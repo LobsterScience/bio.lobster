@@ -1,0 +1,138 @@
+model delay-difference biomass dynamics;
+{
+
+# PRIORS
+
+# priors for scaling factor K (biomass in year 1)
+	logK ~ dnorm(logK.a, logK.b)
+	K <- exp(logK)
+
+
+# priors for K scaled biomass of next year's recruits 
+	for(t in 1:NY){
+		r[t] ~ dlnorm(r.a, r.b)
+	}
+	
+# priors for natural mortality
+
+	# hyperprior on mean m for commercial
+	m.u ~ dunif(m.u.a,m.u.b)
+	# hyperprior on sd m for commercial
+	m.sd ~ dunif(m.sd.a,m.sd.b)
+	
+	# convert mean and sd to hyperparameters for prior
+	#m.b<-pow(log(m.sd),-2)
+	#m.a<-log(m.u)
+	m.b<-(pow(m.sd,2)/m.u) # for gamma prior
+	m.a<-pow(m.sd,2)/pow(m.b,2) # for gamma prior
+
+	# prior for annual m
+	for(t in 1:NY){
+		#m[t] ~ dlnorm(m.a, m.b)
+		m[t] ~ dgamma(m.a, m.b) # gamma prior
+	}
+
+	# hyperprior on mean mR for recruits
+	#mR.u ~ dunif(mR.u.a,mR.u.b)
+	# hyperprior on sd mR for recruits
+	#mR.sd ~ dunif(mR.sd.a,mR.sd.b)
+
+	# convert mean and sd to hyperparameters for prior
+	#mR.b<-pow(log(mR.sd),-2)
+	#mR.a<-log(mR.u)
+	#mR.b<-(pow(mR.sd,2)/mR.u) # for gamma prior
+	#mR.a<-pow(mR.sd,2)/pow(mR.b,2) # for gamma prior
+
+	# prior for annual mR
+	#for(t in 1:NY){
+		#mR[t] ~ dlnorm(mR.a, mR.b) 
+	#	mR[t] ~ dgamma(mR.a, mR.b) # gamma prior
+	#}
+
+
+
+# priors for catchabilities
+	q ~ dbeta(q.a, q.b)
+	qR ~ dbeta(qR.a, qR.b)
+	#qU ~ dunif(qU.a, qU.b)
+	#q<-1
+
+# priors for error terms
+
+	# prior for process errors
+	sigma ~ dunif(sigma.a, sigma.b) # uniform prior on SD
+	isigma2 <- pow(sigma, -2)
+
+	# prior for measurement errors
+	# Survey biomass
+	itau2 ~ dgamma(itau2.a, itau2.b) # gamma prior on precision
+	#tau <- pow(tau, -0.5) #sd
+
+	# Survey recruitment
+	iepsilon2 ~ dgamma(iepsilon2.a, iepsilon2.b) # gamma prior on precision
+	#epsilon <- pow(epsilon, -0.5) #sd
+
+	# Commercial catch rate
+	#nu ~ dgamma(nu.a, nu.b)
+	#inu2 <- pow(nu, -2)
+
+
+# State equation - Biomass dynamics
+Pmed[1] <-0
+P[1] ~ dlnorm(Pmed[1], isigma2) # initialize P (K scaled biomass)
+
+
+for(t in 2:NY){	
+
+	# Dynamics equation (Pmed is the log of the predicted scaled biomass from the biomass dynamics)
+	Pmed[t] <- log(max(exp(-m[t]) * g[t-1] * (P[t-1] - C[t] / K) + exp(-m[t])*gR[t-1] * r[t-1], 0.001)) # same m for both recruits and commercial size
+	#Pmed[t] <- log(max(exp(-m[t]) * g[t-1] * (P[t-1] - C[t] / K) + exp(-mR[t])*gR[t-1] * r[t-1], 0.001)) 
+	#Pmed[t] <- log(max(exp(-m[t]) * (rho + alpha / w.bar[t-1]) * (P[t-1] - C[t-1] / K) + exp(-mR[t]) * (rho + alpha / w.k[t-1]) * r[t-1], 0.001)) # rho and alpha version for reference
+	
+	# Process equation (Pmed is fit to the 'actual' scaled biomass (P) using the estimated process error (sigma) expressed as a precision (isigma2))
+	P[t] ~ dlnorm(Pmed[t], isigma2) 
+	}
+
+
+
+
+# Observation equations - fitting to abundance indices
+
+for(t in 1:NY){
+	# Survey biomass
+	Imed[t] <- log(q * K * P[t])			# predicted survey index in log space 
+	I[t] ~ dlnorm(Imed[t], itau2)			# fit to survey index with log of predicted survey index and estimated survey precision
+	
+	# Survey recruitment
+	IRmed[t] <- log(qR * K * r[t])			# predicted survey index in log space
+	IR[t] ~ dlnorm(IRmed[t], iepsilon2)		# fit to survey index with log of predicted survey index and estimated survey precision
+
+	# Commercial catch rate
+	#Umed[t] <- log(qU * K * P[t])
+	#U[t] ~ dlnorm(Umed[t], inu2)
+
+	# Predicted abundance indices for output	
+	Ipred[t] <- q * B[t]		# predicted survey index for commercial size
+	IRpred[t] <- q * R[t]		# predicted survey index for recruit size
+	#Upred[t] <- qU * B[t]
+	}
+
+	
+# Output
+for(t in 1:NY){
+	B[t] <- P[t] * K 	# Estimated Commercial Biomass
+	R[t] <- r[t] * K	# Estimated Recruit Biomass
+	}
+for(t in 1:(NY)){
+	mu[t] <- C[t]/(B[t]+C[t])					# Exploitation rate
+	Fmort[t] <- -log(max(1 - mu[t], 0.0001))	# Fishing mortality
+	}
+	
+# Diagnostics - calculate observation and process residuals 
+for(t in 1:NY){
+	Iresid[t] <- log(I[t]) - Imed[t]		# Observation residuals for commercial size
+	Presid[t] <- log(P[t]) - Pmed[t]		# Process residuals
+	IRresid[t] <- log(IR[t]) - IRmed[t]		# Observation residuals for recruit size
+	}
+
+}
