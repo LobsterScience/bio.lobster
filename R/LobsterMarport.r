@@ -1,3 +1,8 @@
+#' LobsterMarport
+#' @param file is the marport file obtained during the 2015 ILTS survey which contains the net sensor information as well as the gps data feeds
+#' @author Adam Cook
+#' @return returns a list containing two elements: 1) the trawl sensor information 2) the gps track of the file
+
 LobsterMarport <- function(file) {
 	#reading in and manipulating the marport data from lobster survey
 	con = file(description=file, open="r")
@@ -26,8 +31,8 @@ for(j in 1:n) {
 			  if(any(strsplit(tmp[4],",")[[1]] %in% c('$GPGGA','$GPRMC'))) {
 	  					out.gps = rbind(out.gps,c(tmp[1:3],strsplit(tmp[4],",")[[1]]))
 	  				}	
-  				}
-				jj=jj+1  
+  				}				
+  				jj=jj+1  
 				
 			}	
 		

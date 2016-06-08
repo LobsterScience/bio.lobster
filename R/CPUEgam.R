@@ -1,4 +1,8 @@
-
+#' CPUEgam
+#' @param data is the data frame for fitting a generalized additive catch rate model. Data frame must contain columns of CPUE, SYEAR and DATE
+#' @param mf is the gam model to be fitted
+#' @author Brad Hubley
+#' @return returns a plot of CPUE data by date along with the fitted line as well as a data.frame with raw data and predicted
 CPUEgam<-function(data,mf){
 
 	RLibrary("mgcv")
@@ -19,7 +23,7 @@ CPUEgam<-function(data,mf){
 
 	plot(CPUE~DATE,out.data,pch='.',xlim=c(min(DATE),max(DATE)+365))
 	lines(predCPUE~DATE,out.data)
-
+	return(out.data)
 
 }
 

@@ -1,3 +1,14 @@
+#' LobsterSurveyProcess
+#' @param size.range defines the minimum and maximum value and is a filter (default is 0, 220mm CW).
+#' @param lfa defines the specific LFA for the ILTS
+#' @param yrs is the survey years to estimate
+#' @param mnts months of the survey, defaults to the full year
+#' @param bin.size aggregates the abundance into size bins defaults to 5mm bins
+#' @return data.frame of survey data
+#' @author Brad Hubley
+
+
+
 LobsterSurveyProcess<-function(size.range=c(0,220),lfa,yrs,mths=c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"),bin.size=5){
 loadfunctions(c('lobster','utility','netmensuration'))
   

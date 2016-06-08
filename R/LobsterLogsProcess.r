@@ -1,3 +1,11 @@
+#' LobsterLogsProcess
+#' Processing lobster logbook data to get to clean data in a useable form
+#' @param bumpup is for using the slip data to bumpup logs as a percentage basis. This defaults to false.
+#' @return returns an R data object and saves the data to a .csv
+#' @note Make sure you run the lobster.db('logs.redo') to get the up to date data. Need to check fishing season dates as a appropriate filter.
+#' @seealso lobster.db('logs.redo')
+#' @author Brad Hubley & Adam Cook
+
 LobsterLogsProcess<-function(bumpup=F){
 
 	options(stringsAsFactors=F)
