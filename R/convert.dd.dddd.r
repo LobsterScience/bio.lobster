@@ -1,7 +1,7 @@
-# source("Y:/Assessment/2009/r/fn/convert.dd.dddd.r")
-
-### CONVERTS TO DECIMAL DEGREES
-### can handle a vector with multiple formats
+#' convert.dd.dddd
+#' @param x vector of degrees-minutes-seconds or degree.minutes or degrees to convert to decimal degrees
+#' @param format one of 'dec.deg' or 'deg.min' reflecting input data
+#' @author Brad Hubley
 
 convert.dd.dddd<-function(x,format='dec.deg'){
 	

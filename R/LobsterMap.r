@@ -1,26 +1,28 @@
-#	source("fn/LobsterMap.r")
-
-### MAPS Lobster FISHING AREAS IN R!
-
-# ARGUMENTS
-# area = 'custom' where xlim & ylim are specified or select from area list below
-# mapRes = coastline detail ('LR' = low resolution, 'MR' = medium resolution, 'HR' = high resolution, 'UR' = ultra resolution)
-# title = plot title
-# boundaries = for ploting specific management boundaries
-# isobath = plots bathymetry lines for specified depths from topex data 
-# bathcol = isobath line color, default is transparent blue
-# topolines = plots topographic lines for specified elevations from topex data 
-# bathcol = topolines line color, default is transparent brown
-# points.lst = points to overlay on map in PBSmapping format - list with 2 elements: 1st element is eventSet (EID, POS, X, Y), 2nd element is eventData (EID, pch, col, etc.) 
-# lines.lst = lines to overlay on map in PBSmapping format - list with 2 elements: 1st element is polySet (PID, SID, POS, X, Y), 2nd element is polyData (PID, SID, lty, col, etc.) 
-# poly.lst = polygons to overlay on map in PBSmapping format - list with 2 elements: 1st element is polySet (PID, SID, POS, X, Y), 2nd element is polyData (PID, SID, border, col, etc.) 
-# contours = plots overlaping polygons as contours (same format as poly.lst)
-# image.lst = image to overlay on map - list with 3 elements (x, y, z), 'bathymetry' produces image from bathymetry data 
-# color.fun = color function for image
-# zlim = zlim for image
-# grid = size of grid in degrees, default is no grid
-# stippling = adds stippling to land (purely for visual effect)
-# lol = adds water colored border to coastline (purely for visual effect)
+#' LobsterMap
+#' @param area = 'custom' where xlim & ylim are specified or select from area list below
+#' @param mapRes = coastline detail ('LR' = low resolution, 'MR' = medium resolution, 'HR' = high resolution, 'UR' = ultra resolution)
+#' @param title = plot title
+#' @param boundaries = for ploting specific management boundaries
+#' @param isobath = plots bathymetry lines for specified depths from topex data 
+#' @param bathcol = isobath line color, default is transparent blue
+#' @param topolines = plots topographic lines for specified elevations from topex data 
+#' @param bathcol = topolines line color, default is transparent brown
+#' @param points.lst = points to overlay on map in PBSmapping format - list with 2 elements: 1st element is eventSet (EID, POS, X, Y), 2nd element is eventData (EID, pch, col, etc.) 
+#' @param lines.lst = lines to overlay on map in PBSmapping format - list with 2 elements: 1st element is polySet (PID, SID, POS, X, Y), 2nd element is polyData (PID, SID, lty, col, etc.) 
+#' @param poly.lst = polygons to overlay on map in PBSmapping format - list with 2 elements: 1st element is polySet (PID, SID, POS, X, Y), 2nd element is polyData (PID, SID, border, col, etc.) 
+#' @param contours = plots overlaping polygons as contours (same format as poly.lst)
+#' @param image.lst = image to overlay on map - list with 3 elements (x, y, z), 'bathymetry' produces image from bathymetry data 
+#' @param color.fun = color function for image
+#' @param zlim = zlim for image
+#' @param grid = size of grid in degrees, default is no grid
+#' @param stippling = adds stippling to land (purely for visual effect)
+#' @param lol = adds water colored border to coastline (purely for visual effect)
+#' @author Brad Hubley
+#' @examples
+#' LobsterMap(area='34')
+#' catchgrids <-lobGridPlot(subset(logsInSeason,SYEAR==2007,c("LFA","GRID_NUM","WEIGHT_KG")),lvls=c(100,50000,100000,200000,400000,600000,800000,1000000),FUN=sum,border=NA)
+#' LobsterMap('all',poly.lst=catchgrids[1:2],title="2007 Lobster Catch")
+#' ContLegend("bottomright",lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (t)",inset=0.02,cex=0.8,bg='white')
 
 LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL,...){
 
