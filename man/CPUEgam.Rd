@@ -12,7 +12,7 @@ CPUEgam(data, mf)
 \item{mf}{is the gam model to be fitted}
 }
 \value{
-returns a plot of CPUE data by date along with the fitted line as well as a data.frame with raw data and predicted
+returns a plot of CPUE data by date along with the predicted line as well as a data.frame with raw data and predicted data
 }
 \description{
 CPUEgam
