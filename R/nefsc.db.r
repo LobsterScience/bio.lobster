@@ -1,4 +1,13 @@
-usnefsc.db<-function(DS  = 'odbc.dump.redo'){
+#' @title nefsc.db
+#' @description Pulls the offshore lobster data from NEFSC trawl surveys
+#' @param \code{DS} = the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with .redo) or loaded as 'uscat','usdet','usinf','ustrata.area'
+#' @return saves or loads .rdata object
+#' @examples
+#' nefsc.db(DS = 'odbc.dump.redo')
+#' @author  Adam Cook, \email{Adam.Cook@@dfo-mpo.gc.ca}
+#' @export
+
+nefsc.db <- function(DS  = 'odbc.dump.redo'){
     fn.root =  file.path( project.datadirectory("lobster"), "data") 
     fnODBC  =  file.path(fn.root, "ODBCDump")
 
