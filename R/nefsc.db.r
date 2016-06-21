@@ -11,7 +11,7 @@ nefsc.db <- function(DS  = 'odbc.dump.redo'){
     fn.root =  file.path( project.datadirectory("lobster"), "data") 
     fnODBC  =  file.path(fn.root, "ODBCDump")
 
-if(grepl('redo','DS')) channel = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+if(grepl('redo',DS)) channel = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
 
 options(stringsAsFactors = FALSE) #necessary?
 options(scipen=999)  # this avoids scientific notation
@@ -35,7 +35,7 @@ options(scipen=999)  # this avoids scientific notation
       if(DS == 'uscat') {
         
           load(file = file.path(fnODBC, 'usnefsc.catch.rdata'))
-          return('Loaded uscat')
+          return(uscat)
         } 
 
              uscat = sqlQuery(channel, "select cruise6 mission,to_number(station) setno, stratum, 1 size_class, sum(expcatchwt) totwgt, 0 sampwgt, sum(expcatchnum) totno, 0 calwt
@@ -103,7 +103,7 @@ options(scipen=999)  # this avoids scientific notation
         strata.area = sqlQuery(channel,paste("select * from groundfish.gsstratum where strat like '01%' ;"))
         save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
         }
-
+odbcCloseAll()
 }
 
 
