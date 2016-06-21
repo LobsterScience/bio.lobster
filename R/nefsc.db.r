@@ -20,16 +20,17 @@ options(scipen=999)  # this avoids scientific notation
        
   if(DS %in% c('odbc.dump','odbc.dump.redo')) {
                 if(DS == 'odbc.dump') {
-                      usnefsc.db(DS = 'uscat')        
-                      usnefsc.db(DS = 'usinf')        
-                      usnefsc.db(DS = 'usdet')        
-                      usnefsc.dn(DS = 'usstrata.area')        
+                      nefsc.db(DS = 'uscat')        
+                      nefsc.db(DS = 'usinf')        
+                      nefsc.db(DS = 'usdet')        
+                      nefsc.dn(DS = 'usstrata.area')        
                       return('Done')
                        }
-                  usnefsc.db(DS = 'uscat.redo')        
-                  usnefsc.db(DS = 'usinf.redo')        
-                  usnefsc.db(DS = 'usdet.redo')        
-                  usnefsc.dn(DS = 'usstrata.area.redo')        
+                  nefsc.db(DS = 'uscat.redo')        
+                  nefsc.db(DS = 'usinf.redo')        
+                  nefsc.db(DS = 'usdet.redo')        
+                  nefsc.dn(DS = 'usstrata.area.redo')        
+                  
                 }
 
 
