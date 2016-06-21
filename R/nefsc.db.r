@@ -35,7 +35,7 @@ options(scipen=999)  # this avoids scientific notation
                                      and stratum like '01%'
                                      group by cruise6, to_number(station),stratum")
 
-             save(uscat, file = file.path(fnODBC, 'usnefsc.catch.rdata')
+             save(uscat, file = file.path(fnODBC, 'usnefsc.catch.rdata'))
 
         }
 
@@ -50,7 +50,7 @@ options(scipen=999)  # this avoids scientific notation
                     where to_number(SHG) <= 136
                     and stratum like '01%'"))
                     names(usinf)[1] = 'MISSION'
-                    save(usinf, file = file.path(fnODBC, 'usnefsc.inf.rdata')
+                    save(usinf, file = file.path(fnODBC, 'usnefsc.inf.rdata'))
   }
 
   if(DS %in% c('usdet','usdet.redo')) {
@@ -80,7 +80,7 @@ options(scipen=999)  # this avoids scientific notation
           raw.gsdet<-merge(raw.gsdet,raw.lf, all.x=T) 
           raw.gsdet$FLEN[is.na(raw.gsdet$FLEN)] <- raw.gsdet$LENGTH[is.na(raw.gsdet$FLEN)]
           usdet = raw.gsdet
-          save(usdet, file = file.path(fnODBC, 'usnefsc.det.rdata')
+          save(usdet, file = file.path(fnODBC, 'usnefsc.det.rdata'))
             }
        }
 
