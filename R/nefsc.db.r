@@ -82,7 +82,7 @@ options(scipen=999)  # this avoids scientific notation
           usdet = raw.gsdet
           save(usdet, file = file.path(fnODBC, 'usnefsc.det.rdata'))
             }
-       }
+      
 
     if(DS %in% c('usstrata.area','usstrata.area.redo')) {
         if(DS == 'usstrata.area') {
@@ -95,8 +95,8 @@ options(scipen=999)  # this avoids scientific notation
         save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
         }
 
-
-
-
-
 }
+
+
+
+
