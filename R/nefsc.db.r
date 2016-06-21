@@ -1,8 +1,10 @@
 #' @title nefsc.db
 #' @description Pulls the offshore lobster data from NEFSC trawl surveys
-#' @param \code{DS} = the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with .redo) or loaded as 'uscat','usdet','usinf','ustrata.area'
-#' @return saves or loads .rdata object
+#' @param \code{DS} = the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with \code{.redo}) or loaded as \code{uscat},\code{usdet},\code{usinf},\code{usstrata.area}
+#' @return saves or loads .rdata objects named \code{usinf}, \code{usdet}, \code{uscat}, \code{usstrat.area}
 #' @examples
+#' require(devtools)
+#' load_all('E:/git/LobsterScience/bio.lobster') #to load from directory rather than package if modifying
 #' nefsc.db(DS = 'odbc.dump.redo')
 #' @author  Adam Cook, \email{Adam.Cook@@dfo-mpo.gc.ca}
 #' @export
@@ -52,7 +54,7 @@ options(scipen=999)  # this avoids scientific notation
       if(DS == 'usinf') {
 
         load(file = file.path(fnODBC, 'usnefsc.inf.rdata'))
-        return('Done')
+        return(usinf)
       } 
                   usinf = sqlQuery(channel,paste("SELECT *
                     FROM USNEFSC.USS_STATION 
@@ -67,7 +69,7 @@ options(scipen=999)  # this avoids scientific notation
             if(DS == 'usdet') {
             
                   load(file = file.path(fnODBC, 'usnefsc.det.rdata'))
-                   return('Done')
+                   return(usdet)
             
                 }
 
@@ -97,7 +99,7 @@ options(scipen=999)  # this avoids scientific notation
         if(DS == 'usstrata.area') {
           
           load(file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
-          return('Done')
+          return(strata.area)
         }
 
         strata.area = sqlQuery(channel,paste("select * from groundfish.gsstratum where strat like '01%' ;"))
