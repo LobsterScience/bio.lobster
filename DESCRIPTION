@@ -8,9 +8,11 @@ Depends:
 Imports:
     bio.base,
     bio.utilities,
+    bio.polygons,
     devtools    
 License: MIT
 Encoding: UTF-8
 LazyData: true
+Remotes: github::Beothuk/bio.base, github::Beothuk/bio.utilities, github::Beothuk/bio.polygons
 RoxygenNote: 5.0.1.9000
 URL: https://github.com/LobsterScience/bio.lobster/
