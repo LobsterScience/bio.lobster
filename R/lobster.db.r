@@ -11,7 +11,7 @@
     options(stringsAsFactors=F)
 
   require(lubridate)
-    fn.root =  file.path( project.datadirectory("lobster"), "data") 
+    fn.root =  file.path( project.datadirectory('bio.lobster'), "data") 
     fnODBC  =  file.path(fn.root, "ODBCDump")
     fnProducts = file.path(fn.root,'products')
     dir.create( fn.root, recursive = TRUE, showWarnings = FALSE )
@@ -73,7 +73,7 @@ if(DS %in% c('historical.landings','historical.landings.redo')) {
                 return(historical.landings)
                   }
         
-                historical.landings = read.delim(file.path(project.datadirectory('lobster'),"data","inputs","LFA34_Landings_1892-2004.txt"))
+                historical.landings = read.delim(file.path(project.datadirectory('bio.lobster'),"data","inputs","LFA34_Landings_1892-2004.txt"))
 
                   #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                   #historical.landings = sqlQuery(con,'select * from LOBSTER.SLIP_LAND_HISTORICAL')
@@ -124,7 +124,7 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                                 }
 
                     #Filtering by date trap and weight:
-                          Fish.Date <- read.csv(file.path( project.datadirectory("lobster"), "data","inputs","FishingSeasonDates.csv"),colClasses=c('character','integer','Date','Date'))
+                          Fish.Date <- read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"),colClasses=c('character','integer','Date','Date'))
                           print('Not the ODBC season Dates Need to Have Updated AMC MAY2016')
                           lfa <- unique(Fish.Date$LFA)
                           
@@ -183,14 +183,14 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                     logsInSeason<-rbind(logsInSeasonA,logsInSeasonB,logsInSeasonC)
                     logsInSeason$WEIGHT_KG<-logsInSeason$WEIGHT_LBS*0.4536
 
-                    centgrid<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","lfa27_38_centgrid.csv"))
+                    centgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","lfa27_38_centgrid.csv"))
                     grid.key<-with(centgrid,paste(LFA,GRID_NUM,sep='.'))
                     
                     logsInSeason<-subset(logsInSeason,!is.na(GRID_NUM)&paste(LFA,GRID_NUM,sep='.')%in%grid.key)
                     logsInSeason$CPUE<-logsInSeason$WEIGHT_KG/logsInSeason$NUM_OF_TRAPS
                     logsInSeason<-subset(logsInSeason,CPUE<20)
 
-                    subareas<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","LFA2733subarea.csv"))
+                    subareas<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","LFA2733subarea.csv"))
                     names(subareas)[2]<-"GRID_NUM"
                     logsInSeason<-merge(logsInSeason,subareas,all.x=T)
 

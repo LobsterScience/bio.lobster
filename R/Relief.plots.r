@@ -6,7 +6,7 @@ Relief.plots<-function(tows,MBdata='from.file',expd=1,graphic="pdf",digits=4,fil
 	require(CircStats)
 	dpkm<-0.008983346
 	aspr=1/cos(rad(mean(tows$Y)))
-	key<-read.csv(file.path( project.datadirectory("bathymetry"),"data","GermanBathy","fileKey.csv"))
+	key<-read.csv(file.path( project.datadirectory("bio.bathymetry"),"data","GermanBathy","fileKey.csv"))
 	
 	
 	for(i in 1:nrow(tows)){
@@ -21,7 +21,7 @@ Relief.plots<-function(tows,MBdata='from.file',expd=1,graphic="pdf",digits=4,fil
 			locdata.lst<-list()
 			if(length(gets)>0){
 				for(f in 1:length(gets)){
-					tmp <-read.table(file.path( project.datadirectory("bathymetry"),"data","GermanBathy","gerbk_5",paste("german_",gets[f],".txt",sep='')),header=T)
+					tmp <-read.table(file.path( project.datadirectory("bio.bathymetry"),"data","GermanBathy","gerbk_5",paste("german_",gets[f],".txt",sep='')),header=T)
 					locdata.lst[[f]]<-subset(tmp,X<(tows$X[i]+dpkm*aspr*kms)&X>(tows$X[i]-dpkm*aspr*kms)&Y<(tows$Y[i]+dpkm*kms)&Y>(tows$Y[i]-dpkm*kms))
 				}
 				rm(tmp)

@@ -18,7 +18,7 @@ FSRSclf<-function(lfa= c("27", "28", "29", "30", "31.1", "31.2", "32", "33"), yr
 
 		names.keep<-names(LFdat)
 
-		scd<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
+		scd<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
 		scd$pseudoCL<-rowMeans(scd[c("MIN_S","MAX_S")])
 
 		LFdat<-merge(LFdat,scd[c("LENGTH","pseudoCL")])
@@ -28,7 +28,7 @@ FSRSclf<-function(lfa= c("27", "28", "29", "30", "31.1", "31.2", "32", "33"), yr
 	}
 
 	#MLS
-	mls<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","MinLegalSize.csv"))
+	mls<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
 	mlslfas<-as.numeric(substr(names(mls[-1]),4,5))
 	mlslfas[which(mlslfas==31)]<-c(31.1,31.2)
 

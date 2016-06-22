@@ -49,7 +49,7 @@ ScallopSurveyProcess<-function(size.range=c(0,220),SPA,Yrs,bin.size=5,log=F){
 
     # add LFA column
     events <- with(ScalSurvLob,data.frame(EID=TOW_SEQ,X=lon,Y=lat))
-    LFAPolys<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","LFAPolys.csv"))
+    LFAPolys<-read.csv(file.path( project.datadirectory('bio.lobster'), "data","maps","LFAPolys.csv"))
     key <- findPolys(events,LFAPolys)
     ScalSurvLob <- merge(ScalSurvLob,with(key,data.frame(TOW_SEQ=EID,LFA=PID)),all=T)
 

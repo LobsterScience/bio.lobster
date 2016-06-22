@@ -1,6 +1,6 @@
 addSYEAR<-function(data,date.field="STARTDATE"){
 
-	Fish.Date<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","FishingSeasonDates.csv"))
+	Fish.Date<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
 	Fish.Date$START_DATE<-as.Date(Fish.Date$START_DATE,"%d/%m/%Y")
 	Fish.Date$END_DATE<-as.Date(Fish.Date$END_DATE,"%d/%m/%Y")
 

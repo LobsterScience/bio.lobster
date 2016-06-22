@@ -1,14 +1,14 @@
 setupDepletionData<-function(lfa='34'){
 
 	loadfunctions('lobster')
-	logsInSeason<-read.csv(file.path( project.datadirectory("lobster"), "data","logsInSeason.csv"))
+	logsInSeason<-read.csv(file.path( project.datadirectory('bio.lobster'), "data","logsInSeason.csv"))
 	logs<-subset(logsInSeason,LFA==lfa,c("SYEAR","DATE_FISHED","WEIGHT_KG","NUM_OF_TRAPS"))
 	if(lfa%in%c()){
-		landings<-read.csv(file.path(project.datadirectory('lobster'),"data","Commercial","SeasonalSlipLand.csv"))
+		landings<-read.csv(file.path(project.datadirectory('bio.lobster'),"data","Commercial","SeasonalSlipLand.csv"))
 		landings$YEAR<-as.numeric(substr(landings$SEASON,6,9))
 	}
 	else{
-		landings<-read.csv(file.path(project.datadirectory('lobster'),"data","Commercial","AnnualSlipLand.csv"))
+		landings<-read.csv(file.path(project.datadirectory('bio.lobster'),"data","Commercial","AnnualSlipLand.csv"))
 	}
 
 	S<-sort(unique(logs$SYEAR))
@@ -28,7 +28,7 @@ setupDepletionData<-function(lfa='34'){
 
 	cpue.dat<-do.call("rbind",cpue.lst)
 	cpue.dat$cpue.se<-cpue.dat$cpue.var^0.5
-	write.csv(cpue.dat,file.path(project.datadirectory('lobster'),"data",paste0("depletionData",lfa,".csv")))
+	write.csv(cpue.dat,file.path(project.datadirectory('bio.lobster'),"data",paste0("depletionData",lfa,".csv")))
 
 	return(cpue.dat)
 }

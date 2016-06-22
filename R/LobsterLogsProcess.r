@@ -15,7 +15,7 @@ LobsterLogsProcess<-function(bumpup=F){
 
 
 	#Filtering by date trap and weight:
-	Fish.Date <- read.csv(file.path( project.datadirectory("lobster"), "data","inputs","FishingSeasonDates.csv"))
+	Fish.Date <- read.csv(file.path( project.datadirectory('bio.lobster'), "data","inputs","FishingSeasonDates.csv"))
 	Fish.Date2 = lobster.db('season.dates')
 
 
@@ -122,7 +122,7 @@ slips$SYEAR<-NA
 
 
 	# Save logsInSeason as working data
-	write.csv(logsInSeason,file.path( project.datadirectory("lobster"), "data","products","logsInSeason.csv"),row.names=F)
+	write.csv(logsInSeason,file.path( project.datadirectory('bio.lobster'), "data","products","logsInSeason.csv"),row.names=F)
 
 
 
