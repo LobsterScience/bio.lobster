@@ -22,7 +22,7 @@ lobGridPlot <- function(Data,lvls,bcol="YlGnBu",border=1,FUN=mean,place=0) {
 	pdata$border<-border
 	
 
-	grid<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","GridPolys.csv"))
+	grid<-read.csv(file.path( project.datadirectory('bio.lobster'), "data","maps","GridPolys.csv"))
 	
 	list(grid=grid,pdata=pdata,lvls=lvls[-length(lvls)],col=cols)
 	

@@ -2,7 +2,7 @@ FSRSmodel<-function(FSRS,response="SHORTS",redo=T,interaction=F){
 	
   lfa = ifelse(!is.na(unique(FSRS$subarea)),unique(FSRS$subarea),unique(FSRS$LFA))
 
-  fn.root =  file.path( project.datadirectory("lobster"), "R", "FSRS", "ModelResults")
+  fn.root =  file.path( project.datadirectory('bio.lobster'), "R", "FSRS", "ModelResults")
   # create factor year
   FSRS$fYEAR=as.factor(FSRS$SYEAR)
 

@@ -29,7 +29,7 @@ CPUEplot<-function(logData,lfa='34',yrs,lab='',graphic='R',wd=8,ht=11,effort.min
 	daily.dat<-merge(daily.dat,merge(dates,data.frame(LFA=lfa)),all=T)
 	annual.dat<-do.call("rbind",annual)
 
-	if(graphic=='pdf')pdf(file.path( project.datadirectory("lobster"),"figures",paste0("CPUE",lab,".pdf")),wd,ht)
+	if(graphic=='pdf')pdf(file.path( project.figuredirectory("bio.lobster"),"figures",paste0("CPUE",lab,".pdf")),wd,ht)
 
 	par(mfrow=c(length(lfa),1),mar=c(0,0,0,0),omi=c(0.5,1,0.5,0.5),las=1)
 

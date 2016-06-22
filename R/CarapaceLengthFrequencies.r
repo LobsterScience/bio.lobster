@@ -2,7 +2,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
 
     ### Carapace Length Frequencies (CLF)
 
-        rootdir=file.path(project.datadirectory('lobster'),'figures')
+        rootdir=file.path(project.datadirectory('bio.lobster'),'figures')
 
         #MLS
         mls<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","MinLegalSize.csv"))
@@ -20,7 +20,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
                 surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=Yrs,mths=c("Jul","Jun"),size.range=range(bins),bin.size=diff(bins)[1])
 
                 # Limit data to 32 selected index stations
-                LS32stns<-read.csv(file.path(project.datadirectory('lobster'),"data","products","survey32Stations.csv"))
+                LS32stns<-read.csv(file.path(project.datadirectory('bio.lobster'),"data","products","survey32Stations.csv"))
 
                 # Construct CLF
                 LobsterSurveyCLF<-t(sapply(Yrs,function(y){colMeans(subset(surveyLobsters34,YEAR==y&SID%in%LS32stns$SID,paste0("CL",bins[-length(bins)])),na.rm=T)}))
@@ -118,7 +118,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
 
             # this section is to deal with the fact that there are uneven binning going on for the different size categories
             # it creates a pseudo CL (the mid point of each size category)
-            scd<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
+            scd<-read.csv(file.path( project.datadirectory('bio.lobster'), "data","inputs","FSRS_SIZE_CODES.csv"))
             scd$LENGTH<-rowMeans(scd[c("MIN_S","MAX_S")])
             LFdat<-merge(fsrs,scd[c("SIZE_CD","LENGTH")])
 

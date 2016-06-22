@@ -3,7 +3,7 @@ plotSurveyIndex<-function(trend.dat,moving.avg=T,moving.median=T,ref.points=T,in
 	## Plot Survey Index Figure 4
 	
 	if(index.stations){
-		Stns<-read.csv(file.path(project.datadirectory('lobster'),'data',"survey32Stations.csv"))
+		Stns<-read.csv(file.path(project.datadirectory('bio.lobster'),'data',"survey32Stations.csv"))
 		trend.dat<-subset(trend.dat,SID%in%Stns$SID)
 		}
 
@@ -28,6 +28,6 @@ plotSurveyIndex<-function(trend.dat,moving.avg=T,moving.median=T,ref.points=T,in
 		abline(h=median(LPT[2:15]*0.8),col=rgb(0,0,1,0.5))
 		text(max(yrs)+.5,median(LPT[2:15]*0.8)*.85,"Upper Stock Reference",col=rgb(0,0,1,0.5),pos=2,cex=0.8)
 	}
-	print(paste('Plot is saved in',file.path( project.figuredirectory("lobster"), paste0(fn,".pdf")),sep=""))
+	print(paste('Plot is saved in',file.path( project.figuredirectory('bio.lobster'), paste0(fn,".pdf")),sep=""))
 	dev.off()
 }

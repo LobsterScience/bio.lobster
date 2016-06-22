@@ -9,8 +9,8 @@ PortSummary<-function(lfa='34',bins=seq(50,200,5),output='graph'){
 		
 	PortSamp<-PortSamplesProcess(lfa=lfa,min.size=0)
 		
-	logs<-subset(read.csv(file.path( project.datadirectory("lobster"), "data","products","logsInSeason.csv")),LFA==lfa)
-	allPorts<-subset(read.csv(file.path( project.datadirectory("lobster"), "data","inputs","Ports.csv")),LFA==lfa)
+	logs<-subset(read.csv(file.path( project.datadirectory('bio.lobster'), "data","products","logsInSeason.csv")),LFA==lfa)
+	allPorts<-subset(read.csv(file.path( project.datadirectory('bio.lobster'), "data","inputs","Ports.csv")),LFA==lfa)
 
 		#PSports<-subset(PS$portsamples,!duplicated(PORT_CODE))$PORT_CODE
 		#ASports<-subset(atSea,!duplicated(PORT))$PORT
@@ -22,7 +22,7 @@ PortSummary<-function(lfa='34',bins=seq(50,200,5),output='graph'){
 		
 		for(i in 1:length(ports)){
 
-			pdf(file.path(project.datadirectory('lobster'),"figures","PortSummary",paste0("PortSummary",ports[i],".pdf")))
+			pdf(file.path(project.datadirectory('bio.lobster'),"figures","PortSummary",paste0("PortSummary",ports[i],".pdf")))
 			#browser()
 
 			# at Sea sampling
