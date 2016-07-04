@@ -1,5 +1,5 @@
 # constructs a Length Frequecy matrix
-
+#' @export
 CLF<-function(LFdat,bins=seq(0,220,5),yrs,ID="CLF"){
 
     require("lubridate")

@@ -1,3 +1,4 @@
+#' @export
 createBathyLines<-function(input.fp=file.path( project.datadirectory("bio.lobster"), "data", "maps","topex"), input.fn="topex.xyz",redo=T,interval=10,batch=100,range=c(10,5000),save.by=1000,digits=3,dneg=T,output.fn="bathyPoly"){
 
 	# function to create bathy lines from xyz data

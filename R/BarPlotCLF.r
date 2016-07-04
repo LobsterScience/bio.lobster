@@ -1,3 +1,4 @@
+#' @export
 BarPlotCLF<-function(CLF,yrs=2005:2014,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF.pdf',rows=length(yrs),pdf=T,xl,rel=T,mean.line=F,ylp=0.1,ymax,LS=82.5,sample.size=NULL,recline=NULL,wd=10,ht=12,bx=F,xlab="Carapace Length (mm)",ylab="Mean N / standard tow",...){
     
     mids<-bins[-1]-diff(bins)/2

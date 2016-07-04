@@ -1,3 +1,4 @@
+#' @export
 #	source("fn/interpolation.r")
 
 

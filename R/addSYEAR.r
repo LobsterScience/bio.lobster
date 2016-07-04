@@ -1,3 +1,4 @@
+#' @export
 addSYEAR<-function(data,date.field="STARTDATE"){
 
 	Fish.Date<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))

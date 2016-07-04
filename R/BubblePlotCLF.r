@@ -1,3 +1,4 @@
+#' @export
 BubblePlotCLF<-function(CLF,bins=seq(0,220,5),yrs=2005:2014,log.trans=F,filen='',prop=F,LS=82.5,...){
 
 	mids<-bins[-1]-diff(bins)/2

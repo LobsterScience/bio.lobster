@@ -1,3 +1,4 @@
+#' @export
 waa.plt <- function(waa.t, waa.tm1, waa.lm,nr=1,graphic="R",path='',wd=5,ht=5){
 if(graphic=="pdf") pdf(file.path(path,"waa.pdf"), width =wd, height = ht)
 if(graphic=="R") windows(width = wd, height = ht)

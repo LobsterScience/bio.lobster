@@ -6,7 +6,7 @@
 #' @param bin.size aggregates the abundance into size bins defaults to 5mm bins
 #' @return data.frame of survey data
 #' @author Brad Hubley
-
+#' @export
 
 
 LobsterSurveyProcess<-function(size.range=c(0,220),lfa,yrs,mths=c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"),bin.size=5){

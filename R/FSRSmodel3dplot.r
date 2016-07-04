@@ -1,4 +1,4 @@
-
+#' @export
 FSRSmodel.3dplot<-function(M,response="SHORTS",yr=2015){
 
   RLibrary("ggplot2","glmmADMB","rgl")

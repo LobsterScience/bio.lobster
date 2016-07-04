@@ -1,3 +1,4 @@
+#' @export
 CPUEplot<-function(logData,lfa='34',yrs,lab='',graphic='R',wd=8,ht=11,effort.min=10,...){
 
 	loadfunctions('lobster')

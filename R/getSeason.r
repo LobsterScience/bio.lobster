@@ -1,3 +1,4 @@
+#' @export
 getSeason<-function(DATE){
 
 	# seasons 

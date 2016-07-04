@@ -1,3 +1,4 @@
+#' @export
 getG<-function(CF,l.bar,b=3,VB=c(144,0.4,0)){
 
 		# growth by height adjusted for condition

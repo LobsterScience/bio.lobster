@@ -1,3 +1,5 @@
+
+#' @export
 CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,220,5), Yrs=2005:2014, by=NULL, sex=1:2, fn='',... ) {
 
     ### Carapace Length Frequencies (CLF)

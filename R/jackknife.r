@@ -1,4 +1,4 @@
-# source("Y:/Assessment/2010/r/fn/jackknife.r")
+#' @export
 
 jackknife<-function(data,err='sd',run=T){
 	

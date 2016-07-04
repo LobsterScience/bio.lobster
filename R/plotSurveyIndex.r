@@ -1,3 +1,4 @@
+#' @export
 plotSurveyIndex<-function(trend.dat,moving.avg=T,moving.median=T,ref.points=T,index.stations=T,fn="SurveyIndex",wd=8,ht=6,se=F){
 
 	## Plot Survey Index Figure 4

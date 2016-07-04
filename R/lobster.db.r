@@ -5,7 +5,7 @@
 #' @return Data objects that contain the data for use in further analyses.
 #' @examples lobster.db('fsrs.redo') # makes the data objects for the FSRS data.
 #' lobster.db('fsrs') #loads the object fsrs
-
+#' @export
 
   lobster.db = function( DS="complete.redo",p=p) {
     options(stringsAsFactors=F)

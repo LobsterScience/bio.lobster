@@ -1,3 +1,4 @@
+#' @export
 LAFSS<-function(size.range=c(0,250),SPA,Years){
 	
 	require(lubridate)

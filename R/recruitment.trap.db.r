@@ -1,3 +1,4 @@
+#' @export
 recruitment.trap.db<-function(DS , outdir = project.datadirectory('bio.lobster'), p,Y=1999:2015) {
 	
 	fout = file.path(outdir,p$current.assessment.year,'R')

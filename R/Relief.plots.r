@@ -1,5 +1,5 @@
-# source("fn/Relief.plots.r")
 
+#' @export
 Relief.plots<-function(tows,MBdata='from.file',expd=1,graphic="pdf",digits=4,file="GerTow",kms=1,gerfiles=1:77,key=file.key,tracks=F,trackPath=file.path( project.directory("lobster"),"data","log files","TE17","German")){
 
 	require(PBSmapping)

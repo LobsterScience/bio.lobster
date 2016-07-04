@@ -1,3 +1,4 @@
+#' @export
 FSRSmodel<-function(FSRS,response="SHORTS",redo=T,interaction=F){
 	
   lfa = ifelse(!is.na(unique(FSRS$subarea)),unique(FSRS$subarea),unique(FSRS$LFA))

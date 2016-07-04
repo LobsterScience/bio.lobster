@@ -1,3 +1,4 @@
+#' @export
 decision<-function(area,model.out,mu=0.15,pr=seq(0.1,0.6,0.1),vers=1,post.survey.C=0,index,refs='varied'){
 		
 	require(xtable)

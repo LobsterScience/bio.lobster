@@ -1,3 +1,4 @@
+#' @export
 PortSummary<-function(lfa='34',bins=seq(50,200,5),output='graph'){
 		
 	loadfunctions('lobster')

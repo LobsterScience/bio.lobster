@@ -1,3 +1,4 @@
+#' @export
 FSRSclf<-function(lfa= c("27", "28", "29", "30", "31.1", "31.2", "32", "33"), yrs=2004:2015, bins=seq(0,140,10),fn="FSRS",sex=1:2,maxsoak=10,...){
 
 	loadfunctions("lobster")

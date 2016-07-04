@@ -1,3 +1,4 @@
+#' @export
 collectorTemperatureData <- function(base.dir = file.path(ecomod.datadirectory,'lobster')) {
 			#//combine CTS temperature data
 

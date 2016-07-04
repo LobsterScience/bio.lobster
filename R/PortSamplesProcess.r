@@ -1,3 +1,4 @@
+#' @export
 PortSamplesProcess<-function(lfa='34',min.size=80){
 		
 	# get port sampling data

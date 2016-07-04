@@ -1,4 +1,4 @@
-
+#' @export
 identifyPoints<-function(dat,X='X',Y='Y'){
 
 x<-as.vector(unlist(dat[X]))
