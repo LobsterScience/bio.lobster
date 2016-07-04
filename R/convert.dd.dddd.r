@@ -2,6 +2,7 @@
 #' @param x vector of degrees-minutes-seconds or degree.minutes or degrees to convert to decimal degrees
 #' @param format one of 'dec.deg' or 'deg.min' reflecting input data
 #' @author Brad Hubley
+#' @export
 
 convert.dd.dddd<-function(x,format='dec.deg'){
 	

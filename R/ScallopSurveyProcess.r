@@ -1,3 +1,4 @@
+#' @export
 ScallopSurveyProcess<-function(size.range=c(0,220),SPA,Yrs,bin.size=5,log=F){
 	
 	require(lubridate)

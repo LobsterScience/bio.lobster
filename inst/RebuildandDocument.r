@@ -1,4 +1,4 @@
 require(devtools)
-setwd('~/git/LobsterScience/bio.lobster')
+setwd('~/git/bio.lobster')
 document()
 q('no')

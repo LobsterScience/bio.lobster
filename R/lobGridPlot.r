@@ -1,3 +1,4 @@
+#' @export
 lobGridPlot <- function(Data,lvls,bcol="YlGnBu",border=1,FUN=mean,place=0) {  
 
 	require(PBSmapping)

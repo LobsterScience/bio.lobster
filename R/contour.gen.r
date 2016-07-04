@@ -1,3 +1,4 @@
+#' @export
 contour.gen<-function(contour.dat,lvls,Poly,col="YlGn",colorAdj){
 
 	require(RColorBrewer)

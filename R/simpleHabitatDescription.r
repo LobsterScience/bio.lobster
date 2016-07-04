@@ -1,3 +1,4 @@
+#' @export
 simpleHabitatDescription <- function(){
 	#// makes a simple basin model plot to show the filling of habitat space as abundance increases
 

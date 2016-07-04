@@ -1,5 +1,5 @@
 #	source("Y:/INSHORE SCALLOP/Survey/2010/r/fn/genran")
-
+#' @export
 # Generates random points in a polygon (PBSmapping format)
 
 genran<-function(npoints,bounding.poly,projection="LL",mindist=NULL){

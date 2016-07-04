@@ -1,3 +1,4 @@
+#' @export
 GroundfishSurveyProcess<-function(size.range=c(0,220),Sex = NULL, Strata=c(485,490,495),Years=1976:2014,bin.size=5,Lengths=F){
 
   nbins<-length(seq(size.range[1],size.range[2],bin.size))-1

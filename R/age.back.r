@@ -1,5 +1,4 @@
-# source("Y:\\Assessment\\2010\\r\\fn\\age.back.r")
-
+#' @export
 age.back<-function(ht,LVB=list(linf=145.4,k=0.38,t0=1),age.dif=-1,plot=F){
 
 	

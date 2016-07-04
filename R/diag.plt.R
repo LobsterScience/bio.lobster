@@ -1,3 +1,4 @@
+#' @export
 diag.plt <- function(data, years=1981:2007, name="diag",graphic="R",path=''){
 
 # diagnostics

@@ -1,3 +1,4 @@
+#' @export
 projections<-function(model.out,C.p=c(200,300)){
 	
 

@@ -1,3 +1,4 @@
+#' @export
 write.dat<-function(list,file,...){
 	
 	write(paste("#ADMB input data file:",file),file)

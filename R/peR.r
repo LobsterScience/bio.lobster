@@ -1,3 +1,4 @@
+#' @export
 peR <- function(model, input, priors, years, pe, n = 80000, burn = 40000, thin = 10, graphic="R",run=T,TAC=100,plot=1,full.ests=F,proj.from="BUGS",lab='',g2,gR2,debug=F,dtable=T,path='',wd=''){
 	
 	y1<-years

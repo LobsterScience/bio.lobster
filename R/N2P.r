@@ -1,4 +1,5 @@
 # Converts Length Frequency matrix/matrices from numbers to proportions
+#' @export
 
 N2P<-function(LF){
 	pLF<-list()

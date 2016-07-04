@@ -1,3 +1,4 @@
+#' @export
 setupDepletionData<-function(lfa='34'){
 
 	loadfunctions('lobster')

@@ -5,7 +5,7 @@
 #' @note Make sure you run the lobster.db('logs.redo') to get the up to date data. Need to check fishing season dates as a appropriate filter.
 #' @seealso lobster.db('logs.redo')
 #' @author Brad Hubley & Adam Cook
-
+#' @export
 LobsterLogsProcess<-function(bumpup=F){
 
 	options(stringsAsFactors=F)
