@@ -1,6 +1,6 @@
 #' @title nefsc.db
 #' @description Pulls the offshore lobster data from NEFSC trawl surveys
-#' @param \code{DS} = the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with \code{.redo}) or loaded as \code{uscat},\code{usdet},\code{usinf},\code{usstrata.area}
+#' @param \code{DS} :the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with \code{.redo}) or loaded as \code{uscat},\code{usdet},\code{usinf},\code{usstrata.area}
 #' @return saves or loads .rdata objects named \code{usinf}, \code{usdet}, \code{uscat}, \code{usstrat.area}
 #' @examples
 #' require(devtools)
@@ -8,7 +8,7 @@
 #' nefsc.db(DS = 'odbc.dump.redo')
 #' @author  Adam Cook, \email{Adam.Cook@@dfo-mpo.gc.ca}
 #' @export
-
+''
 nefsc.db <- function(DS  = 'odbc.dump.redo'){
     fn.root =  file.path( project.datadirectory("bio.lobster"), "data") 
     fnODBC  =  file.path(fn.root, "ODBCDump")
@@ -104,6 +104,14 @@ options(scipen=999)  # this avoids scientific notation
         }
 
         strata.area = sqlQuery(channel,paste("select * from groundfish.gsstratum where strat like '01%' ;"))
+
+        strata.area$CanadaOnly = 0
+        strata.area$CanadaOnly[which(strata.area$STRATA==1160)] = 0.5211409 #proportion of strata in Canada
+        strata.area$CanadaOnly[which(strata.area$STRATA==1170)] = 0.7888889 #proportion of strata in Canada
+        strata.area$CanadaOnly[which(strata.area$STRATA==1180)] = 0.7383721 #proportion of strata in Canada
+		strata.area$CanadaOnly[which(strata.area$STRATA==1210)] = 0.4952830 #proportion of strata in Canada
+		strata.area$CanadaOnly[which(strata.area$STRATA==1220)] = 0.2753304 #proportion of strata in Canada
+		strata.area$USOnly = 1 - strata.area$CanadaOnly 
         save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
         }
 odbcCloseAll()

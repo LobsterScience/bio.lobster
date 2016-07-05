@@ -1,11 +1,11 @@
 #' @export
-GroundfishSurveyProcess<-function(size.range=c(0,220),Sex = NULL, Strata=c(485,490,495),Years=1976:2014,bin.size=5,Lengths=F){
-
+GroundfishSurveyProcess<-function(size.range=c(0,220),Sex = NULL, Strata=c(485,490,495),Years=1976:2014,bin.size=5,Lengths=F,series = c('summer')){
+  print('make sure your strata match the series you choose--')
   nbins<-length(seq(size.range[1],size.range[2],bin.size))-1
   p<-list()
   p$init.files = c(loadfunctions( "groundfish", functionname="load.groundfish.environment.r"), loadfunctions('BIOsurvey')) 
   p$strat = Strata
-  p$series = c('summer')# p$series =c('4vswcod');p$series =c('georges')
+  p$series = series# p$series =c('4vswcod');p$series =c('georges')
   p$years.to.estimate = Years
   p$species = 2550
   p$vessel.correction = T
