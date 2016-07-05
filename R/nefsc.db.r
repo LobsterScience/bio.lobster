@@ -1,6 +1,7 @@
 #' @title nefsc.db
 #' @description Pulls the offshore lobster data from NEFSC trawl surveys
 #' @param \code{DS} :the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with \code{.redo}) or loaded as \code{uscat},\code{usdet},\code{usinf},\code{usstrata.area}
+#' @param \code{fn.root} : specify the location of data saves, default is null and uses the project.datadirectory function as default
 #' @return saves or loads .rdata objects named \code{usinf}, \code{usdet}, \code{uscat}, \code{usstrat.area}
 #' @examples
 #' require(devtools)
@@ -8,7 +9,7 @@
 #' nefsc.db(DS = 'odbc.dump.redo')
 #' @author  Adam Cook, \email{Adam.Cook@@dfo-mpo.gc.ca}
 #' @export
-''
+
 nefsc.db <- function(DS  = 'odbc.dump.redo', fn.root=NULL){
     if(is.null(fn.root)) fn.root =  file.path( project.datadirectory("bio.lobster"), "data") 
     fnODBC  =  file.path(fn.root, "ODBCDump")

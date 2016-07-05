@@ -4,10 +4,12 @@
 \alias{nefsc.db}
 \title{nefsc.db}
 \usage{
-nefsc.db(DS = "odbc.dump.redo")
+nefsc.db(DS = "odbc.dump.redo", fn.root = NULL)
 }
 \arguments{
-\item{\code{DS}}{= the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with \code{.redo}) or loaded as \code{uscat},\code{usdet},\code{usinf},\code{usstrata.area}}
+\item{\code{DS}}{:the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with \code{.redo}) or loaded as \code{uscat},\code{usdet},\code{usinf},\code{usstrata.area}}
+
+\item{\code{fn.root}}{: specify the location of data saves, default is null and uses the project.datadirectory function as default}
 }
 \value{
 saves or loads .rdata objects named \code{usinf}, \code{usdet}, \code{uscat}, \code{usstrat.area}
