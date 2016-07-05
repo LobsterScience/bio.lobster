@@ -11,8 +11,13 @@
 #' @export
 
 nefsc.db <- function(DS  = 'odbc.dump.redo', fn.root=NULL){
-    if(is.null(fn.root)) fn.root =  file.path( project.datadirectory("bio.lobster"), "data") 
+
+    if(is.null(fn.root)) {fn.root =  file.path( project.datadirectory("bio.lobster"), "data") }
     fnODBC  =  file.path(fn.root, "ODBCDump")
+
+    dir.create( fn.root, recursive = TRUE, showWarnings = FALSE )
+    dir.create( fnODBC, recursive = TRUE, showWarnings = FALSE )
+
 
 if(grepl('redo',DS)) channel = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
 
@@ -27,10 +32,10 @@ options(scipen=999)  # this avoids scientific notation
                       nefsc.dn(DS = 'usstrata.area')        
                       return('Done')
                        }
-                  nefsc.db(DS = 'uscat.redo')        
-                  nefsc.db(DS = 'usinf.redo')        
-                  nefsc.db(DS = 'usdet.redo')        
-                  nefsc.dn(DS = 'usstrata.area.redo')        
+                  nefsc.db(DS = 'uscat.redo',fn.root)        
+                  nefsc.db(DS = 'usinf.redo',fn.root)        
+                  nefsc.db(DS = 'usdet.redo',fn.root)        
+                  nefsc.db(DS = 'usstrata.area.redo',fn.root)        
                   
                 }
 
@@ -107,11 +112,11 @@ options(scipen=999)  # this avoids scientific notation
         strata.area = sqlQuery(channel,paste("select * from groundfish.gsstratum where strat like '01%' ;"))
 
         strata.area$CanadaOnly = 0
-        strata.area$CanadaOnly[which(strata.area$STRATA==1160)] = 0.5211409 #proportion of strata in Canada
-        strata.area$CanadaOnly[which(strata.area$STRATA==1170)] = 0.7888889 #proportion of strata in Canada
-        strata.area$CanadaOnly[which(strata.area$STRATA==1180)] = 0.7383721 #proportion of strata in Canada
-		strata.area$CanadaOnly[which(strata.area$STRATA==1210)] = 0.4952830 #proportion of strata in Canada
-		strata.area$CanadaOnly[which(strata.area$STRATA==1220)] = 0.2753304 #proportion of strata in Canada
+        strata.area$CanadaOnly[which(strata.area$STRAT==1160)] = 0.5211409 #proportion of strata in Canada
+        strata.area$CanadaOnly[which(strata.area$STRAT==1170)] = 0.7888889 #proportion of strata in Canada
+        strata.area$CanadaOnly[which(strata.area$STRAT==1180)] = 0.7383721 #proportion of strata in Canada
+		strata.area$CanadaOnly[which(strata.area$STRAT==1210)] = 0.4952830 #proportion of strata in Canada
+		strata.area$CanadaOnly[which(strata.area$STRAT==1220)] = 0.2753304 #proportion of strata in Canada
 		strata.area$USOnly = 1 - strata.area$CanadaOnly 
         save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
         }
