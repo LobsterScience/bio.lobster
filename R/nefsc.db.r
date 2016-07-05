@@ -9,8 +9,8 @@
 #' @author  Adam Cook, \email{Adam.Cook@@dfo-mpo.gc.ca}
 #' @export
 ''
-nefsc.db <- function(DS  = 'odbc.dump.redo'){
-    fn.root =  file.path( project.datadirectory("bio.lobster"), "data") 
+nefsc.db <- function(DS  = 'odbc.dump.redo', fn.root=NULL){
+    if(is.null(fn.root)) fn.root =  file.path( project.datadirectory("bio.lobster"), "data") 
     fnODBC  =  file.path(fn.root, "ODBCDump")
 
 if(grepl('redo',DS)) channel = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
