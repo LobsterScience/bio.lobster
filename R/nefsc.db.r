@@ -29,7 +29,7 @@ options(scipen=999)  # this avoids scientific notation
                       nefsc.db(DS = 'uscat')        
                       nefsc.db(DS = 'usinf')        
                       nefsc.db(DS = 'usdet')        
-                      nefsc.dn(DS = 'usstrata.area')        
+                      nefsc.db(DS = 'usstrata.area')        
                       return('Done')
                        }
                   nefsc.db(DS = 'uscat.redo',fn.root)        
@@ -63,13 +63,30 @@ options(scipen=999)  # this avoids scientific notation
         load(file = file.path(fnODBC, 'usnefsc.inf.rdata'))
         return(usinf)
       } 
+       			#10=  NEST
+                #11 = '36 YANKEE TRAWL'
+                #41 = Mod. 41 Yankee Trawl (Accepted Code)
+                #45 = Mod. 41 Yankee Trawl (Erroneously Coded on Several Cruises)
+
+               
                   usinf = sqlQuery(channel,paste("SELECT *
                     FROM USNEFSC.USS_STATION 
                     where to_number(SHG) <= 136
-                    and stratum like '01%'"))
+                    and stratum like '01%' and svgear in (10,11,41,45) and GEARCOND in (1,2,3) and haul in (1,2) and statype = 1"))
                     names(usinf)[1] = 'MISSION'
                     save(usinf, file = file.path(fnODBC, 'usnefsc.inf.rdata'))
   }
+
+  if(DS %in% c('usinf.clean','usinf.clean.redo')) {
+
+  				inf = nefsc.db(DS = 'usinf')
+  				inf$X = (inf$DECDEG_ENDLON + inf$DECDEG_BEGLON)/2
+				inf$Y = (inf$DECDEG_ENDLAT + inf$DECDEG_BEGLAT)/2
+  				vars2keep = c('MISSION','CRUISE','STRATUM','TOW','STATION','STATUS_CODE','ID','AREA','SVVESSEL','CRUNUM','SVGEAR','BEGIN_GMT_TOWDATE','END_GMT_TOWDATE','GMT_YEAR','GMT_MONTH','GMT_DAY','TOWDUR','AVGDEPTH','BOTTEMP','BOTSALIN','X','Y')
+  				inf = inf[,vars2keep]
+  				
+  }
+
 
   if(DS %in% c('usdet','usdet.redo')) {
 
