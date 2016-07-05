@@ -7,15 +7,14 @@ p = bio.lobster::load.environment()
 
 
 # 
-    
-loadfunctions( "lobster", functionname="initialise.local.environment.r") 
+   
 
 ##### lumped function lobster.db
 #be sure to update current.assessment.year.r 
 
 p$yrs = 1947:p$current.assessment.year
 
-        # run in windows emvironment
+        # run in windows environment
         if(redo.all) lobster.db(DS="complete.redo")
         
         lobster.db( DS = "logs.redo",    p=p)        # Inshore logs summary documents
@@ -50,6 +49,9 @@ p$yrs = 1947:p$current.assessment.year
         lobster.db( DS = 'annual.landings', p=p) #static annual landings tabke needs to be updated by CDenton
         lobster.db( DS = 'seasonal.landings', p=p) #static seasonal landings table needs to be updated by CDenton
 
+     #American Trawl Survey Results
+
+        nefsc.db( DS = 'usinf',fn.root = NULL)
 
 
 #### Data Processing
