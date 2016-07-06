@@ -10,7 +10,7 @@
 #' @author  Adam Cook, \email{Adam.Cook@@dfo-mpo.gc.ca}
 #' @export
 
-nefsc.db <- function(DS  = 'odbc.dump.redo', fn.root=NULL){
+nefsc.db <- function(DS  = 'odbc.dump.redo', fn.root=NULL,p=p){
 
     if(is.null(fn.root)) {fn.root =  file.path( project.datadirectory("bio.lobster"), "data") }
     fnODBC  =  file.path(fn.root, "ODBCDump")
@@ -19,7 +19,7 @@ nefsc.db <- function(DS  = 'odbc.dump.redo', fn.root=NULL){
     dir.create( fnODBC, recursive = TRUE, showWarnings = FALSE )
 
 
-if(grepl('redo',DS)) channel = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+if(grepl('redo.odbc',DS)) channel = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
 
 options(stringsAsFactors = FALSE) #necessary?
 options(scipen=999)  # this avoids scientific notation
@@ -32,15 +32,59 @@ options(scipen=999)  # this avoids scientific notation
                       nefsc.db(DS = 'usstrata.area')        
                       return('Done')
                        }
-                  nefsc.db(DS = 'uscat.redo',fn.root)        
-                  nefsc.db(DS = 'usinf.redo',fn.root)        
-                  nefsc.db(DS = 'usdet.redo',fn.root)        
-                  nefsc.db(DS = 'usstrata.area.redo',fn.root)        
+                  nefsc.db(DS = 'uscat.redo.odbc',fn.root)        
+                  nefsc.db(DS = 'usinf.redo.odbc',fn.root)        
+                  nefsc.db(DS = 'usdet.redo.odbc',fn.root)        
+                  nefsc.db(DS = 'usstrata.area.redo.odbc',fn.root)        
                   
                 }
 
 
-  if(DS %in% c('uscat', 'uscat.redo')) {
+  if(DS %in% c('usinf', 'usinf.redo.odbc')) {
+      if(DS == 'usinf') {
+
+        load(file = file.path(fnODBC, 'usnefsc.inf.rdata'))
+        return(usinf)
+      } 
+       			#10=  NEST
+                #11 = '36 YANKEE TRAWL'
+                #41 = Mod. 41 Yankee Trawl (Accepted Code)
+                #45 = Mod. 41 Yankee Trawl (Erroneously Coded on Several Cruises)
+              
+                  usinf = sqlQuery(channel,paste("SELECT *
+                    FROM USNEFSC.USS_STATION 
+                    where to_number(SHG) <= 136
+                    and stratum like '01%' and svgear in (10,11,41,45) and GEARCOND in (1,2,3) and haul in (1,2) and statype = 1"))
+                    names(usinf)[1] = 'MISSION'
+                    save(usinf, file = file.path(fnODBC, 'usnefsc.inf.rdata'))
+
+  }
+
+ if(DS %in% c('usinf.clean','usinf.clean.redo')) {
+  				if(DS == 'usinf.clean') {
+					load(file = file.path(fn.root, 'usnefsc.inf.clean.rdata'))
+					print('Returning inf')
+					return(inf)
+
+  				}
+
+  				inf = nefsc.db(DS = 'usinf')
+  				inf$X = (inf$DECDEG_ENDLON + inf$DECDEG_BEGLON)/2
+				inf$Y = (inf$DECDEG_ENDLAT + inf$DECDEG_BEGLAT)/2
+				vars2keep = c('MISSION','CRUISE','STRATUM','TOW','STATION','STATUS_CODE','ID','AREA','SVVESSEL','CRUNUM','SVGEAR','BEGIN_GMT_TOWDATE','GMT_YEAR','GMT_MONTH','GMT_DAY','TOWDUR','AVGDEPTH','BOTTEMP','BOTSALIN','DOPDISTB')
+  				inf = inf[,vars2keep]
+  				inf$DIST = inf$DOPDISTB
+  				inf$SEASON = recode(inf$GMT_MONTH,"2='Spring';3='Spring';4='Spring';5='Spring';9='Fall';10='Fall';11='Fall';12='Fall'")
+				i = which(inf$SEASON %in% c('Spring','Fall'))
+  				inf = inf[i,]
+  				inf = lonlat2planar(inf,input_names=c('X','Y'),proj.type=p$nefsc.internal.projection)
+				inf$ID = paste(inf$MISSION, inf$STATION, sep=".")
+			save(inf, file = file.path(fn.root, 'usnefsc.inf.clean.rdata'))
+  				}
+
+
+
+  if(DS %in% c('uscat', 'uscat.redo.odbc')) {
       if(DS == 'uscat') {
         
           load(file = file.path(fnODBC, 'usnefsc.catch.rdata'))
@@ -57,38 +101,22 @@ options(scipen=999)  # this avoids scientific notation
 
         }
 
-  if(DS %in% c('usinf', 'usinf.redo')) {
-      if(DS == 'usinf') {
+   if(DS %in% c('uscat.clean','usinf.cat.clean.redo')) {
+  				if(DS=='uscat.clean') {
+					load(file = file.path(fn.root, 'usnefsc.cat.clean.rdata'))
+					print('Returning cat')
+					return(cat)
 
-        load(file = file.path(fnODBC, 'usnefsc.inf.rdata'))
-        return(usinf)
-      } 
-       			#10=  NEST
-                #11 = '36 YANKEE TRAWL'
-                #41 = Mod. 41 Yankee Trawl (Accepted Code)
-                #45 = Mod. 41 Yankee Trawl (Erroneously Coded on Several Cruises)
+  				}
 
-               
-                  usinf = sqlQuery(channel,paste("SELECT *
-                    FROM USNEFSC.USS_STATION 
-                    where to_number(SHG) <= 136
-                    and stratum like '01%' and svgear in (10,11,41,45) and GEARCOND in (1,2,3) and haul in (1,2) and statype = 1"))
-                    names(usinf)[1] = 'MISSION'
-                    save(usinf, file = file.path(fnODBC, 'usnefsc.inf.rdata'))
-  }
+  				ca = nefsc.db(DS='uscat')
+  				ca$ID = paste(ca$MISSION, ca$SETNO, sep=".")
+  				inf = nefsc.db(DS='usinf.clean')
+  				unique()
 
-  if(DS %in% c('usinf.clean','usinf.clean.redo')) {
+  			}
 
-  				inf = nefsc.db(DS = 'usinf')
-  				inf$X = (inf$DECDEG_ENDLON + inf$DECDEG_BEGLON)/2
-				inf$Y = (inf$DECDEG_ENDLAT + inf$DECDEG_BEGLAT)/2
-  				vars2keep = c('MISSION','CRUISE','STRATUM','TOW','STATION','STATUS_CODE','ID','AREA','SVVESSEL','CRUNUM','SVGEAR','BEGIN_GMT_TOWDATE','END_GMT_TOWDATE','GMT_YEAR','GMT_MONTH','GMT_DAY','TOWDUR','AVGDEPTH','BOTTEMP','BOTSALIN','X','Y')
-  				inf = inf[,vars2keep]
-  				
-  }
-
-
-  if(DS %in% c('usdet','usdet.redo')) {
+  if(DS %in% c('usdet','usdet.redo.odbc')) {
 
             if(DS == 'usdet') {
             
@@ -119,7 +147,7 @@ options(scipen=999)  # this avoids scientific notation
             }
       
 
-    if(DS %in% c('usstrata.area','usstrata.area.redo')) {
+    if(DS %in% c('usstrata.area','usstrata.area.redo.odbc')) {
         if(DS == 'usstrata.area') {
           
           load(file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
