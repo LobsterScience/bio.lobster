@@ -51,8 +51,8 @@ p$yrs = 1947:p$current.assessment.year
 
      #American Trawl Survey Results
 
-        nefsc.db( DS = 'usinf.clean.redo',fn.root = NULL,p=p)
-
+      nefsc.db( DS = 'usinf.clean.redo',fn.root = NULL,p=p)
+      nefsc.db( DS = 'uscat.clean.redo',fn.root = NULL,p=p)
 
 #### Data Processing
 
