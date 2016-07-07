@@ -55,10 +55,11 @@ options(scipen=999)  # this avoids scientific notation
                     FROM USNEFSC.USS_STATION 
                     where to_number(SHG) <= 136
                     and stratum like '01%' and svgear in (10,11,41,45) and GEARCOND in (1,2,3) and haul in (1,2) and statype = 1"))
-                    names(usinf)[1] = 'MISSION'
+                    usinf = rename.df(usinf,c('CRUISE6','STATION'),c('MISSION','SETNO'))
+                    usinf$SETNO = as.numeric(usinf$SETNO)
                     save(usinf, file = file.path(fnODBC, 'usnefsc.inf.rdata'))
-
-  }
+                    odbcCloseAll()
+				}
 
  if(DS %in% c('usinf.clean','usinf.clean.redo')) {
   				if(DS == 'usinf.clean') {
@@ -71,7 +72,7 @@ options(scipen=999)  # this avoids scientific notation
   				inf = nefsc.db(DS = 'usinf')
   				inf$X = (inf$DECDEG_ENDLON + inf$DECDEG_BEGLON)/2
 				inf$Y = (inf$DECDEG_ENDLAT + inf$DECDEG_BEGLAT)/2
-				vars2keep = c('MISSION','CRUISE','STRATUM','TOW','STATION','STATUS_CODE','ID','AREA','SVVESSEL','CRUNUM','SVGEAR','BEGIN_GMT_TOWDATE','GMT_YEAR','GMT_MONTH','GMT_DAY','TOWDUR','AVGDEPTH','BOTTEMP','BOTSALIN','DOPDISTB')
+				vars2keep = c('MISSION','CRUISE','STRATUM','TOW','SETNO','STATUS_CODE','ID','AREA','SVVESSEL','CRUNUM','SVGEAR','BEGIN_GMT_TOWDATE','GMT_YEAR','GMT_MONTH','GMT_DAY','TOWDUR','AVGDEPTH','BOTTEMP','BOTSALIN','DOPDISTB','X','Y')
   				inf = inf[,vars2keep]
   				inf$DIST = inf$DOPDISTB
   				inf$SEASON = recode(inf$GMT_MONTH,"2='Spring';3='Spring';4='Spring';5='Spring';9='Fall';10='Fall';11='Fall';12='Fall'")
@@ -98,7 +99,7 @@ options(scipen=999)  # this avoids scientific notation
                                      group by cruise6, to_number(station),stratum")
 
              save(uscat, file = file.path(fnODBC, 'usnefsc.catch.rdata'))
-
+	         odbcCloseAll()
         }
 
    if(DS %in% c('uscat.clean','usinf.cat.clean.redo')) {
@@ -108,11 +109,11 @@ options(scipen=999)  # this avoids scientific notation
 					return(cat)
 
   				}
-
   				ca = nefsc.db(DS='uscat')
   				ca$ID = paste(ca$MISSION, ca$SETNO, sep=".")
-  				inf = nefsc.db(DS='usinf.clean')
-  				unique()
+  				inf   = nefsc.db(DS='usinf.clean')
+  				id    = unique(inf$ID)
+  				#merge(inf[,c('ID','STRATUM',',',ca,by=c('ID','MISSION','STRATUM'),all.x=T)]
 
   			}
 
@@ -144,6 +145,8 @@ options(scipen=999)  # this avoids scientific notation
           raw.gsdet$FLEN[is.na(raw.gsdet$FLEN)] <- raw.gsdet$LENGTH[is.na(raw.gsdet$FLEN)]
           usdet = raw.gsdet
           save(usdet, file = file.path(fnODBC, 'usnefsc.det.rdata'))
+          odbcCloseAll()
+
             }
       
 
@@ -164,8 +167,9 @@ options(scipen=999)  # this avoids scientific notation
 		strata.area$CanadaOnly[which(strata.area$STRAT==1220)] = 0.2753304 #proportion of strata in Canada
 		strata.area$USOnly = 1 - strata.area$CanadaOnly 
         save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
+        odbcCloseAll()
+
         }
-odbcCloseAll()
 }
 
 

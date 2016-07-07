@@ -17,7 +17,7 @@ p$yrs = 1947:p$current.assessment.year
         # run in windows environment
         if(redo.all) lobster.db(DS="complete.redo")
         
-        lobster.db( DS = "logs.redo",    p=p)        # Inshore logs summary documents
+        lobster.db( DS ="logs.redo",    p=p)        # Inshore logs summary documents
         lobster.db( DS = "logs41.redo",  p=p)   # Offshore logs monitoring documents
         lobster.db( DS = "atSea.redo",   p=p)        # at Sea sampling from materialized view
         lobster.db( DS = "cris.redo",    p=p)     # CRIS database
@@ -29,7 +29,7 @@ p$yrs = 1947:p$current.assessment.year
         lobster.db( DS = 'annual.landings.redo', p=p) #static annual landings tabke needs to be updated by CDenton
         lobster.db( DS = 'seasonal.landings.redo', p=p) #static seasonal landings table needs to be updated by CDenton
         lobster.db( DS = "lfa41.vms.redo")
-        nefsc.db( DS = 'odbc.dump.redo',fn.root = file.path(project.datadirectory('lobster'),'data'))
+        nefsc.db( DS = 'odbc.dump.redo',fn.root = file.path(project.datadirectory('lobster'),'data'),p=p)
 
     #process log book data
 
@@ -51,7 +51,7 @@ p$yrs = 1947:p$current.assessment.year
 
      #American Trawl Survey Results
 
-        nefsc.db( DS = 'usinf',fn.root = NULL)
+        nefsc.db( DS = 'usinf.clean.redo',fn.root = NULL,p=p)
 
 
 #### Data Processing
