@@ -54,7 +54,7 @@ options(scipen=999)  # this avoids scientific notation
                   usinf = sqlQuery(channel,paste("SELECT *
                     FROM USNEFSC.USS_STATION 
                     where to_number(SHG) <= 136
-                    and stratum like '01%' and svgear in (10,11,41,45) and GEARCOND in (1,2,3) and haul in (1,2) and statype = 1"))
+                    and stratum like '01%' and svgear in (10,11,41,45)  and gmt_year>=1968")) #Burton Shank suggests 1969 on is fine
                     usinf = rename.df(usinf,c('CRUISE6','STATION'),c('MISSION','SETNO'))
                     usinf$SETNO = as.numeric(usinf$SETNO)
                     save(usinf, file = file.path(fnODBC, 'usnefsc.inf.rdata'))
@@ -72,14 +72,41 @@ options(scipen=999)  # this avoids scientific notation
   				inf = nefsc.db(DS = 'usinf')
   				inf$X = (inf$DECDEG_ENDLON + inf$DECDEG_BEGLON)/2
 				inf$Y = (inf$DECDEG_ENDLAT + inf$DECDEG_BEGLAT)/2
+				i = which(is.na(inf$X))
+				inf$Y[i] = inf$DECDEG_BEGLAT[i]
+				inf$X[i] = inf$DECDEG_BEGLON[i]
 				vars2keep = c('MISSION','CRUISE','STRATUM','TOW','SETNO','STATUS_CODE','ID','AREA','SVVESSEL','CRUNUM','SVGEAR','BEGIN_GMT_TOWDATE','GMT_YEAR','GMT_MONTH','GMT_DAY','TOWDUR','AVGDEPTH','BOTTEMP','BOTSALIN','DOPDISTB','X','Y')
   				inf = inf[,vars2keep]
   				inf$DIST = inf$DOPDISTB
+
+  				sV = unique(inf$SVVESSEL)
+  				inf1 = NULL
+  				
+  				#dealing with crazy tow distances 
+  				
+  				for(v in sV) {
+  						if(v=='AL') {qb = c(0.05, 0.95)}
+  						if(v=='DE') {qb = c(0.1, 0.95)}
+  						if(v=='HB') {qb = c(0.005, 0.995)}
+
+  						u = subset(inf,SVVESSEL == v)
+  						ui = completeFun(u,c('DIST','TOWDUR'))
+  						o = lm(DIST~TOWDUR, data=ui)
+  						i = which.quantile(o$residuals,qb,inside=F)
+  						iid = ui$ID[i]
+  						u[which(u$ID %in% iid),'DIST'] <- NA
+  						ui$DIST[i] <- NA
+  						oi = lm(DIST~TOWDUR, data=ui)
+  						uD = data.frame(ID = u$ID, DIST= predict(oi,newdata=data.frame(TOWDUR = u$TOWDUR)))
+  						u = fillNaDf2(u, uD, mergeCols='ID',fillCols = 'DIST')
+  						inf1 = rbind(inf1,u)
+  						}
+  				inf = inf1
   				inf$SEASON = recode(inf$GMT_MONTH,"2='Spring';3='Spring';4='Spring';5='Spring';9='Fall';10='Fall';11='Fall';12='Fall'")
 				i = which(inf$SEASON %in% c('Spring','Fall'))
   				inf = inf[i,]
   				inf = lonlat2planar(inf,input_names=c('X','Y'),proj.type=p$nefsc.internal.projection)
-				inf$ID = paste(inf$MISSION, inf$STATION, sep=".")
+				inf$ID = paste(inf$MISSION, inf$SETNO, sep=".")
 			save(inf, file = file.path(fn.root, 'usnefsc.inf.clean.rdata'))
   				}
 
@@ -102,20 +129,27 @@ options(scipen=999)  # this avoids scientific notation
 	         odbcCloseAll()
         }
 
-   if(DS %in% c('uscat.clean','usinf.cat.clean.redo')) {
+   if(DS %in% c('uscat.clean','uscat.clean.redo')) {
   				if(DS=='uscat.clean') {
 					load(file = file.path(fn.root, 'usnefsc.cat.clean.rdata'))
 					print('Returning cat')
-					return(cat)
+					return(cainf)
 
   				}
   				ca = nefsc.db(DS='uscat')
   				ca$ID = paste(ca$MISSION, ca$SETNO, sep=".")
   				inf   = nefsc.db(DS='usinf.clean')
   				id    = unique(inf$ID)
-  				#merge(inf[,c('ID','STRATUM',',',ca,by=c('ID','MISSION','STRATUM'),all.x=T)]
+  				cainf = merge(inf,ca,by=c('ID','MISSION','STRATUM','SETNO'),all.x=T)
+  				cainf[,c('TOTWGT','SAMPWGT','TOTNO','CALWT')] <- na.zero(cainf[,c('TOTWGT','SAMPWGT','TOTNO','CALWT')])
+  				i = which(is.na(cainf$SIZE_CLASS))
+  				cainf$SIZE_CLASS[i] = 1
 
+  				save(cainf,file=file.path(fn.root, 'usnefsc.cat.clean.rdata'))
+				
   			}
+
+
 
   if(DS %in% c('usdet','usdet.redo.odbc')) {
 
