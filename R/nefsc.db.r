@@ -171,7 +171,7 @@ options(scipen=999)  # this avoids scientific notation
                 sum(expnumlen) clen, 1 size_class
                 from usnefsc.uss_lengths
                 where to_number(svspp)=301
-                and catchsex in ('0','1','2','3')
+                and catchsex in ('0','1','2','3','4','5')
                 and stratum like '01%'
                 group by cruise6,stratum,station,length, catchsex",sep=""))
             
@@ -194,6 +194,12 @@ options(scipen=999)  # this avoids scientific notation
                de = nefsc.db(DS = 'usdet')
                de$LENGTH = de$LENGTH*10 #to mm
 			   de$FWT    = de$FWT*1000 #to g
+			   de = de[which(de$LENGTH<300),]
+			   de = de[which(de$FWT<8500),]
+
+			   de$FSEX = recode(de$FSEX,"0=0; 1=1; 2=2; 3=3; 4=2; 5=3")
+
+			   nls(FWT~a*LENGTH^b,data=de,start=list(a=0.001,b=3))
 
 
             }
