@@ -3,7 +3,7 @@
 load.environment <- function(){
    p = list()
     p$project.name = "bio.lobster"
-    p$libs = RLibrary( c( 'rgdal',"geosphere", "chron", "lubridate", "parallel","sp","PBSmapping","RColorBrewer" ,'lattice','MASS','doBy','RODBC','bio.polygons','bio.groundfish','bio.utilities','bio.survey')  )
+    p$libs = RLibrary( c( 'rgdal',"geosphere", "chron", "lubridate", "parallel","sp","PBSmapping","RColorBrewer" ,'lattice','MASS','doBy','bio.polygons','bio.groundfish','bio.utilities','bio.survey','bio.spacetime')  )
       
       p$current.assessment.year=2016
 
