@@ -19,7 +19,7 @@ nefsc.db <- function(DS  = 'odbc.dump.redo', fn.root=NULL,p=p){
     dir.create( fnODBC, recursive = TRUE, showWarnings = FALSE )
 
 
-if(grepl('redo.odbc',DS)) channel = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+if(grepl('redo.odbc',DS)) { require(RODBC); channel = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F)} # believeNRows=F required for oracle db's
 
 options(stringsAsFactors = FALSE) #necessary?
 options(scipen=999)  # this avoids scientific notation
@@ -175,13 +175,30 @@ options(scipen=999)  # this avoids scientific notation
                 and stratum like '01%'
                 group by cruise6,stratum,station,length, catchsex",sep=""))
             
-          raw.gsdet<-merge(raw.gsdet,raw.lf, all.x=T) 
+          raw.gsdet<-merge(raw.lf, raw.gsdet, all.x=T) 
           raw.gsdet$FLEN[is.na(raw.gsdet$FLEN)] <- raw.gsdet$LENGTH[is.na(raw.gsdet$FLEN)]
           usdet = raw.gsdet
           save(usdet, file = file.path(fnODBC, 'usnefsc.det.rdata'))
           odbcCloseAll()
 
             }
+
+
+  if(DS %in% c('usdet.clean','usdet.clean.redo')) {
+
+            if(DS == 'usdet.clean') {
+                   load(file = file.path(fnroot, 'usnefsc.det..clean.rdata'))
+                   return(usdet)
+            
+                }
+               de = nefsc.db(DS = 'usdet')
+               de$LENGTH = de$LENGTH*10 #to mm
+			   de$FWT    = de$FWT*1000 #to g
+
+
+            }
+
+
       
 
     if(DS %in% c('usstrata.area','usstrata.area.redo.odbc')) {
