@@ -4,7 +4,7 @@
 \alias{nefsc.db}
 \title{nefsc.db}
 \usage{
-nefsc.db(DS = "odbc.dump.redo", fn.root = NULL)
+nefsc.db(DS = "odbc.dump.redo", fn.root = NULL, p = p)
 }
 \arguments{
 \item{\code{DS}}{:the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with \code{.redo}) or loaded as \code{uscat},\code{usdet},\code{usinf},\code{usstrata.area}}
