@@ -195,16 +195,24 @@ options(scipen=999)  # this avoids scientific notation
                de$LENGTH = de$LENGTH*10 #to mm
 			   de$FWT    = de$FWT*1000 #to g
 			   de = de[which(de$LENGTH<300),]
-			   de = de[which(de$FWT<8500),]
+			   de[which(de$FWT>8500),'FWT'] <- NA
 
-			   de$FSEX = recode(de$FSEX,"0=0; 1=1; 2=2; 3=3; 4=2; 5=3")
+			   de$FSEX = recode(de$FSEX,"0=0; 1=1; 2=2; 3=3; 4=2; 5=3") # 4 and 5 are for notched
+			   de$LEGAL = ifelse(de$FSEX<3 & de$LENGTH>82,1,0)
 
-			   nls(FWT~a*LENGTH^b,data=de,start=list(a=0.001,b=3))
-
-
-            }
-
-
+			   de1 = NULL
+			   sexes = list(1,2,3,0)
+			   #THIS IS BROKE FIXIT #AMC July72016
+			   for(i in 1:length(sexes)) {
+			   		aa = a =   subset(de,FSEX %in% sexes[[i]])
+			   		if(i==4) {aa = subset(de,FSEX %in% c(1,2))}
+	   				nab = coef(nls(FWT~a*LENGTH^b,data=aa,start=list(a=0.001,b=3)))
+			   		j = which(is.na(a$FWT))
+			   				a$FWT[j] = nab[1]*a$LENGTH[j]^nab[2]
+			   		de1 = rbind(de1,a)
+            		}
+            	de = de1
+				}
       
 
     if(DS %in% c('usstrata.area','usstrata.area.redo.odbc')) {
