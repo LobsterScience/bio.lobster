@@ -108,6 +108,7 @@ options(scipen=999)  # this avoids scientific notation
   				inf = lonlat2planar(inf,input_names=c('X','Y'),proj.type=p$nefsc.internal.projection)
 				inf$ID = paste(inf$MISSION, inf$SETNO, sep=".")
 			save(inf, file = file.path(fn.root, 'usnefsc.inf.clean.rdata'))
+			return(inf)
   				}
 
 
@@ -145,8 +146,10 @@ options(scipen=999)  # this avoids scientific notation
   				i = which(is.na(cainf$SIZE_CLASS))
   				cainf$SIZE_CLASS[i] = 1
 
+
+
   				save(cainf,file=file.path(fn.root, 'usnefsc.cat.clean.rdata'))
-				
+				return(cainf)
   			}
 
 
@@ -187,22 +190,21 @@ options(scipen=999)  # this avoids scientific notation
   if(DS %in% c('usdet.clean','usdet.clean.redo')) {
 
             if(DS == 'usdet.clean') {
-                   load(file = file.path(fnroot, 'usnefsc.det..clean.rdata'))
+                   load(file = file.path(fnroot, 'usnefsc.det.clean.rdata'))
                    return(usdet)
             
                 }
                de = nefsc.db(DS = 'usdet')
+               de$ID = paste(de$MISSION, de$SETNO, sep=".")
+               inf = nefsc.db(DS = 'usinf.clean')
                de$LENGTH = de$LENGTH*10 #to mm
 			   de$FWT    = de$FWT*1000 #to g
 			   de = de[which(de$LENGTH<300),]
 			   de[which(de$FWT>8500),'FWT'] <- NA
-
 			   de$FSEX = recode(de$FSEX,"0=0; 1=1; 2=2; 3=3; 4=2; 5=3") # 4 and 5 are for notched
 			   de$LEGAL = ifelse(de$FSEX<3 & de$LENGTH>82,1,0)
-
 			   de1 = NULL
-			   sexes = list(1,2,3,0)
-			   #THIS IS BROKE FIXIT #AMC July72016
+			   sexes = list(1,2,3,0)			 
 			   for(i in 1:length(sexes)) {
 			   		aa = a =   subset(de,FSEX %in% sexes[[i]])
 			   		if(i==4) {aa = subset(de,FSEX %in% c(1,2))}
@@ -212,6 +214,22 @@ options(scipen=999)  # this avoids scientific notation
 			   		de1 = rbind(de1,a)
             		}
             	de = de1
+            	de = merge(de, inf[,c('SVVESSEL','SVGEAR','ID')],by = 'ID') #removes some of the sets that do match the filtered sets from inf.clean use CV's were quite high below 50mm and vessel corrections were not great
+            	data(AlbatrossBigelowConv) #part of the bio.lobster Rpackage and is named 'a'
+
+            	a$Lm = a$CL * 10
+            	de$Lm = round(de$LENGTH)
+            	de = merge(de,a,by='Lm',all.x=T) 
+            	de[which(de$SVVESSEL=='HB' & de$SVGEAR==10),'rho'] <- 1 #no conversion for the bigelow
+            	de[which(is.na(de$rho)),'rho'] <- 1 #no conversion for the bigelow
+            	browser()
+            	de$CLEN = de$CLEN * de$rho
+            	print('Albatross converted to Bigelow ')
+
+
+  				save(de,file=file.path(fn.root, 'usnefsc.det.clean.rdata'))
+				return(de)
+
 				}
       
 
