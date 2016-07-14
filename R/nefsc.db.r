@@ -170,7 +170,7 @@ options(scipen=999)  # this avoids scientific notation
 				o = which(cainf$SVGEAR == 41)
 				cainf$TOTNO[o] = cainf$TOTNO[o]* 36/41
 				cainf$TOTWGT[o] = cainf$TOTWGT[o]* 36/41
-				print('All catches are now in Bigelow Equivalents')
+				print('All catches are now in Bigelow Equivalents; implying that 13m wingspread can be used for all swept area calculations')
  
  				vars2keep = c('ID','MISSION','STRATUM','SETNO','CRUISE','BEGIN_GMT_TOWDATE','GMT_YEAR','AVGDEPTH','BOTTEMP','BOTSALIN','X','Y','DIST','DISTCORRECTION','SEASON','plon','plat','TOTWGT','TOTNO','CALWT','SUBSAMPLE')
   				cainf = cainf[,vars2keep]
@@ -269,11 +269,41 @@ options(scipen=999)  # this avoids scientific notation
 
         strata.area$CanadaOnly = 0
         strata.area$CanadaOnly[which(strata.area$STRAT==1160)] = 0.5211409 #proportion of strata in Canada
-        strata.area$CanadaOnly[which(strata.area$STRAT==1170)] = 0.7888889 #proportion of strata in Canada
-        strata.area$CanadaOnly[which(strata.area$STRAT==1180)] = 0.7383721 #proportion of strata in Canada
-		strata.area$CanadaOnly[which(strata.area$STRAT==1210)] = 0.4952830 #proportion of strata in Canada
-		strata.area$CanadaOnly[which(strata.area$STRAT==1220)] = 0.2753304 #proportion of strata in Canada
+        strata.area$CanadaOnly[which(strata.area$STRAT==1170)] = 0.7888889 
+        strata.area$CanadaOnly[which(strata.area$STRAT==1180)] = 0.7383721 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1210)] = 0.4952830 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1220)] = 0.2753304 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1352)] = 1 		   
+        strata.area$CanadaOnly[which(strata.area$STRAT==1351)] = 0.9609808 
+        strata.area$CanadaOnly[which(strata.area$STRAT==1360)] = 0.4055799 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1330)] = 1         
+		strata.area$CanadaOnly[which(strata.area$STRAT==1340)] = 0.9541892 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1310)] = 1         
+        strata.area$CanadaOnly[which(strata.area$STRAT==1320)] = 1         
+		strata.area$CanadaOnly[which(strata.area$STRAT==1330)] = 1         
+		strata.area$CanadaOnly[which(strata.area$STRAT==1290)] = 0.4669688 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1300)] = 0.8799349 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1200)] = 0.0007818 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1190)] = 0.0009412 
+		
+
+		strata.area$LFA41 = 0
+        strata.area$LFA41[which(strata.area$STRAT==1160)] = 0.5211409 #proportion of strata in Canada
+        strata.area$LFA41[which(strata.area$STRAT==1170)] = 0.7888889 
+        strata.area$LFA41[which(strata.area$STRAT==1180)] = 0.7383721 
+		strata.area$LFA41[which(strata.area$STRAT==1210)] = 0.4952830 
+		strata.area$LFA41[which(strata.area$STRAT==1220)] = 0.2753304 
+		strata.area$LFA41[which(strata.area$STRAT==1360)] = 0.2922712
+		strata.area$LFA41[which(strata.area$STRAT==1340)] = 0.0105999
+		strata.area$LFA41[which(strata.area$STRAT==1310)] = 0.1597051         
+        strata.area$LFA41[which(strata.area$STRAT==1290)] = 0.3842528
+		strata.area$LFA41[which(strata.area$STRAT==1300)] = 0.8799349 
+		strata.area$LFA41[which(strata.area$STRAT==1200)] = 0.0005209 
+		strata.area$LFA41[which(strata.area$STRAT==1190)] = 0.0006892
+
 		strata.area$USOnly = 1 - strata.area$CanadaOnly 
+
+
         save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
         odbcCloseAll()
 
