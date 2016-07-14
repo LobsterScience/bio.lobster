@@ -146,8 +146,10 @@ options(scipen=999)  # this avoids scientific notation
   				i = which(is.na(cainf$SIZE_CLASS))
   				cainf$SIZE_CLASS[i] = 1
 
-
-
+  				de = nefsc.db('usdet.clean.redo') # to adjust the catch rates for size based catchability
+  				dea = aggregate(cbind(CLEN,CLEN*FWT)~ID,data=de,FUN=sum)
+  				names(dea)[2:3] = c('TOTNO','TOTWGT')
+  				ca = merge(ca,dea,by='ID',all.x=T)
   				save(cainf,file=file.path(fn.root, 'usnefsc.cat.clean.rdata'))
 				return(cainf)
   			}
@@ -206,12 +208,12 @@ options(scipen=999)  # this avoids scientific notation
 			   de1 = NULL
 			   sexes = list(1,2,3,0)			 
 			   for(i in 1:length(sexes)) {
-			   		aa = a =   subset(de,FSEX %in% sexes[[i]])
+			   		aa = b =   subset(de,FSEX %in% sexes[[i]])
 			   		if(i==4) {aa = subset(de,FSEX %in% c(1,2))}
 	   				nab = coef(nls(FWT~a*LENGTH^b,data=aa,start=list(a=0.001,b=3)))
-			   		j = which(is.na(a$FWT))
-			   				a$FWT[j] = nab[1]*a$LENGTH[j]^nab[2]
-			   		de1 = rbind(de1,a)
+			   		j = which(is.na(b$FWT))
+			   				b$FWT[j] = nab[1]*b$LENGTH[j]^nab[2]
+			   		de1 = rbind(de1,b)
             		}
             	de = de1
             	de = merge(de, inf[,c('SVVESSEL','SVGEAR','ID')],by = 'ID') #removes some of the sets that do match the filtered sets from inf.clean use CV's were quite high below 50mm and vessel corrections were not great
@@ -222,7 +224,6 @@ options(scipen=999)  # this avoids scientific notation
             	de = merge(de,a,by='Lm',all.x=T) 
             	de[which(de$SVVESSEL=='HB' & de$SVGEAR==10),'rho'] <- 1 #no conversion for the bigelow
             	de[which(is.na(de$rho)),'rho'] <- 1 #no conversion for the bigelow
-            	browser()
             	de$CLEN = de$CLEN * de$rho
             	print('Albatross converted to Bigelow ')
 
