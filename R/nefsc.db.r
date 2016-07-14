@@ -1,6 +1,6 @@
 #' @title nefsc.db
 #' @description Pulls the offshore lobster data from NEFSC trawl surveys
-#' @param \code{DS} :the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with \code{.redo}) or loaded as \code{uscat},\code{usdet},\code{usinf},\code{usstrata.area}
+#' @param \code{DS} :the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with \code{.redo}) or loaded as \code{uscat},\code{usdet},\code{usinf},\code{usstrata.area}. Running any of the previous with the .clean arguement will clean up data, take care of vessel conversions and make it ready for further analysis
 #' @param \code{fn.root} : specify the location of data saves, default is null and uses the project.datadirectory function as default
 #' @return saves or loads .rdata objects named \code{usinf}, \code{usdet}, \code{uscat}, \code{usstrat.area}
 #' @examples
@@ -64,7 +64,6 @@ options(scipen=999)  # this avoids scientific notation
  if(DS %in% c('usinf.clean','usinf.clean.redo')) {
   				if(DS == 'usinf.clean') {
 					load(file = file.path(fn.root, 'usnefsc.inf.clean.rdata'))
-					print('Returning inf')
 					return(inf)
 
   				}
@@ -137,7 +136,6 @@ options(scipen=999)  # this avoids scientific notation
    if(DS %in% c('uscat.clean','uscat.clean.redo')) {
   				if(DS=='uscat.clean') {
 					load(file = file.path(fn.root, 'usnefsc.cat.clean.rdata'))
-					print('Returning cat')
 					return(cainf)
 
   				}
@@ -166,8 +164,16 @@ options(scipen=999)  # this avoids scientific notation
   				cainf$TOTNO = cainf$SAMPNO / cainf$SUBSAMPLE
   				cainf$TOTWGT = cainf$SAMPWGT / cainf$SUBSAMPLE
 
+  				cainf$TOTNO = cainf$TOTNO / cainf$DISTCORRECTION
+				cainf$TOTWGT = cainf$TOTWGT / cainf$DISTCORRECTION  
 
-  				
+				o = which(cainf$SVGEAR == 41)
+				cainf$TOTNO[o] = cainf$TOTNO[o]* 36/41
+				cainf$TOTWGT[o] = cainf$TOTWGT[o]* 36/41
+				print('All catches are now in Bigelow Equivalents')
+ 
+ 				vars2keep = c('ID','MISSION','STRATUM','SETNO','CRUISE','BEGIN_GMT_TOWDATE','GMT_YEAR','AVGDEPTH','BOTTEMP','BOTSALIN','X','Y','DIST','DISTCORRECTION','SEASON','plon','plat','TOTWGT','TOTNO','CALWT','SUBSAMPLE')
+  				cainf = cainf[,vars2keep]
   				save(cainf,file=file.path(fn.root, 'usnefsc.cat.clean.rdata'))
 				return(cainf)
   			}
@@ -243,7 +249,7 @@ options(scipen=999)  # this avoids scientific notation
             	de[which(de$SVVESSEL=='HB' & de$SVGEAR==10),'rho'] <- 1 #no conversion for the bigelow
             	de[which(is.na(de$rho)),'rho'] <- 1 #no conversion for the bigelow
             	de$CLEN = de$CLEN * de$rho
-            	print('Albatross converted to Bigelow ')
+            	
 
 
   				save(de,file=file.path(fn.root, 'usnefsc.det.clean.rdata'))
