@@ -99,6 +99,8 @@ options(scipen=999)  # this avoids scientific notation
   						oi = lm(DIST~TOWDUR, data=ui)
   						uD = data.frame(ID = u$ID, DIST= predict(oi,newdata=data.frame(TOWDUR = u$TOWDUR)))
   						u = fillNaDf2(u, uD, mergeCols='ID',fillCols = 'DIST')
+  						b = which(is.na(u$DIST))
+  						u$DIST[b] = mean(u$DIST,na.rm=T)
   						inf1 = rbind(inf1,u)
   						}
   				inf = inf1
@@ -147,9 +149,23 @@ options(scipen=999)  # this avoids scientific notation
   				cainf$SIZE_CLASS[i] = 1
 
   				de = nefsc.db('usdet.clean.redo') # to adjust the catch rates for size based catchability
-  				dea = aggregate(cbind(CLEN,CLEN*FWT)~ID,data=de,FUN=sum)
-  				names(dea)[2:3] = c('TOTNO','TOTWGT')
-  				ca = merge(ca,dea,by='ID',all.x=T)
+  				dea = aggregate(cbind(CLEN,CLEN*FWT/1000)~ID,data=de,FUN=sum)
+  				names(dea)[2:3] = c('SAMPNO','SAMPWGT')
+  				cainf$SUBSAMPLE = cainf$SAMPWGT / cainf$TOTWGT
+  				cainf[which(!is.finite(cainf$SUBSAMPLE)),'SUBSAMPLE'] <- 1
+  				cainf[which(cainf$SUBSAMPLE==0),'SUBSAMPLE'] <- 1
+  				cainf = subset(cainf,select = -SAMPWGT)
+  				cainf = merge(cainf,dea,by='ID',all.x=T)
+  				o = which(is.na(cainf$SAMPNO))
+  				cainf$SAMPNO[o] <- 0
+  				o = which(is.na(cainf$SAMPWGT))
+  				cainf$SAMPWGT[o] <- 0
+
+  				cainf$TOTNO = cainf$SAMPNO / cainf$SUBSAMPLE
+  				cainf$TOTWGT = cainf$SAMPWGT / cainf$SUBSAMPLE
+
+
+  				
   				save(cainf,file=file.path(fn.root, 'usnefsc.cat.clean.rdata'))
 				return(cainf)
   			}
