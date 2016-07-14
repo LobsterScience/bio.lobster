@@ -101,6 +101,7 @@ options(scipen=999)  # this avoids scientific notation
   						u = fillNaDf2(u, uD, mergeCols='ID',fillCols = 'DIST')
   						b = which(is.na(u$DIST))
   						u$DIST[b] = mean(u$DIST,na.rm=T)
+  						u$DISTCORRECTION = u$DIST / mean(u$DIST,na.rm=T)
   						inf1 = rbind(inf1,u)
   						}
   				inf = inf1
@@ -109,6 +110,7 @@ options(scipen=999)  # this avoids scientific notation
   				inf = inf[i,]
   				inf = lonlat2planar(inf,input_names=c('X','Y'),proj.type=p$nefsc.internal.projection)
 				inf$ID = paste(inf$MISSION, inf$SETNO, sep=".")
+
 			save(inf, file = file.path(fn.root, 'usnefsc.inf.clean.rdata'))
 			return(inf)
   				}
