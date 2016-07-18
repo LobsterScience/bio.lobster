@@ -117,10 +117,10 @@ options(stringsAsFactors=F)
 #groundfish survey summer strata	
 	if(addSummerStrata) {
 			  loadfunctions('polygons')
-			  a = find.ecomod.gis('summer_strata_labels',return.one.match=F)
+			  a = find.bio.gis('summer_strata_labels',return.one.match=F)
 			  a = read.csv(a,header=T)
 			  names(a)[4] <- 'label'
-			  b = find.ecomod.gis('strat.gf',return.one.match=F)
+			  b = find.bio.gis('strat.gf',return.one.match=F)
 			  b = read.table(b)
 			  names(b) <- c('X','Y','PID')
 		if(!is.null(subsetSummerStrata)) {

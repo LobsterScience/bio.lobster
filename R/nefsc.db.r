@@ -1,5 +1,5 @@
 #' @title nefsc.db
-#' @description Pulls the offshore lobster data from NEFSC trawl surveys
+#' @description Pulls the offshore lobster data from NEFSC trawl surveys as well as the strata areas. Included in the strata areas are the proportion of the total strata area incorporated in each of the offshore lobster subunits for post stratification.
 #' @param \code{DS} :the selection of data, consists of a full data dump from ODBC account through \code{odbc.dump}. Or individual data tables can be rebuilt (with \code{.redo}) or loaded as \code{uscat},\code{usdet},\code{usinf},\code{usstrata.area}. Running any of the previous with the .clean arguement will clean up data, take care of vessel conversions and make it ready for further analysis
 #' @param \code{fn.root} : specify the location of data saves, default is null and uses the project.datadirectory function as default
 #' @return saves or loads .rdata objects named \code{usinf}, \code{usdet}, \code{uscat}, \code{usstrat.area}
@@ -271,40 +271,71 @@ options(scipen=999)  # this avoids scientific notation
         strata.area$CanadaOnly[which(strata.area$STRAT==1160)] = 0.5211409 #proportion of strata in Canada
         strata.area$CanadaOnly[which(strata.area$STRAT==1170)] = 0.7888889 
         strata.area$CanadaOnly[which(strata.area$STRAT==1180)] = 0.7383721 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1190)] = 0.0009412 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1200)] = 0.0007818 
 		strata.area$CanadaOnly[which(strata.area$STRAT==1210)] = 0.4952830 
 		strata.area$CanadaOnly[which(strata.area$STRAT==1220)] = 0.2753304 
-		strata.area$CanadaOnly[which(strata.area$STRAT==1352)] = 1 		   
-        strata.area$CanadaOnly[which(strata.area$STRAT==1351)] = 0.9609808 
-        strata.area$CanadaOnly[which(strata.area$STRAT==1360)] = 0.4055799 
-		strata.area$CanadaOnly[which(strata.area$STRAT==1330)] = 1         
-		strata.area$CanadaOnly[which(strata.area$STRAT==1340)] = 0.9541892 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1290)] = 0.4669688 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1300)] = 0.8799349 
 		strata.area$CanadaOnly[which(strata.area$STRAT==1310)] = 1         
         strata.area$CanadaOnly[which(strata.area$STRAT==1320)] = 1         
 		strata.area$CanadaOnly[which(strata.area$STRAT==1330)] = 1         
-		strata.area$CanadaOnly[which(strata.area$STRAT==1290)] = 0.4669688 
-		strata.area$CanadaOnly[which(strata.area$STRAT==1300)] = 0.8799349 
-		strata.area$CanadaOnly[which(strata.area$STRAT==1200)] = 0.0007818 
-		strata.area$CanadaOnly[which(strata.area$STRAT==1190)] = 0.0009412 
-		
-
-		strata.area$LFA41 = 0
-        strata.area$LFA41[which(strata.area$STRAT==1160)] = 0.5211409 #proportion of strata in Canada
-        strata.area$LFA41[which(strata.area$STRAT==1170)] = 0.7888889 
-        strata.area$LFA41[which(strata.area$STRAT==1180)] = 0.7383721 
-		strata.area$LFA41[which(strata.area$STRAT==1210)] = 0.4952830 
-		strata.area$LFA41[which(strata.area$STRAT==1220)] = 0.2753304 
-		strata.area$LFA41[which(strata.area$STRAT==1360)] = 0.2922712
-		strata.area$LFA41[which(strata.area$STRAT==1340)] = 0.0105999
-		strata.area$LFA41[which(strata.area$STRAT==1310)] = 0.1597051         
-        strata.area$LFA41[which(strata.area$STRAT==1290)] = 0.3842528
-		strata.area$LFA41[which(strata.area$STRAT==1300)] = 0.8799349 
-		strata.area$LFA41[which(strata.area$STRAT==1200)] = 0.0005209 
-		strata.area$LFA41[which(strata.area$STRAT==1190)] = 0.0006892
-
+		strata.area$CanadaOnly[which(strata.area$STRAT==1330)] = 1         
+		strata.area$CanadaOnly[which(strata.area$STRAT==1340)] = 0.9541892 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1351)] = 0.9609808 
+		strata.area$CanadaOnly[which(strata.area$STRAT==1352)] = 1 		   
+        strata.area$CanadaOnly[which(strata.area$STRAT==1360)] = 0.4055799 
 		strata.area$USOnly = 1 - strata.area$CanadaOnly 
 
+		strata.area$LFA41 = 0
+        strata.area$LFA41[which(strata.area$STRAT==1160)] = 0.5211409 #proportion of strata in LFA41
+        strata.area$LFA41[which(strata.area$STRAT==1170)] = 0.7888889 
+        strata.area$LFA41[which(strata.area$STRAT==1180)] = 0.7383721 
+		strata.area$LFA41[which(strata.area$STRAT==1190)] = 0.0006892
+		strata.area$LFA41[which(strata.area$STRAT==1200)] = 0.0005209 
+		strata.area$LFA41[which(strata.area$STRAT==1210)] = 0.4952830 
+		strata.area$LFA41[which(strata.area$STRAT==1220)] = 0.2753304 
+        strata.area$LFA41[which(strata.area$STRAT==1290)] = 0.3842528
+		strata.area$LFA41[which(strata.area$STRAT==1300)] = 0.8799349 
+		strata.area$LFA41[which(strata.area$STRAT==1310)] = 0.1597051         
+		strata.area$LFA41[which(strata.area$STRAT==1340)] = 0.0105999
+		strata.area$LFA41[which(strata.area$STRAT==1360)] = 0.2922712
+		
 
-        save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
+		strata.area$Crowell.Basin = 0
+		strata.area$Crowell.Basin[which(strata.area$STRAT==1360)] = 0.23669370
+		strata.area$Crowell.Basin[which(strata.area$STRAT==1290)] = 0.07070323
+		strata.area$Crowell.Basin[which(strata.area$STRAT==1300)] = 0.17935508
+	
+		strata.area$Georges.Bank = 0
+		strata.area$Georges.Bank[which(strata.area$STRAT==1180)] = 0.4500091
+		strata.area$Georges.Bank[which(strata.area$STRAT==1170)] = 0.6487552
+		strata.area$Georges.Bank[which(strata.area$STRAT==1160)] = 0.3462588
+
+		strata.area$Georges.Basin = 0
+		strata.area$Georges.Basin[which(strata.area$STRAT==1290)] = 0.1952057677
+		strata.area$Georges.Basin[which(strata.area$STRAT==1300)] = 0.3205264949
+		strata.area$Georges.Basin[which(strata.area$STRAT==1220)] = 0.2770884218
+		strata.area$Georges.Basin[which(strata.area$STRAT==1210)] = 0.4937706753
+		strata.area$Georges.Basin[which(strata.area$STRAT==1200)] = 0.0005395809
+		strata.area$Georges.Basin[which(strata.area$STRAT==1180)] = 0.2812190757
+		strata.area$Georges.Basin[which(strata.area$STRAT==1170)] = 0.1377683802
+		strata.area$Georges.Basin[which(strata.area$STRAT==1160)] = 0.1700871629
+		strata.area$Georges.Basin[which(strata.area$STRAT==1190)] = 0.0006852029
+
+		strata.area$SE.Browns = 0
+		strata.area$SE.Browns[which(strata.area$STRAT==1290)] = 0.02951950
+		strata.area$Se.Browns[which(strata.area$STRAT==1310)] = 0.08869612
+		
+		strata.area$SW.Browns = 0
+		strata.area$SW.Browns[which(strata.area$STRAT==1360)] =  0.06064647
+		strata.area$SW.Browns[which(strata.area$STRAT==1340)] =  0.01027647
+		strata.area$SW.Browns[which(strata.area$STRAT==1310)] =  0.07092002
+		strata.area$SW.Browns[which(strata.area$STRAT==1290)] =  0.08793530
+		strata.area$SW.Browns[which(strata.area$STRAT==1300)] =  0.39084082
+
+
+save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
         odbcCloseAll()
 
         }

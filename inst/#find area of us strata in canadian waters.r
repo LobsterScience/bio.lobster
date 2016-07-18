@@ -32,7 +32,7 @@ j$prop = j$area.x/j$area.y #Proportion Canadian Strata
 
 #LFA 41 only
 
-	LFA41 = read.csv(file.path( project.datadirectory("lobster"), "data","maps","LFA41Offareas.csv"))
+	LFA41 = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))
 	LFA41 = joinPolys(as.PolySet(LFA41),operation='UNION')
 	attr(LFA41,'projection') <- 'LL'
 
@@ -48,6 +48,51 @@ j$prop = j$area.x/j$area.y #Proportion Canadian Strata
 	j$prop = j$area.x/j$area.y #Proportion LFA41
 
 	
+#New offshore area defns
+
+l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
+h = calcArea(a)
+h = aggregate(area~PID,data=h,FUN=sum)
+
+#CrowellBasin
+lo = joinPolys(a,subset(l41,PID==1),'INT')
+la = calcArea(lo)
+la = merge(la,l,by='PID')
+le = merge(la,h,by='PID',all.x=T)
+le$prop = le$area.x/le$area.y
+
+#GeorgesBank
+lo = joinPolys(a,subset(l41,PID==2),'INT')
+la = calcArea(lo)
+la = aggregate(area~PID,data=la,FUN=sum)
+la = merge(la,l,by='PID')
+le = merge(la,h,by='PID',all.x=T)
+le$prop = le$area.x/le$area.y
 
 
-	h = 
+#GeorgesBasin
+lo = joinPolys(a,subset(l41,PID==3),'INT')
+la = calcArea(lo)
+la = aggregate(area~PID,data=la,FUN=sum)
+la = merge(la,l,by='PID')
+le = merge(la,h,by='PID',all.x=T)
+le$prop = le$area.x/le$area.y
+
+
+#SEBROWNS
+lo = joinPolys(a,subset(l41,PID==4),'INT')
+la = calcArea(lo)
+la = aggregate(area~PID,data=la,FUN=sum)
+la = merge(la,l,by='PID')
+le = merge(la,h,by='PID',all.x=T)
+le$prop = le$area.x/le$area.y
+
+
+#SWBROWNS
+lo = joinPolys(a,subset(l41,PID==5),'INT')
+la = calcArea(lo)
+la = aggregate(area~PID,data=la,FUN=sum)
+la = merge(la,l,by='PID')
+le = merge(la,h,by='PID',all.x=T)
+le$prop = le$area.x/le$area.y
+
