@@ -15,7 +15,7 @@ nefsc.db(DS = "odbc.dump.redo", fn.root = NULL, p = p)
 saves or loads .rdata objects named \code{usinf}, \code{usdet}, \code{uscat}, \code{usstrat.area}
 }
 \description{
-Pulls the offshore lobster data from NEFSC trawl surveys
+Pulls the offshore lobster data from NEFSC trawl surveys as well as the strata areas. Included in the strata areas are the proportion of the total strata area incorporated in each of the offshore lobster subunits for post stratification.
 }
 \examples{
 require(devtools)
