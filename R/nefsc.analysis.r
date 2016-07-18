@@ -112,28 +112,19 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
               }
 
 
-        set = groundfish.db(DS='gsinf.odbc')
-        cas = groundfish.db(DS='gscat.odbc')
-        stra = groundfish.db(DS='gsstratum')
-        de = groundfish.db(DS='gsdet.odbc')
+        set =  nefsc.db(DS='usinf.clean')
+        cas =  nefsc.db(DS='uscat.clean')
+        stra = nefsc.db(DS='usstrata.area')
+        de =   nefsc.db(DS='usdet.clean')
 
         stra$NH = as.numeric(stra$area)/0.011801
-        ii = which(months(set$sdate) %in% mns & set$strat %in% strat & set$type %in% c(1,5))
-        print('Both set types 1 and 5 are saved in data frame but only 1 is used for stratified')
-        set = set[ii,]
-
-        io = which(is.na(cas$totwgt) | cas$totwgt==0 & cas$totno>0)
-        cas[io,'totwgt'] <- 1
-
-        io = which(is.na(cas$sampwgt) & !is.na(cas$totwgt))
-        cas[io,'sampwgt'] <- cas[io,'totwgt']
-        strata.files = list()
+     strata.files = list()
      out = data.frame(yr=NA,sp=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA)
-    mp=0
-    np=1
-    effic.out = data.frame(yr=NA,strat.effic.wt=NA,alloc.effic.wt=NA,strat.effic.n=NA,alloc.effic.n=NA)
-    nopt.out =  list()
-    for(iip in ip) {
+     mp=0
+     np=1
+     effic.out = data.frame(yr=NA,strat.effic.wt=NA,alloc.effic.wt=NA,strat.effic.n=NA,alloc.effic.n=NA)
+     nopt.out =  list()
+     for(iip in ip) {
             mp = mp+1
             v = p$runs[iip,"v"]
             if(iip==1) v0=v
@@ -245,16 +236,6 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   sN = Stratify(sc,st,sc$totno)
                   ssW = summary(sW)
                   ssN = summary(sN)
-               if(p$strata.efficiencies) {
-                  ssW = summary(sW,effic=T,nopt=T)
-                  ssN = summary(sN,effic=T,nopt=T)
-              effic.out[mp,] = c(yr,ssW$effic.str,ssW$effic.alloc,ssN$effic.str,ssN$effic.alloc)
-              nopt.out[[mp]] = list(yr,ssW$n.opt,ssN$n.opt)
-               }
-               if(!p$strata.efficiencies) {
-                      bsW = NA
-                      bsN = NA
-                      nt = NA
                if(p$bootstrapped.ci) {
                   bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='BC')
                   bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
@@ -268,11 +249,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                 print(out[mp,'v'])
               }
             }
-          }
-  if(p$strata.efficiencies) {
-                 return(list(effic.out,nopt.out))
-              }
-              lle = 'all'
+                        lle = 'all'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
               fn = paste('stratified',v0,p$series,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
               fn.st = paste('strata.files',v0,p$series,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
@@ -284,41 +261,4 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
 
    }
 
-  if(DS %in% c('ab','ab.redo')) {
-
-        det = groundfish.db('gsdet.odbc',p=p)
-        set = groundfish.db('gsinf.odbc',p=p)
-        ii = which(months(set$sdate) %in% mns & set$strat %in% strat & set$type == 1)
-        set = set[ii,]
-        set$ids = paste(set$mission,set$setno,sep=".")
-        det$ids = paste(det$mission,det$setno,sep=".")
-        ii = which(det$ids %in% set$ids)
-        det = det[ii,]
-        m=0
-      out = data.frame(sex = NA,yr = NA, species = NA, alpha=NA,N.Measured=NA,N.Outside.of.Polygon=NA,a=NA,b=NA,a.lower=NA,      a.upper=NA,b.lower=NA,b.upper=NA)
-  for(iip in ip) {
-       v0 = v = p$runs[iip,"v"]
-            yr = p$runs[iip,"yrs"]
-            print ( p$runs[iip,] )
-            iv = which(det$spec==v0)
-            iy = which(det$year %in% yr)
-            vars.2.keep =c('fwt','flen','fsex','spec','year')
-            df = det[intersect(iv,iy),vars.2.keep]
-        if(p$by.sex) {
-          for(i in 1:2){
-            m=m+1
-           ds = na.omit(df)
-           ds = ds[which(ds$fsex==i),]
-           out[m,] = ab.nls(ds=ds,p=p)
-        }
-      }
-        if(!p$by.sex) {
-           m=m+1
-           ds = na.omit(df)
-           ds$fsex = 'all'
-           out[m,] = ab.nls(ds=ds,p=p)
-        }
-      }
-   return(out)
-  }
 }

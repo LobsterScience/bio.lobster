@@ -216,7 +216,7 @@ options(scipen=999)  # this avoids scientific notation
   if(DS %in% c('usdet.clean','usdet.clean.redo')) {
 
             if(DS == 'usdet.clean') {
-                   load(file = file.path(fnroot, 'usnefsc.det.clean.rdata'))
+                   load(file = file.path(fn.root, 'usnefsc.det.clean.rdata'))
                    return(usdet)
             
                 }
