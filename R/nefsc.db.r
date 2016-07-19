@@ -325,7 +325,7 @@ options(scipen=999)  # this avoids scientific notation
 
 		strata.area$SE.Browns = 0
 		strata.area$SE.Browns[which(strata.area$STRAT==1290)] = 0.02951950
-		strata.area$Se.Browns[which(strata.area$STRAT==1310)] = 0.08869612
+		strata.area$SE.Browns[which(strata.area$STRAT==1310)] = 0.08869612
 		
 		strata.area$SW.Browns = 0
 		strata.area$SW.Browns[which(strata.area$STRAT==1360)] =  0.06064647
