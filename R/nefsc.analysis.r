@@ -117,6 +117,8 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         stra = nefsc.db(DS='usstrata.area')
         de =   nefsc.db(DS='usdet.clean')
 
+        #working here July 17
+
         stra$NH = as.numeric(stra$area)/0.011801
      strata.files = list()
      out = data.frame(yr=NA,sp=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA)
