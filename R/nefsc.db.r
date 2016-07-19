@@ -217,7 +217,7 @@ options(scipen=999)  # this avoids scientific notation
 
             if(DS == 'usdet.clean') {
                    load(file = file.path(fn.root, 'usnefsc.det.clean.rdata'))
-                   return(usdet)
+                   return(de)
             
                 }
                de = nefsc.db(DS = 'usdet')
