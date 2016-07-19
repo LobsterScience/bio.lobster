@@ -23,7 +23,7 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
          if(p$area=='georges.US') {STRATUM = c(1130,1140,1150,1160,1170,1180,1190,1200,1210,1220,1230); props=c(1,1,1,1-0.5211409, 1-0.7888889, 1-0.7383721, 1-0.0009412, 1-0.0007818, 1-0.4952830, 1-0.2753304,1)}
          if(p$area=='LFA41') {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = c(0.5211409, 0.7888889, 0.7383721, 0.0006892, 0.0005209, 0.4952830, 0.2753304, 0.3842528, 0.8799349, 0.1597051, 0.0105999, 0.2922712)}
           
-         if(p$lobster.subunits==T & p$area=='Georges.Bank') {STRATUM = c(1160,1170,1180),props = c(0.3462588,0.6487552,0.450009)}   
+         if(p$lobster.subunits==T & p$area=='Georges.Bank') {STRATUM = c(1160,1170,1180); props = c(0.3462588,0.6487552,0.450009)}   
          if(p$lobster.subunits==T &p$area=='Georges.Basin') {STRATUM = c(1160,1170,1180,1190,1200,1210,1220,1300,1290); props = c(0.170,0.1377,0.2812,0.0006,0.0005,0.4938,0.2771,0.321,0.195)}      
          if(p$lobster.subunits==T &p$area=='Crowell.Basin') {STRATUM = c(1300,1290,1360); props = c(0.1794,0.0707,0.23669)}   
          if(p$lobster.subunits==T &p$area=='SE.Browns' )    {STRATUM = c(1290,1310); props = c(0.029519,0.08869)}  
