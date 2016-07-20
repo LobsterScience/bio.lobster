@@ -7,15 +7,17 @@ fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 #nefsc
 
 p$season =c('spring')# p$series =c('spring');p$series =c('fall')
-p$area = 'georges.canada' # c('georges.US'); 'LFA412', 'Georges.Bank,'Georges.Basin','Crowell.Basin','SE.Browns','SW.Browns'
+
+p$area = 'Crowell.Basin'
+#p$area = 'georges.canada' # c('georges.US'); 'LFA412', 'Georges.Bank,'Georges.Basin','Crowell.Basin','SE.Browns','SW.Browns'
 p$years.to.estimate = c(1968:2015)
-p$lobster.subunits=F
+p$lobster.subunits=T
 p$length.based = T
 p$size.class= c(82,300)
 p$by.sex = F
 p$sex = 1# male female berried c(1,2,3)
-
-
+p$bootstrapped.ci=T
+p$strata.files.return=F
 
 p$clusters = c( rep( "localhost", 7) )
 

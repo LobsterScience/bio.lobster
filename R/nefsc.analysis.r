@@ -42,47 +42,40 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
          if (is.null(ip)) ip = 1:p$nruns
 
 if(DS %in% c('species.set.data')) {
-           outa = NULL
             a = dir(loc)
             a = a[grep('strata.files',a)]
-            a = a[grep(paste(p$species,collapse="|"),a)]
-            if(exists('strata.files.return',p)){
-                  it = grep(paste(p$size.class,collapse="-"),a)
-                  load(file.path(loc,a[it]))
-                  return(strata.files)
-                  }
-            for(op in a) {
-                load(file.path(loc,op))
-                al = lapply(strata.files,"[[",2)
-                al = do.call('rbind',al)
-                al$Sp= strsplit(op,"\\.")[[1]][3]
-                b = strsplit(op,"\\.")
-                b = b[[1]][grep('length',b[[1]])+1]
-                al = rename.df(al,c('totwgt','totno'),c(paste('totwgt',b,sep="."),paste('totno',b,sep=".")))
-                if(is.null(outa)) {outa = rbind(al,outa)
-                  } else {
-                 outa = merge(outa,al[,c('mission','setno',paste('totwgt',b,sep="."),paste('totno',b,sep="."))],by=c('mission','setno'))
-                }
-                }
-                return(outa)
+            a = a[grep(p$area,a)]
+            a = a[grep(p$season,a)]
+            if(p$length.based) {
+                a = a[grep(p$size.class[1],a)]
+                a = a[grep(p$size.class[2],a)]
+              }
+            if(p$by.sex) {
+              k = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+              a = a[grep(k,a)]
+            }
+            a = load(file.path(loc,a))
+            return(strata.files)
               }
 
 if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
           if(DS=='stratified.estimates'){
-            outa = NULL
             a = dir(loc)
             a = a[grep('stratified',a)]
-            a = a[grep(paste(p$species,collapse="|"),a)]
-          for(op in a) {
-                load(file.path(loc,op))
-                b = strsplit(op,"\\.")
-                b = b[[1]][grep('length',b[[1]])+1]
-                out$group = b
-                outa = rbind(out,outa)
-                }
-                return(outa)
+            a = a[grep(p$area,a)]
+            a = a[grep(p$season,a)]
+            if(p$length.based) {
+                a = a[grep(p$size.class[1],a)]
+                a = a[grep(p$size.class[2],a)]
               }
+            if(p$by.sex) {
+              k = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+              a = a[grep(k,a)]
+            }
 
+             load(file.path(loc,a))
+             return(out)
+              }
 
         set =  nefsc.db(DS='usinf.clean')
         cas =  nefsc.db(DS='uscat.clean')
@@ -95,7 +88,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         #tow dist is 1nm for bigelow
      stra$NH = stra$AREA/(1* 42.6 / 6080.2)
      strata.files = list()
-     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA)
+     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA)
      mp=0
      np=1
      
@@ -124,44 +117,50 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         if(!p$lb) { vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO','SIZE_CLASS')
                     ca = ca[,vars.2.keep]
                 }
+                
 
-        if(p$length.based){
+        if(p$length.based) {
                   dp = de
                   dp = dp[which(dp$ID %in% unique(se$ID)),]
+                  if(nrow(dp)>1) {
+        
                   flf = p$size.class[1]:p$size.class[2]
                   dp$clen2 = ifelse(dp$LENGTH %in% flf,dp$CLEN,0)
 
               if(p$by.sex) dp$clen2 = ifelse(dp$FSEX %in% p$sex, dp$clen2, 0)
 
               if(any(!is.finite(dp$FWT))) {
-                  io = which(!is.finite(dp$FWT))
-                  fit = nls(fwt~a*flen^b,de[which(is.finite(de$FWT)),],start=list(a=0.001,b=3.3))
-                  ab = coef(fit)
-                  dp$FWT[io] = ab[1]*dp$FLEN[io]^ab[2]
+                      io = which(!is.finite(dp$FWT))
+                      fit = nls(fwt~a*flen^b,de[which(is.finite(de$FWT)),],start=list(a=0.001,b=3.3))
+                      ab = coef(fit)
+                      dp$FWT[io] = ab[1]*dp$FLEN[io]^ab[2]
                   }
-                  dp$pb = dp$FWT * dp$CLEN
-                  dp$pb1 = dp$FWT * dp$clen2
+                      dp$pb = dp$FWT * dp$CLEN
+                      dp$pb1 = dp$FWT * dp$clen2
 
                   dpp = data.frame(mission=NA,setno=NA,size_class=NA,pn=NA,pw=NA)
+                  
                   if(nrow(dp)>0) {
-                  dpp = aggregate(cbind(CLEN,clen2,pb,pb1)~MISSION+SETNO+SIZE_CLASS,data=dp,FUN=sum)
-                  dpp$pn = dpp$clen2/dpp$CLEN
-                  dpp$pw = dpp$pb1/dpp$pb
-                  dpp = dpp[,c('MISSION','SETNO','SIZE_CLASS','pn','pw')]
-                  }
+                      dpp = aggregate(cbind(CLEN,clen2,pb,pb1)~MISSION+SETNO+SIZE_CLASS,data=dp,FUN=sum)
+                      dpp$pn = dpp$clen2/dpp$CLEN
+                      dpp$pw = dpp$pb1/dpp$pb
+                      dpp = dpp[,c('MISSION','SETNO','SIZE_CLASS','pn','pw')]
+                      }
+                  
                   ca1 = merge(ca,dpp,by=c('MISSION','SETNO','SIZE_CLASS'))
                   ca1$TOTWGT = ca1$TOTWGT * ca1$pw
                   ca1$TOTNO = ca1$TOTNO * ca1$pn
                   vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO','SIZE_CLASS')
                   ca = ca1[,vars.2.keep]
-              }
+                  }
+                }
 
             if(nrow(ca)>=1) {
 		        ca = aggregate(cbind(TOTWGT,TOTNO)~MISSION+SETNO,data=ca,FUN=sum)
                   sc = merge(se,ca,by=c('MISSION','SETNO'),all.x=T)
                   sc[,c('TOTWGT','TOTNO')] = na.zero(sc[,c('TOTWGT','TOTNO')])
-                  sc$TOTNO = sc$TOTNO * sc$DISTCORRECTION
-                  sc$TOTWGT = sc$TOTWGT * sc$DISTCORRECTION
+                  #sc$TOTNO = sc$TOTNO / sc$DISTCORRECTION #this happens during the nefsc.db uscat.clean step
+                  #sc$TOTWGT = sc$TOTWGT / sc$DISTCORRECTION
                   io = which(stra$STRAT %in% unique(sc$STRATUM))
                   sc$Strata = sc$STRATUM
                   st = stra[io,c('STRAT','NH')]
@@ -178,22 +177,25 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   sN = Stratify(sc,st,sc$TOTNO)
                   ssW = summary(sW)
                   ssN = summary(sN)
+                  
                if(p$bootstrapped.ci) {
                   bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='BC')
                   bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
                   nt  = sum(sW$Nh)/1000
-                }
+                }                
                 out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[1],bsW[2],ssW[[3]]/1000,bsW[1]*nt,bsW[2]*nt,
-                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao)
-                } else {
-                out[mp,] = c(yr,rep(0,15))
+                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]))
+                }   else {
+                out[mp,] = c(yr,rep(0,17))
                
               }
             }
                         lle = 'all'
+                        lbs = 'not'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
-              fn = paste('stratified','nefsc',p$season,p$area,'length',lle,'rdata',sep=".")
-              fn.st = paste('strata.files','nefsc',p$season,p$area,'length',lle,'rdata',sep=".")
+              if(p$by.sex)      lbs = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+              fn = paste('stratified','nefsc',p$season,p$area,'length',lle,lbs,'sexed','rdata',sep=".")
+              fn.st = paste('strata.files','nefsc',p$season,p$area,'length',lle,lbs,'sexed','rdata',sep=".")
              
               save(out,file=file.path(loc,fn))
               save(strata.files,file=file.path(loc,fn.st))
