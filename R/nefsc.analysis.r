@@ -13,7 +13,7 @@
 
 
 
-nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL) {
+nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,define.by.polygons) {
     loc = file.path( project.datadirectory(out.dir), "analysis" ,'nefsc')
 
     dir.create( path=loc, recursive=T, showWarnings=F )
@@ -29,8 +29,6 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
          if(p$lobster.subunits==T &p$area=='SE.Browns' )    {STRATUM = c(1290,1310); props = c(0.029519,0.08869)}  
          if(p$lobster.subunits==T &p$area=='SW.Browns' )    {STRATUM = c(1300,1290,1310,1340,1360); props=c(0.391,0.0879,0.0709,0.0103,0.0606)}  
 
-         
-    
          if(!is.null(p$strat)) strat = p$strat
 
          if (exists( "libs", p)) {
@@ -100,7 +98,16 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             #iv = which(cas$spec %in% vv) Turn on if species are selected right now only lobster is being brought in
             iy = which(set$GMT_YEAR %in% yr)
             ix = which(set$SEASON == SEASON)
-            iz = which(set$STRATUM %in% c(STRATUM))
+
+         if(define.by.polygons=T) {
+
+            l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
+
+
+
+         } else {
+                iz = which(set$STRATUM %in% c(STRATUM))
+                }
             iy = intersect(intersect(ix,iy),iz)
                 se = set[iy,]
                 ca = cas #cas[iv,] see above

@@ -14,7 +14,7 @@ p$years.to.estimate = c(1968:2015)
 p$lobster.subunits=T
 p$length.based = T
 p$size.class= c(82,300)
-p$by.sex = F
+p$by.sex = T
 p$sex = 1# male female berried c(1,2,3)
 p$bootstrapped.ci=T
 p$strata.files.return=F
@@ -29,7 +29,11 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
 aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
-#habitat associations
+
+#all sexs,areas,legal,recruits, 
+
+
+
 
 #figure stratified analysis Note--the values after comments are the other options
 p$add.reference.line = F
