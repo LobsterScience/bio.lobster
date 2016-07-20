@@ -99,7 +99,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             iy = which(set$GMT_YEAR %in% yr)
             ix = which(set$SEASON == SEASON)
 
-         if(define.by.polygons=T) {
+         if(define.by.polygons) {
 
             l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
 
