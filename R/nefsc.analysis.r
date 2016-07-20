@@ -192,8 +192,8 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             }
                         lle = 'all'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
-              fn = paste('stratified','nefsc',p$season,p$series,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
-              fn.st = paste('strata.files','nefsc',p$season,p$series,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
+              fn = paste('stratified','nefsc',p$season,p$area,'length',lle,'rdata',sep=".")
+              fn.st = paste('strata.files','nefsc',p$season,p$area,'length',lle,'rdata',sep=".")
              
               save(out,file=file.path(loc,fn))
               save(strata.files,file=file.path(loc,fn.st))
