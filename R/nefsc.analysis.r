@@ -184,7 +184,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   nt  = sum(sW$Nh)/1000
                 }
                 out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[1],bsW[2],ssW[[3]]/1000,bsW[1]*nt,bsW[2]*nt,
-                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao))
+                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao)
                 } else {
                 out[mp,] = c(yr,rep(0,15))
                
