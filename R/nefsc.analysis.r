@@ -14,7 +14,7 @@
 
 
 nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL) {
-    loc = file.path( project.datadirectory(out.dir), "analysis" )
+    loc = file.path( project.datadirectory(out.dir), "analysis" ,'nefsc')
 
     dir.create( path=loc, recursive=T, showWarnings=F )
          if(p$season=='spring')  {SEASON = 'Spring'    } 
@@ -93,40 +93,17 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         # all catches have been converted to bigelow equivalents and therefore do not need any further towed distance calculations, the DISTCORRECTION is a standardized distance against the mean of the towed distance for that gear and is therefore the correction for towed distance to be used
         #US nautical mile is 6080.2ft bigelow is 42.6'
         #tow dist is 1nm for bigelow
-        stra$NH = stra$AREA/(1* 42.6 / 6080.2)
+     stra$NH = stra$AREA/(1* 42.6 / 6080.2)
      strata.files = list()
-     out = data.frame(yr=NA,sp=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA)
+     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA)
      mp=0
      np=1
      
      for(iip in ip) {
             mp = mp+1
-            v = p$runs[iip,"v"]
-            if(iip==1) v0=v
-            if(v0!=v) { # if this species loop is done save the file and reset data frame to continue with next spp
-                    lle = 'all'
-                    if(p$length.based & !p$sex.based) lle = paste(p$size_class[1],p$size_class[2],sep="-")
-                    if(p$length.based & p$sex.based) lle = 'by.length.by.sex'
-
-                    fn = paste('stratified',v0,p$series,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
-                    fn.st = paste('strata.files',v0,p$series,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
-
-                    save(out,file=file.path(loc,fn))
-                    save(strata.files,file=file.path(loc,fn.st))
-
-                    print(fn)
-                    rm(out)
-                    rm(strata.files)
-
-                    out = data.frame(yr=NA,sp=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA, n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA)
-                    strata.files = list()
-                    mp=1
-                    np = np + 1
-                  }
-            vv = v0 = v
             yr = p$runs[iip,"yrs"]
             print ( p$runs[iip,] )
-            if(p$functional.groups) vv = p$yy[[which(names(p$yy)==v0)]]
+         
             #iv = which(cas$spec %in% vv) Turn on if species are selected right now only lobster is being brought in
             iy = which(set$GMT_YEAR %in% yr)
             ix = which(set$SEASON == SEASON)
@@ -186,16 +163,19 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   sc$TOTNO = sc$TOTNO * sc$DISTCORRECTION
                   sc$TOTWGT = sc$TOTWGT * sc$DISTCORRECTION
                   io = which(stra$STRAT %in% unique(sc$STRATUM))
-
-                  st = stra[io,c('strat','NH')]
-                  st = st[order(st$strat),]
+                  sc$Strata = sc$STRATUM
+                  st = stra[io,c('STRAT','NH')]
+                  st = st[order(st$STRAT),]
+                  spr = data.frame(STRAT = STRATUM, Pr = props)
+                  st = merge(st,spr)
+                  names(st)[1] = 'Strata'
+                  st$NH = st$NH * st$Pr
                   st = Prepare.strata.file(st)
                   sc1= sc
-                  sc = sc[which(sc$type==1),]
                   sc = Prepare.strata.data(sc)
                   strata.files[[mp]]  = list(st,sc1)
-                  sW = Stratify(sc,st,sc$totwgt)
-                  sN = Stratify(sc,st,sc$totno)
+                  sW = Stratify(sc,st,sc$TOTWGT)
+                  sN = Stratify(sc,st,sc$TOTNO)
                   ssW = summary(sW)
                   ssN = summary(sN)
                if(p$bootstrapped.ci) {
@@ -203,19 +183,18 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
                   nt  = sum(sW$Nh)/1000
                 }
-                out[mp,] = c(yr,v,ssW[[1]],ssW[[2]],bsW[1],bsW[2],ssW[[3]]/1000,bsW[1]*nt,bsW[2]*nt,
-                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao)
-                print(out[mp,'v'])
-              } else {
-                out[mp,] = c(yr,v,rep(0,15))
-                print(out[mp,'v'])
+                out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[1],bsW[2],ssW[[3]]/1000,bsW[1]*nt,bsW[2]*nt,
+                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao))
+                } else {
+                out[mp,] = c(yr,rep(0,15))
+               
               }
             }
                         lle = 'all'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
-              fn = paste('stratified',v0,p$series,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
-              fn.st = paste('strata.files',v0,p$series,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
-             print(fn)
+              fn = paste('stratified','nefsc',p$season,p$series,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
+              fn.st = paste('strata.files','nefsc',p$season,p$series,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
+             
               save(out,file=file.path(loc,fn))
               save(strata.files,file=file.path(loc,fn.st))
              if(p$strata.files.return) return(strata.files)
