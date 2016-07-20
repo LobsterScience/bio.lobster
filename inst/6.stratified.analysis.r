@@ -1,53 +1,33 @@
 require(bio.survey)
-p = bio.groundfish::load.groundfish.environment("BIOsurvey")
+require(bio.lobster)
+p = bio.lobster::load.environment()
+p$libs = NULL
+fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 
-fp = file.path(project.datadirectory('bio.groundfish'),"analysis")
-p$strat=490:495
-p$series =c('summer')# p$series =c('4vswcod');p$series =c('georges')
-p$years.to.estimate = c(1970:2015)
-p$species = c(11)
-p$vessel.correction = T
-p$vessel.correction.fixed = 1.2
-p$length.based = F
+#nefsc
+
+p$season =c('spring')# p$series =c('spring');p$series =c('fall')
+p$area = 'georges.canada' # c('georges.US'); 'LFA412', 'Georges.Bank,'Georges.Basin','Crowell.Basin','SE.Browns','SW.Browns'
+p$years.to.estimate = c(1968:2015)
+p$lobster.subunits=F
+p$length.based = T
 p$size.class= c(82,300)
 p$by.sex = F
 p$sex = 1# male female berried c(1,2,3)
 
-#out = groundfish.db(DS='gsdet.spec.redo',p=p)
-p$alpha = 0.05
 
-#out = groundfish.analysis(DS='ab.redo',p=p)
-#MPA functional groups
-p$functional.groups = F
 
-Xpaper=F
-  if(Xpaper){
-          p$years.to.estimate = 1999:2013
-          p$strat = c(470:483)
-          p$species = c(2526)
-          p$file.name = 'snowcrab.inshore.4x.png'
-          }
-#
 p$clusters = c( rep( "localhost", 7) )
 
-p = make.list(list(v=p$species, yrs=p$years.to.estimate),Y=p)
-p$runs = p$runs[order(p$runs$v),]
+p = make.list(list(yrs=p$years.to.estimate),Y=p)
+
 #parallel.run(groundfish.analysis,DS='stratified.estimates.redo',p=p,specific.allocation.to.clusters=T) #silly error arisingexit
 
 #not finished
 
-aout= groundfish.analysis(DS='stratified.estimates.redo',p=p)
+aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
 #habitat associations
-p$strata.files.return =T
-p$plot.name = 'white.hake.4vw.habitat.associations.pdf'
-aout= groundfish.analysis(DS='stratified.estimates.redo',p=p)
-figure.habitat.associations(aout,p=p)
-
-#redo a's and b's
-p$alpha = 0.05
-out = groundfish.analysis(DS='ab.redo',p=p)
-
 
 #figure stratified analysis Note--the values after comments are the other options
 p$add.reference.line = F
