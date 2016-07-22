@@ -13,9 +13,9 @@
 
 
 
-nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,define.by.polygons) {
+nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,define.by.polygons=T) {
+    
     loc = file.path( project.datadirectory(out.dir), "analysis" ,'nefsc')
-
     dir.create( path=loc, recursive=T, showWarnings=F )
          if(p$season=='spring')  {SEASON = 'Spring'    } 
          if(p$season=='fall') {SEASON = 'Fall'}
@@ -100,15 +100,32 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             ix = which(set$SEASON == SEASON)
 
          if(define.by.polygons) {
-
+            if(p$area=='georges.US') {return('this is not setup')}
+            if(p$lobster.subunits) {
             l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
-
-
-
-         } else {
-                iz = which(set$STRATUM %in% c(STRATUM))
+            l = l41[which(l41$OFFAREA == p$area),]
+            } else {
+                          a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
+                          l = attributes(a)$PolyData[,c('PID','STRATA')]
+                          a = merge(a,l,by='PID',all.x=T)
+                          a = a[which(a$STRATA<2000),]
+                          attr(a,'projection') <- "LL"
+                          l4 = joinPolys(l41,operation='UNION') 
+                          l4 = subset(l4,SID==1)
+                          f = joinPolys(a,l4,'INT') 
+                          f = merge(f,l,'PID')
+                          f = f[which(f$STRATA %in% STRATUM),]
+                          l = joinPolys(f,operation='UNION')
+                        
+                    }
+                        set$EID = 1:nrow(set)
+                        a = findPolys(set,l)
+                        iz = which(set$EID %in% a$EID)
+               } else {
+                       iz = which(set$STRATUM %in% c(STRATUM))
                 }
-            iy = intersect(intersect(ix,iy),iz)
+                
+                iy = intersect(intersect(ix,iy),iz)
                 se = set[iy,]
                 ca = cas #cas[iv,] see above
                 se$z = se$AVGDEPTH
@@ -175,7 +192,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   spr = data.frame(STRAT = STRATUM, Pr = props)
                   st = merge(st,spr)
                   names(st)[1] = 'Strata'
-                  st$NH = st$NH * st$Pr
+                  if(p$reweight.strata) st$NH = st$NH * st$Pr #weights the strata based on area in selected region
                   st = Prepare.strata.file(st)
                   sc1= sc
                   sc = Prepare.strata.data(sc)

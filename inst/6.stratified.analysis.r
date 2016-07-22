@@ -7,11 +7,12 @@ fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 #nefsc
 
 p$season =c('spring')# p$series =c('spring');p$series =c('fall')
-
-p$area = 'Crowell.Basin'
+p$define.by.polygons = T
+p$lobster.subunits=F
+p$area = 'LFA41'
+p$reweight.strata = T
 #p$area = 'georges.canada' # c('georges.US'); 'LFA412', 'Georges.Bank,'Georges.Basin','Crowell.Basin','SE.Browns','SW.Browns'
 p$years.to.estimate = c(1968:2015)
-p$lobster.subunits=T
 p$length.based = T
 p$size.class= c(82,300)
 p$by.sex = T
@@ -36,8 +37,8 @@ aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
 
 #figure stratified analysis Note--the values after comments are the other options
-p$add.reference.line = F
-p$time.series.start.year = 1970
+p$add.reference.lines = F
+p$time.series.start.year = 1968
 p$time.series.end.year = 2015
 p$reference.start.year = 1999
 p$reference.end.year = 2013
@@ -46,7 +47,7 @@ p$metric = 'numbers' #weights
 p$measure = 'stratified.mean' #'stratified.total'
 
 p$reference.measure = 'median' # mean, geomean
-p$file.name = 'legal-lfa35-38 lobster.png'
+
 
 #stock reference lines based on primary measure as above
   p$add.upper.lower = F
@@ -54,9 +55,10 @@ p$file.name = 'legal-lfa35-38 lobster.png'
         p$lower.reference.line = 0.4
 
         p$figure.title = 'Legal Sized Lobster 35-38'
+        p$file.name = paste(p$figure.title,'png',sep=".")
         p$y.maximum = NULL # NULL # if ymax is too high for one year
 	p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-
+p$legend=T
         p$legend.placement = 'topright'
         p$running.median = T
 		p$running.length = 3
@@ -65,7 +67,7 @@ p$error.polygon=F
 p$error.bars=T
 
 
-     ref.out=   figure.stratified.analysis(x=aout,p=p)
+     ref.out=   figure.stratified.analysis(x=aout,p=p,out.dir='bio.lobster')
 
 sfp = file.path(fp,'analysis','saved p files')
 dir.create(sfp,recursive=T,showWarnings=F)

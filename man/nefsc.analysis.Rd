@@ -5,7 +5,7 @@
 \title{nefsc.analysis}
 \usage{
 nefsc.analysis(DS = "stratified.estimates", out.dir = "bio.lobster",
-  p = p, ip = NULL)
+  p = p, ip = NULL, define.by.polygons = T)
 }
 \arguments{
 \item{\code{DS}}{:the selection of analysis, options include \code{stratified.estimates}}
