@@ -31,7 +31,10 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
 aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
 
-#all sexs,areas,legal,recruits, 
+p$season='fall'
+
+bout =  nefsc.analysis(DS='stratified.estimates.redo',p=p)
+
 
 
 
