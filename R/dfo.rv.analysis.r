@@ -69,40 +69,6 @@ if(DS %in% c('species.set.data')) {
                 }
                 return(outa)
               }
-if(DS %in% c('mean.wt.at.length')) {
-  p$strata.files.return=T
-  de = groundfish.db(DS='gsdet.odbc')
-  de = de[which(de$spec %in% p$spec & de$flen %in% p$size.class[1]:p$size.class[2]),]
-  de$id = paste(de$mission,de$setno,sep=".")
-  aout= groundfish.analysis(DS='stratified.estimates.redo',p=p,out.dir= out.dir)
-  a = NULL
-  out = data.frame(yr = p$years.to.estimate, meanWt = NA)
-    for(i in 1:length(aout)) {
-      #this is really gross coding, I am very sorry, brain not working, weighted mean per strat by totno, population weighted for annual total.
-        a = aout[[c(i,2)]]
-        a$id = paste(a$mission,a$setno,sep=".")
-        d = de[which(de$id %in% a$id),]
-     if(length(na.omit(d$fwt))>3){
-      if(any(d$mission=='TEL2005605' & d$spec==23)) {l = which(d$fshno==69); d$fwt[l] <- NA}
-          d = aggregate(fwt~id,data=d,FUN=mean)
-        a = merge(a,d,by=c('id'),all.x=T)
-        b = aggregate(totno~strat,data=a,FUN=sum)
-        a = merge(a,b,by='strat')
-        a$wt = a$totno.x/a$totno.y
-        b = as.data.frame(sapply(split(a,a$strat),function(x) weighted.mean(x$fwt,w=x$wt)))
-        b$strat = rownames(b)
-        names(b) = c('fwt','strat')
-        g = aggregate(totno.x~strat,data=a,FUN=mean)
-        h = data.frame(strat=aout[[c(i,1,1)]],NH=aout[[c(i,1,2)]])
-        b = merge(b,g,by='strat')
-        b = merge(b,h,by='strat')
-        b$wt = b$totno.x * b$NH
-        b = weighted.mean(b$fwt,w=b$wt,na.rm=T)
-        out[i,'meanWt']  = b
-      }
-    }
-return(out)
-}
 
 if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
           if(DS=='stratified.estimates'){

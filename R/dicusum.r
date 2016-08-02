@@ -23,7 +23,9 @@ dicusum <- function(x,ref.index,k) {
                 neg.dev[i]<-min(0,neg.dev[i-1]+z[i]+k)
                 }
     
-    list(pos.dev=pos.dev,neg.dev=neg.dev,ref.index = ref.index)
+    a = list(pos.dev=pos.dev,neg.dev=neg.dev,ref.index = ref.index)
+    class(a) <- 'dicusum'
+    return(a)
   
 }
 
