@@ -222,7 +222,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   ssW = summary(sW)
                   ssN = summary(sN)
                
-               if(!p$strata.efficiencies) {
+               
                       bsW = NA
                       bsN = NA
                       nt = NA
@@ -253,4 +253,4 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
              return(out)
 
    }
-}
+
