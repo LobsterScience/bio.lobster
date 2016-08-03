@@ -29,8 +29,7 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
          if(p$lobster.subunits==T &p$area=='SE.Browns' )    {STRATUM = c(1290,1310); props = c(0.029519,0.08869)}  
          if(p$lobster.subunits==T &p$area=='SW.Browns' )    {STRATUM = c(1300,1290,1310,1340,1360); props=c(0.391,0.0879,0.0709,0.0103,0.0606)}  
 
-         if(!is.null(p$strat)) strat = p$strat
-
+        
          if (exists( "libs", p)) {
             p0 = p;
             RLibrary( p$libs )

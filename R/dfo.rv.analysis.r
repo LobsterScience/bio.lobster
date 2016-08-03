@@ -21,8 +21,8 @@ dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', 
          if(p$series=='summer')  {mns = c('June','July','August')     ; strat = c(440:495)}
          if(p$series=='georges') {mns = c('February','March','April'); strat = c('5Z1','5Z2','5Z3','5Z4','5Z5','5Z6','5Z7','5Z8','5Z9')}
          
-         if(p$area=='Georges.Canada' & series == 'georges') {strat = c('5Z1','5Z2')  }
-         if(p$area=='Georges.US' & series =='georges')     {strat = c('5Z3','5Z4','5Z5','5Z6','5Z7','5Z8')}
+         if(p$area=='Georges.Canada' & p$series == 'georges') {strat = c('5Z1','5Z2')  }
+         if(p$area=='Georges.US' & p$series =='georges')     {strat = c('5Z3','5Z4','5Z5','5Z6','5Z7','5Z8')}
          
          if(p$area== 'LFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485); props = c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409)}
         
@@ -33,9 +33,7 @@ dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', 
          if(p$lobster.subunits==T & p$area=='Georges.Bank' & p$series=='georges') {strat = c('5Z1','5Z2'); props = c(0.6813, 0.5474)}   
          if(p$lobster.subunits==T &p$area=='Georges.Basin' & p$series=='georges') {strat = c('5Z1','5Z2'); props = c(0.3187, 0.4537)}
          
-
-
-         if(!is.null(p$strat)) strat = p$strat
+         
 
          if (exists( "libs", p)) {
             p0 = p;
@@ -96,7 +94,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         cas = groundfish.db(DS='gscat.odbc')
         stra = groundfish.db(DS='gsstratum')
         de = groundfish.db(DS='gsdet.odbc')
-        set$X = convert.dd.dddd(set$slong)
+        set$X = convert.dd.dddd(set$slong) *-1
         set$Y = convert.dd.dddd(set$slat)
         
         stra$NH = as.numeric(stra$area)/0.011801
@@ -118,13 +116,12 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             yr = p$runs[iip,"yrs"]
             print ( p$runs[iip,] )
             iy = which(year(set$sdate) %in% yr)
-            iv = which(ca$spec==2550)
+            iv = which(cas$spec==2550)
    
-        if(define.by.polygons) {
-        
+        if(p$define.by.polygons) {
+               l = l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
             if(p$lobster.subunits) {
-                    l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
-                    l = l41[which(l41$OFFAREA == p$area),]
+                       l = l41[which(l41$OFFAREA == p$area),]
                     } else {
                           print('All LFA41 subsetted by LFA Area')
                           l41 = joinPolys(as.PolySet(l41),operation='UNION')
