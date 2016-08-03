@@ -193,6 +193,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   st = merge(st,spr)
                   names(st)[1] = 'Strata'
                   if(p$reweight.strata) st$NH = st$NH * st$Pr #weights the strata based on area in selected region
+                  st = st[order(st$Strata),]
                   st = Prepare.strata.file(st)
                   sc1= sc
                   sc = Prepare.strata.data(sc)
