@@ -10,7 +10,7 @@ p$season =c('spring')# p$series =c('spring');p$series =c('fall')
 p$define.by.polygons = T
 p$lobster.subunits=F
 p$area = 'LFA41'
-p$reweight.strata = T
+p$reweight.strata = T #this subsets 
 #p$area = 'georges.canada' # c('georges.US'); 'LFA412', 'Georges.Bank,'Georges.Basin','Crowell.Basin','SE.Browns','SW.Browns'
 p$years.to.estimate = c(1968:2015)
 p$length.based = T
@@ -76,8 +76,42 @@ sfp = file.path(fp,'analysis','saved p files')
 dir.create(sfp,recursive=T,showWarnings=F)
 save(p,file=file.path(sfp,paste('pfile',p$species,p$series,'strata',min(p$strat),max(p$strat),'rdata',sep=".")))
 
+###----------------------------------------------------------------------------------
+
+#DFO RV Analysis
+
+p = bio.lobster::load.environment()
+p$libs = NULL
+fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 
 
-###Standardarding catch rate data
+p$series =c('summer')# p$series =c('georges');p$series =c('fall')
+p$define.by.polygons = T
+p$lobster.subunits=F
+p$area = 'LFA41'
+p$reweight.strata = T #this subsets 
+p$years.to.estimate = c(1970:2015)
+p$length.based = T
+p$size.class= c(82,300)
+p$by.sex = T
+p$sex = 1# male female berried c(1,2,3)
+p$bootstrapped.ci=T
+p$strata.files.return=F
+
+p$clusters = c( rep( "localhost", 7) )
+
+p = make.list(list(yrs=p$years.to.estimate),Y=p)
+
+#parallel.run(groundfish.analysis,DS='stratified.estimates.redo',p=p,specific.allocation.to.clusters=T) #silly error arisingexit
+
+#not finished
+
+aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+
+
+p$season='fall'
+
+bout =  nefsc.analysis(DS='stratified.estimates.redo',p=p)
+
 
 
