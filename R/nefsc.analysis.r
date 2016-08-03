@@ -105,6 +105,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
             l = l41[which(l41$OFFAREA == p$area),]
             } else {
+                          print('All LFA41 subsetted by LFA Area')
                           a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
                           l = attributes(a)$PolyData[,c('PID','STRATA')]
                           a = merge(a,l,by='PID',all.x=T)

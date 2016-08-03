@@ -21,14 +21,15 @@ dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', 
          if(p$series=='summer')  {mns = c('June','July','August')     ; strat = c(440:495)}
          if(p$series=='georges') {mns = c('February','March','April'); strat = c('5Z1','5Z2','5Z3','5Z4','5Z5','5Z6','5Z7','5Z8','5Z9')}
          
-         if(p$area=='Georges.Canada' & series == 'georges') {strat = c('5Z1','5Z2') ; props = c(1,1) }
-         if(p$area=='Georges.US' & series =='georges')     {strat = c('5Z3','5Z4','5Z5','5Z6','5Z7','5Z8'); props=rep(1,6)}
-         if(p$lobster.subunits==T & p$area=='Georges.Bank' & p$series=='summer') {return('no overlap')}   
+         if(p$area=='Georges.Canada' & series == 'georges') {strat = c('5Z1','5Z2')  }
+         if(p$area=='Georges.US' & series =='georges')     {strat = c('5Z3','5Z4','5Z5','5Z6','5Z7','5Z8')}
+         
+         if(p$area= 'LFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485); props = c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409)}
+        
          if(p$lobster.subunits==T &p$area=='Georges.Basin' & p$series=='summer') {strat = c(482,483); props = c(0.1462, 0.2696)}      
          if(p$lobster.subunits==T &p$area=='Crowell.Basin' & p$series=='summer') {strat = c(482,483,484,485); props = c(0.1963,0.1913,0.3935,0.0483)}   
          if(p$lobster.subunits==T &p$area=='SE.Browns' & p$series=='summer')    {strat = c(472,473,475,477,478,481,482); props = c(0.2196,0.4415,0.00202,0.7592,0.7151,0.0868,0.0871)}  
          if(p$lobster.subunits==T &p$area=='SW.Browns' & p$series=='summer')    {strat = c(481,482,483,484,485); props=c(0.0509,0.2684,0.4358,0.1143,0.02197)}  
-
          if(p$lobster.subunits==T & p$area=='Georges.Bank' & p$series=='georges') {strat = c('5Z1','5Z2'); props = c(0.6813, 0.5474)}   
          if(p$lobster.subunits==T &p$area=='Georges.Basin' & p$series=='georges') {strat = c('5Z1','5Z2'); props = c(0.3187, 0.4537)}
          
@@ -75,23 +76,29 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             outa = NULL
             a = dir(loc)
             a = a[grep('stratified',a)]
-            a = a[grep(paste(p$species,collapse="|"),a)]
-          for(op in a) {
-                load(file.path(loc,op))
-                b = strsplit(op,"\\.")
-                b = b[[1]][grep('length',b[[1]])+1]
-                out$group = b
-                outa = rbind(out,outa)
-                }
-                return(outa)
+            a = a[grep(p$area,a)]
+            a = a[grep(p$series,a)]
+            if(p$length.based) {
+                a = a[grep(p$size.class[1],a)]
+                a = a[grep(p$size.class[2],a)]
               }
+            if(p$by.sex) {
+              k = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+              a = a[grep(k,a)]
+            }
+
+             load(file.path(loc,a))
+             return(out)
+             }
 
 
         set = groundfish.db(DS='gsinf.odbc')
         cas = groundfish.db(DS='gscat.odbc')
         stra = groundfish.db(DS='gsstratum')
         de = groundfish.db(DS='gsdet.odbc')
-
+        set$X = convert.dd.dddd(set$slong)
+        set$Y = convert.dd.dddd(set$slat)
+        
         stra$NH = as.numeric(stra$area)/0.011801
         ii = which(months(set$sdate) %in% mns & set$strat %in% strat & set$type %in% c(1,5))
         print('Both set types 1 and 5 are saved in data frame but only 1 is used for stratified')
@@ -112,13 +119,30 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             print ( p$runs[iip,] )
             iy = which(year(set$sdate) %in% yr)
             iv = which(ca$spec==2550)
-                se = set[iy,]
+   
+        if(define.by.polygons) {
+        
+            if(p$lobster.subunits) {
+                    l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
+                    l = l41[which(l41$OFFAREA == p$area),]
+                    } else {
+                          print('All LFA41 subsetted by LFA Area')
+                          l41 = joinPolys(as.PolySet(l41),operation='UNION')
+                        attr(l41,'projection') <- 'LL'
+                        l41 = subset(l41, SID==1)
+                    }
+                        set$EID = 1:nrow(set)
+                        a = findPolys(set,l)
+                        iz = which(set$EID %in% a$EID)
+                  } else {
+                        iz = which(set$strat %in% c(strat))
+                }
+
+                se = set[intersect(iy,iz),]
                 ca = cas[iv,]
-                  se$z = (se$dmin+se$dmax) / 2
+                se$z = (se$dmin+se$dmax) / 2
                 vars.2.keep = c('mission','slat','slong','setno','sdate','dist','strat','z','bottom_temperature','bottom_salinity','type')
                 se = se[,vars.2.keep]
-                se$slong = convert.dd.dddd(se$slong)
-                se$slat = convert.dd.dddd(se$slat)
         p$lb = p$length.based
 
         if(p$by.sex & !p$length.based) {p$size_class=c(0,1000); p$length.based=T}
@@ -175,6 +199,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                              print('Into Needler Years No Need for Vessel Correction')
                            }
                            }
+             
                            if(nrow(ca)>=1) {
 		                      ca = aggregate(cbind(totwgt,totno)~mission+setno,data=ca,FUN=sum)
                           sc = merge(se,ca,by=c('mission','setno'),all.x=T)
@@ -185,15 +210,21 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                           st = stra[io,c('strat','NH')]
                           st = st[order(st$strat),]
                           st$Strata = st$strat
+                          spr = data.frame(Strata = strat, Pr = props)
+                          st = merge(st,spr)
+                          if(p$reweight.strata) st$NH = st$NH * st$Pr #weights the strata based on area in selected region
+         
                           st = Prepare.strata.file(st)
                           sc1= sc
                           sc = sc[which(sc$type==1),]
                           sc = Prepare.strata.data(sc)
                           strata.files[[mp]]  = list(st,sc1)
+
                   sW = Stratify(sc,st,sc$totwgt)
                   sN = Stratify(sc,st,sc$totno)
                   ssW = summary(sW)
                   ssN = summary(sN)
+               
                if(!p$strata.efficiencies) {
                       bsW = NA
                       bsN = NA
@@ -214,9 +245,11 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
           }
               lle = 'all'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
-              fn = paste('stratified',v0,p$series,p$area,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
-              fn.st = paste('strata.files',v0,p$series,p$area,'strata',min(strat),max(strat),'length',lle,'rdata',sep=".")
-             print(fn)
+              if(p$by.sex)      lbs = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+           
+              fn = paste('stratified',v0,p$series,p$area,'strata',min(strat),max(strat),'length',lle,lbs,'rdata',sep=".")
+              fn.st = paste('strata.files',v0,p$series,p$area,'strata',min(strat),max(strat),'length',lle,lbs,'rdata',sep=".")
+              print(fn)
               save(out,file=file.path(loc,fn))
               save(strata.files,file=file.path(loc,fn.st))
              if(p$strata.files.return) return(strata.files)
