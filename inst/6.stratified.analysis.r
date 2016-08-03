@@ -79,7 +79,7 @@ save(p,file=file.path(sfp,paste('pfile',p$species,p$series,'strata',min(p$strat)
 ###----------------------------------------------------------------------------------
 
 #DFO RV Analysis
-
+require(bio.lobster)
 p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
@@ -97,7 +97,8 @@ p$by.sex = T
 p$sex = 1# male female berried c(1,2,3)
 p$bootstrapped.ci=T
 p$strata.files.return=F
-
+p$vessel.correction.fixed=1.2
+p$strat = NULL
 p$clusters = c( rep( "localhost", 7) )
 
 p = make.list(list(yrs=p$years.to.estimate),Y=p)
@@ -106,7 +107,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
 #not finished
 
-aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
 
 
 p$season='fall'
