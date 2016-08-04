@@ -113,6 +113,17 @@ l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA
 			h$area = abs(h$area)
 			h$area[which(h$PID==481)] = h$area[which(h$PID==481)] - h$area[which(h$PID==480)]
 
+#Full LFA41
+	LFA41 = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))
+	LFA41 = joinPolys(as.PolySet(LFA41),operation='UNION')
+	attr(LFA41,'projection') <- 'LL'
+	LFA41 = subset(LFA41, SID==1)
+
+	lo = joinPolys(a,LFA41,'INT')
+	la = calcArea(lo)
+	le = aggregate(area~PID,data = la, FUN=sum)
+	le = merge(le,h,by='PID',all.x=T)
+	le$prop = le$area.x/le$area.y
 
 #CrowellBasin
 lo = joinPolys(a,subset(l41,PID==1),'INT')
