@@ -108,7 +108,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         io = which(is.na(cas$sampwgt) & !is.na(cas$totwgt))
         cas[io,'sampwgt'] <- cas[io,'totwgt']
         strata.files = list()
-     out = data.frame(yr=NA,sp=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA)
+     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs=NA)
     mp=0
     np=1
     for(iip in ip) {
@@ -117,7 +117,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             print ( p$runs[iip,] )
             iy = which(year(set$sdate) %in% yr)
             iv = which(cas$spec==2550)
-   
+
         if(p$define.by.polygons) {
                l = l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
             if(p$lobster.subunits) {
@@ -216,7 +216,6 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                           sc = sc[which(sc$type==1),]
                           sc = Prepare.strata.data(sc)
                           strata.files[[mp]]  = list(st,sc1)
-
                   sW = Stratify(sc,st,sc$totwgt)
                   sN = Stratify(sc,st,sc$totno)
                   ssW = summary(sW)
@@ -231,21 +230,22 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
                   nt  = sum(sW$Nh)/1000
                 }
-                out[mp,] = c(yr,v,ssW[[1]],ssW[[2]],bsW[1],bsW[2],ssW[[3]]/1000,bsW[1]*nt,bsW[2]*nt,
-                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao)
-                print(out[mp,'v'])
+                out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[1],bsW[2],ssW[[3]]/1000,bsW[1]*nt,bsW[2]*nt,
+                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]),round(sum(sc$totno)))
+                print(out[mp,'yr'])
               } else {
-                out[mp,] = c(yr,v,rep(0,15))
-                print(out[mp,'v'])
+                out[mp,] = c(yr,rep(0,18))
+                print(out[mp,'yr'])
               }
             }
           }
               lle = 'all'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
               if(p$by.sex)      lbs = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+              if(length(lbs)>1) lbs = paste(lbs[1],lbs[2],sep='&')
            
-              fn = paste('stratified',v0,p$series,p$area,'strata',min(strat),max(strat),'length',lle,lbs,'rdata',sep=".")
-              fn.st = paste('strata.files',v0,p$series,p$area,'strata',min(strat),max(strat),'length',lle,lbs,'rdata',sep=".")
+              fn = paste('stratified',p$series,p$area,'strata',min(strat),max(strat),'length',lle,lbs,'rdata',sep=".")
+              fn.st = paste('strata.files',p$series,p$area,'strata',min(strat),max(strat),'length',lle,lbs,'rdata',sep=".")
               print(fn)
               save(out,file=file.path(loc,fn))
               save(strata.files,file=file.path(loc,fn.st))

@@ -24,7 +24,7 @@
 #' LobsterMap('all',poly.lst=catchgrids[1:2],title="2007 Lobster Catch")
 #' ContLegend("bottomright",lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (t)",inset=0.02,cex=0.8,bg='white')
 #' @export
-LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL,...){
+LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, output = 'bio.lobster',fname = 'one.pdf',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL,...){
 
 options(stringsAsFactors=F)		
 	require(PBSmapping)|| stop("Install PBSmapping Package")
@@ -57,7 +57,11 @@ options(stringsAsFactors=F)
 	rivers<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","gshhs",paste0("rivers",mapRes,".csv")))
 	attr(coast,"projection")<-"LL"
 
-
+if(save) {
+	print('only pdf and png are setup to save')
+	if(grepl('pdf',fname)) pdf(file.path(project.figuredirectory(output),fname), width=6.5, height=5, bg='white')
+	if(grepl('png',fname)) png(file.path(project.figuredirectory(output),fname), width=3072, height=2304, pointsize=40, res=300)
+	}
 	#par(...)
 	plotMap(coast,xlim=xlim,ylim=ylim,border=NA,...)
 	#addLines(rivers)
@@ -159,9 +163,9 @@ options(stringsAsFactors=F)
 				addPolys(LFAgrid,border=rgb(0,0,0,0.2),col=NULL)
 			}
 		}
-		#browser()
+			#browser()
 		addPolys(LFAs)
-		if(labels=='lfa'){
+		if('lfa'%in% labels){
 			LFAgrid$label<-LFAgrid$PID
 			LFAgrid$label[LFAgrid$label==311]<-'31A'
 			LFAgrid$label[LFAgrid$label==312]<-'31B'
@@ -171,8 +175,9 @@ options(stringsAsFactors=F)
     		LFAgrid.dat$Y[il] = 45.02
     		il = which(LFAgrid.dat$label==35)
 			LFAgrid.dat$Y[il] = 45.23
-    		
-			#addLabels(subset(LFAgrid.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.8),cex=1.5)
+			
+    		LFAgrid.dat = as.data.frame(rbind(LFAgrid.dat,c(41,-62,43.4,41)))	#add in lfa41 label		
+			addLabels(subset(LFAgrid.dat,!duplicated(label)),col=rgb(0,0,0,0.8),cex=labcex)
 		}
 
 	}
@@ -228,7 +233,6 @@ options(stringsAsFactors=F)
 		gridlines<-makeGrid(x,y,byrow=TRUE,addSID=TRUE,projection="LL",zone=NULL)
 		addLines(gridlines,col='grey80',lwd=1)
 	}
-	if('lfa'%in%labels) addLabels(subset(LFAgrid.dat,!duplicated(label)),col=rgb(0,0,0,0.5),cex=labcex,font=2)
 	if('grid'%in%labels) addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.5),cex=labcex)
 	if('subarea'%in%labels) addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.5),cex=labcex)
 	if(is.list(labels)) addLabels(labels[[1]],polyProps=labels[[2]])
@@ -238,7 +242,11 @@ options(stringsAsFactors=F)
 	
 
 	title(main=title)
+if(save){
+	dev.off()
+	print('saved')
 	
+}	
 
 }
 
