@@ -53,13 +53,13 @@ options(stringsAsFactors=F)
 	if(area=='41')		{ ylim=c(41.1,44); 		xlim=c(-68,-63.5)	}
 	
 
-	coast<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","gshhs",paste0("shoreline",mapRes,".csv")))
-	rivers<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","gshhs",paste0("rivers",mapRes,".csv")))
+	coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline",mapRes,".csv")))
+	rivers<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("rivers",mapRes,".csv")))
 	attr(coast,"projection")<-"LL"
 
 if(save) {
 	print('only pdf and png are setup to save')
-	if(grepl('pdf',fname)) pdf(file.path(project.figuredirectory(output),fname), width=6.5, height=5, bg='white')
+	if(grepl('pdf',fname)) pdf(file.path(project.figuredirectory(output),fname), width=6.5, height=5)
 	if(grepl('png',fname)) png(file.path(project.figuredirectory(output),fname), width=3072, height=2304, pointsize=40, res=300)
 	}
 	#par(...)
@@ -93,7 +93,7 @@ if(save) {
 		if(!is.null(isobaths)){
 			bath.lst<-list()
 			for(i in unique(ceiling(isobaths/1000))){
-	 			load(file.path( project.datadirectory("lobster"), "data","maps", bathy.source, paste0("bathy",sn,"Poly",i,".rdata")))
+	 			load(file.path( project.datadirectory("bio.lobster"), "data","maps", bathy.source, paste0("bathy",sn,"Poly",i,".rdata")))
 	 			bath.lst[[i]]<-bathy.poly
 	 		}
  			bathy.poly<-do.call(rbind,bath.lst)
@@ -107,7 +107,7 @@ if(save) {
 	# NAFO
 	if(!is.null(nafo)){
 		
-        nafo.xy<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","nafo.csv"))
+        nafo.xy<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","nafo.csv"))
         if(nafo[1]=='all')nafo<-unique(nafo.xy$label)
         nafo.sel<-subset(nafo.xy,label%in%nafo)
         nafo.dat<-merge(calcCentroid(nafo.sel),nafo.sel[c("PID","label")])[!duplicated(nafo.sel[c("PID","label")]),]
@@ -120,7 +120,7 @@ if(save) {
 	
 #groundfish survey summer strata	
 	if(addSummerStrata) {
-			  loadfunctions('polygons')
+			  loadfunctions('bio.polygons')
 			  a = find.bio.gis('summer_strata_labels',return.one.match=F)
 			  a = read.csv(a,header=T)
 			  names(a)[4] <- 'label'
@@ -131,17 +131,17 @@ if(save) {
 			  b = b[which(b$PID %in% c(subsetSummerStrata)),]
 				}
 			  b = within(b,{POS <- ave(PID,list(PID),FUN=seq_along)})
-			  addPolys(b,lty=1,border='lightblue',col=adjustcolor('blue',alpha.f=0.15))
+			  addPolys(b,lty=1,border='black',col=adjustcolor('lightblue',alpha.f=1))
 			 # addLabels(a,cex=0.6)
 			}
   # Boundries
 	
 	if(boundaries=='LFAs'){
 		
-		LFAs<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","LFAPolys.csv"))
-		LFAgrid<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","GridPolys.csv"))
-		LFA41<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","LFA41Offareas.csv"))
-		subareas<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","LFA2733subareas.csv"))
+		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+		LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
+		LFA41<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))
+		subareas<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA2733subareas.csv"))
 
 		if(area=='31a')area<-311
 		if(area=='31b')area<-312
@@ -183,13 +183,13 @@ if(save) {
 	}
 
 	if(boundaries=='scallop'){
-		SFA<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","SFA.csv"))
+		SFA<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","SFA.csv"))
 		addLines(SFA)
-		SPA<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","SPA.csv"))
+		SPA<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","SPA.csv"))
 		addPolys(SPA,col=NULL)
 	}
 		
-	EEZ<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","EEZ.csv"))
+	EEZ<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","EEZ.csv"))
 	addLines(EEZ,lty=4,lwd=2)
 	
 	# plots land
@@ -205,7 +205,7 @@ if(save) {
 		if(!is.null(topolines)){
 			topo.lst<-list()
 			for(i in unique(ceiling(topolines/1000))){
-	 			load(file.path( project.datadirectory("lobster"), "data", "maps","topex",paste0("topoPoly",i,".rdata")))
+	 			load(file.path( project.datadirectory("bio.lobster"), "data", "maps","topex",paste0("topoPoly",i,".rdata")))
 	 			topo.lst[[i]]<-topo.poly
 	 		}
  			topo.poly<-do.call(rbind,topo.lst)
