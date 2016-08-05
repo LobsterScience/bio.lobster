@@ -24,10 +24,6 @@ p$clusters = c( rep( "localhost", 7) )
 
 p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
-#parallel.run(groundfish.analysis,DS='stratified.estimates.redo',p=p,specific.allocation.to.clusters=T) #silly error arisingexit
-
-#not finished
-
 aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
 
@@ -100,19 +96,9 @@ p$strata.files.return=F
 p$vessel.correction.fixed=1.2
 p$strat = NULL
 p$clusters = c( rep( "localhost", 7) )
-
+p$strata.efficiencies =T
 p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
-#parallel.run(groundfish.analysis,DS='stratified.estimates.redo',p=p,specific.allocation.to.clusters=T) #silly error arisingexit
-
-#not finished
-
 aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-
-
-p$season='fall'
-
-bout =  nefsc.analysis(DS='stratified.estimates.redo',p=p)
-
 
 
