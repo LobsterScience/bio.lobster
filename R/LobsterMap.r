@@ -131,7 +131,7 @@ if(save) {
 			  b = b[which(b$PID %in% c(subsetSummerStrata)),]
 				}
 			  b = within(b,{POS <- ave(PID,list(PID),FUN=seq_along)})
-			  addPolys(b,lty=1,border='black',col=adjustcolor('lightblue',alpha.f=1))
+			  addPolys(b,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
 			 # addLabels(a,cex=0.6)
 			}
   # Boundries
