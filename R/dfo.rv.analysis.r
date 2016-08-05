@@ -111,6 +111,9 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
      out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs=NA)
     mp=0
     np=1
+    effic.out = data.frame(yr=NA,strat.effic.wt=NA,alloc.effic.wt=NA,strat.effic.n=NA,alloc.effic.n=NA)
+    nopt.out =  list()
+
     for(iip in ip) {
             mp = mp+1
             yr = p$runs[iip,"yrs"]
@@ -220,8 +223,15 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   sN = Stratify(sc,st,sc$totno)
                   ssW = summary(sW)
                   ssN = summary(sN)
-               
-               
+                if(p$strata.efficiencies) {
+                      ssW = summary(sW,effic=T,nopt=T)
+                      ssN = summary(sN,effic=T,nopt=T)
+                    effic.out[mp,] = c(yr,ssW$effic.str,ssW$effic.alloc,ssN$effic.str,ssN$effic.alloc)
+                    nopt.out[[mp]] = list(yr,ssW$n.opt,ssN$n.opt)
+                  }
+             
+                if(!p$strata.efficiencies) {
+              
                       bsW = NA
                       bsN = NA
                       nt = NA
@@ -239,6 +249,10 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
               }
             }
           }
+           if(p$strata.efficiencies) {
+                 return(list(effic.out,nopt.out))
+              }
+  
               lle = 'all'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
               if(p$by.sex)      lbs = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
