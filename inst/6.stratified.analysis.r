@@ -80,6 +80,7 @@ p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 
+
 p$series =c('summer')# p$series =c('georges');p$series =c('fall')
 p$define.by.polygons = T
 p$lobster.subunits=F
@@ -131,5 +132,38 @@ save(aout,file = file.path(project.datadirectory('bio.lobster'),'analysis','lfa4
 
 
 
+
+#by length for histograms
+#DFO RV Analysis
+require(bio.lobster)
+p = bio.lobster::load.environment()
+p$libs = NULL
+fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+
+
+p$series =c('summer')# p$series =c('georges');p$series =c('fall')
+p$define.by.polygons = T
+p$lobster.subunits=F
+p$area = 'LFA41'
+p$reweight.strata = T #this subsets 
+p$years.to.estimate = c(1999:2015)
+p$length.based = T
+p$size.class= c(82,300)
+p$by.sex = T
+p$sex = c(1,2) # male female berried c(1,2,3)
+p$bootstrapped.ci=F
+p$strata.files.return=F
+p$vessel.correction.fixed=1.2
+p$strat = NULL
+p$clusters = c( rep( "localhost", 7) )
+p$strata.efficiencies = F
+p = make.list(list(yrs=p$years.to.estimate),Y=p)
+
+a = seq(3,200,3)
+out = list()
+for(i in 1:length(a)) {
+  p$size.class=c(a[i],a[i]+2)
+  out[[i]] = dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
+  }
 
 
