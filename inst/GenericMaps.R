@@ -10,7 +10,7 @@ LobsterMap(xlim=c(-69,-57.5),ylim=c(41.5,47.2),boundaries='LFAs',labcex=.8,fname
 LobsterMap('41',boundaries='LFAs',labcex=.8,fname='LFA41.pdf',save=T,output='bio.lobster')
 
 
-LobsterMap(xlim=c(-69,-56.8),ylim=c(41.2,47.5),boundaries='N',addSummerStrata=T,output='bio.lobster','summerstratamap.pdf',save=T)
+LobsterMap(xlim=c(-69,-56.8),ylim=c(41.2,47.5),boundaries='LFAs',addSummerStrata=T,output='bio.lobster','summerstratamap.pdf',save=F,labcex =0.8)
 
 
 	FA41 = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))

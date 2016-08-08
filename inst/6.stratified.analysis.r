@@ -80,13 +80,12 @@ p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 
-
 p$series =c('summer')# p$series =c('georges');p$series =c('fall')
 p$define.by.polygons = T
 p$lobster.subunits=F
 p$area = 'LFA41'
 p$reweight.strata = T #this subsets 
-p$years.to.estimate = c(2001:2015)
+p$years.to.estimate = c(1999:2015)
 p$length.based = T
 p$size.class= c(82,300)
 p$by.sex = T
@@ -96,9 +95,41 @@ p$strata.files.return=F
 p$vessel.correction.fixed=1.2
 p$strat = NULL
 p$clusters = c( rep( "localhost", 7) )
-p$strata.efficiencies =T
+p$strata.efficiencies = F
 p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
 aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+
+
+#survey efficiency
+#dfo summer defined by LFA41 polygons
+p$strata.efficiencies = T
+aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+save(aout,file = file.path(project.datadirectory('bio.lobster'),'analysis','lfa41restratified.survey.efficiency.rdata'))
+  #these are currently for commercial size fish
+  load(file = file.path(project.datadirectory('bio.lobster'),'analysis','lfa41restratified.survey.efficiency.rdata'))
+    pdf(file.path(project.figuredirectory('bio.lobster'),'lfa41restratifiedsurveyefficiency.pdf'))
+      with(aout[[1]],plot(yr-0.1,strat.effic.wt,type='h',col='black',xlab='Year', lwd=2,ylab='Efficiency (%)',ylim=c(-100,100)))
+      with(aout[[1]],lines(yr+0.1,alloc.effic.wt,type='h',col='grey40',lwd=2,ylab='Efficiency (%)',ylim=c(-100,100)))
+      legend('topright',lty=c(1,1),lwd=2,col=c('black','grey40'),c('Strata Efficiency','Allocation Efficiency'),bty='n',cex=0.9)
+      dev.off()
+
+#dfo summer defined by survey polygons
+    p$strata.efficiencies = T
+    p$define.by.polygons=F
+    p$reweight.strata=F
+    aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+    save(aout,file = file.path(project.datadirectory('bio.lobster'),'analysis','lfa41basestratified.survey.efficiency.rdata'))
+
+  #these are currently for commercial size fish
+  load(file = file.path(project.datadirectory('bio.lobster'),'analysis','lfa41basestratified.survey.efficiency.rdata'))
+    pdf(file.path(project.figuredirectory('bio.lobster'),'lfa41basesurveyefficiency.pdf'))
+      with(aout[[1]],plot(yr-0.1,strat.effic.wt,type='h',col='black',xlab='Year', lwd=2,ylab='Efficiency (%)',ylim=c(-100,100)))
+      with(aout[[1]],lines(yr+0.1,alloc.effic.wt,type='h',col='grey40',lwd=2,ylab='Efficiency (%)',ylim=c(-100,100)))
+      legend('topright',lty=c(1,1),lwd=2,col=c('black','grey40'),c('Strata Efficiency','Allocation Efficiency'),bty='n',cex=0.9)
+      dev.off()
+
+
+
 
 

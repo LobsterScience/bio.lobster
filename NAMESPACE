@@ -2,6 +2,7 @@
 
 S3method(contour,gen)
 S3method(plot,dicusum)
+export("%ni%")
 export(BarPlotCLF)
 export(BubblePlotCLF)
 export(CLF)

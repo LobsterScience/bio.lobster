@@ -13,7 +13,7 @@
 
 
 
-dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL) {
+dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,save=T) {
     loc = file.path( project.datadirectory(out.dir), "analysis" )
 
     dir.create( path=loc, recursive=T, showWarnings=F )
@@ -23,9 +23,9 @@ dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', 
          
          if(p$area=='Georges.Canada' & p$series == 'georges') {strat = c('5Z1','5Z2')  }
          if(p$area=='Georges.US' & p$series =='georges')     {strat = c('5Z3','5Z4','5Z5','5Z6','5Z7','5Z8')}
-         
+         browser()
          if(p$area== 'LFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485); props = c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409)}
-        
+         if(p$area== 'adjacentLFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485,480); props = 1-c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409,0)}
          if(p$lobster.subunits==T &p$area=='Georges.Basin' & p$series=='summer') {strat = c(482,483); props = c(0.1462, 0.2696)}      
          if(p$lobster.subunits==T &p$area=='Crowell.Basin' & p$series=='summer') {strat = c(482,483,484,485); props = c(0.1963,0.1913,0.3935,0.0483)}   
          if(p$lobster.subunits==T &p$area=='SE.Browns' & p$series=='summer')    {strat = c(472,473,475,477,478,481,482); props = c(0.2196,0.4415,0.00202,0.7592,0.7151,0.0868,0.0871)}  
@@ -133,7 +133,8 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                     }
                         set$EID = 1:nrow(set)
                         a = findPolys(set,l)
-                        iz = which(set$EID %in% a$EID)
+                       iz = which(set$EID %in% a$EID)
+                       if(p$area=='adjacentLFA41') iz = which(set$EID %!in% a$EID)
                   } else {
                         iz = which(set$strat %in% c(strat))
                 }
@@ -253,7 +254,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                  return(list(effic.out,nopt.out))
               }
   
-              lle = 'all'
+              lbs = lle = 'all'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
               if(p$by.sex)      lbs = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
               if(length(lbs)>1) lbs = paste(lbs[1],lbs[2],sep='&')
@@ -261,8 +262,10 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
               fn = paste('stratified',p$series,p$area,'strata',min(strat),max(strat),'length',lle,lbs,'rdata',sep=".")
               fn.st = paste('strata.files',p$series,p$area,'strata',min(strat),max(strat),'length',lle,lbs,'rdata',sep=".")
               print(fn)
+              if(save) {
               save(out,file=file.path(loc,fn))
               save(strata.files,file=file.path(loc,fn.st))
+              }
              if(p$strata.files.return) return(strata.files)
              return(out)
 
