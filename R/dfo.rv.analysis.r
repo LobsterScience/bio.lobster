@@ -23,7 +23,7 @@ dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', 
          
          if(p$area=='Georges.Canada' & p$series == 'georges') {strat = c('5Z1','5Z2')  }
          if(p$area=='Georges.US' & p$series =='georges')     {strat = c('5Z3','5Z4','5Z5','5Z6','5Z7','5Z8')}
-         browser()
+        
          if(p$area== 'LFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485); props = c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409)}
          if(p$area== 'adjacentLFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485,480); props = 1-c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409,0)}
          if(p$lobster.subunits==T &p$area=='Georges.Basin' & p$series=='summer') {strat = c(482,483); props = c(0.1462, 0.2696)}      
@@ -134,7 +134,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                         set$EID = 1:nrow(set)
                         a = findPolys(set,l)
                        iz = which(set$EID %in% a$EID)
-                       if(p$area=='adjacentLFA41') iz = which(set$EID %!in% a$EID)
+                       if(p$area=='adjacentLFA41') iz = which(set$EID %ni% a$EID)
                   } else {
                         iz = which(set$strat %in% c(strat))
                 }
