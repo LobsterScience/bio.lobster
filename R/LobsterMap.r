@@ -24,7 +24,7 @@
 #' LobsterMap('all',poly.lst=catchgrids[1:2],title="2007 Lobster Catch")
 #' ContLegend("bottomright",lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (t)",inset=0.02,cex=0.8,bg='white')
 #' @export
-LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, output = 'bio.lobster',fname = 'one.pdf',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL,...){
+LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, output = 'bio.lobster',fname = 'one.pdf',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,...){
 
 options(stringsAsFactors=F)		
 	require(PBSmapping)|| stop("Install PBSmapping Package")
@@ -120,7 +120,7 @@ if(save) {
 	
 #groundfish survey summer strata	
 	if(addSummerStrata) {
-			  loadfunctions('bio.polygons')
+			  require('bio.polygons')
 			  a = find.bio.gis('summer_strata_labels',return.one.match=F)
 			  a = read.csv(a,header=T)
 			  names(a)[4] <- 'label'
@@ -134,6 +134,20 @@ if(save) {
 			  addPolys(b,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
 			 # addLabels(a,cex=0.6)
 			}
+  if(addGeorgesStrata) {
+			  require('bio.polygons')
+			  b = find.bio.gis('georges',return.one.match=F)
+			  b = load(b)
+				  addPolys(b,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
+				}
+  if(addAmericanStrata) {
+			  require('bio.polygons')
+			   b = importShapefile(find.bio.gis('bts',return.one.match=F))
+			  addPolys(b,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
+				}
+
+  # 
+
   # Boundries
 	
 	if(boundaries=='LFAs'){
