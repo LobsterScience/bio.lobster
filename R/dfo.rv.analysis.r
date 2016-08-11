@@ -24,7 +24,8 @@ dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', 
          if(p$area=='Georges.Canada' & p$series == 'georges') {strat = c('5Z1','5Z2')  }
          if(p$area=='Georges.US' & p$series =='georges')     {strat = c('5Z3','5Z4','5Z5','5Z6','5Z7','5Z8')}
         
-         if(p$area== 'LFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485); props = c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409)}
+         if(p$area== 'LFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485); props = 1}
+         if(p$area== 'LFA41' & p$series =='summer' & p$define.by.polygons) {strat = c(472,473,477,478,481,482,483,484,485); props = c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409)}
          if(p$area== 'adjacentLFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485,480); props = 1-c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409,0)}
          if(p$lobster.subunits==T &p$area=='Georges.Basin' & p$series=='summer') {strat = c(482,483); props = c(0.1462, 0.2696)}      
          if(p$lobster.subunits==T &p$area=='Crowell.Basin' & p$series=='summer') {strat = c(482,483,484,485); props = c(0.1963,0.1913,0.3935,0.0483)}   
@@ -134,12 +135,18 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                         set$EID = 1:nrow(set)
                         a = findPolys(set,l)
                        iz = which(set$EID %in% a$EID)
-                       if(p$area=='adjacentLFA41') iz = which(set$EID %ni% a$EID)
+                       if(p$area=='adjacentLFA41') { 
+                                  iz = which(set$EID %ni% a$EID)
+                                  ir = which(set$strat %in% c(strat))  
+                                  iz = intersect(iz,ir)
+                                }
                   } else {
-                        iz = which(set$strat %in% c(strat))
+                              iz = which(set$strat %in% c(strat))
                 }
 
                 se = set[intersect(iy,iz),]
+                se$EID = 1:nrow(se)
+                plotPoints(se)
                 ca = cas[iv,]
                 se$z = (se$dmin+se$dmax) / 2
                 vars.2.keep = c('mission','slat','slong','setno','sdate','dist','strat','z','bottom_temperature','bottom_salinity','type')
