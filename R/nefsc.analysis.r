@@ -13,7 +13,7 @@
 
 
 
-nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,define.by.polygons=T) {
+nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL) {
     
     loc = file.path( project.datadirectory(out.dir), "analysis" ,'nefsc')
     dir.create( path=loc, recursive=T, showWarnings=F )
@@ -21,7 +21,9 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
          if(p$season=='fall') {SEASON = 'Fall'}
          if(p$area=='georges.canada') {STRATUM = c(1160,1170,1180,1190,1200,1210,1220); props = c(0.5211409, 0.7888889, 0.7383721, 0.0009412, 0.0007818, 0.4952830, 0.2753304)}
          if(p$area=='georges.US') {STRATUM = c(1130,1140,1150,1160,1170,1180,1190,1200,1210,1220,1230); props=c(1,1,1,1-0.5211409, 1-0.7888889, 1-0.7383721, 1-0.0009412, 1-0.0007818, 1-0.4952830, 1-0.2753304,1)}
-         if(p$area=='LFA41') {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = c(0.5211409, 0.7888889, 0.7383721, 0.0006892, 0.0005209, 0.4952830, 0.2753304, 0.3842528, 0.8799349, 0.1597051, 0.0105999, 0.2922712)}
+         if(p$area=='LFA41') {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = 1}
+         if(p$area=='LFA41' & p$define.by.polygons) {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = c(0.5211409, 0.7888889, 0.7383721, 0.0006892, 0.0005209, 0.4952830, 0.2753304, 0.3842528, 0.8799349, 0.1597051, 0.0105999, 0.2922712)}
+         if(p$area=='adjacentLFA41') {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = 1-c(0.5211409, 0.7888889, 0.7383721, 0.0006892, 0.0005209, 0.4952830, 0.2753304, 0.3842528, 0.8799349, 0.1597051, 0.0105999, 0.2922712)}
           
          if(p$lobster.subunits==T & p$area=='Georges.Bank') {STRATUM = c(1160,1170,1180); props = c(0.3462588,0.6487552,0.450009)}   
          if(p$lobster.subunits==T &p$area=='Georges.Basin') {STRATUM = c(1160,1170,1180,1190,1200,1210,1220,1300,1290); props = c(0.170,0.1377,0.2812,0.0006,0.0005,0.4938,0.2771,0.321,0.195)}      
@@ -85,9 +87,12 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         #tow dist is 1nm for bigelow
      stra$NH = stra$AREA/(1* 42.6 / 6080.2)
      strata.files = list()
-     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA)
+     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA)
      mp=0
      np=1
+    effic.out = data.frame(yr=NA,strat.effic.wt=NA,alloc.effic.wt=NA,strat.effic.n=NA,alloc.effic.n=NA)
+    nopt.out =  list()
+ 
      
      for(iip in ip) {
             mp = mp+1
@@ -98,35 +103,33 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             iy = which(set$GMT_YEAR %in% yr)
             ix = which(set$SEASON == SEASON)
 
-         if(define.by.polygons) {
+         if(p$define.by.polygons) {
+          print('dbp')
             if(p$area=='georges.US') {return('this is not setup')}
-            if(p$lobster.subunits) {
             l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
-            l = l41[which(l41$OFFAREA == p$area),]
-            } else {
+            if(p$lobster.subunits) {
+                       l = l41[which(l41$OFFAREA == p$area),]
+                    } else {
                           print('All LFA41 subsetted by LFA Area')
-                          a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
-                          l = attributes(a)$PolyData[,c('PID','STRATA')]
-                          a = merge(a,l,by='PID',all.x=T)
-                          a = a[which(a$STRATA<2000),]
-                          attr(a,'projection') <- "LL"
-                          l4 = joinPolys(l41,operation='UNION') 
-                          l4 = subset(l4,SID==1)
-                          f = joinPolys(a,l4,'INT') 
-                          f = merge(f,l,'PID')
-                          f = f[which(f$STRATA %in% STRATUM),]
-                          l = joinPolys(f,operation='UNION')
-                        
+                        l41 = joinPolys(as.PolySet(l41),operation='UNION')
+                        attr(l41,'projection') <- 'LL'
+                        l =l41 = subset(l41, SID==1)
                     }
+      
                         set$EID = 1:nrow(set)
                         a = findPolys(set,l)
                         iz = which(set$EID %in% a$EID)
+                        if(p$area=='adjacentLFA41') {
+                            iz = which(set$EID %ni% a$EID)
+                            ir = which(set$STRATUM %in% c(STRATUM))
+                            iz = intersect(iz,ir)
+                          }
                } else {
                        iz = which(set$STRATUM %in% c(STRATUM))
                 }
-                
                 iy = intersect(intersect(ix,iy),iz)
                 se = set[iy,]
+                se$EID = 1:nrow(se)
                 ca = cas #cas[iv,] see above
                 se$z = se$AVGDEPTH
                 vars.2.keep = c('MISSION','X','Y','ID','SETNO','BEGIN_GMT_TOWDATE','GMT_YEAR','STRATUM','z','BOTTEMP','BOTSALIN','DISTCORRECTION','SEASON')
@@ -202,19 +205,34 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   sN = Stratify(sc,st,sc$TOTNO)
                   ssW = summary(sW)
                   ssN = summary(sN)
-                  
-               if(p$bootstrapped.ci) {
+                if(p$strata.efficiencies) {
+                      ssW = summary(sW,effic=T,nopt=T)
+                      ssN = summary(sN,effic=T,nopt=T)
+                    effic.out[mp,] = c(yr,ssW$effic.str,ssW$effic.alloc,ssN$effic.str,ssN$effic.alloc)
+                    nopt.out[[mp]] = list(yr,ssW$n.opt,ssN$n.opt)
+                  }
+             
+               if(!p$strata.efficiencies) {
+              
+                      bsW = NA
+                      bsN = NA
+                      nt = NA
+                if(p$bootstrapped.ci) {
                   bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='BC')
                   bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
                   nt  = sum(sW$Nh)/1000
                 }                
                 out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[1],bsW[2],ssW[[3]]/1000,bsW[1]*nt,bsW[2]*nt,
-                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]))
+                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]),round(sum(sc$TOTNO)))
                 }   else {
-                out[mp,] = c(yr,rep(0,17))
-               
+                out[mp,] = c(yr,rep(0,18))
               }
             }
+          }
+          if(p$strata.efficiencies) {
+                 return(list(effic.out,nopt.out))
+              }
+  
                         lle = 'all'
                         lbs = 'not'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")

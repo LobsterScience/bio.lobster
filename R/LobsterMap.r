@@ -127,6 +127,7 @@ if(save) {
 			  b = find.bio.gis('strat.gf',return.one.match=F)
 			  b = read.table(b)
 			  names(b) <- c('X','Y','PID')
+			  
 		if(!is.null(subsetSummerStrata)) {
 			  b = b[which(b$PID %in% c(subsetSummerStrata)),]
 				}
@@ -136,9 +137,10 @@ if(save) {
 			}
   if(addGeorgesStrata) {
 			  require('bio.polygons')
-			  b = find.bio.gis('georges',return.one.match=F)
-			  b = load(b)
-				  addPolys(b,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
+			  b = file.path(project.datadirectory('bio.polygons'),'data','Science','PED','GeorgesBankStrata.rdata')
+			  load(b)
+				  addPolys(out,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
+				
 				}
   if(addAmericanStrata) {
 			  require('bio.polygons')

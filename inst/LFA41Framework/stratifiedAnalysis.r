@@ -7,7 +7,7 @@ fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 #nefsc
 
 p$season =c('spring')# p$series =c('spring');p$series =c('fall')
-p$define.by.polygons = T
+p$define.by.polygons = F
 p$lobster.subunits=F
 p$area = 'LFA41'
 p$reweight.strata = T #this subsets 
