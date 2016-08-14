@@ -38,18 +38,31 @@ LobsterMap(xlim=c(-69,-56.8),ylim=c(41.2,47.5),boundaries='LFAs',addSummerStrata
 
 
 pdf(file=file.path(project.figuredirectory('bio.lobster'),paste('summerstratamap41.pdf',sep='.')))
-		LobsterMap('41',boundaries='LFAs',addSummerStrata=T,output='bio.lobster',fname='summerstratamap41.pdf',save=F,labcex =0.8,labels=F)
+		LobsterMap('41',boundaries='LFAs',addSummerStrata=T,output='bio.lobster',fname='summerstratamap41.pdf',save=F,labcex =0.8,labels=F,subsetSummerStrata=c(472,473,477,478,481,482,483,484,485))
 		addPolys(LFA41,border='blue',lwd=2)
-	dev.off
+	 dev.off()
 
 pdf(file=file.path(project.figuredirectory('bio.lobster'),paste('georgesmap41.pdf',sep='.')))
 LobsterMap(xlim=c(-70.5,-63.5),ylim=c(38.5,45),boundaries='LFAs',addGeorgesStrata=T,output='bio.lobster',fname='georgesmap41.pdf',save=F,labcex =0.8,labels=T)
 	addPolys(LFA41,border='blue',lwd=2)
+	b = file.path(project.datadirectory('bio.polygons'),'data','Science','PED','GeorgesBankStrata.rdata')
+	 load(b)
+	 addPolys(subset(out,PID %in% c(1,2)),lty=1,border='green')
 	dev.off()
 
 
-pdf(file=file.path(project.figuredirectory('bio.lobster'),paste('americanmap41.pdf',sep='.')))
-LobsterMap(xlim=c(-73,-63.5),ylim=c(37.5,45),boundaries='LFAs',addAmericanStrata=T,output='bio.lobster',fname='americanmap41.pdf',save=F,labcex =0.8,labels=T)
+pdf(file=file.path(project.figuredirectory('bio.lobster'),paste('americanmap41full.pdf',sep='.')))
+LobsterMap(xlim=c(-71,-63.5),ylim=c(38,45),boundaries='LFAs',addAmericanStrata=T,output='bio.lobster',fname='americanmapfull41.pdf',save=F,labcex =0.8,labels=T)
+a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
+                          l = attributes(a)$PolyData[,c('PID','STRATA')]
+                          a = merge(a,l,by='PID',all.x=T)
+    addPolys(a,border='red')                      
+    addPolys(subset(a,STRATA %in% c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360)),lty=1,border='red',col=adjustcolor('white',alpha.f=1))
+			
+         
 	addPolys(LFA41,border='blue',lwd=2)
+
+
+
 	dev.off()
 

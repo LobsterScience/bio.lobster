@@ -51,6 +51,7 @@ if(DS %in% c('species.set.data')) {
               }
             if(p$by.sex) {
               k = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+              if(length(k)>1) k = paste(k[1],k[2],sep='&')
               a = a[grep(k,a)]
             }
             a = load(file.path(loc,a))
@@ -69,6 +70,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
               }
             if(p$by.sex) {
               k = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+              if(length(k)>1) k = paste(k[1],k[2],sep='&')
               a = a[grep(k,a)]
             }
 
@@ -87,7 +89,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         #tow dist is 1nm for bigelow
      stra$NH = stra$AREA/(1* 42.6 / 6080.2)
      strata.files = list()
-     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA)
+     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA,gini = NA,gini.lo =NA, gini.hi=NA,dwao.lo=NA,dwao.hi=NA)
      mp=0
      np=1
     effic.out = data.frame(yr=NA,strat.effic.wt=NA,alloc.effic.wt=NA,strat.effic.n=NA,alloc.effic.n=NA)
@@ -205,6 +207,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   sN = Stratify(sc,st,sc$TOTNO)
                   ssW = summary(sW)
                   ssN = summary(sN)
+                  
                 if(p$strata.efficiencies) {
                       ssW = summary(sW,effic=T,nopt=T)
                       ssN = summary(sN,effic=T,nopt=T)
@@ -221,11 +224,11 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='BC')
                   bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
                   nt  = sum(sW$Nh)/1000
-                }                
-                out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[1],bsW[2],ssW[[3]]/1000,bsW[1]*nt,bsW[2]*nt,
-                ssN[[1]],ssN[[2]],bsN[1],bsN[2],ssN[[3]]/1000,bsN[1]*nt,bsN[2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]),round(sum(sc$TOTNO)))
+                }              
+                out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[[1]][1],bsW[[1]][2],ssW[[3]]/1000,bsW[[1]][1]*nt,bsW[[1]][2]*nt,
+                ssN[[1]],ssN[[2]],bsN[[1]][1],bsN[[1]][2],ssN[[3]]/1000,bsN[[1]][1]*nt,bsN[[1]][2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]),round(sum(sc$TOTNO)),ssN$gini,bsN[[2]][1],bsN[[2]][2],bsN[[3]][1],bsN[[3]][2])
                 }   else {
-                out[mp,] = c(yr,rep(0,18))
+                out[mp,] = c(yr,rep(0,24))
               }
             }
           }
@@ -237,9 +240,10 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                         lbs = 'not'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
               if(p$by.sex)      lbs = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+             if(length(lbs)>1) lbs = paste(lbs[1],lbs[2],sep='&')
+ 
               fn = paste('stratified','nefsc',p$season,p$area,'length',lle,lbs,'sexed','rdata',sep=".")
               fn.st = paste('strata.files','nefsc',p$season,p$area,'length',lle,lbs,'sexed','rdata',sep=".")
-             
               save(out,file=file.path(loc,fn))
               save(strata.files,file=file.path(loc,fn.st))
              if(p$strata.files.return) return(strata.files)

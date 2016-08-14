@@ -1,4 +1,4 @@
-figure.stratified.analysis <- function(x,p,out.dir='bio.groundfish') {
+figure.stratified.analysis <- function(x,p,out.dir='bio.lobster') {
 	fn=file.path(project.datadirectory(out.dir),'figures')
 	dir.create(fn,showWarnings=F)
 	if(is.character(x)) {
@@ -13,9 +13,12 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.groundfish') {
 		m='Yst' ; mm = 'n'; lev='Stratified Total'; mt= 'Number'; div = 1000
 		if(grepl('mean',measure)) {m = 'yst'; lev = 'Stratified Mean'; div =1}
 		if(grepl('weight',metric)) {mm = 'w'; mt = 'Weight'}
+		if(grepl('gini',metric)) {m = 'gini'; mt = 'Gini'; mm='gini'}
+		if(grepl('dwao',metric)) {m = 'dwao'; mt = 'Design Weighted Area Occupied'; mm='dwao'}
 		n1 = names(x)[grep(m,names(x))]
 		n2 = names(x)[grep(mm,names(x))]
 		n = intersect(n1,n2)
+
 		xp = x[,c('yr',n)]
 		if(ncol(xp)==5) names(xp) = c('year','mean','se','lower','upper')
 		if(ncol(xp)==4) names(xp) = c('year','mean','lower','upper')
@@ -28,6 +31,10 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.groundfish') {
 			ylim[2] = y.maximum
 			sll = xpp[which(xpp$upper>y.maximum),c('year','upper')]
 		}
+		if(exists('ylim')) {
+			ylim = ylim
+			}
+
 
 			plot(xpp$year,xpp$mean,type='n',xlab='Year',ylab = paste(lev,mt,sep=" "),ylim=ylim)
 		if(error.polygon)	polygon(c(xpp$year,rev(xpp$year)),c(xpp$lower,rev(xpp$upper)),col='grey60', border=NA)
