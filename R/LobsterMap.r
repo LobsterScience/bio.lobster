@@ -162,8 +162,9 @@ if(save) {
 		if(area=='31a')area<-311
 		if(area=='31b')area<-312
 		if(addsubareas)addPolys(subset(subareas,SID==1),lty=3)
-	
+		if(area=='41') addPolys(LFA41,border='blue')
 		lfa<-as.numeric(area)
+		
 		if(lfa%in%LFAgrid$PID){
 			if(!is.na(lfa)){
 				grids<-subset(LFAgrid,PID==lfa)
