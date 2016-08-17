@@ -9,7 +9,7 @@
 \pagestyle{fancy}
 
 \lhead{\bf Maritimes Region}
-\rhead{\bf LFA41 2016}
+\rhead{\bf LFA41016}
 \lfoot{October 11, 2016}
 \cfoot{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
@@ -25,7 +25,7 @@
 % maps section
 \begin{figure}
 \centering
-    \includegraphics[width=1.2\textwidth]{\e LFAMapATL.jpg}
+    \includegraphics[width=1\textwidth]{\e LFAMapATL.jpg}
     \caption{Map of the Lobster Fishing Areas in Atlantic Canada using the boundaries identified in the Atlantic fishery regulations.}
 
 \end{figure}
@@ -66,7 +66,7 @@
 \end{landscape}
 \begin{figure}
 
-    \includegraphics[width=1.2\textwidth]{\e georgesmap41.pdf}
+    \includegraphics[width=1\textwidth]{\e georgesmap41.pdf}
     \caption{Currently fished areas of Lobster Fishing Area 41 (blue line) with the DFO Georges Bank Spring strata from their depth stratified survey shown in red and green. The strata outlined in green are those used in survey trends from the Georges Bank Survey.}
 
 \end{figure}
@@ -84,20 +84,201 @@
 %survey efficiency section
 
 
-\begin{landscape}
 \begin{figure}
 \centering
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41Logs\D 2002\D 2007\D .pdf}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41Logs\D 2007\D 2012\D .pdf}}\\
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41Logs\D 2013\D 2018\D .pdf}}
-\caption{Map showing spatial location of fishing in offshore LFA41 between 2003 to 2007 (topleft), 2008 to 2012 (topright) and 2013 to 2015 (bottom) as obtained from fishery logbook information. Overlaid in red are the offshore polygons which will be used to describe the fishery data into zones. }
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFObase.pdf}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFOrestratified.pdf}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFOadjrestratified.pdf}}
+\caption{Survey efficiency of DFO RV base survey (topleft), DFO RV restratified survey (topright) and DFO RV survey restratified to adjacent areas (bottom) from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
 \end{figure}
 \clearpage
 
 
 
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCspringbase.pdf}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCspringrestratified.pdf}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCspringrestratifiedadjacent.pdf}}
+\caption{Survey efficiency of NEFSC Spring base survey (topleft), NEFSC Spring restratified survey (topright) and NEFSC Spring survey restratified to adjacent areas (bottom) from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
+\end{figure}
+\clearpage
+
+
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCfallbase.pdf}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCfalrestratified.pdf}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallrestratifiedadjacent.pdf}}
+\caption{Survey efficiency of NEFSC Fall base survey (topleft), NEFSC Fall restratified survey (topright) and NEFSC Fall survey restratified to adjacent areas (bottom) from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
+\end{figure}
+\clearpage
+
+%stratified analysis
+%numbers
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFObasenumbers.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFOrestratifiednumbers.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjcentlfa41DFOrestratifiednumbers.png}}
+\caption{DFO Summer RV survey American lobster stratified mean number per tow for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1970 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. }
+\end{figure}
+\clearpage
+
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringbasenumbers.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringrestratifiednumbers.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41NEFSCSpringrestratifiednumbers.png}}
+\caption{NEFSC spring survey American lobster stratified mean number per tow for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. }
+\end{figure}
+\clearpage
+
+
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallbasenumbers.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallrestratifiednumbers.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41NEFSCFallrestratifiednumbers.png}}
+\caption{NEFSC Fall survey American lobster stratified mean number per tow for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. }
+\end{figure}
+\clearpage
+
+\begin{figure}
+
+    \includegraphics[width=1\textwidth]{\e lfa41georgesnumbers.png}
+    \caption{DFO RV Georges Bank survey American lobster stratified mean number per tow for the Canadian portion of the survey from 1987 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate.}
+
+\end{figure}
+
+
+%weights
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFObaseweights.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFOrestratifiedweights.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41DFOrestratifiedweights.png}}
+\caption{DFO Summer RV survey American lobster stratified mean weight per tow for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1970 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate.}
+\end{figure}
+\clearpage
+
+
+
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringbaseweights.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringrestratifiedweights.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41NEFSCSpringrestratifiedweights.png}}
+\caption{NEFSC spring survey American lobster stratified mean weight per tow for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. }
+\end{figure}
+\clearpage
+
+
+
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallbaseweights.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallrestratifiedweights.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41NEFSCFallrestratifiedweights.png}}
+\caption{NEFSC Fall survey American lobster stratified mean weight per tow for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. }
+\end{figure}
+\clearpage
+
+
+\begin{figure}
+
+    \includegraphics[width=1\textwidth]{\e lfa41georgesweights.png}
+    \caption{DFO RV Georges Bank survey American lobster stratified mean weight per per tow for the Canadian portion of the survey from 1987 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate.}
+
+\end{figure}
+
+
+%dwao
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFObaseDWAO.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFOrestratifiedDWAO.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41DFOrestratifiedDWAO.png}}
+\caption{DFO Summer RV survey American lobster design weighted area occupied (DWAO) for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1970 to 2015. Red line represents a three year running median.}
+\end{figure}
+\clearpage
+
+
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringbaseDWAO.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringrestratifiedDWAO.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41NEFSCSpringrestratifiedDWAO.png}}
+\caption{NEFSC spring survey American lobster design weighted area occupied (DWAO) for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median. }
+\end{figure}
+\clearpage
+
+
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallbaseDWAO.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallrestratifiedDWAO.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41NEFSCFallrestratifiedDWAO.png}}
+\caption{NEFSC Fall survey American lobster design weighted area occupied (DWAO) for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median. }
+\end{figure}
+\clearpage
+
+
+\begin{figure}
+
+    \includegraphics[width=1\textwidth]{\e lfa41georgesDWAO.png}
+    \caption{DFO RV Georges Bank survey American lobster design weighted area occupied for the Canadian portion of the survey from 1987 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate.}
+
+\end{figure}
+
+
+%gini
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFObasegini.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFOrestratifiedgini.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41DFOrestratifiedgini.png}}
+\caption{DFO Summer RV survey American lobster Gini index of spatial evenness for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1970 to 2015. Red line represents a three year running median. Breaks in the three year running median are for years where no American lobster were captured in the survey strata.}
+\end{figure}
+\clearpage
+
+
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringbasegini.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringrestratifiedgini.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41NEFSCSpringrestratifiedgini.png}}
+\caption{NEFSC spring survey American lobster Gini coefficient of spatial evenness for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median.  }
+\end{figure}
+\clearpage
+
+
+
+\begin{figure}
+\centering
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallbasegini.png}}
+\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallrestratifiedgini.png}}\\
+\subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41NEFSCFallrestratifiedgini.png}}
+\caption{NEFSC Fall survey American lobster Gini coefficient of spatial evenness for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median.  }
+\end{figure}
+\clearpage
+
+
+\begin{figure}
+
+    \includegraphics[width=1\textwidth]{\e lfa41georgesgini.png}
+    \caption{DFO RV Georges Bank survey American lobster Gini coefficient of spatial evenness for the Canadian portion of the survey from 1987 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate.}
+
+\end{figure}
+
+
 
 \end{document}
+
+%stratified analysis
+
+
+
 \begin{figure}
 \centering
 \subfloat{\includegraphics[clip,trim={0 2.cm 0 1.7cm},width=0.6\textwidth]{\e fisheryFootprint\D 2008.pdf}}
