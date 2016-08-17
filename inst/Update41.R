@@ -202,17 +202,104 @@ loadfunctions(c('lobster','groundfish','BIOsurvey','utility'))
 
 ##______________________##
 ##                      ##
-##       BYCATCH	    ##
+##       BYCATCH	      ##
 ##______________________##
 ##                      ##
 
 
-
+	lobster.db('observer41.redo')
+	lobster.db('observer41')
 	# Bycatch from Observer Data
-	bycatch41<-read.csv(file.path(project.datadirectory('lobster'),'data',"LFA41bycatch2015.csv"))
+	bycatch41<-subset(observer41,SOURCE==0)
+	
+	#bycatch41<-read.csv(file.path(project.datadirectory('bio.lobster'),'data','products',"LFA41Offareas.csv"))
 	bycatch41$LONGITUDE<-bycatch41$LONGITUDE*-1
 	bycatch41$YEAR<-year(bycatch41$BOARD_DATE)
 
+	#Assign OFFAREA=UNKNOWN records when position is available
+	data.check<-subset(bycatch41,OFFAREA=="UNKNOWN") #Records are outside of LFA 41 polygons, 3 records are from an allocated trip should be corrected
+	
+	#Bycatch Records Complete 
+	bycatch41<-subset(bycatch41,OFFAREA!="UNKNOWN")
+	na.sub<-which(is.na(bycatch41$LATITUDE))
+	na<-bycatch41[na.sub,] #Allocated entries without location coordinates
+	bycatch41.map<-bycatch41[-na.sub,]
+	
+	bycatch.EID<-as.data.frame(cbind(EID=1:length(bycatch41.map[,1]),X=bycatch41.map[,16],Y=bycatch41.map[,15],Trip_ID=bycatch41.map[,1],
+	                 YEAR=bycatch41.map[,19],OFFAREA=bycatch41.map[,17]))
+	
+  bycatch.EID[,1] <- as.numeric(as.character(bycatch.EID[,1]))
+  bycatch.EID[,2] <- as.numeric(as.character(bycatch.EID[,2]))
+  bycatch.EID[,3] <- as.numeric(as.character(bycatch.EID[,3]))
+  bycatch.EID[,4] <- as.numeric(as.character(bycatch.EID[,4]))
+  
+                            
+  LFA41poly2<-read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps',"LFA41Offareas_ext.csv"))
+ 
+  LFA41.grid<-findPolys(bycatch.EID,LFA41poly2,maxRow=3e+6)
+  PolyEID<-merge(bycatch.EID,LFA41.grid,by=c("EID"),all.x=T,all.y=T, sort=F)
+  str(PolyEID)
+  write.table(PolyEID, file="Subarea id for LFA41.AUG.2016.txt", row.names=FALSE, col.names=TRUE, sep=" ")
+  
+  
+  land<-read.table("C:/!Manon/LOBSTER/LFA 27-41/Maps/martimesHIGH.ll",header=T)
+  attr(land,"projection")<-"LL"
+  plotMap(land,xlim=c(-70,-60),ylim=c(40,48),col='bisque3', bg="LightCyan",main="LFA 41 Observer Sample Coverage")
+  
+  attr(LFA41poly2,"projection")<-"LL"
+  labelData<-data.frame(PID=c(1,2,3,4,5),label=c("CROWELL","GBANK","GBASIN","SEBROWNS","SWBROWNS"))
+  labXY<-calcCentroid(LFA41poly2,1)
+  labelData<-merge(labelData,labXY,all.x=TRUE)
+  addPolys(LFA41poly2)
+  attr(labelData,"projection")<-"LL"
+  addLabels(labelData,cex=0.6, font=2)
+  #Plots all data points in file
+  addPoints(bycatch.EID,col="red",pch=16)
+  addPoints(subset(bycatch.EID,YEAR==2002),col='green',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2003),col='blue',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2004),col='purple',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2005),col='yellow',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2006),col='pink',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2007),col='orange',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2008),col='black',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2009),col='red',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2010),col='turquoise',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2011),col='dark green',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2012),col='brown',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2013),col='hot pink',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2014),col='beige',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2015),col='green',pch=20)
+  addPoints(subset(bycatch.EID,YEAR==2016),col='blue',pch=20)
+
+  
+ summary(bycatch41)   
+ a<-ddply(bycatch41,c('YEAR','QUARTER','OFFAREA'), summarize, TOT.NUM=length(unique(TRIP_ID)))
+  
+  
+ #BY-CATCH DESCRIPTIVE STATS:
+ #How many observer trips per year:
+ str(bycatch41)
+ length(unique(paste(bycatch41.map$BOARD_DATE,bycatch41.map$TRIP_ID))) # 66 SAMPLES
+ ann.trip<-ddply(bycatch41.map,c('YEAR'),summarize,TOT_SAMP=length(unique(paste(bycatch41.map$TRIP_ID))))
+ 
+ length(unique(paste(bycatch41.map$BOARD_DATE,bycatch41.map$TRIP_ID,bycatch41.map$OFFAREA))) # 134 SAMPLES
+ ann.trip.sub<-ddply(LFA41.obs.area,c('YEAR','TRIP_ID'),summarize,SUBAREA_SAMPLED=length(unique(paste(bycatch41.map$OFFAREA)))
+ 
+  
+  
+  
+  
+
+  
+  
+  
+  
+  LFA41.allocation<-findPolys(bycatch.EID,LFA41poly2,maxRow=3e+6)
+  
+  LFA41.grid<-findPolys(Final.EID,Poly41,maxRow=3e+6)
+  PolyEID<-merge(LFA27.EID,LFA27.grid,by=c("EID"),all.x=T,all.y=T, sort=F)
+  str(PolyEID)
+  
 	# Remove records not observed
 	bycatch41<-subset(bycatch41,SOURCE==0&OFFAREA!="UNKNOWN")
 
