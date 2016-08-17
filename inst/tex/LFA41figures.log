@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2016.2.7)  15 AUG 2016 21:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2016.2.7)  17 AUG 2016 11:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -574,7 +574,7 @@ File: /backup/bio_data/bio.lobster/figures/LFAMapATL.jpg Graphic file (type jpg
  <use /backup/bio_data/bio.lobster/figures/LFAMapATL.jpg>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LFAMapATL.jpg use
 d on input line 28.
-(pdftex.def)             Requested size: 532.29282pt x 348.46416pt.
+(pdftex.def)             Requested size: 443.57848pt x 290.3745pt.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -693,11 +693,7 @@ pdf)
  <use /backup/bio_data/bio.lobster/figures/georgesmap41.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/georgesmap41.pdf 
 used on input line 69.
-(pdftex.def)             Requested size: 532.29282pt x 532.30402pt.
-
-Overfull \hbox (88.71434pt too wide) in paragraph at lines 69--70
-[][] 
- []
+(pdftex.def)             Requested size: 443.57848pt x 443.58667pt.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -986,12 +982,7 @@ File: /backup/bio_data/bio.lobster/figures/lfa41georgesnumbers.png Graphic file
 <use /backup/bio_data/bio.lobster/figures/lfa41georgesnumbers.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesnumbe
 rs.png used on input line 149.
-(pdftex.def)             Requested size: 532.29282pt x 425.85117pt.
-
-Overfull \hbox (88.71434pt too wide) in paragraph at lines 149--150
-[][] 
- []
-
+(pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41DFObaseweights.png, id=249, 1084.05p
 t x 867.24pt>
@@ -1133,12 +1124,7 @@ File: /backup/bio_data/bio.lobster/figures/lfa41georgesweights.png Graphic file
 <use /backup/bio_data/bio.lobster/figures/lfa41georgesweights.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesweigh
 ts.png used on input line 190.
-(pdftex.def)             Requested size: 532.29282pt x 425.85117pt.
-
-Overfull \hbox (88.71434pt too wide) in paragraph at lines 190--191
-[][] 
- []
-
+(pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41DFObaseDWAO.png, id=289, 1084.05pt x
  867.24pt>
@@ -1274,12 +1260,7 @@ ype png)
  <use /backup/bio_data/bio.lobster/figures/lfa41georgesDWAO.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesDWAO.
 png used on input line 229.
-(pdftex.def)             Requested size: 532.29282pt x 425.85117pt.
-
-Overfull \hbox (88.71434pt too wide) in paragraph at lines 229--230
-[][] 
- []
-
+(pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41DFObasegini.png, id=329, 1084.05pt x
  867.24pt>
@@ -1363,11 +1344,11 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[24 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasegini.png (PNG cop
-y)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedgini.png 
-(PNG copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestr
-atifiedgini.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasegini.png, id=356, 1084.
+[24 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasegini.png> </backu
+p/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedgini.png (PNG copy)>
+ </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedgini
+.png (PNG copy)>]
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasegini.png, id=357, 1084.
 05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasegini.png Graphic f
 ile (type png)
@@ -1378,7 +1359,7 @@ egini.png used on input line 259.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedgini.png, id=35
-7, 1084.05pt x 867.24pt>
+8, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedgini.png G
 raphic file (type png)
 
@@ -1388,7 +1369,7 @@ tratifiedgini.png used on input line 260.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedgini.pn
-g, id=358, 1084.05pt x 867.24pt>
+g, id=359, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedgi
 ni.png Graphic file (type png)
 
@@ -1408,20 +1389,16 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 > </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedgini.png (PNG
  copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifie
 dgini.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41georgesgini.png, id=368, 1084.05pt x
+</backup/bio_data/bio.lobster/figures/lfa41georgesgini.png, id=369, 1084.05pt x
  867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41georgesgini.png Graphic file (t
 ype png)
  <use /backup/bio_data/bio.lobster/figures/lfa41georgesgini.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesgini.
 png used on input line 269.
-(pdftex.def)             Requested size: 532.29282pt x 425.85117pt.
-
-Overfull \hbox (88.71434pt too wide) in paragraph at lines 269--270
-[][] 
- []
-
+(pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 276.
+
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
@@ -1440,16 +1417,16 @@ Package rerunfilecheck Info: File `LFA41figures.out' has not changed.
 Here is how much of TeX's memory you used:
  10749 strings out of 493054
  186315 string characters out of 6140587
- 272307 words of memory out of 5000000
+ 272303 words of memory out of 5000000
  13975 multiletter control sequences out of 15000+600000
  4561 words of font info for 17 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  44i,10n,75p,1040b,474s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-Output written on LFA41figures.pdf (26 pages, 15367045 bytes).
+Output written on LFA41figures.pdf (26 pages, 15106856 bytes).
 PDF statistics:
- 406 PDF objects out of 1000 (max. 8388607)
+ 407 PDF objects out of 1000 (max. 8388607)
  296 compressed objects within 3 object streams
  104 named destinations out of 1000 (max. 500000)
  301 words of extra memory for PDF output out of 10000 (max. 10000000)

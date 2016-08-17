@@ -105,6 +105,9 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
 
         io = which(is.na(cas$totwgt) | cas$totwgt==0 & cas$totno>0)
         cas[io,'totwgt'] <- 1
+        
+        io = which(is.na(cas$totno) & !is.na(cas$totwgt))
+        cas[io,'totno'] = cas[io,'totwgt']/0.806 #mean weight of individual per tow taken from 1999 to 2015
 
         io = which(is.na(cas$sampwgt) & !is.na(cas$totwgt))
         cas[io,'sampwgt'] <- cas[io,'totwgt']
