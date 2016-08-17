@@ -13,28 +13,30 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster') {
 		m='Yst' ; mm = 'n'; lev='Stratified Total'; mt= 'Number'; div = 1000
 		if(grepl('mean',measure)) {m = 'yst'; lev = 'Stratified Mean'; div =1}
 		if(grepl('weight',metric)) {mm = 'w'; mt = 'Weight'}
-		if(grepl('gini',metric)) {m = 'gini'; mt = 'Gini'; mm='gini'}
-		if(grepl('dwao',metric)) {m = 'dwao'; mt = 'Design Weighted Area Occupied'; mm='dwao'}
+		if(grepl('gini',metric)) {m = 'gini'; mt = 'Gini'; mm='gini'; div =1; ylim=c(0,1);}
+		if(grepl('dwao',metric)) {m = 'dwao'; mt = 'Design Weighted Area Occupied'; mm='dwao'; div=1}
 		n1 = names(x)[grep(m,names(x))]
 		n2 = names(x)[grep(mm,names(x))]
 		n = intersect(n1,n2)
-
 		xp = x[,c('yr',n)]
 		if(ncol(xp)==5) names(xp) = c('year','mean','se','lower','upper')
 		if(ncol(xp)==4) names(xp) = c('year','mean','lower','upper')
+		if(ncol(xp)==2) {names(xp) = c('year','mean'); xp$lower=NA; xp$upper=NA}
+		if(metric == 'gini'){ xp = xp[,c('year','mean')] ; xp$lower = NA; xp$upper = NA}
 
 		xp$mean = xp$mean / div; xp$lower = xp$lower / div; xp$upper = xp$upper / div
 		xpp = xp[which(xp$year>=time.series.start.year & xp$year<=time.series.end.year),  ]
+		if(exists('ylim')) {
+			ylim = ylim
+			} else {
 		ylim=c(min(xpp$lower),max(xpp$upper))
+			}
 		if(exists('y.maximum')) {
 			yl = ylim[2];
 			ylim[2] = y.maximum
 			sll = xpp[which(xpp$upper>y.maximum),c('year','upper')]
 		}
-		if(exists('ylim')) {
-			ylim = ylim
-			}
-
+		if(any(is.na(ylim))) ylim = NULL
 
 			plot(xpp$year,xpp$mean,type='n',xlab='Year',ylab = paste(lev,mt,sep=" "),ylim=ylim)
 		if(error.polygon)	polygon(c(xpp$year,rev(xpp$year)),c(xpp$lower,rev(xpp$upper)),col='grey60', border=NA)
@@ -51,7 +53,18 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster') {
 		if(running.median){
 		  print(paste(running.length,'Year Running Median'))
 		  #rmean = smooth(xpp$mean,kind='3RS3R',endrule='Tukey')
+		  	if(any(is.na(xpp$mean) | !is.finite(xpp$mean))) {
+		  		ik  = which(is.na(xpp$mean) | !is.finite(xpp$mean))
+				xpo = xpp$mean[-ik]
+				xpy = xpp$year[-ik]
+				rmean = runmed(xpo,k=running.length,endrule='median')
+				yp = data.frame(mean = xpo, year=xpy)
+				year = data.frame(year = xpp$year[1:length(xpp$year)])
+				yp = merge(year,yp,all.x=T)
+				rmean = yp$mean				  		
+		  	} else {
       	rmean = runmed(xpp$mean,k=running.length,endrule='median')
+      }
         rmean.yr = xpp$year[1:length(xpp$year)]
 		  lines(rmean.yr,rmean,lty=1,lwd=3,col='salmon')
 		}
