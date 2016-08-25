@@ -13,7 +13,7 @@
 
 
 
-nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL) {
+nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,save=T) {
     
     loc = file.path( project.datadirectory(out.dir), "analysis" ,'nefsc')
     dir.create( path=loc, recursive=T, showWarnings=F )
@@ -151,7 +151,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         if(p$length.based) {
                   dp = de
                   dp = dp[which(dp$ID %in% unique(se$ID)),]
-                  if(nrow(dp)>1) {
+                  if(nrow(dp)>=1) {
         
                   flf = p$size.class[1]:p$size.class[2]
                   dp$clen2 = ifelse(dp$LENGTH %in% flf,dp$CLEN,0)
@@ -207,7 +207,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   sN = Stratify(sc,st,sc$TOTNO)
                   ssW = summary(sW)
                   ssN = summary(sN)
-                  
+    
                 if(p$strata.efficiencies) {
                       ssW = summary(sW,effic=T,nopt=T)
                       ssN = summary(sN,effic=T,nopt=T)
@@ -217,8 +217,8 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
              
                if(!p$strata.efficiencies) {
               
-                      bsW = NA
-                      bsN = NA
+                      bsW = list(NA,NA,NA)
+                      bsN = list(NA,NA,NA)
                       nt = NA
                 if(p$bootstrapped.ci) {
                   bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='BC')
@@ -244,8 +244,10 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
  
               fn = paste('stratified','nefsc',p$season,p$area,'length',lle,lbs,'sexed','rdata',sep=".")
               fn.st = paste('strata.files','nefsc',p$season,p$area,'length',lle,lbs,'sexed','rdata',sep=".")
+            if(save) {  
               save(out,file=file.path(loc,fn))
               save(strata.files,file=file.path(loc,fn.st))
+            }
              if(p$strata.files.return) return(strata.files)
              return(out)
 

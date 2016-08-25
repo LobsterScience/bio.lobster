@@ -7,7 +7,7 @@ fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
 load_all('~/git/bio.survey/')
 
-if(redo) {
+
 #by length for histograms
 #DFO RV Analysis
 
@@ -277,27 +277,3 @@ if(redo) {
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41dfogeorges.rdata  '))
-    
-#population weighted median FLEN
-	l = c()
-	y = p$years.to.estimate
-	for(i in 1:length(y)) {
-			w = subset(aa,yr==y[i])
-			l[i] = median(rep(w$FLEN,times=w$n.yst*1000))
-				}
-
-
-}
-
-if(load.all) {
-         load(file=file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41baseSummerRV.rdata  '))
-         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41dfogeorges.rdata  '))
-        
-         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCfallbase.rdata  '))
-         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCfallrestratified.rdata  '))
-         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCfalladjrestratified.rdata  '))
-		 
-		 save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCspringbase.rdata  '))
-         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCspringrestratified.rdata  '))
-         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCspringadjrestratified.rdata  '))
-

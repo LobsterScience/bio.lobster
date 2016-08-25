@@ -1,4 +1,5 @@
-figure.stratified.analysis <- function(x,p,out.dir='bio.lobster') {
+#' @export
+figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x2=NULL) {
 	fn=file.path(project.datadirectory(out.dir),'figures')
 	dir.create(fn,showWarnings=F)
 	if(is.character(x)) {
@@ -13,8 +14,11 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster') {
 		m='Yst' ; mm = 'n'; lev='Stratified Total'; mt= 'Number'; div = 1000
 		if(grepl('mean',measure)) {m = 'yst'; lev = 'Stratified Mean'; div =1}
 		if(grepl('weight',metric)) {mm = 'w'; mt = 'Weight'}
-		if(grepl('gini',metric)) {m = 'gini'; mt = 'Gini'; mm='gini'; div =1; ylim=c(0,1);}
-		if(grepl('dwao',metric)) {m = 'dwao'; mt = 'Design Weighted Area Occupied'; mm='dwao'; div=1}
+		if(grepl('gini',metric)) {m = 'gini'; mt = 'Gini'; mm='gini'; div =1; ylim=c(0,1);lev=""}
+		if(grepl('dwao',metric)) {m = 'dwao'; mt = 'Design Weighted Area Occupied'; mm='dwao'; div=1;lev=""}
+		if(grepl('sexRatio',metric)) {m = 'pFem'; mt = 'Proportion Female'; mm = 'pFem';div=1;lev=""}
+		if(grepl('medianL',metric)) {m = 'medL'; mt = 'Median Length'; mm = 'medL';div=1;lev=""}
+		
 		n1 = names(x)[grep(m,names(x))]
 		n2 = names(x)[grep(mm,names(x))]
 		n = intersect(n1,n2)
@@ -36,10 +40,11 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster') {
 			ylim[2] = y.maximum
 			sll = xpp[which(xpp$upper>y.maximum),c('year','upper')]
 		}
+		
 		if(any(is.na(ylim))) ylim = NULL
-
+		if(sampleSizes) par(mar=c(5.1,4,4.1,4))
 			plot(xpp$year,xpp$mean,type='n',xlab='Year',ylab = paste(lev,mt,sep=" "),ylim=ylim)
-		if(error.polygon)	polygon(c(xpp$year,rev(xpp$year)),c(xpp$lower,rev(xpp$upper)),col='grey60', border=NA)
+		if(error.polygon)	polygon(x=c(xpp$year,rev(xpp$year)),y=c(xpp$lower,rev(xpp$upper)),col='grey60', border=NA)
 		if(error.bars)  	arrows(x0=xpp$year,x1 = xpp$year, y0 = xpp$upper, y1 = xpp$lower, lwd=1, angle=90, length= 0)
 
 		points(xpp$year,xpp$mean,type='b',lty=1,pch=16,lwd=2)
@@ -111,6 +116,12 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster') {
 	}
   title(figure.title)
 
+if(sampleSizes) {
+		par(new=T)
+		with(x2,plot(x,y,type='l',axes=F,xlab=NA,ylab=NA,col='blue',ylim=p$ylim2))
+		axis(side=4)
+		mtext(side = 4, line = 3, 'Sample Size')
+		}
 
 		print(file.path(fn,file.name))
 dev.off()
