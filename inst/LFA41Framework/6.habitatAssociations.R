@@ -62,6 +62,32 @@ load_all('~/git/bio.survey/')
  	figure.habitat.associations(out,p=p)
 
 
+#dfo georges
+     p$series =c('georges')# p$series =c('georges');p$series =c('fall')
+      p$define.by.polygons = F
+      p$lobster.subunits=F
+      p$years.to.estimate = c(1987:2015)
+      p$length.based = F
+      p$by.sex = F
+      p$bootstrapped.ci=T
+      p$strata.files.return=F
+      p$vessel.correction.fixed=1.2
+      p$strat = NULL
+      p$clusters = c( rep( "localhost", 7) )
+      p$strata.efficiencies = F
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
+	 p$define.by.polygons = F
+      p$lobster.subunits=F
+      p$area = 'Georges.Canada'
+      p$reweight.strata = F #this subsets 
+    	p$strata.files.return =T      
+	  p$plot.name = 'habitatAssociationsgeorges.pdf'
+       
+      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
+      
+figure.habitat.associations(out,p=p)
+
+
 
 #nefsc
 

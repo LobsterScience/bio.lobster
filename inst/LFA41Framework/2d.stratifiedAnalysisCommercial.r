@@ -17,9 +17,9 @@ load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
       p$reweight.strata = F #this subsets 
       p$years.to.estimate = c(1969:2015)
       p$length.based = T
-      p$size.class= c(140,300)
+      p$size.class= c(83,300)
       p$by.sex = T
-      p$sex = c(2,3) # male female berried c(1,2,3)
+      p$sex = c(1,2) # male female berried c(1,2,3)
       p$bootstrapped.ci=T
       p$strata.files.return=F
       p$strata.efficiencies=F
@@ -40,14 +40,14 @@ load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'weights' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCSpringbasenumberslargefemale.png'
+                              p$file.name = 'lfa41NEFSCSpringbaseweightscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
                                 p$legend = FALSE
                                 p$running.median = T
@@ -60,7 +60,7 @@ load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
                               names(xx) =c('x','y')
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-     aout$subset = 'NEFSCSpringLargeFemale'
+     aout$subset = 'NEFSCSpringcommercial'
      base  = append(base, list(aout))
 
 
@@ -77,14 +77,14 @@ load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'weights' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCSpringrestratifiednumberslargefemale.png'
+                              p$file.name = 'lfa41NEFSCSpringrestratifiedweightscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
                                 p$legend = FALSE
                                 p$running.median = T
@@ -98,7 +98,7 @@ load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
-aout$subset = 'NEFSCSpringLargeFemale'
+aout$subset = 'NEFSCSpringcommercial'
      restratified  = append(restratified, list(aout))
 
      
@@ -115,14 +115,14 @@ aout$subset = 'NEFSCSpringLargeFemale'
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'weights' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjacentlfa41NEFSCSpringrestratifiednumberslargefemale.png'
+                              p$file.name = 'adjacentlfa41NEFSCSpringrestratifiedweightscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
                                 p$legend = FALSE
                                 p$running.median = T
@@ -138,7 +138,7 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
-      aout$subset = 'NEFSCSpringLargeFemale'
+      aout$subset = 'NEFSCSpringcommercial'
      adjacentrestratified  = append(adjacentrestratified, list(aout))
 
 
@@ -159,14 +159,14 @@ aout$subset = 'NEFSCSpringLargeFemale'
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'weights' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCFallbasenumberslargefemale.png'
+                              p$file.name = 'lfa41NEFSCFallbaseweightscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
                                 p$legend = FALSE
                                 p$running.median = T
@@ -181,7 +181,7 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
-      aout$subset = 'NEFSCFallLargeFemale'
+      aout$subset = 'NEFSCFallcommercial'
      base  = append(base, list(aout))
      
      
@@ -198,14 +198,14 @@ aout$subset = 'NEFSCSpringLargeFemale'
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'weights' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCFallrestratifiednumberslargefemale.png'
+                              p$file.name = 'lfa41NEFSCFallrestratifiedweightscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
                                 p$legend = FALSE
                                 p$running.median = T
@@ -221,7 +221,7 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
-      aout$subset = 'NEFSCFallLargeFemale'
+      aout$subset = 'NEFSCFallcommercial'
      restratified  = append(restratified, list(aout))
 
 
@@ -238,14 +238,14 @@ aout$subset = 'NEFSCSpringLargeFemale'
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'weights' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjacentlfa41NEFSCFallrestratifiednumberslargefemale.png'
+                              p$file.name = 'adjacentlfa41NEFSCFallrestratifiedweightscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
                                 p$legend = FALSE
                                 p$running.median = T
@@ -262,7 +262,7 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
 
-      aout$subset = 'NEFSCFallLargeFemale'
+      aout$subset = 'NEFSCFallcommercial'
      adjacentrestratified  = append(adjacentrestratified, list(aout))
 
 ##############################################################
@@ -275,7 +275,7 @@ aout$subset = 'NEFSCSpringLargeFemale'
       p$years.to.estimate = c(1970:2015)
       p$length.based = T
       p$by.sex = T
-      p$size.class = c(140,300)
+      p$size.class = c(83,300)
       p$sex = c(2,3)
       p$bootstrapped.ci=T
       p$strata.files.return=F
@@ -300,14 +300,14 @@ aout$subset = 'NEFSCSpringLargeFemale'
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'weights' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41DFObasenumberslargefemale.png'
+                              p$file.name = 'lfa41DFObaseweightscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
                                 p$legend = FALSE
                                 p$running.median = T
@@ -324,7 +324,7 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
 
-      aout$subset = 'DFOLargeFemale'
+      aout$subset = 'DFOcommercial'
      base  = append(base, list(aout))
 
 
@@ -346,14 +346,14 @@ aout$subset = 'NEFSCSpringLargeFemale'
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'weights' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41DFOrestratifiednumberslargefemale.png'
+                              p$file.name = 'lfa41DFOrestratifiedweightscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
                                 p$legend = FALSE
                                 p$running.median = T
@@ -369,7 +369,7 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
     
-     aout$subset = 'DFOLargeFemale'
+     aout$subset = 'DFOcommercial'
     restratified  = append(restratified, list(aout))
      
 
@@ -388,14 +388,14 @@ aout$subset = 'NEFSCSpringLargeFemale'
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'weights' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjcentlfa41DFOrestratifiednumberslargefemale.png'
+                              p$file.name = 'adjcentlfa41DFOrestratifiedweightscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
                                 p$legend = FALSE
                                 p$running.median = T
@@ -411,7 +411,7 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
-      aout$subset = 'DFOLargeFemale'
+      aout$subset = 'DFOcommercial'
      adjacentrestratified  = append(adjacentrestratified, list(aout))
 
 
@@ -423,7 +423,7 @@ aout$subset = 'NEFSCSpringLargeFemale'
       p$length.based = T
       p$by.sex = T
       p$sex = c(2,3)
-      p$size.class = c(140,300)
+      p$size.class = c(83,300)
       p$bootstrapped.ci=T
       p$strata.files.return=F
       p$vessel.correction.fixed=1.2
@@ -447,14 +447,14 @@ aout$subset = 'NEFSCSpringLargeFemale'
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'weights' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41georgesnumberslargefemale.png'
+                              p$file.name = 'lfa41georgesweightscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
                                 p$legend = FALSE
                                 p$running.median = T

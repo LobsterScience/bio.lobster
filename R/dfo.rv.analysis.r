@@ -124,9 +124,10 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             print ( p$runs[iip,] )
             iy = which(year(set$sdate) %in% yr)
             iv = which(cas$spec==2550)
-
+pi='base'
         if(p$define.by.polygons) {
                l = l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
+               pi = 'restratified'
             if(p$lobster.subunits) {
                        l = l41[which(l41$OFFAREA == p$area),]
                     } else {
@@ -151,7 +152,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                 se$EID = 1:nrow(se)
                 ca = cas[iv,]
                 se$z = (se$dmin+se$dmax) / 2
-                vars.2.keep = c('mission','slat','slong','setno','sdate','dist','strat','z','bottom_temperature','bottom_salinity','type')
+                vars.2.keep = c('mission','X','Y','setno','sdate','dist','strat','z','bottom_temperature','bottom_salinity','type')
                 se = se[,vars.2.keep]
         p$lb = p$length.based
 
@@ -263,13 +264,14 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                  return(list(effic.out,nopt.out))
               }
   
-              lbs = lle = 'all'
+              lle = 'all'
+              lbs = 'not'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
               if(p$by.sex)      lbs = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
               if(length(lbs)>1) lbs = paste(lbs[1],lbs[2],sep='&')
            
-              fn = paste('stratified',p$series,p$area,'strata',min(strat),max(strat),'length',lle,lbs,'rdata',sep=".")
-              fn.st = paste('strata.files',p$series,p$area,'strata',min(strat),max(strat),'length',lle,lbs,'rdata',sep=".")
+              fn = paste('stratified',p$series,p$area,pi,'length',lle,lbs,'sexed','rdata',sep=".")
+              fn.st = paste('strata.files',p$series,p$area,pi,'length',lle,lbs,'sexed','rdata',sep=".")
               
               if(save) {
               print(fn)

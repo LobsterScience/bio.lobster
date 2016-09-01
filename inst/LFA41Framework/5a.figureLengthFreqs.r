@@ -12,7 +12,9 @@ a = c(        file.path(project.datadirectory('bio.lobster'),'analysis','LengthF
 		      file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCfallrestratified.rdata  '),
               file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCfalladjrestratified.rdata  '),
    			  file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41dfogeorges.rdata  '))
-    	
+    	###hard coded long term median values ---need to change with updates
+    	lens = c(111,110,111,108,108,106,106,114,106,108)
+
 for(i in 1:length(a)) {
 		out = c()
 	load(a[i])
@@ -35,16 +37,17 @@ for(i in 1:length(a)) {
 			plot(u$ff,u$n.yst,lwd=3,xlab='Carapace Length',ylab = 'Stratified Mean Number',type='h',ylim=c(0,yll))
 			legend('topleft',bty='n',pch="", legend=c(y,paste('N=',nn,sep=" ")),cex=2)
 			dev.off()
-			print(fn)
+			#print(fn)
 			lm = median(rep(g$FLEN,times=g$n.yst*1000))
 			ll = quantile(rep(g$FLEN,times=g$n.yst*1000),0.25)
 			lu = quantile(rep(g$FLEN,times=g$n.yst*1000),0.75)
-			
-			out = rbind(out,c(y,lm,ll,lu))
+			aS = with(subset(g,FLEN<lens[i]),sum(n.yst))
+			aL = with(subset(g,FLEN>=lens[i]),sum(n.yst))
+			out = rbind(out,c(y,lm,ll,lu,aL))
 			}
 			out = as.data.frame(out)
-			names(out) = c('yr','medL','medLlower','medLupper')
-
+			names(out) = c('yr','medL','medLlower','medLupper','smallCatch','largeCatch')
+			print(median(out$medL))
 				p=list()
 			                  p$add.reference.lines = F
                               p$time.series.start.year = min(aa$yr)
@@ -124,7 +127,7 @@ for(i in 1:length(a)) {
             nn = sum(g$ObsLobs)
             pdf(file.path(project.figuredirectory('bio.lobster'),fn))
 			plot(u$ff,u$n.yst,lwd=3,xlab='Carapace Length',ylab = 'Scaled Stratified Mean Number',type='h',ylim=c(0,yll))
-			abline(v=82.5,lty=2,col='red')
+			abline(v=82.5,lty=2,col='red',lwd=3)
 			legend('topleft',bty='n',pch="", legend=c(paste(min(y),max(y),sep="-"),paste('N=',nn,sep=" ")),cex=1.5)
 			dev.off()
 			print(fn)

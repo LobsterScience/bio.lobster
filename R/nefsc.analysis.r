@@ -15,7 +15,7 @@
 
 nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,save=T) {
     
-    loc = file.path( project.datadirectory(out.dir), "analysis" ,'nefsc')
+    loc = file.path( project.datadirectory(out.dir), "analysis" )
     dir.create( path=loc, recursive=T, showWarnings=F )
          if(p$season=='spring')  {SEASON = 'Spring'    } 
          if(p$season=='fall') {SEASON = 'Fall'}
@@ -24,7 +24,7 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
          if(p$area=='LFA41') {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = 1}
          if(p$area=='LFA41' & p$define.by.polygons) {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = c(0.5211409, 0.7888889, 0.7383721, 0.0006892, 0.0005209, 0.4952830, 0.2753304, 0.3842528, 0.8799349, 0.1597051, 0.0105999, 0.2922712)}
          if(p$area=='adjacentLFA41') {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = 1-c(0.5211409, 0.7888889, 0.7383721, 0.0006892, 0.0005209, 0.4952830, 0.2753304, 0.3842528, 0.8799349, 0.1597051, 0.0105999, 0.2922712)}
-          
+         if(p$area=='all') {STRATUM = c(1080,1090,1100,1110,1120,1130,1140,1150,1160,1170,1190,1200,1210,1220,1230,1240,1180,1010,1020,1030,1040,1050,1060,1070,1300,1340,1351,1360,1370,1380,1390,1400,1610,1620,1630,1640,1650,1660,1670,1680,1690,1700,1710,1720,1730,1740,1750,1760,1250,1260,1270,1280,1290,1310,1320,1330,1350,1410,1420,1490,1990); props=rep(1,61)}
          if(p$lobster.subunits==T & p$area=='Georges.Bank') {STRATUM = c(1160,1170,1180); props = c(0.3462588,0.6487552,0.450009)}   
          if(p$lobster.subunits==T &p$area=='Georges.Basin') {STRATUM = c(1160,1170,1180,1190,1200,1210,1220,1300,1290); props = c(0.170,0.1377,0.2812,0.0006,0.0005,0.4938,0.2771,0.321,0.195)}      
          if(p$lobster.subunits==T &p$area=='Crowell.Basin') {STRATUM = c(1300,1290,1360); props = c(0.1794,0.0707,0.23669)}   
@@ -104,9 +104,10 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             #iv = which(cas$spec %in% vv) Turn on if species are selected right now only lobster is being brought in
             iy = which(set$GMT_YEAR %in% yr)
             ix = which(set$SEASON == SEASON)
-
+ pi = 'base'
          if(p$define.by.polygons) {
           print('dbp')
+          pi = 'restratified'
             if(p$area=='georges.US') {return('this is not setup')}
             l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
             if(p$lobster.subunits) {
@@ -242,8 +243,8 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
               if(p$by.sex)      lbs = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
              if(length(lbs)>1) lbs = paste(lbs[1],lbs[2],sep='&')
  
-              fn = paste('stratified','nefsc',p$season,p$area,'length',lle,lbs,'sexed','rdata',sep=".")
-              fn.st = paste('strata.files','nefsc',p$season,p$area,'length',lle,lbs,'sexed','rdata',sep=".")
+              fn = paste('stratified','nefsc',p$season,p$area,pi,'length',lle,lbs,'sexed','rdata',sep=".")
+              fn.st = paste('strata.files','nefsc',p$season,p$area,pi,'length',lle,lbs,'sexed','rdata',sep=".")
             if(save) {  
               save(out,file=file.path(loc,fn))
               save(strata.files,file=file.path(loc,fn.st))

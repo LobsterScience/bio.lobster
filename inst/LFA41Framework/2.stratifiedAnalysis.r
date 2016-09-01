@@ -5,8 +5,12 @@ p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
 load_all('~/git/bio.survey/')
+
+base = list()
+restratified = list()
+adjacentrestratified = list()
 #NEFSC Setup
-#need to figureout DWAO boot strapping errors with the dfo survey....something not working
+
 
 
       p$reweight.strata = F #this subsets 
@@ -65,6 +69,8 @@ load_all('~/git/bio.survey/')
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$ylim = NULL
 
+                aout$subset = 'NEFSC.Spring.All'
+                base = append(base,list(aout))
      
 
 #Spring restratified to lfa41
@@ -112,7 +118,9 @@ load_all('~/git/bio.survey/')
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$ylim = NULL
 
-
+                 aout$subset = 'NEFSC.Spring.Restratified'
+                restratified = append(restratified,list(aout))
+     
 
 
 #Spring restratified to adjacentlfa41
@@ -159,7 +167,9 @@ load_all('~/git/bio.survey/')
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$ylim = NULL
 
-
+                aout$subset = 'NEFSC.Spring.adjRestratified'
+                adjacentrestratified = append(adjacentrestratified,list(aout))
+     
 
 
 
@@ -208,7 +218,9 @@ load_all('~/git/bio.survey/')
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$ylim = NULL
 
-
+                aout$subset = 'NEFSC.Fall.All'
+                base = append(base,list(aout))
+     
      
 
 #Fall restratified to lfa41
@@ -254,7 +266,9 @@ load_all('~/git/bio.survey/')
                        p$ylim =c(0,1)
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$ylim = NULL
-
+                aout$subset = 'NEFSC.Fall.Restratified'
+                restratified = append(restratified,list(aout))
+     
 
 
 
@@ -302,6 +316,9 @@ load_all('~/git/bio.survey/')
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$ylim = NULL
 
+                aout$subset = 'NEFSC.Fall.adjRestratified'
+                adjacentrestratified = append(adjacentrestratified,list(aout))
+     
 
 
 
@@ -369,7 +386,9 @@ load_all('~/git/bio.survey/')
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$ylim = NULL
 
-
+                aout$subset = 'DFO.Base.All'
+                base = append(base,list(aout))
+     
 
 
 
@@ -423,7 +442,9 @@ load_all('~/git/bio.survey/')
                        p$ylim = NULL
 
 
-
+               aout$subset = 'DFO.restratified.All'
+                restratified = append(restratified,list(aout))
+     
 
 
 
@@ -474,6 +495,9 @@ load_all('~/git/bio.survey/')
                        p$ylim = NULL
 
 
+               aout$subset = 'DFO.adjrestratified.All'
+                adjacentrestratified = append(adjacentrestratified,list(aout))
+     
 
 
   #DFO Georges
@@ -539,4 +563,11 @@ load_all('~/git/bio.survey/')
 
 
 
+#pull all results
 
+fpp = file.path(fp,'combinedResults')
+dir.create(fpp,showWarnings=F)
+
+save(base,file = file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
+save(restratified, file = file.path(fpp,'CombinedReStratifiedResults.rdata'))
+save(adjacentrestratified,file = file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
