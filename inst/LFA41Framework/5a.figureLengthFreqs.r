@@ -43,7 +43,7 @@ for(i in 1:length(a)) {
 			lu = quantile(rep(g$FLEN,times=g$n.yst*1000),0.75)
 			aS = with(subset(g,FLEN<lens[i]),sum(n.yst))
 			aL = with(subset(g,FLEN>=lens[i]),sum(n.yst))
-			out = rbind(out,c(y,lm,ll,lu,aL))
+			out = rbind(out,c(y,lm,ll,lu,aS,aL))
 			}
 			out = as.data.frame(out)
 			names(out) = c('yr','medL','medLlower','medLupper','smallCatch','largeCatch')

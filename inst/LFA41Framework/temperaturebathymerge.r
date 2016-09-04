@@ -46,4 +46,66 @@
         
     OP = cbind(O,P)
     names(OP) <- c('plon','plat','z','Jan','Feb','March','Apr','May','Jun','July','Aug','Sept','Oct')
-levelplot(Jan~plon+plat,data=OP,aspect='iso',colorkey = terrain.colors(100))
+
+levelplot(Jan~plon+plat,data=OP,aspect='iso',col.regions = color.code('seis',150))
+
+
+
+
+#logbook data
+
+require(bio.survey)
+require(bio.lobster)
+la()
+p = bio.lobster::load.environment()
+p$libs = NULL
+
+require(bio.utilities)
+require(bio.habitat)
+require(raster)
+loadfunctions('bio.habitat')
+loadfunctions('bio.utilities')
+loadfunctions('bio.indicators')
+loadfunctions('bio.temperature')
+
+lobster.db('logs41') #make sure to do a database recapture through logs41.redo before moving on
+
+logs41 = rename.df(logs41,c('FV_FISHED_DATETIME'),c('DATE_FISHED'))
+
+logs41$yr = year(logs41$DATE_FISHED) #2002 to present
+ziff41$yr = year(ziff41$DATE_FISHED) #1995 to 2001
+ziff41$DDLON = ziff41$DDLON * -1
+off41$yr  = year(off41$DATE_FISHED) #1981 to 1994
+
+logs41$OFFAREA = NULL 
+
+#oct16-oct15 fishing year until 2005 switch to Jan 1 to Dec 31
+
+a41 = rbind(off41,ziff41,logs41)
+a41$fishingYear = sapply(a41$DATE_FISHED,offFishingYear)
+
+a41 = lonlat2planar(a41,input_names = c('DDLON','DDLAT'),proj.type = p$internal.projection)
+a41$plon = grid.internal(a41$plon,p$plons)
+a41$plat = grid.internal(a41$plat,p$plats)
+a41$z = NA
+a41$depth = NULL
+ 
+a41 = completeFun(a41,c('plon','plat'))
+a41 = subset(a41,DDLAT>0)
+a41 = subset(a41, MON_DOC_ID!=153219950609)
+a41 = habitat.lookup(a41,p=p,DS='depth')
+
+#clean up some errors
+a41$z[which(a41$z>450)] <- NA
+
+hist(a41$z,'fd',xlab='Depth',main="")
+
+#time stamping for seasonal temperatures
+
+a41$timestamp = as.POSIXct(a41$DATE_FISHED,tz='America/Halifax',origin=lubridate::origin)
+a41$timestamp = with_tz(a41$timestamp,"UTC")
+a41$dyear = lubridate::decimal_date(a41$timestamp)- lubridate::year(a41$timestamp)
+a41 = subset(a41,fishingYear<2016)
+
+a41 = habitat.lookup(a41,p=p,DS='temperature.seasonal')
+a41 = habitat.lookup(a41,p=p,DS='substrate')

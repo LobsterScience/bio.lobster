@@ -4,7 +4,7 @@
 
 fishing.season<-function(dat,scale=2,off=330,outer=F,clr='grey80',fun=sum,smooth=0,title='', pointer=NULL){
  
-	
+
 	xt<-sin(seq(0, 2 * pi, length = 365))
 	yt<--cos(seq(0, 2 * pi, length = 365))
 	
@@ -23,22 +23,22 @@ fishing.season<-function(dat,scale=2,off=330,outer=F,clr='grey80',fun=sum,smooth
 	plot(x,y,asp=1,type='l', axes = FALSE, xlim = c(-scale, scale), ylim = c(-scale, scale), xlab = "",  ylab = "")
 
 	names(dat)<-c('date','variable')
+	dat = dat[order(dat$date),]
+
 	dat$date<-as.Date(dat$date)
 	years<-unique(as.numeric(format(dat$date,"%Y")))
-	for(i in 1:length(years)){
-       DAY<-julian(as.Date(dat$date[as.numeric(format(dat$date,"%Y"))==years[i]]),origin=as.Date(paste(years[i]-1,"-12-31",sep="")))
-    }
-    
+       DAY<-julian(dat$date,origin=min(dat$date))
     metric<-with(dat,tapply(variable,DAY,fun,na.rm=T))
     met.dat<-merge(data.frame(day=1:365),data.frame(day=as.numeric(names(metric)),metric),all=T)
     met.dat$metric[is.na(met.dat$metric)]<-0
+    browser()
     if(smooth>0) met.dat<-merge(data.frame(day=1:365),data.frame(day=lowess(met.dat$metric,f=smooth)$x,metric=lowess(met.dat$metric,f=smooth)$y),all=T)
 
     met.dat$metric[is.na(met.dat$metric)]<-0
     met<-met.dat$metric
     dy<-met/max(met)*0.5*scale+1.1
-    lines(x*dy,y*dy)
-    polygon(c(x*dy,x*1.1),c(y*dy,y*1.1),col=clr)
+    lines(x*dy[1:365],y*dy[1:365])
+    polygon(c(x*dy[1:365],x*1.1),c(y*dy[1:365],y*1.1),col=clr)
 	
 	# plot months
 
