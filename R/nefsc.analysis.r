@@ -34,10 +34,10 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
         
          if (exists( "libs", p)) {
             p0 = p;
-            RLibrary( p$libs )
+       #     RLibrary( p$libs )
             p=p0
           }
-         if (exists( "libs", p)) RLibrary( p$libs )
+        # if (exists( "libs", p)) RLibrary( p$libs )
          if (is.null(ip)) ip = 1:p$nruns
 
 if(DS %in% c('species.set.data')) {

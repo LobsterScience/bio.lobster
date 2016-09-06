@@ -34,3 +34,30 @@ a41$ADJCATCH = a41$ADJCATCH / 2.2 #convert to kgs
 pra41 = completeFun(a41,c('X','Y'))
 
 p1 = findPolys(pra41,LFA41)
+pp = merge(pra41,p1,by=c('EID'))
+
+fy = unique(pp$fishingYear)
+
+for(i in 1:length(fy)) {
+	r = subset(pp,fishingYear==fy[i])
+	up = unique(r$PID)
+	for(j in 1:length(up)) {
+		w = subset(r,PID==up[j])
+
+		fishing.season(w[,c('DATE_FISHED','ADJCATCH')],smooth=0.01)
+	}
+
+}
+
+ pdf(file.path( project.datadirectory("bio.surfclam"), "figures","SeasonalFishingPattern.pdf"),8,11)
+ 
+ 
+  p$yrs= 2007:2015
+  par(mfrow=c(3,3),mar=c(0,0,0,0))
+  for (i in 1:length(p$yrs)) {
+      fishing.season(subset(fisheryList$log.data,year%in%p$yrs[[i]]&bank==1,c('record_date','area')),smooth=0.01,title="")
+      mtext("Relative effort",3,-2,cex=1.2,outer=T)
+    }
+    # Apparently they fish pretty much all year round except for the winter of 2015, when presumably Banquereau was under 15ft of snow like everywhere else
+  dev.off()
+ 

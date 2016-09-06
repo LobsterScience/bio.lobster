@@ -97,7 +97,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         de = groundfish.db(DS='gsdet.odbc')
         set$X = convert.dd.dddd(set$slong) *-1
         set$Y = convert.dd.dddd(set$slat)
-        
+      
         stra$NH = as.numeric(stra$area)/0.011801
         ii = which(months(set$sdate) %in% mns & set$strat %in% strat & set$type %in% c(1,5))
         print('Both set types 1 and 5 are saved in data frame but only 1 is used for stratified')
