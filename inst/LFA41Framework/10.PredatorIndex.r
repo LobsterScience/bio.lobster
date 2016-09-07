@@ -22,6 +22,7 @@ p$strata.efficiencies=F
 #MPA functional groups
 p$functional.groups = T
 p$bootstrapped.ci=T
+p$strata.files.return=F
 
 p$clusters = c( rep( "localhost", 7) )
 
@@ -31,8 +32,8 @@ p$runs = p$runs[order(p$runs$v),]
 
 #not finished
 
-aout= groundfish.analysis(DS='stratified.estimates.redo',out.dir = 'bio.lobster',p=p)
-
+aout= groundfish.analysis(DS='stratified.estimates',out.dir = 'bio.lobster',p=p)
+                        p$ylim = NULL
               				  p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
@@ -40,7 +41,7 @@ aout= groundfish.analysis(DS='stratified.estimates.redo',out.dir = 'bio.lobster'
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'LobPredators.png'
+                              p$file.name = 'LobPredatorsabundance.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -52,6 +53,32 @@ aout= groundfish.analysis(DS='stratified.estimates.redo',out.dir = 'bio.lobster'
                                p$error.polygon=F
                               p$error.bars=T
 
+rm(figure.stratified.analysis)
+la()
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+              
 
+
+              				  p$add.reference.lines = F
+                              p$time.series.start.year = p$years.to.estimate[1]
+                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+                              p$metric = 'weights' #weights
+                              p$measure = 'stratified.mean' #'stratified.total'
+                              p$figure.title = ""
+                              p$reference.measure = 'median' # mean, geomean
+                              p$file.name = 'LobPredatorsbiomass.png'
+
+                          p$y.maximum = NULL # NULL # if ymax is too high for one year
+                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+
+                                p$legend = FALSE
+                                p$running.median = T
+                                p$running.length = 3
+                                p$running.mean = F #can only have rmedian or rmean
+                               p$error.polygon=F
+                              p$error.bars=T
+                              p$ylim=c(10,160)
+rm(figure.stratified.analysis)
+la()
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
               

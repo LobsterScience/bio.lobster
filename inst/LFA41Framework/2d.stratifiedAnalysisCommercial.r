@@ -9,11 +9,13 @@ load_all('~/git/bio.survey/')
 #need to figureout DWAO boot strapping errors with the dfo survey....something not working
 fpp = file.path(fp,'combinedResults')
 
-load(file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
-load( file.path(fpp,'CombinedReStratifiedResults.rdata'))
-load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
+#load(file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
+#load( file.path(fpp,'CombinedReStratifiedResults.rdata'))
+#load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
 
-
+base= list()
+restratified = list()
+adjacentrestratified = list()
       p$reweight.strata = F #this subsets 
       p$years.to.estimate = c(1969:2015)
       p$length.based = T
@@ -276,7 +278,7 @@ aout$subset = 'NEFSCSpringcommercial'
       p$length.based = T
       p$by.sex = T
       p$size.class = c(83,300)
-      p$sex = c(2,3)
+      p$sex = c(1,2)
       p$bootstrapped.ci=T
       p$strata.files.return=F
       p$vessel.correction.fixed=1.2
@@ -422,7 +424,7 @@ aout$subset = 'NEFSCSpringcommercial'
       p$years.to.estimate = c(1987:2015)
       p$length.based = T
       p$by.sex = T
-      p$sex = c(2,3)
+      p$sex = c(1,2)
       p$size.class = c(83,300)
       p$bootstrapped.ci=T
       p$strata.files.return=F
@@ -472,6 +474,6 @@ aout$subset = 'NEFSCSpringcommercial'
       
 
 
-save(base,file = file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
-save(restratified, file = file.path(fpp,'CombinedReStratifiedResults.rdata'))
-save(adjacentrestratified,file = file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
+#save(base,file = file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
+#save(restratified, file = file.path(fpp,'CombinedReStratifiedResults.rdata'))
+#save(adjacentrestratified,file = file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))

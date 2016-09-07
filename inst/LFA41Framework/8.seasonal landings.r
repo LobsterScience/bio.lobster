@@ -1,5 +1,8 @@
 #seasonal landings
 
+
+#this is not used
+
 require(bio.survey)
 require(bio.lobster)
 p = bio.lobster::load.environment()

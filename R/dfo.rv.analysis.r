@@ -154,6 +154,7 @@ pi='base'
                 se$z = (se$dmin+se$dmax) / 2
                 vars.2.keep = c('mission','X','Y','setno','sdate','dist','strat','z','bottom_temperature','bottom_salinity','type')
                 se = se[,vars.2.keep]
+
         p$lb = p$length.based
 
         if(p$by.sex & !p$length.based) {p$size.class=c(0,1000); p$length.based=T}
@@ -224,7 +225,9 @@ pi='base'
                           spr = data.frame(Strata = strat, Pr = props)
                           st = merge(st,spr)
                           if(p$reweight.strata) st$NH = st$NH * st$Pr #weights the strata based on area in selected region
-         
+                          
+                          if(exists('temperature',p)) {sc = sc[!is.na(sc$bottom_temperature),] ; sc$totno = sc$bottom_temperature; sc$totwgt = sc$bottom_temperature }
+
                           st = Prepare.strata.file(st)
                           sc1= sc
                           sc = sc[which(sc$type==1),]

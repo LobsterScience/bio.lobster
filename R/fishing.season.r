@@ -31,7 +31,7 @@ fishing.season<-function(dat,scale=2,off=330,outer=F,clr='grey80',fun=sum,smooth
     metric<-with(dat,tapply(variable,DAY,fun,na.rm=T))
     met.dat<-merge(data.frame(day=1:365),data.frame(day=as.numeric(names(metric)),metric),all=T)
     met.dat$metric[is.na(met.dat$metric)]<-0
-    browser()
+
     if(smooth>0) met.dat<-merge(data.frame(day=1:365),data.frame(day=lowess(met.dat$metric,f=smooth)$x,metric=lowess(met.dat$metric,f=smooth)$y),all=T)
 
     met.dat$metric[is.na(met.dat$metric)]<-0
@@ -60,7 +60,7 @@ fishing.season<-function(dat,scale=2,off=330,outer=F,clr='grey80',fun=sum,smooth
     
 	if(!is.null(pointer))segments(x[pointer]*0.9,y[pointer]*0.9,x[pointer]*1.1,y[pointer]*1.1,col='red',lwd=2)
 	
-	text(0,0,years,cex=1.2)
+	text(0,0,min(years),cex=1.2)
 	title(main=title)	
 	summary(metric)
 }

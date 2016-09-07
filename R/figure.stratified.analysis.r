@@ -18,7 +18,8 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 		if(grepl('dwao',metric)) {m = 'dwao'; mt = 'Design Weighted Area Occupied'; mm='dwao'; div=1;lev=""}
 		if(grepl('sexRatio',metric)) {m = 'pFem'; mt = 'Proportion Female'; mm = 'pFem';div=1;lev=""}
 		if(grepl('medianL',metric)) {m = 'medL'; mt = 'Median Length'; mm = 'medL';div=1;lev=""}
-		
+		if(grepl('temper',metric)) {lev = 'Temperature'; mt=""}
+		if(grepl('relF',metric)) { mm = m = metric; lev = 'Relative F'; div=1; mt=""}
 		n1 = names(x)[grep(m,names(x))]
 		n2 = names(x)[grep(mm,names(x))]
 		n = intersect(n1,n2)
@@ -28,24 +29,25 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 		if(ncol(xp)==2) {names(xp) = c('year','mean'); xp$lower=NA; xp$upper=NA}
 		if(metric == 'gini'){ xp = xp[,c('year','mean')] ; xp$lower = NA; xp$upper = NA}
 
-		xp$mean = xp$mean / div; xp$lower = xp$lower / div; xp$upper = xp$upper / div
+		xp$mean = as.numeric(xp$mean) / div; xp$lower = as.numeric(xp$lower) / div; xp$upper = as.numeric(xp$upper) / div
 		xpp = xp[which(xp$year>=time.series.start.year & xp$year<=time.series.end.year),  ]
-		if(exists('ylim')) {
+		if(exists('ylim',p)) {
 			ylim = ylim
-			} else {
+			} 
+		if(!exists('ylim',p)){
 		ylim=c(min(xpp$lower),max(xpp$upper))
 			}
-		if(exists('y.maximum')) {
+		if(exists('y.maximum',p)) {
 			yl = ylim[2];
 			ylim[2] = y.maximum
 			sll = xpp[which(xpp$upper>y.maximum),c('year','upper')]
 		}
-		
 		if(any(is.na(ylim))) ylim = NULL
 		if(sampleSizes) par(mar=c(5.1,4,4.1,4))
 			plot(xpp$year,xpp$mean,type='n',xlab='Year',ylab = paste(lev,mt,sep=" "),ylim=ylim)
 		if(error.polygon)	polygon(x=c(xpp$year,rev(xpp$year)),y=c(xpp$lower,rev(xpp$upper)),col='grey60', border=NA)
-		if(error.bars)  	arrows(x0=xpp$year,x1 = xpp$year, y0 = xpp$upper, y1 = xpp$lower, lwd=1, angle=90, length= 0)
+		
+		if(error.bars)  	arrows(x0=as.numeric(xpp$year),x1 = as.numeric(xpp$year), y0 = xpp$upper, y1 = xpp$lower, lwd=1, angle=90, length= 0)
 
 		points(xpp$year,xpp$mean,type='b',lty=1,pch=16,lwd=2)
 
