@@ -433,6 +433,7 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                               END) longitude
                           FROM (
                           SELECT
+                          
                             a.fishset_id, 
                            sum(case b.pntcd_id when 1 then latitude else null end ) pntcd_lat_1,
                            sum(case b.pntcd_id when 1 then longitude else null end ) pntcd_lon_1,
