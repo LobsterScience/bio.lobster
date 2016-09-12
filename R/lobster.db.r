@@ -383,9 +383,9 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                           select  a.trip_id, g.cfv, g.vessel_name, g.license_no, b.num_hook_haul, a.board_date, c.set_no, b.source,
                           c.speccd_id, d.common, c.est_num_caught, c.est_kept_wt, c.est_discard_wt, 
                           f.latitude, f.longitude, replace(b.comments,Chr(10),' ') comments
-                           from   istrips a,
-                           isfishsets b,
-                           iscatches c,
+                           from   observer.istrips a,
+                           observer.isfishsets b,
+                           observer.iscatches c,
                            observer.isspeciescodes d,
                            (SELECT 
                               fishset_id, 
@@ -448,7 +448,7 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                           order by a.fishset_id
                           ) 
                           )F,
-                           isvessels g
+                           observer.isvessels g
                            where  a.trip_id = b.trip_id
                            and  g.vess_id = a.vess_id(+)
                            and   b.fishset_id = c.fishset_id(+)
@@ -457,10 +457,9 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                            and  b.fishset_id = c.fishset_id(+)
                           and a.vess_id in (295,316,317,1891,1892,1979,1982,2096,2097,2098,2099,2152,2153,4444,10069,10141,10285,12217,13677,18620,20140)
                           and a.tripcd_id = 2550
-                          and a.board_date > '2001-12-31'
+                          and a.board_date > to_date('2001-12-31', 'YYYY-MM-DD')
                           order by trip_id, set_no
                           )"
-               
                 observer41 = sqlQuery(con, query41)
                 save( observer41, file=file.path( fnODBC, "observer41.rdata"), compress=T)
                 gc()  # garbage collection
