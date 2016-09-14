@@ -83,7 +83,8 @@ load_all('~/git/bio.survey/')
     	p$strata.files.return =T      
 	  p$plot.name = 'habitatAssociationsgeorges.pdf'
        
-      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
+      out= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
+
       
 figure.habitat.associations(out,p=p)
 

@@ -50,11 +50,17 @@ options(scipen=999)  # this avoids scientific notation
                 #11 = '36 YANKEE TRAWL'
                 #41 = Mod. 41 Yankee Trawl (Accepted Code)
                 #45 = Mod. 41 Yankee Trawl (Erroneously Coded on Several Cruises)
-              
+               # matches inputs from B.Shank Sept 2016
+
                   usinf = sqlQuery(channel,paste("SELECT *
-                    FROM USNEFSC.USS_STATION 
-                    where to_number(SHG) <= 136
-                    and stratum like '01%' and svgear in (10,11,41,45)  and gmt_year>=1968")) #Burton Shank suggests 1969 on is fine
+                    FROM  USNEFSC.USS_STATION a, 
+                          usnefsc.uss_mstr_cruise b
+                    where   a.cruise6 = b.cruise6
+                        and to_number(SHG) <= 136
+                        and b.purpose_code = 10
+                        and stratum like '01%' and gmt_year>=1968 and a.STATUS_CODE in (10,15);")) 
+                   
+
                     usinf = rename.df(usinf,c('CRUISE6','STATION'),c('MISSION','SETNO'))
                     usinf$SETNO = as.numeric(usinf$SETNO)
                     save(usinf, file = file.path(fnODBC, 'usnefsc.inf.rdata'))
@@ -74,7 +80,7 @@ options(scipen=999)  # this avoids scientific notation
 				i = which(is.na(inf$X))
 				inf$Y[i] = inf$DECDEG_BEGLAT[i]
 				inf$X[i] = inf$DECDEG_BEGLON[i]
-				vars2keep = c('MISSION','CRUISE','STRATUM','TOW','SETNO','STATUS_CODE','ID','AREA','SVVESSEL','CRUNUM','SVGEAR','BEGIN_GMT_TOWDATE','GMT_YEAR','GMT_MONTH','GMT_DAY','TOWDUR','AVGDEPTH','BOTTEMP','BOTSALIN','DOPDISTB','X','Y')
+				vars2keep = c('MISSION','CRUISE','STRATUM','TOW','SETNO','SEASON','STATUS_CODE','ID','AREA','SVVESSEL','CRUNUM','SVGEAR','BEGIN_GMT_TOWDATE','GMT_YEAR','GMT_MONTH','GMT_DAY','TOWDUR','AVGDEPTH','BOTTEMP','BOTSALIN','DOPDISTB','X','Y')
   				inf = inf[,vars2keep]
   				inf$DIST = inf$DOPDISTB
 
@@ -104,10 +110,11 @@ options(scipen=999)  # this avoids scientific notation
   						inf1 = rbind(inf1,u)
   						}
   				inf = inf1
-  				inf$SEASON = recode(inf$GMT_MONTH,"2='Spring';3='Spring';4='Spring';5='Spring';9='Fall';10='Fall';11='Fall';12='Fall'")
-				i = which(inf$SEASON %in% c('Spring','Fall'))
-  				inf = inf[i,]
-  				inf = lonlat2planar(inf,input_names=c('X','Y'),proj.type=p$nefsc.internal.projection)
+  			#	inf$SEASON = recode(inf$GMT_MONTH,"2='Spring';3='Spring';4='Spring';5='Spring';9='Fall';10='Fall';11='Fall';12='Fall'")
+				#i = which(inf$SEASON %in% c('Spring','Fall'))
+  			
+        #	inf = inf[i,]
+  			inf = lonlat2planar(inf,input_names=c('X','Y'),proj.type=p$nefsc.internal.projection)
 				inf$ID = paste(inf$MISSION, inf$SETNO, sep=".")
 
 			save(inf, file = file.path(fn.root, 'usnefsc.inf.clean.rdata'))
@@ -265,9 +272,15 @@ options(scipen=999)  # this avoids scientific notation
           return(strata.area)
         }
 
-        strata.area = sqlQuery(channel,paste("select * from groundfish.gsstratum where strat like '01%' ;"))
-
-save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
+        #strata.area = sqlQuery(channel,paste("select * from groundfish.gsstratum where strat like '01%' ;"))
+          a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
+          l = attributes(a)$PolyData[,c('PID','STRATA')]
+          a = calcArea(a)
+          strata.area = merge(a,l,by='PID',all.x=T)
+          strata.area = aggregate(area~STRATA,data = strata.area,FUN=sum)
+          strata.area = strata.area[which(strata.area$STRATA>0),]
+        #this is in km2
+          save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
         odbcCloseAll()
 
         }

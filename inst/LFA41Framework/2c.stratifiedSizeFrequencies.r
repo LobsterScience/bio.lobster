@@ -124,7 +124,7 @@ load_all('~/git/bio.survey/')
       p$length.based = T
       p$size.class= c(50,300)
       p$by.sex = F
-      p$sex = c(1,2) # male female berried c(1,2,3)
+      p$sex = c(1,2,3) # male female berried c(1,2,3)
       p$bootstrapped.ci=F
       p$strata.files.return=F
       p$strata.efficiencies=F

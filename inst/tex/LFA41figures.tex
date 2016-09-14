@@ -4,6 +4,7 @@
 \usepackage{pdfcomment}
 \usepackage{amsmath}
 \usepackage{lscape}
+\usepackage{hyperref}
 \usepackage[top=2.4cm, bottom=2.4cm, left=3cm, right=3cm]{geometry}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -753,6 +754,30 @@
 
 \end{figure}
 
+% environmental conditions
+
+
+\begin{figure}
+
+    \includegraphics[width=.5\textwidth]{\e lfa41DFOTemp.png}
+    \includegraphics[width=.5\textwidth]{\e lfa41georgestemperature.png}\\
+    \includegraphics[width=.5\textwidth]{\e lfa41NEFSCFallTemps.png}
+    \includegraphics[width=.5\textwidth]{\e lfa41NEFSCSpringTemps.png}\\
+    \caption{Stratified mean temperatures from DFO RV summer (upper-left), Georges Bank (upper-right), NEFSC fall (lower-left) and NEFSC spring (lower-right) surveys with base strata for LFA 41. Within each plot red line represents running median and error bars are the 95 \% bootstrapped confidence intervals.}
+
+\end{figure}
+
+
+
+\begin{figure}
+
+    \includegraphics[width=1\textwidth]{\e AMO.png}
+    \caption{Annual mean anomalies of the Atlantic multidecadal osscillation (AMO). Data obtained from \url{http://www.esrl.noaa.gov/psd/data/correlation//amon.us.long.data}}
+
+\end{figure}
+
+
+
 
 % habitat associations
 
@@ -848,23 +873,34 @@ the median habitat occupied by lobster. Blue line is the median sampled habitat.
 \end{figure}
 
 
-
 \begin{figure}
 
-    \includegraphics[width=1\textwidth]{\e giniFootprintCPUE.png}
-    \caption{Time series of spatial evenness of fishery catch rates (kg \textbackslash TH estimated through the Gini Index for LFA 41. Red line represents the three year running median. Annual catch rates were estimated by grouping fishing trips into 0.05 deg$^2$.}
+    \includegraphics[width=1\textwidth]{\e habitatAssociationsgeorges.pdf}
+    \caption{Time series of habitat associations for American lobster as obtained from the Georges Bank survey between 1987 and 2015. Circles represent the location of maximum deviation of cumulative distributions from catch weighted effort and effort. Filled circles represent statistically significant habitat associations and open circles represent non significant associations. Red line indicates the median habitat occupied by lobster. Blue line is the median sampled habitat. Shaded polygon in background is the 95th percentile for range of sampled habitat}
 
 \end{figure}
+
 
 
 
 %%Predator Index
 
 \begin{figure}
-
+\centering
     \includegraphics[width=.6\textwidth]{\e LobPredatorsbiomass.png}\\
     \includegraphics[width=.6\textwidth]{\e LobPredatorsabundance.png}\\
     \caption{Time series of biomass (lower) and abundance (upper) of predators of American lobster captured on the western Scotian Shelf during the summer RV survey.}
+
+\end{figure}
+
+
+
+
+%gini fishery
+\begin{figure}
+
+    \includegraphics[width=1\textwidth]{\e giniFootprintCPUE.png}
+    \caption{Time series of spatial evenness of fishery catch rates (kg \textbackslash TH estimated through the Gini Index for LFA 41. Red line represents the three year running median. Annual catch rates were estimated by grouping fishing trips into 0.05 deg$^2$.}
 
 \end{figure}
 

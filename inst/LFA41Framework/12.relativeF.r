@@ -9,7 +9,7 @@ require(bio.lobster)
 require(bio.utilities)
 la()
  fp = file.path(project.datadirectory('bio.lobster'),'analysis')
- fn = file.path( project.figuredirectory("bio.lobster")
+ fn = file.path( project.figuredirectory("bio.lobster"))
 # fisheries data
 
 				lobster.db('logs41') #make sure to do a database recapture through logs41.redo before moving on

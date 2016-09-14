@@ -11,8 +11,10 @@ g = length(a)
 
 a = matrix(scan(url,skip=1,nlines=g),nrow=g,ncol=13,byrow=T)
 p = rowMeans(a[,2:13])
-plot(1856:2015,p,type='h')
-
+fn = file.path(project.figuredirectory('bio.lobster'))
+png(file=file.path(fn,'AMO.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+plot(1856:2015,p,type='h',ylab='AMO anomaly',xlab='Year')
+dev.off()
 
 
 #NAO
@@ -73,7 +75,7 @@ load_all('~/git/bio.survey/')
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
                               p$file.name = 'lfa41NEFSCSpringTemps.png'
-
+                              p$ylim = c(5,12)
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
 
@@ -117,7 +119,8 @@ load_all('~/git/bio.survey/')
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = F #this subsets 
-      
+      require(bio.groundfish)
+      la()
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
       
                                    p$add.reference.lines = F
