@@ -1,5 +1,5 @@
 #' @title nefsc.analysis
-#' @description Stratified analysis of NEFSC lobster data with bootstrapped resampling and set-up the data for sensitivity analysis
+#' @description Stratified analysis of NEFSC lobster data with bootstrapped resampling and set-up the data for sensitivity analysis (removed strata 1310 and 1320 as they were not sampled since mid 80's (B. Shank pers comm))
 #' @param \code{DS} :the selection of analysis, options include \code{stratified.estimates}
 #' @param \code{out.dir} : specify the location of data saves, default is null and uses the project.datadirectory function as default
 #' @param \code{p} : the parameter list which contains the specifics of the analysis at a minimum includes the season and area for analysis
@@ -21,15 +21,15 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
          if(p$season=='fall') {SEASON = 'Fall'}
          if(p$area=='georges.canada') {STRATUM = c(1160,1170,1180,1190,1200,1210,1220); props = c(0.5211409, 0.7888889, 0.7383721, 0.0009412, 0.0007818, 0.4952830, 0.2753304)}
          if(p$area=='georges.US') {STRATUM = c(1130,1140,1150,1160,1170,1180,1190,1200,1210,1220,1230); props=c(1,1,1,1-0.5211409, 1-0.7888889, 1-0.7383721, 1-0.0009412, 1-0.0007818, 1-0.4952830, 1-0.2753304,1)}
-         if(p$area=='LFA41') {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = 1}
-         if(p$area=='LFA41' & p$define.by.polygons) {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = c(0.5211409, 0.7888889, 0.7383721, 0.0006892, 0.0005209, 0.4952830, 0.2753304, 0.3842528, 0.8799349, 0.1597051, 0.0105999, 0.2922712)}
-         if(p$area=='adjacentLFA41') {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1310, 1340, 1360); props = 1-c(0.5211409, 0.7888889, 0.7383721, 0.0006892, 0.0005209, 0.4952830, 0.2753304, 0.3842528, 0.8799349, 0.1597051, 0.0105999, 0.2922712)}
-         if(p$area=='all') {STRATUM = c(1080,1090,1100,1110,1120,1130,1140,1150,1160,1170,1190,1200,1210,1220,1230,1240,1180,1010,1020,1030,1040,1050,1060,1070,1300,1340,1351,1360,1370,1380,1390,1400,1610,1620,1630,1640,1650,1660,1670,1680,1690,1700,1710,1720,1730,1740,1750,1760,1250,1260,1270,1280,1290,1310,1320,1330,1350,1410,1420,1490,1990); props=rep(1,61)}
+         if(p$area=='LFA41') {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1340, 1360); props = 1}
+         if(p$area=='LFA41' & p$define.by.polygons) {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300,  1340, 1360); props = c(0.5211409, 0.7888889, 0.7383721, 0.0006892, 0.0005209, 0.4952830, 0.2753304, 0.3842528, 0.8799349,  0.0105999, 0.2922712)}
+         if(p$area=='adjacentLFA41') {STRATUM = c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1340, 1360); props = 1-c(0.5211409, 0.7888889, 0.7383721, 0.0006892, 0.0005209, 0.4952830, 0.2753304, 0.3842528, 0.8799349, 0.0105999, 0.2922712)}
+         if(p$area=='all') {STRATUM = c(1080,1090,1100,1110,1120,1130,1140,1150,1160,1170,1190,1200,1210,1220,1230,1240,1180,1010,1020,1030,1040,1050,1060,1070,1300,1340,1351,1360,1370,1380,1390,1400,1610,1620,1630,1640,1650,1660,1670,1680,1690,1700,1710,1720,1730,1740,1750,1760,1250,1260,1270,1280,1290,1330,1350,1410,1420,1490,1990); props=rep(1,59)}
          if(p$lobster.subunits==T & p$area=='Georges.Bank') {STRATUM = c(1160,1170,1180); props = c(0.3462588,0.6487552,0.450009)}   
          if(p$lobster.subunits==T &p$area=='Georges.Basin') {STRATUM = c(1160,1170,1180,1190,1200,1210,1220,1300,1290); props = c(0.170,0.1377,0.2812,0.0006,0.0005,0.4938,0.2771,0.321,0.195)}      
          if(p$lobster.subunits==T &p$area=='Crowell.Basin') {STRATUM = c(1300,1290,1360); props = c(0.1794,0.0707,0.23669)}   
-         if(p$lobster.subunits==T &p$area=='SE.Browns' )    {STRATUM = c(1290,1310); props = c(0.029519,0.08869)}  
-         if(p$lobster.subunits==T &p$area=='SW.Browns' )    {STRATUM = c(1300,1290,1310,1340,1360); props=c(0.391,0.0879,0.0709,0.0103,0.0606)}  
+         if(p$lobster.subunits==T &p$area=='SE.Browns' )    {STRATUM = c(1290); props = c(0.029519)}  
+         if(p$lobster.subunits==T &p$area=='SW.Browns' )    {STRATUM = c(1300,1290,1340,1360); props=c(0.391,0.0879,0.0103,0.0606)}  
 
         
          if (exists( "libs", p)) {

@@ -244,4 +244,24 @@ habitat.model.data <- function(DS, p) {
 
 	}
 
+if(DS %in% c('predion.surface','prediction.surface.redo')) {
+
+	if(DS=='prediction.surface') {
+
+
+	}
+							yr = p$years
+							H = indicators.lookup(DS='depth',p=p)
+							H = H[,c('z','dZ','ddZ','plon','plat')]
+							H = indicators.lookup(DS='depth',p=p)
+    						T = indicators.lookup(p=p,DS='temperature.seasonal')
+				           j = which(is.na(aa$bottom_temperature))
+				           aa$bottom_temperature[j] = aa$t[j]
+				            
+				            aa$t = aa$bottom_temperature
+				            aa = habitat.lookup(aa,p=p,DS='substrate')
+				        
+
+}
+
 }
