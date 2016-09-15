@@ -9,7 +9,7 @@
 LobsterLogsProcess<-function(bumpup=F){
 
 	options(stringsAsFactors=F)
-	loadfunctions("lobster")
+	#loadfunctions("lobster")
 	require(lubridate)
 
 
@@ -48,11 +48,11 @@ LobsterLogsProcess<-function(bumpup=F){
 		}
 
 	}
-	logs1<-subset(logs,!is.na(SYEAR))
-	logs2<-subset(logs,!is.na(SYEAR))
+	logs<-subset(logs,!is.na(SYEAR))
+	#logs2<-subset(logs,!is.na(SYEAR))
 
 
-slips$SYEAR<-NA
+	slips$SYEAR<-NA
 	slips$END_DATE <- NA
 	slips$DATE_FISHED<-as.Date(slips$DATE_LANDED)
 	for(i in 1:length(lfa)) {
@@ -65,7 +65,7 @@ slips$SYEAR<-NA
 
 	}
 	
-
+	#browser()
 
 	# add week of season (WOS) variable
 	logs$WOS<-NA
@@ -95,17 +95,17 @@ slips$SYEAR<-NA
 	logsInSeason<-rbind(logsInSeasonA,logsInSeasonB,logsInSeasonC)
 	logsInSeason$WEIGHT_KG<-logsInSeason$WEIGHT_LBS*0.4536
 
-	centgrid<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","lfa27_38_centgrid.csv"))
+	centgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","lfa27_38_centgrid.csv"))
 	grid.key<-with(centgrid,paste(LFA,GRID_NUM,sep='.'))
 	logsInSeason<-subset(logsInSeason,!is.na(GRID_NUM)&paste(LFA,GRID_NUM,sep='.')%in%grid.key)
 	logsInSeason$CPUE<-logsInSeason$WEIGHT_KG/logsInSeason$NUM_OF_TRAPS
 	logsInSeason<-subset(logsInSeason,CPUE<20)
 
-	subareas<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","LFA2733subarea.csv"))
+	subareas<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","LFA2733subarea.csv"))
 	names(subareas)[2]<-"GRID_NUM"
 	logsInSeason<-merge(logsInSeason,subareas,all.x=T)
 
-	TotalLandings<-read.csv(file.path( project.datadirectory("lobster"), "data","products","TotalLandings.csv"))
+	TotalLandings<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","products","TotalLandings.csv"))
 		
 	# add BUMPUP column: total landings/sum of logs for each year  & LFA
 	if(bumpup){

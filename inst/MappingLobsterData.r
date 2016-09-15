@@ -3,16 +3,19 @@ require("bio.lobster")
 
 ### LOGS ###
 
-#loadfunctions('lobster')
+#loadfunctions('bio.lobster')
 #cpuegrids<-lobGridPlot(subset(logsInSeason,LFA=='34'&SYEAR==2014,c("LFA","GRID_NUM","CPUE")),FUN=mean)
 #LobsterMap('34',poly.lst=cpuegrids)
 
 
 ####### 2014 CATCH with survey location LFA 34
+lobster.db('process.logs.redo')
+logsInSeason=lobster.db('process.logs')
 
-loadfunctions('lobster')
-logsInSeason<-read.csv(file.path( project.datadirectory("lobster"), "data","logsInSeason.csv"))
-logsInSeason$CPUE = logsInSeason$TOTAL_WEIGHT_KG / logsInSeason$NUM_OF_TRAPS
+
+logsInSeason$CPUE = logsInSeason$WEIGHT_KG / logsInSeason$NUM_OF_TRAPS
+logsInSeason$ADJ_WEIGHT = logsInSeason$WEIGHT_KG * logsInSeason$BUMPUP
+
 #catchgrids<-lobGridPlot(subset(logsInSeason,LFA=='34'&SYEAR==2014,c("LFA","GRID_NUM","WEIGHT_KG")),lvls=c(1000,50000,100000,200000,400000,600000,800000,1000000),FUN=sum,border=NA)
 
 catchgrids<-lobGridPlot(subset(logsInSeason,LFA=='34'&SYEAR==2014 & CPUE<10,c("LFA","GRID_NUM","CPUE")),lvls = c(0.1,1.6,2.5,3.8,4.8,14.7),FUN=mean,border=NA)
@@ -27,27 +30,77 @@ legend('topleft',c('index','2014'),col=c('red','black'),pch=c(16,1),inset=0.02,c
 
 dev.off()
 
+############# Grid Catch 
 
-loadfunctions('lobster')
-catchgrids <-lobGridPlot(subset(logsInSeason,SYEAR==2007,c("LFA","GRID_NUM","WEIGHT_KG")),lvls=c(100,50000,100000,200000,400000,600000,800000,1000000),FUN=sum,border=NA)
+catchgrids <-lobGridPlot(subset(logsInSeason,SYEAR==2014,c("LFA","GRID_NUM","WEIGHT_KG")),lvls=c(0,65720,198753,328007,564229),FUN=sum,border=NA,bcol="RdYlGn",rev=T)
 	
-pdf(file.path( project.datadirectory("lobster"), "R","2007GridLandings.pdf"),11,8)
+pdf(file.path( project.datadirectory("bio.lobster"), "figures","2014GridLandings.pdf"),10,8)
 
-LobsterMap('all',poly.lst=catchgrids[1:2],title="2007 Lobster Catch")
-ContLegend("bottomright",lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (t)",inset=0.02,cex=0.8,bg='white')
+LobsterMap('all',poly.lst=catchgrids[1:2],title="2014 Lobster Catch")
+ContLegend("bottomright",lvls=catchgrids$lvls,Cont.data=catchgrids,title="Catch (kg)",inset=0.02,cex=0.8,bg='white')
+
+dev.off()
+
+############# Grid Catch Adjusted
+
+catchadjgrids <-lobGridPlot(subset(logsInSeason,SYEAR==2014,c("LFA","GRID_NUM","ADJ_WEIGHT")),lvls=c(0,65720,198753,328007,564229),FUN=sum,border=NA,bcol="RdYlGn",rev=T)
+	
+pdf(file.path( project.datadirectory("bio.lobster"), "figures","2014GridLandingsAdj.pdf"),10,8)
+
+LobsterMap('all',poly.lst=catchgrids[1:2],title="2014 Lobster Catch")
+ContLegend("bottomright",lvls=catchgrids$lvls,Cont.data=catchadjgrids,title="Catch (kg)",inset=0.02,cex=0.8,bg='white')
 
 dev.off()
 
 
+############# Grid Catch lbs
+
+catchlbsgrids <-lobGridPlot(subset(logsInSeason,SYEAR==2014,c("LFA","GRID_NUM","WEIGHT_LBS")),lvls=c(0,65720,198753,328007,564229),FUN=sum,border=NA,bcol="RdYlGn",rev=T)
+	
+pdf(file.path( project.datadirectory("bio.lobster"), "figures","2014GridLandingsLbs.pdf"),10,8)
+
+LobsterMap('all',poly.lst=catchgrids[1:2],title="2014 Lobster Catch")
+ContLegend("bottomright",lvls=catchgrids$lvls,Cont.data=catchlbsgrids,title="Catch (lbs)",inset=0.02,cex=0.8,bg='white')
+
+dev.off()
+
+
+############# Grid Effort
+
+effortgrids <-lobGridPlot(subset(logsInSeason,SYEAR==2014,c("LFA","GRID_NUM","NUM_OF_TRAPS")),lvls=c(0,15400,49461,129458,247331),FUN=sum,border=NA,bcol="RdYlGn",rev=T)
+	
+pdf(file.path( project.datadirectory("bio.lobster"), "figures","2014GridEffort.pdf"),10,8)
+
+LobsterMap('all',poly.lst=effortgrids[1:2],title="2014 Lobster Effort")
+ContLegend("bottomright",lvls=effortgrids$lvls,Cont.data=effortgrids,title="Trap Hauls",inset=0.02,cex=0.8,bg='white')
+
+dev.off()
+
+
+############# Grid CPUE
+
+cpuegrids <-lobGridPlot(subset(logsInSeason,SYEAR==2014,c("LFA","GRID_NUM","CPUE")),lvls=c(0.2,1.6,2.5,3.8,4.8),FUN=sum,border=NA,bcol="RdYlGn",rev=T)
+	
+pdf(file.path( project.datadirectory("bio.lobster"), "figures","2007GridCPUE.pdf"),10,8)
+
+LobsterMap('all',poly.lst=catchgrids[1:2],title="2014 Lobster CPUE")
+ContLegend("bottomright",lvls=catchgrids$lvls,Cont.data=catchgrids,title="kg/TH",inset=0.02,cex=0.8,bg='white')
+
+dev.off()
+
+
+
+griddata2014=data.frame(LFA=catchgrids[[2]]$PID,GRID=catchgrids[[2]]$SID,CATCH=catchgrids[[2]]$Z,ADJCATCH=catchadjgrids[[2]]$Z,EFFORT=effortgrids[[2]]$Z)
+save( griddata2014, file=file.path( project.datadirectory("bio.lobster"), "gridsummary2014.rdata"), compress=T)
 ############## LFA grid effort
 
 
-loadfunctions('lobster')
+loadfunctions('bio.lobster')
 logsInSeason<-read.csv(file.path( project.datadirectory("lobster"), "data","logsInSeason.csv"))
 yy = unique(logsInSeason$SYEAR)
 
 
-fp = file.path( project.datadirectory("lobster"), "figures")
+fp = file.path( project.datadirectory("bio.lobster"), "figures")
 dir.create(fp, recursive =T, showWarnings =F)
 for(y in yy) {
 effortgrids <-lobGridPlot(subset(logsInSeason,SYEAR==y,c("LFA","GRID_NUM","NUM_OF_TRAPS")),lvls=c(100,50000,100000,200000,400000,600000,800000,1000000),FUN=sum,border=NA)
