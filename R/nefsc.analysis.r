@@ -87,7 +87,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         # all catches have been converted to bigelow equivalents and therefore do not need any further towed distance calculations, the DISTCORRECTION is a standardized distance against the mean of the towed distance for that gear and is therefore the correction for towed distance to be used
         #US nautical mile is 6080.2ft bigelow is 42.6'
         #tow dist is 1nm for bigelow
-     stra$NH = stra$AREA/(1* 42.6 / 6080.2)
+     stra$NH = stra$area
      strata.files = list()
      out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA,gini = NA,gini.lo =NA, gini.hi=NA)
      mp=0
@@ -103,7 +103,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
          
             #iv = which(cas$spec %in% vv) Turn on if species are selected right now only lobster is being brought in
             iy = which(set$GMT_YEAR %in% yr)
-            ix = which(set$SEASON == SEASON)
+            ix = which(tolower(set$SEASON) == tolower(SEASON))
  pi = 'base'
          if(p$define.by.polygons) {
           print('dbp')
@@ -155,32 +155,26 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   if(nrow(dp)>=1) {
         
                   flf = p$size.class[1]:p$size.class[2]
-                  dp$clen2 = ifelse(dp$LENGTH %in% flf,dp$CLEN,0)
+                  dp$clen2 = ifelse(dp$FLEN %in% flf,dp$CLEN,0)
 
               if(p$by.sex) dp$clen2 = ifelse(dp$FSEX %in% p$sex, dp$clen2, 0)
 
-              if(any(!is.finite(dp$FWT))) {
-                      io = which(!is.finite(dp$FWT))
-                      fit = nls(fwt~a*flen^b,de[which(is.finite(de$FWT)),],start=list(a=0.001,b=3.3))
-                      ab = coef(fit)
-                      dp$FWT[io] = ab[1]*dp$FLEN[io]^ab[2]
-                  }
                       dp$pb = dp$FWT * dp$CLEN
                       dp$pb1 = dp$FWT * dp$clen2
 
                   dpp = data.frame(mission=NA,setno=NA,size_class=NA,pn=NA,pw=NA)
                   
                   if(nrow(dp)>0) {
-                      dpp = aggregate(cbind(CLEN,clen2,pb,pb1)~MISSION+SETNO+SIZE_CLASS,data=dp,FUN=sum)
+                      dpp = aggregate(cbind(CLEN,clen2,pb,pb1)~MISSION+SETNO,data=dp,FUN=sum)
                       dpp$pn = dpp$clen2/dpp$CLEN
                       dpp$pw = dpp$pb1/dpp$pb
-                      dpp = dpp[,c('MISSION','SETNO','SIZE_CLASS','pn','pw')]
+                      dpp = dpp[,c('MISSION','SETNO','pn','pw')]
                       }
                   
-                  ca1 = merge(ca,dpp,by=c('MISSION','SETNO','SIZE_CLASS'))
+                  ca1 = merge(ca,dpp,by=c('MISSION','SETNO'))
                   ca1$TOTWGT = ca1$TOTWGT * ca1$pw
                   ca1$TOTNO = ca1$TOTNO * ca1$pn
-                  vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO','SIZE_CLASS')
+                  vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO')
                   ca = ca1[,vars.2.keep]
                   }
                 }
@@ -191,11 +185,11 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   sc[,c('TOTWGT','TOTNO')] = na.zero(sc[,c('TOTWGT','TOTNO')])
                   #sc$TOTNO = sc$TOTNO / sc$DISTCORRECTION #this happens during the nefsc.db uscat.clean step
                   #sc$TOTWGT = sc$TOTWGT / sc$DISTCORRECTION
-                  io = which(stra$STRAT %in% unique(sc$STRATUM))
+                  io = which(stra$STRATA %in% unique(sc$STRATUM))
                   sc$Strata = sc$STRATUM
-                  st = stra[io,c('STRAT','NH')]
-                  st = st[order(st$STRAT),]
-                  spr = data.frame(STRAT = STRATUM, Pr = props)
+                  st = stra[io,c('STRATA','NH')]
+                  st = st[order(st$STRATA),]
+                  spr = data.frame(STRATA = STRATUM, Pr = props)
                   st = merge(st,spr)
                   names(st)[1] = 'Strata'
                   if(p$reweight.strata) st$NH = st$NH * st$Pr #weights the strata based on area in selected region

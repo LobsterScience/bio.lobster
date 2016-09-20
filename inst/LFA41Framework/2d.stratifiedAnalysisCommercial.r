@@ -1,3 +1,5 @@
+#redone sept 18 2016. need to contine
+
 require(bio.survey)
 require(bio.lobster)
 p = bio.lobster::load.environment()
@@ -473,7 +475,3 @@ aout$subset = 'NEFSCSpringcommercial'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
       
 
-
-#save(base,file = file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
-#save(restratified, file = file.path(fpp,'CombinedReStratifiedResults.rdata'))
-#save(adjacentrestratified,file = file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
