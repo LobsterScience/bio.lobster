@@ -1,7 +1,10 @@
 #map of survey density
 
+
+###need to rerun broken
 require(bio.survey)
 require(bio.lobster)
+require(bio.groundfish)
 p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
@@ -60,7 +63,7 @@ load_all('~/git/bio.survey/')
 		addPolys(LFA41,border='blue')
 		j = makePBS(j,polygon=F)
 		j$Z =j$TOTNO
-		addBubbles(j,legend.pos='bottomright',legend.type='horiz',legend.cex=0.8,symbol.zero=".",max.size=0.8,z.max=1000,type='surface')
+		addBubbles(j,legend.pos='bottomright',legend.type='horiz',legend.cex=0.8,symbol.zero=".",symbol.bg = rgb(1,0,0,.6),max.size=0.8,z.max=1000,type='surface')
 		legend('bottomleft',bty='n',pch="", legend=paste(min(j$yr),max(j$yr),sep="-"),cex=1.5)
 		dev.off()	
 	}
@@ -100,7 +103,7 @@ load_all('~/git/bio.survey/')
 		j = makePBS(j,polygon=F)
 		j$Z =j$TOTNO
 		addPolys(LFA41,border='blue')
-		addBubbles(j,legend.pos='bottomright',legend.type='horiz',legend.cex=0.8,symbol.zero=".",max.size=0.8,z.max=1000,type='surface')
+		addBubbles(j,legend.pos='bottomright',legend.type='horiz',legend.cex=0.8,symbol.zero=".",max.size=0.8,z.max=1000,type='surface',symbol.bg = rgb(1,0,0,.6))
 		legend('bottomleft',bty='n',pch="", legend=paste(min(j$yr),max(j$yr),sep="-"),cex=1.5)
 		dev.off()	
 	}
@@ -159,7 +162,7 @@ load_all('~/git/bio.survey/')
 		j = makePBS(j,polygon=F)
 		j$Z =j$totno
 		addPolys(LFA41,border='blue')
-		addBubbles(j,legend.pos='bottomright',legend.type='horiz',legend.cex=0.8,symbol.zero=".",max.size=0.8,z.max=1000,type='surface')
+		addBubbles(j,legend.pos='bottomright',legend.type='horiz',legend.cex=0.8,symbol.zero=".",max.size=0.8,z.max=1000,type='surface',symbol.bg = rgb(1,0,0,.6))
 		legend('bottomleft',bty='n',pch="", legend=paste(min(j$yr),max(j$yr),sep="-"),cex=1.5)
 		dev.off()	
 	}
@@ -218,7 +221,7 @@ load_all('~/git/bio.survey/')
 		j = makePBS(j,polygon=F)
 		j$Z =j$totno
 		addPolys(LFA41,border='blue')
-		addBubbles(j,legend.pos='bottomright',legend.type='horiz',legend.cex=0.8,symbol.zero=".",max.size=0.8,z.max=1000,type='surface')
+		addBubbles(j,legend.pos='bottomright',legend.type='horiz',legend.cex=0.8,symbol.zero=".",max.size=0.8,z.max=1000,type='surface',symbol.bg = rgb(1,0,0,.6))
 		legend('bottomleft',bty='n',pch="", legend=paste(min(j$yr),max(j$yr),sep="-"),cex=1.5)
 		dev.off()	
 	}

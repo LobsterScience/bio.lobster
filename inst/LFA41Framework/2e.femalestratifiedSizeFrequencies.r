@@ -1,6 +1,7 @@
-#size frequencies and sex ratios surveys
+#size frequencies females
 require(bio.survey)
 require(bio.lobster)
+require(bio.groundfish)
 p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
@@ -19,7 +20,7 @@ load_all('~/git/bio.survey/')
       p$length.based = F
       p$by.sex = T
       p$sex=c(2,3)
-      p$bootstrapped.ci=F
+      p$bootstrapped.ci=T
       p$strata.files.return=F
       p$vessel.correction.fixed=1.2
       p$strat = NULL
@@ -49,10 +50,10 @@ load_all('~/git/bio.survey/')
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41baseSummerRV.rdata  '))
 
 #restratified
-        require(bio.lobster)
-        p = bio.lobster::load.environment()
-        p$libs = NULL
-        fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+#        require(bio.lobster)
+ #       p = bio.lobster::load.environment()
+ #       p$libs = NULL
+  #      fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 
 
         p$series =c('summer')# p$series =c('georges');p$series =c('fall')
@@ -65,7 +66,7 @@ load_all('~/git/bio.survey/')
         p$by.sex = T
         p$sex=c(2,3)
       
-        p$bootstrapped.ci=F
+        p$bootstrapped.ci=T
         p$strata.files.return=F
         p$vessel.correction.fixed=1.2
         p$strat = NULL
@@ -85,10 +86,10 @@ load_all('~/git/bio.survey/')
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata  '))
 
 #adjacent
-        require(bio.lobster)
-        p = bio.lobster::load.environment()
-        p$libs = NULL
-        fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+       # require(bio.lobster)
+       # p = bio.lobster::load.environment()
+       # p$libs = NULL
+       # fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 
 
         p$series =c('summer')# p$series =c('georges');p$series =c('fall')
@@ -100,7 +101,7 @@ load_all('~/git/bio.survey/')
         p$length.based = T
         p$by.sex = T
         p$sex=c(2,3)
-        p$bootstrapped.ci=F
+        p$bootstrapped.ci=T
         p$strata.files.return=F
         p$vessel.correction.fixed=1.2
         p$strat = NULL
@@ -129,7 +130,7 @@ load_all('~/git/bio.survey/')
       p$size.class= c(50,300)
       p$by.sex = T
       p$sex = c(1,2) # male maturefemaleLength berried c(1,2,3)
-      p$bootstrapped.ci=F
+      p$bootstrapped.ci=T
       p$strata.files.return=F
       p$strata.efficiencies=F
       p$clusters = c( rep( "localhost", 7) )
@@ -224,6 +225,7 @@ load_all('~/git/bio.survey/')
           p$size.class=c(a[i],a[i])
           out[[i]] = nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
           }
+#save(out,file='~/tmp/fall41partial.rdata') had to stop but length=44 so flen is done to 133
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
@@ -256,7 +258,7 @@ load_all('~/git/bio.survey/')
       p$by.sex = T
       p$sex=c(2,3)
       
-      p$bootstrapped.ci=F
+      p$bootstrapped.ci=T
       p$strata.files.return=F
       p$vessel.correction.fixed=1.2
       p$strat = NULL

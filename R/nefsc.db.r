@@ -46,21 +46,26 @@ options(scipen=999)  # this avoids scientific notation
         load(file = file.path(fnODBC, 'usnefsc.inf.rdata'))
         return(usinf)
       } 
-       			#10=  NEST
+       		     	#10=  NEST
                 #11 = '36 YANKEE TRAWL'
                 #41 = Mod. 41 Yankee Trawl (Accepted Code)
                 #45 = Mod. 41 Yankee Trawl (Erroneously Coded on Several Cruises)
-               # matches inputs from B.Shank Sept 2016
+                ### matches inputs from B.Shank Sept 2016 ###
+                ## need the distinct clause in the uss_mstr_cruise as some of the early cruises have multiple entries for a single survey-station combination
 
                   usinf = sqlQuery(channel,paste("SELECT *
                     FROM  USNEFSC.USS_STATION a, 
-                          usnefsc.uss_mstr_cruise b
+                          (select distinct cruise6, season, year 
+                              from usnefsc.uss_mstr_cruise 
+                              where status_code in (10,15) 
+                              and purpose_code = 10
+                              and season in ('SPRING','FALL')
+                              and year>=1968) b
                     where   a.cruise6 = b.cruise6
                         and to_number(SHG) <= 136
-                        and b.purpose_code = 10
-                        and stratum like '01%' and gmt_year>=1968 and a.STATUS_CODE in (10,15);")) 
+                        and stratum like '01%' 
+                        ;")) 
                    
-
                     usinf = rename.df(usinf,c('CRUISE6','STATION'),c('MISSION','SETNO'))
                     usinf$SETNO = as.numeric(usinf$SETNO)
                     save(usinf, file = file.path(fnODBC, 'usnefsc.inf.rdata'))
@@ -114,7 +119,7 @@ options(scipen=999)  # this avoids scientific notation
 				#i = which(inf$SEASON %in% c('Spring','Fall'))
   			
         #	inf = inf[i,]
-  			inf = lonlat2planar(inf,input_names=c('X','Y'),proj.type=p$nefsc.internal.projection)
+  			inf = lonlat2planar(inf,input_names=c('X','Y'),proj.type='lambert.conic.canada.east')
 				inf$ID = paste(inf$MISSION, inf$SETNO, sep=".")
 
 			save(inf, file = file.path(fn.root, 'usnefsc.inf.clean.rdata'))
@@ -196,24 +201,29 @@ options(scipen=999)  # this avoids scientific notation
             
                 }
 
-            raw.gsdet<- sqlQuery(channel, paste(" select cruise6 mission, stratum, to_number(station) setno, length, avg(indwt) fwt
-                          from usnefsc.uss_detail
-                           where to_number(svspp)=301
-                           and stratum like '01%'
-                            group by cruise6,station,stratum,length"))
+                #no trust in individual weights therefore not included # B Shank Sept 2016
+           # raw.gsdet<- sqlQuery(channel, paste(" select cruise6 mission, stratum, to_number(station) setno, length, avg(indwt) fwt
+           #              from usnefsc.uss_detail
+           #              where to_number(svspp)=301
+           #              and stratum like '01%'
+           #              group by cruise6,station,stratum,length"))
             
           
-            raw.lf<- sqlQuery(channel,paste("select cruise6 mission, stratum, catchsex fsex, station setno,length, 
-                sum(expnumlen) clen, 1 size_class
-                from usnefsc.uss_lengths
-                where to_number(svspp)=301
-                and catchsex in ('0','1','2','3','4','5')
-                and stratum like '01%'
-                group by cruise6,stratum,station,length, catchsex",sep=""))
+            usdet<- sqlQuery(channel,paste("select len.cruise6 mission, len.stratum, len.tow, len.station setno, len.svspp, len.catchsex fsex, len.length*10 as flen, len.expnumlen CLEN
+                          from usnefsc.uss_lengths len, 
+                          (select distinct cruise6, purpose_code, status_code, year, season from usnefsc.uss_mstr_cruise
+                            where purpose_code =10
+                            and STATUS_CODE in (10,15)
+                            and YEAR >=1968
+                            and season in ('SPRING','FALL')) cru  
+                          where len.cruise6 = cru.cruise6  
+                          and STRATUM like '01%'
+                          and len.svspp = 301
+                           ",sep=""))
             
-          raw.gsdet<-merge(raw.lf, raw.gsdet, all.x=T) 
-          raw.gsdet$FLEN[is.na(raw.gsdet$FLEN)] <- raw.gsdet$LENGTH[is.na(raw.gsdet$FLEN)]
-          usdet = raw.gsdet
+           
+                    usdet$SETNO = as.numeric(usdet$SETNO)
+                   
           save(usdet, file = file.path(fnODBC, 'usnefsc.det.rdata'))
           odbcCloseAll()
 
@@ -230,42 +240,37 @@ options(scipen=999)  # this avoids scientific notation
                de = nefsc.db(DS = 'usdet')
                de$ID = paste(de$MISSION, de$SETNO, sep=".")
                inf = nefsc.db(DS = 'usinf.clean')
-               de$LENGTH = de$LENGTH*10 #to mm
-			   de$FWT    = de$FWT*1000 #to g
-			   de = de[which(de$LENGTH<300),]
-			   de[which(de$FWT>8500),'FWT'] <- NA
-			   de$FSEX = recode(de$FSEX,"0=0; 1=1; 2=2; 3=3; 4=2; 5=3") # 4 and 5 are for notched
-			   de$LEGAL = ifelse(de$FSEX<3 & de$LENGTH>82,1,0)
-			   de1 = NULL
-			   sexes = list(1,2,3,0)			 
-			   for(i in 1:length(sexes)) {
-			   		aa = b =   subset(de,FSEX %in% sexes[[i]])
-			   		if(i==4) {aa = subset(de,FSEX %in% c(1,2))}
-	   				nab = coef(nls(FWT~a*LENGTH^b,data=aa,start=list(a=0.001,b=3)))
-			   		j = which(is.na(b$FWT))
-			   				b$FWT[j] = nab[1]*b$LENGTH[j]^nab[2]
-			   		de1 = rbind(de1,b)
-            		}
-            	de = de1
-            	de = merge(de, inf[,c('SVVESSEL','SVGEAR','ID')],by = 'ID') #removes some of the sets that do match the filtered sets from inf.clean use CV's were quite high below 50mm and vessel corrections were not great
-            	data(AlbatrossBigelowConv) #part of the bio.lobster Rpackage and is named 'a'
+               #de$LENGTH = de$LENGTH*10 #to mm
+               de$FWT = NA
+         de$FSEX = recode(de$FSEX,"0=0; 1=1; 2=2; 3=3; 4=2; 5=3") # 4 and 5 are for notched
 
+          i = which(de$FSEX %in% c(1))
+          de$FWT[i] = exp(-14.468) * de$FLEN[i] ^ 3.0781 * 2.204 #lw cov from GB 
+           i = which(de$FSEX %in% c(2,3))
+          de$FWT[i] = exp(-13.3388) * de$FLEN[i] ^ 2.8455 * 2.204 #lw cov from GB 
+          i = which(de$FSEX %in% c(0))
+          de$FWT[i] = exp(-13.7012) * de$FLEN[i] ^ 2.9212 * 2.204 #lw cov from GB 
+
+			   de$FWT    = de$FWT*1000 #to g
+			   #de = de[which(de$LENGTH<300),]
+			   de[which(de$FWT>11500),'FWT'] <- NA
+			   
+			      	de = merge(de, inf[,c('SVVESSEL','SVGEAR','ID')],by = 'ID') #removes some of the sets that do match the filtered sets from inf.clean use CV's were quite high below 50mm and vessel corrections were not great
+            	if(OS=='Windows') load('E:/git/bio.lobster/data/AlbatrossBigelowConv.rda') #part of the bio.lobster Rpackage and is named 'a'
+              if(OS=='Linux') load('~/git/bio.lobster/data/AlbatrossBigelowConv.rda') #part of the bio.lobster Rpackage and is named 'a'
             	a$Lm = a$CL * 10
-            	de$Lm = round(de$LENGTH)
+            	de$Lm = round(de$FLEN)
             	de = merge(de,a,by='Lm',all.x=T) 
             	de[which(de$SVVESSEL=='HB' & de$SVGEAR==10),'rho'] <- 1 #no conversion for the bigelow
             	de[which(is.na(de$rho)),'rho'] <- 1 #no conversion for the bigelow
             	de$CLEN = de$CLEN * de$rho
-            	
-
-
   				save(de,file=file.path(fn.root, 'usnefsc.det.clean.rdata'))
 				return(de)
 
 				}
       
 
-    if(DS %in% c('usstrata.area','usstrata.area.redo.odbc')) {
+    if(DS %in% c('usstrata.area','usstrata.area.redo')) {
         if(DS == 'usstrata.area') {
           
           load(file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
@@ -274,12 +279,19 @@ options(scipen=999)  # this avoids scientific notation
 
         #strata.area = sqlQuery(channel,paste("select * from groundfish.gsstratum where strat like '01%' ;"))
           a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
-          l = attributes(a)$PolyData[,c('PID','STRATA')]
+          attr(a,'projection') <- "LL"
+           l = attributes(a)$PolyData[,c('PID','STRATA')]
           a = calcArea(a)
           strata.area = merge(a,l,by='PID',all.x=T)
           strata.area = aggregate(area~STRATA,data = strata.area,FUN=sum)
           strata.area = strata.area[which(strata.area$STRATA>0),]
         #this is in km2
+        TUNITS = T #converting km to trawlable units
+        if(TUNITS) {
+          strata.area$area = strata.area$area*0.291553 # to square nm
+          strata.area$area = strata.area$area / 0.00701944 # 13m net towed 1nm = 0.00701944*1 
+           }
+
           save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
         odbcCloseAll()
 
