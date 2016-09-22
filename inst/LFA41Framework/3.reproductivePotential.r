@@ -22,41 +22,39 @@ la()
 	af = aggregate(ObsLobs~yr,data=aa,FUN=sum)
 	names(af) = c('x','y')
 	h = split(aa,f=aa$yr)
+	out= c()
 	for(j in 1:length(h)) {
 			g = h[[j]]
+			y = unique(g$yr)
 			g$Mat = ifelse(g$FLEN>=95,1,0)
-			g$Fec = (g$Mat * 0.0031829 * g$FLEN ^ 3.353501) / 1000 # campbell and Robinson 1983
-			g$Fecl = g$Fec * g$n.ci.yst.l
-			g$Fecu = g$Fec * g$n.ci.yst.u
-			g$Fecm = g$Fec * g$n.yst
+			g$Fec = (g$Mat * 0.0031829 * g$FLEN ^ 3.353501)  # campbell and Robinson 1983
+			g$Fecl = g$Fec * g$n.ci.Yst.l / 1000000
+			g$Fecu = g$Fec * g$n.ci.Yst.u / 1000000
+			g$Fecm = g$Fec * g$n.Yst / 1000000
 
-			m=  aggregate(cbind(Fecm,Fecl,Fecu)~yr,data = g, FUN=sum, na.rm=T)
-			
-
+			n = aggregate(cbind(Fecm,Fecl,Fecu)~yr,data = g, FUN=sum, na.rm=T)
+			out = rbind(out,n)
 			}
-			out = as.data.frame(out)
-			names(out) = c('yr','medL','medLlower','medLupper','smallCatch','largeCatch')
-			print(median(out$medL))
-				p=list()
+							  p=list()
 			                  p$add.reference.lines = F
                               p$time.series.start.year = min(aa$yr)
                               p$time.series.end.year = max(aa$yr)
-                              p$metric = 'medianL' #weights
+                              p$metric = 'Fec' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = paste('medianL',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'png',sep=".")
+                              p$file.name = paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][6],"\\.")[[1]][1],'png',sep=".")
     		                  print(p$file.name)
 
                         p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-                        		p$ylim = c(60,155)
+                        		p$ylim = c(0,400)
                                 p$legend = FALSE
                                 p$running.median = T
                                 p$running.length = 3
                                 p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=T
-                              p$error.bars=F
+                               p$error.polygon=F
+                              p$error.bars=T
 
                               p$ylim2 = c(0,500)
                              

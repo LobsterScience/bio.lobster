@@ -86,11 +86,36 @@ load(file='/backup/bio_data/bio.lobster/R/LobitatModelSept122016.rdata')
 #Climate Envelop Model Booth 2014 Diversity and Distributions 20:1-9
 
 require(dismo)
+p = bio.lobster::load.environment()
 
 load(file.path(project.datadirectory('bio.lobster'),'analysis','habitatmodellingdata.rdata'))
 #presence only
+	dat = dat[-24165,]
 	dat$Y = ifelse(dat$B>0,1,0)
-	dat.p = subset(dat,Y==1 & dyear <0.5)
-	bc <- bioclim(dat.p[,c('t','z','dZ','ddZ')])
+	
+la()	
+#prediction layer
 
-bcp = predict(dat.p,bc)
+p$dyear=.8 #autumn 
+p$yrs = unique(dat$yr)
+J = habitat.model.data('prediction.surface',p=p)
+
+out = c()
+for(i in 1:length(p$yrs)) {
+		a = p$yrs[i]
+	dat.p = subset(dat,Y==1 & yr==a)
+		bc <- bioclim(dat.p[,c('dyear','t','z','dZ','ddZ')])
+		pI = J[,c('z','dZ','ddZ')]
+		k = grep(a,names(J))
+		pI = data.frame(pI,J[,k])
+		names(pI)[ncol(pI)] <- 't'
+		pI$dyear = p$dyear
+		pI$z = log(pI$z)
+		bcp = predict(bc,pI) 
+		datarange = range( bcp[ which(is.finite(bcp))])
+    	dr = seq( 0,1, length.out=100)
+    	png(file=file.path(project.figuredirectory('bio.lobster'),paste('bioclim',a,'.png',sep="")),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+	o = levelplot(bcp~J$plon+J$plat,aspect='iso',xlim=c(-600,100),ylim=c(-450,100),at=dr,col.regions=color.code('blue.yellow.red',dr))
+	print(o)
+	dev.off()
+	}

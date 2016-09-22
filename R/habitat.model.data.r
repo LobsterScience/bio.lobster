@@ -244,44 +244,18 @@ habitat.model.data <- function(DS, p) {
 
 	}
 
-if(DS %in% c('predion.surface','prediction.surface.redo')) {
+if(DS %in% c('prediction.surface')) {
 
-	if(DS=='prediction.surface') {
-
-print('need to load')
-	}
-							bathymetry.db(DS='baseline')
-							yr = p$years
 							H = indicators.lookup(DS='depth',p=p)
 							H = H[,c('z','dZ','ddZ','plon','plat')]
-							datarange=log(c(5,4000))
-							 dr = seq( datarange[1], datarange[2], length.out=100)
-
-							levelplot(log(z)~plon+plat,data=subset(H,z>5),aspect = 'iso', region=T,col.region = rev(color.code( "seis", dr)))
-
-    oc = landmask( db="worldHires", regions=c("Canada", "US"), return.value="not.land", tag="predictions" )
-    # oc= 1:nrow(P[])
-    print(
-      levelplot( log( P[oc,2] ) ~ plons + plats, pps[oc,], aspect="iso", main=NULL, at=dr, col.regions=rev(color.code( "seis", dr)) ,
-      contour=FALSE, labels=FALSE, pretty=TRUE, xlab=NULL,ylab=NULL,scales=list(draw=FALSE),
-        panel = function(x, y, subscripts, ...) {
-          panel.levelplot (x, y, subscripts, aspect="iso", rez=c(1,1), ...)
-          sp.lines( isobath.db( p=p, DS="isobath", depths=c(200, 400 ), crs=p$internal.crs ), col = "gray80", cex=0.1 )
-          sp.lines( coastline.db( p=p, crs=p$internal.crs ), col = "steelblue", cex=0.1 )
-        }
-    ) )
-  fn = file.path(project.datadirectory("bio.bathymetry"), "landmask", "/backup/bio_data/bio.bathymetry/landmask/predictions.worldHires.CanadaUS.lambert.conic.canada.east.rdata")
-							# only for scotican shelf need to update
-							#H = bio.substrate::substrate.db ( p=p, DS="planar")
-  							#H$substrate.mean = log(H$grainsize)
-  							
-  						for(y in yr) {
+							H = subset(H,z<1000)
+							
+  						for(y in p$yrs) {
     						T = indicators.lookup(p=p,DS='temperature.seasonal',yr=y)
-
-  						}
-				        
-  X = as.numeric(as.character(base::cut( x, zx, include.lowest=TRUE, right=F, labels=gx )))
-    
-}
-
-}
+    						d = p$dyear * 10
+    						H = data.frame(H,T[,d])
+    						names(H)[ncol(H)] <- paste('x',y,sep='.')    						 
+    						}
+				        return(H)
+						}
+					}

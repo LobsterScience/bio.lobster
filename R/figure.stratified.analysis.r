@@ -1,5 +1,5 @@
 #' @export
-figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x2=NULL) {
+figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x2=NULL,save=T) {
 	fn=file.path(project.datadirectory(out.dir),'figures')
 	dir.create(fn,showWarnings=F)
 	if(is.character(x)) {
@@ -10,7 +10,7 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 	#default is to use the object directly
 
 	with(p,{
-		 png(file=file.path(fn,file.name),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+		if(save) png(file=file.path(fn,file.name),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 		m='Yst' ; mm = 'n'; lev='Stratified Total'; mt= 'Number'; div = 1000
 		if(grepl('mean',measure)) {m = 'yst'; lev = 'Stratified Mean'; div =1}
 		if(grepl('weight',metric)) {mm = 'w'; mt = 'Weight'}
@@ -20,6 +20,8 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 		if(grepl('medianL',metric)) {m = 'medL'; mt = 'Median Length'; mm = 'medL';div=1;lev=""}
 		if(grepl('temper',metric)) {lev = 'Temperature'; mt=""}
 		if(grepl('relF',metric)) { mm = m = metric; lev = 'Relative F'; div=1; mt=""}
+		if(grepl('Fec',metric)) { mm = m = metric; lev = 'Reproductive Potential'; div=1; mt=""}
+	
 		n1 = names(x)[grep(m,names(x))]
 		n2 = names(x)[grep(mm,names(x))]
 		n = intersect(n1,n2)
@@ -42,6 +44,7 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 			ylim[2] = y.maximum
 			sll = xpp[which(xpp$upper>y.maximum),c('year','upper')]
 		}
+		
 		if(any(is.na(ylim))) ylim = NULL
 		if(sampleSizes) par(mar=c(5.1,4,4.1,4))
 			plot(xpp$year,xpp$mean,type='n',xlab='Year',ylab = paste(lev,mt,sep=" "),ylim=ylim)
@@ -58,7 +61,7 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 		  lines(rmean.yr,rmean,lty=1,lwd=3,col='salmon')
 		}
 		if(running.median){
-		  print(paste(running.length,'Year Running Median'))
+		#  print(paste(running.length,'Year Running Median'))
 		  #rmean = smooth(xpp$mean,kind='3RS3R',endrule='Tukey')
 		  	if(any(is.na(xpp$mean) | !is.finite(xpp$mean))) {
 		  		ik  = which(is.na(xpp$mean) | !is.finite(xpp$mean))
@@ -120,13 +123,14 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 
 if(sampleSizes) {
 		par(new=T)
-		with(x2,plot(x,y,type='l',axes=F,xlab=NA,ylab=NA,col='blue',ylim=p$ylim2))
+		if(!exists(y2.type)) y2.type == 'l'
+		with(x2,plot(x,y,type=y2.type,axes=F,xlab=NA,ylab=NA,col='blue',ylim=p$ylim2))
 		axis(side=4)
 		mtext(side = 4, line = 3, 'Sample Size')
 		}
 
 		print(file.path(fn,file.name))
-dev.off()
+if(save) dev.off()
 if(add.reference.lines) {return(c(Reference=xref,Reflow=lxref,Refhi=uxref))}
 
 	})

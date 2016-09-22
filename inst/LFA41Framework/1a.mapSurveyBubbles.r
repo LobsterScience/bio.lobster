@@ -178,7 +178,7 @@ load_all('~/git/bio.survey/')
       p$years.to.estimate = c(1987:2015)
       p$length.based = F
       p$by.sex = F
-      p$bootstrapped.ci=T
+      p$bootstrapped.ci=F
       p$strata.files.return=F
       p$vessel.correction.fixed=1.2
       p$strat = NULL
