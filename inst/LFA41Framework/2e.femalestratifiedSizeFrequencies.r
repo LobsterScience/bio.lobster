@@ -225,7 +225,6 @@ load_all('~/git/bio.survey/')
           p$size.class=c(a[i],a[i])
           out[[i]] = nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
           }
-#save(out,file='~/tmp/fall41partial.rdata') had to stop but length=44 so flen is done to 133
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))

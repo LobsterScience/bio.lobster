@@ -125,7 +125,7 @@ la()
 		}
 dev.off()
 
-
+O  = subset(O,yr < 2016)
 
 #not all seasons and areas have adequate data the combinations to use are as determined by ACook Sept 2016
 
@@ -143,16 +143,87 @@ dev.off()
 	      		ln=c('SW.Browns.Summer','SW.Browns.Autumn','SE.Browns.Spring','Georges.Basin.Spring','Georges.Basin.Summer','Georges.Bank.Summer')
 
 for( i in 1:length(ll)) {
-	g = ll[[i]]
+	r = ll[[i]]
 
-			lm = aggregate(carlength~yr,data=g, FUN=function(x) quantile(x,c(0.5,0.25,0.75)))
-				lm = data.frame(lm[,1],lm$carlength[,1],lm$carlength[,2],lm$carlength[,3])
+			lm = aggregate(carlength~yr,data=r, FUN=function(x) quantile(x,c(0.5,0.25,0.75,0.95)))
+				lm = data.frame(lm[,1],lm$carlength[,1],lm$carlength[,2],lm$carlength[,3],lm$carlength[,4])
 
-			af = aggregate(carlength~yr,data=g, FUN=length)
+			af = aggregate(carlength~yr,data=r, FUN=length)
 			names(af) = c('x','y')
 			
-			names(lm) = c('yr','medL','medLlower','medLupper')
+			names(lm) = c('yr','medL','medLlower','medLupper','upper95')
 			
+			r$ff = round(r$carlength/3)*3
+			
+			aa = aggregate(qt~ff+yr,data = r,FUN=length)
+
+			#grouped year length freq plots
+
+					YG = 5 # year grouping
+					y = unique(aa$yr)
+					yL = y[length(y)] #last year
+					yLL = length(y)-1
+					yLm = yLL %% YG
+					yLr = yLL %/% YG
+					yw = y[which(y %in% y[1:yLm])] #add the early years to the first histogram and keep the rest at 5 years
+					
+					yLw = c(rep(1,yLm),rep(1:yLr,each = YG),yLr+1)
+					grps = data.frame(yr = y,ry = yLw)
+					aa = merge(aa,grps,by='yr',all.x=T)
+					yll = max(aggregate(qt~ff+ry,data=aa,FUN=mean)$qt)
+					yll = 1
+					h = split(aa,f=aa$ry)
+					
+					for(j in 1:length(h)) {
+							g = h[[j]]
+							
+							y = unique(g$yr)
+							u = aggregate(qt~ff,data=g,FUN=mean)              
+							u$qt = u$qt / max(u$qt)
+							fn = paste(ln[i],min(y),max(y),'pdf',sep=".")
+				            nn = sum(g$qt)
+				            pdf(file.path(project.figuredirectory('bio.lobster'),fn))
+							plot(u$ff,u$qt,lwd=3,xlab='Carapace Length',ylab = 'Scaled Number Measured',type='h',ylim=c(0,yll),xlim=c(0,50))
+							abline(v=82.5,lty=2,col='red',lwd=3)
+							legend('topleft',bty='n',pch="", legend=c(paste(min(y),max(y),sep="-"),paste('N=',nn,sep=" ")),cex=1.5)
+							dev.off()
+							print(fn)
+							}
+						}
+
+
+
+
+
+
+
+
+
+
+
+
+
+			fn = paste('max95',ln[i],'pdf',sep=".")
+            nn = sum(g$ObsLobs)
+            pdf(file.path(project.figuredirectory('bio.lobster'),fn))
+			plot(out$yr,out$upper95,lwd=1,xlab='Year',ylab = 'Maximum Length (mm)',type='b',ylim=c(115,195),pch=16)
+			lines(out$yr,runmed(out$upper95,k=3,endrule='median'),col='salmon',lwd=2)
+			dev.off()
+			
+			fn = paste('shannon',ln[i],'pdf',sep=".")
+            nn = sum(g$ObsLobs)
+            oo = out[,c('yr','ShannonEquitability')]
+            ii = which(is.na(oo$ShannonEquitability))
+            oo$ShannonEquitability[ii] <- oo$ShannonEquitability[ii-1]
+
+            pdf(file.path(project.figuredirectory('bio.lobster'),fn))
+			plot(oo$yr,oo$ShannonEquitability,lwd=1,xlab='Year',ylab = 'Shannon Equitability',type='b',pch=16,ylim=c(0.60,1))
+			lines(oo$yr,runmed(oo$ShannonEquitability,k=3,endrule='median'),col='salmon',lwd=2)
+			dev.off()
+
+
+
+
 				p=list()
 			                  p$add.reference.lines = F
                               p$time.series.start.year = min(g$yr)

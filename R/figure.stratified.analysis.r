@@ -68,16 +68,14 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 				xpo = xpp$mean[-ik]
 				xpy = xpp$year[-ik]
 				rmean = runmed(xpo,k=running.length,endrule='median')
-				yp = data.frame(mean = xpo, year=xpy)
-				year = data.frame(year = xpp$year[1:length(xpp$year)])
-				yp = merge(year,yp,all.x=T)
-				rmean = yp$mean				  		
+				yp = data.frame(mean = rmean, year=xpy)
+				lines(yp$year,yp$mean,lty=1,lwd=3,col='salmon')
 		  	} else {
       	rmean = runmed(xpp$mean,k=running.length,endrule='median')
-      }
         rmean.yr = xpp$year[1:length(xpp$year)]
 		  lines(rmean.yr,rmean,lty=1,lwd=3,col='salmon')
 		}
+	}
 
 			if(exists('y.maximum',p) &  exists('show.truncated.numbers',p)) {
 				if(nrow(sll)>0){
@@ -123,13 +121,14 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 
 if(sampleSizes) {
 		par(new=T)
-		if(!exists(y2.type)) y2.type == 'l'
-		with(x2,plot(x,y,type=y2.type,axes=F,xlab=NA,ylab=NA,col='blue',ylim=p$ylim2))
+		if(!exists('y2.type',p)) p$y2.type == 'l'
+		with(x2,plot(x,y,type=p$y2.type,axes=F,xlab=NA,ylab=NA,col='blue',ylim=p$ylim2))
 		axis(side=4)
 		mtext(side = 4, line = 3, 'Sample Size')
 		}
 
 		print(file.path(fn,file.name))
+if(exists('box',p)) {box(lwd=3)}
 if(save) dev.off()
 if(add.reference.lines) {return(c(Reference=xref,Reflow=lxref,Refhi=uxref))}
 

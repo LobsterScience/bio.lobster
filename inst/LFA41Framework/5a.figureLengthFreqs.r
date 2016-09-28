@@ -1,7 +1,7 @@
 #figureLengthFreqs
 require(bio.lobster)
 la()
-
+m=0
 a = c(        file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41baseSummerRV.rdata  '),  
 			  file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41polygonSummerRV.rdata  '),
 		      file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41adjacentpolygonSummerRV.rdata  '),
@@ -20,7 +20,7 @@ for(i in 1:length(a)) {
 	load(a[i])
 	if(grepl('NEFSC',a[i])) {
 		aa <- aa[which(aa$FLEN>49),]
-		print(i)
+#		print(i)
 	}
 	yll = max(aa$n.yst)
 	af = aggregate(ObsLobs~yr,data=aa,FUN=sum)
@@ -41,13 +41,43 @@ for(i in 1:length(a)) {
 			lm = median(rep(g$FLEN,times=g$n.yst*1000))
 			ll = quantile(rep(g$FLEN,times=g$n.yst*1000),0.25)
 			lu = quantile(rep(g$FLEN,times=g$n.yst*1000),0.75)
+			lmax = quantile(rep(g$FLEN,times=g$n.yst*1000),0.95)
 			aS = with(subset(g,FLEN<lens[i]),sum(n.yst))
 			aL = with(subset(g,FLEN>=lens[i]),sum(n.yst))
-			out = rbind(out,c(y,lm,ll,lu,aS,aL))
+			
+			u = subset(u,n.yst>0)$n.yst
+			u = u / sum(u)
+			m=m+1
+			print(m)
+			Eh = -1*(sum(u*log(u))) / log(length(u))
+			out = rbind(out,c(y,lm,ll,lu,aS,aL,lmax,Eh))
 			}
 			out = as.data.frame(out)
-			names(out) = c('yr','medL','medLlower','medLupper','smallCatch','largeCatch')
-			print(median(out$medL))
+			names(out) = c('yr','medL','medLlower','medLupper','smallCatch','largeCatch','upper95','ShannonEquitability')
+			fn = paste('max95',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'pdf',sep=".")
+            nn = sum(g$ObsLobs)
+            pdf(file.path(project.figuredirectory('bio.lobster'),fn))
+			plot(out$yr,out$upper95,lwd=1,xlab='Year',ylab = 'Maximum Length (mm)',type='b',ylim=c(115,195),pch=16)
+			lines(out$yr,runmed(out$upper95,k=3,endrule='median'),col='salmon',lwd=2)
+			dev.off()
+			
+			fn = paste('shannon',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'pdf',sep=".")
+            nn = sum(g$ObsLobs)
+            oo = out[,c('yr','ShannonEquitability')]
+            ii = which(is.na(oo$ShannonEquitability))
+            oo$ShannonEquitability[ii] <- oo$ShannonEquitability[ii-1]
+
+            pdf(file.path(project.figuredirectory('bio.lobster'),fn))
+			plot(oo$yr,oo$ShannonEquitability,lwd=1,xlab='Year',ylab = 'Shannon Equitability',type='b',pch=16,ylim=c(0.60,1))
+			lines(oo$yr,runmed(oo$ShannonEquitability,k=3,endrule='median'),col='salmon',lwd=2)
+			dev.off()
+
+									
+
+			#print(fn)
+			
+#			print(median(out$medL))
+			save(out,file=file.path(project.datadirectory('bio.lobster'),'analysis',paste('medianL',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'rdata',sep=".")))
 				p=list()
 			                  p$add.reference.lines = F
                               p$time.series.start.year = min(aa$yr)

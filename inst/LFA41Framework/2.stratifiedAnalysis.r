@@ -1,5 +1,9 @@
+#####need to rerun this full thing, to get the combined results and to get the gini and dwao running medians figured out for the dfo summer rv surey with missing years
+####sept 23, 2016
+
 require(bio.survey)
 require(bio.lobster)
+require(bio.groundfish)
 p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
@@ -54,12 +58,16 @@ adjacentrestratified = list()
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-
-
+                       p$file.name = 'lfa41NEFSCSpringbasenumbers.png'
+                       p$ylim = c(0,20)
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+
+                       p$ylim = c(0,50)
                        p$metric = 'weights'
                        p$file.name = 'lfa41NEFSCSpringbaseweights.png'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+
+                       p$ylim = NULL
                        p$file.name = 'lfa41NEFSCSpringbaseDWAO.png'
                        p$metric = 'dwao'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
@@ -92,6 +100,7 @@ adjacentrestratified = list()
                               p$reference.measure = 'median' # mean, geomean
                               p$file.name = 'lfa41NEFSCSpringrestratifiednumbers.png'
 
+                              p$ylim=c(0,20)
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
 
@@ -104,15 +113,30 @@ adjacentrestratified = list()
 
 
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       p$file.name = 'lfa41NEFSCSpringrestratifiednumbersNOY.png'
+                       p$ylim=NULL
+                       p$box=T
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                         
+                       p$box=NULL
+                       p$ylim=c(0,50)
                        p$metric = 'weights'
                        p$file.name = 'lfa41NEFSCSpringrestratifiedweights.png'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
+                       p$box=T
+                       p$ylim=NULL
+                       p$metric = 'weights'
+                       p$file.name = 'lfa41NEFSCSpringrestratifiedweightsNOY.png'
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+
+                       p$box=NULL
+                       p$ylim=NULL
                        p$file.name = 'lfa41NEFSCSpringrestratifiedDWAO.png'
                        p$metric = 'dwao'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       
                        p$file.name = 'lfa41NEFSCSpringrestratifiedgini.png'
-
                        p$metric = 'gini'
                        p$ylim =c(0,1)
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
@@ -141,8 +165,8 @@ adjacentrestratified = list()
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
                               p$file.name = 'adjacentlfa41NEFSCSpringrestratifiednumbers.png'
-
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
+                        p$ylim = c(0,20)
+                        p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
 
                                 p$legend = FALSE
@@ -154,10 +178,13 @@ adjacentrestratified = list()
 
 
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       
+                       p$ylim=c(0,50)
                        p$metric = 'weights'
                        p$file.name = 'adjacentlfa41NEFSCSpringrestratifiedweights.png'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
+                       p$ylim=NULL
                        p$file.name = 'adjacentlfa41NEFSCSpringrestratifiedDWAO.png'
                        p$metric = 'dwao'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
@@ -196,7 +223,7 @@ adjacentrestratified = list()
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-
+                        p$ylim=c(0,15)
                                 p$legend = FALSE
                                 p$running.median = T
                                 p$running.length = 3
@@ -207,8 +234,10 @@ adjacentrestratified = list()
 
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$metric = 'weights'
+                       p$ylim=c(0,30)
                        p$file.name = 'lfa41NEFSCFallbaseweights.png'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       p$ylim=NULL
                        p$file.name = 'lfa41NEFSCFallbaseDWAO.png'
                        p$metric = 'dwao'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
@@ -252,12 +281,25 @@ adjacentrestratified = list()
                                p$error.polygon=F
                               p$error.bars=T
 
-
+                              p$ylim=c(0,15)
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+
+                      p$file.name = 'lfa41NEFSCFallrestratifiednumbersNOY.png'
+                        p$ylim=NULL
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                                              
+                       p$ylim=c(0,30)
                        p$metric = 'weights'
                        p$file.name = 'lfa41NEFSCFallrestratifiedweights.png'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
+                       p$box=T
+                       p$ylim=NULL
+                       p$metric = 'weights'
+                       p$file.name = 'lfa41NEFSCFallrestratifiedweightsNOY.png'
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+
+                       p$box=NULL
                        p$file.name = 'lfa41NEFSCFallrestratifiedDWAO.png'
                        p$metric = 'dwao'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
@@ -301,12 +343,14 @@ adjacentrestratified = list()
                                p$error.polygon=F
                               p$error.bars=T
 
+                              p$ylim=c(0,15)
 
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       p$ylim=c(0,30)
                        p$metric = 'weights'
                        p$file.name = 'adjacentlfa41NEFSCFallrestratifiedweights.png'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
+                       p$ylim=NULL
                        p$file.name = 'adjacentlfa41NEFSCFallrestratifiedDWAO.png'
                        p$metric = 'dwao'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
@@ -371,12 +415,16 @@ adjacentrestratified = list()
                                p$error.polygon=F
                               p$error.bars=T
 
+                                p$ylim=c(0,30)
 
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                      
+                        p$ylim=c(0,32)
                        p$metric = 'weights'
                        p$file.name = 'lfa41DFObaseweights.png'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
+                       p$ylim=NULL
                        p$file.name = 'lfa41DFObaseDWAO.png'
                        p$metric = 'dwao'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
@@ -426,12 +474,28 @@ adjacentrestratified = list()
                                p$error.polygon=F
                               p$error.bars=T
 
-
+                              p$ylim=c(0,30)
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+
+                       p$ylim=NULL
+                       p$box=T
+                       p$file.name = 'lfa41DFOrestratifiednumbersNOY.png'
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+
+                       p$box=NULL
+                       p$ylim=c(0,32)
                        p$metric = 'weights'
                        p$file.name = 'lfa41DFOrestratifiedweights.png'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
+                       p$box=T
+                        p$ylim=NULL
+                       p$metric = 'weights'
+                       p$file.name = 'lfa41DFOrestratifiedweightsNOY.png'
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+
+                       p$box=NULL
+                       p$ylim=NULL
                        p$file.name = 'lfa41DFOrestratifiedDWAO.png'
                        p$metric = 'dwao'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
@@ -479,12 +543,14 @@ adjacentrestratified = list()
                                p$error.polygon=F
                               p$error.bars=T
 
-
+                              p$ylim=c(0,30)
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$metric = 'weights'
+                        p$ylim=c(0,32)
                        p$file.name = 'adjacentlfa41DFOrestratifiedweights.png'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
+                       p$ylim=NULL
                        p$file.name = 'adjacentlfa41DFOrestratifiedDWAO.png'
                        p$metric = 'dwao'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)

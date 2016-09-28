@@ -99,12 +99,12 @@ la()
 p$dyear=.8 #autumn 
 p$yrs = unique(dat$yr)
 J = habitat.model.data('prediction.surface',p=p)
+dat.p = subset(dat,Y==1)
+bc <- bioclim(dat.p[,c('dyear','t','z','dZ','ddZ')])
 
 out = c()
 for(i in 1:length(p$yrs)) {
 		a = p$yrs[i]
-	dat.p = subset(dat,Y==1 & yr==a)
-		bc <- bioclim(dat.p[,c('dyear','t','z','dZ','ddZ')])
 		pI = J[,c('z','dZ','ddZ')]
 		k = grep(a,names(J))
 		pI = data.frame(pI,J[,k])
@@ -119,3 +119,7 @@ for(i in 1:length(p$yrs)) {
 	print(o)
 	dev.off()
 	}
+
+require(gbm)
+dat$Y = ifelse(dat$B>0,1,0)
+	aa <- gbm.step(data=na.omit(dat), gbm.x = c(1,5,6,7,8), gbm.y = 12, family = "bernoulli", tree.complexity = 5, learning.rate = 0.01, bag.fraction = 0.5)
