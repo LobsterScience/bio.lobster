@@ -30,7 +30,6 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 		if(ncol(xp)==4) names(xp) = c('year','mean','lower','upper')
 		if(ncol(xp)==2) {names(xp) = c('year','mean'); xp$lower=NA; xp$upper=NA}
 		if(metric == 'gini'){ xp = xp[,c('year','mean')] ; xp$lower = NA; xp$upper = NA}
-
 		xp$mean = as.numeric(xp$mean) / div; xp$lower = as.numeric(xp$lower) / div; xp$upper = as.numeric(xp$upper) / div
 		xpp = xp[which(xp$year>=time.series.start.year & xp$year<=time.series.end.year),  ]
 		if(exists('ylim',p)) {

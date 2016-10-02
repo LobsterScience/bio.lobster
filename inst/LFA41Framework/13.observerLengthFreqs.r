@@ -41,7 +41,7 @@ la()
 
 				#ports  =1,2,3,4,5 for cris tables observer samples for offshore
 
-				ct = subset(cris.trips,PORT %in% c(1,2,3,4,5)) #all trips are in cris.traps -- 280 trips
+				ct = subset(cris.trips,PORT %in% c(1,2,3,4,5) & TARGETSPECIES==1) #all trips are in cris.traps -- 280 trips
 
 				ctr = subset(cris.traps,PORT %in% c(1,2,3,4,5))
 
@@ -156,7 +156,16 @@ for( i in 1:length(ll)) {
 			r$ff = round(r$carlength/3)*3
 			
 			aa = aggregate(qt~ff+yr,data = r,FUN=length)
-
+			sH=c()
+			dk = unique(aa$yr)
+			for (j in dk) {
+				gh = subset(aa,yr==j)
+				gh$p = gh$qt / sum(gh$qt)
+				sH = c(sH,-1*(sum(gh$p * log(gh$p)) / log(nrow(gh))))
+			}
+			sH = data.frame(yr=  dk, ShannonEquitability = sH)
+			lm = merge(lm,sH)
+			
 			#grouped year length freq plots
 
 					YG = 5 # year grouping
@@ -183,36 +192,25 @@ for( i in 1:length(ll)) {
 							fn = paste(ln[i],min(y),max(y),'pdf',sep=".")
 				            nn = sum(g$qt)
 				            pdf(file.path(project.figuredirectory('bio.lobster'),fn))
-							plot(u$ff,u$qt,lwd=3,xlab='Carapace Length',ylab = 'Scaled Number Measured',type='h',ylim=c(0,yll),xlim=c(0,50))
+							plot(u$ff,u$qt,lwd=3,xlab='Carapace Length',ylab = 'Scaled Number Measured',type='h',ylim=c(0,yll),xlim=c(50,200))
 							abline(v=82.5,lty=2,col='red',lwd=3)
 							legend('topleft',bty='n',pch="", legend=c(paste(min(y),max(y),sep="-"),paste('N=',nn,sep=" ")),cex=1.5)
 							dev.off()
 							print(fn)
 							}
-						}
-
-
-
-
-
-
-
-
-
-
-
+						
 
 
 			fn = paste('max95',ln[i],'pdf',sep=".")
-            nn = sum(g$ObsLobs)
+            nn = sum(r$ObsLobs)
             pdf(file.path(project.figuredirectory('bio.lobster'),fn))
-			plot(out$yr,out$upper95,lwd=1,xlab='Year',ylab = 'Maximum Length (mm)',type='b',ylim=c(115,195),pch=16)
-			lines(out$yr,runmed(out$upper95,k=3,endrule='median'),col='salmon',lwd=2)
+			plot(lm$yr,lm$upper95,lwd=1,xlab='Year',ylab = 'Maximum Length (mm)',type='b',ylim=c(115,195),pch=16)
+			lines(lm$yr,runmed(lm$upper95,k=3,endrule='median'),col='salmon',lwd=2)
 			dev.off()
 			
 			fn = paste('shannon',ln[i],'pdf',sep=".")
             nn = sum(g$ObsLobs)
-            oo = out[,c('yr','ShannonEquitability')]
+            oo = lm[,c('yr','ShannonEquitability')]
             ii = which(is.na(oo$ShannonEquitability))
             oo$ShannonEquitability[ii] <- oo$ShannonEquitability[ii-1]
 
@@ -226,8 +224,8 @@ for( i in 1:length(ll)) {
 
 				p=list()
 			                  p$add.reference.lines = F
-                              p$time.series.start.year = min(g$yr)
-                              p$time.series.end.year = max(g$yr)
+                              p$time.series.start.year = min(r$yr)
+                              p$time.series.end.year = max(r$yr)
                               p$metric = 'medianL' #weights
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""

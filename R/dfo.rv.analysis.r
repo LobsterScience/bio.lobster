@@ -113,6 +113,8 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         cas[io,'sampwgt'] <- cas[io,'totwgt']
         strata.files = list()
     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA,gini = NA,gini.lo =NA, gini.hi=NA)
+  big.out = matrix(NA,nrow=p$nruns,ncol=length(seq(0.01,0.99,0.01))+1)
+   
     mp=0
     np=1
     effic.out = data.frame(yr=NA,strat.effic.wt=NA,alloc.effic.wt=NA,strat.effic.n=NA,alloc.effic.n=NA)
@@ -254,6 +256,10 @@ pi='base'
                   bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
                   nt  = sum(sW$Nh)/1000
                 }
+                     if(exists('big.ci',p)) {
+                    big.out[mp,] = c(yr,summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC',big.ci=T))
+                  }
+
                 out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[[1]][1],bsW[[1]][2],ssW[[3]]/1000,bsW[[1]][1]*nt,bsW[[1]][2]*nt,
                 ssN[[1]],ssN[[2]],bsN[[1]][1],bsN[[1]][2],ssN[[3]]/1000,bsN[[1]][1]*nt,bsN[[1]][2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]),round(sum(sc$totno)),ssN$gini,bsN[[2]][1],bsN[[2]][2])
                 print(out[mp,'yr'])
@@ -266,6 +272,10 @@ pi='base'
            if(p$strata.efficiencies) {
                  return(list(effic.out,nopt.out))
               }
+          if(exists('big.ci',p)) {
+              return(big.out)
+            }
+          
   
               lle = 'all'
               lbs = 'not'

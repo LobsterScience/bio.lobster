@@ -13,6 +13,9 @@
 #' @export
 
 plot.dicusum <- function(x,x.index,h,...) {
+	if(class(x)=='dicusum' & is.null(x.index)) {
+		x.index = 1:length(x$pos.dev)
+	}
 	y = max(abs(c(x$pos.dev,x$neg.dev)))
 	ylims = c(y *-1 ,y)
 	plot(x.index,x$pos.dev,ylim=c(ylims),ylab="S-|S+", lty=1,lwd=1,type='l')

@@ -98,7 +98,7 @@ for(i in 1:length(a)) {
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=T
                               p$error.bars=F
-
+                              p$y2.type = 'l'
                               p$ylim2 = c(0,500)
                              
                        figure.stratified.analysis(x=out,out.dir = 'bio.lobster', x2 = af, p=p,sampleSizes=T)
