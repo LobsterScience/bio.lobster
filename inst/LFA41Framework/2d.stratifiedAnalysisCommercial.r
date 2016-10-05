@@ -685,7 +685,7 @@ aout$subset = 'NEFSCSpringcommercial'
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(1987:2015)
+      p$years.to.estimate = c(2007:2015)
       p$length.based = T
       p$by.sex = T
       p$sex = c(1,2)

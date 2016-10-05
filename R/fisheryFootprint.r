@@ -28,7 +28,7 @@ fisheryFootprint <- function(x,res=0.1,var = 'CPUE',gini = T, propArea=NULL){
 			xq = quantile(xy$lL,c(0.25,0.4,0.55,0.7,0.85,0.95))	
 			xq = round(xq*2)/2
 			xll = xq
-			ti = "Landings '000 t"
+			ti = "Landings t"
 			}		
 			if(var == 'EFFORT') {
 				x$NUM_OF_TRAPS = x$NUM_OF_TRAPS / 1000
@@ -52,6 +52,7 @@ fisheryFootprint <- function(x,res=0.1,var = 'CPUE',gini = T, propArea=NULL){
 					xx = xy[which(xy$fishingYear==y),]
 					xx$Z = xx$lL
 					xx<-as.PolyData(xx)
+					
 					xx<-makeProps(xx,xq,"col",cols)
 					xx[which(xx$Z<xq[1]),'col'] <- cols[1]				
 					xx[which(xx$Z>xq[length(xq)]),'col'] <- cols[length(cols)]				

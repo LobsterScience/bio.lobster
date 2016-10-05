@@ -24,7 +24,7 @@ logs41$OFFAREA = NULL
 a41 = rbind(off41,ziff41,logs41)
 a41$fishingYear = sapply(a41$DATE_FISHED,offFishingYear)
 a41 = makePBS(a41,polygon=F)
-a41$ADJCATCH = a41$ADJCATCH / 2.2 #convert to kgs
+a41$ADJCATCH = a41$ADJCATCH / 2.2 #convert to kgs then to t
 
 #prune out 
 	LFA41 = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))

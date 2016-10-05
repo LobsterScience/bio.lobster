@@ -154,6 +154,17 @@ a = c('stratified.georges.Georges.Canada.base.length.83-300.male&female.sexed.rd
 		Lm$relF = Lm$landings / Lm$w.Yst
 		Lm$relF.u = Lm$landings / Lm$w.ci.Yst.l
 		Lm$relF.l = Lm$landings / Lm$w.ci.Yst.u
+
+		##AIM and Surplus prod
+			delb = Lm$w.Yst[-1] - Lm$w.Yst[-nrow(Lm)]
+			surprod = delb + Lm$landings[-nrow(Lm)]
+
+
+
+
+
+
+
 		Lm = Lm[,c('yr','relF','relF.l','relF.u')]
 
 		            #Figure

@@ -2,10 +2,15 @@
 
 require(bio.lobster)
 la()
-fp = file.path(projectd.datadirectory('bio.lobster'),'analysis')
+fp = file.path(project.datadirectory('bio.lobster'),'analysis')
 
-a = c('stratified.nefsc.fall.LFA41.restratified.length.50-300.not.sexed.rdata',
-	'stratified.nefsc.spring.LFA41.restratified.length.50-300.not.sexed.rdata',
-	'stratified.summer.LFA41.restratified.length.all.not.sexed.rdata',
-	'stratified.georges.Georges.Canada.base.length.all.not.sexed.rdata'
+a = c('nefsc.spring.restratified.bigci.rdata',
+	'nefsc.fall.restratified.bigci.rdata',
+	'dfo.summer.restratified.bigci.rdata',
+	'dfo.georges.restratified.bigci.rdata'
 	)
+
+
+load(file.path(fp,a[1]))
+
+ranges = aout[,c(26,76)] #first and third quartile
