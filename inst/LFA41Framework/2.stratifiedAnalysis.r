@@ -4,10 +4,11 @@
 require(bio.survey)
 require(bio.lobster)
 require(bio.groundfish)
+la()
+
 p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
-la()
 load_all('~/git/bio.survey/')
 
 base = list()
@@ -35,6 +36,7 @@ adjacentrestratified = list()
                         p$define.by.polygons = F
                         p$lobster.subunits=F
                         p$area = 'LFA41'
+                        p$return.both = T
                       p = make.list(list(yrs=p$years.to.estimate),Y=p)
                     
                         aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)

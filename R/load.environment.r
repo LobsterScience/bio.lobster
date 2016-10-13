@@ -4,7 +4,9 @@ load.environment <- function(){
    p = list()
     p$project.name = "bio.lobster"
     p$libs = RLibrary(Force=FALSE, c( 'rgdal',"geosphere", "chron", "lubridate", "parallel","sp","PBSmapping","RColorBrewer" ,'lattice','MASS','doBy','bio.polygons','bio.utilities','bio.survey','bio.spacetime','raster','bio.habitat')  )
-      
+      require(bio.spacetime)
+      require(rgdal)
+      require(bio.utilities)
       p$current.assessment.year=2016
 
       p$lfas=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34", "35", "36", "37", "38")
