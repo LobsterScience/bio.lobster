@@ -37,7 +37,7 @@ save(dat,file=file.path(project.datadirectory('bio.lobster'),'analysis','habitat
 ###GAM
     bM = formula( Y ~ s(dyear, bs="cr" ) + s(t, bs ='cr') + 
 	            + s(z,bs='cr') + s(dZ, bs="cr" )         
-	            + ti(plon, plat, k=100, bs="cs") + as.factor(yr)  )
+	            + ti(plon, plat, k=40, bs="cs") + as.factor(yr)  )
 
 
 

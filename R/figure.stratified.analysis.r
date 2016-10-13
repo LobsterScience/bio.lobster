@@ -130,7 +130,8 @@ if(sampleSizes) {
 if(exists('box',p)) {box(lwd=3)}
 if(save) dev.off()
 if(add.reference.lines) {return(c(Reference=xref,Reflow=lxref,Refhi=uxref))}
-
+if(exists('return.running',p)) {return(yp)}
 	})
-
 }
+
+
