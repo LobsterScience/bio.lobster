@@ -9,7 +9,7 @@ BarPlotCLF<-function(CLF,yrs=2005:2014,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF.p
         if(ncol(LS)==1)LS=matrix(LS,length(yrs),length(CLF))
     }
 
-    
+browser()    
     if(pdf) pdf(filen, width = wd, height = ht)
     par(mfcol=c(rows,ceiling(length(yrs)/rows)), mar = c(0,2,0,0.5), omi = c(0.85, 0.75, 0.75, 0.5))
     

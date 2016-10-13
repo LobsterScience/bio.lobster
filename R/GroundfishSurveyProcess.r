@@ -18,7 +18,7 @@ GroundfishSurveyProcess<-function(size.range=c(0,220),Sex = NULL, Strata=c(485,4
   p$functional.groups = F
   p$alpha = 0.05
   p<-make.list(list(v=p$species, yrs=p$years.to.estimate),Y=p)
-
+  p$strata.efficiencies =F
  grfanal<-groundfish.analysis(DS='stratified.estimates.redo',p=p)
  index<-grfanal$n.yst
  se<-grfanal$n.yst.se

@@ -255,6 +255,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
               save(strata.files,file=file.path(loc,fn.st))
             }
              if(p$strata.files.return) return(strata.files)
+             if(exists('return.both',p)) return(list(strat.ests = out,data=strata.files))
              return(out)
 
    }
