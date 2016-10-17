@@ -134,14 +134,14 @@ a = c('stratified.georges.Georges.Canada.base.length.83-300.male&female.sexed.rd
 
 		            #Figure
                               p$add.reference.lines = F
-                              p$time.series.start.year = 1999
+                              p$time.series.start.year = 1981
                               p$time.series.end.year = 2015
                               p$metric = 'relF' #weights
                               p$measure = '' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
                               p$file.name = 'relFSummerRV.png'
-                              p$ylim = c(0,3)
+                              p$ylim = c(0,13)
                                 p$legend = FALSE
                                 p$running.median = T
                                 p$running.length = 3
@@ -150,7 +150,7 @@ a = c('stratified.georges.Georges.Canada.base.length.83-300.male&female.sexed.rd
                               p$error.bars=T
 
 
-                       ref.out=   figure.stratified.analysis(x=Lm,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=Lm,out.dir = 'bio.lobster', p=p,save=F)
 
 
 
