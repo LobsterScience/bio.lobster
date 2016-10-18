@@ -21,8 +21,8 @@ require(PBSmapping)
 		atSeaCLF<-CLF(subset(atSea41,!is.na(YEAR),c("YEAR","CARLENGTH")))
 
 	### Map Areas 
-	LFA41areas<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","LFA41Offareas.csv"))
-	LFA41areasEXT<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","LFA41Offareas_ext.csv"))
+	LFA41areas<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))
+	LFA41areasEXT<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas_ext.csv"))
 	LFA41areas$OFFAREA = paste(LFA41areas$OFFAREA,LFA41areas$X.1,sep='.')
 
 
