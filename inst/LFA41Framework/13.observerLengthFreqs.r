@@ -148,8 +148,6 @@ for( i in 1:length(ll)) {
 			lm = aggregate(carlength~yr,data=r, FUN=function(x) quantile(x,c(0.5,0.25,0.75,0.95)))
 				lm = data.frame(lm[,1],lm$carlength[,1],lm$carlength[,2],lm$carlength[,3],lm$carlength[,4])
 
-			af = aggregate(carlength~yr,data=r, FUN=length)
-			names(af) = c('x','y')
 			
 			names(lm) = c('yr','medL','medLlower','medLupper','upper95')
 			
@@ -165,7 +163,13 @@ for( i in 1:length(ll)) {
 			}
 			sH = data.frame(yr=  dk, ShannonEquitability = sH)
 			lm = merge(lm,sH)
-			
+			af = aggregate(carlength~yr,data=r, FUN=length)
+			lm = merge(lm,af,by='yr')
+			names(lm)[7] = 'ObsLobs'
+			names(af) = c('x','y')
+			write.csv(lm,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators',paste(ln[i],'obslength.csv',sep="_")))
+
+
 			#grouped year length freq plots
 
 					YG = 5 # year grouping

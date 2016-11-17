@@ -63,9 +63,9 @@ require(PBSmapping)
 
 	# Summer Survey index for 4X
 	RVS4X.lst<-GroundfishSurveyProcess(Strata=c(477,478,480,481,482,483,484),Years=1980:2016) 
-	RVS4Xlgf.lst<-GroundfishSurveyProcess(size.range=c(140,240),series='summer',length.base=T,Sex=2:3,Strata=c(480:481),Years=1999:2016) 
+	RVS4Xlgf.lst<-GroundfishSurveyProcess(size.range=c(140,240),series='summer',length.based=T,Sex=2:3,Strata=c(480:481),Years=1999:2016) 
 	
-	RVS4XLths<-GroundfishSurveyProcess(Lengths=T,series='summer',length.base=T,Sex=2:3,Strata=c(480:481),Years=1999:2016) 
+	RVS4XLths<-GroundfishSurveyProcess(size.range=c(20,240),Lengths=T,series='summer',length.base=T,Sex=2:3,Strata=c(480:481),Years=1999:2016) 
 
 
 	mavg(RVS4Xlgf.lst$index)
@@ -96,7 +96,56 @@ require(PBSmapping)
 	legend('topleft',c("3yr Moving Average","50% Median 1995-09","40% Median 1983-94"),col=c('blue','green','red'),lty=c(3,3,3),bty='n',inset=0.02,lwd=2)
 	dev.off()
 
+######
+#median size from survey
 
+  p$series =c('summer')# p$series =c('georges');p$series =c('fall')
+      p$define.by.polygons = F
+      p$lobster.subunits=F
+      p$area = 'custom'
+      p$strat = 480:481
+      p$years.to.estimate = c(1999:2016)
+      p$length.based = F
+      p$by.sex = T
+      p$sex=c(2,3)
+      p$bootstrapped.ci=F
+      p$strata.files.return=F
+      p$vessel.correction.fixed=1.2
+    
+      p$clusters = c( rep( "localhost", 7) )
+      p$strata.efficiencies = F
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
+
+      
+
+# DFO survey All stations including adjacent
+      p$define.by.polygons = F
+      p$lobster.subunits=F
+      p$reweight.strata = F #this subsets 
+      p$length.based=T
+      
+      #full strata
+        a = seq(20,200,1)
+        out = list()
+        for(i in 1:length(a)) {
+          p$size.class=c(a[i],a[i])
+          out[[i]] = dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
+          }
+
+        aa = do.call(rbind,out)
+        aa$FLEN = rep(a,each=length(p$years.to.estimate))
+      h = split(aa,f=aa$yr)
+      out=c()
+  for(j in 1:length(h)) {
+      g = h[[j]]
+      y=unique(g$yr)
+      lm = median(rep(g$FLEN,times=g$n.yst*1000))
+      out = rbind(out,c(y,lm))
+      }
+      out = as.data.frame(out)
+      names(out) = c('yr','medL')
+  
+  
 
 
 ##______________________##

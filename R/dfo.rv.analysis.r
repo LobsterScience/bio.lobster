@@ -229,7 +229,7 @@ pi='base'
                           if(p$reweight.strata) st$NH = st$NH * st$Pr #weights the strata based on area in selected region
                           
                           if(exists('temperature',p)) {sc = sc[!is.na(sc$bottom_temperature),] ; sc$totno = sc$bottom_temperature; sc$totwgt = sc$bottom_temperature }
-
+                          if(nrow(sc)>0){
                           st = Prepare.strata.file(st)
                           sc1= sc
                           sc = sc[which(sc$type==1),]
@@ -269,6 +269,7 @@ pi='base'
               }
             }
           }
+        }
            if(p$strata.efficiencies) {
                  return(list(effic.out,nopt.out))
               }

@@ -70,7 +70,7 @@ p$figure.title=''
 gg = as.data.frame(a[[1]])
 names(gg) = c('gini','yr')
 gg = gg[,c('yr','gini')]
-
+write.csv(gg,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','giniCPUE.csv'))
 figure.stratified.analysis(gg,p=p)
 
 gg = as.data.frame(b[[1]])
@@ -78,6 +78,7 @@ names(gg) = c('gini','yr')
 gg = gg[,c('yr','gini')]
 p$file.name = 'giniFootprintLandings.png'
 figure.stratified.analysis(gg,p=p)
+write.csv(gg,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','giniLandings.csv'))
 
 
 gg = as.data.frame(d[[1]])
@@ -85,3 +86,4 @@ names(gg) = c('gini','yr')
 gg = gg[,c('yr','gini')]
 p$file.name = 'giniFootprintEffort.png'
 figure.stratified.analysis(gg,p=p)
+write.csv(gg,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','giniEffort.csv'))

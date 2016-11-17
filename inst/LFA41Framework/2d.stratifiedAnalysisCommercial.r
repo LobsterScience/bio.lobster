@@ -8,12 +8,6 @@ fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
 load_all('~/git/bio.survey/')
 #NEFSC Setup
-#need to figureout DWAO boot strapping errors with the dfo survey....something not working
-fpp = file.path(fp,'combinedResults')
-
-#load(file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
-#load( file.path(fpp,'CombinedReStratifiedResults.rdata'))
-#load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
 
 base= list()
 restratified = list()
@@ -99,8 +93,8 @@ adjacentrestratified = list()
 
 
      aout$subset = 'NEFSCSpringcommercial'
-     base  = append(base, list(aout))
-
+       write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.base.commercial.csv'))
+  
 
 #Spring restratified to lfa41
       p$define.by.polygons = T
@@ -137,7 +131,8 @@ adjacentrestratified = list()
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
 aout$subset = 'NEFSCSpringcommercial'
-     restratified  = append(restratified, list(aout))
+write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.commercial.csv'))
+
 
      
 
@@ -204,7 +199,8 @@ aout$subset = 'NEFSCSpringcommercial'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
       aout$subset = 'NEFSCSpringcommercial'
-     adjacentrestratified  = append(adjacentrestratified, list(aout))
+    write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.adjrestratified.commercial.csv'))
+
 
      #total
 
@@ -233,7 +229,7 @@ aout$subset = 'NEFSCSpringcommercial'
                         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
                               names(xx) =c('x','y')
                        
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
 
 #Fall Survey All stations not pruned by polygon
@@ -246,7 +242,7 @@ aout$subset = 'NEFSCSpringcommercial'
                       p = make.list(list(yrs=p$years.to.estimate),Y=p)
                     
                         aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
-
+ 
                               #Figure
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
@@ -302,8 +298,8 @@ aout$subset = 'NEFSCSpringcommercial'
 
 
       aout$subset = 'NEFSCFallcommercial'
-     base  = append(base, list(aout))
-     
+        write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.base.commercial.csv'))
+    
      
 #Fall restratified to lfa41
       p$define.by.polygons = T
@@ -372,8 +368,8 @@ aout$subset = 'NEFSCSpringcommercial'
                            ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
       aout$subset = 'NEFSCFallcommercial'
-     restratified  = append(restratified, list(aout))
-
+        write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.restratified.commercial.csv'))
+    
 
 #Fall restratified to adjacentlfa41
       p$define.by.polygons = T
@@ -445,7 +441,8 @@ aout$subset = 'NEFSCSpringcommercial'
 
 
       aout$subset = 'NEFSCFallcommercial'
-     adjacentrestratified  = append(adjacentrestratified, list(aout))
+      write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.adjrestratified.commercial.csv'))
+    
 
 ##############################################################
 #DFO RV Setup
@@ -534,7 +531,8 @@ aout$subset = 'NEFSCSpringcommercial'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
       aout$subset = 'DFOcommercial'
-     base  = append(base, list(aout))
+      write.csv(aout,file=file.path(fp,'indicators','DFO.base.commercial.csv'))
+    
 
 
 
@@ -607,8 +605,8 @@ aout$subset = 'NEFSCSpringcommercial'
     
 
      aout$subset = 'DFOcommercial'
-    restratified  = append(restratified, list(aout))
-     
+      write.csv(aout,file=file.path(fp,'indicators','DFO.restratified.commercial.csv'))
+ 
 
 
 #DFO restratified to lfa41adjacent
@@ -678,8 +676,8 @@ aout$subset = 'NEFSCSpringcommercial'
 
 
       aout$subset = 'DFOcommercial'
-     adjacentrestratified  = append(adjacentrestratified, list(aout))
-
+     write.csv(aout,file=file.path(fp,'indicators','DFO.adjrestratified.commercial.csv'))
+ 
 
   #DFO Georges
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
@@ -764,4 +762,6 @@ aout$subset = 'NEFSCSpringcommercial'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
       
 
-
+       aout$subset = 'DFOcommercial'
+      write.csv(aout,file=file.path(fp,'indicators','DFO.Georges.commercial.csv'))
+ 
