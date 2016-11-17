@@ -33,6 +33,7 @@ p$runs = p$runs[order(p$runs$v),]
 #not finished
 
 aout= groundfish.analysis(DS='stratified.estimates',out.dir = 'bio.lobster',p=p)
+write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','predatorIndex.csv'))
                         p$ylim = NULL
               				  p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]

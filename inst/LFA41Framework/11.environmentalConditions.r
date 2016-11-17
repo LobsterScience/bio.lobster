@@ -15,7 +15,8 @@ fn = file.path(project.figuredirectory('bio.lobster'))
 png(file=file.path(fn,'AMO.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 plot(1856:2015,p,type='h',ylab='AMO anomaly',xlab='Year')
 dev.off()
-
+aa = data.frame(yr=1856:2015,amo=p)
+write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','amo.csv'))
 
 #NAO
 
@@ -65,8 +66,8 @@ load_all('~/git/bio.survey/')
                       p = make.list(list(yrs=p$years.to.estimate),Y=p)
                     
                         aout= nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
-
-            #Figure
+write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','lfa41NEFSCSpringTemps.csv'))
+              #Figure
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
@@ -92,6 +93,8 @@ load_all('~/git/bio.survey/')
          p$season =c('fall')# p$series =c('spring');p$series =c('fall')
                         
 	                        aout= nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
+                          write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','lfa41NEFSCFallTemps.csv'))
+
                             p$file.name = 'lfa41NEFSCFallTemps.png'
                             ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
  
@@ -122,6 +125,7 @@ load_all('~/git/bio.survey/')
       require(bio.groundfish)
       la()
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
+write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','lfa41DFOSummerTemps.csv'))
       
                                    p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
@@ -170,6 +174,7 @@ load_all('~/git/bio.survey/')
       p$reweight.strata = F #this subsets 
       p$temperature=T
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','lfa41DFOGeorgesTemps.csv'))
       
 
          #Figure
@@ -193,5 +198,5 @@ load_all('~/git/bio.survey/')
                               p$error.bars=T
 
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,save=F)
       

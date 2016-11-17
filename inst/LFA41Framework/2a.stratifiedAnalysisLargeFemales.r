@@ -9,9 +9,6 @@ load_all('~/git/bio.survey/')
 #need to figureout DWAO boot strapping errors with the dfo survey....something not working
 fpp = file.path(fp,'combinedResults')
 
-load(file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
-load( file.path(fpp,'CombinedReStratifiedResults.rdata'))
-load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
 
 
       p$reweight.strata = F #this subsets 
@@ -61,8 +58,8 @@ load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      aout$subset = 'NEFSCSpringLargeFemale'
-     base  = append(base, list(aout))
-
+     write.csv(aout,file=file.path(fp,'indicators','NEFSC.Spring.LargeFemale.csv'))
+     
 
 #Spring restratified to lfa41
       p$define.by.polygons = T
@@ -99,8 +96,9 @@ load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
 aout$subset = 'NEFSCSpringLargeFemale'
-     restratified  = append(restratified, list(aout))
-
+     
+write.csv(aout,file=file.path(fp,'indicators','restratified.NEFSC.Spring.LargeFemale.csv'))
+     
      
 #Spring restratified to adjacentlfa41
       p$define.by.polygons = T
@@ -139,8 +137,8 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
       aout$subset = 'NEFSCSpringLargeFemale'
-     adjacentrestratified  = append(adjacentrestratified, list(aout))
-
+     write.csv(aout,file=file.path(fp,'indicators','adjrestratified.NEFSC.Spring.LargeFemale.csv'))
+     
 
 
 
@@ -182,7 +180,7 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
       aout$subset = 'NEFSCFallLargeFemale'
-     base  = append(base, list(aout))
+     write.csv(aout,file=file.path(fp,'indicators','NEFSC.Fall.LargeFemale.csv'))
      
      
 #Fall restratified to lfa41
@@ -222,8 +220,8 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
       aout$subset = 'NEFSCFallLargeFemale'
-     restratified  = append(restratified, list(aout))
-
+     write.csv(aout,file=file.path(fp,'indicators','restratified.NEFSC.Fall.LargeFemale.csv'))
+     
 
 #Fall restratified to adjacentlfa41
       p$define.by.polygons = T
@@ -263,8 +261,8 @@ aout$subset = 'NEFSCSpringLargeFemale'
      
 
       aout$subset = 'NEFSCFallLargeFemale'
-     adjacentrestratified  = append(adjacentrestratified, list(aout))
-
+     write.csv(aout,file=file.path(fp,'indicators','adjrestratified.NEFSC.Fall.LargeFemale.csv'))
+     
 ##############################################################
 #DFO RV Setup
 
@@ -325,8 +323,8 @@ aout$subset = 'NEFSCSpringLargeFemale'
      
 
       aout$subset = 'DFOLargeFemale'
-     base  = append(base, list(aout))
-
+     write.csv(aout,file=file.path(fp,'indicators','DFO.Base.LargeFemale.csv'))
+     
 
 
 
@@ -370,8 +368,8 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
     
      aout$subset = 'DFOLargeFemale'
-    restratified  = append(restratified, list(aout))
-     
+    write.csv(aout,file=file.path(fp,'indicators','DFO.restratified.LargeFemale.csv'))
+          
 
 
 #DFO restratified to lfa41adjacent
@@ -412,8 +410,8 @@ aout$subset = 'NEFSCSpringLargeFemale'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
       aout$subset = 'DFOLargeFemale'
-     adjacentrestratified  = append(adjacentrestratified, list(aout))
-
+write.csv(aout,file=file.path(fp,'indicators','DFO.adjrestratified.LargeFemale.csv'))
+    
 
   #DFO Georges
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
@@ -469,9 +467,6 @@ aout$subset = 'NEFSCSpringLargeFemale'
                               names(xx) =c('x','y')
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-      
-
-
-save(base,file = file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
-save(restratified, file = file.path(fpp,'CombinedReStratifiedResults.rdata'))
-save(adjacentrestratified,file = file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
+    aout$subset = 'DFO.Georges.LargeFemale'  
+write.csv(aout,file=file.path(fp,'indicators','DFO.Georges.LargeFemale.csv'))
+    

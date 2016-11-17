@@ -1,24 +1,22 @@
-#####need to rerun this full thing, to get the combined results and to get the gini and dwao running medians figured out for the dfo summer rv surey with missing years
-####sept 23, 2016
+#redone sept 18 2016. need to contine
 
 require(bio.survey)
 require(bio.lobster)
-require(bio.groundfish)
-la()
-
 p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+la()
 load_all('~/git/bio.survey/')
+#NEFSC Setup
 
-
-
-
+base= list()
+restratified = list()
+adjacentrestratified = list()
       p$reweight.strata = F #this subsets 
       p$years.to.estimate = c(1969:2015)
       p$length.based = T
-      p$size.class= c(50,300)
-      p$by.sex = F
+      p$size.class= c(0,82)
+      p$by.sex = T
       p$sex = c(1,2) # male female berried c(1,2,3)
       p$bootstrapped.ci=T
       p$strata.files.return=F
@@ -32,7 +30,6 @@ load_all('~/git/bio.survey/')
                         p$define.by.polygons = F
                         p$lobster.subunits=F
                         p$area = 'LFA41'
-                        p$return.both = NULL
                       p = make.list(list(yrs=p$years.to.estimate),Y=p)
                     
                         aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
@@ -41,11 +38,11 @@ load_all('~/git/bio.survey/')
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'numbers' #numbers
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCSpringbasenumbers.png'
+                              p$file.name = 'lfa41NEFSCSpringbasenumberscommercial.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -56,28 +53,16 @@ load_all('~/git/bio.survey/')
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-                       p$file.name = 'lfa41NEFSCSpringbasenumbers.png'
-                       p$ylim = c(0,20)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                         p$ylim2 = c(0,500)
+                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+                              names(xx) =c('x','y')
+                       
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+  
 
-                       p$ylim = c(0,50)
-                       p$metric = 'weights'
-                       p$file.name = 'lfa41NEFSCSpringbaseweights.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$ylim = NULL
-                       p$file.name = 'lfa41NEFSCSpringbaseDWAO.png'
-                       p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = 'lfa41NEFSCSpringbasegini.png'
-                       p$metric = 'gini'
-                       p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim = NULL
-
-                aout$subset = 'NEFSC.Spring.All'
-                write.csv(aout,file=file.path(fp,'indicators','NEFSC.Spring.All.csv'))
-     
+     aout$subset = 'NEFSCSpringrecruits'
+       write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.base.recruits.csv'))
+  
 
 #Spring restratified to lfa41
       p$define.by.polygons = T
@@ -92,13 +77,12 @@ load_all('~/git/bio.survey/')
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'numbers' #numbers
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCSpringrestratifiednumbers.png'
+                              p$file.name = 'lfa41NEFSCSpringrestratifiednumbersrecruits.png'
 
-                              p$ylim=c(0,20)
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
 
@@ -108,42 +92,17 @@ load_all('~/git/bio.survey/')
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-
-
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = 'lfa41NEFSCSpringrestratifiednumbersNOY.png'
-                       p$ylim=NULL
-                       p$box=T
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                         
-                       p$box=NULL
-                       p$ylim=c(0,50)
-                       p$metric = 'weights'
-                       p$file.name = 'lfa41NEFSCSpringrestratifiedweights.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$box=T
-                       p$ylim=NULL
-                       p$metric = 'weights'
-                       p$file.name = 'lfa41NEFSCSpringrestratifiedweightsNOY.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$box=NULL
-                       p$ylim=NULL
-                       p$file.name = 'lfa41NEFSCSpringrestratifiedDWAO.png'
-                       p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       p$ylim2 = c(0,500)
+                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+                              names(xx) =c('x','y')
                        
-                       p$file.name = 'lfa41NEFSCSpringrestratifiedgini.png'
-                       p$metric = 'gini'
-                       p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim = NULL
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+     
+aout$subset = 'NEFSCSpringrecruits'
+write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruits.csv'))
 
-                 aout$subset = 'NEFSC.Spring.Restratified'
-                write.csv(aout,file=file.path(fp,'indicators','NEFSC.Spring.Restratified.csv'))
-          
 
+     
 
 #Spring restratified to adjacentlfa41
       p$define.by.polygons = T
@@ -158,13 +117,13 @@ load_all('~/git/bio.survey/')
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'numbers' #numbers
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjacentlfa41NEFSCSpringrestratifiednumbers.png'
-                        p$ylim = c(0,20)
-                        p$y.maximum = NULL # NULL # if ymax is too high for one year
+                              p$file.name = 'adjacentlfa41NEFSCSpringrestratifiednumbersrecruits.png'
+
+                          p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
 
                                 p$legend = FALSE
@@ -175,26 +134,14 @@ load_all('~/git/bio.survey/')
                               p$error.bars=T
 
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                            p$ylim2 = c(0,500)
+                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+                              names(xx) =c('x','y')
                        
-                       p$ylim=c(0,50)
-                       p$metric = 'weights'
-                       p$file.name = 'adjacentlfa41NEFSCSpringrestratifiedweights.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$ylim=NULL
-                       p$file.name = 'adjacentlfa41NEFSCSpringrestratifiedDWAO.png'
-                       p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = 'adjacentlfa41NEFSCSpringrestratifiedgini.png'
-                       p$metric = 'gini'
-                       p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim = NULL
-
-                aout$subset = 'NEFSC.Spring.adjRestratified'
-                write.csv(aout,file=file.path(fp,'indicators','NEFSC.Spring.adjRestratified.csv'))
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
+      aout$subset = 'NEFSCSpringrecruits'
+    write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.adjrestratified.recruits.csv'))
 
 
 
@@ -208,20 +155,20 @@ load_all('~/git/bio.survey/')
                       p = make.list(list(yrs=p$years.to.estimate),Y=p)
                     
                         aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
-
+ 
                               #Figure
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'numbers' #numbers
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCFallbasenumbers.png'
+                              p$file.name = 'lfa41NEFSCFallbasenumbersrecruits.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-                        p$ylim=c(0,15)
+
                                 p$legend = FALSE
                                 p$running.median = T
                                 p$running.length = 3
@@ -229,27 +176,16 @@ load_all('~/git/bio.survey/')
                                p$error.polygon=F
                               p$error.bars=T
 
+                p$ylim2 = c(0,500)
+                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+                              names(xx) =c('x','y')
+                       
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$metric = 'weights'
-                       p$ylim=c(0,30)
-                       p$file.name = 'lfa41NEFSCFallbaseweights.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim=NULL
-                       p$file.name = 'lfa41NEFSCFallbaseDWAO.png'
-                       p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = 'lfa41NEFSCFallbasegini.png'
-                       p$metric = 'gini'
-                       p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim = NULL
-
-                aout$subset = 'NEFSC.Fall.All'
-                write.csv(aout,file=file.path(fp,'indicators','NEFSC.Fall.All.csv'))
+      aout$subset = 'NEFSCFallrecruits'
+        write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.base.recruits.csv'))
+    
      
-     
-
 #Fall restratified to lfa41
       p$define.by.polygons = T
       p$lobster.subunits=F
@@ -263,11 +199,11 @@ load_all('~/git/bio.survey/')
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'numbers' #numbers
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCFallrestratifiednumbers.png'
+                              p$file.name = 'lfa41NEFSCFallrestratifiednumbersrecruits.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -279,38 +215,17 @@ load_all('~/git/bio.survey/')
                                p$error.polygon=F
                               p$error.bars=T
 
-                              p$ylim=c(0,15)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
-                      p$file.name = 'lfa41NEFSCFallrestratifiednumbersNOY.png'
-                        p$ylim=NULL
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                                              
-                       p$ylim=c(0,30)
-                       p$metric = 'weights'
-                       p$file.name = 'lfa41NEFSCFallrestratifiedweights.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$box=T
-                       p$ylim=NULL
-                       p$metric = 'weights'
-                       p$file.name = 'lfa41NEFSCFallrestratifiedweightsNOY.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$box=NULL
-                       p$file.name = 'lfa41NEFSCFallrestratifiedDWAO.png'
-                       p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = 'lfa41NEFSCFallrestratifiedgini.png'
-                       p$metric = 'gini'
-                       p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim = NULL
-                aout$subset = 'NEFSC.Fall.Restratified'
-                write.csv(aout,file=file.path(fp,'indicators','NEFSC.Fall.Restratified.csv'))
+                     p$ylim2 = c(0,500)
+                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+                              names(xx) =c('x','y')
+                       
+                           ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
 
-
+      aout$subset = 'NEFSCFallrecruits'
+        write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.restratified.recruits.csv'))
+    
 
 #Fall restratified to adjacentlfa41
       p$define.by.polygons = T
@@ -325,11 +240,11 @@ load_all('~/git/bio.survey/')
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'numbers' #numbers
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjacentlfa41NEFSCFallrestratifiednumbers.png'
+                              p$file.name = 'adjacentlfa41NEFSCFallrestratifiednumbersrecruits.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -341,28 +256,17 @@ load_all('~/git/bio.survey/')
                                p$error.polygon=F
                               p$error.bars=T
 
-                              p$ylim=c(0,15)
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim=c(0,30)
-                       p$metric = 'weights'
-                       p$file.name = 'adjacentlfa41NEFSCFallrestratifiedweights.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim=NULL
-                       p$file.name = 'adjacentlfa41NEFSCFallrestratifiedDWAO.png'
-                       p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = 'adjacentlfa41NEFSCFallrestratifiedgini.png'
-                       p$metric = 'gini'
-                       p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim = NULL
-
-                aout$subset = 'NEFSC.Fall.adjRestratified'
-                write.csv(aout,file=file.path(fp,'indicators','NEFSC.Fall.adjRestratified.csv'))
+                     p$ylim2 = c(0,500)
+                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+                              names(xx) =c('x','y')
+                       
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
 
-
+      aout$subset = 'NEFSCFallrecruits'
+      write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.adjrestratified.recruits.csv'))
+    
 
 ##############################################################
 #DFO RV Setup
@@ -372,8 +276,10 @@ load_all('~/git/bio.survey/')
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$years.to.estimate = c(1970:2015)
-      p$length.based = F
-      p$by.sex = F
+      p$length.based = T
+      p$by.sex = T
+      p$size.class = c(0,82)
+      p$sex = c(1,2)
       p$bootstrapped.ci=T
       p$strata.files.return=F
       p$vessel.correction.fixed=1.2
@@ -397,11 +303,11 @@ load_all('~/git/bio.survey/')
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'numbers' #numbers
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41DFObasenumbers.png'
+                              p$file.name = 'lfa41DFObasenumbersrecruits.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -413,29 +319,16 @@ load_all('~/git/bio.survey/')
                                p$error.polygon=F
                               p$error.bars=T
 
-                                p$ylim=c(0,30)
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                      
-                        p$ylim=c(0,32)
-                       p$metric = 'weights'
-                       p$file.name = 'lfa41DFObaseweights.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$ylim=NULL
-                       p$file.name = 'lfa41DFObaseDWAO.png'
-                       p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = 'lfa41DFObasegini.png'
-                       p$metric = 'gini'
-                       p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim = NULL
-
-                aout$subset = 'DFO.Base.All'
-                write.csv(aout,file=file.path(fp,'indicators','DFO.Base.All.csv'))
+                     p$ylim2 = c(0,500)
+                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+                              names(xx) =c('x','y')
+                       
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
-
+      aout$subset = 'DFOrecruits'
+      write.csv(aout,file=file.path(fp,'indicators','DFO.base.recruits.csv'))
+    
 
 
 
@@ -456,11 +349,11 @@ load_all('~/git/bio.survey/')
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'numbers' #numbers
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41DFOrestratifiednumbers.png'
+                              p$file.name = 'lfa41DFOrestratifiednumbersrecruits.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -472,43 +365,16 @@ load_all('~/git/bio.survey/')
                                p$error.polygon=F
                               p$error.bars=T
 
-                              p$ylim=c(0,30)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
-                       p$ylim=NULL
-                       p$box=T
-                       p$file.name = 'lfa41DFOrestratifiednumbersNOY.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$box=NULL
-                       p$ylim=c(0,32)
-                       p$metric = 'weights'
-                       p$file.name = 'lfa41DFOrestratifiedweights.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$box=T
-                        p$ylim=NULL
-                       p$metric = 'weights'
-                       p$file.name = 'lfa41DFOrestratifiedweightsNOY.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$box=NULL
-                       p$ylim=NULL
-                       p$file.name = 'lfa41DFOrestratifiedDWAO.png'
-                       p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = 'lfa41DFOrestratifiedgini.png'
-                       p$metric = 'gini'
-                       p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim = NULL
-
-
-               aout$subset = 'DFO.restratified.All'
-               write.csv(aout,file=file.path(fp,'indicators','DFO.restratified.All.csv'))
-          
-
-
+                     p$ylim2 = c(0,500)
+                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+                              names(xx) =c('x','y')
+                       
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+    
+     aout$subset = 'DFOrecruits'
+      write.csv(aout,file=file.path(fp,'indicators','DFO.restratified.recruits.csv'))
+ 
 
 
 #DFO restratified to lfa41adjacent
@@ -525,11 +391,11 @@ load_all('~/git/bio.survey/')
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'numbers' #numbers
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjcentlfa41DFOrestratifiednumbers.png'
+                              p$file.name = 'adjcentlfa41DFOrestratifiednumbersrecruits.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -541,36 +407,27 @@ load_all('~/git/bio.survey/')
                                p$error.polygon=F
                               p$error.bars=T
 
-                              p$ylim=c(0,30)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$metric = 'weights'
-                        p$ylim=c(0,32)
-                       p$file.name = 'adjacentlfa41DFOrestratifiedweights.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
-                       p$ylim=NULL
-                       p$file.name = 'adjacentlfa41DFOrestratifiedDWAO.png'
-                       p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = 'adjacentlfa41DFOrestratifiedgini.png'
-                       p$metric = 'gini'
-                       p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim = NULL
+                     p$ylim2 = c(0,500)
+                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+                              names(xx) =c('x','y')
+                       
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
 
-               aout$subset = 'DFO.adjrestratified.All'
-                write.csv(aout,file=file.path(fp,'indicators','DFO.adjrestratified.All.csv'))
-     
-
+      aout$subset = 'DFOrecruits'
+     write.csv(aout,file=file.path(fp,'indicators','DFO.adjrestratified.recruits.csv'))
+ 
 
   #DFO Georges
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(1987:2015)
-      p$length.based = F
-      p$by.sex = F
+      p$years.to.estimate = c(2007:2015)
+      p$length.based = T
+      p$by.sex = T
+      p$sex = c(1,2)
+      p$size.class = c(0,82)
       p$bootstrapped.ci=T
       p$strata.files.return=F
       p$vessel.correction.fixed=1.2
@@ -582,7 +439,7 @@ load_all('~/git/bio.survey/')
       
 
 # DFO survey All stations including adjacent
-      p$define.by.polygons = F
+      p$define.by.polygons = T
       p$lobster.subunits=F
       p$area = 'Georges.Canada'
       p$reweight.strata = F #this subsets 
@@ -594,11 +451,11 @@ load_all('~/git/bio.survey/')
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'numbers' #weights
+                              p$metric = 'numbers' #numbers
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41georgesnumbers.png'
+                              p$file.name = 'lfa41georgesnumbersrecruits.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -611,21 +468,12 @@ load_all('~/git/bio.survey/')
                               p$error.bars=T
 
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$metric = 'weights'
-                       p$file.name = 'lfa41georgesweights.png'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$file.name = 'lfa41georgesDWAO.png'
-                       p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = 'lfa41georgesgini.png'
-                       p$metric = 'gini'
-                       p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$ylim = NULL
-
-aout$subset = 'DFO.Georges.All.csv'
-
-write.csv(aout,file=file.path(fp,'indicators','DFO.Georges.All.csv'))
-     
+                     p$ylim2 = c(0,500)
+                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+                              names(xx) =c('x','y')
+                       
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+      
+       aout$subset = 'DFOrecruits'
+      write.csv(aout,file=file.path(fp,'indicators','DFO.Georges.recruits.csv'))
+ 

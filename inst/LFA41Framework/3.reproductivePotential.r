@@ -31,11 +31,11 @@ la()
 			g$Fecl = g$Fec * g$n.ci.Yst.l / 1000000
 			g$Fecu = g$Fec * g$n.ci.Yst.u / 1000000
 			g$Fecm = g$Fec * g$n.Yst / 1000000
-
+      nn = sum(g$ObsLobs)
 			n = aggregate(cbind(Fecm,Fecl,Fecu)~yr,data = g, FUN=sum, na.rm=T)
 			out = rbind(out,n)
 			}
-							  p=list()
+ 							  p=list()
 			                  p$add.reference.lines = F
                               p$time.series.start.year = min(aa$yr)
                               p$time.series.end.year = max(aa$yr)
@@ -59,5 +59,11 @@ la()
                               p$ylim2 = c(0,500)
                              
                        figure.stratified.analysis(x=out,out.dir = 'bio.lobster', x2 = af, p=p,sampleSizes=T)
+         names(af) = c('yr','ObsLobs')
+         out = merge(out,af)
+         fnn = file.path(project.datadirectory('bio.lobster'),'analysis','indicators',paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][6],"\\.")[[1]][1],'csv',sep="."))
+          write.csv(out, file=fnn)
+          out$ObsLobs = NULL
+
 		}
 

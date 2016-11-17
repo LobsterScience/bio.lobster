@@ -1,6 +1,8 @@
 # sex ratios surveys
 require(bio.survey)
+require(bio.groundfish)
 require(bio.lobster)
+la()
 p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
@@ -45,6 +47,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41baseSummerRV.rdata  '))
+        write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.Base.SexRatio.csv  '))
 
 #restratified
         require(bio.lobster)
@@ -79,6 +82,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
 		aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41polygonSummerRV.rdata  '))
+    write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.restratified.SexRatio.csv  '))
 
 #adjacent
         require(bio.lobster)
@@ -113,6 +117,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41adjacentpolygonSummerRV.rdata  '))
+    write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.adjrestratified.SexRatio.csv  '))
 
 
 #NEFSC spring
@@ -150,6 +155,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCspringbase.rdata  '))
+      write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.spring.Base.SexRatio.csv  '))
 
 # restratified
     p$define.by.polygons = T
@@ -167,6 +173,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCspringrestratified.rdata  '))
+     write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.spring.restratified.SexRatio.csv  '))
 
 # adjacent
     p$define.by.polygons = T
@@ -184,6 +191,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCspringadjrestratified.rdata  '))
+       write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.spring.adjrestratified.SexRatio.csv  '))
 
 
 
@@ -207,6 +215,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCfallbase.rdata  '))
+       write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.fall.Base.SexRatio.csv  '))
 
 # restratified
     p$define.by.polygons = T
@@ -224,6 +233,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCfallrestratified.rdata  '))
+        write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.fall.restratified.SexRatio.csv  '))
 
 # adjacent
     p$define.by.polygons = T
@@ -241,6 +251,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCfalladjrestratified.rdata  '))
+        write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.fall.adjrestratified.SexRatio.csv  '))
 
 
 #DFO Georges
@@ -277,7 +288,8 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41dfogeorges.rdata  '))
-    
+        write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.georges.SexRatio.csv  '))
+
 ##################################### 
 #####mature lobster sex ratios
 # sex ratios surveys
@@ -329,6 +341,7 @@ load_all('~/git/bio.survey/')
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
                           	    
    	    save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41baseSummerRV.rdata  '))
+        write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.Base.Mature.SexRatio.csv  '))
 
 #restratified
         require(bio.lobster)
@@ -363,6 +376,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
 		aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41polygonSummerRV.rdata  '))
+    write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.restratified.Mature.SexRatio.csv  '))
 
 #adjacent
         require(bio.lobster)
@@ -397,6 +411,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41adjacentpolygonSummerRV.rdata  '))
+      write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.adjrestratified.Mature.SexRatio.csv  '))
 
 
 #NEFSC spring
@@ -430,6 +445,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCspringbase.rdata  '))
+      write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.spring.base.Mature.SexRatio.csv  '))
 
 # restratified
     p$define.by.polygons = T
@@ -447,6 +463,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCspringrestratified.rdata  '))
+  write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.spring.restratified.Mature.SexRatio.csv  '))
 
 # adjacent
     p$define.by.polygons = T
@@ -464,6 +481,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCspringadjrestratified.rdata  '))
+  write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.spring.adjrestratified.Mature.SexRatio.csv  '))
 
 
 
@@ -485,6 +503,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCfallbase.rdata  '))
+  write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.fall.base.Mature.SexRatio.csv  '))
 
 # restratified
     p$define.by.polygons = T
@@ -502,6 +521,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCfallrestratified.rdata  '))
+  write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.fall.restratified.Mature.SexRatio.csv  '))
 
 # adjacent
     p$define.by.polygons = T
@@ -519,6 +539,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCfalladjrestratified.rdata  '))
+write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.fall.adjrestratified.Mature.SexRatio.csv  '))
 
 
 
@@ -559,6 +580,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41dfogeorges.rdata  '))
+write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.Georges.Mature.SexRatio.csv  '))
     
 
 
@@ -612,6 +634,7 @@ load_all('~/git/bio.survey/')
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
                                 
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41baseSummerRV.rdata  '))
+        write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.base.immature.SexRatio.csv  '))
 
 #restratified
         require(bio.lobster)
@@ -646,6 +669,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
     aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41polygonSummerRV.rdata  '))
+     write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.restratified.immature.SexRatio.csv  '))
 
 #adjacent
         require(bio.lobster)
@@ -680,6 +704,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41adjacentpolygonSummerRV.rdata  '))
+       write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.adjrestratified.immature.SexRatio.csv  '))
 
 
 #NEFSC spring
@@ -713,6 +738,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCspringbase.rdata  '))
+   write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.spring.base.immature.SexRatio.csv  '))
 
 # restratified
     p$define.by.polygons = T
@@ -730,6 +756,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCspringrestratified.rdata  '))
+     write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.spring.restratified.immature.SexRatio.csv  '))
 
 # adjacent
     p$define.by.polygons = T
@@ -747,6 +774,8 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCspringadjrestratified.rdata  '))
+         write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.spring.adjrestratified.immature.SexRatio.csv  '))
+
 
 
 
@@ -768,6 +797,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCfallbase.rdata  '))
+  write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.fall.base.immature.SexRatio.csv  '))
 
 # restratified
     p$define.by.polygons = T
@@ -785,6 +815,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCfallrestratified.rdata  '))
+  write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.fall.restratified.immature.SexRatio.csv  '))
 
 # adjacent
     p$define.by.polygons = T
@@ -802,6 +833,7 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCfalladjrestratified.rdata  '))
+  write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','NEFSC.fall.adjrestratified.immature.SexRatio.csv  '))
 
 
 
@@ -842,198 +874,27 @@ load_all('~/git/bio.survey/')
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
         save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41dfogeorges.rdata  '))
-    
+      write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','DFO.Georges.base.immature.SexRatio.csv  '))
+
 
 
 
 #adding sex ratios combined data frames
 
-fpp = file.path(fp,'combinedResults')
+fp = file.path(project.datadirectory('bio.lobster'),"analysis","indicators")
+h = dir(fp)
 
-load(file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
-load( file.path(fpp,'CombinedReStratifiedResults.rdata'))
-load( file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
+hi = h[grep('SexRatio',h)]
 
+for(i in hi) {
+    j = read.csv(file.path(fp,i))
+    g = aggregate(cbind(n.yst,ObsLobs)~yr,data=j,FUN=sum)
+    k = subset(j,sex=='femberr',select=c('yr','n.yst'))
+  
+    l = merge(g,k,by='yr')
 
-fp = file.path(project.datadirectory('bio.lobster'),"analysis")
-la()
+    l$sexratio = l$n.yst.y / l$n.yst.x
+    l = l[,c('yr','sexratio','ObsLobs')]
+    write.csv(l,file=file.path(fp,i))
 
-
-      a = c(file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41baseSummerRV.rdata  '),
-         file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCfallbase.rdata  '),
-         file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCspringbase.rdata  '))
-
-
-      b = c(file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41polygonSummerRV.rdata  ') ,
-file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCspringrestratified.rdata  '),
-file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCfallrestratified.rdata  '))
-        
-
-      d = c(file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCfalladjrestratified.rdata  '),     
-         file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCspringadjrestratified.rdata  '), 
-         file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41adjacentpolygonSummerRV.rdata  ')
-         )
-
-
-
-for(i in 1:length(a)) {
-  load(a[i])
-    ap = aggregate(n.yst~yr,data=aa,FUN=sum)
-    af = aggregate(n.yst~yr,data=subset(aa,sex=='femberr'),FUN=sum)
-    apf = merge(ap,af,by='yr')
-    apf$pFem = apf$n.yst.y / apf$n.yst.x
-    if(grepl('SummerRV',a[i])) apf$subset = 'DFOpFemAllsize'
-    if(grepl('spring',a[i]))  apf$subset = 'NEFSCSpringpFemAllsize'
-    if(grepl('fall',a[i]))  apf$subset = 'NEFSCFallpFemAllsize'
-    base = append(base,list(apf))
-  }
-
-
-for(i in 1:length(b)) {
-  load(b[i])
-    ap = aggregate(n.yst~yr,data=aa,FUN=sum)
-    af = aggregate(n.yst~yr,data=subset(aa,sex=='femberr'),FUN=sum)
-    apf = merge(ap,af,by='yr')
-    apf$pFem = apf$n.yst.y / apf$n.yst.x
-    if(grepl('SummerRV',b[i])) apf$subset = 'DFOpFemAllsize'
-    if(grepl('spring',b[i]))  apf$subset = 'NEFSCSpringpFemAllsize'
-    if(grepl('fall',b[i]))  apf$subset = 'NEFSCFallpFemAllsize'
-    restratified = append(restratified,list(apf))
-  }
-
-
-for(i in 1:length(d)) {
-  load(d[i])
-    ap = aggregate(n.yst~yr,data=aa,FUN=sum)
-    af = aggregate(n.yst~yr,data=subset(aa,sex=='femberr'),FUN=sum)
-    apf = merge(ap,af,by='yr')
-    apf$pFem = apf$n.yst.y / apf$n.yst.x
-    if(grepl('SummerRV',d[i])) apf$subset = 'DFOpFemAllsize'
-    if(grepl('spring',d[i]))  apf$subset = 'NEFSCSpringpFemAllsize'
-    if(grepl('fall',d[i]))  apf$subset = 'NEFSCFallpFemAllsize'
-    adjacentrestratified = append(adjacentrestratified,list(apf))
-  }
-
-
-
-
-
-  ###mature sex ratios
-        a = c(file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41baseSummerRV.rdata  '),
-         file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCfallbase.rdata  '),
-         file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCspringbase.rdata  '))
-
-
-      b = c(file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41polygonSummerRV.rdata  ') ,
-file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCspringrestratified.rdata  '),
-file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCfallrestratified.rdata  '))
-        
-
-      d = c(file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCfalladjrestratified.rdata  '),     
-         file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCspringadjrestratified.rdata  '), 
-         file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41adjacentpolygonSummerRV.rdata  ')
-         )
-
-
-
-for(i in 1:length(a)) {
-  load(a[i])
-    ap = aggregate(n.yst~yr,data=aa,FUN=sum)
-    af = aggregate(n.yst~yr,data=subset(aa,sex=='femberr'),FUN=sum)
-    apf = merge(ap,af,by='yr')
-    apf$pFem = apf$n.yst.y / apf$n.yst.x
-    if(grepl('SummerRV',a[i])) apf$subset = 'DFOpFemmaturesize'
-    if(grepl('spring',a[i]))  apf$subset = 'NEFSCSpringpFemmaturesize'
-    if(grepl('fall',a[i]))  apf$subset = 'NEFSCFallpFemmaturesize'
-    base = append(base,list(apf))
-  }
-
-
-for(i in 1:length(b)) {
-  load(b[i])
-    ap = aggregate(n.yst~yr,data=aa,FUN=sum)
-    af = aggregate(n.yst~yr,data=subset(aa,sex=='femberr'),FUN=sum)
-    apf = merge(ap,af,by='yr')
-    apf$pFem = apf$n.yst.y / apf$n.yst.x
-    if(grepl('SummerRV',b[i])) apf$subset = 'DFOpFemmaturesize'
-    if(grepl('spring',b[i]))  apf$subset = 'NEFSCSpringpFemmaturesize'
-    if(grepl('fall',b[i]))  apf$subset = 'NEFSCFallpFemmaturesize'
-    restratified = append(restratified,list(apf))
-  }
-
-
-for(i in 1:length(d)) {
-  load(d[i])
-    ap = aggregate(n.yst~yr,data=aa,FUN=sum)
-    af = aggregate(n.yst~yr,data=subset(aa,sex=='femberr'),FUN=sum)
-    apf = merge(ap,af,by='yr')
-    apf$pFem = apf$n.yst.y / apf$n.yst.x
-    if(grepl('SummerRV',d[i])) apf$subset = 'DFOpFemmaturesize'
-    if(grepl('spring',d[i]))  apf$subset = 'NEFSCSpringpFemmaturesize'
-    if(grepl('fall',d[i]))  apf$subset = 'NEFSCFallpFemmaturesize'
-    adjacentrestratified = append(adjacentrestratified,list(apf))
-  }
-
-  ###immature sex ratios
-        a = c(file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41baseSummerRV.rdata  '),
-         file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCfallbase.rdata  '),
-         file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCspringbase.rdata  '))
-
-
-      b = c(file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41polygonSummerRV.rdata  ') ,
-file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCspringrestratified.rdata  '),
-file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCfallrestratified.rdata  '))
-        
-
-      d = c(file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCfalladjrestratified.rdata  '),     
-         file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCspringadjrestratified.rdata  '), 
-         file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41adjacentpolygonSummerRV.rdata  ')
-         )
-
-
-
-for(i in 1:length(a)) {
-  load(a[i])
-    ap = aggregate(n.yst~yr,data=aa,FUN=sum)
-    af = aggregate(n.yst~yr,data=subset(aa,sex=='femberr'),FUN=sum)
-    apf = merge(ap,af,by='yr')
-    apf$pFem = apf$n.yst.y / apf$n.yst.x
-    if(grepl('SummerRV',a[i])) apf$subset = 'DFOpFemimmaturesize'
-    if(grepl('spring',a[i]))  apf$subset = 'NEFSCSpringpFemimmaturesize'
-    if(grepl('fall',a[i]))  apf$subset = 'NEFSCFallpFemimmaturesize'
-    base = append(base,list(apf))
-  }
-
-
-for(i in 1:length(b)) {
-  load(b[i])
-    ap = aggregate(n.yst~yr,data=aa,FUN=sum)
-    af = aggregate(n.yst~yr,data=subset(aa,sex=='femberr'),FUN=sum)
-    apf = merge(ap,af,by='yr')
-    apf$pFem = apf$n.yst.y / apf$n.yst.x
-    if(grepl('SummerRV',b[i])) apf$subset = 'DFOpFemimmaturesize'
-    if(grepl('spring',b[i]))  apf$subset = 'NEFSCSpringpFemimmaturesize'
-    if(grepl('fall',b[i]))  apf$subset = 'NEFSCFallpFemimmaturesize'
-    restratified = append(restratified,list(apf))
-  }
-
-
-for(i in 1:length(d)) {
-  load(d[i])
-    ap = aggregate(n.yst~yr,data=aa,FUN=sum)
-    af = aggregate(n.yst~yr,data=subset(aa,sex=='femberr'),FUN=sum)
-    apf = merge(ap,af,by='yr')
-    apf$pFem = apf$n.yst.y / apf$n.yst.x
-    if(grepl('SummerRV',d[i])) apf$subset = 'DFOpFemimmaturesize'
-    if(grepl('spring',d[i]))  apf$subset = 'NEFSCSpringpFemimmaturesize'
-    if(grepl('fall',d[i]))  apf$subset = 'NEFSCFallpFemimmaturesize'
-    adjacentrestratified = append(adjacentrestratified,list(apf))
-  }
-
-
-
-save(base,file = file.path(fpp,'CombinedBaseStratifiedResults.rdata'))
-save(restratified, file = file.path(fpp,'CombinedReStratifiedResults.rdata'))
-save(adjacentrestratified,file = file.path(fpp,'CombinedadjacentReStratifiedResults.rdata'))
-
-
+}

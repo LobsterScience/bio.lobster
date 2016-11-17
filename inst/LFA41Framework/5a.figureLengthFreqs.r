@@ -50,10 +50,10 @@ for(i in 1:length(a)) {
 			m=m+1
 			print(m)
 			Eh = -1*(sum(u*log(u))) / log(length(u))
-			out = rbind(out,c(y,lm,ll,lu,aS,aL,lmax,Eh))
+			out = rbind(out,c(y,lm,ll,lu,aS,aL,lmax,Eh,nn))
 			}
 			out = as.data.frame(out)
-			names(out) = c('yr','medL','medLlower','medLupper','smallCatch','largeCatch','upper95','ShannonEquitability')
+			names(out) = c('yr','medL','medLlower','medLupper','smallCatch','largeCatch','upper95','ShannonEquitability','ObsLobs')
 			fn = paste('max95',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'pdf',sep=".")
             nn = sum(g$ObsLobs)
             pdf(file.path(project.figuredirectory('bio.lobster'),fn))
@@ -78,6 +78,7 @@ for(i in 1:length(a)) {
 			
 #			print(median(out$medL))
 			save(out,file=file.path(project.datadirectory('bio.lobster'),'analysis',paste('medianL',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'rdata',sep=".")))
+			write.csv(out,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators',paste('medianL',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'csv',sep=".")))
 				p=list()
 			                  p$add.reference.lines = F
                               p$time.series.start.year = min(aa$yr)
