@@ -29,6 +29,7 @@ p$yrs = 1947:p$current.assessment.year
         lobster.db( DS = 'annual.landings.redo', p=p) #static annual landings tabke needs to be updated by CDenton
         lobster.db( DS = 'seasonal.landings.redo', p=p) #static seasonal landings table needs to be updated by CDenton
         lobster.db( DS = "lfa41.vms.redo")
+        lobster.db( DS="logs41jonah.redo")
         nefsc.db( DS = 'odbc.dump.redo',fn.root = file.path(project.datadirectory('lobster'),'data'),p=p)
 
     #process log book data
@@ -71,10 +72,29 @@ p$yrs = 1947:p$current.assessment.year
   
         write.csv(TotalLandings,file.path( project.datadirectory("lobster"), "data","products","TotalLandings.csv"))
 
-
-
-
-
+       # LFA41 Landings Update
+        
+        logs41$YEAR<-year(logs41$FV_FISHED_DATETIME)
+        ziff41$YEAR<-year(ziff41$DATE_FISHED)
+        off41$YEAR<-year(off41$DATE_FISHED)
+        
+        names(logs41)[names(logs41)=="FV_FISHED_DATETIME"]<-"DATE_FISHED"
+        names(slip41)[names(slip41)=="TO_CHAR(LANDING_DATE_TIME,'YYYY')"]<-"SYEAR"
+        names(slip41)[names(slip41)=="SUM(SLIP_WEIGHT_LBS)"]<-"ADJCATCH"
+        
+        logs41$LANDINGS_T<-logs41$ADJCATCH*0.0004536
+        ziff41$LANDINGS_T<-ziff41$ADJCATCH*0.0004536
+        off41$LANDINGS_T<-off41$ADJCATCH*0.0004536
+        slip41$LANDINGS_T<-slip41$ADJCATCH*0.0004536
+        l.41<-logs41%>%select(DATE_FISHED, YEAR, LANDINGS_T,NUM_OF_TRAPS)
+        z.41<-ziff41%>%select(DATE_FISHED, YEAR, LANDINGS_T,NUM_OF_TRAPS)
+        o.41<-off41%>%select(DATE_FISHED, YEAR, LANDINGS_T,NUM_OF_TRAPS)
+        
+        tot.land<-rbind(l.41,z.41,o.41)
+        tot.land$SYEAR<-sapply(tot.land$DATE_FISHED,offFishingYear)
+        
+        ann.41<-tot.land%>%group_by(YEAR)%>%summarise(LAND_T=sum(LANDINGS_T,na.rm=TRUE), TH=sum(NUM_OF_TRAPS, na.rm=TRUE),
+                                                      CPUE=sum((LANDINGS_T/TH)*1000,na.rm=TRUE))%>%ungroup()%>%data.frame()
 
 
 #### FSRS recruitment traps only
