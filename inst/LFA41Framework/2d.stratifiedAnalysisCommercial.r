@@ -1,4 +1,4 @@
-#redone sept 18 2016. need to contine
+#redone nov 18 2016
 
 require(bio.survey)
 require(bio.lobster)
@@ -7,532 +7,551 @@ p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
 load_all('~/git/bio.survey/')
+load_all('~/git/bio.groundfish/')
+la()
 #NEFSC Setup
 
-base= list()
-restratified = list()
-adjacentrestratified = list()
-      p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:2015)
-      p$length.based = T
-      p$size.class= c(83,300)
-      p$by.sex = T
-      p$sex = c(1,2) # male female berried c(1,2,3)
-      p$bootstrapped.ci=T
-      p$strata.files.return=F
-      p$strata.efficiencies=F
-      p$clusters = c( rep( "localhost", 7) )
-  
-      
-
-# Spring survey All stations including adjacent
-                        p$season =c('spring')# p$series =c('spring');p$series =c('fall')
-                        p$define.by.polygons = F
-                        p$lobster.subunits=F
-                        p$area = 'LFA41'
-                      p = make.list(list(yrs=p$years.to.estimate),Y=p)
-                    
-                        aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
-
-                              #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.mean' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCSpringbaseweightscommercial.png'
-
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
-
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
-                         p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-  
+        p$reweight.strata = F #this subsets 
+        p$years.to.estimate = c(1969:2015)
+        p$length.based = T
+        p$size.class= c(83,300)
+        p$by.sex = T
+        p$sex = c(1,2) # male female berried c(1,2,3)
+        p$bootstrapped.ci=T
+        p$strata.files.return=F
+        p$strata.efficiencies=F
+        p$clusters = c( rep( "localhost", 7) )
+        
 
 
-                        ##total
+    # Spring survey All stations including adjacent
+        p$season =c('spring')# p$series =c('spring');p$series =c('fall')
+        p$define.by.polygons = F
+        p$lobster.subunits=F
+        p$area = 'LFA41'
+        p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
-                         #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.total' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCSpringbasetotalweightscommercial.png'
+    aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
-
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
-                         p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-  
-
-
-
-
-     aout$subset = 'NEFSCSpringcommercial'
-       write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.base.commercial.csv'))
-  
-
-#Spring restratified to lfa41
-      p$define.by.polygons = T
-      p$lobster.subunits=F
-      p$area = 'LFA41'
-      p$reweight.strata = T #this subsets 
-      
-   aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
-
-
-                              #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.mean' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCSpringrestratifiedweightscommercial.png'
-
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
-
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
-                       p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+    #Figure
+         p$add.reference.lines = F
+         p$time.series.start.year = p$years.to.estimate[1]
+         p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+         p$metric = 'weights' #weights
+         p$measure = 'stratified.mean' #'stratified.total'
+         p$figure.title = ""
+         p$reference.measure = 'median' # mean, geomean
+         p$file.name = 'lfa41NEFSCSpringbaseweightscommercial.png'
+         p$y.maximum = NULL # NULL # if ymax is too high for one year
+         p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+        
+        p$legend = FALSE
+        p$running.median = T
+        p$running.length = 3
+        p$running.mean = F #can only have rmedian or rmean
+        p$error.polygon=F
+        p$error.bars=T
+        p$ylim2 = c(0,500)
+      xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+      names(xx) =c('x','y')
+      p$ylim =c(0,50) 
      
-aout$subset = 'NEFSCSpringcommercial'
-write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.commercial.csv'))
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+
+         p$ylim=c(0,20)
+         p$metric = 'numbers' #weights
+         p$file.name = 'lfa41NEFSCSpringbasenumberscommercial.png'
+         ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
 
-     
+    ##total
 
-                              #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.total' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCSpringrestratifiedtotalweightscommercial.png'
+     #Figure
+        p$add.reference.lines = F
+        p$time.series.start.year = p$years.to.estimate[1]
+        p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+        p$metric = 'weights' #weights
+        p$measure = 'stratified.total' #'stratified.total'
+        p$figure.title = ""
+        p$reference.measure = 'median' # mean, geomean
+        p$file.name = 'lfa41NEFSCSpringbasetotalweightscommercial.png'
+        p$y.maximum = NULL # NULL # if ymax is too high for one year
+        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+        p$legend = FALSE
+        p$running.median = T
+        p$running.length = 3
+        p$running.mean = F #can only have rmedian or rmean
+        p$error.polygon=F
+        p$error.bars=T
+        p$ylim2 = c(0,500)
+        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+        names(xx) =c('x','y')
+         p$ylim=NULL
+    ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+    aout$subset = 'NEFSCSpringcommercial'
+    write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.base.commercial.csv'))
+    rm(aout)
 
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
-                       p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+
+    #Spring restratified to lfa41
+        p$define.by.polygons = T
+        p$lobster.subunits=F
+        p$area = 'LFA41'
+        p$reweight.strata = T #this subsets 
+
+     aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+
+
+    #Figure
+        p$add.reference.lines = F
+        p$time.series.start.year = p$years.to.estimate[1]
+        p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+        p$metric = 'weights' #weights
+        p$measure = 'stratified.mean' #'stratified.total'
+        p$figure.title = ""
+        p$reference.measure = 'median' # mean, geomean
+        p$file.name = 'lfa41NEFSCSpringrestratifiedweightscommercial.png'
+        p$y.maximum = NULL # NULL # if ymax is too high for one year
+        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+        p$legend = FALSE
+        p$running.median = T
+        p$running.length = 3
+        p$running.mean = F #can only have rmedian or rmean
+        p$error.polygon=F
+        p$error.bars=T
+        p$ylim2 = c(0,500)
+        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+        names(xx) =c('x','y')
+        p$ylim=c(0,50)
+
+      ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+      p$ylim=c(0,20)
+      p$metric = 'numbers' #weights
+      p$file.name = 'lfa41NEFSCSpringrestratifiednumberscommercial.png'
+      ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+
+    aout$subset = 'NEFSCSpringcommercial'
+    write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.commercial.csv'))
+
+
      
 
-#Spring restratified to adjacentlfa41
-      p$define.by.polygons = T
-      p$lobster.subunits=F
-      p$area = 'adjacentLFA41'
-      p$reweight.strata = T #this subsets 
-      
-   aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+    #Figure
+        p$add.reference.lines = F
+        p$time.series.start.year = p$years.to.estimate[1]
+        p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+        p$metric = 'weights' #weights
+        p$measure = 'stratified.total' #'stratified.total'
+        p$figure.title = ""
+        p$reference.measure = 'median' # mean, geomean
+        p$file.name = 'lfa41NEFSCSpringrestratifiedtotalweightscommercial.png'
+        p$y.maximum = NULL # NULL # if ymax is too high for one year
+        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+        p$legend = FALSE
+        p$running.median = T
+        p$running.length = 3
+        p$running.mean = F #can only have rmedian or rmean
+        p$error.polygon=F
+        p$error.bars=T
+        p$ylim2 = c(0,500)
+        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+        names(xx) =c('x','y')
+        p$ylim=NULL
+        ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+        rm(aout)
+
+    #Spring restratified to adjacentlfa41
+        p$define.by.polygons = T
+        p$lobster.subunits=F
+        p$area = 'adjacentLFA41'
+        p$reweight.strata = T #this subsets 
+
+     aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
 
-                              #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.mean' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjacentlfa41NEFSCSpringrestratifiedweightscommercial.png'
+    #Figure
+        p$add.reference.lines = F
+        p$time.series.start.year = p$years.to.estimate[1]
+        p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+        p$metric = 'weights' #weights
+        p$measure = 'stratified.mean' #'stratified.total'
+        p$figure.title = ""
+        p$reference.measure = 'median' # mean, geomean
+        p$file.name = 'adjacentlfa41NEFSCSpringrestratifiedweightscommercial.png'
+        p$y.maximum = NULL # NULL # if ymax is too high for one year
+        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+        p$legend = FALSE
+        p$running.median = T
+        p$running.length = 3
+        p$running.mean = F #can only have rmedian or rmean
+        p$error.polygon=F
+        p$error.bars=T
+        p$ylim2 = c(0,500)
+        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+        names(xx) =c('x','y')
+     p$ylim=c(0,50)
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+     p$metric = 'numbers' #weights
+         
+         p$ylim=c(0,20)
+         p$file.name = 'adjacentlfa41NEFSCSpringrestratifiednumberscommercial.png'
+         ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
-
-
-                            p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-     
-      aout$subset = 'NEFSCSpringcommercial'
+    aout$subset = 'NEFSCSpringcommercial'
     write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.adjrestratified.commercial.csv'))
 
 
      #total
 
-                              #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.total' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjacentlfa41NEFSCSpringrestratifiedtotalweightscommercial.png'
+    #Figure
+    p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.total' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name = 'adjacentlfa41NEFSCSpringrestratifiedtotalweightscommercial.png'
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
 
-
-                            p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-
+    p$ylim=NULL
+    p$ylim2 = c(0,500)
+    xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+    names(xx) =c('x','y')
+     
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+    rm(aout)
 
 #Fall Survey All stations not pruned by polygon
       p$season =c('fall')# p$series =c('spring');p$series =c('fall')
-   # Spring survey All stations including adjacent
-                        p$season =c('fall')# p$series =c('fall');p$series =c('fall')
-                        p$define.by.polygons = F
-                        p$lobster.subunits=F
-                        p$area = 'LFA41'
-                      p = make.list(list(yrs=p$years.to.estimate),Y=p)
-                    
-                        aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
- 
-                              #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.mean' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCFallbaseweightscommercial.png'
+      p$define.by.polygons = F
+      p$lobster.subunits=F
+      p$area = 'LFA41'
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+      aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+       
+      #Figure
+      p$add.reference.lines = F
+      p$time.series.start.year = p$years.to.estimate[1]
+      p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+      p$metric = 'weights' #weights
+      p$measure = 'stratified.mean' #'stratified.total'
+      p$figure.title = ""
+      p$reference.measure = 'median' # mean, geomean
+      p$file.name = 'lfa41NEFSCFallbaseweightscommercial.png'
 
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+      p$y.maximum = NULL # NULL # if ymax is too high for one year
+      p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
-                p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+      p$legend = FALSE
+      p$running.median = T
+      p$running.length = 3
+      p$running.mean = F #can only have rmedian or rmean
+       p$error.polygon=F
+      p$error.bars=T
+      p$ylim = c(0,30)
+      p$ylim2 = c(0,500)
+      xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+      names(xx) =c('x','y')
+       
+       ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
-                      #total
-                       #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.total' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCFallbasetotalweightscommercial.png'
+       p$ylim=c(0,15)
+       p$metric = 'numbers' #weights
+       p$file.name = 'lfa41NEFSCFallbasenumberscommercial.png'
+       ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+      #total
+       #Figure
+      p$add.reference.lines = F
+      p$time.series.start.year = p$years.to.estimate[1]
+      p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+      p$metric = 'weights' #weights
+      p$measure = 'stratified.total' #'stratified.total'
+      p$figure.title = ""
+      p$reference.measure = 'median' # mean, geomean
+      p$file.name = 'lfa41NEFSCFallbasetotalweightscommercial.png'
 
-                p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+      p$y.maximum = NULL # NULL # if ymax is too high for one year
+      p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+
+      p$legend = FALSE
+      p$running.median = T
+      p$running.length = 3
+      p$running.mean = F #can only have rmedian or rmean
+       p$error.polygon=F
+      p$error.bars=T
+      p$ylim=NULL
+      p$ylim2 = c(0,500)
+      xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+      names(xx) =c('x','y')
+       
+       ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
 
       aout$subset = 'NEFSCFallcommercial'
-        write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.base.commercial.csv'))
-    
-     
+      write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.base.commercial.csv'))
+      rm(aout)
+       
 #Fall restratified to lfa41
       p$define.by.polygons = T
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
-      
-   aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+
+       aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
 
-                              #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.mean' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCFallrestratifiedweightscommercial.png'
+  #Figure
+      p$add.reference.lines = F
+      p$time.series.start.year = p$years.to.estimate[1]
+      p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+      p$metric = 'weights' #weights
+      p$measure = 'stratified.mean' #'stratified.total'
+      p$figure.title = ""
+      p$reference.measure = 'median' # mean, geomean
+      p$file.name = 'lfa41NEFSCFallrestratifiedweightscommercial.png'
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+      p$y.maximum = NULL # NULL # if ymax is too high for one year
+      p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+      p$legend = FALSE
+      p$running.median = T
+      p$running.length = 3
+      p$running.mean = F #can only have rmedian or rmean
+       p$error.polygon=F
+      p$error.bars=T
+      p$ylim=c(0,30)
 
+       p$ylim2 = c(0,500)
+      xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+      names(xx) =c('x','y')
+       
+       ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+       
+       p$ylim=c(0,15)
+       p$metric = 'numbers' #weights
+       p$file.name = 'lfa41NEFSCFallrestratifiednumberscommercial.png'
+       ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+       
 
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                           ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-     
+       #total
+      #Figure
+      p$add.reference.lines = F
+      p$time.series.start.year = p$years.to.estimate[1]
+      p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+      p$metric = 'weights' #weights
+      p$measure = 'stratified.total' #'stratified.total'
+      p$figure.title = ""
+      p$reference.measure = 'median' # mean, geomean
+      p$file.name = 'lfa41NEFSCFallrestratifiedtotalweightscommercial.png'
 
-                           #total
-                              #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.total' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCFallrestratifiedtotalweightscommercial.png'
+      p$y.maximum = NULL # NULL # if ymax is too high for one year
+      p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+      p$legend = FALSE
+      p$running.median = T
+      p$running.length = 3
+      p$running.mean = F #can only have rmedian or rmean
+       p$error.polygon=F
+      p$error.bars=T
 
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+      p$ylim=NULL
+       p$ylim2 = c(0,500)
+      xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+      names(xx) =c('x','y')
+       
 
-
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-
-                           ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-     
+       ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+       
       aout$subset = 'NEFSCFallcommercial'
-        write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.restratified.commercial.csv'))
-    
+      write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.restratified.commercial.csv'))
+      rm(aout)
 
 #Fall restratified to adjacentlfa41
-      p$define.by.polygons = T
-      p$lobster.subunits=F
-      p$area = 'adjacentLFA41'
-      p$reweight.strata = T #this subsets 
-      
-   aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+    p$define.by.polygons = T
+    p$lobster.subunits=F
+    p$area = 'adjacentLFA41'
+    p$reweight.strata = T #this subsets 
+
+     aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
 
-                              #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.mean' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjacentlfa41NEFSCFallrestratifiedweightscommercial.png'
+#Figure
+      p$add.reference.lines = F
+      p$time.series.start.year = p$years.to.estimate[1]
+      p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+      p$metric = 'weights' #weights
+      p$measure = 'stratified.mean' #'stratified.total'
+      p$figure.title = ""
+      p$reference.measure = 'median' # mean, geomean
+      p$file.name = 'adjacentlfa41NEFSCFallrestratifiedweightscommercial.png'
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+      p$y.maximum = NULL # NULL # if ymax is too high for one year
+      p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
-
-
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-     
-
-                        #total
+      p$legend = FALSE
+      p$running.median = T
+      p$running.length = 3
+      p$running.mean = F #can only have rmedian or rmean
+       p$error.polygon=F
+      p$error.bars=T
 
 
-                              #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.total' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjacentlfa41NEFSCFallrestratifiedtotalweightscommercial.png'
-
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
-
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
-
-
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-     
-
-
-      aout$subset = 'NEFSCFallcommercial'
-      write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.adjrestratified.commercial.csv'))
+       p$ylim2 = c(0,500)
+      xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+      names(xx) =c('x','y')
+ 
+    ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
     
+     p$ylim=c(0,15)
+     p$metric = 'numbers' #weights
+     p$file.name = 'adjacentlfa41NEFSCFallrestratifiednumberscommercial.png'
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+  
+
+#total
+#Figure
+    p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.total' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name = 'adjacentlfa41NEFSCFallrestratifiedtotalweightscommercial.png'
+    
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+    
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
+    
+    p$ylim=NULL
+    p$ylim2 = c(0,500)
+    xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+    names(xx) =c('x','y')
+     
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+ 
+
+
+aout$subset = 'NEFSCFallcommercial'
+write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.adjrestratified.commercial.csv'))
+rm(aout)
 
 ##############################################################
 #DFO RV Setup
 
-      p$series =c('summer')# p$series =c('georges');p$series =c('fall')
-      p$define.by.polygons = F
-      p$lobster.subunits=F
-      p$area = 'LFA41'
-      p$years.to.estimate = c(1970:2015)
-      p$length.based = T
-      p$by.sex = T
-      p$size.class = c(83,300)
-      p$sex = c(1,2)
-      p$bootstrapped.ci=T
-      p$strata.files.return=F
-      p$vessel.correction.fixed=1.2
-      p$strat = NULL
-      p$clusters = c( rep( "localhost", 7) )
-      p$strata.efficiencies = F
-      p = make.list(list(yrs=p$years.to.estimate),Y=p)
+    p$series =c('summer')# p$series =c('georges');p$series =c('fall')
+    p$define.by.polygons = F
+    p$lobster.subunits=F
+    p$area = 'LFA41'
+    p$years.to.estimate = c(1970:2015)
+    p$length.based = T
+    p$by.sex = T
+    p$size.class = c(83,300)
+    p$sex = c(1,2)
+    p$bootstrapped.ci=T
+    p$strata.files.return=F
+    p$vessel.correction.fixed=1.2
+    p$strat = NULL
+    p$clusters = c( rep( "localhost", 7) )
+    p$strata.efficiencies = F
+    p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
-      
+
 
 # DFO survey All stations including adjacent
-      p$define.by.polygons = F
-      p$lobster.subunits=F
-      p$area = 'LFA41'
-      p$reweight.strata = F #this subsets 
-      
-      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-      
+    p$define.by.polygons = F
+    p$lobster.subunits=F
+    p$area = 'LFA41'
+    p$reweight.strata = F #this subsets 
 
-         #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.mean' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41DFObaseweightscommercial.png'
-
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
-
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+    aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
 
 
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+ #Figure
+    p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.mean' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name = 'lfa41DFObaseweightscommercial.png'
+
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
+
+    p$ylim =c(0,30)
+     p$ylim2 = c(0,500)
+    xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+    names(xx) =c('x','y')
      
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+ 
+    p$ylim =c(0,25)
+    p$metric = 'numbers' #weights
+    p$file.name = 'lfa41DFObasenumberscommercial.png'
+    ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+ 
 ##total
 
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.total' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41DFObasetotalweightscommercial.png'
+    p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.total' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name = 'lfa41DFObasetotalweightscommercial.png'
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
 
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
 
 
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+  p$ylim2 = c(0,500)
+  xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+  names(xx) =c('x','y')
+  p$ylim =NULL
 
-      aout$subset = 'DFOcommercial'
-      write.csv(aout,file=file.path(fp,'indicators','DFO.base.commercial.csv'))
-    
+   ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+
+    aout$subset = 'DFOcommercial'
+    write.csv(aout,file=file.path(fp,'indicators','DFO.base.commercial.csv'))
+    rm(aout)
 
 
 
@@ -540,228 +559,246 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.commerc
 
 
 #DFO restratified to lfa41
-      p$define.by.polygons = T
-      p$lobster.subunits=F
-      p$area = 'LFA41'
-      p$reweight.strata = T #this subsets 
-  
-
-      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-      
-
-         #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.mean' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41DFOrestratifiedweightscommercial.png'
-
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
-
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+    p$define.by.polygons = T
+    p$lobster.subunits=F
+    p$area = 'LFA41'
+    p$reweight.strata = T #this subsets 
 
 
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-    
-                       #total
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.total' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41DFOrestratifiedtotalweightscommercial.png'
-
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
-
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+    aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
 
 
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-    
+ #Figure
+    p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.mean' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name = 'lfa41DFOrestratifiedweightscommercial.png'
+
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
+
+
+     p$ylim2 = c(0,500)
+    xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+    names(xx) =c('x','y')
+     p$ylim =c(0,30)
+
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+
+    p$ylim =c(0,25)
+    p$metric = 'numbers' #weights
+    p$file.name = 'lfa41DFOrestratifiednumberscommercial.png'
+    ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+
+
+ #total
+    p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.total' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name = 'lfa41DFOrestratifiedtotalweightscommercial.png'
+
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
+
+
+     p$ylim2 = c(0,500)
+    xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+    names(xx) =c('x','y')
+     p$ylim=NULL
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+
 
      aout$subset = 'DFOcommercial'
-      write.csv(aout,file=file.path(fp,'indicators','DFO.restratified.commercial.csv'))
+    write.csv(aout,file=file.path(fp,'indicators','DFO.restratified.commercial.csv'))
  
-
+    rm(aout)
 
 #DFO restratified to lfa41adjacent
-      p$define.by.polygons = T
-      p$lobster.subunits=F
-      p$area = 'adjacentLFA41'
-      p$reweight.strata = T #this subsets 
+    p$define.by.polygons = T
+    p$lobster.subunits=F
+    p$area = 'adjacentLFA41'
+    p$reweight.strata = T #this subsets 
 
 
-      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-      
-
-         #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.mean' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjcentlfa41DFOrestratifiedweightscommercial.png'
-
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
-
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+    aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
 
 
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+ #Figure
+    p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.mean' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name = 'adjcentlfa41DFOrestratifiedweightscommercial.png'
+
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
 
 
-         #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.total' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'adjcentlfa41DFOrestratifiedtotalweightscommercial.png'
+     p$ylim2 = c(0,500)
+    xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+    names(xx) =c('x','y')
+    p$ylim=c(0,30)
+    ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+    p$ylim=c(0,25)
+    p$metric = 'numbers' #weights
+    p$file.name = 'adjacentlfa41DFOrestratifiednumberscommercial.png'
+    ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+ #Figure
+    p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.total' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name = 'adjcentlfa41DFOrestratifiedtotalweightscommercial.png'
 
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
 
 
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+     p$ylim2 = c(0,500)
+    xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+    names(xx) =c('x','y')
+     p$ylim=NULL
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
 
-      aout$subset = 'DFOcommercial'
+    aout$subset = 'DFOcommercial'
      write.csv(aout,file=file.path(fp,'indicators','DFO.adjrestratified.commercial.csv'))
- 
-
-  #DFO Georges
-      p$series =c('georges')# p$series =c('georges');p$series =c('fall')
-      p$define.by.polygons = F
-      p$lobster.subunits=F
-      p$years.to.estimate = c(2007:2015)
-      p$length.based = T
-      p$by.sex = T
-      p$sex = c(1,2)
-      p$size.class = c(83,300)
-      p$bootstrapped.ci=T
-      p$strata.files.return=F
-      p$vessel.correction.fixed=1.2
-      p$strat = NULL
-      p$clusters = c( rep( "localhost", 7) )
-      p$strata.efficiencies = F
-      p = make.list(list(yrs=p$years.to.estimate),Y=p)
-
-      
-
-# DFO survey All stations including adjacent
-      p$define.by.polygons = T
-      p$lobster.subunits=F
-      p$area = 'Georges.Canada'
-      p$reweight.strata = F #this subsets 
-      
-      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-      
-
-         #Figure
-                              p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.mean' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41georgesweightscommercial.png'
-
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
-
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+     
+    rm(aout)
 
 
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-      
-                       #total
-                                               p$add.reference.lines = F
-                              p$time.series.start.year = p$years.to.estimate[1]
-                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
-                              p$metric = 'weights' #weights
-                              p$measure = 'stratified.total' #'stratified.total'
-                              p$figure.title = ""
-                              p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41georgestotalweightscommercial.png'
-
-                          p$y.maximum = NULL # NULL # if ymax is too high for one year
-                        p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
-
-                                p$legend = FALSE
-                                p$running.median = T
-                                p$running.length = 3
-                                p$running.mean = F #can only have rmedian or rmean
-                               p$error.polygon=F
-                              p$error.bars=T
+#DFO Georges
+    p$series =c('georges')# p$series =c('georges');p$series =c('fall')
+    p$define.by.polygons = F
+    p$lobster.subunits=F
+    p$years.to.estimate = c(2007:2015)
+    p$length.based = T
+    p$by.sex = T
+    p$sex = c(1,2)
+    p$size.class = c(83,300)
+    p$bootstrapped.ci=T
+    p$strata.files.return=F
+    p$vessel.correction.fixed=1.2
+    p$strat = NULL
+    p$clusters = c( rep( "localhost", 7) )
+    p$strata.efficiencies = F
+    p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
 
-                     p$ylim2 = c(0,500)
-                        xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
-                              names(xx) =c('x','y')
-                       
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-      
 
-       aout$subset = 'DFOcommercial'
-      write.csv(aout,file=file.path(fp,'indicators','DFO.Georges.commercial.csv'))
- 
+    # DFO survey All stations including adjacent
+    p$define.by.polygons = T
+    p$lobster.subunits=F
+    p$area = 'Georges.Canada'
+    p$reweight.strata = F #this subsets 
+
+    aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+
+
+     #Figure
+    p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.mean' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name = 'lfa41georgesweightscommercial.png'
+
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
+
+
+     p$ylim2 = c(0,500)
+    xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+    names(xx) =c('x','y')
+     
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+    p$metric = 'numbers'
+    p$file.name = 'lfa41georgesnumberscommercial.png'
+    p$ylim =c(0,10)
+     
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+
+
+     #total
+     p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.total' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name = 'lfa41georgestotalweightscommercial.png'
+
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
+
+
+     p$ylim2 = c(0,500)
+    xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+    names(xx) =c('x','y')
+     
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+
+
+     aout$subset = 'DFOcommercial'
+    write.csv(aout,file=file.path(fp,'indicators','DFO.Georges.commercial.csv'))
+     

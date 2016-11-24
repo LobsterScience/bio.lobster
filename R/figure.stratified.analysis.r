@@ -92,7 +92,10 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 			}
 		}
 
-
+	if(exists('user.defined.references',p)) {
+				lines(x=c(l.reference.start.year,l.reference.end.year),y=c(lref,lref),col='blue',lty=1,lwd=2)
+				lines(x=c(u.reference.start.year,u.reference.end.year),y=c(uref,uref),col='blue',lty=1,lwd=3.5)
+		}
 	if(add.reference.lines) {
 			me = xp[which(xp$year>=reference.start.year & xp$year<=reference.end.year), 'mean' ]
 			if(reference.measure=='median')	xref = median(me)

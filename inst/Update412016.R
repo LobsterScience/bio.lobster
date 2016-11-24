@@ -84,15 +84,15 @@ require(PBSmapping)
 
 	bgcol<-rep('darkblue',nrow(RVindex))
 	#bgcol[which(RVindex$YEAR%in%(1995:1997))]<-'grey'
-	bgcol[which(RVindex$YEAR<1999)]<-'red'
+	bgcol[which(RVindex$YEAR<1999)]<-'white'
 
 	pdf(file.path( project.datadirectory("bio.lobster"), "R","LFA41updateFig32016.pdf"),8,6)
-	with(RVindex,plot(YEAR,RV4X,pch=21,col='lightblue',bg=bgcol,xlab='',ylab='Mean # / Tow',las=1,ylim=c(0,max(RV4X+RV4Xse,na.rm=T))))
+	with(RVindex,plot(YEAR,RV4X,pch=21,col='black',bg=bgcol,xlab='',ylab='Mean # / Tow',las=1,ylim=c(0,max(RV4X+RV4Xse,na.rm=T))))
 	with(RVindex,arrows(YEAR, RV4X+RV4Xse, YEAR, RV4X-RV4Xse ,code=3,angle=90,length=0.03))
-	with(RVindex,points(YEAR,RV4X,pch=21,col='lightblue',bg=bgcol))
+	with(RVindex,points(YEAR,RV4X,pch=21,col='black',bg=bgcol))
 	with(RVindex,lines(YEAR[-1],MVAvg3[-length(YEAR)],lty=3,col='blue',lwd=2))
 	lines(1995:2016,rep(1.48,length(1995:2016)),lty=3,col='green',lwd=2)
-	lines(1995:2016,rep(0.16,length(1995:2016)),lty=3,col='red',lwd=2)
+	lines(1995:2016,rep(0.16,length(1995:2016)),lty=1,col='red',lwd=2)
 	legend('topleft',c("3yr Moving Average","50% Median 1995-09","40% Median 1983-94"),col=c('blue','green','red'),lty=c(3,3,3),bty='n',inset=0.02,lwd=2)
 	dev.off()
 
