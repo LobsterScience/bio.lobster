@@ -154,3 +154,30 @@ fp = file.path(project.datadirectory('bio.lobster'),"analysis")
   			load(file = file.path(fp,'lfa41DFOadjrestratified.survey.efficiency.rdata'))
 			
 			surveyEfficPlot(aout,fname='lfa41DFOadjrestratified.pdf')
+
+
+###Georges Ban
+
+	p$series =c('georges')# p$series =c('georges');p$series =c('fall')
+			p$define.by.polygons = F
+			p$lobster.subunits=F
+			p$area = 'Georges.Canada'
+			p$years.to.estimate = c(1999:2015)
+			p$length.based = F
+			p$by.sex = F
+			p$bootstrapped.ci=F
+			p$strata.files.return=F
+			p$vessel.correction.fixed=1.2
+			p$strat = NULL
+			p$clusters = c( rep( "localhost", 7) )
+			p$strata.efficiencies = T
+			p = make.list(list(yrs=p$years.to.estimate),Y=p)
+
+			p$reweight.strata =F		
+	
+			aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
+			save(aout,file = file.path(fp,'lfa41georges.survey.efficiency.rdata'))
+  			load(file = file.path(fp,'lfa41georges.survey.efficiency.rdata'))
+			
+			surveyEfficPlot(aout,fname='lfa41georgesefficiency.pdf')
+

@@ -7,15 +7,14 @@ p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
 load_all('~/git/bio.survey/')
+load_all('~/git/bio.groundfish/')
+la()
 #NEFSC Setup
 
-base= list()
-restratified = list()
-adjacentrestratified = list()
       p$reweight.strata = F #this subsets 
       p$years.to.estimate = c(1969:2015)
       p$length.based = T
-      p$size.class= c(0,82)
+      p$size.class= c(50,82)
       p$by.sex = T
       p$sex = c(1,2) # male female berried c(1,2,3)
       p$bootstrapped.ci=T
@@ -42,7 +41,7 @@ adjacentrestratified = list()
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = 'lfa41NEFSCSpringbasenumberscommercial.png'
+                              p$file.name = 'lfa41NEFSCSpringbasenumbersrecruits.png'
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -56,13 +55,14 @@ adjacentrestratified = list()
                          p$ylim2 = c(0,500)
                         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
                               names(xx) =c('x','y')
+                              p$ylim=c(0,2)
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
   
 
      aout$subset = 'NEFSCSpringrecruits'
        write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.base.recruits.csv'))
-  
+  rm(aout)
 
 #Spring restratified to lfa41
       p$define.by.polygons = T
@@ -100,7 +100,7 @@ adjacentrestratified = list()
      
 aout$subset = 'NEFSCSpringrecruits'
 write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruits.csv'))
-
+rm(aout)
 
      
 
@@ -142,7 +142,7 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruit
      
       aout$subset = 'NEFSCSpringrecruits'
     write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.adjrestratified.recruits.csv'))
-
+rm(aout)
 
 
 #Fall Survey All stations not pruned by polygon
@@ -175,7 +175,7 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruit
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-
+                              p$ylim=c(0,4)
                 p$ylim2 = c(0,500)
                         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
                               names(xx) =c('x','y')
@@ -184,7 +184,7 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruit
 
       aout$subset = 'NEFSCFallrecruits'
         write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.base.recruits.csv'))
-    
+    rm(aout)
      
 #Fall restratified to lfa41
       p$define.by.polygons = T
@@ -225,7 +225,7 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruit
 
       aout$subset = 'NEFSCFallrecruits'
         write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.restratified.recruits.csv'))
-    
+    rm(aout)
 
 #Fall restratified to adjacentlfa41
       p$define.by.polygons = T
@@ -267,7 +267,7 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruit
       aout$subset = 'NEFSCFallrecruits'
       write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.adjrestratified.recruits.csv'))
     
-
+rm(aout)
 ##############################################################
 #DFO RV Setup
 
@@ -318,7 +318,7 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruit
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-
+                              p$ylim=c(0,5)
 
                      p$ylim2 = c(0,500)
                         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
@@ -329,7 +329,7 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruit
       aout$subset = 'DFOrecruits'
       write.csv(aout,file=file.path(fp,'indicators','DFO.base.recruits.csv'))
     
-
+rm(aout)
 
 
 
@@ -374,7 +374,7 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruit
     
      aout$subset = 'DFOrecruits'
       write.csv(aout,file=file.path(fp,'indicators','DFO.restratified.recruits.csv'))
- 
+ rm(aout)
 
 
 #DFO restratified to lfa41adjacent
@@ -417,7 +417,7 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruit
 
       aout$subset = 'DFOrecruits'
      write.csv(aout,file=file.path(fp,'indicators','DFO.adjrestratified.recruits.csv'))
- 
+ rm(aout)
 
   #DFO Georges
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
@@ -471,9 +471,10 @@ write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruit
                      p$ylim2 = c(0,500)
                         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
                               names(xx) =c('x','y')
-                       
+        p$ylim=c(0,1.5)               
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
       
        aout$subset = 'DFOrecruits'
       write.csv(aout,file=file.path(fp,'indicators','DFO.Georges.recruits.csv'))
  
+rm(aout)
