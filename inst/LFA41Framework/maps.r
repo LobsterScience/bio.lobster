@@ -66,3 +66,50 @@ a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T)
 
 	dev.off()
 
+
+
+#areas within each polygon
+
+#LFA41 total
+		LFA41 = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))
+				LFA41 = joinPolys(as.PolySet(LFA41),operation='UNION')
+				LFA41 = subset(LFA41,SID==1)
+				attr(LFA41,'projection') <- 'LL'
+
+a41 = calcArea(LFA41)$area
+#32686
+
+#Summer strata
+			  a = find.bio.gis('summer_strata_labels',return.one.match=F)
+			  a = read.csv(a,header=T)
+			  names(a)[4] <- 'label'
+			  b = find.bio.gis('strat.gf',return.one.match=F)
+			  b = read.table(b)
+			  names(b) <- c('X','Y','PID')
+			  b = within(b,{POS <- ave(PID,list(PID),FUN=seq_along)})
+			  d = joinPolys(LFA41,b,'INT')
+			  attr(d,'projection') <- "LL"
+			  d = joinPolys(d,operation='UNION')
+			  d = calcArea(d)
+			  RVa = sum(d$area)
+# 14597 / 32686 = 0.446
+ 
+
+			  b = file.path(project.datadirectory('bio.polygons'),'data','Science','PED','GeorgesBankStrata.rdata')
+			  load(b)
+			  d = joinPolys(LFA41,out,'INT')
+			  attr(d,'projection') <- "LL"
+			  d = joinPolys(d,operation='UNION')
+			  d = calcArea(d)
+			  GBa = sum(d$area)
+# 7274 / 32686 = 0.222
+
+     		   b = importShapefile(find.bio.gis('bts',return.one.match=F))
+			  d = joinPolys(LFA41,b,'INT')
+			  attr(d,'projection') <- "LL"
+			  d = joinPolys(d,operation='UNION')
+			  d = calcArea(d)
+			USa = sum(d$area)
+#194119 / 32686 = 0.594 
+
+  # 

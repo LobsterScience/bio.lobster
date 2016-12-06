@@ -26,14 +26,15 @@ la()
 	for(j in 1:length(h)) {
 			g = h[[j]]
 			y = unique(g$yr)
-			g$Mat = ifelse(g$FLEN>=95,1,0)
+			g$Mat = exp(-17.8583 +(0.1894 *g$FLEN)) / (1+exp(-17.8583 +(0.1894 *g$FLEN))) #pezzack and duggan 1989
 			g$Fec = (g$Mat * 0.0031829 * g$FLEN ^ 3.353501)  # campbell and Robinson 1983
 			g$Fecl = g$Fec * g$n.ci.Yst.l / 1000000
 			g$Fecu = g$Fec * g$n.ci.Yst.u / 1000000
 			g$Fecm = g$Fec * g$n.Yst / 1000000
       nn = sum(g$ObsLobs)
-			n = aggregate(cbind(Fecm,Fecl,Fecu)~yr,data = g, FUN=sum, na.rm=T)
-			out = rbind(out,n)
+			#n = aggregate(cbind(Fecm,Fecl,Fecu)~yr,data = g, FUN=sum, na.rm=T)
+			n = aggregate(Fecm~yr,data = g, FUN=sum, na.rm=T)
+      out = rbind(out,n)
 			}
  							  p=list()
 			                  p$add.reference.lines = F
@@ -57,7 +58,8 @@ la()
                               p$error.bars=T
 
                               p$ylim2 = c(0,500)
-                             
+        if(i %in% c(2,5,8,10)) {p$ylim = NULL; p$file.name = paste('NOY',p$file.name,sep="-")}
+        
                        figure.stratified.analysis(x=out,out.dir = 'bio.lobster', x2 = af, p=p,sampleSizes=T)
          names(af) = c('yr','ObsLobs')
          out = merge(out,af)

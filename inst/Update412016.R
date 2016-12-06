@@ -61,8 +61,62 @@ require(PBSmapping)
 ##                      ##
 
 
-	# Summer Survey index for 4X
-	RVS4X.lst<-GroundfishSurveyProcess(Strata=c(477,478,480,481,482,483,484),Years=1980:2016) 
+	
+#	RVS4X.lst<-GroundfishSurveyProcess(Strata=c(477,478,480,481,482,483,484),Years=1980:2016) 
+
+# Summer Survey index for 4X
+p = bio.lobster::load.environment()
+p$libs = NULL
+fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+load_all('~/git/bio.survey/')
+
+
+    p$series =c('summer')# p$series =c('georges');p$series =c('fall')
+      p$define.by.polygons = F
+      p$lobster.subunits=F
+      p$area = 'custom'
+      p$strat = c(477,478,480:484)
+      p$years.to.estimate = c(1970:2016)
+      p$length.based = F
+      p$by.sex = F
+      p$bootstrapped.ci=T
+      p$strata.files.return=F
+      p$vessel.correction.fixed=1.2
+      p$clusters = c( rep( "localhost", 7) )
+      p$strata.efficiencies = F
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
+
+      
+
+# DFO survey All stations including adjacent
+      p$define.by.polygons = F
+      p$lobster.subunits=F
+      p$reweight.strata = F #this subsets 
+      
+      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+    aout$MVAvg3<-mavg(aout$n.yst)
+    aout = subset(aout,yr>1979)
+	
+	bgcol<-rep('darkblue',nrow(aout))
+	#bgcol[which(RVindex$YEAR%in%(199))]<-'grey'
+	bgcol[which(aout$yr<1999)]<-'white'
+
+	pdf(file.path( project.datadirectory("bio.lobster"), "R","LFA41updateFig32016.pdf"),8,6)
+	with(aout,plot(yr,n.yst,pch=21,col='black',bg=bgcol,xlab='',ylab='Mean # / Tow',las=1,ylim=c(0,max(n.yst+n.yst.se,na.rm=T))))
+	with(aout,arrows(yr, n.yst+n.yst.se, yr, n.yst-n.yst.se ,code=3,angle=90,length=0.03))
+	with(aout,points(yr,n.yst,pch=21,col='black',bg=bgcol))
+	with(aout,lines(yr[-1],MVAvg3[-length(yr)],lty=3,col='blue',lwd=2))
+	lines(1995:2016,rep(1.48,length(1995:2016)),lty=3,col='green',lwd=2)
+	lines(1995:2016,rep(0.16,length(1995:2016)),lty=1,col='red',lwd=2)
+	legend('topleft',c("3yr Moving Average","50% Median 1995-09","40% Median 1983-94"),col=c('blue','green','red'),lty=c(3,3,1),bty='n',inset=0.02,lwd=2)
+	dev.off()
+
+
+
+
+
+
+
 	RVS4Xlgf.lst<-GroundfishSurveyProcess(size.range=c(140,240),series='summer',length.based=T,Sex=2:3,Strata=c(480:481),Years=1999:2016) 
 	
 	RVS4XLths<-GroundfishSurveyProcess(size.range=c(20,240),Lengths=T,series='summer',length.base=T,Sex=2:3,Strata=c(480:481),Years=1999:2016) 

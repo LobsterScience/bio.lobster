@@ -120,6 +120,7 @@ a = c('stratified.georges.Georges.Canada.base.length.83-300.male&female.sexed.rd
 		Lm$relF.u = Lm$landings / Lm$w.ci.Yst.l
 		Lm$relF.l = Lm$landings / Lm$w.ci.Yst.u
 
+
 		# can not use zeros, using interpolation to fill in 0's
 
 		save(Lm,file=file.path(fp,'BiomassLandingsSummer1981-2015.rdata'))
@@ -224,46 +225,26 @@ a = c('stratified.georges.Georges.Canada.base.length.83-300.male&female.sexed.rd
              
 
 ##spring
-			   b = importShapefile(find.bio.gis('bts',return.one.match=F))
-			  
-
+	   b = importShapefile(find.bio.gis('bts',return.one.match=F))
 	  load(file.path(fp,'stratified.nefsc.spring.LFA41.restratified.length.83-300.male&female.sexed.rdata'))
-
-			out = out[,c('yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')]
+	out = out[,c('yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')]
 
 			b = findPolys(completeFun(a41,c('X','Y')),b)$EID
 			aS = subset(a41,EID %in% b)
-
 			fy = unique(aS$fishingYear)
-			fy = 1999:2015
 
-			pdf(file.path( project.figuredirectory("bio.lobster"), "NEFSCSeasonalFishingPattern.pdf"),8,11)
-
-			for(i in 1:length(fy)) {
-				if(i %in% seq(1,90,by=9)){
-					#x11()
-					par(mfrow=c(3,3),mar=c(0,0,0,0))
-					}
-				w = subset(aS,fishingYear==fy[i])
-					fishing.season(w[,c('DATE_FISHED','ADJCATCH')],smooth=0.05)
-					}
-				dev.off()
-
-		#treating fishing year and survey year as same..
 		La = aggregate(ADJCATCH~fishingYear,data=aS,FUN=sum)
 		La$landings = La$ADJCATCH / 1000
 		La = rename.df(La,'fishingYear','yr')
-	 png(file=file.path(fn,'NEFSCSurveyLandings.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
-	
-		plot(La$yr,La$landings,type='l',xlab='Year',ylab='Landings')
-		dev.off()
 		
 		Lm = merge(out,La,all.x=T)
+		Lm = subset(Lm,yr>1980)
+		save(Lm, file=file.path(fp,'BiomassLandingsSpringNEF1981-2015.rdata'))
 		Lm$relF = Lm$landings / Lm$w.Yst
 		Lm$relF.u = Lm$landings / (Lm$w.ci.Yst.l+0.00001)
 		Lm$relF.l = Lm$landings / (Lm$w.ci.Yst.u+0.00001)
 		Lm = Lm[,c('yr','relF','relF.l','relF.u')]
-		Lm = subset(Lm,yr>1980)
+		
 		            #Figure
                               p$add.reference.lines = F
                               p$time.series.start.year = 1981
@@ -316,11 +297,15 @@ a = c('stratified.georges.Georges.Canada.base.length.83-300.male&female.sexed.rd
 		La$landings = La$ADJCATCH / 1000
 		La = rename.df(La,'fishingYear','yr')
 		Lm = merge(out,La,all.x=T)
+		Lm = subset(Lm,yr>1980)
+
+	save(Lm,file=file.path(fp,'BiomassLandingsFall1981-2015.rdata'))
+
+
 		Lm$relF = Lm$landings / Lm$w.Yst
 		Lm$relF.u = Lm$landings / (Lm$w.ci.Yst.l+0.00001)
 		Lm$relF.l = Lm$landings / (Lm$w.ci.Yst.u+0.00001)
 		Lm = Lm[,c('yr','relF','relF.l','relF.u')]
-		Lm = subset(Lm,yr>1980)
 		            #Figure
                               p$add.reference.lines = F
                               p$time.series.start.year = 1981
