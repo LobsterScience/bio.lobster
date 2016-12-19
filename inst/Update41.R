@@ -202,7 +202,7 @@ loadfunctions(c('lobster','groundfish','BIOsurvey','utility'))
 
 ##______________________##
 ##                      ##
-##       BYCATCH	      ##
+##       BYCATCH	    ##
 ##______________________##
 ##                      ##
 
@@ -377,7 +377,7 @@ loadfunctions(c('lobster','groundfish','BIOsurvey','utility'))
 	finaldata$NAFOAREA[finaldata$OFFAREA %in% c('3SEBROWNS','4WBROWNS')] <- "4X"
 
 	yrs<-sort(unique(finaldata$YEAR))
-	table4X<-sapply(yrs,function(y){with(subset(finaldata,NAFOAREA=="4X"&YEAR==y),tapply(TotalDiscards,COMMON,sum))})
+	table4X<-sapply(yrs,function(y){with(subset(finaldata,NAFOAREA=="4X"&YEAR==y),tapply(TotalDiscards,COMMON,sum,na.rm=T))})
 	table4X<-data.frame(round(table4X[order(rowSums(table4X),decreasing=T),]))
 	names(table4X)<-yrs
 	table4X
