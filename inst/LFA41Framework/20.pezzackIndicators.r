@@ -169,9 +169,9 @@ load_all('~/git/bio.survey/')
 	                                p$running.mean = F #can only have rmedian or rmean
 	                               p$error.polygon=F
 	                              p$error.bars=T
-	                              p$ylim=c(0,10)
+	                              p$ylim=c(0,6)
 
-	                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+	                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,save=T)
 
 ###############################################
 #Large Females
@@ -273,3 +273,64 @@ pdf(file=file.path(project.figuredirectory('bio.lobster'),paste('pezzack480481ma
         addPolys(b,lty=1,border='red',col=adjustcolor('yellow',alpha.f=1))
     addPolys(LFA41,border='blue',lwd=2)
   dev.off() 
+
+
+### Georges large females
+
+p = bio.lobster::load.environment()
+p$libs = NULL
+fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+load_all('~/git/bio.survey/')
+
+  p$series =c('georges')# p$series =c('georges');p$series =c('fall')
+      p$define.by.polygons = F
+      p$lobster.subunits=F
+      p$years.to.estimate = c(2007:2015)
+      p$length.based = T
+      p$by.sex = T
+      p$sex = c(2,3)
+           p$size.class = c(140,300)
+ 
+      p$bootstrapped.ci=T
+      p$strata.files.return=F
+      p$vessel.correction.fixed=1.2
+      p$strat = c('5Z1','5Z2','5Z3','5Z4')
+      p$clusters = c( rep( "localhost", 7) )
+      p$strata.efficiencies = F
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
+
+      
+
+# DFO survey All stations including adjacent
+      p$define.by.polygons = F
+      p$lobster.subunits=F
+      p$area = 'custom'
+      p$reweight.strata = F #this subsets 
+      
+      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+      
+
+           #Figure
+                                p$add.reference.lines = F
+                                p$time.series.start.year = p$years.to.estimate[1]
+                                p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+                                p$metric = 'numbers' #weights
+                                p$measure = 'stratified.mean' #'stratified.total'
+                                p$figure.title = ""
+                                p$reference.measure = 'median' # mean, geomean
+                                p$file.name = 'largefemalepezzackgeorges.png'
+
+                            p$y.maximum = NULL # NULL # if ymax is too high for one year
+                          p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+
+                                  p$legend = FALSE
+                                  p$running.median = T
+                                  p$running.length = 3
+                                  p$running.mean = F #can only have rmedian or rmean
+                                 p$error.polygon=F
+                                p$error.bars=T
+                                p$ylim=c(0,1.5)
+
+                         ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,save=T)
+
+###############################################

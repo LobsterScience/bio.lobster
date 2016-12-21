@@ -69,6 +69,7 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 				rmean = runmed(xpo,k=running.length,endrule='median')
 				yp = data.frame(mean = rmean, year=xpy)
 				lines(yp$year,yp$mean,lty=1,lwd=3,col='salmon')
+				rmean.yr = yp$year; rmean = yp$mean
 		  	} else {
       	rmean = runmed(xpp$mean,k=running.length,endrule='median')
         rmean.yr = xpp$year[1:length(xpp$year)]
@@ -133,7 +134,7 @@ if(sampleSizes) {
 if(exists('box',p)) {box(lwd=3)}
 if(save) dev.off()
 if(add.reference.lines) {return(c(Reference=xref,Reflow=lxref,Refhi=uxref))}
-if(exists('return.running',p)) {return(yp)}
+if(exists('return.running',p)) {return(data.frame(yr=rmean.yr,mean=rmean))}
 	})
 }
 

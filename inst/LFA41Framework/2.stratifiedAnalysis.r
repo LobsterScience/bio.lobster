@@ -587,7 +587,7 @@ load_all('~/git/bio.survey/')
       p$area = 'Georges.Canada'
       p$reweight.strata = F #this subsets 
       
-      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=T)
       
 
          #Figure

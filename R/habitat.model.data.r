@@ -252,8 +252,13 @@ if(DS %in% c('prediction.surface')) {
 							
   						for(y in p$yrs) {
     						T = indicators.lookup(p=p,DS='temperature.seasonal',yr=y)
-    						d = p$dyear * 10
-    						H = data.frame(H,T[,d])
+    						if(p$annual.T.means) {
+    							T = rowMeans(T,na.rm=TRUE)
+    						} else {
+    						d= p$dyear * 10
+    						T = T[,d]
+    					    }
+    						H = data.frame(H,T)
     						names(H)[ncol(H)] <- paste('x',y,sep='.')    						 
     						}
 				        return(H)

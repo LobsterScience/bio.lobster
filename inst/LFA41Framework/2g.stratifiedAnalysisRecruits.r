@@ -95,8 +95,13 @@ la()
                        p$ylim2 = c(0,500)
                         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
                               names(xx) =c('x','y')
+                              p$ylim=c(0,2)
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+                              p$ylim=NULL
+                      p$file.name = 'NOYlfa41NEFSCSpringrestratifiednumbersrecruits.png'
+                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+                      
      
 aout$subset = 'NEFSCSpringrecruits'
 write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.recruits.csv'))
@@ -137,6 +142,7 @@ rm(aout)
                             p$ylim2 = c(0,500)
                         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
                               names(xx) =c('x','y')
+                              p$ylim=c(0,2)
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      
@@ -215,14 +221,15 @@ rm(aout)
                                p$error.polygon=F
                               p$error.bars=T
 
-
                      p$ylim2 = c(0,500)
                         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
                               names(xx) =c('x','y')
                        
                            ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-     
-
+                    p$ylim=NULL
+                    p$file.name = 'NOYlfa41NEFSCFallrestratifiednumbersrecruits.png'
+                   ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+                   p$ylim=c(0,4)
       aout$subset = 'NEFSCFallrecruits'
         write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.restratified.recruits.csv'))
     rm(aout)
@@ -371,10 +378,13 @@ rm(aout)
                               names(xx) =c('x','y')
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
-    
+                      p$ylim=NULL
+                      p$file.name = 'NOYlfa41DFOrestratifiednumbersrecruits.png'
+                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
      aout$subset = 'DFOrecruits'
       write.csv(aout,file=file.path(fp,'indicators','DFO.restratified.recruits.csv'))
  rm(aout)
+   p$ylim=c(0,5)
 
 
 #DFO restratified to lfa41adjacent
@@ -467,7 +477,7 @@ rm(aout)
                                p$error.polygon=F
                               p$error.bars=T
 
-
+p$ylim = NULL
                      p$ylim2 = c(0,500)
                         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
                               names(xx) =c('x','y')
