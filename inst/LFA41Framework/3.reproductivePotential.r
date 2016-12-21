@@ -26,8 +26,10 @@ la()
 	for(j in 1:length(h)) {
 			g = h[[j]]
 			y = unique(g$yr)
-			g$Mat = exp(-17.8583 +(0.1894 *g$FLEN)) / (1+exp(-17.8583 +(0.1894 *g$FLEN))) #pezzack and duggan 1989
-			g$Fec = (g$Mat * 0.0031829 * g$FLEN ^ 3.353501)  # campbell and Robinson 1983
+			#g$Mat = exp(-17.8583 +(0.1894 *g$FLEN)) / (1+exp(-17.8583 +(0.1894 *g$FLEN))) #pezzack and duggan 1989
+			g$Mat = 1 / (1+exp(-(-22.5522 +0.2455 *g$FLEN))) #gaudette 2016 from offshore lobsters collected in 2016
+      g$Mat = ifelse(g$FLEN<120, g$Mat/2,g$Mat*(2/3))
+      g$Fec = (g$Mat * 0.0031829 * g$FLEN ^ 3.353501)  # campbell and Robinson 1983
 			g$Fecl = g$Fec * g$n.ci.Yst.l / 1000000
 			g$Fecu = g$Fec * g$n.ci.Yst.u / 1000000
 			g$Fecm = g$Fec * g$n.Yst / 1000000

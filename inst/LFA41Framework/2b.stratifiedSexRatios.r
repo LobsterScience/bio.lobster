@@ -319,7 +319,7 @@ load_all('~/git/bio.survey/')
       p$clusters = c( rep( "localhost", 7) )
       p$strata.efficiencies = F
       p = make.list(list(yrs=p$years.to.estimate),Y=p)
-      p$size.class = c(95,300)
+      p$size.class = c(92,300)
       
 
 # DFO survey All stations including adjacent
@@ -365,7 +365,7 @@ load_all('~/git/bio.survey/')
         p$clusters = c( rep( "localhost", 7) )
         p$strata.efficiencies = F
         p = make.list(list(yrs=p$years.to.estimate),Y=p)
-        p$size.class = c(95,300)
+        p$size.class = c(92,300)
         a = list(1,c(2,3))
         out = list()
         for(i in 1:length(a)) {
@@ -400,7 +400,7 @@ load_all('~/git/bio.survey/')
         p$clusters = c( rep( "localhost", 7) )
         p$strata.efficiencies = F
         p = make.list(list(yrs=p$years.to.estimate),Y=p)
-        p$size.class=c(95,300)
+        p$size.class=c(92,300)
         a = list(1,c(2,3))
         out = list()
         for(i in 1:length(a)) {
@@ -420,7 +420,7 @@ load_all('~/git/bio.survey/')
       p$reweight.strata = F #this subsets 
       p$years.to.estimate = c(1969:2015)
       p$length.based = T
-      p$size.class= c(95,300)
+      p$size.class= c(92,300)
       p$by.sex = T
       p$sex = c(1,2) # male female berried c(1,2,3)
       p$bootstrapped.ci=F
@@ -558,7 +558,7 @@ write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','ind
       p$strat = NULL
       p$clusters = c( rep( "localhost", 7) )
       p$strata.efficiencies = F
-      p$size.class = c(95,300)
+      p$size.class = c(92,300)
       p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
       
@@ -612,7 +612,7 @@ load_all('~/git/bio.survey/')
       p$clusters = c( rep( "localhost", 7) )
       p$strata.efficiencies = F
       p = make.list(list(yrs=p$years.to.estimate),Y=p)
-      p$size.class = c(0,94)
+      p$size.class = c(0,91)
       
 
 # DFO survey All stations including adjacent
@@ -658,7 +658,7 @@ load_all('~/git/bio.survey/')
         p$clusters = c( rep( "localhost", 7) )
         p$strata.efficiencies = F
         p = make.list(list(yrs=p$years.to.estimate),Y=p)
-        p$size.class = c(0,94)
+        p$size.class = c(0,91)
         a = list(1,c(2,3))
         out = list()
         for(i in 1:length(a)) {
@@ -693,7 +693,7 @@ load_all('~/git/bio.survey/')
         p$clusters = c( rep( "localhost", 7) )
         p$strata.efficiencies = F
         p = make.list(list(yrs=p$years.to.estimate),Y=p)
-        p$size.class=c(0,94)
+        p$size.class=c(0,91)
         a = list(1,c(2,3))
         out = list()
         for(i in 1:length(a)) {
@@ -713,7 +713,7 @@ load_all('~/git/bio.survey/')
       p$reweight.strata = F #this subsets 
       p$years.to.estimate = c(1969:2015)
       p$length.based = T
-      p$size.class= c(0,94)
+      p$size.class= c(50,91)
       p$by.sex = T
       p$sex = c(1,2) # male female berried c(1,2,3)
       p$bootstrapped.ci=F
@@ -852,7 +852,7 @@ load_all('~/git/bio.survey/')
       p$strat = NULL
       p$clusters = c( rep( "localhost", 7) )
       p$strata.efficiencies = F
-      p$size.class = c(0,94)
+      p$size.class = c(0,91)
       p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
       

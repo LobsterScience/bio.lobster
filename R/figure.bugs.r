@@ -1,5 +1,5 @@
 
-  figure.bugs = function( vname="", type="density", sb=NULL, y=NULL, fn=NULL, labs=c("N-ENS","S-ENS","4X") ,save.plot=T) {
+  figure.bugs = function( vname="", type="density", sb=NULL, y=NULL, fn=NULL, xlab="" ,save.plot=T) {
   sb$IOA = sb$I
     yrs0 = sb$yr
     yrs = sb$yr
@@ -32,7 +32,7 @@
 
            prr$meanlog= sb$K.a
            prr$sdlog = sqrt(sb$K.b)
-          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat )
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat ,xlab=xlab)
          
      }
 
@@ -43,9 +43,9 @@
           prr=NULL
           prr$class='normal'
           prr$mean=sb$r.a
-          prr$sd=sqrt(sb$r.b)
+          prr$sd=1/sqrt(sb$r.b)
           pdat = as.vector(y$r[,,])
-          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat )
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat ,xlab=xlab)
       }
 
 
@@ -56,10 +56,46 @@
         pdat = as.vector(y$q[,,])
         prr=NULL
         prr$class='uniform'
-        prr$max=1
-        prr$min=0.001
-          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat )
+        prr$max=7
+        prr$min=0.01
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat,xlab=xlab )
       }
+
+   if ( vname=="q2" ) {
+        qs = apply( y$q2[,,], 1, quantile, probs=c(0.025, 0.5, 0.975) )
+        qs = signif( qs, 3 )
+        pdat = as.vector(y$q2[,,])
+        prr=NULL
+        prr$class='uniform'
+        prr$max=7
+        prr$min=0.01
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat ,xlab=xlab)
+      }
+
+    if ( vname=="q3" ) {
+        qs = apply( y$q3[,,], 1, quantile, probs=c(0.025, 0.5, 0.975) )
+        qs = signif( qs, 3 )
+        pdat = as.vector(y$q3[,,])
+        prr=NULL
+        prr$class='uniform'
+        prr$max=7
+        prr$min=0.01
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat ,xlab=xlab)
+      }
+
+ 
+    if ( vname=="q4" ) {
+        qs = apply( y$q4[,,], 1, quantile, probs=c(0.025, 0.5, 0.975) )
+        qs = signif( qs, 3 )
+        pdat = as.vector(y$q4[,,])
+        prr=NULL
+        prr$class='uniform'
+        prr$max=7
+        prr$min=0.01
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat ,xlab=xlab)
+      }
+
+ 
 
       
       if ( vname=="BMSY" ) {
@@ -68,7 +104,7 @@
           pdat = as.vector(y$K[,,]/2)
           prr=NULL
           prr$class="none"
-          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat )
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat ,xlab=xlab)
        }
   
       if ( vname=="FMSY" ) {
@@ -77,29 +113,74 @@
           pdat = as.vector(y$r[,,]/2)
           prr=NULL
           prr$class="none"
-          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat )
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat ,xlab=xlab)
         }
 
-	if ( vname=="sd.o" ) {
+	if ( vname=="sd.oa" ) {
+        qs = apply( y$sd.oa[,,], 1, quantile, probs=c(0.025, 0.5, 0.975) )
+        qs = signif( qs, 3 )
+       
+          pdat = as.vector(y$sd.oa[,,])
+          prr=NULL
+          prr$class="uniform"
+          prr$max= 7 
+          prr$min= 0.01
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat ,xlab=xlab)
+      }
+      if ( vname=="sd.ob" ) {
+        qs = apply( y$sd.ob[,,], 1, quantile, probs=c(0.025, 0.5, 0.975) )
+        qs = signif( qs, 3 )
+       
+          pdat = as.vector(y$sd.ob[,,])
+          prr=NULL
+          prr$class="uniform"
+          prr$max= 7 
+          prr$min= 0.01
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat ,xlab=xlab)
+      }
+  if ( vname=="sd.oc" ) {
+        qs = apply( y$sd.oc[,,], 1, quantile, probs=c(0.025, 0.5, 0.975) )
+        qs = signif( qs, 3 )
+       
+          pdat = as.vector(y$sd.oc[,,])
+          prr=NULL
+          prr$class="uniform"
+          prr$max= 7 
+          prr$min= 0.01
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat,xlab=xlab )
+      }
+  if ( vname=="sd.od" ) {
+        qs = apply( y$sd.od[,,], 1, quantile, probs=c(0.025, 0.5, 0.975) )
+        qs = signif( qs, 3 )
+       
+          pdat = as.vector(y$sd.od[,,])
+          prr=NULL
+          prr$class="uniform"
+          prr$max= 7 
+          prr$min= 0.01
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat,xlab=xlab )
+      }
+  if ( vname=="sd.o" ) {
         qs = apply( y$sd.o[,,], 1, quantile, probs=c(0.025, 0.5, 0.975) )
         qs = signif( qs, 3 )
        
           pdat = as.vector(y$sd.o[,,])
           prr=NULL
-          prr$class="lognormal"
-          prr$meanlog= 1 
-          prr$sdlog= 1
-          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat )
+          prr$class="uniform"
+          prr$max= 7 
+          prr$min= 0.01
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat,xlab=xlab )
       }
+  
           if ( vname=="sd.p" ) {
         qs = apply( y$sd.p[,,], 1, quantile, probs=c(0.025, 0.5, 0.975) )
         qs = signif( qs, 3 )
           pdat = as.vector(y$sd.p[,,])
           prr=NULL
-          prr$class="lognormal"
-          prr$meanlog=1
-          prr$sdlog=1
-          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat )
+          prr$class="uniform"
+          prr$max=7
+          prr$min=0.01
+          plot.freq.distribution.prior.posterior( prior=prr, posterior=pdat,xlab=xlab )
          }
 
      
@@ -116,7 +197,7 @@
           IOA = sb$I 
           meanval = apply( y$B[,,], 1, mean, na.rm=T  )
 
-          prs = seq( from=0.25, to=0.75, length.out=600)
+          prs = seq( from=0.25, to=0.75, length.out=1000)
           Bq =  apply( y$B[,,], 1, quantile, probs=prs, na.rm=T  )
 
           yran = range(c(0, Bq, sb$I ), na.rm=T )*1.01
@@ -139,10 +220,11 @@
       if (vname=="fishingmortality") { 
         Fmsy = apply( y$r/2, 1, mean, na.rm=T ) 
         
-          prs = seq( from=0.25, to=0.75, length.out=600)
+          prs = seq( from=0.25, to=0.75, length.out=1000)
           Fi = apply( y$F[1:sb$N,,], 1, quantile, probs=prs, na.rm=T )
-          yran = range(c(0, max(c(Fi,Fmsy))), na.rm=T )*1.01
-          yran = pmin( yran, 1.2 )
+          
+          yran = c(0, 1.5)
+          #yran = pmin( yran, 1.2 )
           plot( yrs0, Fi[1,], type="n", ylim=yran, xlab="", ylab="" )
           cols = gray.colors( floor(length( prs)/2) )
           cols2 = c(cols[length(cols):1], cols )
@@ -152,18 +234,18 @@
           title( ylab="Fishing mortality" ) 
           title( xlab="Year" ) 
         #  abline (h=-log(1-0.2), lwd=2, lty="dashed" )
-          abline (h=mean(y$r/2), lwd=2, lty="solid", col="red" )
+       #   abline (h=mean(y$r/2), lwd=2, lty="solid", col="red" )
     
     }
 
     if (type=="hcr") {
       if (vname=="default") {
-          B =  apply( y$B, c(1), mean, na.rm=T  )
-          F =  apply( y$F, c(1), mean, na.rm=T  )
-          K =  apply( y$K, c(1), mean, na.rm=T  )
-          FMSY = apply( y$r/2, c(1), mean, na.rm=T  )
-          BMSY = apply( y$K/2, c(1), mean, na.rm=T  )
-
+          B =  apply( y$B, c(1), median, na.rm=T  )
+          F =  apply( y$F, c(1), median, na.rm=T  )
+          K =  apply( y$K, , median, na.rm=T  )
+          FMSY = apply( y$r/2, median, na.rm=T  )
+          BMSY = apply( y$K/2, median, na.rm=T  )
+browser()
           ylims = c(0, min( 1, max( FMSY * 1.25, F[hdat] ) ) )
           plot( B[hdat], F[hdat],  type="b", xlim=c(0, K * 1.1 ),  
             ylim=ylims, col="darkorange", cex=0.8, lwd=2, xlab="", ylab="", pch=20 )

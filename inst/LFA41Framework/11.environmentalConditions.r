@@ -21,15 +21,23 @@ write.csv(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','ind
 #NAO
 
 u = 'ftp://ftp.cpc.ncep.noaa.gov/cwlinks/norm.daily.nao.index.b500101.current.ascii'
-l = readLines(u)
+l =readLines(u)
 e = sapply(strsplit(l, split=" "), function(x) rbind(x))
 e = lapply(e,function(x) { a = which(x==""); x[-a]})
+e = Filter(length,e)
 f = as.data.frame(do.call(rbind,e))
 
 names(f) = c('yr','mon','d','nao')
 f = toNums(f,c('yr','mon','d','nao'))
 f = f[-which.max(f$nao),]
 
+ u = 'https://www.ncdc.noaa.gov/teleconnections/nao/data.csv'
+ l = read.csv(u,header=T)
+ l = as.data.frame(l[-1,])
+ l$yr = c(rep(1950:2015, each=12),rep(2016,11))
+names(l)[1] <- 'NAO'
+l$NAO = as.numeric(l$NAO)
+a = aggregate(NAO~yr,data=l,FUN=mean)
 ###not really worth including seasonal changes not quite the same for annual
 
 

@@ -18,6 +18,7 @@
 \newcommand{\D}{.}
 \newcommand{\tl}{\textless}
 \newcommand{\e}{/backup/bio_data/bio.lobster/figures/} %change this to set figure directory
+\newcommand{\spm}{/backup/bio_data/bio.lobster/spmodelling/lfa41/}
 
 
 \begin{document}
@@ -48,14 +49,14 @@
 \end{figure}
 
 \begin{landscape}
-\begin{figure}
-\centering
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41Logs\D 2002\D 2007\D .pdf}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41Logs\D 2007\D 2012\D .pdf}}\\
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41Logs\D 2013\D 2018\D .pdf}}
-\caption{Map showing spatial location of fishing in offshore LFA41 between 2003 to 2007 (topleft), 2008 to 2012 (topright) and 2013 to 2015 (bottom) as obtained from fishery logbook information. Overlaid in red are the offshore polygons which will be used to describe the fishery data into zones. }
-\end{figure}
-\clearpage
+%\begin{figure}
+%\centering
+%\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41Logs\D 2002\D 2007\D .pdf}}
+%\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41Logs\D 2007\D 2012\D .pdf}}\\
+%\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41Logs\D 2013\D 2018\D .pdf}}
+%\caption{Map showing spatial location of fishing in offshore LFA41 between 2003 to 2007 (topleft), 2008 to 2012 (topright) and 2013 to 2015 (bottom) as obtained from fishery %logbook information. Overlaid in red are the offshore polygons which will be used to describe the fishery data into zones. }
+%\end{figure}
+%\clearpage
 
 \begin{figure}
 \centering
@@ -83,124 +84,479 @@
 
 \end{landscape}
 
+%survey length frequencies 
+\begin{figure}
+\centering
+    \includegraphics[width=0.8\textwidth]{\e DFORVSurveyLengthFreqAllv41.png}
+    \caption{Comparison of sampled length frequencies from the DFO summer RV survey for the entire surveyed area (red) and the lobsters sampled within LFA14 (black). Densities were scaled to the maximum density estimated.}
+\end{figure}
+
 %survey bubbles
+        \begin{figure}
+        \centering
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1970\D 1974.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1975\D 1979.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1980\D 1984.pdf}}\\
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1985\D 1989.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1990\D 1994.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1995\D 1999.pdf}}\\
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2000\D 2004.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2005\D 2009.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2010\D 2014.pdf}}\\
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2015\D 2015.pdf}}\\
 
 
-\begin{figure}
-\centering
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1970\D 1974.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1975\D 1979.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1980\D 1984.pdf}}\\
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1985\D 1989.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1990\D 1994.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1995\D 1999.pdf}}\\
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2000\D 2004.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2005\D 2009.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2010\D 2014.pdf}}\\
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2015\D 2015.pdf}}\\
-
-
- \caption{Map of the abundance of lobster captured during DFO's summer RV survey of the Scotian Shelf. Strata boundaries are outlined in red and LFA 41 stock boundaries are outlined in blue. Size of the symbols are scaled to the number observed within each tow.}
-\end{figure}
-\clearpage
-
-
-
-\begin{figure}
-\centering
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1969\D 1974.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1975\D 1979.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1980\D 1984.pdf}}\\
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1985\D 1989.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1990\D 1994.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1995\D 1999.pdf}}\\
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 2000\D 2004.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 2005\D 2009.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 2010\D 2014.pdf}}\\
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 2015\D 2015.pdf}}\\
-
-
- \caption{Map of the abundance of lobster captured during during NEFSC's Spring Survey of the Gulf of Maine, Georges Bank and Scotian Shelf. Strata boundaries are outlined in red and LFA 41 stock boundaries are outlined in blue. Size of the symbols are scaled to the number observed within each tow.}
-\end{figure}
-\clearpage
-
-
-\begin{figure}
-\centering
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1969\D 1974.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1975\D 1979.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1980\D 1984.pdf}}\\
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1985\D 1989.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1990\D 1994.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1995\D 1999.pdf}}\\
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 2000\D 2004.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 2005\D 2009.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 2010\D 2014.pdf}}\\
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 2015\D 2015.pdf}}\\
-
-
- \caption{Map of the abundance of lobster captured during NEFSC's Fall Survey of the Gulf of Maine, Georges Bank and Scotian Shelf. Strata boundaries are outlined in red and LFA 41 stock boundaries are outlined in blue. Size of the symbols are scaled to the number observed within each tow.}
-\end{figure}
-\clearpage
+         \caption{Map of the abundance of lobster captured during DFO's summer RV survey of the Scotian Shelf. Strata boundaries are outlined in red and LFA 41 stock boundaries are outlined in blue. Size of the symbols are scaled to the number observed within each tow.}
+        \end{figure}
+        \clearpage
 
 
 
-\begin{figure}
-\centering
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 1987\D 1994.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 1995\D 1999.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 2000\D 2004.pdf}}\\
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 2005\D 2009.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 2010\D 2014.pdf}}
-\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 2015\D 2015.pdf}}\\
+        \begin{figure}
+        \centering
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1969\D 1974.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1975\D 1979.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1980\D 1984.pdf}}\\
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1985\D 1989.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1990\D 1994.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 1995\D 1999.pdf}}\\
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 2000\D 2004.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 2005\D 2009.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 2010\D 2014.pdf}}\\
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCSpring\D 2015\D 2015.pdf}}\\
 
- \caption{Map of the abundance of lobster captured during DFO's Georges Bank Survey. Strata boundaries are outlined in red and LFA 41 stock boundaries are outlined in blue. Size of the symbols are scaled to the number observed within each tow.}
-\end{figure}
-\clearpage
+
+         \caption{Map of the abundance of lobster captured during during NEFSC's Spring Survey of the Gulf of Maine, Georges Bank and Scotian Shelf. Strata boundaries are outlined in red and LFA 41 stock boundaries are outlined in blue. Size of the symbols are scaled to the number observed within each tow.}
+        \end{figure}
+        \clearpage
+
+
+        \begin{figure}
+        \centering
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1969\D 1974.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1975\D 1979.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1980\D 1984.pdf}}\\
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1985\D 1989.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1990\D 1994.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 1995\D 1999.pdf}}\\
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 2000\D 2004.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 2005\D 2009.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 2010\D 2014.pdf}}\\
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesNEFSCFall\D 2015\D 2015.pdf}}\\
+
+
+         \caption{Map of the abundance of lobster captured during NEFSC's Fall Survey of the Gulf of Maine, Georges Bank and Scotian Shelf. Strata boundaries are outlined in red and LFA 41 stock boundaries are outlined in blue. Size of the symbols are scaled to the number observed within each tow.}
+        \end{figure}
+        \clearpage
+
+
+
+        \begin{figure}
+        \centering
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 1987\D 1994.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 1995\D 1999.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 2000\D 2004.pdf}}\\
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 2005\D 2009.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 2010\D 2014.pdf}}
+        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOGeorges\D 2015\D 2015.pdf}}\\
+
+         \caption{Map of the abundance of lobster captured during DFO's Georges Bank Survey. Strata boundaries are outlined in red and LFA 41 stock boundaries are outlined in blue. Size of the symbols are scaled to the number observed within each tow.}
+        \end{figure}
+        \clearpage
 
 
 %survey efficiency section
 
 
+        \begin{figure}
+        \centering
+        \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFObase.pdf}}
+        \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFOrestratified.pdf}}\\
+        \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFOadjrestratified.pdf}}
+        \caption{Survey efficiency of DFO RV base survey (topleft), DFO RV restratified survey (topright) and DFO RV survey restratified to adjacent areas (bottom) from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
+        \end{figure}
+        \clearpage
+
+
+
+        \begin{figure}
+        \centering
+        \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCspringbase.pdf}}
+        \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCspringrestratified.pdf}}\\
+        \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCspringrestratifiedadjacent.pdf}}
+        \caption{Survey efficiency of NEFSC Spring base survey (topleft), NEFSC Spring restratified survey (topright) and NEFSC Spring survey restratified to adjacent areas (bottom) from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
+        \end{figure}
+        \clearpage
+
+
+        \begin{figure}
+        \centering
+        \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCfallbase.pdf}}
+        \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCfalrestratified.pdf}}\\
+        \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallrestratifiedadjacent.pdf}}
+        \caption{Survey efficiency of NEFSC Fall base survey (topleft), NEFSC Fall restratified survey (topright) and NEFSC Fall survey restratified to adjacent areas (bottom) from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
+        \end{figure}
+        \clearpage
+
+
+
+        \begin{figure}
+        \centering
+        \subfloat{\includegraphics[width=0.85\textwidth]{\e lfa41georgesefficiency.pdf}}
+        \caption{Survey efficiency of Georges Bank survey from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
+        \end{figure}
+        \clearpage
+
+
+
+%%%%%%%%%%%%%
+%Biomass dynamic modelling figures
+%%%%%%%%%%%%%
 \begin{figure}
 \centering
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFObase.pdf}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFOrestratified.pdf}}\\
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41DFOadjrestratified.pdf}}
-\caption{Survey efficiency of DFO RV base survey (topleft), DFO RV restratified survey (topright) and DFO RV survey restratified to adjacent areas (bottom) from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
+        \subfloat{\includegraphics[width=0.85\textwidth]{\spm SurveyIndicesModeledB.png}}
+        \caption{Plot of biomass dynamic model fits (black line) along with DFO Summer RV survey commercial (red), NEFSC Spring survey commercial biomass (purple), NEFSC Autumn survey commercial biomass (green) and DFO Georges Bank survey commercial biomass (blue). Each survey index was adjusted by their specific modeled estimate of \emph{q} to match the scale of the modelled biomass.}
+
+
 \end{figure}
-\clearpage
+
+\begin{landscape}
+\begin{figure}
+\centering
+        \subfloat{\includegraphics[width=0.65\textwidth]{\spm biomass\D timeseriesfourI.png}}
+        \subfloat{\includegraphics[width=0.65\textwidth]{\spm fishingmortality\D timeseries\D fourI.png}}
+       \caption{Time series of fishable biomass from  biomass dynamic model fits (left) and related time series of fishing mortality rates (right). In each plot the density distribution of the posterior fishable biomass or fishing mortality estimates are presented in grey with the darkest areas representing medians and the lightest representing the 50\% credible intervals.}
+
+\end{figure}
+     \clearpage
+
 
 
 
 \begin{figure}
 \centering
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCspringbase.pdf}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCspringrestratified.pdf}}\\
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCspringrestratifiedadjacent.pdf}}
-\caption{Survey efficiency of NEFSC Spring base survey (topleft), NEFSC Spring restratified survey (topright) and NEFSC Spring survey restratified to adjacent areas (bottom) from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
+        \subfloat{\includegraphics[clip,trim={0 1.cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorr.png}}
+        \subfloat{\includegraphics[clip,trim={0 1.cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorK.png}}
+        \subfloat{\includegraphics[clip,trim={0 1.cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorq1.png}}\\
+        \subfloat{\includegraphics[clip,trim={0 1.cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorq2.png}}
+        \subfloat{\includegraphics[clip,trim={0 1.cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorq3.png}}
+        \subfloat{\includegraphics[clip,trim={0 1.cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorq4.png}}\\
+        \caption{Prior (red lines) and posterior distributions (bars) from the biomass dynamic modelling of from LFA41 lobster stock. Top row figures from left to right represent the intrinsic growth parameter \emph{r}, carrying capacity \emph{K} and the DFO Summer RV survey proportionality constant \emph{q}. Bottom row figures from left to right represent \emph{q} for the NEFSC spring survey, \emph{q} for the NEFSC Autumn survey and \emph{q} for the DFO Georges Bank survey. }
+        
 \end{figure}
-\clearpage
+     \clearpage
 
 
 \begin{figure}
 \centering
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCfallbase.pdf}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCfalrestratified.pdf}}\\
-\subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallrestratifiedadjacent.pdf}}
-\caption{Survey efficiency of NEFSC Fall base survey (topleft), NEFSC Fall restratified survey (topright) and NEFSC Fall survey restratified to adjacent areas (bottom) from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
+        \subfloat{\includegraphics[clip,trim={0 1cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorsdp.png}}
+        \subfloat{\includegraphics[clip,trim={0 1cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorsd\D oa.png}}
+        \subfloat{\includegraphics[clip,trim={0 1cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorsd\D ob.png}}\\
+        \subfloat{\includegraphics[clip,trim={0 1cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorsd\D oc.png}}
+        \subfloat{\includegraphics[clip,trim={0 1cm 0.3cm 2.1cm},width=0.37\textwidth]{\spm priorposteriorsd\D od.png}}
+         \caption{Prior (red lines) and posterior distributions (bars) from the biomass dynamic modelling of from LFA41 lobster stock. Top row figures from left to right represent the process error $\tau$, the observation error $\sigma$ associated with DFO Summer RV survey and the observation error $\sigma$ associated with NEFSC Spring survey. Bottom row figures from left to right represent observation error $\sigma$ for the NEFSC Autumn survey and the observation error $\sigma$ for the DFO Georges Bank survey. }
+       
+        
 \end{figure}
-\clearpage
+\end{landscape}
+     \clearpage
 
+\begin{figure}
+\centering
+\includegraphics[width=0.85\textwidth]{\spm CarringCapacityPriorBiomasstoKratio.png}
+\caption{Impact of changing the prior mean for carrying capacity, \emph{K} on modelled biomass trends using the biomass dynamic model for LFA41 lobster. The lines represent the time series of the ratio of the time series of modelled median biomass to the median of modelled \emph{K} using increasing means for prior distribution on \emph{K}. }
+
+\end{figure}
+     \clearpage
+
+\begin{landscape}
+\begin{figure}
+\centering
+ \subfloat{\includegraphics[clip,trim={0 0.7cm 0.3cm 1.56cm},width=0.33\textwidth]{\spm HCRKsens69.png}}
+ \subfloat{\includegraphics[clip,trim={0 0.7cm 0.3cm 1.56cm},width=0.33\textwidth]{\spm HCRKsens104.png}}
+ \subfloat{\includegraphics[clip,trim={0 0.7cm 0.3cm 1.56cm},width=0.33\textwidth]{\spm HCRKsens139.png}}\\
+ \subfloat{\includegraphics[clip,trim={0 0.7cm 0.3cm 1.56cm},width=0.33\textwidth]{\spm HCRKsens173.png}}
+ \subfloat{\includegraphics[clip,trim={0 0.7cm 0.3cm 1.56cm},width=0.33\textwidth]{\spm HCRKsens208.png}}
+ \subfloat{\includegraphics[clip,trim={0 0.7cm 0.3cm 1.56cm},width=0.33\textwidth]{\spm HCRKsens243.png}}\\
+ \subfloat{\includegraphics[clip,trim={0 0.7cm 0.3cm 1.56cm},width=0.33\textwidth]{\spm HCRKsens277.png}}
+ \subfloat{\includegraphics[clip,trim={0 0.7cm 0.3cm 1.56cm},width=0.33\textwidth]{\spm HCRKsens312.png}}
+ \subfloat{\includegraphics[clip,trim={0 0.7cm 0.3cm 1.56cm},width=0.33\textwidth]{\spm HCRKsens347.png}}
+
+
+
+\caption{Phase plot showing the impact of changing the prior mean for carrying capacity, \emph{K} on modelled biomass trends in relation to reference points. Each plot represents the estimated median biomass and reference points determined from biomass dynamic model parameters for a model run using a different mean prior on \emph{K}. The mean of the prior for each model run was shown in each figure title.}
+
+\end{figure}
+\end{landscape}
+     \clearpage
+
+
+%Biomass and Fishery reference points
+
+%DFO Summer 
+\begin{landscape}
+\begin{figure}
+\centering
+         \subfloat{\includegraphics[width=0.65\textwidth]{\e BCPDFORefpointsNewArea.png}}
+        \subfloat{\includegraphics[width=0.7\textwidth]{\e DFORefpointsNewArea.png}}
+       \caption{Commercial biomasses (kt) for the DFO summer RV (RV41) survey. (Left) Results from bayesian change point analysis to determine the probability of a change in commercial biomasses as an indicator of changing productivity regime. Upper panel represent the posterior means of the bayesian change point model (red line) along with the input values for log(commercial biomass). Lower panel represents the probability of a change point occurring at specific time (black line). (Right) Commercial biomass time series along with the running median (red line) the median of the five lowest non zero biomasses (\emph{proposed LRP}; orange) and the medians for the full time series (USR; purple), the lower productivity period (1970-1999; blue; LRP) and 40\% of the median of the higher productivity period (2000-2015; green; \emph{proposed USR}). }
+
+\end{figure}
+\end{landscape}
+
+\begin{figure}
+\centering
+        \subfloat{\includegraphics[width=0.7\textwidth]{\e relFDFOSurvey.png}}
+       \caption{Relative fishing mortality (relF) for the DFO Summer RV (RV41) survey and landings. Results from bayesian change point analysis from commercial biomass trends were used to inform a change in productivity regime and hence relative F. Relative F time series along with the running median (red line) and the medians for the full time series (purple) and the lower productivity period (1981 - 1999;blue; \emph{proposed RR}). }
+\end{figure}
+     \clearpage
+
+
+\begin{landscape}
+\begin{figure}
+\centering
+         \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRLongTermDataDFOSurvey.png}}
+        \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRDataDFOSurvey.png}}\\
+        \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRllbLongTermDataDFOSurvey.png}}
+        \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRllbDataDFOSurvey.png}}\\
+       
+       \caption{Phase plots showing the impact of different choices of reference points on the stock status zones for offshore American Lobster LFA41 using DFO Summer RV survey (RV41) commercial biomass (kt) and relative F. Left panels  - USR and RR were defined using the medians of the entire time series of biomass or relative fishing mortality. Right panels - USR and RR were defined using the medians of commercial biomass and relative F for the upper (2000 - 2015) and lower (1981 - 1999) productivity periods respectively. In upper panels LRP was defined as the median biomass during the lower productivity period. In lower panels LRP was defined as the median of the five lowest non zero biomasses. Time series trends of fishable biomass and fishing mortality were represented by the three year running medians. }
+
+\end{figure}
+\end{landscape}
+
+%###### Refernce points spring
+
+\begin{landscape}
+\begin{figure}
+\centering
+         \subfloat{\includegraphics[width=0.65\textwidth]{\e BCPSpringRefpointsNewArea.png}}
+        \subfloat{\includegraphics[width=0.7\textwidth]{\e SpringRefpointsNewArea.png}}
+       \caption{Commercial biomasses (kt) for the NEFSC Spring (NSpr41) survey. (Left) Results from bayesian change point analysis to determine the probability of a change in commercial biomasses as an indicator of changing productivity regime. Upper panel represent the posterior means of the bayesian change point model (red line) along with the input values for log(commercial biomass). Lower panel represents the probability of a change point occurring at specific time (black line). (Right) Commercial biomass time series along with the running median (red line), the median of the five lowest non zero biomasses (\emph{proposed LRP}; orange) and the medians for the full time series (USR; purple), the lower productivity period (1969-2001; blue; LRP) and 40\% of the median of the higher productivity period (2002-2015; green; \emph{proposed USR}). }
+
+\end{figure}
+\end{landscape}
+     \clearpage
 
 
 \begin{figure}
 \centering
-\subfloat{\includegraphics[width=0.85\textwidth]{\e lfa41georgesefficiency.pdf}}
-\caption{Survey efficiency of Georges Bank survey from 1999 to 2015. Percent efficiency refers to changes in either strata or allocation scheme relative to a simple random survey }
+        \subfloat{\includegraphics[width=0.7\textwidth]{\e relFSpringSurvey.png}}
+       \caption{Relative fishing mortality (relF) for the NEFSC Spring (NSpr41) survey and landings. Results from bayesian change point analysis from commercial biomass trends were used to inform a change in productivity regime and hence relative F. Relative F time series along with the running median (red line) and the medians for the full time series (purple) and the lower productivity period (1981 - 2001;blue; \emph{proposed RR}). }
 \end{figure}
-\clearpage
 
+
+\begin{landscape}
+\begin{figure}
+\centering
+         \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRLongTermDataSpringSurvey.png}}
+        \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRDataSpringSurvey.png}}\\
+                 \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRllbLongTermDataSpringSurvey.png}}
+        \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRllbDataSpringSurvey.png}}
+
+      \caption{Phase plots showing the impact of different choices of reference points on the stock status zones for offshore American Lobster LFA41 using NEFSC Spring survey (NSpr41) commercial biomass (kt) and relative F. Left panels  - USR and RR were defined using the medians of the entire time series of biomass or relative fishing mortality. Right panels - USR and RR were defined using the medians of commercial biomass and relative F for the upper (2002 - 2015) and lower (1981 - 2001) productivity periods respectively. In upper panels LRP was defined as the median biomass during the lower productivity period. In lower panels LRP was defined as the median of the five lowest non zero biomasses in the time series. Time series trends of fishable biomass and fishing mortality were represented by the three year running medians. }
+
+\end{figure}
+\end{landscape}
+
+%###### Refernce points autumn
+
+
+
+\begin{landscape}
+\begin{figure}
+\centering
+         \subfloat{\includegraphics[width=0.65\textwidth]{\e BCPAutumnRefpointsNewArea.png}}
+        \subfloat{\includegraphics[width=0.7\textwidth]{\e AutumnRefpointsNewArea.png}}
+       \caption{Commercial biomasses (kt) for the NEFSC Autumn (NAut41) survey. (Left) Results from bayesian change point analysis to determine the probability of a change in commercial biomasses as an indicator of changing productivity regime. Upper panel represent the posterior means of the bayesian change point model (red line) along with the input values for log(commercial biomass). Lower panel represents the probability of a change point occurring at specific time (black line). (Right) Commercial biomass time series along with the running median (red line), the median of the five lowest non zero biomasses (\emph{proposed LRP}; orange) and the medians for the full time series (USR; purple), the lower productivity period (1969-2000; blue; LRP) and 40\% of the median of the higher productivity period (2000-2015; green; \emph{proposed USR}). }
+
+\end{figure}
+\end{landscape}
+
+
+\begin{figure}
+\centering
+        \subfloat{\includegraphics[width=0.7\textwidth]{\e relFAutumnSurvey.png}}
+       \caption{Relative fishing mortality (relF) for the NEFSC Autumn (NAut41) survey and landings. Results from bayesian change point analysis from commercial biomass trends were used to inform a change in productivity regime and hence relative F. Relative F time series along with the running median (red line) and the medians for the full time series (purple) and the lower productivity period (1981 - 2000;blue; \emph{proposed RR}). }
+\end{figure}
+
+
+\begin{landscape}
+\begin{figure}
+\centering
+         \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRLongTermDataAutumnSurvey.png}}
+        \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRDataAutumnSurvey.png}}\\
+        \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRllbLongTermDataAutumnSurvey.png}}
+        \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRllbDataAutumnSurvey.png}}
+      
+
+      \caption{Phase plots showing the impact of different choices of reference points on the stock status zones for offshore American Lobster LFA41 using NEFSC Autumn survey (NAut41) commercial biomass (kt) and relative F. Left panels  - USR and RR were defined using the medians of the entire time series of biomass or relative fishing mortality. Right panels - USR and RR were defined using the medians of commercial biomass and relative F for the upper (2001 - 2015) and lower (1981 - 2000) productivity periods respectively. In upper panels LRP was defined as the median biomass during the lower productivity period. In lower panels LRP was defined as the median of the five lowest non zero biomasses in the time series. Time series trends of fishable biomass and fishing mortality were represented by the three year running medians. }
+
+\end{figure}
+\end{landscape}
+
+
+%############### Referece points Georges
+\begin{landscape}
+\begin{figure}
+\centering
+         \subfloat{\includegraphics[width=0.65\textwidth]{\e BCPGeorgesRefpointsNewArea.png}}
+        \subfloat{\includegraphics[width=0.7\textwidth]{\e GeorgesRefpointsNewArea.png}}
+       \caption{Commercial biomasses (kt) for the DFO Georges Bank (GB) survey. (Left) Results from bayesian change point analysis to determine the probability of a change in commercial biomasses as an indicator of changing productivity regime. Upper panel represent the posterior means of the bayesian change point model (red line) along with the input values for log(commercial biomass). Lower panel represents the probability of a change point occurring at specific time (black line). (Right) Commercial biomass time series along with the running median (red line), the median of the five lowest non zero biomasses (\emph{proposed LRP}; orange) and the medians for the full time series (USR; purple), the lower productivity period (1987-1999; blue; LRP) and 40\% of the median of the higher productivity period (2000-2015; green; \emph{proposed USR}). }
+
+\end{figure}
+\end{landscape}
+     \clearpage
+
+\begin{figure}
+\centering
+        \subfloat{\includegraphics[width=0.7\textwidth]{\e relFGeorgesSurvey.png}}
+       \caption{Relative fishing mortality (relF) for the DFO Georges (GB) survey and landings. Results from bayesian change point analysis from commercial biomass trends were used to inform a change in productivity regime and hence relative F. Relative F time series along with the running median (red line) and the medians for the full time series (purple) and the lower productivity period (1987 - 1999;blue; \emph{proposed RR}). }
+\end{figure}
+     \clearpage
+
+
+\begin{landscape}
+\begin{figure}
+\centering
+         \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRLongTermDataGeorgesSurvey.png}}
+        \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRDataGeorgesSurvey.png}}\\
+           \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRllbLongTermDataGeorgesSurvey.png}}
+        \subfloat{\includegraphics[width=0.45\textwidth]{\e HCRllbDataGeorgesSurvey.png}}
+     
+      \caption{Phase plots showing the impact of different choices of reference points on the stock status zones for offshore American Lobster LFA41 using DFO Georges Bank survey (GB) commercial biomass (kt) and relative F. Left panels  - USR and RR were defined using the medians of the entire time series of biomass or relative fishing mortality. Right panels - USR and RR were defined using the medians of commercial biomass and relative F for the upper (2000 - 2015) and lower (1987 - 1999) productivity periods respectively. In upper panels LRP was defined as the median biomass during the lower productivity period. In lower panels LRP was defined as the median of the five lowest non zero biomasses in the time series. Time series trends of fishable biomass and fishing mortality were represented by the three year running medians. }
+
+
+\end{figure}
+\end{landscape}
+     \clearpage
+
+%Reproducdtive potential refernce points
+%DFO
+\begin{figure}
+
+\centering
+    \subfloat{\includegraphics[width=0.7\textwidth]{\e RefsRepPotDFO.png}}
+\caption{Reproductive potential in millions of eggs estimated from DFO Summer RV (RV41) survey American lobster population weighted fecundity estimates. Red line represents a three year running median. Green line represents the upper boundary estimated as 40\% of the median of 2000 - 2015. }
+\end{figure}
+
+%NEFSC spring
+\begin{landscape}
+\begin{figure}
+\centering
+        \subfloat{\includegraphics[width=0.65\textwidth]{\e BCPRepPotNEFSCSpring.png}}
+        \subfloat{\includegraphics[width=0.7\textwidth]{\e RefsRepPotNEFSCSpring.png}}
+    
+\caption{Reproductive potential in millions of eggs estimated from NEFSC Spring survey (NSpr41) American lobster population weighted fecundity.  (Left) Bayesian change point analysis to determine if a shift in productivity regime was evident. Upper panel represents the posterior means of the bayesian change point model (red line) along with the input values for log(Reproductive potential). Lower panel represents the probability of a change point occurring at specific time (black line). (Right) Reproductive potential time series along with the running median (red line), the median of the five lowest non zero biomasses (lower boundary; orange) and the medians for the full time series (upper boundary; purple), the lower productivity period (1969-2001; blue; lower boundary) and 40\% of the median of the higher productivity period (2002-2015; green; proposed upper boundary). }
+\end{figure}
+\end{landscape}
+
+
+%NEFSC autumn
+\begin{landscape}
+\begin{figure}
+\centering
+        \subfloat{\includegraphics[width=0.65\textwidth]{\e BCPRepPotNEFSCAutumn.png}}
+        \subfloat{\includegraphics[width=0.7\textwidth]{\e RefsRepPotNEFSCAutumn.png}}
+    
+\caption{Reproductive potential in millions of eggs estimated from NEFSC Autumn survey (NAut41) American lobster population weighted fecundity.  (Left) Bayesian change point analysis to determine if a shift in productivity regime was evident. Upper panel represents the posterior means of the bayesian change point model (red line) along with the input values for log(Reproductive potential). Lower panel represents the probability of a change point occurring at specific time (black line). (Right) Reproductive potential time series along with the running median (red line), the median of the five lowest non zero biomasses (lower boundary; orange) and the medians for the full time series (upper boundary; purple), the lower productivity period (1969-2000; blue; lower boundary) and 40\% of the median of the higher productivity period (2001-2015; green; proposed upper boundary). }
+\end{figure}
+\end{landscape}
+
+%DFO
+\begin{figure}
+
+\centering
+    \subfloat{\includegraphics[width=0.7\textwidth]{\e RefsRepPotGeorges.png}}
+\caption{Reproductive potential in millions of eggs estimated from DFO Georges Bank RV (GB) survey American lobster population weighted fecundity estimates. Red line represents a three year running median. }
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%relative F and BCP plots
+
+
+%\begin{figure}
+%\centering
+%        \subfloat{\includegraphics[width=0.7\textwidth]{\e relFDFOSurvey.png}}
+%       \caption{Relative fishing mortality (relF) for the DFO Summer RV (RV41) survey and landings. (Left) Results from bayesian change point analysis to determine the timing of %a change in relative F as a result of changing productivity from increased survey biomass. Upper panel represent the posterior means of the bayesian change point model (red %line) along with the input values for relative F. Lower panel represents the probability of a change point occurring at specific time (black line). (Right) Relative F time %series along with the running median (red line) and the medians for the full time series (green) and the lower productivity period (blue). }
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%        \subfloat{\includegraphics[width=0.65\textwidth]{\e BCPrelFNEFSCSPRINGSurvey.png}}
+%        \subfloat{\includegraphics[width=0.7\textwidth]{\e relFNEFSCSPRING.png}}
+%       \caption{Relative F for the NEFSC Spring survey (NSpr41) and landings. (Left) Results from bayesian change point analysis to determine the timing of a change in relative F %as a result of changing productivity from increased survey biomass. Upper panel represent the posterior means of the bayesian change point model (red line) along with the %input values for relative F. Lower panel represents the probability of a change point occurring at specific time (black line). (Right) Relative F time series along with %the running median (red line) and the medians for the full time series (green) and the lower productivity period (blue). }
+%\end{figure}
+%
+%
+%\begin{figure}
+%\centering
+%        \subfloat{\includegraphics[width=0.65\textwidth]{\e BCPrelFNEFSCFALLSurvey.png}}
+%        \subfloat{\includegraphics[width=0.7\textwidth]{\e relFNEFSCFALL.png}}
+%       \caption{Relative F for the NEFSC Fall survey (NAut41) and landings. (Left) Results from bayesian change point analysis to determine the timing of a change in relative F %as a result of changing productivity from increased survey biomass. Upper panel represent the posterior means of the bayesian change point model (red line) along with the %input values for relative F. Lower panel represents the probability of a change point occurring at specific time (black line). (Right) Relative F time series along with %the running median (red line) and the medians for the full time series (green) and the lower productivity period (blue). Purple line represents the $F_ref$ from the %replacement ratio method. }
+%\end{figure}
+%
+%
+%\begin{figure}
+%\centering
+%        \subfloat{\includegraphics[width=0.65\textwidth]{\e BCPrelFDFOGeorgesSurvey.png}}
+%        \subfloat{\includegraphics[width=0.7\textwidth]{\e relFDFOGeorges.png}}
+%       \caption{Relative F for the Georges Bank (GB) survey and landings. (Left) Results from bayesian change point analysis to determine the timing of a change in relative F as %a result of changing productivity from increased survey biomass. Upper panel represent the posterior means of the bayesian change point model (red line) along with the %input values for relative F. Lower panel represents the probability of a change point occurring at specific time (black line). (Right) Relative F time series along with %the running median (red line) and the medians for the full time series (green) and the lower productivity period (blue). }
+%\end{figure}
+%
+%
+%
+%
+%
+%\end{landscape}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%AIM plots
+%
+%\begin{figure}
+%\centering
+%
+%        \includegraphics[width=0.7\textwidth]{\e AIMDFOSummer.png}
+%       \caption{Relationship between log(replacement ratio) and log(relative F) from the RV41 survey and landings from 1981 to 2015 (points). Black line represents the robust %regression with an $R^2=0.03$.}
+%
+%
+%\end{figure}
+%
+%
+%\begin{figure}
+%\centering
+%
+%        \includegraphics[width=0.7\textwidth]{\e AIMNEFSCSpring.png}
+%       \caption{Relationship between log(replacement ratio) and log(relative F) from the NSpr41 survey and landings from 1981 to 2015 (points). Black line represents the robust %regression with an $R^2=0.015$.}
+%
+%
+%\end{figure}
+%
+%
+%
+%\begin{figure}
+%\centering
+%
+%        \includegraphics[width=0.7\textwidth]{\e AIMNEFSCFALL.png} \\
+%
+%        \includegraphics[width=0.7\textwidth]{\e AIMFREFNEFSCFALLSurvey.png} \\
+%
+%       \caption{((Upper)Relationship between log(replacement ratio) and log(relative F) from the NAut41 survey and landings from 1981 to 2015 (points). Black line represents the %robust regression with an $R^2=0.11$.(Lower) Bootstrapped histogram of Fref levels from robust regressions.}
+%
+%
+%\end{figure}
+%
+%
+%
+%\begin{figure}
+%\centering
+%
+%        \includegraphics[width=0.7\textwidth]{\e AIMDFOGeorges.png}
+%       \caption{Relationship between log(replacement ratio) and log(relative F) from the GB survey and landings from 1987 to 2015 (points). Black line represents the robust %regression with an $R^2=0.014$.}
+%
+%
+%\end{figure}
+%
 
 %stratified analysis
 %numbers
@@ -378,7 +734,7 @@
 \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringbasenumberscommercial.png}}
 \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringrestratifiednumberscommercial.png}}\\
 \subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41NEFSCSpringrestratifiednumberscommercial.png}}
-\caption{NEFSC spring survey commercial sized American lobster stratified mean number per tow for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. Blue line represents the annual number of commerical lobster observed within the survey and area.}
+\caption{NEFSC spring survey commercial sized American lobster stratified mean number per tow for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. Blue line represents the annual number of commercial lobster observed within the survey and area.}
 \end{figure}
 \clearpage
 
@@ -388,14 +744,14 @@
 \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallbasenumberscommercial.png}}
 \subfloat{\includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallrestratifiednumberscommercial.png}}\\
 \subfloat{\includegraphics[width=0.5\textwidth]{\e adjacentlfa41NEFSCFallrestratifiednumberscommercial.png}}
-\caption{NEFSC Fall survey commerical sized American lobster stratified mean number per tow for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. Blue line represents the annual number of commercial lobster observed within the survey and area.}
+\caption{NEFSC Fall survey commercial sized American lobster stratified mean number per tow for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. Blue line represents the annual number of commercial lobster observed within the survey and area.}
 \end{figure}
 \clearpage
 
 \begin{figure}
 
     \includegraphics[width=1\textwidth]{\e lfa41georgesnumberscommercial.png}
-    \caption{DFO RV Georges Bank survey commercial sized American lobster stratified mean number per tow for the Canadian portion of the survey from 1987 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. Blue line represents the annual number of commerical lobster observed within the survey and area.}
+    \caption{DFO RV Georges Bank survey commercial sized American lobster stratified mean number per tow for the Canadian portion of the survey from 1987 to 2015. Red line represents a three year running median. Confidence bounds are presented for each point estimate. Blue line represents the annual number of commercial lobster observed within the survey and area.}
 
 \end{figure}
 
@@ -449,55 +805,6 @@
 
 \end{figure}
 \end{landscape}
-
-%Reproductive potential
-
-
-\begin{figure}
-\centering
-\subfloat{\includegraphics[width=0.5\textwidth]{\e Fec\D maturefemaleLengthFrequenciesLFA41baseSummerRV.png}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e Fec\D maturefemaleLengthFrequenciesLFA41polygonSummerRV.png}}\\
-\subfloat{\includegraphics[width=0.5\textwidth]{\e Fec\D maturefemaleLengthFrequenciesLFA41adjacentpolygonSummerRV.png}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e NOY-Fec\D maturefemaleLengthFrequenciesLFA41polygonSummerRV.png}}\\
-
-\caption{DFO Summer RV survey American lobster population weighted fecundity estimates (solid line and points) for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1999 to 2015. The bottom right plot represents the reproductive potential for the restratified survey without the y-scaling to match the other figures. Red line represents a three year running median. Within each plot the blue points represent the sample size of observed lobster within that year and area.}
-\end{figure}
-\clearpage
-
-
-\begin{figure}
-\centering
-\subfloat{\includegraphics[width=0.5\textwidth]{\e Fec\D maturefemaleLengthFrequenciesLFA41NEFSCspringbase.png}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e Fec\D maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.png}}\\
-\subfloat{\includegraphics[width=0.5\textwidth]{\e Fec\D maturefemaleLengthFrequenciesLFA41NEFSCspringadjrestratified.png}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e NOY-Fec\D maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.png}}\\
-
-\caption{NEFSC spring survey American lobster population weighted fecundity estimates (solid line and points) for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. The figure in the bottom right represents the restratified survey with independent y-axis scaling. Red line represents a three year running median. Within each plot the blue points represents the sample size of observed lobster within that year and area. }
-\end{figure}
-\clearpage
-
-
-
-\begin{figure}
-\centering
-\subfloat{\includegraphics[width=0.5\textwidth]{\e Fec\D maturefemaleLengthFrequenciesLFA41NEFSCfallbase.png}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e Fec\D maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.png}}\\
-\subfloat{\includegraphics[width=0.5\textwidth]{\e Fec\D maturefemaleLengthFrequenciesLFA41NEFSCfalladjrestratified.png}}
-\subfloat{\includegraphics[width=0.5\textwidth]{\e NOY-Fec\D maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.png}}\\
-
-\caption{NEFSC Fall survey American lobster population weighted fecundity estimates (solid line and points) for the base survey (topleft), restratified survey (topright) restratified to adjacent areas (bottom) from 1969 to 2015. The figure in the bottom right represents the restratified survey with independent y-axis scaling. Red line represents a three year running median. Within each plot the blue points represents the sample size of observed lobster within that year and area. }
-\end{figure}
-\clearpage
-
-
-\begin{figure}
-
-    \includegraphics[width=1\textwidth]{\e NOY-Fec\D maturefemaleLengthFrequenciesLFA41dfogeorges.png}
-    \caption{DFO RV Georges Bank survey American lobster population weighted fecundity estimates (solid line and points) for the Canadian portion of the survey from 2007 to 2015. Red line represents a three year running median. Blue points represents the sample size of observed lobster within that year and area.}
-
-\end{figure}
-
-
 
 
 %dwao
@@ -578,7 +885,6 @@
     \caption{DFO RV Georges Bank survey American lobster Gini coefficient of spatial evenness for the Canadian portion of the survey from 1987 to 2015. Red line represents a three year running median. }
 
 \end{figure}
-
 \end{document}
 %sex ratios
 %\begin{figure}
@@ -701,7 +1007,9 @@
 
 \end{figure}
 
+% Reproductive Potential
 
+NEED TO READD THESE IN FUCK
 
 
 % Size frequencies
@@ -724,7 +1032,7 @@
 \subfloat{\includegraphics[clip,trim={0 2.1cm 0 1.9cm},width=0.4\textwidth]{\e LengthFrequenciesLFA41polygonSummerRV\D 2005\D 2009.pdf}}\\
 \subfloat{\includegraphics[clip,trim={0 2.1cm 0 1.9cm},width=0.4\textwidth]{\e LengthFrequenciesLFA41polygonSummerRV\D 2010\D 2014.pdf}}\\
 \subfloat{\includegraphics[clip,trim={0 1.5cm 0 1.9cm},width=0.4\textwidth]{\e LengthFrequenciesLFA41polygonSummerRV\D 2015\D 2015.pdf}}\\
- \caption{Carapace length frequencies of American lobster captured during the Summer RV survey with following the restratification stragegy to areas within LFA 41. Bars represents the mean number per tow for each length bin scaled to the maximum numbers per tow. For plots with multiple years bars represent the average over respective time spans. Dashed red line indicates the minimum legal size.}
+ \caption{Carapace length frequencies of American lobster captured during the Summer RV survey with following the restratification strategy to areas within LFA 41. Bars represents the mean number per tow for each length bin scaled to the maximum numbers per tow. For plots with multiple years bars represent the average over respective time spans. Dashed red line indicates the minimum legal size.}
 \end{figure}
 \clearpage
 
@@ -736,7 +1044,7 @@
 \subfloat{\includegraphics[clip,trim={0 2.1cm 0 1.9cm},width=0.4\textwidth]{\e LengthFrequenciesLFA41adjacentpolygonSummerRV\D 2005\D 2009.pdf}}\\
 \subfloat{\includegraphics[clip,trim={0 2.1cm 0 1.9cm},width=0.4\textwidth]{\e LengthFrequenciesLFA41adjacentpolygonSummerRV\D 2010\D 2014.pdf}}\\
 \subfloat{\includegraphics[clip,trim={0 1.5cm 0 1.9cm},width=0.4\textwidth]{\e LengthFrequenciesLFA41adjacentpolygonSummerRV\D 2015\D 2015.pdf}}\\
- \caption{Carapace length frequencies of American lobster captured during the Summer RV survey with following the restratification stragegy to areas adjacent to LFA 41. Bars represents the mean number per tow for each length bin scaled to the maximum numbers per tow. For plots with multiple years bars represent the average over respective time spans. Dashed red line indicates the minimum legal size.}
+ \caption{Carapace length frequencies of American lobster captured during the Summer RV survey with following the restratification strategy to areas adjacent to LFA 41. Bars represents the mean number per tow for each length bin scaled to the maximum numbers per tow. For plots with multiple years bars represent the average over respective time spans. Dashed red line indicates the minimum legal size.}
 \end{figure}
 \clearpage
 
@@ -1342,49 +1650,6 @@ the median habitat occupied by lobster. Blue line is the median sampled habitat.
 
 \clearpage
 
-
-
-
-%relative Fishing Mortality
-
-\begin{figure}
-\centering
-    \includegraphics[width=0.5\textwidth]{\e lfa41DFOrestratifiedtotalweightscommercial.png}
-    \includegraphics[width=0.5\textwidth]{\e SummerSurveyLandings.png} \\
-    \includegraphics[width=0.75\textwidth]{\e relFSummerRV.png} \\
-    \caption{Time series of biomass (upper-left) landings (upper-right) and relative fishing mortality (lower) from the area included in DFO summer RV survey restratified to the boundaries of LFA41. Red lines represent 3 year running medians and error bars are confidence intervals.}
-
-\end{figure}
-
-
-\begin{figure}
-\centering
-    \includegraphics[width=0.5\textwidth]{\e lfa41NEFSCSpringrestratifiedtotalweightscommercial.png}
-    \includegraphics[width=0.5\textwidth]{\e NEFSCSurveyLandings.png} \\
-    \includegraphics[width=0.75\textwidth]{\e relFNEFSCSpring.png} \\
-    \caption{Time series of biomass (upper-left) landings (upper-right) and relative fishing mortality (lower) from the area included in NEFSC spring survey restratified to the boundaries of LFA41. Red lines represent 3 year running medians and error bars are confidence intervals.}
-
-\end{figure}
-
-
-\begin{figure}
-\centering
-    \includegraphics[width=0.5\textwidth]{\e lfa41NEFSCFallrestratifiedtotalweightscommercial.png}
-    \includegraphics[width=0.5\textwidth]{\e NEFSCSurveyLandings.png} \\
-    \includegraphics[width=0.75\textwidth]{\e relFNEFSCFall.png} \\
-    \caption{Time series of biomass (upper-left) landings (upper-right) and relative fishing mortality (lower) from the area included in NEFSC fall survey restratified to the boundaries of LFA41. Red lines represent 3 year running medians and error bars are confidence intervals.}
-
-\end{figure}
-
-
-\begin{figure}
-\centering
-    \includegraphics[width=0.5\textwidth]{\e lfa41georgestotalweightscommercial.png}
-    \includegraphics[width=0.5\textwidth]{\e GBSurveyLandings.png} \\
-    \includegraphics[width=0.75\textwidth]{\e relFGeorges.png} \\
-    \caption{Time series of biomass (upper-left) landings (upper-right) and relative fishing mortality (lower) from the area included in DFO's Georges Bank survey restratified to the boundaries of LFA41. Red lines represent 3 year running medians and error bars are confidence intervals.}
-
-\end{figure}
 
 
 % environmental conditions

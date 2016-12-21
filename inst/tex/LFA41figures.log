@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2016.9.6)  4 DEC 2016 15:44
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2016.9.6)  15 DEC 2016 10:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -455,22 +455,22 @@ Package: geometry 2010/09/12 v5.6 Page Geometry
 ) (./LFA41figures.aux)
 \openout1 = `LFA41figures.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
 
 (/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -509,7 +509,7 @@ Package caption Info: End \AtBeginDocument code.
 Package marginnote Info: \pdfoutput not 0 or unimportant and
 (marginnote)             \pdflastxpos or \lastxpos available.
 (marginnote)             Extended position detection mode activated.
-Package soulpos Info: Loading soulutf8 on input line 23.
+Package soulpos Info: Loading soulutf8 on input line 24.
 
 (/usr/share/texmf-dist/tex/generic/oberdiek/soulutf8.sty
 Package: soulutf8 2016/05/16 v1.1 Permit use of UTF-8 characters in soul (HO)
@@ -527,7 +527,7 @@ Package: soul 2003/11/17 v2.4 letterspacing/underlining (mf)
 \SOUL@ulht=\dimen141
 ))
 \AtBeginShipoutBox=\box31
-Package hyperref Info: Link coloring OFF on input line 23.
+Package hyperref Info: Link coloring OFF on input line 24.
 
 (/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -537,9 +537,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count165
 )
-LaTeX Info: Redefining \ref on input line 23.
-LaTeX Info: Redefining \pageref on input line 23.
-LaTeX Info: Redefining \nameref on input line 23.
+LaTeX Info: Redefining \ref on input line 24.
+LaTeX Info: Redefining \pageref on input line 24.
+LaTeX Info: Redefining \nameref on input line 24.
 
 (./LFA41figures.out) (./LFA41figures.out)
 \@outlinefile=\write4
@@ -587,7 +587,7 @@ File: /backup/bio_data/bio.lobster/figures/LFAMapATL.jpg Graphic file (type jpg
 )
  <use /backup/bio_data/bio.lobster/figures/LFAMapATL.jpg>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LFAMapATL.jpg use
-d on input line 29.
+d on input line 30.
 (pdftex.def)             Requested size: 443.57848pt x 290.3745pt.
 
 
@@ -607,7 +607,7 @@ type jpg)
 
 <use /backup/bio_data/bio.lobster/figures/oldoffshorebounds.jpg>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/oldoffshorebounds
-.jpg used on input line 37.
+.jpg used on input line 38.
 (pdftex.def)             Requested size: 354.86412pt x 357.27882pt.
 
 </backup/bio_data/bio.lobster/figures/newoffshoreareas.jpg, id=13, 438.6233pt x
@@ -616,7 +616,7 @@ File: /backup/bio_data/bio.lobster/figures/newoffshoreareas.jpg Graphic file (t
 ype jpg)
  <use /backup/bio_data/bio.lobster/figures/newoffshoreareas.jpg>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/newoffshoreareas.
-jpg used on input line 44.
+jpg used on input line 45.
 (pdftex.def)             Requested size: 354.86412pt x 420.63731pt.
 
 
@@ -633,65 +633,23 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [3 </backup/bio_data/bio.lobster/figures/newoffshoreareas.jpg>]
-</backup/bio_data/bio.lobster/figures/lfa41Logs.2002.2007..pdf, id=24, 505.89pt
- x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/lfa41Logs.2002.2007..pdf Graphic fil
-e (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/lfa41Logs.2002.2007..pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41Logs.2002.20
-07..pdf used on input line 53.
-(pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
-
-</backup/bio_data/bio.lobster/figures/lfa41Logs.2007.2012..pdf, id=25, 505.89pt
- x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/lfa41Logs.2007.2012..pdf Graphic fil
-e (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/lfa41Logs.2007.2012..pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41Logs.2007.20
-12..pdf used on input line 54.
-(pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
-
-</backup/bio_data/bio.lobster/figures/lfa41Logs.2013.2018..pdf, id=26, 505.89pt
- x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/lfa41Logs.2013.2018..pdf Graphic fil
-e (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/lfa41Logs.2013.2018..pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41Logs.2013.20
-18..pdf used on input line 55.
-(pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
-
-
-LaTeX Warning: Float too large for page by 71.80048pt on input line 57.
-
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.59999pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[4 </backup/bio_data/bio.lobster/figures/lfa41Logs.2002.2007..pdf> </backup/bio
-_data/bio.lobster/figures/lfa41Logs.2007.2012..pdf> </backup/bio_data/bio.lobst
-er/figures/lfa41Logs.2013.2018..pdf>]
-</backup/bio_data/bio.lobster/figures/summerstratamap.pdf, id=65, 469.755pt x 3
+</backup/bio_data/bio.lobster/figures/summerstratamap.pdf, id=24, 469.755pt x 3
 61.35pt>
 File: /backup/bio_data/bio.lobster/figures/summerstratamap.pdf Graphic file (ty
 pe pdf)
  <use /backup/bio_data/bio.lobster/figures/summerstratamap.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/summerstratamap.p
-df used on input line 62.
+df used on input line 63.
 (pdftex.def)             Requested size: 288.32329pt x 221.78508pt.
 
-</backup/bio_data/bio.lobster/figures/summerstrata41closeup.pdf, id=66, 505.89p
+</backup/bio_data/bio.lobster/figures/summerstrata41closeup.pdf, id=25, 505.89p
 t x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/summerstrata41closeup.pdf Graphic fi
 le (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/summerstrata41closeup.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/summerstrata41clo
-seup.pdf used on input line 63.
+seup.pdf used on input line 64.
 (pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
 
 
@@ -700,15 +658,15 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[5 </backup/bio_data/bio.lobster/figures/summerstratamap.pdf> </backup/bio_data
+[4 </backup/bio_data/bio.lobster/figures/summerstratamap.pdf> </backup/bio_data
 /bio.lobster/figures/summerstrata41closeup.pdf>]
-</backup/bio_data/bio.lobster/figures/georgesmap41.pdf, id=92, 505.89pt x 505.8
+</backup/bio_data/bio.lobster/figures/georgesmap41.pdf, id=51, 505.89pt x 505.8
 9pt>
 File: /backup/bio_data/bio.lobster/figures/georgesmap41.pdf Graphic file (type 
 pdf)
  <use /backup/bio_data/bio.lobster/figures/georgesmap41.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/georgesmap41.pdf 
-used on input line 70.
+used on input line 71.
 (pdftex.def)             Requested size: 443.57848pt x 443.58667pt.
 
 
@@ -717,26 +675,26 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[6 </backup/bio_data/bio.lobster/figures/georgesmap41.pdf>]
-</backup/bio_data/bio.lobster/figures/americanmap41full.pdf, id=107, 505.89pt x
- 505.89pt>
+[5 </backup/bio_data/bio.lobster/figures/georgesmap41.pdf>]
+</backup/bio_data/bio.lobster/figures/americanmap41full.pdf, id=66, 505.89pt x 
+505.89pt>
 File: /backup/bio_data/bio.lobster/figures/americanmap41full.pdf Graphic file (
 type pdf)
  <use /backup/bio_data/bio.lobster/figures/americanmap41full.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/americanmap41full
-.pdf used on input line 78.
+.pdf used on input line 79.
 (pdftex.def)             Requested size: 354.86412pt x 354.86934pt.
 
-</backup/bio_data/bio.lobster/figures/americanmap41.pdf, id=108, 505.89pt x 505
-.89pt>
+</backup/bio_data/bio.lobster/figures/americanmap41.pdf, id=67, 505.89pt x 505.
+89pt>
 File: /backup/bio_data/bio.lobster/figures/americanmap41.pdf Graphic file (type
  pdf)
  <use /backup/bio_data/bio.lobster/figures/americanmap41.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/americanmap41.pdf
- used on input line 79.
+ used on input line 80.
 (pdftex.def)             Requested size: 354.86412pt x 354.86934pt.
 
-Overfull \hbox (51.33113pt too wide) in paragraph at lines 78--79
+Overfull \hbox (51.33113pt too wide) in paragraph at lines 79--80
  [][][][] 
  []
 
@@ -746,106 +704,46 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[7 </backup/bio_data/bio.lobster/figures/americanmap41full.pdf> </backup/bio_da
+[6 </backup/bio_data/bio.lobster/figures/americanmap41full.pdf> </backup/bio_da
 ta/bio.lobster/figures/americanmap41.pdf>]
+</backup/bio_data/bio.lobster/figures/DFORVSurveyLengthFreqAllv41.png, id=93, 9
+13.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/DFORVSurveyLengthFreqAllv41.png Grap
+hic file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/DFORVSurveyLengthFreqAllv41.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/DFORVSurveyLength
+FreqAllv41.png used on input line 90.
+(pdftex.def)             Requested size: 354.86412pt x 354.86357pt.
+
 </backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1970.1974.pdf, id=
-136, 505.89pt x 505.89pt>
+94, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1970.1974.pdf
  Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1970.1974.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
-ummer.1970.1974.pdf used on input line 91.
+ummer.1970.1974.pdf used on input line 97.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1975.1979.pdf, id=
-138, 505.89pt x 505.89pt>
+96, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1975.1979.pdf
  Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1975.1979.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
-ummer.1975.1979.pdf used on input line 92.
+ummer.1975.1979.pdf used on input line 98.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1980.1984.pdf, id=
-140, 505.89pt x 505.89pt>
+98, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1980.1984.pdf
  Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1980.1984.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
-ummer.1980.1984.pdf used on input line 93.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-Overfull \hbox (48.7871pt too wide) in paragraph at lines 91--93
- [][][][][][] 
- []
-
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1985.1989.pdf, id=
-142, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1985.1989.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1985.1989.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
-ummer.1985.1989.pdf used on input line 94.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1990.1994.pdf, id=
-144, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1990.1994.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1990.1994.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
-ummer.1990.1994.pdf used on input line 95.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1995.1999.pdf, id=
-146, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1995.1999.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1995.1999.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
-ummer.1995.1999.pdf used on input line 96.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-Overfull \hbox (48.7871pt too wide) in paragraph at lines 94--96
- [][][][][][] 
- []
-
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2000.2004.pdf, id=
-148, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2000.2004.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2000.2004.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
-ummer.2000.2004.pdf used on input line 97.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2005.2009.pdf, id=
-150, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2005.2009.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2005.2009.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
-ummer.2005.2009.pdf used on input line 98.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2010.2014.pdf, id=
-152, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2010.2014.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2010.2014.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
-ummer.2010.2014.pdf used on input line 99.
+ummer.1980.1984.pdf used on input line 99.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 Overfull \hbox (48.7871pt too wide) in paragraph at lines 97--99
@@ -853,15 +751,92 @@ Overfull \hbox (48.7871pt too wide) in paragraph at lines 97--99
  []
 
 
+</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1985.1989.pdf, id=
+100, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1985.1989.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1985.1989.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
+ummer.1985.1989.pdf used on input line 100.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1990.1994.pdf, id=
+102, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1990.1994.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
+ummer.1990.1994.pdf used on input line 101.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1995.1999.pdf, id=
+104, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1995.1999.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.1995.1999.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
+ummer.1995.1999.pdf used on input line 102.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 100--102
+ [][][][][][] 
+ []
+
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2000.2004.pdf, id=
+106, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2000.2004.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2000.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
+ummer.2000.2004.pdf used on input line 103.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2005.2009.pdf, id=
+108, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2005.2009.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2005.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
+ummer.2005.2009.pdf used on input line 104.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2010.2014.pdf, id=
+110, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2010.2014.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
+ummer.2010.2014.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 103--105
+ [][][][][][] 
+ []
+
+
 </backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2015.2015.pdf, id=
-154, 505.89pt x 505.89pt>
+112, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2015.2015.pdf
  Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOSummer.2015.2015.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOS
-ummer.2015.2015.pdf used on input line 100.
+ummer.2015.2015.pdf used on input line 106.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[7 </backup/bio_data/bio.lobster/figures/DFORVSurveyLengthFreqAllv41.png>]
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
@@ -879,112 +854,36 @@ bio.lobster/figures/surveyBubblesDFOSummer.2005.2009.pdf> </backup/bio_data/bio
 .lobster/figures/surveyBubblesDFOSummer.2010.2014.pdf> </backup/bio_data/bio.lo
 bster/figures/surveyBubblesDFOSummer.2015.2015.pdf>]
 </backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1969.1974.pdf, i
-d=292, 505.89pt x 505.89pt>
+d=256, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1969.1974.p
 df Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1969.1974.pd
 f>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CSpring.1969.1974.pdf used on input line 111.
+CSpring.1969.1974.pdf used on input line 117.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1975.1979.pdf, i
-d=294, 505.89pt x 505.89pt>
+d=258, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1975.1979.p
 df Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1975.1979.pd
 f>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CSpring.1975.1979.pdf used on input line 112.
+CSpring.1975.1979.pdf used on input line 118.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1980.1984.pdf, i
-d=296, 505.89pt x 505.89pt>
+d=260, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1980.1984.p
 df Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1980.1984.pd
 f>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CSpring.1980.1984.pdf used on input line 113.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-Overfull \hbox (48.7871pt too wide) in paragraph at lines 111--113
- [][][][][][] 
- []
-
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1985.1989.pdf, i
-d=298, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1985.1989.p
-df Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1985.1989.pd
-f>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CSpring.1985.1989.pdf used on input line 114.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1990.1994.pdf, i
-d=300, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1990.1994.p
-df Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1990.1994.pd
-f>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CSpring.1990.1994.pdf used on input line 115.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1995.1999.pdf, i
-d=302, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1995.1999.p
-df Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1995.1999.pd
-f>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CSpring.1995.1999.pdf used on input line 116.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-Overfull \hbox (48.7871pt too wide) in paragraph at lines 114--116
- [][][][][][] 
- []
-
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2000.2004.pdf, i
-d=304, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2000.2004.p
-df Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2000.2004.pd
-f>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CSpring.2000.2004.pdf used on input line 117.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2005.2009.pdf, i
-d=306, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2005.2009.p
-df Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2005.2009.pd
-f>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CSpring.2005.2009.pdf used on input line 118.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2010.2014.pdf, i
-d=308, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2010.2014.p
-df Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2010.2014.pd
-f>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CSpring.2010.2014.pdf used on input line 119.
+CSpring.1980.1984.pdf used on input line 119.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 Overfull \hbox (48.7871pt too wide) in paragraph at lines 117--119
@@ -992,15 +891,91 @@ Overfull \hbox (48.7871pt too wide) in paragraph at lines 117--119
  []
 
 
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1985.1989.pdf, i
+d=262, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1985.1989.p
+df Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1985.1989.pd
+f>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CSpring.1985.1989.pdf used on input line 120.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1990.1994.pdf, i
+d=264, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1990.1994.p
+df Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1990.1994.pd
+f>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CSpring.1990.1994.pdf used on input line 121.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1995.1999.pdf, i
+d=266, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1995.1999.p
+df Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.1995.1999.pd
+f>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CSpring.1995.1999.pdf used on input line 122.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 120--122
+ [][][][][][] 
+ []
+
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2000.2004.pdf, i
+d=268, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2000.2004.p
+df Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2000.2004.pd
+f>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CSpring.2000.2004.pdf used on input line 123.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2005.2009.pdf, i
+d=270, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2005.2009.p
+df Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2005.2009.pd
+f>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CSpring.2005.2009.pdf used on input line 124.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2010.2014.pdf, i
+d=272, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2010.2014.p
+df Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2010.2014.pd
+f>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CSpring.2010.2014.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 123--125
+ [][][][][][] 
+ []
+
+
 </backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2015.2015.pdf, i
-d=310, 505.89pt x 505.89pt>
+d=274, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2015.2015.p
 df Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2015.2015.pd
 f>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CSpring.2015.2015.pdf used on input line 120.
+CSpring.2015.2015.pdf used on input line 126.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 
@@ -1020,103 +995,33 @@ ckup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2005.2009.pdf> </bac
 kup/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2010.2014.pdf> </back
 up/bio_data/bio.lobster/figures/surveyBubblesNEFSCSpring.2015.2015.pdf>]
 </backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1969.1974.pdf, id=
-448, 505.89pt x 505.89pt>
+413, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1969.1974.pdf
  Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1969.1974.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CFall.1969.1974.pdf used on input line 130.
+CFall.1969.1974.pdf used on input line 136.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1975.1979.pdf, id=
-450, 505.89pt x 505.89pt>
+415, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1975.1979.pdf
  Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1975.1979.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CFall.1975.1979.pdf used on input line 131.
+CFall.1975.1979.pdf used on input line 137.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1980.1984.pdf, id=
-452, 505.89pt x 505.89pt>
+417, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1980.1984.pdf
  Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1980.1984.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CFall.1980.1984.pdf used on input line 132.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-Overfull \hbox (48.7871pt too wide) in paragraph at lines 130--132
- [][][][][][] 
- []
-
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1985.1989.pdf, id=
-454, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1985.1989.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1985.1989.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CFall.1985.1989.pdf used on input line 133.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1990.1994.pdf, id=
-456, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1990.1994.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1990.1994.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CFall.1990.1994.pdf used on input line 134.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1995.1999.pdf, id=
-458, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1995.1999.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1995.1999.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CFall.1995.1999.pdf used on input line 135.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-Overfull \hbox (48.7871pt too wide) in paragraph at lines 133--135
- [][][][][][] 
- []
-
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2000.2004.pdf, id=
-460, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2000.2004.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2000.2004.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CFall.2000.2004.pdf used on input line 136.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2005.2009.pdf, id=
-462, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2005.2009.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2005.2009.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CFall.2005.2009.pdf used on input line 137.
-(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
-
-</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2010.2014.pdf, id=
-464, 505.89pt x 505.89pt>
-File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2010.2014.pdf
- Graphic file (type pdf)
-
-<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2010.2014.pdf>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CFall.2010.2014.pdf used on input line 138.
+CFall.1980.1984.pdf used on input line 138.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 Overfull \hbox (48.7871pt too wide) in paragraph at lines 136--138
@@ -1124,14 +1029,84 @@ Overfull \hbox (48.7871pt too wide) in paragraph at lines 136--138
  []
 
 
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1985.1989.pdf, id=
+419, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1985.1989.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1985.1989.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CFall.1985.1989.pdf used on input line 139.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1990.1994.pdf, id=
+421, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1990.1994.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CFall.1990.1994.pdf used on input line 140.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1995.1999.pdf, id=
+423, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1995.1999.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.1995.1999.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CFall.1995.1999.pdf used on input line 141.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 139--141
+ [][][][][][] 
+ []
+
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2000.2004.pdf, id=
+425, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2000.2004.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2000.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CFall.2000.2004.pdf used on input line 142.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2005.2009.pdf, id=
+427, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2005.2009.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2005.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CFall.2005.2009.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2010.2014.pdf, id=
+429, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2010.2014.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
+CFall.2010.2014.pdf used on input line 144.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 142--144
+ [][][][][][] 
+ []
+
+
 </backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2015.2015.pdf, id=
-466, 505.89pt x 505.89pt>
+431, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2015.2015.pdf
  Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesNEFSCFall.2015.2015.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesNEFS
-CFall.2015.2015.pdf used on input line 139.
+CFall.2015.2015.pdf used on input line 145.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1150,77 +1125,77 @@ ata/bio.lobster/figures/surveyBubblesNEFSCFall.2000.2004.pdf> </backup/bio_data
 o.lobster/figures/surveyBubblesNEFSCFall.2010.2014.pdf> </backup/bio_data/bio.l
 obster/figures/surveyBubblesNEFSCFall.2015.2015.pdf>]
 </backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.1987.1994.pdf, id
-=604, 505.89pt x 505.89pt>
+=569, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.1987.1994.pd
 f Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.1987.1994.pdf
 >
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOG
-eorges.1987.1994.pdf used on input line 150.
+eorges.1987.1994.pdf used on input line 156.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.1995.1999.pdf, id
-=606, 505.89pt x 505.89pt>
+=571, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.1995.1999.pd
 f Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.1995.1999.pdf
 >
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOG
-eorges.1995.1999.pdf used on input line 151.
+eorges.1995.1999.pdf used on input line 157.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2000.2004.pdf, id
-=608, 505.89pt x 505.89pt>
+=573, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2000.2004.pd
 f Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2000.2004.pdf
 >
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOG
-eorges.2000.2004.pdf used on input line 152.
+eorges.2000.2004.pdf used on input line 158.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
-Overfull \hbox (48.7871pt too wide) in paragraph at lines 150--152
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 156--158
  [][][][][][] 
  []
 
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2005.2009.pdf, id
-=610, 505.89pt x 505.89pt>
+=575, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2005.2009.pd
 f Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2005.2009.pdf
 >
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOG
-eorges.2005.2009.pdf used on input line 153.
+eorges.2005.2009.pdf used on input line 159.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2010.2014.pdf, id
-=612, 505.89pt x 505.89pt>
+=577, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2010.2014.pd
 f Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2010.2014.pdf
 >
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOG
-eorges.2010.2014.pdf used on input line 154.
+eorges.2010.2014.pdf used on input line 160.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
 </backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2015.2015.pdf, id
-=614, 505.89pt x 505.89pt>
+=579, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2015.2015.pd
 f Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2015.2015.pdf
 >
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/surveyBubblesDFOG
-eorges.2015.2015.pdf used on input line 155.
+eorges.2015.2015.pdf used on input line 161.
 (pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
 
-Overfull \hbox (48.7871pt too wide) in paragraph at lines 153--155
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 159--161
  [][][][][][] 
  []
 
@@ -1236,33 +1211,33 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 backup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2005.2009.pdf> </ba
 ckup/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2010.2014.pdf> </back
 up/bio_data/bio.lobster/figures/surveyBubblesDFOGeorges.2015.2015.pdf>]
-</backup/bio_data/bio.lobster/figures/lfa41DFObase.pdf, id=700, 505.89pt x 505.
+</backup/bio_data/bio.lobster/figures/lfa41DFObase.pdf, id=665, 505.89pt x 505.
 89pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFObase.pdf Graphic file (type 
 pdf)
  <use /backup/bio_data/bio.lobster/figures/lfa41DFObase.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFObase.pdf 
-used on input line 167.
+used on input line 173.
 (pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFOrestratified.pdf, id=701, 505.89p
+</backup/bio_data/bio.lobster/figures/lfa41DFOrestratified.pdf, id=666, 505.89p
 t x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratified.pdf Graphic fil
 e (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOrestratified.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratif
-ied.pdf used on input line 168.
+ied.pdf used on input line 174.
 (pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFOadjrestratified.pdf, id=702, 505.
+</backup/bio_data/bio.lobster/figures/lfa41DFOadjrestratified.pdf, id=667, 505.
 89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOadjrestratified.pdf Graphic 
 file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOadjrestratified.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOadjrestra
-tified.pdf used on input line 169.
+tified.pdf used on input line 175.
 (pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
 
 
@@ -1274,35 +1249,35 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [12 </backup/bio_data/bio.lobster/figures/lfa41DFObase.pdf> </backup/bio_data/b
 io.lobster/figures/lfa41DFOrestratified.pdf> </backup/bio_data/bio.lobster/figu
 res/lfa41DFOadjrestratified.pdf>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCspringbase.pdf, id=726, 505.89p
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCspringbase.pdf, id=691, 505.89p
 t x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCspringbase.pdf Graphic fil
 e (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCspringbase.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCspringb
-ase.pdf used on input line 178.
+ase.pdf used on input line 184.
 (pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCspringrestratified.pdf, id=727,
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCspringrestratified.pdf, id=692,
  505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCspringrestratified.pdf Gra
 phic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCspringrestratified.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCspringr
-estratified.pdf used on input line 179.
+estratified.pdf used on input line 185.
 (pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCspringrestratifiedadjacent.pdf,
- id=728, 505.89pt x 505.89pt>
+ id=693, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCspringrestratifiedadjacent
 .pdf Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCspringrestratifiedadjacent.
 pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCspringr
-estratifiedadjacent.pdf used on input line 180.
+estratifiedadjacent.pdf used on input line 186.
 (pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
 
 
@@ -1314,34 +1289,34 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [13 </backup/bio_data/bio.lobster/figures/lfa41NEFSCspringbase.pdf> </backup/bi
 o_data/bio.lobster/figures/lfa41NEFSCspringrestratified.pdf> </backup/bio_data/
 bio.lobster/figures/lfa41NEFSCspringrestratifiedadjacent.pdf>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCfallbase.pdf, id=753, 505.89pt 
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCfallbase.pdf, id=718, 505.89pt 
 x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCfallbase.pdf Graphic file 
 (type pdf)
  <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCfallbase.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCfallbas
-e.pdf used on input line 188.
+e.pdf used on input line 194.
 (pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCfalrestratified.pdf, id=754, 50
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCfalrestratified.pdf, id=719, 50
 5.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCfalrestratified.pdf Graphi
 c file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCfalrestratified.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCfalrest
-ratified.pdf used on input line 189.
+ratified.pdf used on input line 195.
 (pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedadjacent.pdf, i
-d=755, 505.89pt x 505.89pt>
+d=720, 505.89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedadjacent.p
 df Graphic file (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedadjacent.pd
 f>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallres
-tratifiedadjacent.pdf used on input line 190.
+tratifiedadjacent.pdf used on input line 196.
 (pdftex.def)             Requested size: 221.78923pt x 221.78947pt.
 
 
@@ -1353,14 +1328,14 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [14 </backup/bio_data/bio.lobster/figures/lfa41NEFSCfallbase.pdf> </backup/bio_
 data/bio.lobster/figures/lfa41NEFSCfalrestratified.pdf> </backup/bio_data/bio.l
 obster/figures/lfa41NEFSCFallrestratifiedadjacent.pdf>]
-</backup/bio_data/bio.lobster/figures/lfa41georgesefficiency.pdf, id=780, 505.8
+</backup/bio_data/bio.lobster/figures/lfa41georgesefficiency.pdf, id=744, 505.8
 9pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41georgesefficiency.pdf Graphic f
 ile (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41georgesefficiency.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgeseffic
-iency.pdf used on input line 199.
+iency.pdf used on input line 205.
 (pdftex.def)             Requested size: 377.0444pt x 377.05446pt.
 
 
@@ -1370,45 +1345,823 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [15 </backup/bio_data/bio.lobster/figures/lfa41georgesefficiency.pdf>]
-</backup/bio_data/bio.lobster/figures/lfa41DFObasenumbers.png, id=792, 1084.05p
-t x 867.24pt>
+</backup/bio_data/bio.lobster/spmodelling/lfa41/SurveyIndicesModeledB.png, id=7
+56, 899.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/SurveyIndicesModeledB.png 
+Graphic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/SurveyIndicesModeledB.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/SurveyI
+ndicesModeledB.png used on input line 217.
+(pdftex.def)             Requested size: 377.0444pt x 382.93376pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[16 </backup/bio_data/bio.lobster/spmodelling/lfa41/SurveyIndicesModeledB.png>]
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/biomass.timeseriesfourI.png, id
+=764, 899.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/biomass.timeseriesfourI.pn
+g Graphic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/biomass.timeseriesfourI.png
+>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/biomass
+.timeseriesfourI.png used on input line 226.
+(pdftex.def)             Requested size: 288.32329pt x 292.82759pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/fishingmortality.timeseries.fou
+rI.png, id=765, 899.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/fishingmortality.timeserie
+s.fourI.png Graphic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/fishingmortality.timeseries
+.fourI.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/fishing
+mortality.timeseries.fourI.png used on input line 227.
+(pdftex.def)             Requested size: 288.32329pt x 292.82759pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[17 </backup/bio_data/bio.lobster/spmodelling/lfa41/biomass.timeseriesfourI.png
+> </backup/bio_data/bio.lobster/spmodelling/lfa41/fishingmortality.timeseries.f
+ourI.png>]
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorr.png, id=773, 89
+9.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorr.png Graphi
+c file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorr.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorr.png used on input line 238.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorK.png, id=775, 89
+9.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorK.png Graphi
+c file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorK.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorK.png used on input line 239.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq1.png, id=777, 8
+99.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq1.png Graph
+ic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq1.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorq1.png used on input line 240.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq2.png, id=779, 8
+99.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq2.png Graph
+ic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq2.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorq2.png used on input line 241.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq3.png, id=781, 8
+99.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq3.png Graph
+ic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq3.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorq3.png used on input line 242.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq4.png, id=783, 8
+99.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq4.png Graph
+ic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorq4.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorq4.png used on input line 243.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[18 </backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorr.png> </back
+up/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorK.png> </backup/bio_dat
+a/bio.lobster/spmodelling/lfa41/priorposteriorq1.png> </backup/bio_data/bio.lob
+ster/spmodelling/lfa41/priorposteriorq2.png> </backup/bio_data/bio.lobster/spmo
+delling/lfa41/priorposteriorq3.png> </backup/bio_data/bio.lobster/spmodelling/l
+fa41/priorposteriorq4.png>]
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsdp.png, id=803, 
+899.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsdp.png Grap
+hic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsdp.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorsdp.png used on input line 252.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.oa.png, id=805
+, 899.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.oa.png Gr
+aphic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.oa.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorsd.oa.png used on input line 253.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.ob.png, id=807
+, 899.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.ob.png Gr
+aphic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.ob.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorsd.ob.png used on input line 254.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.oc.png, id=809
+, 899.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.oc.png Gr
+aphic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.oc.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorsd.oc.png used on input line 255.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.od.png, id=811
+, 899.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.od.png Gr
+aphic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.od.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/priorpo
+steriorsd.od.png used on input line 256.
+(pdftex.def)             Requested size: 164.12186pt x 152.03165pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[19 </backup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsdp.png> </ba
+ckup/bio_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.oa.png> </backup/b
+io_data/bio.lobster/spmodelling/lfa41/priorposteriorsd.ob.png> </backup/bio_dat
+a/bio.lobster/spmodelling/lfa41/priorposteriorsd.oc.png> </backup/bio_data/bio.
+lobster/spmodelling/lfa41/priorposteriorsd.od.png>]
+</backup/bio_data/bio.lobster/spmodelling/lfa41/CarringCapacityPriorBiomasstoKr
+atio.png, id=830, 899.36pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/CarringCapacityPriorBiomas
+stoKratio.png Graphic file (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/CarringCapacityPriorBiomass
+toKratio.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/Carring
+CapacityPriorBiomasstoKratio.png used on input line 266.
+(pdftex.def)             Requested size: 377.0444pt x 382.93376pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[20 </backup/bio_data/bio.lobster/spmodelling/lfa41/CarringCapacityPriorBiomass
+toKratio.png>]
+</backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens69.png, id=836, 899.36p
+t x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens69.png Graphic fil
+e (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens69.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsen
+s69.png used on input line 275.
+(pdftex.def)             Requested size: 146.3817pt x 139.52693pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens104.png, id=838, 899.36
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens104.png Graphic fi
+le (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens104.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsen
+s104.png used on input line 276.
+(pdftex.def)             Requested size: 146.3817pt x 139.52693pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens139.png, id=840, 899.36
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens139.png Graphic fi
+le (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens139.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsen
+s139.png used on input line 277.
+(pdftex.def)             Requested size: 146.3817pt x 139.52693pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens173.png, id=842, 899.36
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens173.png Graphic fi
+le (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens173.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsen
+s173.png used on input line 278.
+(pdftex.def)             Requested size: 146.3817pt x 139.52693pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens208.png, id=844, 899.36
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens208.png Graphic fi
+le (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens208.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsen
+s208.png used on input line 279.
+(pdftex.def)             Requested size: 146.3817pt x 139.52693pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens243.png, id=846, 899.36
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens243.png Graphic fi
+le (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens243.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsen
+s243.png used on input line 280.
+(pdftex.def)             Requested size: 146.3817pt x 139.52693pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens277.png, id=848, 899.36
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens277.png Graphic fi
+le (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens277.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsen
+s277.png used on input line 281.
+(pdftex.def)             Requested size: 146.3817pt x 139.52693pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens312.png, id=850, 899.36
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens312.png Graphic fi
+le (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens312.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsen
+s312.png used on input line 282.
+(pdftex.def)             Requested size: 146.3817pt x 139.52693pt.
+
+</backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens347.png, id=852, 899.36
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens347.png Graphic fi
+le (type png)
+
+<use /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens347.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsen
+s347.png used on input line 283.
+(pdftex.def)             Requested size: 146.3817pt x 139.52693pt.
+
+
+LaTeX Warning: Float too large for page by 57.80232pt on input line 289.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[21 </backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens69.png> </backup/bi
+o_data/bio.lobster/spmodelling/lfa41/HCRKsens104.png> </backup/bio_data/bio.lob
+ster/spmodelling/lfa41/HCRKsens139.png> </backup/bio_data/bio.lobster/spmodelli
+ng/lfa41/HCRKsens173.png> </backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKs
+ens208.png> </backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens243.png> </
+backup/bio_data/bio.lobster/spmodelling/lfa41/HCRKsens277.png> </backup/bio_dat
+a/bio.lobster/spmodelling/lfa41/HCRKsens312.png> </backup/bio_data/bio.lobster/
+spmodelling/lfa41/HCRKsens347.png>]
+</backup/bio_data/bio.lobster/figures/BCPDFORefpointsNewArea.png, id=877, 913.4
+125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/BCPDFORefpointsNewArea.png Graphic f
+ile (type png)
+
+<use /backup/bio_data/bio.lobster/figures/BCPDFORefpointsNewArea.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/BCPDFORefpointsNe
+wArea.png used on input line 300.
+(pdftex.def)             Requested size: 288.32329pt x 288.31184pt.
+
+</backup/bio_data/bio.lobster/figures/DFORefpointsNewArea.png, id=878, 913.4125
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/DFORefpointsNewArea.png Graphic file
+ (type png)
+
+<use /backup/bio_data/bio.lobster/figures/DFORefpointsNewArea.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/DFORefpointsNewAr
+ea.png used on input line 301.
+(pdftex.def)             Requested size: 310.50357pt x 310.5004pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[22 </backup/bio_data/bio.lobster/figures/BCPDFORefpointsNewArea.png> </backup/
+bio_data/bio.lobster/figures/DFORefpointsNewArea.png>]
+</backup/bio_data/bio.lobster/figures/relFDFOSurvey.png, id=886, 913.4125pt x 9
+13.4125pt>
+File: /backup/bio_data/bio.lobster/figures/relFDFOSurvey.png Graphic file (type
+ png)
+ <use /backup/bio_data/bio.lobster/figures/relFDFOSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/relFDFOSurvey.png
+ used on input line 309.
+(pdftex.def)             Requested size: 310.50357pt x 310.5004pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[23 </backup/bio_data/bio.lobster/figures/relFDFOSurvey.png>]
+</backup/bio_data/bio.lobster/figures/HCRLongTermDataDFOSurvey.png, id=893, 913
+.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRLongTermDataDFOSurvey.png Graphic
+ file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRLongTermDataDFOSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRLongTermDataDF
+OSurvey.png used on input line 318.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRDataDFOSurvey.png, id=894, 913.4125pt 
+x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRDataDFOSurvey.png Graphic file (t
+ype png)
+ <use /backup/bio_data/bio.lobster/figures/HCRDataDFOSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRDataDFOSurvey.
+png used on input line 319.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRllbLongTermDataDFOSurvey.png, id=895, 
+913.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRllbLongTermDataDFOSurvey.png Grap
+hic file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRllbLongTermDataDFOSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRllbLongTermDat
+aDFOSurvey.png used on input line 320.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRllbDataDFOSurvey.png, id=896, 913.4125
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRllbDataDFOSurvey.png Graphic file
+ (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRllbDataDFOSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRllbDataDFOSurv
+ey.png used on input line 321.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+
+LaTeX Warning: Float too large for page by 81.8204pt on input line 325.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[24 </backup/bio_data/bio.lobster/figures/HCRLongTermDataDFOSurvey.png> </backu
+p/bio_data/bio.lobster/figures/HCRDataDFOSurvey.png> </backup/bio_data/bio.lobs
+ter/figures/HCRllbLongTermDataDFOSurvey.png> </backup/bio_data/bio.lobster/figu
+res/HCRllbDataDFOSurvey.png>]
+</backup/bio_data/bio.lobster/figures/BCPSpringRefpointsNewArea.png, id=906, 91
+3.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/BCPSpringRefpointsNewArea.png Graphi
+c file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/BCPSpringRefpointsNewArea.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/BCPSpringRefpoint
+sNewArea.png used on input line 333.
+(pdftex.def)             Requested size: 288.32329pt x 288.31184pt.
+
+</backup/bio_data/bio.lobster/figures/SpringRefpointsNewArea.png, id=907, 913.4
+125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/SpringRefpointsNewArea.png Graphic f
+ile (type png)
+
+<use /backup/bio_data/bio.lobster/figures/SpringRefpointsNewArea.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SpringRefpointsNe
+wArea.png used on input line 334.
+(pdftex.def)             Requested size: 310.50357pt x 310.5004pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[25 </backup/bio_data/bio.lobster/figures/BCPSpringRefpointsNewArea.png> </back
+up/bio_data/bio.lobster/figures/SpringRefpointsNewArea.png>]
+</backup/bio_data/bio.lobster/figures/relFSpringSurvey.png, id=916, 913.4125pt 
+x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/relFSpringSurvey.png Graphic file (t
+ype png)
+ <use /backup/bio_data/bio.lobster/figures/relFSpringSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/relFSpringSurvey.
+png used on input line 344.
+(pdftex.def)             Requested size: 310.50357pt x 310.5004pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[26 </backup/bio_data/bio.lobster/figures/relFSpringSurvey.png>]
+</backup/bio_data/bio.lobster/figures/HCRLongTermDataSpringSurvey.png, id=923, 
+913.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRLongTermDataSpringSurvey.png Grap
+hic file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRLongTermDataSpringSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRLongTermDataSp
+ringSurvey.png used on input line 352.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRDataSpringSurvey.png, id=924, 913.4125
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRDataSpringSurvey.png Graphic file
+ (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRDataSpringSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRDataSpringSurv
+ey.png used on input line 353.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRllbLongTermDataSpringSurvey.png, id=92
+5, 913.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRllbLongTermDataSpringSurvey.png G
+raphic file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRllbLongTermDataSpringSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRllbLongTermDat
+aSpringSurvey.png used on input line 354.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRllbDataSpringSurvey.png, id=926, 913.4
+125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRllbDataSpringSurvey.png Graphic f
+ile (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRllbDataSpringSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRllbDataSpringS
+urvey.png used on input line 355.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+
+LaTeX Warning: Float too large for page by 81.8204pt on input line 359.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[27 </backup/bio_data/bio.lobster/figures/HCRLongTermDataSpringSurvey.png> </ba
+ckup/bio_data/bio.lobster/figures/HCRDataSpringSurvey.png> </backup/bio_data/bi
+o.lobster/figures/HCRllbLongTermDataSpringSurvey.png> </backup/bio_data/bio.lob
+ster/figures/HCRllbDataSpringSurvey.png>]
+</backup/bio_data/bio.lobster/figures/BCPAutumnRefpointsNewArea.png, id=936, 91
+3.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/BCPAutumnRefpointsNewArea.png Graphi
+c file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/BCPAutumnRefpointsNewArea.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/BCPAutumnRefpoint
+sNewArea.png used on input line 369.
+(pdftex.def)             Requested size: 288.32329pt x 288.31184pt.
+
+</backup/bio_data/bio.lobster/figures/AutumnRefpointsNewArea.png, id=937, 913.4
+125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/AutumnRefpointsNewArea.png Graphic f
+ile (type png)
+
+<use /backup/bio_data/bio.lobster/figures/AutumnRefpointsNewArea.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/AutumnRefpointsNe
+wArea.png used on input line 370.
+(pdftex.def)             Requested size: 310.50357pt x 310.5004pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[28 </backup/bio_data/bio.lobster/figures/BCPAutumnRefpointsNewArea.png> </back
+up/bio_data/bio.lobster/figures/AutumnRefpointsNewArea.png>]
+</backup/bio_data/bio.lobster/figures/relFAutumnSurvey.png, id=945, 913.4125pt 
+x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/relFAutumnSurvey.png Graphic file (t
+ype png)
+ <use /backup/bio_data/bio.lobster/figures/relFAutumnSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/relFAutumnSurvey.
+png used on input line 379.
+(pdftex.def)             Requested size: 310.50357pt x 310.5004pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[29 </backup/bio_data/bio.lobster/figures/relFAutumnSurvey.png>]
+</backup/bio_data/bio.lobster/figures/HCRLongTermDataAutumnSurvey.png, id=953, 
+913.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRLongTermDataAutumnSurvey.png Grap
+hic file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRLongTermDataAutumnSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRLongTermDataAu
+tumnSurvey.png used on input line 387.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRDataAutumnSurvey.png, id=954, 913.4125
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRDataAutumnSurvey.png Graphic file
+ (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRDataAutumnSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRDataAutumnSurv
+ey.png used on input line 388.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRllbLongTermDataAutumnSurvey.png, id=95
+5, 913.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRllbLongTermDataAutumnSurvey.png G
+raphic file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRllbLongTermDataAutumnSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRllbLongTermDat
+aAutumnSurvey.png used on input line 389.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRllbDataAutumnSurvey.png, id=956, 913.4
+125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRllbDataAutumnSurvey.png Graphic f
+ile (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRllbDataAutumnSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRllbDataAutumnS
+urvey.png used on input line 390.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+
+LaTeX Warning: Float too large for page by 81.8204pt on input line 395.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[30 </backup/bio_data/bio.lobster/figures/HCRLongTermDataAutumnSurvey.png> </ba
+ckup/bio_data/bio.lobster/figures/HCRDataAutumnSurvey.png> </backup/bio_data/bi
+o.lobster/figures/HCRllbLongTermDataAutumnSurvey.png> </backup/bio_data/bio.lob
+ster/figures/HCRllbDataAutumnSurvey.png>]
+</backup/bio_data/bio.lobster/figures/BCPGeorgesRefpointsNewArea.png, id=966, 9
+13.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/BCPGeorgesRefpointsNewArea.png Graph
+ic file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/BCPGeorgesRefpointsNewArea.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/BCPGeorgesRefpoin
+tsNewArea.png used on input line 403.
+(pdftex.def)             Requested size: 288.32329pt x 288.31184pt.
+
+</backup/bio_data/bio.lobster/figures/GeorgesRefpointsNewArea.png, id=967, 913.
+4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/GeorgesRefpointsNewArea.png Graphic 
+file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/GeorgesRefpointsNewArea.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/GeorgesRefpointsN
+ewArea.png used on input line 404.
+(pdftex.def)             Requested size: 310.50357pt x 310.5004pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[31 </backup/bio_data/bio.lobster/figures/BCPGeorgesRefpointsNewArea.png> </bac
+kup/bio_data/bio.lobster/figures/GeorgesRefpointsNewArea.png>]
+</backup/bio_data/bio.lobster/figures/relFGeorgesSurvey.png, id=976, 913.4125pt
+ x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/relFGeorgesSurvey.png Graphic file (
+type png)
+
+<use /backup/bio_data/bio.lobster/figures/relFGeorgesSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/relFGeorgesSurvey
+.png used on input line 413.
+(pdftex.def)             Requested size: 310.50357pt x 310.5004pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[32 </backup/bio_data/bio.lobster/figures/relFGeorgesSurvey.png>]
+</backup/bio_data/bio.lobster/figures/HCRLongTermDataGeorgesSurvey.png, id=983,
+ 913.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRLongTermDataGeorgesSurvey.png Gra
+phic file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRLongTermDataGeorgesSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRLongTermDataGe
+orgesSurvey.png used on input line 422.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRDataGeorgesSurvey.png, id=984, 913.412
+5pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRDataGeorgesSurvey.png Graphic fil
+e (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRDataGeorgesSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRDataGeorgesSur
+vey.png used on input line 423.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRllbLongTermDataGeorgesSurvey.png, id=9
+85, 913.4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRllbLongTermDataGeorgesSurvey.png 
+Graphic file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRllbLongTermDataGeorgesSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRllbLongTermDat
+aGeorgesSurvey.png used on input line 424.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+</backup/bio_data/bio.lobster/figures/HCRllbDataGeorgesSurvey.png, id=986, 913.
+4125pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/HCRllbDataGeorgesSurvey.png Graphic 
+file (type png)
+
+<use /backup/bio_data/bio.lobster/figures/HCRllbDataGeorgesSurvey.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/HCRllbDataGeorges
+Survey.png used on input line 425.
+(pdftex.def)             Requested size: 199.60895pt x 199.59943pt.
+
+
+LaTeX Warning: Float too large for page by 81.8204pt on input line 430.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[33 </backup/bio_data/bio.lobster/figures/HCRLongTermDataGeorgesSurvey.png> </b
+ackup/bio_data/bio.lobster/figures/HCRDataGeorgesSurvey.png> </backup/bio_data/
+bio.lobster/figures/HCRllbLongTermDataGeorgesSurvey.png> </backup/bio_data/bio.
+lobster/figures/HCRllbDataGeorgesSurvey.png>]
+</backup/bio_data/bio.lobster/figures/RefsRepPotDFO.png, id=996, 913.4125pt x 9
+13.4125pt>
+File: /backup/bio_data/bio.lobster/figures/RefsRepPotDFO.png Graphic file (type
+ png)
+ <use /backup/bio_data/bio.lobster/figures/RefsRepPotDFO.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/RefsRepPotDFO.png
+ used on input line 439.
+(pdftex.def)             Requested size: 310.50357pt x 310.5004pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[34 </backup/bio_data/bio.lobster/figures/RefsRepPotDFO.png>]
+</backup/bio_data/bio.lobster/figures/BCPRepPotNEFSCSpring.png, id=1003, 899.36
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/BCPRepPotNEFSCSpring.png Graphic fil
+e (type png)
+
+<use /backup/bio_data/bio.lobster/figures/BCPRepPotNEFSCSpring.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/BCPRepPotNEFSCSpr
+ing.png used on input line 447.
+(pdftex.def)             Requested size: 288.32329pt x 292.82759pt.
+
+</backup/bio_data/bio.lobster/figures/RefsRepPotNEFSCSpring.png, id=1004, 899.3
+6pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/RefsRepPotNEFSCSpring.png Graphic fi
+le (type png)
+
+<use /backup/bio_data/bio.lobster/figures/RefsRepPotNEFSCSpring.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/RefsRepPotNEFSCSp
+ring.png used on input line 448.
+(pdftex.def)             Requested size: 310.50357pt x 315.35065pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[35 </backup/bio_data/bio.lobster/figures/BCPRepPotNEFSCSpring.png> </backup/bi
+o_data/bio.lobster/figures/RefsRepPotNEFSCSpring.png>]
+</backup/bio_data/bio.lobster/figures/BCPRepPotNEFSCAutumn.png, id=1012, 899.36
+pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/BCPRepPotNEFSCAutumn.png Graphic fil
+e (type png)
+
+<use /backup/bio_data/bio.lobster/figures/BCPRepPotNEFSCAutumn.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/BCPRepPotNEFSCAut
+umn.png used on input line 459.
+(pdftex.def)             Requested size: 288.32329pt x 292.82759pt.
+
+</backup/bio_data/bio.lobster/figures/RefsRepPotNEFSCAutumn.png, id=1013, 899.3
+6pt x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/RefsRepPotNEFSCAutumn.png Graphic fi
+le (type png)
+
+<use /backup/bio_data/bio.lobster/figures/RefsRepPotNEFSCAutumn.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/RefsRepPotNEFSCAu
+tumn.png used on input line 460.
+(pdftex.def)             Requested size: 310.50357pt x 315.35065pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[36 </backup/bio_data/bio.lobster/figures/BCPRepPotNEFSCAutumn.png> </backup/bi
+o_data/bio.lobster/figures/RefsRepPotNEFSCAutumn.png>]
+</backup/bio_data/bio.lobster/figures/RefsRepPotGeorges.png, id=1021, 913.4125p
+t x 913.4125pt>
+File: /backup/bio_data/bio.lobster/figures/RefsRepPotGeorges.png Graphic file (
+type png)
+
+<use /backup/bio_data/bio.lobster/figures/RefsRepPotGeorges.png>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/RefsRepPotGeorges
+.png used on input line 470.
+(pdftex.def)             Requested size: 310.50357pt x 310.5004pt.
+
+</backup/bio_data/bio.lobster/figures/lfa41DFObasenumbers.png, id=1022, 1084.05
+pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFObasenumbers.png Graphic file
  (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFObasenumbers.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFObasenumbe
-rs.png used on input line 209.
+rs.png used on input line 565.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbers.png, id=793, 
-1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbers.png, id=1023,
+ 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbers.png Grap
 hic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbers.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratif
-iednumbers.png used on input line 210.
+iednumbers.png used on input line 566.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestratifiednumbers.png, i
-d=794, 1084.05pt x 867.24pt>
+d=1024, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestratifiednumbers.p
 ng Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestratifiednumbers.pn
 g>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjcentlfa41DFOre
-stratifiednumbers.png used on input line 211.
+stratifiednumbers.png used on input line 567.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbersNOY.png, id=79
-5, 1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbersNOY.png, id=10
+25, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbersNOY.png G
 raphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbersNOY.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratif
-iednumbersNOY.png used on input line 212.
+iednumbersNOY.png used on input line 568.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -1417,52 +2170,59 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[16 </backup/bio_data/bio.lobster/figures/lfa41DFObasenumbers.png (PNG copy)> <
+[37 </backup/bio_data/bio.lobster/figures/RefsRepPotGeorges.png>]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[38 </backup/bio_data/bio.lobster/figures/lfa41DFObasenumbers.png (PNG copy)> <
 /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbers.png (PNG copy)
 > </backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestratifiednumbers.png 
 (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbersNO
 Y.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbers.png, id=805, 
-1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbers.png, id=1042,
+ 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbers.png Grap
 hic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbers.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringb
-asenumbers.png used on input line 220.
+asenumbers.png used on input line 576.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbers.png, 
-id=806, 1084.05pt x 867.24pt>
+id=1043, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbers.
 png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbers.p
 ng>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringr
-estratifiednumbers.png used on input line 221.
+estratifiednumbers.png used on input line 577.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiednumbe
-rs.png, id=807, 1084.05pt x 867.24pt>
+rs.png, id=1044, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratified
 numbers.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedn
 umbers.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CSpringrestratifiednumbers.png used on input line 222.
+CSpringrestratifiednumbers.png used on input line 578.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbersNOY.pn
-g, id=808, 1084.05pt x 867.24pt>
+g, id=1045, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbersN
 OY.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbersNO
 Y.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringr
-estratifiednumbersNOY.png used on input line 223.
+estratifiednumbersNOY.png used on input line 579.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -1471,52 +2231,52 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[17 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbers.png (PNG 
+[39 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbers.png (PNG 
 copy)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumber
 s.png (PNG copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSprin
 grestratifiednumbers.png (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa4
 1NEFSCSpringrestratifiednumbersNOY.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbers.png, id=818, 10
-84.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbers.png, id=1055, 1
+084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbers.png Graphi
 c file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbers.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbas
-enumbers.png used on input line 232.
+enumbers.png used on input line 588.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumbers.png, id
-=819, 1084.05pt x 867.24pt>
+=1056, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumbers.pn
 g Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumbers.png
 >
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallres
-tratifiednumbers.png used on input line 233.
+tratifiednumbers.png used on input line 589.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednumbers
-.png, id=820, 1084.05pt x 867.24pt>
+.png, id=1057, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednu
 mbers.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednum
 bers.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CFallrestratifiednumbers.png used on input line 234.
+CFallrestratifiednumbers.png used on input line 590.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumbersNOY.png,
- id=821, 1084.05pt x 867.24pt>
+ id=1058, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumbersNOY
 .png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumbersNOY.
 png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallres
-tratifiednumbersNOY.png used on input line 235.
+tratifiednumbersNOY.png used on input line 591.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -1525,19 +2285,19 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[18 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbers.png (PNG co
+[40 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbers.png (PNG co
 py)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumbers.pn
 g (PNG copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestr
 atifiednumbers.png (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa41NEFSC
 FallrestratifiednumbersNOY.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41georgesnumbers.png, id=831, 1084.05p
-t x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41georgesnumbers.png, id=1068, 1084.05
+pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41georgesnumbers.png Graphic file
  (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41georgesnumbers.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesnumbe
-rs.png used on input line 243.
+rs.png used on input line 599.
 (pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
 
 
@@ -1546,25 +2306,25 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[19 </backup/bio_data/bio.lobster/figures/lfa41georgesnumbers.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/pezzackRVDFObasenumbers.png, id=838, 1084
-.05pt x 867.24pt>
+[41 </backup/bio_data/bio.lobster/figures/lfa41georgesnumbers.png (PNG copy)>]
+</backup/bio_data/bio.lobster/figures/pezzackRVDFObasenumbers.png, id=1074, 108
+4.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/pezzackRVDFObasenumbers.png Graphic 
 file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/pezzackRVDFObasenumbers.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/pezzackRVDFObasen
-umbers.png used on input line 251.
+umbers.png used on input line 607.
 (pdftex.def)             Requested size: 257.27632pt x 205.81285pt.
 
-</backup/bio_data/bio.lobster/figures/pezzacksummerstratamap.pdf, id=839, 505.8
-9pt x 505.89pt>
+</backup/bio_data/bio.lobster/figures/pezzacksummerstratamap.pdf, id=1075, 505.
+89pt x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/pezzacksummerstratamap.pdf Graphic f
 ile (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/pezzacksummerstratamap.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/pezzacksummerstra
-tamap.pdf used on input line 252.
+tamap.pdf used on input line 608.
 (pdftex.def)             Requested size: 257.27632pt x 257.28258pt.
 
 
@@ -1573,26 +2333,26 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[20 </backup/bio_data/bio.lobster/figures/pezzackRVDFObasenumbers.png (PNG copy
+[42 </backup/bio_data/bio.lobster/figures/pezzackRVDFObasenumbers.png (PNG copy
 )> </backup/bio_data/bio.lobster/figures/pezzacksummerstratamap.pdf>]
-</backup/bio_data/bio.lobster/figures/pezzacklfa41georgesnumbers.png, id=854, 1
-084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/pezzacklfa41georgesnumbers.png, id=1090, 
+1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/pezzacklfa41georgesnumbers.png Graph
 ic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/pezzacklfa41georgesnumbers.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/pezzacklfa41georg
-esnumbers.png used on input line 263.
+esnumbers.png used on input line 619.
 (pdftex.def)             Requested size: 257.27632pt x 205.81285pt.
 
-</backup/bio_data/bio.lobster/figures/pezzackgeorgesmap41.pdf, id=855, 505.89pt
- x 505.89pt>
+</backup/bio_data/bio.lobster/figures/pezzackgeorgesmap41.pdf, id=1091, 505.89p
+t x 505.89pt>
 File: /backup/bio_data/bio.lobster/figures/pezzackgeorgesmap41.pdf Graphic file
  (type pdf)
 
 <use /backup/bio_data/bio.lobster/figures/pezzackgeorgesmap41.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/pezzackgeorgesmap
-41.pdf used on input line 264.
+41.pdf used on input line 620.
 (pdftex.def)             Requested size: 257.27632pt x 257.28258pt.
 
 
@@ -1601,47 +2361,47 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[21 </backup/bio_data/bio.lobster/figures/pezzacklfa41georgesnumbers.png> </bac
+[43 </backup/bio_data/bio.lobster/figures/pezzacklfa41georgesnumbers.png> </bac
 kup/bio_data/bio.lobster/figures/pezzackgeorgesmap41.pdf>]
-</backup/bio_data/bio.lobster/figures/lfa41DFObaseweights.png, id=871, 1084.05p
-t x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41DFObaseweights.png, id=1109, 1084.05
+pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFObaseweights.png Graphic file
  (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFObaseweights.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFObaseweigh
-ts.png used on input line 276.
+ts.png used on input line 632.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedweights.png, id=872, 
-1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedweights.png, id=1110,
+ 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedweights.png Grap
 hic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedweights.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratif
-iedweights.png used on input line 277.
+iedweights.png used on input line 633.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedweights.png, 
-id=873, 1084.05pt x 867.24pt>
+id=1111, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedweights.
 png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedweights.p
 ng>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOr
-estratifiedweights.png used on input line 278.
+estratifiedweights.png used on input line 634.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedweightsNOY.png, id=87
-4, 1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedweightsNOY.png, id=11
+12, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedweightsNOY.png G
 raphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedweightsNOY.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratif
-iedweightsNOY.png used on input line 279.
+iedweightsNOY.png used on input line 635.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -1650,52 +2410,52 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[22 </backup/bio_data/bio.lobster/figures/lfa41DFObaseweights.png (PNG copy)> <
+[44 </backup/bio_data/bio.lobster/figures/lfa41DFObaseweights.png (PNG copy)> <
 /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedweights.png (PNG copy)
 > </backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedweights.png
  (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedweightsN
 OY.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseweights.png, id=884, 
-1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseweights.png, id=1122,
+ 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseweights.png Grap
 hic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseweights.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringb
-aseweights.png used on input line 289.
+aseweights.png used on input line 645.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedweights.png, 
-id=885, 1084.05pt x 867.24pt>
+id=1123, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedweights.
 png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedweights.p
 ng>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringr
-estratifiedweights.png used on input line 290.
+estratifiedweights.png used on input line 646.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedweigh
-ts.png, id=886, 1084.05pt x 867.24pt>
+ts.png, id=1124, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratified
 weights.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedw
 eights.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CSpringrestratifiedweights.png used on input line 291.
+CSpringrestratifiedweights.png used on input line 647.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedweightsNOY.pn
-g, id=887, 1084.05pt x 867.24pt>
+g, id=1125, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedweightsN
 OY.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedweightsNO
 Y.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringr
-estratifiedweightsNOY.png used on input line 292.
+estratifiedweightsNOY.png used on input line 648.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -1704,52 +2464,52 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[23 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseweights.png (PNG 
+[45 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseweights.png (PNG 
 copy)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedweight
 s.png (PNG copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSprin
 grestratifiedweights.png (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa4
 1NEFSCSpringrestratifiedweightsNOY.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseweights.png, id=897, 10
-84.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseweights.png, id=1135, 1
+084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseweights.png Graphi
 c file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseweights.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbas
-eweights.png used on input line 302.
+eweights.png used on input line 658.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedweights.png, id
-=898, 1084.05pt x 867.24pt>
+=1136, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedweights.pn
 g Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedweights.png
 >
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallres
-tratifiedweights.png used on input line 303.
+tratifiedweights.png used on input line 659.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedweights
-.png, id=899, 1084.05pt x 867.24pt>
+.png, id=1137, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedwe
 ights.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedwei
 ghts.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CFallrestratifiedweights.png used on input line 304.
+CFallrestratifiedweights.png used on input line 660.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedweightsNOY.png,
- id=900, 1084.05pt x 867.24pt>
+ id=1138, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedweightsNOY
 .png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedweightsNOY.
 png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallres
-tratifiedweightsNOY.png used on input line 305.
+tratifiedweightsNOY.png used on input line 661.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -1758,51 +2518,51 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[24 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseweights.png (PNG co
+[46 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseweights.png (PNG co
 py)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedweights.pn
 g (PNG copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestr
 atifiedweights.png (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa41NEFSC
 FallrestratifiedweightsNOY.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41georgesweights.png, id=910, 1084.05p
-t x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41georgesweights.png, id=1148, 1084.05
+pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41georgesweights.png Graphic file
  (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41georgesweights.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesweigh
-ts.png used on input line 314.
+ts.png used on input line 670.
 (pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFObasenumbersrecruits.png, id=911, 
-1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41DFObasenumbersrecruits.png, id=1149,
+ 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFObasenumbersrecruits.png Grap
 hic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFObasenumbersrecruits.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFObasenumbe
-rsrecruits.png used on input line 323.
+rsrecruits.png used on input line 679.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbersrecruits.png, 
-id=912, 1084.05pt x 867.24pt>
+id=1150, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbersrecruits.
 png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbersrecruits.p
 ng>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratif
-iednumbersrecruits.png used on input line 324.
+iednumbersrecruits.png used on input line 680.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestratifiednumbersrecruit
-s.png, id=913, 1084.05pt x 867.24pt>
+s.png, id=1151, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestratifiednumbersre
 cruits.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestratifiednumbersrec
 ruits.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjcentlfa41DFOre
-stratifiednumbersrecruits.png used on input line 325.
+stratifiednumbersrecruits.png used on input line 681.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -1811,48 +2571,48 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[25 </backup/bio_data/bio.lobster/figures/lfa41georgesweights.png (PNG copy)>]
+[47 </backup/bio_data/bio.lobster/figures/lfa41georgesweights.png (PNG copy)>]
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[26 </backup/bio_data/bio.lobster/figures/lfa41DFObasenumbersrecruits.png (PNG 
+[48 </backup/bio_data/bio.lobster/figures/lfa41DFObasenumbersrecruits.png (PNG 
 copy)> </backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumbersrecruit
 s.png (PNG copy)> </backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestrati
 fiednumbersrecruits.png (PNG copy)>]
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbersrecruits.png, 
-id=929, 1084.05pt x 867.24pt>
+id=1165, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbersrecruits.
 png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbersrecruits.p
 ng>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringb
-asenumbersrecruits.png used on input line 335.
+asenumbersrecruits.png used on input line 691.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbersrecrui
-ts.png, id=930, 1084.05pt x 867.24pt>
+ts.png, id=1166, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbersr
 ecruits.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbersre
 cruits.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringr
-estratifiednumbersrecruits.png used on input line 336.
+estratifiednumbersrecruits.png used on input line 692.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiednumbe
-rsrecruits.png, id=931, 1084.05pt x 867.24pt>
+rsrecruits.png, id=1167, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratified
 numbersrecruits.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedn
 umbersrecruits.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CSpringrestratifiednumbersrecruits.png used on input line 337.
+CSpringrestratifiednumbersrecruits.png used on input line 693.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -1861,41 +2621,41 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[27 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbersrecruits.p
+[49 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumbersrecruits.p
 ng (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifi
 ednumbersrecruits.png (PNG copy)> </backup/bio_data/bio.lobster/figures/adjacen
 tlfa41NEFSCSpringrestratifiednumbersrecruits.png (PNG copy)>]
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbersrecruits.png, id
-=940, 1084.05pt x 867.24pt>
+=1177, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbersrecruits.pn
 g Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbersrecruits.png
 >
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbas
-enumbersrecruits.png used on input line 347.
+enumbersrecruits.png used on input line 703.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumbersrecruits
-.png, id=941, 1084.05pt x 867.24pt>
+.png, id=1178, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumbersrec
 ruits.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumbersrecr
 uits.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallres
-tratifiednumbersrecruits.png used on input line 348.
+tratifiednumbersrecruits.png used on input line 704.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednumbers
-recruits.png, id=942, 1084.05pt x 867.24pt>
+recruits.png, id=1179, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednu
 mbersrecruits.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednum
 bersrecruits.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CFallrestratifiednumbersrecruits.png used on input line 349.
+CFallrestratifiednumbersrecruits.png used on input line 705.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -1904,50 +2664,50 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[28 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbersrecruits.png
+[50 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumbersrecruits.png
  (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednu
 mbersrecruits.png (PNG copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa
 41NEFSCFallrestratifiednumbersrecruits.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41georgesnumbersrecruits.png, id=951, 
-1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41georgesnumbersrecruits.png, id=1188,
+ 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41georgesnumbersrecruits.png Grap
 hic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41georgesnumbersrecruits.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesnumbe
-rsrecruits.png used on input line 358.
+rsrecruits.png used on input line 714.
 (pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFObasenumberscommercial.png, id=952
-, 1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41DFObasenumberscommercial.png, id=118
+9, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFObasenumberscommercial.png Gr
 aphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFObasenumberscommercial.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFObasenumbe
-rscommercial.png used on input line 369.
+rscommercial.png used on input line 725.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumberscommercial.png
-, id=953, 1084.05pt x 867.24pt>
+, id=1190, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumberscommercia
 l.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumberscommercial
 .png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratif
-iednumberscommercial.png used on input line 370.
+iednumberscommercial.png used on input line 726.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiednumberscommer
-cial.png, id=954, 1084.05pt x 867.24pt>
+cial.png, id=1191, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiednumbersc
 ommercial.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiednumbersco
 mmercial.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOr
-estratifiednumberscommercial.png used on input line 371.
+estratifiednumberscommercial.png used on input line 727.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -1956,7 +2716,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[29 </backup/bio_data/bio.lobster/figures/lfa41georgesnumbersrecruits.png (PNG 
+[51 </backup/bio_data/bio.lobster/figures/lfa41georgesnumbersrecruits.png (PNG 
 copy)>]
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1964,41 +2724,41 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[30 </backup/bio_data/bio.lobster/figures/lfa41DFObasenumberscommercial.png (PN
+[52 </backup/bio_data/bio.lobster/figures/lfa41DFObasenumberscommercial.png (PN
 G copy)> </backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumberscomme
 rcial.png (PNG copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41DFOres
 tratifiednumberscommercial.png (PNG copy)>]
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumberscommercial.png
-, id=968, 1084.05pt x 867.24pt>
+, id=1205, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumberscommercia
 l.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumberscommercial
 .png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringb
-asenumberscommercial.png used on input line 378.
+asenumberscommercial.png used on input line 734.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumberscommer
-cial.png, id=969, 1084.05pt x 867.24pt>
+cial.png, id=1206, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbersc
 ommercial.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbersco
 mmercial.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringr
-estratifiednumberscommercial.png used on input line 379.
+estratifiednumberscommercial.png used on input line 735.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiednumbe
-rscommercial.png, id=970, 1084.05pt x 867.24pt>
+rscommercial.png, id=1207, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratified
 numberscommercial.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedn
 umberscommercial.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CSpringrestratifiednumberscommercial.png used on input line 380.
+CSpringrestratifiednumberscommercial.png used on input line 736.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -2007,41 +2767,41 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[31 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumberscommercial
+[53 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumberscommercial
 .png (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestrati
 fiednumberscommercial.png (PNG copy)> </backup/bio_data/bio.lobster/figures/adj
 acentlfa41NEFSCSpringrestratifiednumberscommercial.png (PNG copy)>]
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumberscommercial.png, 
-id=980, 1084.05pt x 867.24pt>
+id=1216, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumberscommercial.
 png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumberscommercial.p
 ng>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbas
-enumberscommercial.png used on input line 388.
+enumberscommercial.png used on input line 744.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumberscommerci
-al.png, id=981, 1084.05pt x 867.24pt>
+al.png, id=1217, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumberscom
 mercial.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumberscomm
 ercial.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallres
-tratifiednumberscommercial.png used on input line 389.
+tratifiednumberscommercial.png used on input line 745.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednumbers
-commercial.png, id=982, 1084.05pt x 867.24pt>
+commercial.png, id=1218, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednu
 mberscommercial.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednum
 berscommercial.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CFallrestratifiednumberscommercial.png used on input line 390.
+CFallrestratifiednumberscommercial.png used on input line 746.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -2050,50 +2810,50 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[32 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumberscommercial.p
+[54 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumberscommercial.p
 ng (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratified
 numberscommercial.png (PNG copy)> </backup/bio_data/bio.lobster/figures/adjacen
 tlfa41NEFSCFallrestratifiednumberscommercial.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41georgesnumberscommercial.png, id=991
-, 1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41georgesnumberscommercial.png, id=122
+7, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41georgesnumberscommercial.png Gr
 aphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41georgesnumberscommercial.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesnumbe
-rscommercial.png used on input line 397.
+rscommercial.png used on input line 753.
 (pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFObasenumberslargefemale.png, id=99
-2, 1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41DFObasenumberslargefemale.png, id=12
+28, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFObasenumberslargefemale.png G
 raphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFObasenumberslargefemale.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFObasenumbe
-rslargefemale.png used on input line 408.
+rslargefemale.png used on input line 764.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumberslargefemale.pn
-g, id=993, 1084.05pt x 867.24pt>
+g, id=1229, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumberslargefema
 le.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumberslargefemal
 e.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratif
-iednumberslargefemale.png used on input line 409.
+iednumberslargefemale.png used on input line 765.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestratifiednumberslargefe
-male.png, id=994, 1084.05pt x 867.24pt>
+male.png, id=1230, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestratifiednumbersla
 rgefemale.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjcentlfa41DFOrestratifiednumberslar
 gefemale.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjcentlfa41DFOre
-stratifiednumberslargefemale.png used on input line 410.
+stratifiednumberslargefemale.png used on input line 766.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -2102,7 +2862,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[33 </backup/bio_data/bio.lobster/figures/lfa41georgesnumberscommercial.png (PN
+[55 </backup/bio_data/bio.lobster/figures/lfa41georgesnumberscommercial.png (PN
 G copy)>]
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -2110,41 +2870,41 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[34 </backup/bio_data/bio.lobster/figures/lfa41DFObasenumberslargefemale.png (P
+[56 </backup/bio_data/bio.lobster/figures/lfa41DFObasenumberslargefemale.png (P
 NG copy)> </backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiednumberslarg
 efemale.png (PNG copy)> </backup/bio_data/bio.lobster/figures/adjcentlfa41DFOre
 stratifiednumberslargefemale.png (PNG copy)>]
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumberslargefemale.pn
-g, id=1009, 1084.05pt x 867.24pt>
+g, id=1246, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumberslargefema
 le.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumberslargefemal
 e.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringb
-asenumberslargefemale.png used on input line 417.
+asenumberslargefemale.png used on input line 773.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumberslargef
-emale.png, id=1010, 1084.05pt x 867.24pt>
+emale.png, id=1247, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbersl
 argefemale.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiednumbersla
 rgefemale.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringr
-estratifiednumberslargefemale.png used on input line 418.
+estratifiednumberslargefemale.png used on input line 774.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiednumbe
-rslargefemale.png, id=1011, 1084.05pt x 867.24pt>
+rslargefemale.png, id=1248, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratified
 numberslargefemale.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedn
 umberslargefemale.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CSpringrestratifiednumberslargefemale.png used on input line 419.
+CSpringrestratifiednumberslargefemale.png used on input line 775.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -2153,41 +2913,41 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[35 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumberslargefemal
+[57 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasenumberslargefemal
 e.png (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestrat
 ifiednumberslargefemale.png (PNG copy)> </backup/bio_data/bio.lobster/figures/a
 djacentlfa41NEFSCSpringrestratifiednumberslargefemale.png (PNG copy)>]
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumberslargefemale.png,
- id=1020, 1084.05pt x 867.24pt>
+ id=1257, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumberslargefemale
 .png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumberslargefemale.
 png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbas
-enumberslargefemale.png used on input line 427.
+enumberslargefemale.png used on input line 783.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumberslargefem
-ale.png, id=1021, 1084.05pt x 867.24pt>
+ale.png, id=1258, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumberslar
 gefemale.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiednumberslarg
 efemale.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallres
-tratifiednumberslargefemale.png used on input line 428.
+tratifiednumberslargefemale.png used on input line 784.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednumbers
-largefemale.png, id=1022, 1084.05pt x 867.24pt>
+largefemale.png, id=1259, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednu
 mberslargefemale.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiednum
 berslargefemale.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CFallrestratifiednumberslargefemale.png used on input line 429.
+CFallrestratifiednumberslargefemale.png used on input line 785.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -2196,18 +2956,18 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[36 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumberslargefemale.
+[58 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasenumberslargefemale.
 png (PNG copy)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifie
 dnumberslargefemale.png (PNG copy)> </backup/bio_data/bio.lobster/figures/adjac
 entlfa41NEFSCFallrestratifiednumberslargefemale.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41georgesnumberslargefemale.png, id=10
-31, 1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41georgesnumberslargefemale.png, id=12
+69, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41georgesnumberslargefemale.png G
 raphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41georgesnumberslargefemale.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesnumbe
-rslargefemale.png used on input line 436.
+rslargefemale.png used on input line 792.
 (pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
 
 
@@ -2216,25 +2976,25 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[37 </backup/bio_data/bio.lobster/figures/lfa41georgesnumberslargefemale.png (P
+[59 </backup/bio_data/bio.lobster/figures/lfa41georgesnumberslargefemale.png (P
 NG copy)>]
-</backup/bio_data/bio.lobster/figures/pezzacklfa41largefemale.png, id=1038, 108
+</backup/bio_data/bio.lobster/figures/pezzacklfa41largefemale.png, id=1275, 108
 4.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/pezzacklfa41largefemale.png Graphic 
 file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/pezzacklfa41largefemale.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/pezzacklfa41large
-female.png used on input line 445.
+female.png used on input line 801.
 (pdftex.def)             Requested size: 257.27632pt x 205.81285pt.
 
-</backup/bio_data/bio.lobster/figures/pezzack480481map.pdf, id=1039, 505.89pt x
+</backup/bio_data/bio.lobster/figures/pezzack480481map.pdf, id=1276, 505.89pt x
  505.89pt>
 File: /backup/bio_data/bio.lobster/figures/pezzack480481map.pdf Graphic file (t
 ype pdf)
  <use /backup/bio_data/bio.lobster/figures/pezzack480481map.pdf>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/pezzack480481map.
-pdf used on input line 446.
+pdf used on input line 802.
 (pdftex.def)             Requested size: 257.27632pt x 257.28258pt.
 
 
@@ -2243,214 +3003,35 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[38 </backup/bio_data/bio.lobster/figures/pezzacklfa41largefemale.png (PNG copy
+[60 </backup/bio_data/bio.lobster/figures/pezzacklfa41largefemale.png (PNG copy
 )> </backup/bio_data/bio.lobster/figures/pezzack480481map.pdf>]
-</backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41bas
-eSummerRV.png, id=1054, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA
-41baseSummerRV.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1baseSummerRV.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleL
-engthFrequenciesLFA41baseSummerRV.png used on input line 458.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-</backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41pol
-ygonSummerRV.png, id=1055, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA
-41polygonSummerRV.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1polygonSummerRV.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleL
-engthFrequenciesLFA41polygonSummerRV.png used on input line 459.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-</backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41adj
-acentpolygonSummerRV.png, id=1056, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA
-41adjacentpolygonSummerRV.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1adjacentpolygonSummerRV.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleL
-engthFrequenciesLFA41adjacentpolygonSummerRV.png used on input line 460.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-</backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequenciesLFA4
-1polygonSummerRV.png, id=1057, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequencie
-sLFA41polygonSummerRV.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequencies
-LFA41polygonSummerRV.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefem
-aleLengthFrequenciesLFA41polygonSummerRV.png used on input line 461.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.59999pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[39 </backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1baseSummerRV.png (PNG copy)> </backup/bio_data/bio.lobster/figures/Fec.maturef
-emaleLengthFrequenciesLFA41polygonSummerRV.png (PNG copy)> </backup/bio_data/bi
-o.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41adjacentpolygonSummerRV
-.png (PNG copy)> </backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLeng
-thFrequenciesLFA41polygonSummerRV.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41NEF
-SCspringbase.png, id=1067, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA
-41NEFSCspringbase.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1NEFSCspringbase.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleL
-engthFrequenciesLFA41NEFSCspringbase.png used on input line 470.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-</backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41NEF
-SCspringrestratified.png, id=1068, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA
-41NEFSCspringrestratified.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1NEFSCspringrestratified.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleL
-engthFrequenciesLFA41NEFSCspringrestratified.png used on input line 471.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-</backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41NEF
-SCspringadjrestratified.png, id=1069, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA
-41NEFSCspringadjrestratified.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1NEFSCspringadjrestratified.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleL
-engthFrequenciesLFA41NEFSCspringadjrestratified.png used on input line 472.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-</backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequenciesLFA4
-1NEFSCspringrestratified.png, id=1070, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequencie
-sLFA41NEFSCspringrestratified.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequencies
-LFA41NEFSCspringrestratified.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefem
-aleLengthFrequenciesLFA41NEFSCspringrestratified.png used on input line 473.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.59999pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[40 </backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1NEFSCspringbase.png (PNG copy)> </backup/bio_data/bio.lobster/figures/Fec.matu
-refemaleLengthFrequenciesLFA41NEFSCspringrestratified.png (PNG copy)> </backup/
-bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41NEFSCspringa
-djrestratified.png (PNG copy)> </backup/bio_data/bio.lobster/figures/NOY-Fec.ma
-turefemaleLengthFrequenciesLFA41NEFSCspringrestratified.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41NEF
-SCfallbase.png, id=1080, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA
-41NEFSCfallbase.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1NEFSCfallbase.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleL
-engthFrequenciesLFA41NEFSCfallbase.png used on input line 483.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-</backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41NEF
-SCfallrestratified.png, id=1081, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA
-41NEFSCfallrestratified.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1NEFSCfallrestratified.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleL
-engthFrequenciesLFA41NEFSCfallrestratified.png used on input line 484.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-</backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41NEF
-SCfalladjrestratified.png, id=1082, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA
-41NEFSCfalladjrestratified.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1NEFSCfalladjrestratified.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Fec.maturefemaleL
-engthFrequenciesLFA41NEFSCfalladjrestratified.png used on input line 485.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-</backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequenciesLFA4
-1NEFSCfallrestratified.png, id=1083, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequencie
-sLFA41NEFSCfallrestratified.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequencies
-LFA41NEFSCfallrestratified.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefem
-aleLengthFrequenciesLFA41NEFSCfallrestratified.png used on input line 486.
-(pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
-
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.59999pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[41 </backup/bio_data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA4
-1NEFSCfallbase.png (PNG copy)> </backup/bio_data/bio.lobster/figures/Fec.mature
-femaleLengthFrequenciesLFA41NEFSCfallrestratified.png (PNG copy)> </backup/bio_
-data/bio.lobster/figures/Fec.maturefemaleLengthFrequenciesLFA41NEFSCfalladjrest
-ratified.png (PNG copy)> </backup/bio_data/bio.lobster/figures/NOY-Fec.maturefe
-maleLengthFrequenciesLFA41NEFSCfallrestratified.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequenciesLFA4
-1dfogeorges.png, id=1094, 1084.05pt x 867.24pt>
-File: /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequencie
-sLFA41dfogeorges.png Graphic file (type png)
-
-<use /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequencies
-LFA41dfogeorges.png>
-Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/NOY-Fec.maturefem
-aleLengthFrequenciesLFA41dfogeorges.png used on input line 495.
-(pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
-
-</backup/bio_data/bio.lobster/figures/lfa41DFObaseDWAO.png, id=1095, 1084.05pt 
+</backup/bio_data/bio.lobster/figures/lfa41DFObaseDWAO.png, id=1291, 1084.05pt 
 x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFObaseDWAO.png Graphic file (t
 ype png)
  <use /backup/bio_data/bio.lobster/figures/lfa41DFObaseDWAO.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFObaseDWAO.
-png used on input line 506.
+png used on input line 813.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedDWAO.png, id=1096, 10
+</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedDWAO.png, id=1292, 10
 84.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedDWAO.png Graphic
  file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedDWAO.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratif
-iedDWAO.png used on input line 507.
+iedDWAO.png used on input line 814.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedDWAO.png, id=
-1097, 1084.05pt x 867.24pt>
+1293, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedDWAO.png
  Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedDWAO.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOr
-estratifiedDWAO.png used on input line 508.
+estratifiedDWAO.png used on input line 815.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -2458,47 +3039,39 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[42 </backup/bio_data/bio.lobster/figures/NOY-Fec.maturefemaleLengthFrequencies
-LFA41dfogeorges.png (PNG copy)>]
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 13.59999pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[43 </backup/bio_data/bio.lobster/figures/lfa41DFObaseDWAO.png (PNG copy)> </ba
+[61 </backup/bio_data/bio.lobster/figures/lfa41DFObaseDWAO.png (PNG copy)> </ba
 ckup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedDWAO.png (PNG copy)> </ba
 ckup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedDWAO.png (PNG cop
 y)>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseDWAO.png, id=1112, 10
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseDWAO.png, id=1303, 10
 84.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseDWAO.png Graphic
  file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseDWAO.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringb
-aseDWAO.png used on input line 516.
+aseDWAO.png used on input line 823.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedDWAO.png, id=
-1113, 1084.05pt x 867.24pt>
+1304, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedDWAO.png
  Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedDWAO.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringr
-estratifiedDWAO.png used on input line 517.
+estratifiedDWAO.png used on input line 824.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedDWAO.
-png, id=1114, 1084.05pt x 867.24pt>
+png, id=1305, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratified
 DWAO.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedD
 WAO.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CSpringrestratifiedDWAO.png used on input line 518.
+CSpringrestratifiedDWAO.png used on input line 825.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -2507,39 +3080,39 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[44 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseDWAO.png (PNG cop
+[62 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbaseDWAO.png (PNG cop
 y)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedDWAO.png 
 (PNG copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestr
 atifiedDWAO.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseDWAO.png, id=1123, 1084
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseDWAO.png, id=1314, 1084
 .05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseDWAO.png Graphic f
 ile (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseDWAO.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbas
-eDWAO.png used on input line 526.
+eDWAO.png used on input line 833.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedDWAO.png, id=11
-24, 1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedDWAO.png, id=13
+15, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedDWAO.png G
 raphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedDWAO.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallres
-tratifiedDWAO.png used on input line 527.
+tratifiedDWAO.png used on input line 834.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedDWAO.pn
-g, id=1125, 1084.05pt x 867.24pt>
+g, id=1316, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedDW
 AO.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedDWA
 O.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CFallrestratifiedDWAO.png used on input line 528.
+CFallrestratifiedDWAO.png used on input line 835.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -2548,46 +3121,46 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[45 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseDWAO.png (PNG copy)
+[63 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbaseDWAO.png (PNG copy)
 > </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedDWAO.png (PNG
  copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifie
 dDWAO.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41georgesDWAO.png, id=1134, 1084.05pt 
+</backup/bio_data/bio.lobster/figures/lfa41georgesDWAO.png, id=1325, 1084.05pt 
 x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41georgesDWAO.png Graphic file (t
 ype png)
  <use /backup/bio_data/bio.lobster/figures/lfa41georgesDWAO.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesDWAO.
-png used on input line 536.
+png used on input line 843.
 (pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFObasegini.png, id=1135, 1084.05pt 
+</backup/bio_data/bio.lobster/figures/lfa41DFObasegini.png, id=1326, 1084.05pt 
 x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFObasegini.png Graphic file (t
 ype png)
  <use /backup/bio_data/bio.lobster/figures/lfa41DFObasegini.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFObasegini.
-png used on input line 546.
+png used on input line 853.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedgini.png, id=1136, 10
+</backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedgini.png, id=1327, 10
 84.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedgini.png Graphic
  file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedgini.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41DFOrestratif
-iedgini.png used on input line 547.
+iedgini.png used on input line 854.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedgini.png, id=
-1137, 1084.05pt x 867.24pt>
+1328, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedgini.png
  Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedgini.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41DFOr
-estratifiedgini.png used on input line 548.
+estratifiedgini.png used on input line 855.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -2595,46 +3168,46 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[46 </backup/bio_data/bio.lobster/figures/lfa41georgesDWAO.png (PNG copy)>]
+[64 </backup/bio_data/bio.lobster/figures/lfa41georgesDWAO.png (PNG copy)>]
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 13.59999pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[47 </backup/bio_data/bio.lobster/figures/lfa41DFObasegini.png (PNG copy)> </ba
+[65 </backup/bio_data/bio.lobster/figures/lfa41DFObasegini.png (PNG copy)> </ba
 ckup/bio_data/bio.lobster/figures/lfa41DFOrestratifiedgini.png (PNG copy)> </ba
 ckup/bio_data/bio.lobster/figures/adjacentlfa41DFOrestratifiedgini.png (PNG cop
 y)>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasegini.png, id=1151, 10
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasegini.png, id=1342, 10
 84.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasegini.png Graphic
  file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasegini.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringb
-asegini.png used on input line 556.
+asegini.png used on input line 863.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedgini.png, id=
-1152, 1084.05pt x 867.24pt>
+1343, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedgini.png
  Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedgini.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringr
-estratifiedgini.png used on input line 557.
+estratifiedgini.png used on input line 864.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedgini.
-png, id=1153, 1084.05pt x 867.24pt>
+png, id=1344, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratified
 gini.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestratifiedg
 ini.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CSpringrestratifiedgini.png used on input line 558.
+CSpringrestratifiedgini.png used on input line 865.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -2643,39 +3216,39 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[48 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasegini.png (PNG cop
+[66 </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringbasegini.png (PNG cop
 y)> </backup/bio_data/bio.lobster/figures/lfa41NEFSCSpringrestratifiedgini.png 
 (PNG copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCSpringrestr
 atifiedgini.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasegini.png, id=1162, 1084
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasegini.png, id=1353, 1084
 .05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasegini.png Graphic f
 ile (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasegini.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbas
-egini.png used on input line 567.
+egini.png used on input line 874.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
-</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedgini.png, id=11
-63, 1084.05pt x 867.24pt>
+</backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedgini.png, id=13
+54, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedgini.png G
 raphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedgini.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41NEFSCFallres
-tratifiedgini.png used on input line 568.
+tratifiedgini.png used on input line 875.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedgini.pn
-g, id=1164, 1084.05pt x 867.24pt>
+g, id=1355, 1084.05pt x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedgi
 ni.png Graphic file (type png)
 
 <use /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifiedgin
 i.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/adjacentlfa41NEFS
-CFallrestratifiedgini.png used on input line 569.
+CFallrestratifiedgini.png used on input line 876.
 (pdftex.def)             Requested size: 221.78923pt x 177.42805pt.
 
 
@@ -2684,19 +3257,19 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[49 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasegini.png (PNG copy)
+[67 </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallbasegini.png (PNG copy)
 > </backup/bio_data/bio.lobster/figures/lfa41NEFSCFallrestratifiedgini.png (PNG
  copy)> </backup/bio_data/bio.lobster/figures/adjacentlfa41NEFSCFallrestratifie
 dgini.png (PNG copy)>]
-</backup/bio_data/bio.lobster/figures/lfa41georgesgini.png, id=1174, 1084.05pt 
+</backup/bio_data/bio.lobster/figures/lfa41georgesgini.png, id=1365, 1084.05pt 
 x 867.24pt>
 File: /backup/bio_data/bio.lobster/figures/lfa41georgesgini.png Graphic file (t
 ype png)
  <use /backup/bio_data/bio.lobster/figures/lfa41georgesgini.png>
 Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/lfa41georgesgini.
-png used on input line 577.
+png used on input line 884.
 (pdftex.def)             Requested size: 443.57848pt x 354.85612pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 582.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 888.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -2704,30 +3277,32 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[50 </backup/bio_data/bio.lobster/figures/lfa41georgesgini.png (PNG copy)>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 582.
+[68 </backup/bio_data/bio.lobster/figures/lfa41georgesgini.png (PNG copy)>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 888.
 
 (./LFA41figures.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 582.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 582.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 888.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 888.
 Package rerunfilecheck Info: File `LFA41figures.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 14949 strings out of 493013
- 269050 string characters out of 6139318
- 302005 words of memory out of 5000000
- 17956 multiletter control sequences out of 15000+600000
- 7674 words of font info for 28 fonts, out of 8000000 for 9000
+ 15246 strings out of 493013
+ 280923 string characters out of 6139318
+ 303456 words of memory out of 5000000
+ 18130 multiletter control sequences out of 15000+600000
+ 8020 words of font info for 29 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 44i,10n,77p,1040b,474s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,10n,77p,1040b,497s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/font
-s/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on LFA41figures.pdf (50 pages, 56324642 bytes).
+texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mti10.pfb>
+Output written on LFA41figures.pdf (68 pages, 54765570 bytes).
 PDF statistics:
- 1245 PDF objects out of 1440 (max. 8388607)
- 934 compressed objects within 10 object streams
- 234 named destinations out of 1000 (max. 500000)
- 977 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1457 PDF objects out of 1728 (max. 8388607)
+ 1065 compressed objects within 11 object streams
+ 312 named destinations out of 1000 (max. 500000)
+ 1312 words of extra memory for PDF output out of 10000 (max. 10000000)
 
