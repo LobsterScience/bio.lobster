@@ -45,7 +45,8 @@ pp = merge(pp,mp,by='PID')
 				xy = aggregate(cbind(ADJCATCH,NUM_OF_TRAPS)~fishingYear,data=x,FUN=sum)
 				xy$lL = xy$ADJCATCH / xy$NUM_OF_TRAPS
 	
-with(subset(xy,Area=='Georges.Bank'),plot(fishingYear,lL,type='l',xlab='Year',ylab='CPUE'))
+with(xy,plot(fishingYear,lL,type='l',xlab='Year',ylab='CPUE',yaxt='n'))
+savePlot(file=file.path(project.figuredirectory('bio.lobster'),'CPUE.png'))
 xy = xy[,c('fishingYear','lL')]
 names(xy)[2] = 'CPUE'
 write.csv(xy,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','commercialCatchrates.csv'))

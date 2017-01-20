@@ -211,7 +211,7 @@ habitat.model.data <- function(DS, p) {
   aa = lonlat2planar(aa,input_names = c('X','Y'),proj.type = p$internal.projection)
 				            aa$plon = grid.internal(aa$plon,p$plons)
 				            aa$plat = grid.internal(aa$plat,p$plats)
-				            aa$z = aa$z*1.8288
+				            #aa$z = aa$z*1.8288
 				            aa$zO = aa$z
 
 				            aa$z = NA

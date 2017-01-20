@@ -13,11 +13,11 @@
     of1 = paste(outfileroot, "PC1.png", sep=".")
     of2 = paste(outfileroot, "PC2.png", sep=".")
     of3 = paste(outfileroot, "anomalies.png", sep=".")
-
+    
     corel = cor( b, use="pairwise.complete.obs" ) # set up a correlation matrix ignoring NAs
     corel[ is.na(corel) ] = 0
     
-    s1 = svd(corel)  # eigenanalysis via singular value decomposition
+    s = svd(corel)  # eigenanalysis via singular value decomposition
     
     scores = matrix.multiply (b, s$v)  # i.e., b %*% s$v  .. force a multiplication ignoring NAs
     evec = s$v

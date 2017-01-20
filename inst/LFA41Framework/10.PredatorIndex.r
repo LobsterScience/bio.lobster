@@ -3,7 +3,7 @@ p = bio.groundfish::load.groundfish.environment("BIOsurvey")
 require(bio.survey)
 fp = file.path(project.datadirectory('bio.groundfish'),"analysis")
 loadfunctions('bio.groundfish')
-p$strat=470:495
+p$strat=474:485
 p$series =c('summer')# p$series =c('4vswcod');p$series =c('georges')
 p$years.to.estimate = c(1970:2015)
 p$functional.groups = T
@@ -28,11 +28,10 @@ p$clusters = c( rep( "localhost", 7) )
 
 p = make.list(list(v=p$species, yrs=p$years.to.estimate),Y=p)
 p$runs = p$runs[order(p$runs$v),]
-#parallel.run(groundfish.analysis,DS='stratified.estimates.redo',p=p,specific.allocation.to.clusters=T) #silly error arisingexit
+parallel.run(groundfish.analysis,DS='stratified.estimates.redo',p=p,specific.allocation.to.clusters=T) #silly error arisingexit
 
-#not finished
 
-aout= groundfish.analysis(DS='stratified.estimates',out.dir = 'bio.lobster',p=p)
+aout= groundfish.analysis(DS='stratified.estimates.redo',out.dir = 'bio.lobster',p=p)
 write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','predatorIndex.csv'))
                         p$ylim = NULL
               				  p$add.reference.lines = F

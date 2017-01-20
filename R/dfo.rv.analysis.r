@@ -153,7 +153,7 @@ pi='base'
                 se = set[intersect(iy,iz),]
                 se$EID = 1:nrow(se)
                 ca = cas[iv,]
-                se$z = (se$dmin+se$dmax) / 2
+                se$z = (se$dmin+se$dmax) / 2 * 1.8288 #from fm to m
                 vars.2.keep = c('mission','X','Y','setno','sdate','dist','strat','z','bottom_temperature','bottom_salinity','type')
                 se = se[,vars.2.keep]
 

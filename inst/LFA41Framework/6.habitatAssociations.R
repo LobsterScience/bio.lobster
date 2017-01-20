@@ -9,6 +9,8 @@ fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
 load_all('~/git/bio.survey/')
 
+#need to rerun these
+
 #DFO RV Analysis
 
       p$series =c('summer')# p$series =c('georges');p$series =c('fall')

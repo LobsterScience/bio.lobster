@@ -8,7 +8,7 @@
 
 require(bio.lobster)
 p = bio.lobster::load.environment()
-require('bio.polygons')
+require(bio.polygons)
 p$libs = NULL
 require(PBSmapping)
 require(bio.lobster)
@@ -16,8 +16,9 @@ require(bio.utilities)
 la()
  fp = file.path(project.datadirectory('bio.lobster'),'analysis')
 figfp = file.path(project.figuredirectory('bio.lobster'))
-
-    
+outref = list()
+RR95=list()    
+RR75 = list()
 #logbook data
     lobster.db('logs41') #make sure to do a database recapture through logs41.redo before moving on
 
@@ -32,11 +33,12 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
 
         a41 = rbind(off41,ziff41,logs41)
         a41$fishingYear = sapply(a41$DATE_FISHED,offFishingYear)
-        a41 = makePBS(a41,polygon=F)
+        a41 = makePBS(a41,polygon=FALSE)
         a41$ADJCATCH = a41$ADJCATCH / 2.2 #convert to kgs
 
 
-
+TOTALLAND = aggregate(ADJCATCH~fishingYear,data=a41,FUN=sum)
+TOTALLAND = rename.df(TOTALLAND,'fishingYear','yr')
 
 #boundaries for fishing data
 
@@ -60,6 +62,8 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
       La$landings = La$ADJCATCH / 1000
       La = rename.df(La,'fishingYear','yr')
 
+a = merge(TOTALLAND,La,'yr')
+RVPropLand = (a[,3]/a[,2])
 
  ###DFO RV survey   
     load(file.path(fp,'stratified.summer.LFA41.restratified.length.all.not.sexed.rdata'))
@@ -81,10 +85,12 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
 
 
         p=list()
-              p$add.reference.lines = F
+              p$add.reference.lines = FALSE
               p$user.defined.references=NULL
                               p$time.series.start.year = 1970
                               p$time.series.end.year = 2015
+                              p$reference.start.year=1970
+                              p$reference.end.year=2015
                               p$metric = 'weights' #weights
                               p$measure = 'stratified.total' #'stratified.total'
                               p$figure.title = ""
@@ -106,10 +112,11 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
+                              p$add.primary.line=F
                                            p$return.running=T
                                            p$ylim = c(0,3.5)
                        bref=   figure.stratified.analysis(x=ao,out.dir = 'bio.lobster', p=p,save=F)
-
+outbref[[1]] = bref
           #based on bcp              
               lb = median(subset(ao,yr %in% 1970:1999,select=w.Yst)[,1])/1000
               ub = median(subset(ao,yr %in% 2000:2015,select=w.Yst)[,1])/1000 * 0.4
@@ -131,7 +138,7 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
           aa$relF = aa$landings / aa$w.Yst
           t = which(is.finite(aa$relF))
           
-                                        p$add.reference.lines = F
+                                        p$add.reference.lines = FALSE
                                         p$time.series.start.year = 1981
                                         p$time.series.end.year = 2015
                                         p$metric = 'relF' #weights
@@ -151,6 +158,8 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
           ii = intersect(t,ii)
           ap = median(aa$relF[ii])
           apt = median(aa$relF[t])
+          RR75[[1]] = quantile(aa$relF[ii],0.75)
+          RR95[[1]] = quantile(aa$relF[ii],0.95)
           rref=   figure.stratified.analysis(x=aa,out.dir = 'bio.lobster', p=p,save=F)
           abline(h=ap,col='blue',lwd=2)
           abline(h=apt,col='purple',lwd=2)
@@ -204,7 +213,7 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbLongTermDataDFO
 
 
                           p=list()
-                                p$add.reference.lines = F
+                                p$add.reference.lines = FALSE
                                 p$user.defined.references=NULL
                                                 p$time.series.start.year = 1987
                                                 p$time.series.end.year = 2015
@@ -231,7 +240,7 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbLongTermDataDFO
                                                 p$error.bars=T
                                                              p$ylim = c(0,1.2)
                                                              p$return.running=T
-                                         bref=   figure.stratified.analysis(x=ao,out.dir = 'bio.lobster', p=p,save=F)
+outbref[[2]] = bref=   figure.stratified.analysis(x=ao,out.dir = 'bio.lobster', p=p,save=F)
 
                   #based on bcp              
                   lb = median(subset(ao,yr %in% 1987:1999,select=w.Yst)[,1])/1000
@@ -268,13 +277,17 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbLongTermDataDFO
       La$landings = La$ADJCATCH / 1000
       La = rename.df(La,'fishingYear','yr')
 
+
+a = merge(TOTALLAND,La,'yr')
+GBPropLand = (a[,3]/a[,2])
+
       aa = merge(ao,La,by='yr')
 
 ###relative F 
          aa$relF = aa$landings / aa$w.Yst
           t = which(is.finite(aa$relF))
 
-                                        p$add.reference.lines = F
+                                        p$add.reference.lines = FALSE
                                         p$time.series.start.year = 1987
                                         p$time.series.end.year = 2015
                                         p$metric = 'relF' #weights
@@ -294,6 +307,8 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbLongTermDataDFO
           ii = intersect(t,ii)
           ap = median(aa$relF[ii])
           apt = median(aa$relF[t])
+          RR75[[2]] = quantile(aa$relF[ii],0.75)
+          RR95[[2]] = quantile(aa$relF[ii],0.95)
           rref=   figure.stratified.analysis(x=aa,out.dir = 'bio.lobster', p=p,save=F)
           abline(h=ap,col='blue',lwd=2)
           abline(h=apt,col='purple',lwd=2)
@@ -331,7 +346,7 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbLongTermDataGeo
 
 
         p=list()
-              p$add.reference.lines = F
+              p$add.reference.lines = FALSE
               p$user.defined.references=NULL
                               p$time.series.start.year = 1969
                               p$time.series.end.year = 2015
@@ -358,7 +373,7 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbLongTermDataGeo
                               p$error.bars=T
                                            p$ylim = c(0,38)
                                            p$return.running=T
-                       bref=   figure.stratified.analysis(x=ao,out.dir = 'bio.lobster', p=p,save=F)
+           outbref[[3]]=     bref=   figure.stratified.analysis(x=ao,out.dir = 'bio.lobster', p=p,save=F)
 
 lb = median(subset(ao,yr %in% 1969:2000,select=w.Yst)[,1])/1000
 ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1])/1000 * 0.4
@@ -395,6 +410,11 @@ savePlot(file.path(figfp,'SpringRefpointsNewArea.png'))
       La = rename.df(La,'fishingYear','yr')
       aa = merge(ao,La,by='yr')
 
+a = merge(TOTALLAND,La,'yr')
+NPropLand = (a[,3]/a[,2])
+
+
+
 ###relative F 
          aa$relF = aa$landings / aa$w.Yst
           t = which(is.finite(aa$relF))
@@ -419,6 +439,8 @@ savePlot(file.path(figfp,'SpringRefpointsNewArea.png'))
           ii = intersect(t,ii)
           ap = median(aa$relF[ii])
           apt = median(aa$relF[t])
+          RR75[[3]] = quantile(aa$relF[ii],0.75)
+          RR95[[3]] = quantile(aa$relF[ii],0.95)
           rref=   figure.stratified.analysis(x=aa,out.dir = 'bio.lobster', p=p,save=F)
           abline(h=ap,col='blue',lwd=2)
           abline(h=apt,col='purple',lwd=2)
@@ -454,7 +476,7 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbLongTermDataSpr
 
 
         p=list()
-              p$add.reference.lines = F
+              p$add.reference.lines = FALSE
               p$user.defined.references=NULL
                               p$time.series.start.year = 1969
                               p$time.series.end.year = 2015
@@ -481,7 +503,7 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbLongTermDataSpr
                               p$error.bars=T
                                            p$ylim = c(0,20)
                                            p$return.running=T
-                       bref=   figure.stratified.analysis(x=ao,out.dir = 'bio.lobster', p=p,save=F)
+              outbref[[4]] =  bref=   figure.stratified.analysis(x=ao,out.dir = 'bio.lobster', p=p,save=F)
 
 lb = median(subset(ao,yr %in% 1969:2000,select=w.Yst)[,1])/1000
 ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1])/1000 * 0.4
@@ -523,7 +545,7 @@ savePlot(file.path(figfp,'AutumnRefpointsNewArea.png'))
           t = which(is.finite(aa$relF))
 
 
-                                p$add.reference.lines = F
+                                p$add.reference.lines = FALSE
                                         p$time.series.start.year = 1981
                                         p$time.series.end.year = 2015
                                         p$metric = 'relF' #weights
@@ -543,6 +565,8 @@ savePlot(file.path(figfp,'AutumnRefpointsNewArea.png'))
           ii = intersect(t,ii)
           ap = median(aa$relF[ii])
           apt = median(aa$relF[t])
+          RR75[[4]] = quantile(aa$relF[ii],0.75)
+          RR95[[4]] = quantile(aa$relF[ii],0.95)
           rref=   figure.stratified.analysis(x=aa,out.dir = 'bio.lobster', p=p,save=F)
           abline(h=ap,col='blue',lwd=2)
           abline(h=apt,col='purple',lwd=2)
@@ -559,3 +583,12 @@ hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=ap,yrs=aa$yr)
 savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbDataAutumnSurvey.png'))
 hcrPlot(B=aa$mean,mF=aa$relF,USR=nub,LRP=llb,RR=apt,yrs=aa$yr)
 savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbLongTermDataAutumnSurvey.png'))
+
+save(outbref,file=file.path(project.datadirectory('bio.lobster'),'analysis','RunningMedians.Rdata'))
+
+
+
+
+RVPropLand
+GBPropLand
+NPropLand

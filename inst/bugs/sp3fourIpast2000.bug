@@ -1,19 +1,5 @@
 model {
-        for(i in 1:N1) {
-				Imeana[i] <- log(q * K*P[i]);
-				Imeanb[i] <- log(q2* K*P[i]);
-				Imeanc[i] <- log(q3* K*P[i]);
-
-				#partion based on area -- assuming single Q
-	
-				IRV[i] ~ dlnorm(Imeana[i],itau2a);
-				INS[i] ~ dlnorm(Imeanb[i],itau2b);
-				INA[i] ~ dlnorm(Imeanc[i],itau2c);
-				
-                 B[i] <- K*P[i] 
-                 }
- 
- for(i in (N1+1):N) {
+        for(i in 1:N) {
 				Imeana[i] <- log(q*K*P[i]);
 				Imeanb[i] <- log(q2*K*P[i]);
 				Imeanc[i] <- log(q3*K*P[i]);
@@ -37,13 +23,13 @@ model {
 	
 	#P[2:N]
 	for (i in 2:N) {
-		    Pmean[i] <- log(max(P[i-1] + r*P[i-1]*(1-P[i-1]) - k*C[i-1],0.0000001));
+		    Pmean[i] <- log(max(P[i-1] + r*P[i-1]*(1-P[i-1]) - k*C[i-1],0.00001));
 		    P[i] ~ dlnorm(Pmean[i],isigma2);
 		    P.res[i] <- log(P[i]) - Pmean[i]
 		    }
 
    for(i in 1:N) {
-       F[i] <- -log( max(1 - C[i] / B[i], 0.00001))  
+       F[i] <- -log( max(1 - C[i] / B[i], 0.0001))  
      }
   
 
@@ -53,8 +39,8 @@ model {
 				
 #####Prior on k######
 		i.k.b<-1/k.b
-		k ~ dlnorm(k.a,i.k.b);
-		#k ~ dunif(0.000001,1)
+		#k ~ dlnorm(k.a,i.k.b);
+		k ~ dunif(0.000000001,1)
 		K <- 1/k;	
 		
 #Prior on P0
