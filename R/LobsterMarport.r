@@ -6,9 +6,14 @@
 LobsterMarport <- function(file) {
 	#reading in and manipulating the marport data from lobster survey
 	con = file(description=file, open="r")
-	com = paste("wc -l ", file, " | awk '{ print $1 }'", sep="")
-	  n = system(command=com, intern=TRUE)
- 
+	
+	OSinfo = Sys.info()
+	OS = OSinfo["sysname"]
+
+
+if(OS=='Linux')	{com = paste("wc -l ", file, " | awk '{ print $1 }'", sep=""); n = system(command=com, intern=TRUE)}
+if(OS=='Windows') {n =  length(readLines(file))}
+	  
 
 		jj=0
 		out.sensors = NULL
