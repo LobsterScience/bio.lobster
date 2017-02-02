@@ -1,5 +1,5 @@
 #' @export
-BarPlotCLF<-function(CLF,yrs=2005:2014,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF.pdf',rows=length(yrs),pdf=T,xl,rel=T,mean.line=F,ylp=0.1,ymax,LS=82.5,sample.size=NULL,recline=NULL,wd=10,ht=12,bx=F,xlab="Carapace Length (mm)",ylab="Mean N / standard tow",...){
+BarPlotCLF<-function(CLF,yrs=2005:2016,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF.pdf',rows=length(yrs),pdf=T,xl,rel=T,mean.line=F,ylp=0.1,ymax,LS=82.5,sample.size=NULL,recline=NULL,wd=10,ht=12,bx=F,xlab="Carapace Length (mm)",ylab="Mean N / standard tow",...){
     
     mids<-bins[-1]-diff(bins)/2
     
@@ -9,7 +9,6 @@ BarPlotCLF<-function(CLF,yrs=2005:2014,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF.p
         if(ncol(LS)==1)LS=matrix(LS,length(yrs),length(CLF))
     }
 
-browser()    
     if(pdf) pdf(filen, width = wd, height = ht)
     par(mfcol=c(rows,ceiling(length(yrs)/rows)), mar = c(0,2,0,0.5), omi = c(0.85, 0.75, 0.75, 0.5))
     

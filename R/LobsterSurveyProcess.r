@@ -1,15 +1,16 @@
 #' LobsterSurveyProcess
-#' @param size.range defines the minimum and maximum value and is a filter (default is 0, 220mm CW).
+#' @param size.range defines the minimum and maximum value and is a filter (default is 0, 220mm CW)
 #' @param lfa defines the specific LFA for the ILTS
 #' @param yrs is the survey years to estimate
 #' @param mnts months of the survey, defaults to the full year
-#' @param bin.size aggregates the abundance into size bins defaults to 5mm bins
-#' @return data.frame of survey data
-#' @author Brad Hubley
+#' @param bin.size aggregates the abundance into size bins (default is 5mm bins)
+#' @param gear.type survey trawl net identification (default is 280 BALLOON)
+#' @return data.frame of survey data called 'surveyLobsters'
+#' @author Brad Hubley & Manon Cassista-Da Ros
 #' @export
 
 
-LobsterSurveyProcess<-function(size.range=c(0,220),lfa,yrs,mths=c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"),bin.size=5){
+LobsterSurveyProcess<-function(size.range=c(0,220),lfa=34,yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=c("280 BALLOON"),bin.size=5){
 require('bio.lobster')
 require('bio.utilities')
   
@@ -28,14 +29,14 @@ require('bio.utilities')
 	surveyCatch<-merge(surveyCatch,subset(SurvLFAs,!duplicated(SET_ID),c("SET_ID","LFA")),all=T)
 	
 	# select for Lobsters
-	setNames<-c("SET_ID", "TRIP_ID", "TRIPCD_ID", "SURVEY_TYPE", "CFV", "VESSEL_NAME", "LICENSE_NO", "BOARD_DATE", "LANDING_DATE","HAULCCD_ID", "SET_NO", "FISHSET_ID",
+	setNames<-c("SET_ID", "TRIP_ID", "TRIPCD_ID", "SURVEY_TYPE", "CFV", "VESSEL_NAME", "BOARD_DATE", "LANDING_DATE","HAULCCD_ID", "SET_NO","GEAR","FISHSET_ID",
 	        "STATION", "STRATUM_ID", "SET_LAT", "SET_LONG", "SET_DEPTH", "SET_TIME", "SET_DATE", "HAUL_LAT", "HAUL_LONG", "HAUL_DEPTH", "HAUL_TIME", 
 	        "HAUL_DATE", "YEAR", "LFA")           
 	surveyLobsters<-merge(subset(surveyCatch,SPECCD_ID==2550),subset(surveyCatch,!duplicated(SET_ID),setNames),all=T)
 
 	# number of lobsters with detailed data
 	NLM<-with(surveyMeasurements,tapply(SET_ID,SET_ID,length))
-	surveyLobsters<-merge(surveyLobsters,data.frame(SET_ID=names(NLM),LOBSTERS_MEASURED=NLM),all=T)
+	surveyLobsters<-merge(surveyLobsters,data.frame(SET_ID=names(NLM),LOBSTERS_MEASURED=NLM),by='SET_ID',all=T)
 
 	# add column for tow length
 	lat1<-surveyLobsters$SET_LAT
@@ -48,12 +49,12 @@ require('bio.utilities')
 	write.csv(subset(surveyLobsters,(LENGTH<0.67|LENGTH>3.5)&HAULCCD_ID==1),file.path(project.datadirectory('bio.lobster'),"data","longTows.csv"),row.names=F)
 
 	# add columns  NUM_STANDARDIZED and MONTH
-	surveyLobsters$NUM_CORRECTED[is.na(surveyLobsters$NUM_CORRECTED)]<-0
+	surveyLobsters$NUM_CAUGHT[is.na(surveyLobsters$NUM_CAUGHT)]<-0
 	surveyLobsters$LENGTH[surveyLobsters$LENGTH<0.67|surveyLobsters$LENGTH>3.5]<-NA
-	surveyLobsters$NUM_STANDARDIZED<-surveyLobsters$NUM_CORRECTED/surveyLobsters$LENGTH
+	surveyLobsters$NUM_STANDARDIZED<-surveyLobsters$NUM_CAUGHT/surveyLobsters$LENGTH
 	surveyLobsters$MONTH<-as.character(month(surveyLobsters$BOARD_DATE,T))
 	surveyLobsters$AREA_SWEPT<-surveyLobsters$LENGTH*1000*17
-	surveyLobsters$LobDen<-surveyLobsters$NUM_CORRECTED/surveyLobsters$AREA_SWEPT*1000
+	surveyLobsters$LobDen<-surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT*1000
 	surveyLobsters<-subset(surveyLobsters,!is.na(NUM_STANDARDIZED)&LFA==lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
 
 	# add columns for length bins
@@ -81,22 +82,23 @@ require('bio.utilities')
 	write.csv(surveyLobsters,file.path(project.datadirectory('bio.lobster'),"data","products","surveyLobsters.csv"),row.names=F) # Save data as csv
 	surveyLobsters<-subset(surveyLobsters,!is.na(NUM_STANDARDIZED)&LFA==lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
 
-	if(lfa==34){
+	#if(lfa==34){
 
 		# STATIONS assigned based on proximity
-		ITQspat34<-subset(surveyLobsters,select=c("SET_ID","SET_LONG","SET_LAT","HAUL_LONG","HAUL_LAT","STATION"))
-		names(ITQspat34)[2:5]<-c("X1","Y1","X2","Y2")
-		ITQspat34$EID<-1:nrow(ITQspat34)
-		pdf(file.path( project.datadirectory('bio.lobster'), "figures","LFA34ITQSurveyStations.pdf"),8,11)
-		ITQspat34ns<-assignStation(ITQspat34,lines=T)
-		dev.off()
-		write.csv(ITQspat34ns$events,file.path(project.datadirectory('bio.lobster'),"data","products","surveyTows.csv"),row.names=F)
-		write.csv(ITQspat34ns$stations,file.path(project.datadirectory('bio.lobster'),"data","products","surveyStations.csv"),row.names=F)
+		#ITQspat34<-subset(surveyLobsters,select=c("SET_ID","SET_LONG","SET_LAT","HAUL_LONG","HAUL_LAT","STATION","GEAR"))
+		#names(ITQspat34)[2:5]<-c("X1","Y1","X2","Y2")
+		#ITQspat34$EID<-1:nrow(ITQspat34)
+		#pdf(file.path( project.datadirectory('bio.lobster'), "figures","LFA34ITQSurveyStations.pdf"),8,11)
+		#ITQspat34<-ITQspat34[complete.cases(ITQspat34),]
+		#ITQspat34ns<-assignStation(ITQspat34,lines=T)
+		#dev.off()
+		#write.csv(ITQspat34ns$events,file.path(project.datadirectory('bio.lobster'),"data","products","surveyTows.csv"),row.names=F)
+		#write.csv(ITQspat34ns$stations,file.path(project.datadirectory('bio.lobster'),"data","products","surveyStations.csv"),row.names=F)
 
 		# add assigned stations to data
-		surveyLobsters<-merge(surveyLobsters,subset(ITQspat34ns$events,select=c("SET_ID","SID")),all=T)
+		#surveyLobsters<-merge(surveyLobsters,subset(ITQspat34ns$events,select=c("SET_ID","SID")),all=T)
 
-	}
+	#}
 
 
 
