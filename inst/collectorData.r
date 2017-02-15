@@ -3,11 +3,11 @@
 	require(lattice)
 
 
-	FigLoc = file.path(project.figuredirectory('lobster'),'collectors')
+	FigLoc = file.path(project.figuredirectory('bio.lobster'),'collectors')
 	dir.create(FigLoc, showWarnings=F)
-	fp = file.path(project.datadirectory('lobster'),'data')
+	fp = file.path(project.datadirectory('bio.lobster'),'data')
 
-	x = read.csv(file.path(fp,'CollectorData2016.csv'))
+	x = read.csv(file.path(fp,'CollectorData.csv'))
 
 	x$Study.Area = trimws(x$Study.Area,'right') #lobster bay has space in name sometimes
 	x$Site = trimws(x$Site,'right') #lobster bay has space in name sometimes
@@ -25,9 +25,9 @@
 
 
 	#distinct number of collectors sampled per year
-			a = data.frame(unique(cbind(x$Year,x$Collector.Number,x$Study.Area)))
-			names(a) = c('Year','Collector.Count','Study.Area')
-			a = aggregate(Collector.Count~Year+Study.Area,data=a,FUN=length)
+			a = data.frame(unique(cbind(x$Year,x$Collector.Number,x$Study.Area,x$Site)))
+			names(a) = c('Year','Collector.Count','Study.Area','Site')
+			a = aggregate(Collector.Count~Year+Study.Area+Site,data=a,FUN=length)
 
 	xyplot(Collector.Count~as.numeric(Year)|factor(Study.Area),data=a, main="N Collectors Sampled by Year", xlab='Year',type='b',lwd=5,xlim=c(2006,2016))
 

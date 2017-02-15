@@ -1,4 +1,4 @@
-loadfunctions("lobster")
+loadfunctions("bio.lobster")
 
 RLibrary("plyr","lattice","glmmADMB","ggplot2")
 
@@ -74,11 +74,52 @@ FSRSvesday<-merge(FSRS_1.dat,FSRS_2.dat,all.x=T)
 str(FSRSvesday)
 
 
-subareas<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","LFA2733subarea.csv"))
+subareas<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","LFA2733subarea.csv"))
 FSRSvesday<-merge(FSRSvesday,subareas,all.x=T)
-write.csv(FSRSvesday,file.path( project.datadirectory("lobster"), "data","products","FSRSrectraps.csv"),row.names=F)
+write.csv(FSRSvesday,file.path( project.datadirectory("bio.lobster"), "data","products","FSRSrectraps.csv"),row.names=F)
 
-FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","products","FSRSrectraps.csv"))
+FSRSvesday<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","products","FSRSrectraps.csv"))
+
+
+#plot raw data on shorts
+b = aggregate(cbind(SHORTS,TOTAL_TRAPS)~LFA+SYEAR,data=FSRSvesday,FUN=sum)
+b$CPUE=  b$SHORTS / b$TOTAL_TRAPS
+
+p <- ggplot()
+p <- p + geom_point(data = b, 
+                    aes(y = CPUE, x = SYEAR),
+                    shape = 16, 
+                    size = 3) + xlab("Year") + ylab("Lobsters / Trap") + theme(text = element_text(size=15)) + 
+					theme_bw() + geom_line(data = b,  aes(x = SYEAR, y = CPUE), colour = "black")+ 
+					facet_wrap(  ~LFA, ncol=2,scales = "fixed")
+p
+
+#plot temperature across years
+FSRSvesday$TEMP[FSRSvesday$TEMP==-99] <- NA
+  
+
+b = aggregate(TEMP~LFA+SYEAR+DOS,data=FSRSvesday,FUN=mean)
+
+lf = unique(b$LFA)
+
+for(i in lf) {
+	j = subset(b,LFA==i)
+ plot(1,1,type='n',xlim=c(min(j$DOS),max(j$DOS)),ylim=c(min(j$TEMP),max(j$TEMP)),main=i)
+
+ jj = unique(j$SYEAR)
+ m=0
+ gg = rev(shadesOfGrey(length(jj)))
+ 	for(l in jj) {
+ 		m=m+1
+ 		with(subset(j,SYEAR==l),lines(DOS,TEMP,col=gg[m]))
+ 	}
+x11()
+}
+
+
+
+
+
 #FSRSvesday$HAUL_DATE<-as.Date(FSRSvesday$HAUL_DATE)
 
 ### Checking frequency of missing temp data
@@ -94,13 +135,13 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 	LFA27north<-subset(FSRSvesday,subarea=='27 North')
 
 	LFA27n.sm<-FSRSmodel(LFA27north, response="SHORTS")
-	LFA27n.lm<-FSRSmodel(LFA27north, response="LEGALS")
+	#LFA27n.lm<-FSRSmodel(LFA27north, response="LEGALS")
 
 	#------------------------------South
 	LFA27south<-subset(FSRSvesday,subarea=='27 South')
 
 	LFA27s.sm<-FSRSmodel(LFA27south, response="SHORTS")
-	LFA27s.lm<-FSRSmodel(LFA27south, response="LEGALS")
+	#LFA27s.lm<-FSRSmodel(LFA27south, response="LEGALS")
 
 
 #-------------------------------LFA28
@@ -108,7 +149,7 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 	LFA28<-subset(FSRSvesday,LFA==28)
 
 	LFA28.sm<-FSRSmodel(LFA28, response="SHORTS")
-	LFA28.lm<-FSRSmodel(LFA28, response="LEGALS")
+	#LFA28.lm<-FSRSmodel(LFA28, response="LEGALS")
 
 
 #-------------------------------LFA29
@@ -116,7 +157,7 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 	LFA29<-subset(FSRSvesday,LFA==29)
 
 	LFA29.sm<-FSRSmodel(LFA29, response="SHORTS")
-	LFA29.lm<-FSRSmodel(LFA29, response="LEGALS")
+	#LFA29.lm<-FSRSmodel(LFA29, response="LEGALS")
 
 
 #-------------------------------LFA30
@@ -124,7 +165,7 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 	LFA30<-subset(FSRSvesday,LFA==30)
 
 	LFA30.sm<-FSRSmodel(LFA30, response="SHORTS")
-	LFA30.lm<-FSRSmodel(LFA30, response="LEGALS")
+	#LFA30.lm<-FSRSmodel(LFA30, response="LEGALS")
 
 
 #-------------------------------LFA31A
@@ -132,7 +173,7 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 	LFA31A<-subset(FSRSvesday,LFA==31.1)
 
 	LFA31A.sm<-FSRSmodel(LFA31A, response="SHORTS")
-	LFA31A.lm<-FSRSmodel(LFA31A, response="LEGALS")
+	#LFA31A.lm<-FSRSmodel(LFA31A, response="LEGALS")
 
 
 #-------------------------------LFA31B
@@ -140,7 +181,7 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 	LFA31B<-subset(FSRSvesday,LFA==31.2)
 
 	LFA31B.sm<-FSRSmodel(LFA31B, response="SHORTS")
-	LFA31B.lm<-FSRSmodel(LFA31B, response="LEGALS")
+	#LFA31B.lm<-FSRSmodel(LFA31B, response="LEGALS")
 
 
 #-------------------------------LFA32
@@ -148,7 +189,7 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 	LFA32<-subset(FSRSvesday,LFA==32)
 
 	LFA32.sm<-FSRSmodel(LFA32, response="SHORTS")
-	LFA32.lm<-FSRSmodel(LFA32, response="LEGALS")
+	#LFA32.lm<-FSRSmodel(LFA32, response="LEGALS")
 
 
 #-----------------------------------LFA33
@@ -157,13 +198,13 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 	LFA33east<-subset(FSRSvesday,subarea=='33 East')
 
 	LFA33e.sm<-FSRSmodel(LFA33east, response="SHORTS",interaction=T)
-	LFA33e.lm<-FSRSmodel(LFA33east, response="LEGALS",interaction=T)
+	#LFA33e.lm<-FSRSmodel(LFA33east, response="LEGALS",interaction=T)
 
 	#------------------------------West
 	LFA33west<-subset(FSRSvesday,subarea=='33 West')
 
 	LFA33w.sm<-FSRSmodel(LFA33west, response="SHORTS",interaction=T)
-	LFA33w.lm<-FSRSmodel(LFA33west, response="LEGALS",interaction=T)
+	#LFA33w.lm<-FSRSmodel(LFA33west, response="LEGALS",interaction=T)
 
 
 #-------------------------------LFA34
@@ -171,7 +212,7 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 	LFA34<-subset(FSRSvesday,LFA==34)
 
 	LFA34.sm<-FSRSmodel(LFA34, response="SHORTS",interaction=T)
-	LFA34.lm<-FSRSmodel(LFA34, response="LEGALS",interaction=T)
+	#LFA34.lm<-FSRSmodel(LFA34, response="LEGALS",interaction=T)
 
 #________________________
 
@@ -179,7 +220,7 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 
 
 	#------------------------------load previous runs
-	FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","products","FSRSrectraps.csv"))
+#	FSRSvesday<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","products","FSRSrectraps.csv"))
 
 	LFA27north<-subset(FSRSvesday,subarea=='27 North')
 	LFA27south<-subset(FSRSvesday,subarea=='27 South')
@@ -194,49 +235,39 @@ FSRSvesday<-read.csv(file.path( project.datadirectory("lobster"), "data","produc
 
 
 	LFA27n.sm<-FSRSmodel(LFA27north, response="SHORTS",redo=F)
-	LFA27n.lm<-FSRSmodel(LFA27north, response="LEGALS",redo=F)
+	#LFA27n.lm<-FSRSmodel(LFA27north, response="LEGALS",redo=F)
 	LFA27s.sm<-FSRSmodel(LFA27south, response="SHORTS",redo=F)
-	LFA27s.lm<-FSRSmodel(LFA27south, response="LEGALS",redo=F)
+	#LFA27s.lm<-FSRSmodel(LFA27south, response="LEGALS",redo=F)
 	LFA28.sm<-FSRSmodel(LFA28, response="SHORTS",redo=F)
-	LFA28.lm<-FSRSmodel(LFA28, response="LEGALS",redo=F)
+	#LFA28.lm<-FSRSmodel(LFA28, response="LEGALS",redo=F)
 	LFA29.sm<-FSRSmodel(LFA29, response="SHORTS",redo=F)
-	LFA29.lm<-FSRSmodel(LFA29, response="LEGALS",redo=F)
+	#LFA29.lm<-FSRSmodel(LFA29, response="LEGALS",redo=F)
 	LFA30.sm<-FSRSmodel(LFA30, response="SHORTS",redo=F)
-	LFA30.lm<-FSRSmodel(LFA30, response="LEGALS",redo=F)
+	#LFA30.lm<-FSRSmodel(LFA30, response="LEGALS",redo=F)
 	LFA31A.sm<-FSRSmodel(LFA31A, response="SHORTS",redo=F)
-	LFA31A.lm<-FSRSmodel(LFA31A, response="LEGALS",redo=F)
+	#LFA31A.lm<-FSRSmodel(LFA31A, response="LEGALS",redo=F)
 	LFA31B.sm<-FSRSmodel(LFA31B, response="SHORTS",redo=F)
-	LFA31B.lm<-FSRSmodel(LFA31B, response="LEGALS",redo=F)
+	#LFA31B.lm<-FSRSmodel(LFA31B, response="LEGALS",redo=F)
 	LFA32.sm<-FSRSmodel(LFA32, response="SHORTS",redo=F)
-	LFA32.lm<-FSRSmodel(LFA32, response="LEGALS",redo=F)
+	#LFA32.lm<-FSRSmodel(LFA32, response="LEGALS",redo=F)
 	LFA33e.sm<-FSRSmodel(LFA33east, response="SHORTS",redo=F)
-	LFA33e.lm<-FSRSmodel(LFA33east, response="LEGALS",redo=F)
+	#LFA33e.lm<-FSRSmodel(LFA33east, response="LEGALS",redo=F)
 	LFA33w.sm<-FSRSmodel(LFA33west, response="SHORTS",redo=F)
-	LFA33w.lm<-FSRSmodel(LFA33west, response="LEGALS",redo=F)
-	LFA34.sm<-FSRSmodel(LFA34, response="SHORTS",redo=F)
-	LFA34.lm<-FSRSmodel(LFA34, response="LEGALS",redo=F)
+	#LFA33w.lm<-FSRSmodel(LFA33west, response="LEGALS",redo=F)
+	#LFA34.sm<-FSRSmodel(LFA34, response="SHORTS",redo=F)
+	#LFA34.lm<-FSRSmodel(LFA34, response="LEGALS",redo=F)
 
 	# plot model fit in most recent year
 	FSRSmodel.3dplot(LFA27n.sm$model,response="SHORTS")
-	FSRSmodel.3dplot(LFA27n.lm$model,response="LEGALS")
 	FSRSmodel.3dplot(LFA27s.sm$model,response="SHORTS")
-	FSRSmodel.3dplot(LFA27s.lm$model,response="LEGALS")
 	FSRSmodel.3dplot(LFA28.sm$model,response="SHORTS")
-	FSRSmodel.3dplot(LFA28.lm$model,response="LEGALS")
 	FSRSmodel.3dplot(LFA29.sm$model,response="SHORTS")
-	FSRSmodel.3dplot(LFA29.lm$model,response="LEGALS")
 	FSRSmodel.3dplot(LFA30.sm$model,response="SHORTS")
-	FSRSmodel.3dplot(LFA30.lm$model,response="LEGALS")
 	FSRSmodel.3dplot(LFA31A.sm$model,response="SHORTS")
-	FSRSmodel.3dplot(LFA31A.lm$model,response="LEGALS")
 	FSRSmodel.3dplot(LFA31B.sm$model,response="SHORTS")
-	FSRSmodel.3dplot(LFA31B.lm$model,response="LEGALS")
 	FSRSmodel.3dplot(LFA32.sm$model,response="SHORTS")
-	FSRSmodel.3dplot(LFA32.lm$model,response="LEGALS")
 	FSRSmodel.3dplot(LFA33e.sm$model,response="SHORTS")
-	FSRSmodel.3dplot(LFA33e.lm$model,response="LEGALS")
 	FSRSmodel.3dplot(LFA33w.sm$model,response="SHORTS")
-	FSRSmodel.3dplot(LFA33w.lm$model,response="LEGALS")
 
 # compile results
 LFA27n.sm$pData$Area<-'27N'
@@ -249,26 +280,13 @@ LFA31B.sm$pData$Area<-'31B'
 LFA32.sm$pData$Area<-'32'
 LFA33e.sm$pData$Area<-'33E'
 LFA33w.sm$pData$Area<-'33W'
-#LFA34.sm$pData$Area<-'34'
-shorts<-rbind(LFA27n.sm$pData,LFA27s.sm$pData,LFA28.sm$pData,LFA29.sm$pData,LFA30.sm$pData,LFA31A.sm$pData,LFA31B.sm$pData,LFA32.sm$pData,LFA33e.sm$pData,LFA33w.sm$pData)
-write.csv(shorts,file.path( project.datadirectory("lobster"), "data","products","FSRSmodelresultsSHORT.csv"),row.names=F)
 
-LFA27n.lm$pData$Area<-'27N'
-LFA27s.lm$pData$Area<-'27S'
-LFA28.lm$pData$Area<-'28'
-LFA29.lm$pData$Area<-'29'
-LFA30.lm$pData$Area<-'30'
-LFA31A.lm$pData$Area<-'31A'
-LFA31B.lm$pData$Area<-'31B'
-LFA32.lm$pData$Area<-'32'
-LFA33e.lm$pData$Area<-'33E'
-LFA33w.lm$pData$Area<-'33W'
-#LFA34.lm$pData$Area<-'34'
-legals<-rbind(LFA27n.lm$pData,LFA27s.lm$pData,LFA28.lm$pData,LFA29.lm$pData,LFA30.lm$pData,LFA31A.lm$pData,LFA31B.lm$pData,LFA32.lm$pData,LFA33e.lm$pData,LFA33w.lm$pData)
-write.csv(legals,file.path( project.datadirectory("lobster"), "data","products","FSRSmodelresultsLEGAL.csv"),row.names=F)
+shorts<-rbind(LFA27n.sm$pData,LFA27s.sm$pData,LFA28.sm$pData,LFA29.sm$pData,LFA30.sm$pData,LFA31A.sm$pData,LFA31B.sm$pData,LFA32.sm$pData,LFA33e.sm$pData,LFA33w.sm$pData)
+write.csv(shorts,file.path( project.datadirectory("bio.lobster"), "data","products","FSRSmodelresultsSHORT.csv"),row.names=F)
 
 
 # shorts
+	pdf(file.path(project.figuredirectory('bio.lobster'),'FSRS.LFA27-33.2017.pdf'),width=8,height=10)
 
 
 p <- ggplot()
@@ -288,29 +306,5 @@ p <- p + geom_ribbon(data = shorts,
                          ymin = lb ),
                      alpha = 0.5)
 p <- p + facet_wrap(  ~Area, ncol=2,scales = "fixed")
-p
-
-
-# legals
-
-
-p <- ggplot()
-p <- p + geom_point(data = legals, 
-                    aes(y = mu, x = YEAR),
-                    shape = 16, 
-                    size = 3)
-p <- p + xlab("Year") + ylab("Lobsters / Trap")
-p <- p + theme(text = element_text(size=15)) + theme_bw()
-p <- p + geom_line(data = legals, 
-                   aes(x = YEAR, y = mu), 
-                   colour = "black")
-
-p <- p + geom_ribbon(data = legals, 
-                     aes(x = YEAR, 
-                         ymax = ub, 
-                         ymin = lb ),
-                     alpha = 0.5)
-p <- p + facet_wrap(  ~Area, ncol=2,scales = "fixed")
-p
-
-
+print(p)
+dev.off()

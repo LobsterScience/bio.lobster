@@ -124,16 +124,18 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                                   return(logsInSeason)
                                 }
 
-                    #Filtering by date trap and weight:
-                          Fish.Date <- read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"),colClasses=c('character','integer','Date','Date'))
-                          print('Not the ODBC season Dates Need to Have Updated AMC MAY2016')
+                    #Filtering by   
+                    Fish.Date<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
+                     
+                
+                          print('Not the ODBC season Dates Need to Have Updated AMC jan2017')
                           lfa <- unique(Fish.Date$LFA)
                           
                           max_trap<-c(825,750,750,750,750,750,750,750,1126,1126,1126,1226)
                           max_lbs<-c(2750,2750,2750,2750,2750,2750,2750,10000,30000,30000,30000,30000)
-                          Fish.Date$START_DATE<-as.Date(Fish.Date$START_DATE,format = "%Y-%m-%d")
-                          Fish.Date$END_DATE<-as.Date(Fish.Date$END_DATE,format = "%Y-%m-%d")
-                    
+                          Fish.Date$START_DATE<-as.Date(Fish.Date$START_DATE,"%d/%m/%Y")
+                          Fish.Date$END_DATE<-as.Date(Fish.Date$END_DATE,"%d/%m/%Y")
+
 
                     # imported logs from marfis
                           lobster.db('logs')
