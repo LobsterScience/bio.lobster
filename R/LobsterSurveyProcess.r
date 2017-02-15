@@ -33,11 +33,11 @@ require('bio.utilities')
 	        "STATION", "STRATUM_ID", "SET_LAT", "SET_LONG", "SET_DEPTH", "SET_TIME", "SET_DATE", "HAUL_LAT", "HAUL_LONG", "HAUL_DEPTH", "HAUL_TIME", 
 	        "HAUL_DATE", "YEAR", "LFA")           
 	surveyLobsters<-merge(subset(surveyCatch,SPECCD_ID==2550),subset(surveyCatch,!duplicated(SET_ID),setNames),all=T)
-
 	# number of lobsters with detailed data
 	NLM<-with(surveyMeasurements,tapply(SET_ID,SET_ID,length))
 	surveyLobsters<-merge(surveyLobsters,data.frame(SET_ID=names(NLM),LOBSTERS_MEASURED=NLM),by='SET_ID',all=T)
-
+	surveyLobsters <- subset(surveyLobsters,GEAR !='3/4 OTTER TRAWL') # Remove 2015 survey portion on Fundy Spray
+	
 	# add column for tow length
 	lat1<-surveyLobsters$SET_LAT
 	lat2<-surveyLobsters$HAUL_LAT
@@ -45,17 +45,33 @@ require('bio.utilities')
 	lon2<-surveyLobsters$HAUL_LONG
 	surveyLobsters$LENGTH<-6371.3*acos(cos(rad(90-lat1))*cos(rad(90-lat2))+sin(rad(90-lat1))*sin(rad(90-lat2))*cos(rad(lon1-lon2)))
 
-	# save list of tows with length outliers
+	# Save list of tows with length outliers
 	write.csv(subset(surveyLobsters,(LENGTH<0.67|LENGTH>3.5)&HAULCCD_ID==1),file.path(project.datadirectory('bio.lobster'),"data","longTows.csv"),row.names=F)
 
-	# add columns  NUM_STANDARDIZED and MONTH
-	surveyLobsters$NUM_CAUGHT[is.na(surveyLobsters$NUM_CAUGHT)]<-0
-	surveyLobsters$LENGTH[surveyLobsters$LENGTH<0.67|surveyLobsters$LENGTH>3.5]<-NA
+	# Add columns  NUM_STANDARDIZED and MONTH
+	surveyLobsters$LENGTH[surveyLobsters$LENGTH<0.67|surveyLobsters$LENGTH>3.5]<-NA #123 NA records created JAN_2017
+	surveyLobsters$NUM_CAUGHT[is.na(surveyLobsters$NUM_CAUGHT)]<-0 #2053 NA records of NUM_CAUGHT replaced with 0 JAN_2017
 	surveyLobsters$NUM_STANDARDIZED<-surveyLobsters$NUM_CAUGHT/surveyLobsters$LENGTH
-	surveyLobsters$MONTH<-as.character(month(surveyLobsters$BOARD_DATE,T))
-	surveyLobsters$AREA_SWEPT<-surveyLobsters$LENGTH*1000*17
-	surveyLobsters$LobDen<-surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT*1000
-	surveyLobsters<-subset(surveyLobsters,!is.na(NUM_STANDARDIZED)&LFA==lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
+	surveyLobsters$MONTH<-as.character(month(surveyLobsters$HAUL_DATE,T))
+	
+	#Use trawl gear wingspread specification
+	x = as.data.frame(with(surveyLobsters,unique(cbind(YEAR,GEAR))))
+	out <- list()
+	for(i in 1:nrow(x)){
+	    g = subset(surveyLobsters,YEAR==x[i,1] & GEAR == x[i,2])
+	    mL = mean(g$LENGTH,na.rm=T)
+	    g$LENGTH[is.na(g$LENGTH)]<-mL
+	    g$GEAR_WIDTH <- NA
+	    if(x[i,2]=='280 BALLOON') g$GEAR_WIDTH <- 20
+	    if(x[i,2]=='NEST') g$GEAR_WIDTH <- 13
+	    out[[i]] <- g
+	 }
+	surveyLobsters = do.call(rbind,out)
+	surveyLobsters$AREA_SWEPT<-surveyLobsters$LENGTH*(surveyLobsters$GEAR_WIDTH/1000)
+	
+	surveyLobsters$LobDen<-surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT
+	surveyLobsters<-subset(surveyLobsters,!is.na(NUM_STANDARDIZED) & LFA==lfa & HAULCCD_ID==1 & YEAR %in% yrs & MONTH %in% mths)
+	
 
 	# add columns for length bins
 	bins<-seq(size.range[1],size.range[2],bin.size)
