@@ -2,7 +2,7 @@
 p=list()
 p$yrs = 1947:2016
 require(bio.lobster)
-#lobster.db('logs.redo',p=p)
+lobster.db('logs.redo',p=p)
 lobster.db(DS='process.logs.redo', p=p)
 
 
@@ -13,10 +13,13 @@ lobster.db(DS='process.logs.redo', p=p)
 	lfa <- unique(Fish.Date$LFA)
 	max_trap<-c(825,750,750,750,750,750,750,750,1126,1126,1126,1226)
 	max_lbs<-c(2750,2750,2750,2750,2750,2750,2750,10000,30000,30000,30000,30000)
+	#If Linux
 	Fish.Date$START_DATE<-as.Date(Fish.Date$START_DATE,"%Y-%m-%d")
 	Fish.Date$END_DATE<-as.Date(Fish.Date$END_DATE,"%Y-%m-%d")
-
-
+  #If Windows
+	Fish.Date$START_DATE<-as.Date(Fish.Date$START_DATE,"%d/%m/%Y")
+	Fish.Date$END_DATE<-as.Date(Fish.Date$END_DATE,"%d/%m/%Y")
+	
 ## LOGS
 logsInSeason<-lobster.db('process.logs')
 	
@@ -72,11 +75,6 @@ LOGcpue.dat<-do.call("rbind",cpue2.lst)
 write.csv(LOGcpue.dat,file.path( project.datadirectory("bio.lobster"), "data","products","CommercialCPUE_LFA.csv"),row.names=F)
 
 
-
-
-
-
-
 #---------------------------------------------------------------------------Plots for Update
 	require(lattice)
 	require(plyr)
@@ -87,30 +85,51 @@ write.csv(LOGcpue.dat,file.path( project.datadirectory("bio.lobster"), "data","p
 	LOGcpue.dat<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","products","CommercialCPUE_LFA.csv"))
 	cpue.dat<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","products","CommercialCPUE.csv"))
 	vollog.dat<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","products","VolLogsCPUE_LFA.csv"))
-	vollog.dat$lfa = recode(vollog.dat$lfa,"'27N'='27 North';'27S'='27 South'; '33E'='33 East'; '33W' = '33 West' ")
-	logs.0814<-subset(cpue.dat,year<2017&lfa<34)
-	logs.0814$lfa <- logs.0814$subarea
-	long.term.mean<-ddply(subset(logs.0814,year>2007), .(lfa), summarize, lt.mean=mean(cpue))
+	vollog.dat$lfa = bio.utilities::recode(vollog.dat$lfa,"'27N'='27 North';'27S'='27 South'; '33E'='33 East'; '33W' = '33 West' ")
+	logs.0016<-subset(cpue.dat,year<=2016 & lfa<34)
+	logs.0016$lfa <- logs.0016$subarea
+	long.term.mean<-ddply(subset(logs.0015,year>2007), .(lfa), summarize, lt.mean=mean(cpue))
 	require(ggplot2)
 
 
-
-
+	vollog.27<-subset(vollog.dat,lfa %in% c('27 North','27 South'))
+	
 	pdf(file.path(project.figuredirectory('bio.lobster'),'Commercial.CPUE.Vollog.LFA27-33.2017.pdf'),width=8,height=10)
 				p1 = ggplot(vollog.dat,aes(x=as.factor(year),y=cpue, group=lfa, colour="red")) + geom_line () + facet_wrap(~lfa, ncol=2) +
-				  geom_segment(aes(x='2008', y=lt.meanq(),xend='2015',yend=lt.mean,group=lfa), colour="cornflowerblue", data=subset(long.term.mean,lfa<"34")) + geom_line(data=logs.0814,colour="black") + 
-				  geom_point(data=logs.0814,colour="black") +scale_y_continuous(limits=c(0,2.2), breaks=c(0,1,2)) + scale_x_discrete(breaks=seq(1980,2015,5),
-				  labels=c('1981','1986','1991','1996','2001','2006','2011','2016')) + 
-				  theme_bw() + theme(axis.text.x=element_text(size=10.0),strip.text=element_text(size=12.0),legend.position="none") + xlab("Year") + ylab("CPUE (Kg/Trap Haul)")
+				  geom_segment(aes(x='2008', y=lt.mean,xend='2015',yend=lt.mean,group=lfa), colour="cornflowerblue", linetype="dashed",
+				  data=subset(long.term.mean,lfa<"34")) + geom_line(data=logs.0016,colour="black") + 
+				  geom_point(data=logs.0016,colour="black") +scale_y_continuous(limits=c(0,2.2), breaks=c(0,1,2)) + 
+				  scale_x_discrete(breaks=seq(1981,2016,4))+ 
+				  theme_bw() + theme(axis.text.x=element_text(angle=0,hjust=0.5,size=9.0),strip.text=element_text(size=12.0),legend.position="none") +
+				  xlab("Year") + ylab("CPUE (Kg/Trap Haul)")
 				  p1
 	dev.off()
+	
+	#Plot by LFA
+	vollog.27<-subset(vollog.dat,lfa %in% c('27 North','27 South'))
+	logs.27<-subset(logs.0815,lfa %in% c('27 North','27 South'))
+	vollog.31A<-subset(vollog.dat,lfa=="31A")
+	logs.31A<-subset(cpue.dat,lfa=="31A")
+	
+	
+	pdf(file.path(project.figuredirectory('bio.lobster'),'Commercial.CPUE.Vollog.LFA27.2017.pdf'),width=8,height=10)
+	p1 = ggplot(vollog.27,aes(x=as.factor(year),y=cpue, group=lfa, colour="red")) + geom_line () + facet_wrap(~lfa, ncol=1) +
+	  geom_segment(aes(x='2008', y=lt.mean,xend='2015',yend=lt.mean,group=lfa), colour="cornflowerblue", 
+	               data=subset(long.term.mean,lfa=="27")) + geom_line(data=logs.27,colour="black") + 
+	  geom_point(data=logs.27,colour="black") +scale_y_continuous(limits=c(0,1), breaks=c(0,0.25,0.50,0.75,1)) + 
+	  scale_x_discrete(breaks=seq(1981,2016,5))+ 
+	  theme_bw() + theme(axis.text.x=element_text(angle=0,hjust=0.5,size=9.0),strip.text=element_text(size=12.0),legend.position="none") +
+	  xlab("Year") + ylab("CPUE (Kg/Trap Haul)")
+	p1
+	dev.off()
+	
 	
 	# Landings
 	LandingsUpdate<-lobster.db('annual.landings')
 	LR = as.data.frame(reshape(LandingsUpdate[,c("YR","LFA27",  "LFA28",  "LFA29",  "LFA30",  "LFA31",  "LFA32",  "LFA33")],
 		varying=c("LFA27",  "LFA28",  "LFA29",  "LFA30",  "LFA31",  "LFA32",  "LFA33"),v.names='Landings',timevar='LFA',times=c("LFA27",  "LFA28",  "LFA29",  "LFA30", "LFA31",  "LFA32",  "LFA33"), direction='long'))
 	 attr(LR,'reshapeLong') <- NULL
-	 LR$LFA1 <- recode(LR$LFA,c("'LFA28'='LFA28.32';'LFA29'='LFA28.32';'LFA30'='LFA28.32'; 'LFA31'='LFA28.32';'LFA32'='LFA28.32'"))
+	 LR$LFA1 <- bio.utilities::recode(LR$LFA,c("'LFA28'='LFA28.32';'LFA29'='LFA28.32';'LFA30'='LFA28.32'; 'LFA31'='LFA28.32';'LFA32'='LFA28.32'"))
 
 	 L =aggregate(Landings~LFA1+YR,data=LR,FUN=sum)
 	
@@ -128,31 +147,44 @@ write.csv(LOGcpue.dat,file.path( project.datadirectory("bio.lobster"), "data","p
 					L27$Landings = L27$Landings - L27$LandingsGulf
 					
 					L27 = L27[,-4]
-					Gulf27 <- data.frame(YR = 2004:2015,LFA1='27G', Landings= c(115,	117,	118,	110,	138,	104,146.2,149.3,161.4,208.8,174.3,158.4)) 
+					Gulf27 <- data.frame(YR = 2004:2015,LFA1='27G', Landings= c(115,	117,	118,	110,	138, 104,146.2,149.3,161.4,208.8,174.3,158.4)) 
 					L27 = rbind(L27,Gulf27)
 					names(L27)[2] <- 'LFA'
-
-				p1<-ggplot(L27,aes(x=YR,y=Landings,fill=factor(LFA))) + geom_bar(stat='identity', width=1.0) +
-							   scale_y_continuous(limits=c(0,5000),breaks=seq(0, 5000, 1000))  + scale_x_continuous(breaks=seq(1947, 2015, 4)) + 
-							   ggtitle("LFA 27") + theme(axis.text.x=element_text(size=10, colour='black'),panel.background=element_rect(colour='black'),
-							   panel.border=element_rect(fill=NA,colour='black'),axis.text.y=element_text(size=10, colour='black'),axis.title.y= element_text(size=15)) +
-							   xlab('') + ylab('Landings (t)') + scale_fill_manual(breaks=factor('LFA'),values=c("#D55E00","#000000")) + geom_segment(aes(x=1947,y=1629,xend=2016,yend=1629),
-							   col="#0072B2",linetype="dashed", size=1.0) + geom_segment(aes(x=1947,y=814,xend=2016,yend=814),col="#009E73",linetype="solid", size=1.0) +
-							   geom_text(aes(1947,4500,label = '- - - USR (80%)'),col="#0072B2",size=4,hjust=0) + geom_text(aes(1947,4000,label = '------ LRP (40%)'),col="#009E73",size=4,hjust=0) + 
-							   geom_text(aes(1947,3500,label = 'Gulf Landings'),col="#D55E00",size=4,hjust=0)
-							 
-				 
-					 L28.32 <- subset(L,LFA1=='LFA28.32')
-				 	 names(L28.32)[1] <- 'LFA'
-				 p2<-ggplot(L28.32,aes(x=YR,y=Landings,fill=factor(LFA))) + geom_bar(stat='identity', width=1.0) +
-							   scale_y_continuous(limits=c(0,5000),breaks=seq(0, 5000, 1000))  + scale_x_continuous(breaks=seq(1947, 2015, 4)) +
-							   ggtitle("LFA 28-32") + theme(axis.text.x=element_text(size=10, colour='black'),panel.background=element_rect(colour='black'),
-							   panel.border=element_rect(fill=NA,colour='black'),axis.text.y=element_text(size=10, colour='black'),axis.title.y= element_text(size=15)) + 
-							   xlab('') + ylab('Landings (t)') + scale_fill_manual(breaks=factor('LFA'),values=cbPalette) + geom_segment(aes(x=1947,y=691,xend=2016,yend=691), 
-							   col="#0072B2",linetype="dashed", size=1.0) + geom_segment(aes(x=1947,y=346,xend=2016,yend=346), col="#009E73",linetype="solid", size=1.0) +
-							   geom_text(aes(1947,4500,label = '- - - USR (80%)'),col="#0072B2",size=4,hjust=0) + geom_text(aes(1947,4000,label = '------ LRP (40%)'),col="#009E73",size=4,hjust=0)
-				 
-
+					MEAN3YR<-c(NA,NA,1027,1106,1202,1217,1308,1268,1284,1241,1119,1017,1027,1145,1275,1174,1135,1037,1013,894,743,691,803,894,940,782,662,
+					           547,535,540,480,369,337,312,337,356,396,651,1053,1695,2279,2590,2423,2230,2234,2260,2095,1900,1725,1763,1686,1906,2006,
+					           2158,2277,2489,2515,2346,2265,2343,2703,2729,3011,3126,3561,4136,4792,5435,6083,7651)
+					L27.rp<-data.frame(YR= rep(1947:2016,times=2),LFA=rep("LFA27",times=140),RP=c(rep("USR",times=70),rep("LRP",times=70)),
+					                   Landings=c(rep(1629,times=70),rep(814,times=70)))
+					L28.32.rp<-data.frame(YR= rep(1947:2016,times=2),LFA=rep("LFA28.32",times=),RP=c(rep("USR",times=70),rep("LRP",times=70)),
+					                   Landings=c(rep(691,times=70),rep(346,times=70)))
+					L33.rp<-data.frame(YR= rep(1947:2016,times=3),LFA=rep("LFA33",times=210),TYPE=c(rep("USR",times=70),rep("LRP",times=70),rep("3-year Mean",times=70)),
+					                   Landings=c(rep(1794,times=70),rep(897,times=70),MEAN3YR))
+					
+				L27.rp$RP <- factor(L27.rp$RP)
+				L27.rp$RP <- factor(L27.rp$RP, levels = rev(levels(L27.rp$RP)))
+				p1<-ggplot(L27, aes(x=YR,y=Landings,fill=factor(LFA))) + geom_bar(stat='identity', width=1.0) +
+				  scale_y_continuous(limits=c(0,5000),breaks=seq(0, 5000, 1000))  + scale_x_continuous(breaks=seq(1947, 2016, 4)) +
+				  scale_fill_manual(values=c("#999999","#000000"),name='Landings',breaks=c("LFA27","27G"), labels=c("LFA 27","LFA 27 Gulf")) +
+				  ggtitle("LFA 27") + theme(axis.text.x=element_text(size=10, colour='black'),panel.border=element_rect(fill=NA,colour='black'),
+				  axis.text.y=element_text(size=10, colour='black'),axis.title.y= element_text(size=15),legend.position=c(0.10,0.69),
+				  legend.title = element_blank()) + xlab('') + ylab('Landings (t)') + 
+				  geom_line(data=L27.rp, aes(x=YR,y=Landings,group=RP,linetype=RP, color= RP),size=1.0) +
+				  scale_color_manual(values=c("#0072B2","#009E73")) + scale_linetype_manual(values = c("dashed","solid")) 
+				  
+				 L28.32 <- subset(L,LFA1=='LFA28.32')
+				 names(L28.32)[1] <- 'LFA'
+				 L28.32.rp$RP <- factor(L28.32.rp$RP)
+				 L28.32.rp$RP <- factor(L28.32.rp$RP, levels = rev(levels(L28.32.rp$RP)))
+				 p2<-ggplot(L28.32,aes(x=YR,y=Landings,fill=(LFA))) + geom_bar(stat='identity', width=1.0) + guides(fill=FALSE) +
+							   scale_y_continuous(limits=c(0,5000),breaks=seq(0, 5000, 1000))  + scale_x_continuous(breaks=seq(1947, 2016, 4)) +
+				         scale_fill_manual(values="#000000") +ggtitle("LFA 28-32") + 
+				         theme(axis.text.x=element_text(size=10, colour='black'),panel.background=element_rect(colour='black'),
+							   panel.border=element_rect(fill=NA,colour='black'),axis.text.y=element_text(size=10, colour='black'),
+							   axis.title.y= element_text(size=15),legend.position=c(0.07,0.85),legend.title = element_blank()) + 
+							   xlab('') + ylab('Landings (t)') +
+				         geom_line(data=L28.32.rp, aes(x=YR,y=Landings,group=RP,linetype=RP, color= RP),size=1.0) +
+				         scale_color_manual(values=c("#0072B2","#009E73")) + scale_linetype_manual(values = c("dashed","solid")) 
+				   
 				LandingsUpdate<-lobster.db('seasonal.landings')
 				LU = LandingsUpdate[,c('SYEAR','LFA33')]
 				LU$YR = 1976:2017
@@ -163,18 +195,23 @@ write.csv(LOGcpue.dat,file.path( project.datadirectory("bio.lobster"), "data","p
 				L3 = L3[,c('Landings','YR')]
 				L3$TYPE = 'Annual'
 				LU = rbind(L3,LU)
-
+				L33.rp$TYPE <- factor(L33.rp$TYPE)
+				L33.rp$TYPE <- factor(L33.rp$TYPE, levels = rev(levels(L33.rp$TYPE)))
+				
 				 p3<-ggplot(LU,aes(x=YR,y=Landings,colour=TYPE, group=TYPE)) + 
-							   geom_bar(data=subset(LU,TYPE=='Annual'),fill='black',colour='black',stat='identity', width=1.0) +
-							   geom_bar(data=subset(LU,TYPE=='Seasonal'),fill='darkgray',colour='darkgray', stat='identity',width=1.0) +
-							   scale_y_continuous(limits=c(0,10200),breaks=seq(0, 10200, 1000)) + scale_x_continuous(breaks=seq(1947, 2016, 4)) + ggtitle("LFA 33") +
-							   theme(axis.text.x=element_text(size=10, colour='black'),panel.background=element_rect(colour='black'),
-							         panel.border=element_rect(,fill=NA,colour='black'),axis.text.y=element_text(size=10, colour='black'),
-							         axis.title.y= element_text(size=15)) + xlab('') + ylab('Landings (t)') +
-							   geom_segment(aes(x=1947,y=1794,xend=2016,yend=1794), col="#0072B2",linetype="dashed", size=1.0) +
-							   geom_segment(aes(x=1947,y=897,xend=2016,yend=897),col="#009E73",linetype="solid", size=1.0) + 
-							   geom_text(aes(1947,7000,label = '- - - USR (80%)'),col="#0072B2",size=4, hjust=0) + geom_text(aes(1947,6300,label = '----- LRP (40%)'),col="#009E73",size=4,hjust=0)
-							 grid.arrange(p1,p2,p3,ncol=1)  
+							   geom_bar(data=subset(LU,TYPE=='Annual'),fill='darkgray',colour='darkgray',stat='identity', width=1.0) + 
+							   geom_bar(data=subset(LU,TYPE=='Seasonal'),fill='black',colour='black', stat='identity',width=1.0) + 
+				         #geom_line(data=LU, aes(x=YR,y=MEAN3YR), color="#D55E00") + geom_point(data=LU, aes(x=YR,y=MEAN3YR),colour="#D55E00") +
+				   
+							   scale_y_continuous(limits=c(0,10200),breaks=seq(0, 10200, 1000)) + scale_x_continuous(breaks=seq(1947, 2016, 4)) + 
+				         ggtitle("LFA 33") + theme(axis.text.x=element_text(size=10, colour='black'),panel.background=element_rect(colour='black'),
+							   panel.border=element_rect(,fill=NA,colour='black'),axis.text.y=element_text(size=10, colour='black'),
+							   axis.title.y= element_text(size=15),legend.position=c(0.10,0.80),legend.title = element_blank()) + 
+                 xlab('') + ylab('Landings (t)') + 
+				         geom_line(data=L33.rp, aes(x=YR,y=Landings,group=TYPE,linetype=TYPE, color= TYPE),size=1.0) +
+                 scale_color_manual(values=c("#0072B2","#009E73","#D55E00")) + scale_linetype_manual(values = c("dashed","solid","dotted"))  
+				   
+  							 grid.arrange(p1,p2,p3,ncol=1)  
  dev.off()
  
 
