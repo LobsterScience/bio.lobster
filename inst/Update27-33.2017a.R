@@ -88,7 +88,7 @@ write.csv(LOGcpue.dat,file.path( project.datadirectory("bio.lobster"), "data","p
 	vollog.dat$lfa = bio.utilities::recode(vollog.dat$lfa,"'27N'='27 North';'27S'='27 South'; '33E'='33 East'; '33W' = '33 West' ")
 	logs.0016<-subset(cpue.dat,year<=2016 & lfa<34)
 	logs.0016$lfa <- logs.0016$subarea
-	long.term.mean<-ddply(subset(logs.0015,year>2007), .(lfa), summarize, lt.mean=mean(cpue))
+	long.term.mean<-ddply(subset(logs.0016,year>2007), .(lfa), summarize, lt.mean=mean(cpue))
 	require(ggplot2)
 
 
@@ -108,15 +108,15 @@ write.csv(LOGcpue.dat,file.path( project.datadirectory("bio.lobster"), "data","p
 	#Plot by LFA
 	vollog.27<-subset(vollog.dat,lfa %in% c('27 North','27 South'))
 	logs.27<-subset(logs.0815,lfa %in% c('27 North','27 South'))
-	vollog.31A<-subset(vollog.dat,lfa=="31A")
-	logs.31A<-subset(cpue.dat,lfa=="31A")
+	vollog.2829<-subset(vollog.dat,lfa %in% c("28","29"))
+	logs.2829<-subset(cpue.dat,lfa %in% c("28","29"))
 	
 	
 	pdf(file.path(project.figuredirectory('bio.lobster'),'Commercial.CPUE.Vollog.LFA27.2017.pdf'),width=8,height=10)
-	p1 = ggplot(vollog.27,aes(x=as.factor(year),y=cpue, group=lfa, colour="red")) + geom_line () + facet_wrap(~lfa, ncol=1) +
+	p1 = ggplot(vollog.2829,aes(x=as.factor(year),y=cpue, group=lfa, colour="red")) + geom_line () + facet_wrap(~lfa, ncol=1) +
 	  geom_segment(aes(x='2008', y=lt.mean,xend='2015',yend=lt.mean,group=lfa), colour="cornflowerblue", 
-	               data=subset(long.term.mean,lfa=="27")) + geom_line(data=logs.27,colour="black") + 
-	  geom_point(data=logs.27,colour="black") +scale_y_continuous(limits=c(0,1), breaks=c(0,0.25,0.50,0.75,1)) + 
+	               data=subset(long.term.mean,lfa %in% c("28","29"))) + geom_line(data=logs.2829,colour="black") + 
+	  geom_point(data=logs.2829,colour="black") +scale_y_continuous(limits=c(0,2.0), breaks=c(0,0.50,1.00,1.50,2)) + 
 	  scale_x_discrete(breaks=seq(1981,2016,5))+ 
 	  theme_bw() + theme(axis.text.x=element_text(angle=0,hjust=0.5,size=9.0),strip.text=element_text(size=12.0),legend.position="none") +
 	  xlab("Year") + ylab("CPUE (Kg/Trap Haul)")

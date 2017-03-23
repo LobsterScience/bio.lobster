@@ -284,27 +284,29 @@ LFA33w.sm$pData$Area<-'33W'
 shorts<-rbind(LFA27n.sm$pData,LFA27s.sm$pData,LFA28.sm$pData,LFA29.sm$pData,LFA30.sm$pData,LFA31A.sm$pData,LFA31B.sm$pData,LFA32.sm$pData,LFA33e.sm$pData,LFA33w.sm$pData)
 write.csv(shorts,file.path( project.datadirectory("bio.lobster"), "data","products","FSRSmodelresultsSHORT.csv"),row.names=F)
 
+shorts<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","products","FSRSmodelresultsSHORT.csv"))
+shorts.2829<-subset(shorts,Area %in% c("28","29"))
 
 # shorts
 	pdf(file.path(project.figuredirectory('bio.lobster'),'FSRS.LFA27-33.2017.pdf'),width=8,height=10)
 
 
 p <- ggplot()
-p <- p + geom_point(data = shorts, 
+p <- p + geom_point(data = shorts.2829, 
                     aes(y = mu, x = YEAR),
                     shape = 16, 
                     size = 3)
 p <- p + xlab("Year") + ylab("Lobsters / Trap")
 p <- p + theme(text = element_text(size=15)) + theme_bw()
-p <- p + geom_line(data = shorts, 
+p <- p + geom_line(data = shorts.2829, 
                    aes(x = YEAR, y = mu), 
                    colour = "black")
 
-p <- p + geom_ribbon(data = shorts, 
+p <- p + geom_ribbon(data = shorts.2829, 
                      aes(x = YEAR, 
                          ymax = ub, 
                          ymin = lb ),
                      alpha = 0.5)
-p <- p + facet_wrap(  ~Area, ncol=2,scales = "fixed")
+p <- p + facet_wrap(  ~Area, ncol=1,scales = "fixed")
 print(p)
 dev.off()
