@@ -155,16 +155,16 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                               }
                         
                         logs<-subset(logs,!is.na(SYEAR))
-                    
+                   
                     # add week of season (WOS) variable
-                      logs$WOS<-NA
-                        
-                          for(i in 1:length(lfa)) {
-                                h <- Fish.Date[Fish.Date$LFA==lfa[i],]  
-                             for(j in unique(logs$SYEAR[logs$LFA==lfa[i]])){
-                                 logs$WOS[logs$LFA==lfa[i]&logs$SYEAR==j]<-floor(as.numeric(logs$DATE_FISHED[logs$LFA==lfa[i]&logs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                        logs$WOS<-NA
+                          
+                            for(i in 1:length(lfa)) {
+                                  h <- Fish.Date[Fish.Date$LFA==lfa[i],]  
+                               for(j in unique(logs$SYEAR[logs$LFA==lfa[i]])){
+                                   logs$WOS[logs$LFA==lfa[i]&logs$SYEAR==j]<-floor(as.numeric(logs$DATE_FISHED[logs$LFA==lfa[i]&logs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                }
                               }
-                            }
 
                     # add quarter
                       logs$quarter<-NA

@@ -1,3 +1,4 @@
+#' @export
   
   lobSortedOrdination = function( b, colscheme="redgreen", addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ) {
 
@@ -13,7 +14,6 @@
     of1 = paste(outfileroot, "PC1.png", sep=".")
     of2 = paste(outfileroot, "PC2.png", sep=".")
     of3 = paste(outfileroot, "anomalies.png", sep=".")
-    
     corel = cor( b, use="pairwise.complete.obs" ) # set up a correlation matrix ignoring NAs
     corel[ is.na(corel) ] = 0
     

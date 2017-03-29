@@ -4,28 +4,30 @@
 \alias{LobsterSurveyProcess}
 \title{LobsterSurveyProcess}
 \usage{
-LobsterSurveyProcess(size.range = c(0, 220), lfa, yrs, mths = c("Jan",
-  "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
-  bin.size = 5)
+LobsterSurveyProcess(size.range = c(0, 220), lfa = "34", yrs,
+  mths = c("May", "Jun", "Jul", "Aug", "Sep", "Oct"),
+  gear.type = c("280 BALLOON"), bin.size = 5)
 }
 \arguments{
-\item{size.range}{defines the minimum and maximum value and is a filter (default is 0, 220mm CW).}
+\item{size.range}{defines the minimum and maximum value and is a filter (default is 0, 220mm CW)}
 
 \item{lfa}{defines the specific LFA for the ILTS}
 
 \item{yrs}{is the survey years to estimate}
 
-\item{bin.size}{aggregates the abundance into size bins defaults to 5mm bins}
+\item{gear.type}{survey trawl net identification (default is 280 BALLOON)}
+
+\item{bin.size}{aggregates the abundance into size bins (default is 5mm bins)}
 
 \item{mnts}{months of the survey, defaults to the full year}
 }
 \value{
-data.frame of survey data
+data.frame of survey data called 'surveyLobsters'
 }
 \description{
 LobsterSurveyProcess
 }
 \author{
-Brad Hubley
+Brad Hubley & Manon Cassista-Da Ros
 }
 
