@@ -165,3 +165,11 @@ a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T)
 		addPolys(LFA41,border='blue')
 
 		savePlot(file=file.path(project.figuredirectory('bio.lobster'),'AllSurveyCoverage.png'))
+
+
+
+		#LFA40
+
+				LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+				a = subset(LFAs,PID==40)
+				
