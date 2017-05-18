@@ -8,7 +8,8 @@ p = bio.lobster::load.environment()
     
 ##### lumped function lobster.db
 #be sure to update current.assessment.year.r 
-
+p=  list()
+p$current.assessment.year=2017
 p$yrs = 1947:p$current.assessment.year
 
 #lobster map
