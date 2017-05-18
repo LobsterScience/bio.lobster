@@ -57,6 +57,9 @@ options(stringsAsFactors=F)
 	rivers<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("rivers",mapRes,".csv")))
 	attr(coast,"projection")<-"LL"
 
+		# comment
+
+
 if(save) {
 	print('only pdf and png are setup to save')
 	if(grepl('pdf',fname)) pdf(file.path(project.figuredirectory(output),fname), width=6.5, height=5)
