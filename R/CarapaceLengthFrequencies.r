@@ -1,13 +1,13 @@
 
 #' @export
-CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,220,5), Yrs=2005:2014, by=NULL, sex=1:2, fn='',... ) {
+CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,220,5), Yrs=2005:2016, by=NULL, sex=1:2, fn='',GEAR='280 BALLOON',... ) {
 
     ### Carapace Length Frequencies (CLF)
 
         rootdir=file.path(project.datadirectory('bio.lobster'),'figures')
 
         #MLS
-        mls<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","MinLegalSize.csv"))
+        mls<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
         mlslfas<-as.numeric(substr(names(mls[-1]),4,5))
         if(31.1%in%LFAs) mlslfas[which(mlslfas==31)]<-c(31.1,31.2)
         mls=cbind(mls[mls$Year%in%Yrs,which(mlslfas%in%LFAs)+1])
@@ -19,11 +19,11 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
             if(DS=='LobsterSurvey'){
 
                 # Gets Lobster Survey Data
-                surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=Yrs,mths=c("Jul","Jun"),size.range=range(bins),bin.size=diff(bins)[1])
+                surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=Yrs,mths=c("Jul","Jun"),size.range=range(bins),bin.size=diff(bins)[1], gear.type = GEAR)
 
                 # Limit data to 32 selected index stations
                 LS32stns<-read.csv(file.path(project.datadirectory('bio.lobster'),"data","products","survey32Stations.csv"))
-
+                
                 # Construct CLF
                 LobsterSurveyCLF<-t(sapply(Yrs,function(y){colMeans(subset(surveyLobsters34,YEAR==y&SID%in%LS32stns$SID,paste0("CL",bins[-length(bins)])),na.rm=T)}))
 

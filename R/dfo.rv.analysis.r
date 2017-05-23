@@ -27,6 +27,8 @@ dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', 
          if(p$area== 'LFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485,480); props = 1}
          if(p$area== 'LFA41' & p$series =='summer' & p$define.by.polygons) {strat = c(472,473,477,478,481,482,483,484,485); props = c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409)}
          if(p$area== 'adjacentLFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485,480); props = 1-c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409,0)}
+         if(p$area== 'LFA40' & p$series =='summer') {strat = c(476,477,480,481,482); props = c(0.02,0.0204,1,0.0904,0.2865)}
+         
          if(p$lobster.subunits==T &p$area=='Georges.Basin' & p$series=='summer') {strat = c(482,483); props = c(0.1462, 0.2696)}      
          if(p$lobster.subunits==T &p$area=='Crowell.Basin' & p$series=='summer') {strat = c(482,483,484,485); props = c(0.1963,0.1913,0.3935,0.0483)}   
          if(p$lobster.subunits==T &p$area=='SE.Browns' & p$series=='summer')    {strat = c(472,473,475,477,478,481,482); props = c(0.2196,0.4415,0.00202,0.7592,0.7151,0.0868,0.0871)}  
@@ -127,8 +129,10 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             iy = which(year(set$sdate) %in% yr)
             iv = which(cas$spec==2550)
 pi='base'
+
         if(p$define.by.polygons) {
-               l = l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
+               if(p$area=='LFA41') {
+                l = l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
                pi = 'restratified'
             if(p$lobster.subunits) {
                        l = l41[which(l41$OFFAREA == p$area),]
@@ -146,10 +150,18 @@ pi='base'
                                   ir = which(set$strat %in% c(strat))  
                                   iz = intersect(iz,ir)
                                 }
-                  } else {
+                  }
+          if(p$area=='LFA40') {
+                      LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+                      l = l41 = subset(LFAs,PID==40)
+                     attr(l41,'projection') <- 'LL'
+                     set$EID = 1:nrow(set)
+                     a = findPolys(set,l)
+                       iz = which(set$EID %in% a$EID)
+                    }
+                } else {
                               iz = which(set$strat %in% c(strat))
                 }
-                
                 se = set[intersect(iy,iz),]
                 se$EID = 1:nrow(se)
                 ca = cas[iv,]

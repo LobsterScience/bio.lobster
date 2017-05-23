@@ -4,8 +4,18 @@ plotSurveyIndex<-function(trend.dat,moving.avg=T,moving.median=T,ref.points=T,in
 	## Plot Survey Index Figure 4
 	
 	if(index.stations){
-		Stns<-read.csv(file.path(project.datadirectory('bio.lobster'),'data',"survey32Stations.csv"))
-		trend.dat<-subset(trend.dat,SID%in%Stns$SID)
+		#Stns<-read.csv(file.path(project.datadirectory('bio.lobster'),'data',"survey32Stations.csv"))
+		#trend.dat<-subset(trend.dat,SID%in%Stns$SID)
+		
+		h = as.data.frame(unique(cbind(trend.dat$SID,trend.dat$YEAR)))
+		names(h) = c('SID','YEAR')
+		g = aggregate(YEAR~SID,data=h,FUN=length)
+		g = subset(g,YEAR>=16)$SID
+		h = subset(h,SID %in% c(g))
+		h = aggregate(YEAR~SID,data=h,FUN=max)
+		h = subset(h,YEAR==max(trend.dat$YEAR))$SID
+		trend.dat = subset(trend.dat,SID %in% h)
+
 		}
 
 	LPT   <- with(trend.dat,tapply(NUM_STANDARDIZED,YEAR,mean,na.rm=T))
@@ -16,7 +26,7 @@ plotSurveyIndex<-function(trend.dat,moving.avg=T,moving.median=T,ref.points=T,in
 	rmLPT <- mavg(LPT)
 
 	
-	pdf(file.path( project.figuredirectory("lobster"), paste0(fn,".pdf")),wd,ht)
+	pdf(file.path( project.figuredirectory("bio.lobster"), paste0(fn,".pdf")),wd,ht)
 
 	plot(yrs,LPT,pch=16,ylim=c(0,max(LPT+LPTse)),xlab='',ylab='Mean N / Standard Tow',las=1)
 	axis(1,yrs,lab=F,tck=-0.01)

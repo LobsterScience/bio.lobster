@@ -1,3 +1,5 @@
+#' @export
+
   pcaAnalyseData = function(X, t0, t1, fname, vars=NULL, newnames=NULL) {
     
     if (!is.null(vars)) X = X[, vars ]
