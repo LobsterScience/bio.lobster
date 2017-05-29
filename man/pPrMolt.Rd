@@ -24,4 +24,3 @@ Made up function that gives you probability of moulting based on day since last 
 \author{
 Brad Hubley, \email{Brad.Hubley@dfo-mpo.gc.ca}
 }
-

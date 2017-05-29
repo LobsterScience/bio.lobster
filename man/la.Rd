@@ -4,7 +4,7 @@
 \alias{la}
 \title{la}
 \usage{
-la(base.loc = "~/git")
+la(base.loc = "~/bio")
 }
 \arguments{
 \item{\code{base.loc}}{:the base directory of bio.lobster}
@@ -18,4 +18,3 @@ la()
 \author{
 Adam Cook, \email{Adam.Cook@dfo-mpo.gc.ca}
 }
-

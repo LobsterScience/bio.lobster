@@ -23,10 +23,9 @@ decision interval CUSUM control chart analysis
 x = c(1,2,3,4,5,3,2,1,2,6)
 dicusum(x,1:3,0.2)
 }
-\author{
-Adam Cook, \email{Adam.Cook@dfo-mpo.gc.ca}
-}
 \references{
 Mesnil and Pettigas 2008 Aquat Living Resour 22 187-192
 }
-
+\author{
+Adam Cook, \email{Adam.Cook@dfo-mpo.gc.ca}
+}

@@ -24,4 +24,3 @@ giniFootprint(x,plot=T)
 \author{
 Adam Cook, \email{Adam.Cook@dfo-mpo.gc.ca}
 }
-

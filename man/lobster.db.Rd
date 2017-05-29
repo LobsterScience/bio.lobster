@@ -19,4 +19,3 @@ This function is the main workhorse to pull data from databases and some initial
 lobster.db('fsrs.redo') # makes the data objects for the FSRS data.
 lobster.db('fsrs') #loads the object fsrs
 }
-

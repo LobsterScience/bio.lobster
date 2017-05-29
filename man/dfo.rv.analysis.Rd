@@ -28,4 +28,3 @@ dfo.rv.analysis(DS = 'stratified.estimates')
 \author{
 Adam Cook, \email{Adam.Cook@dfo-mpo.gc.ca}
 }
-

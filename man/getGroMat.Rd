@@ -20,4 +20,3 @@ Prediction of moulting based on day since last moult, size and can include tempe
 \author{
 Brad Hubley, \email{Brad.Hubley@dfo-mpo.gc.ca}
 }
-

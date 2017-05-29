@@ -20,4 +20,3 @@ CPUEgam
 \author{
 Brad Hubley
 }
-

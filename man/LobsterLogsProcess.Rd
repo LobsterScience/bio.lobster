@@ -20,10 +20,9 @@ Processing lobster logbook data to get to clean data in a useable form
 \note{
 Make sure you run the lobster.db('logs.redo') to get the up to date data. Need to check fishing season dates as a appropriate filter.
 }
-\author{
-Brad Hubley & Adam Cook
-}
 \seealso{
 lobster.db('logs.redo')
 }
-
+\author{
+Brad Hubley & Adam Cook
+}

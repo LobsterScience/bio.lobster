@@ -9,4 +9,3 @@ predGrow(p, mat = F)
 \description{
 growth matrix loading from bergeron 2011
 }
-

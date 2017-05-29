@@ -42,4 +42,3 @@ aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 \author{
 Adam Cook, \email{Adam.Cook@dfo-mpo.gc.ca}
 }
-

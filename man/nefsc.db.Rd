@@ -25,4 +25,3 @@ nefsc.db(DS = 'odbc.dump.redo')
 \author{
 Adam Cook, \email{Adam.Cook@dfo-mpo.gc.ca}
 }
-

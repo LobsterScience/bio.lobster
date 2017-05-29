@@ -5,8 +5,8 @@
 \title{LobsterSurveyProcess}
 \usage{
 LobsterSurveyProcess(size.range = c(0, 220), lfa = "34", yrs,
-  mths = c("May", "Jun", "Jul", "Aug", "Sep", "Oct"),
-  gear.type = c("280 BALLOON"), bin.size = 5)
+  mths = c("May", "Jun", "Jul", "Aug", "Sep", "Oct"), gear.type = NULL,
+  bin.size = 5)
 }
 \arguments{
 \item{size.range}{defines the minimum and maximum value and is a filter (default is 0, 220mm CW)}
@@ -15,7 +15,7 @@ LobsterSurveyProcess(size.range = c(0, 220), lfa = "34", yrs,
 
 \item{yrs}{is the survey years to estimate}
 
-\item{gear.type}{survey trawl net identification (default is 280 BALLOON)}
+\item{gear.type}{survey trawl net identification (if !NULL options are '280 BALLOON' or 'NEST')}
 
 \item{bin.size}{aggregates the abundance into size bins (default is 5mm bins)}
 
@@ -30,4 +30,3 @@ LobsterSurveyProcess
 \author{
 Brad Hubley & Manon Cassista-Da Ros
 }
-

@@ -4,7 +4,7 @@
 \alias{plot.dicusum}
 \title{plot.dicusum}
 \usage{
-\method{plot}{dicusum}(x, x.index, h, ...)
+plot.dicusum(x, x.index, h, ...)
 }
 \arguments{
 \item{\code{x}}{:output of dicusum.r}
@@ -24,10 +24,9 @@ x = c(1,2,3,4,5,3,2,1,2,6)
 a = dicusum(x,1:3,0.2)
 plot.dicusum(a)
 }
-\author{
-Adam Cook, \email{Adam.Cook@dfo-mpo.gc.ca}
-}
 \references{
 Mesnil and Pettigas 2008 Aquat Living Resour 22 187-192
 }
-
+\author{
+Adam Cook, \email{Adam.Cook@dfo-mpo.gc.ca}
+}
