@@ -1,5 +1,5 @@
 #' @export
-write.dat<-function(list,file,...){
+writeDat<-function(list,file,...){
 	
 	write(paste("#ADMB input data file:",file),file)
 	for(i in 1:length(list)){

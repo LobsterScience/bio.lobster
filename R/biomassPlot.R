@@ -1,5 +1,5 @@
 #' @export
-biomass.plt <- function(out.data, years, graphic='pdf',avg.line=NULL,ht=7,wd=6.5,Rymax,Bymax,TAC,pred=1,kt=T,refs=c("USR","LRP","zones"),index,USR,LRP,USR2=8000,LRP2=3000,out.data2,lab='',alpha=c(0.05,0.2),path=''){
+biomassPlot <- function(out.data, years, graphic='pdf',avg.line=NULL,ht=7,wd=6.5,Rymax,Bymax,TAC,pred=1,kt=T,refs=c("USR","LRP","zones"),index,USR,LRP,USR2=8000,LRP2=3000,out.data2,lab='',alpha=c(0.05,0.2),path=''){
 
 # Fit plots
 if(graphic=='pdf')pdf(file.path(path,paste(lab,"Biomass.pdf",sep='')), width = wd, height = ht)

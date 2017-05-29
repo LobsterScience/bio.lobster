@@ -3,7 +3,6 @@
 #' @param \code{p} :parameter list containing (at a minimum) region, doy (day of year), temp (temperature at doy)
 #' @param \code{cw} : carapace width 
 #' @return The predicted probability of moulting
-#' @examples
 #' @author  Brad Hubley, \email{Brad.Hubley@@dfo-mpo.gc.ca}
 #' @export
 

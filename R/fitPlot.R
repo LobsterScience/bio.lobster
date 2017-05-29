@@ -1,5 +1,5 @@
 #' @export
-fit.plt <- function(data.out,name="", CI=F,CV=F,SE=F,Iadj=1,Uadj=1,graphic='R',ymaxB,ymaxR,alpha=0.05,path=''){
+fitPlot <- function(data.out,name="", CI=F,CV=F,SE=F,Iadj=1,Uadj=1,graphic='R',ymaxB,ymaxR,alpha=0.05,path=''){
 
 # Fit plots
 

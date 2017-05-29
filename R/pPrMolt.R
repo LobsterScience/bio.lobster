@@ -6,7 +6,6 @@
 #' @param \code{d} : days since last molt
 #' @citation  Bergeron 2011 MSc thesis Lobster Age Size Relationships U of Maine
 #' @return The predicted probability of moulting
-#' @examples
 #' @author  Brad Hubley, \email{Brad.Hubley@@dfo-mpo.gc.ca}
 #' @export
 pPrMolt = function(cw,a,b,d){ 

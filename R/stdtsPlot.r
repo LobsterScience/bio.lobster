@@ -1,6 +1,6 @@
 
 #' @export
-stdts.plt <- function(data, x=names(data[1]), y=names(data[2]), ylab=y, xlab=x, mean.line=F,graphic="R",fn='timeseries',width = 8, height = 6, labcx=1.25, ylim, xlim, col=rep(1,length(y)), pch=1:length(y), lty=1:length(y),type='o', ...){
+stdtsPlot <- function(data, x=names(data[1]), y=names(data[2]), ylab=y, xlab=x, mean.line=F,graphic="R",fn='timeseries',width = 8, height = 6, labcx=1.25, ylim, xlim, col=rep(1,length(y)), pch=1:length(y), lty=1:length(y),type='o', ...){
 	if(graphic=='pdf')pdf(file.path(project.figuredirectory("bio.lobster"), "figures",paste0(fn,".pdf")), width = width, height = height, pointsize = 14)
 	if(graphic=="R")x11( width = width, height = height)
 	meany<-colMeans(data[y],na.rm=T)

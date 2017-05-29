@@ -1,5 +1,5 @@
 #' @export
-trace.plt <- function(model.out, priors, years, nr=4, nc=2, wd=8, ht=11, post.labs=NULL, graphic='R',xl.type=1, multi=T){
+tracePlot <- function(model.out, priors, years, nr=4, nc=2, wd=8, ht=11, post.labs=NULL, graphic='R',xl.type=1, multi=T){
 
 	if(graphic=='pdf')pdf("figures/post_single.pdf", width = wd, height = ht, pointsize = 16)
 	if(graphic=='R')windows(record=T,wd, ht)
