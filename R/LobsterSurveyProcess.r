@@ -11,10 +11,7 @@
 
 
 LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,bin.size=5){
-require('bio.lobster')
-require('bio.utilities')
   
-#browser()
 	lobster.db("survey")
 	RLibrary("CircStats","PBSmapping")
 	if(missing(yrs))yrs<-sort(unique(surveyCatch$YEAR))
