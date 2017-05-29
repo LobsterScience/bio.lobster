@@ -17,7 +17,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
         ## from surveys in LFA 34 only
         
             if(DS=='LobsterSurvey'){
-
+browser()
                 # Gets Lobster Survey Data
                 surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=Yrs,mths=c("Jul","Jun"),size.range=range(bins),bin.size=diff(bins)[1], gear.type = GEAR)
 

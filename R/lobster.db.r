@@ -635,6 +635,56 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       load(file.path( fnODBC, "surveyStationID.rdata"), .GlobalEnv)
       
     }
+### lobster sampling from rv survey  
+
+if(DS %in% c('rv.survey.samples.redo','rv.survey.samples.samples')) {
+   if (DS=="rv.survey.samples.redo") {
+        require(RODBC)
+        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        
+        # Denton Script May 2017
+
+        sql = "SELECT d.mission,
+                d.setno,
+                d.spec,
+                d.size_class,
+                d.specimen_id,
+                d.flen,
+                d.fwt,
+                d.clen,
+                MIN(DECODE(o.LV1_OBSERVATION,'Abdominal Width', o.data_value)) ab_width,
+                MIN(DECODE(o.LV1_OBSERVATION,'Clutch Fullness Rate', o.data_value)) Clutch_full,
+                MIN(DECODE(o.LV1_OBSERVATION,'Egg Stage', o.data_value)) Egg_st,
+                MIN(DECODE(o.LV1_OBSERVATION,'Molt Stage', o.data_value)) Molt_stage,
+                MIN(DECODE(o.LV1_OBSERVATION,'Spermatophore Presence', o.data_value)) sperm_plug,
+                MIN(DECODE(o.LV1_OBSERVATION,'Shell Disease Index', o.data_value)) disease
+              FROM GROUNDFISH.GSDET d,
+                GROUNDFISH.GS_LV1_OBSERVATIONS o
+              WHERE d.mission           = o.mission(+)
+              AND d.setno               = o.setno(+)
+              AND d.specimen_id         = o.SPECIMEN_ID(+)
+              AND d.spec                = 2550
+              AND SUBSTR(d.mission,4,4) = 2016
+              GROUP BY d.mission,
+                d.setno,
+                d.spec,
+                d.size_class,
+                d.specimen_id,
+                d.flen,
+                d.fwt,
+                d.clen"
+
+        rv.samp <- sqlQuery(con, sql)
+
+
+        save( rv.samp, file=file.path( fnODBC, "rv.survey.samples.rdata"), compress=T)
+        gc()  # garbage collection
+        odbcClose(con)
+      }
+
+      load(file=file.path( fnODBC, "rv.survey.samples.rdata"),.GlobalEnv)
+
+    }
 
 
   }
