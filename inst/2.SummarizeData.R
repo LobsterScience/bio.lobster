@@ -1,6 +1,6 @@
     
-    loadfunctions( "lobster", functionname="initialise.local.environment.r") 
   
+	p = bio.lobster::load.environment()
 
     p$lfas = c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34") # specify lfas for data summary
     p$syr = 2005
@@ -12,7 +12,7 @@
 
     # Lobster Survey
 	CarapaceLengthFrequencies(LFAs='34', DS='LobsterSurvey', fn='v1')
-	CarapaceLengthFrequencies(LFAs='34', DS='LobsterSurvey', Yrs=2010:2015, rel=F, ymax=5, bins=seq(0,200,1), pdf=F)
+	CarapaceLengthFrequencies(LFAs='34', DS='LobsterSurvey', Yrs=2010:2015, rel=T, bins=seq(0,200,5), pdf=F)
 
 	# Scallop Survey
 	CarapaceLengthFrequencies(LFAs='34', DS='ScallopSurvey')
