@@ -310,3 +310,33 @@ p <- p + geom_ribbon(data = shorts.2829,
 p <- p + facet_wrap(  ~Area, ncol=1,scales = "fixed")
 print(p)
 dev.off()
+
+
+
+####33E and 33W
+
+p33 = subset(shorts,Area %in% c("33W","33E"))
+
+pdf(file.path(project.figuredirectory('bio.lobster'),'FSRS.LFA33.2017.pdf'),width=8,height=10)
+
+
+p <- ggplot()
+p <- p + geom_point(data = p33, 
+                    aes(y = mu, x = YEAR),
+                    shape = 16, 
+                    size = 3)
+p <- p + xlab("Year") + ylab("Lobsters / Trap")
+p <- p + theme(text = element_text(size=15)) + theme_bw()
+p <- p + geom_line(data = p33, 
+                   aes(x = YEAR, y = mu), 
+                   colour = "black")
+
+p <- p + geom_ribbon(data = p33, 
+                     aes(x = YEAR, 
+                         ymax = ub, 
+                         ymin = lb ),
+                     alpha = 0.5)
+p <- p + facet_wrap(  ~Area, ncol=1,scales = "fixed")
+print(p)
+savePlot(file.path(project.figuredirectory('bio.lobster'),'FSRS.LFA33.2017.png'),type='png')
+
