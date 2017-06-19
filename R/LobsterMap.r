@@ -51,6 +51,7 @@ options(stringsAsFactors=F)
 	if(area=='38')		{ ylim=c(44,45);		xlim=c(-67.3,-66.4) }
 	if(area=='40')		{ ylim=c(42.25,43);		xlim=c(-66.5,-65.25)}
 	if(area=='41')		{ ylim=c(41.1,44); 		xlim=c(-68,-63.5)	}
+	if(area=='SWN')		{ ylim=c(42.5,45); 		xlim=c(-67.8,-62.2)	}
 	
 
 	coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline",mapRes,".csv")))
@@ -165,9 +166,9 @@ if(save) {
 		if(area=='31a')area<-311
 		if(area=='31b')area<-312
 		if(addsubareas)addPolys(subset(subareas,SID==1),lty=3)
-		if(area=='41') addPolys(LFA41,border='blue')
+	#	if(area=='41') addPolys(LFA41,border='blue')
 		lfa<-as.numeric(area)
-		
+			
 		if(lfa%in%LFAgrid$PID){
 			if(!is.na(lfa)){
 				grids<-subset(LFAgrid,PID==lfa)
@@ -196,7 +197,10 @@ if(save) {
     		il = which(LFAgrid.dat$label==35)
 			LFAgrid.dat$Y[il] = 45.23
 			
-    		LFAgrid.dat = as.data.frame(rbind(LFAgrid.dat,c(41,-62,43.4,41)))	#add in lfa41 label		
+			il = which(LFAgrid.dat$label==35)
+			LFAgrid.dat$Y[il] = 45.23
+					
+    		LFAgrid.dat = as.data.frame(rbind(LFAgrid.dat,c(41,-66,41.9,41)))	#add in lfa41 label		
 			addLabels(subset(LFAgrid.dat,!duplicated(label)),col=rgb(0,0,0,0.8),cex=labcex)
 		}
 
