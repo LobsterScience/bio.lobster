@@ -6,8 +6,8 @@ SoMLeBris <- function(p,cl,T){
 	
 	Lm = 459.794-0.169*Y-2.79*T
 	
-	B = -22.073-0.012*Y-0.027*T
-	o = 1 / (1+exp(-B*(cl-Lm)))
+	B = 22.073-0.012*Y-0.027*T
+	o = 1 / (1+exp(B*(cl-Lm)))
 	return(o)
 
 	})

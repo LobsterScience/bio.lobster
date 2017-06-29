@@ -54,8 +54,7 @@ load_all('~/git/bio.survey/')
 
       p$reweight.strata = F #this subsets 
       p$years.to.estimate = c(1969:2015)
-      p$length.based = T
-      p$size.class= c(50,300)
+      p$length.based = F
       p$by.sex = F
       p$sex = c(1,2) # male female berried c(1,2,3)
       p$bootstrapped.ci=T

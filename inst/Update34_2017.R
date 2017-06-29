@@ -26,12 +26,10 @@ p$yrs = 1947:p$current.assessment.year
 					}
 
 
-## Landings
-
 	annual.landings     = lobster.db('annual.landings') #annual.landings
 	seasonal.landings   = lobster.db('seasonal.landings')
 	#historical.landings = lobster.db('historical.landings')
-	historical.landings<-read.delim(file.path(project.datadirectory('lobster'),"data","Commercial","LFA34_Landings_1892-2004.txt"))
+	historical.landings<-read.delim(file.path(project.datadirectory('bio.lobster'),"data","Commercial","LFA34_Landings_1892-2004.txt"))
 	names(historical.landings)[1] = 'YR'	
 
 
@@ -79,7 +77,7 @@ p$yrs = 1947:p$current.assessment.year
 				n.new      <- with(logDat,tapply(NUM_OF_TRAPS,SYEAR,length))
 
 			#OLD DATA required until we find out where it came from	
-				LFA34logData = read.delim(file.path(project.datadirectory('lobster'),"data","Commercial","LFA34_CPUE_Data_2015.05.12.txt"))
+				LFA34logData = read.delim(file.path(project.datadirectory('bio.lobster'),"data","Commercial","LFA34_CPUE_Data_2015.05.12.txt"))
 				LFA34logData <- subset(LFA34logData,SYEAR!="OOS"&SYEAR %in% 1999:2002)
 				LFA34logData$WEIGHT_KG<-LFA34logData$WEIGHT_LBS*0.4536
 
@@ -91,7 +89,7 @@ p$yrs = 1947:p$current.assessment.year
 			
 			#merge old and new data
 				cpueLFA34.dat <- data.frame(year=1999:(p$current.assessment.year-1),n=c(n,n.new),catch=c(catch,catch.new),effort=c(effort,effort.new),cpue=c(catch/effort,catch.new/effort.new))
-				save(cpueLFA34.dat,file=file.path(project.datadirectory('lobster'),'data','products',"LFA34CPUE2017.rdata"))
+				save(cpueLFA34.dat,file=file.path(project.datadirectory('bio.lobster'),'data','products',"LFA34CPUE2017.rdata"))
 
 				KgPTH<- as.matrix(cpueLFA34.dat$cpue,nrow=1)
 				yrs<-sort(as.numeric(cpueLFA34.dat$year))
@@ -100,13 +98,14 @@ p$yrs = 1947:p$current.assessment.year
 			
 		# Plot Commercial CPUE Figure 3
 
-				pdf(file.path( project.figuredirectory("lobster"), "LFA34CommercialCPUE2017.pdf"),8,6)
-				plot(yrs,KgPTH,pch=16,ylim=c(0,max(KgPTH)),xlab='',ylab='CPUE (Kg/TH)',las=1, main="LFA 34 - Commercial Log CPUE",xaxt='n')
-				axis(1,yrs,lab=paste(yrs-1,substr(yrs,3,4),sep='-'),las=2)
+				pdf(file.path( project.figuredirectory("bio.lobster"), "LFA34CommercialCPUE2017.pdf"),8,6)
+				plot(yrs,KgPTH,pch=16,ylim=c(0,max(KgPTH)),ylab='CPUE (Kg/TH)',las=1, main="LFA 34 - Commercial Log CPUE",xaxt='n',xlab='Year')
+				axis(1,yrs,lab=yrs)
 				lines(yrs[-(1:2)],rmKgPTH[!is.na(rmKgPTH)],lty=1,col='orange',lwd=2)
 				lines(yrs,rmed,lty=2,col='green',lwd=2)			
 				abline(h=median(KgPTH[1:11]*0.8),col=rgb(0,0,1,0.5))
 				text(max(yrs)+.5,median(KgPTH[2:15]*0.8)*.85,"Upper Stock Reference",col=rgb(0,0,1,0.5),pos=2,cex=0.8)
+
 				dev.off()
 				
 			
@@ -116,4 +115,6 @@ p$yrs = 1947:p$current.assessment.year
 
 	## Plot Survey Index Figure 4
 	plotSurveyIndex(surveyLobsters34,se=T)
+
+## Landings
 

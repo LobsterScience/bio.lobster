@@ -1,5 +1,5 @@
 ####### Update 35: May 2015
-loadfunctions('lobster')
+loadfunctions('bio.lobster')
 
 	## Landings
 
@@ -12,9 +12,10 @@ SeasonalSlip<-lobster.db( DS="seasonal.landings")
 #Historic<-lobster.db( DS="historical.landings")
 
 
-	Annual35<-subset(AnnualSlip,select=c("YEAR","LFA35"))
-	SeasonalSlip$YEAR<-as.numeric(substr(SeasonalSlip$SEASON,6,9))
-	Seasonal35<-subset(SeasonalSlip,select=c("SEASON","LFA35","YEAR"))
+	Annual35<-subset(AnnualSlip,select=c("YR","LFA35"))
+	Annual35$YEAR = Annual35$YR
+	SeasonalSlip$YEAR<-as.numeric(substr(SeasonalSlip$SYEAR,6,9))
+	Seasonal35<-subset(SeasonalSlip,select=c("LFA35","SYEAR"))
 
 	require(ggplot2)
 
@@ -209,7 +210,7 @@ SeasonalSlip<-lobster.db( DS="seasonal.landings")
 
 	## Commercial catch rate index
 	LFA3538logData<-read.delim(file.path(project.datadirectory('lobster'),"data","Commercial","LFA35-38CPUE_2015.05.19.txt"))
-	LFA3538logData<-subset(LFA3538logData,SYEAR!="OOS"&SYEAR%in%2006:2014)
+	LFA3538logData<-subset(LFA3538logData,SYEAR!="OOS"&SYEAR%in%2006:2016)
 	LFA3538logData$WEIGHT_KG<-LFA3538logData$WEIGHT_LBS*0.4536
 
 	catch<-with(LFA3538logData,tapply(WEIGHT_KG,SYEAR,sum))
@@ -221,7 +222,7 @@ SeasonalSlip<-lobster.db( DS="seasonal.landings")
 
 	KgPTH<- cpueLFA3538.dat$cpue
 	yrs<-sort(as.numeric(cpueLFA3538.dat$year))
-	rmKgPTH<-ma(KgPTH)
+	rmKgPTH<-mavg(KgPTH)
 
 	#pdf(file.path( project.datadirectory("lobster"), "R","LFA3538CommercialCPUE.pdf"),8,6)
 	plot(yrs,KgPTH,pch=16,ylim=c(0,max(KgPTH)),xlab='',ylab='CPUE (Kg/TH)',las=1, main="LFA 35 to 38 - Commercial Log CPUE",xaxt='n')

@@ -235,13 +235,13 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                 query41<-"select * from lobster.logs41"
                 slipquery41<-"select  * from lobster.slips41"
                 ziffquery41 <- "select * from lobster.ziff41"
-                offquery41 <- "select * from lobster.crisofflogs41 "
+                offquery41 <- "select * from lobster.crislog41;" # table not view
 
                 slip41 = sqlQuery(con, slipquery41)
                 logs41 = sqlQuery(con, query41)
                 ziff41 = sqlQuery(con, ziffquery41)
                 off41 = sqlQuery(con, offquery41)
-
+            
                 off41 = subset(off41,DATE_FISHED < '1995-01-01')
 
                 logs41$DDLON<-logs41$DDLON*-1
