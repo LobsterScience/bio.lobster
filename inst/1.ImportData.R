@@ -24,7 +24,7 @@ p$yrs = 1947:p$current.assessment.year
         lobster.db( DS = "port.redo",    p=p)     # Port Sampling
         lobster.db( DS = "vlog.redo",    p=p)     # Voluntary logs
         lobster.db( DS = "fsrs.redo",    p=p)     # FSRS recruitment traps
-        lobster.db( DS = "scallop.redo", p=p)  # scallop survey bycatch
+        lobster.db( DS = "scallop", p=p)  # scallop survey bycatch
         lobster.db( DS = "survey.redo",  p=p)   # ITLS Lobster Survey
         lobster.db( DS = 'annual.landings.redo', p=p) #static annual landings tabke needs to be updated by CDenton
         lobster.db( DS = 'seasonal.landings.redo', p=p) #static seasonal landings table needs to be updated by CDenton

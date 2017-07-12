@@ -1,6 +1,6 @@
 
 #' @export
-CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,220,5), Yrs=2005:2016, by=NULL, sex=1:2, fn='',GEAR='280 BALLOON',... ) {
+CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,220,5), Yrs=2005:2016, by=NULL, sex=1:2, fn='',GEAR='280 BALLOON',ss=F,vers=1,... ) {
 
     ### Carapace Length Frequencies (CLF)
 
@@ -47,6 +47,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
                 ScalSurvey$ScallopSurvey29<-t(sapply(Yrs,function(y){colMeans(subset(SCALSURV29.dat,YEAR==y,paste0("CL",bins[-length(bins)])),na.rm=T)}))
                 
                # plot
+
                 BarPlotCLF(ScalSurvey,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFScalSurvLFA34",fn,".pdf")),LS=mls, ...)
                 #BubblePlotCLF(ScalSurvey,inch=0.2,bg=rgb(0,1,0,0.1),yrs=Yrs,bins=bins,filen="ScalSurveyLFA34",prop=T)
                 return(ScalSurvey)
@@ -86,10 +87,22 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
             atSeaData$Q<-quarter(atSeaData$SDATE)
 
             # Construct CLF
-            atSeaCLF<-CLF(subset(atSeaData,SYEAR%in%Yrs&SEX%in%sex,c("SYEAR","CARLENGTH",by)),yrs=Yrs,bins=bins)
+            atSeaCLF<-CLF(subset(atSeaData,SYEAR%in%Yrs&SEX%in%sex,c("SYEAR","CARLENGTH",by)),yrs=Yrs,bins=bins,vers=vers)
+
             
+            if(ss){
+                ss = unlist(lapply(with(subset(atSeaData,SYEAR%in%Yrs&SEX%in%sex),tapply(paste(SYEAR,TRIPNO),SYEAR,unique)),length))
+                ss = data.frame(Year=names(ss),N=ss)
+                ss = merge(data.frame(Year=Yrs),ss,all=T)
+                ss = ss$N
+            }
+            else ss = NULL
+
+            #browser()
+
             # plot
-            BarPlotCLF(atSeaCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFSeaSampling",fn,".pdf")),LS=mls, ...)
+            if(vers==1)BarPlotCLF(atSeaCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFSeaSampling",fn,".pdf")),LS=mls, sample.size=ss,...)
+            if(vers==2)BarPlotCLF2(atSeaCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFSeaSampling",fn,".pdf")),LS= as.vector(mls), sample.size=ss,...)
             #BubblePlotCLF(atSeaCLF$CLF,inch=0.2,bg=rgb(0,1,0,0.1),prop=T,bins=bins,filen="SeaSamplingLFA34",yrs=Yrs)
             return(atSeaCLF)
         }

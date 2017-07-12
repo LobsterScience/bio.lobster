@@ -58,7 +58,7 @@ for(i in 1:length(lfa)) {
 names(cpue.lst)<-lfa
 cpue.dat<-do.call("rbind",cpue.lst)
 
-write.csv(cpue.dat,file.path( project.datadirectory("lobster"), "data","products","CommercialCPUE.csv"),row.names=F)
+write.csv(cpue.dat,file.path( project.datadirectory("bio.lobster"), "data","products","CommercialCPUE.csv"),row.names=F)
 
 ### by LFA
 cpue2.lst<-list()

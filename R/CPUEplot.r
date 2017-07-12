@@ -1,7 +1,6 @@
 #' @export
 CPUEplot<-function(logData,lfa='34',yrs,lab='',graphic='R',wd=8,ht=11,effort.min=10,...){
 
-	loadfunctions('lobster')
 	
 	if(missing(yrs))yrs<-unique(logData$SYEAR)
 	logs<-subset(logData,LFA%in%lfa&SYEAR%in%yrs,c("SYEAR","LFA","DATE_FISHED","WEIGHT_KG","NUM_OF_TRAPS"))
