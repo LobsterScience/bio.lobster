@@ -1,5 +1,5 @@
 #' @export
- CLF<-function(LFdat,bins=seq(0,220,5),yrs,ID="CLF"){
+ CLF<-function(LFdat,bins=seq(0,220,5),yrs,ID="CLF",vers=1){
 
     require("lubridate")
     names(LFdat)[1:2]<-c('YEAR','LENGTH')
@@ -19,10 +19,18 @@
 
     CLF<-list()
     IDs<-sort(unique(LFdat$ID))
-    for(i in 1:length(IDs)){
-        CLF[[i]]<-t(sapply(yrs,function(y){with(subset(LFdat,YEAR==y&ID==IDs[i]&LENGTH>=min(bins)&LENGTH<max(bins)),hist(LENGTH,breaks=bins,plot=F)$count)}))
+    if(vers==1){
+        for(i in 1:length(IDs)){
+            CLF[[i]]<-t(sapply(yrs,function(y){with(subset(LFdat,YEAR==y&ID==IDs[i]&LENGTH>=min(bins)&LENGTH<max(bins)),hist(LENGTH,breaks=bins,plot=F)$count)}))
+        }
+        names(CLF)<-IDs
     }
-    names(CLF)<-IDs
+    if(vers==2){
+        for(i in 1:length(yrs)){
+            CLF[[i]]<-t(sapply(IDs,function(y){with(subset(LFdat,ID==y&YEAR==yrs[i]&LENGTH>=min(bins)&LENGTH<max(bins)),hist(LENGTH,breaks=bins,plot=F)$count)}))
+        }
+        names(CLF)<-yrs
+    }
 
     return(CLF)
 }

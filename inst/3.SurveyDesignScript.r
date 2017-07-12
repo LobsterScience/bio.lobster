@@ -1,11 +1,7 @@
 #------------------------- ecosystem survey data
 
-  p = list()
-
-  p$init.files = loadfunctions( "groundfish", functionname="load.groundfish.environment.r") 
-  loadfunctions(c('utility','lobster','surveydesign'))
-
-  p$libs = RLibrary( c( "chron", "lubridate", "parallel","sp" ,"PBSmapping")  )
+  p = bio.lobster::load.environment()
+  p = bio.groundfish::load.groundfish.environment(assessment.year = 2016)
 
   odbc.data.yrs=1970:2015
 
@@ -32,12 +28,12 @@
 
   # select for LFA 34
 
-  LFAs<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","LFAPolys.csv"))
-  LFAgrid<-read.csv(file.path( project.datadirectory("lobster"), "data","maps","GridPolys.csv"))
+  LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+  LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 
   # Multibeam
-  gerbk50 <-read.csv(file.path( project.datadirectory("bathymetry"),"data","GermanBathy","gerbk_50.txt"))
-  key<-read.csv(file.path( project.datadirectory("bathymetry"),"data","GermanBathy","fileKey.csv"))
+  gerbk50 <-read.csv(file.path( project.datadirectory("bio.bathymetry"),"data","GermanBathy","gerbk_50.txt"))
+  key<-read.csv(file.path( project.datadirectory("bio.bathymetry"),"data","GermanBathy","fileKey.csv"))
 
   # groundfish survey
   gfkey<-findPolys(na.omit(gic[c('X','Y','EID')]),LFAs)
@@ -56,10 +52,10 @@
 
   median(with(subset(gic34,yr>=1999),tapply(EID,yr,length)))
 
-  stations=	read.csv(file.path(project.datadirectory('lobster'),"data","products","surveyStations.csv"))
+  stations=	read.csv(file.path(project.datadirectory('bio.lobster'),"data","products","surveyStations.csv"))
   stations$EID=stations$SID
   addPoints(stations,pch=16)
-  Stns32<-read.csv(file.path(project.datadirectory('lobster'),'data',"survey32Stations.csv"))
+  Stns32<-read.csv(file.path(project.datadirectory('bio.lobster'),'data',"survey32Stations.csv"))
   indexStns=subset(stations,SID%in%Stns32$SID)
   addPoints(indexStns,pch=16,col='green')
   with(indexStns,text(X,Y,SID,pos=4,col='darkgreen',cex=0.5))
@@ -109,7 +105,8 @@
   
   LFA34surveyPolys=rbind(innerGridPoly,MBpoly,outerGridPoly)
 
-
+  write.csv(LFA34surveyPolys,file.path(project.datadirectory('bio.lobster'),"data","products","LFA34surveyPolys.csv"),row.names=F)
+  LFA34surveyPolys = read.csv(file.path(project.datadirectory('bio.lobster'),"data","products","LFA34surveyPolys.csv"))
 
   ###-------------- Determine allocation
 
@@ -421,3 +418,94 @@ Relief.plots(subset(towlst$Tows$repeated.tows,STRATA=='multibeam'),graphic="pdf"
 #
 #    Relief.plots(allTows,graphic="pdf",file=file.path(project.datadirectory('lobster'),'R','SurveyMB','Tow'),digits=4,gerfiles=1:77,key=file.key)
 #
+
+
+
+
+
+
+
+
+
+
+########### 2017 ##########################3
+
+
+  surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2016,bin.size=5)
+
+  primary = subset(surveyLobsters34,YEAR==2016&GEAR!="NEST",c("STATION","SID","SET_LONG","SET_LAT"))
+  names(primary)[3:4] = c("X","Y")
+  #write.csv(primary,file.path(project.datadirectory('bio.lobster'),"data","survey","2017","primary.csv"),row.names=F)
+ 
+
+
+  LobsterMap('34')
+  with(subset(surveyLobsters34),points(SET_LONG,SET_LAT))
+  with(primary,points(SET_LONG,SET_LAT,pch=16,col='green'))
+  with(subset(surveyLobsters34),identify(SET_LONG,SET_LAT))
+  with(secondary,identify(SET_LONG,SET_LAT))
+  a=surveyLobsters34[c(28,   37,  449,  467,  617,  623,  651,  749,  808,  814,  815,  845,  868,  881,  922,  971, 1175, 1181, 1218, 1223),]
+
+  secondary = subset(a,select=c("STATION","SID","SET_LONG","SET_LAT"))
+  names(secondary)[3:4] = c("X","Y")
+  #write.csv(secondary,file.path(project.datadirectory('bio.lobster'),"data","survey","2017","secondary.csv"),row.names=F)
+
+
+
+  LFA34surveyPolys = read.csv(file.path(project.datadirectory('bio.lobster'),"data","products","LFA34surveyPolys.csv"))
+  LFA34surveyPolyData=data.frame(PID=1:3,col=c(rgb(1,0,0,0.3),rgb(0,1,0,0.3),rgb(0,0,1,0.3)),PName=c("inner","multibeam","outer"))
+
+  SurveyStation2016 =  subset(read.csv(file.path(project.datadirectory('bio.lobster'),"data","survey","2016","SurveyStationAssignOriginal.csv")),TOW_ID!="Pre2016")
+   with(SurveyStation2016,identify(X,Y))
+   SurveyStation2016[c(3,  4,  6,  7,  8,  9, 13, 14, 17, 18, 19, 20, 23, 29, 31, 34, 36),]
+
+   tertiary =  SurveyStation2016[c(3,  4,  6,  7,  8,  9, 13, 14, 17, 18, 19, 20, 23, 29, 31, 34, 36),c("STATION","SID","X","Y")]
+
+ 
+
+  repeatStns=rbind(primary,secondary,tertiary)
+  repeatStns$EID = 1:nrow(repeatStns)
+  rStnkey=findPolys(repeatStns,LFA34surveyPolys)
+  repeatStns=with(merge(repeatStns,rStnkey,by='EID',all=T),data.frame(EID,X,Y,PID))
+
+
+  rStnAlloc=with(rStnkey,tapply(EID,PID,length))
+  newAlloc=c(20,20,10)
+
+    LFA34surveyPolyData$allocation=newAlloc
+    LFA34surveyPolyData$repeats=rStnAlloc
+
+   towlst<-allocPoly(poly.lst=list(LFA34surveyPolys, LFA34surveyPolyData),ntows=100,pool.size=3,mindist=5,repeated.tows=repeatStns,map='lfa34',show.pool=T,UTMzone=20)
+    tertiary = rbind(tertiary, data.frame(STATION=304:353,SID=304:353, towlst$Tows$new.tows[,c("X","Y")]))
+
+   with(tertiary,identify(X,Y))
+   tertiary[c(21,27,34),'X'] = c(-66.42397,-66.13020,-66.5143)
+   tertiary[c(21,27,34),'Y'] = c(43.21405,43.0097,43.58518)
+  write.csv(tertiary,file.path(project.datadirectory('bio.lobster'),"data","survey","2017","tertiary.csv"),row.names=F)
+
+pdf(file.path(project.datadirectory('bio.lobster'),'figures','SurveyDesign',"Survey2017.pdf"),8,11)
+
+    LobsterMap('34',labels='grid',labcex=0.5)
+    addPolys(LFA34surveyPolys,polyProps=LFA34surveyPolyData)
+    points(Y~X,primary,pch=21,bg='green')
+    points(Y~X,secondary,pch=21,bg='orange')
+    points(Y~X,tertiary,pch=21,bg='purple')
+    legend('bottomleft',c('primary','secondary','tertiary'),pch=21,pt.bg=c('green','orange','purple'),bg='white')
+
+    dev.off()
+
+primary$priority='primary'
+secondary$priority='secondary'
+tertiary$priority='tertiary'
+
+   tows2017=rbind(primary,secondary,tertiary)
+  tows2017$EID = 1:nrow(tows2017)
+  write.csv(tows2017,file.path(project.datadirectory('bio.lobster'),"data","survey","2017","tows2017.csv"),row.names=F)
+   
+  rStnkey=findPolys(tows2017,LFA34surveyPolys)
+  tows2017=with(merge(tows2017,rStnkey,by='EID',all=T),data.frame(EID,X,Y,PID))
+
+   
+
+ file.key<-read.csv(file.path( project.datadirectory("bio.bathymetry"),"data","GermanBathy","fileKey.csv"))
+ Relief.plots(subset(tows2017,PID==2),graphic="pdf",file=file.path(project.datadirectory('bio.lobster'),'figures','SurveyDesign','SurveyMB','2017','Tow'),digits=4,gerfiles=1:77,key=file.key)
