@@ -1,5 +1,5 @@
 #' @export
-plotSurveyIndex<-function(trend.dat,moving.avg=T,moving.median=T,ref.points=T,index.stations=T,fn="SurveyIndex",wd=8,ht=6,se=F){
+plotSurveyIndex<-function(trend.dat,moving.avg=T,moving.median=T,ref.points=T,index.stations=T,fn="SurveyIndex",wd=8,ht=6,se=F,add.legend=T,legend.specs = list(leg.place='topleft',lty=c(1,2,1),col=c('orange','green','rgb(0,0,1,0.5)'))){
 
 	## Plot Survey Index Figure 4
 	
@@ -36,9 +36,13 @@ plotSurveyIndex<-function(trend.dat,moving.avg=T,moving.median=T,ref.points=T,in
 	if(moving.median) lines(yrs,runmed(LPT,3),lty=2,col='green',lwd=2)
 
 	if(ref.points){
-		abline(h=median(LPT[2:15]*0.8),col=rgb(0,0,1,0.5))
-		text(max(yrs)+.5,median(LPT[2:15]*0.8)*.85,"Upper Stock Reference",col=rgb(0,0,1,0.5),pos=2,cex=0.8)
+		abline(h=median(LPT[1:14])*0.8,col=rgb(0,0,1,0.5))
+		text(max(yrs)+.5,median(LPT[1:14]*0.8)*.85,"Upper Stock Reference",col=rgb(0,0,1,0.5),pos=2,cex=0.8)
+	print(median(LPT[1:14]*0.8))
 	}
 	print(paste('Plot is saved in',file.path( project.figuredirectory('bio.lobster'), paste0(fn,".pdf")),sep=""))
+	if(add.legend){with(legend.specs)
+
+	}
 	dev.off()
 }

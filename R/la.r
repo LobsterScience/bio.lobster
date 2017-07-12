@@ -6,6 +6,6 @@
 #' @author  Adam Cook, \email{Adam.Cook@@dfo-mpo.gc.ca}
 #' @export
 
-la <- function(base.loc='~/bio') {
+la <- function(base.loc=git.repo) {
 	load_all(paste(base.loc,'bio.lobster',sep="/"))
 }

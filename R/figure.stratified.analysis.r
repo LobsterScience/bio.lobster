@@ -98,15 +98,18 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 				lines(x=c(u.reference.start.year,u.reference.end.year),y=c(uref,uref),col='blue',lty=1,lwd=3.5)
 		}
 	if(add.reference.lines) {
+		
 			me = xp[which(xp$year>=reference.start.year & xp$year<=reference.end.year), 'mean' ]
+			if(exists('ref.level')) {me = ref.level}
+		
 			if(reference.measure=='median')	xref = median(me)
 			if(reference.measure=='mean')	xref = mean(me)
-			if(reference.measure=='geomean') xref = geomean(me)
+			if(reference.measure=='geomean') xref = bio.utilities::geomean(me)
 			if(add.primary.line) {
 				lines(x=c(time.series.start.year,time.series.end.year),y=c(xref,xref),col='blue',lty=1,lwd=2)
 				lines(x=c(reference.start.year,reference.end.year),y=c(xref,xref),col='blue',lty=1,lwd=3.5)
 				}
-			if(add.upper.lower) {
+			if(exists('add.upper.lower')) {
 				uxref = xref*upper.reference.line
 				lxref = xref*lower.reference.line
 				lines(x=c(time.series.start.year,time.series.end.year),y=c(uxref,uxref),col='darkgreen',lty=2,lwd=2.5)
@@ -121,7 +124,7 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 	if(running.median)  legend(legend.placement,lty=c(1,1,1),lwd=c(4,4,4),col=c('darkgreen','blue','salmon'),c('80% reference period','40% reference period',paste(running.length,'yr Running Median',sep="")),bty='n',cex=0.8)
 	}
   title(figure.title)
-
+if(exists('custom.legend')) {with(legend.details,legend(legend.placement,legend=legend, lty=line.types, col = col.types, bty='n'))}
 if(sampleSizes) {
 		par(new=T)
 		if(!exists('y2.type',p)) p$y2.type == 'l'
@@ -133,7 +136,7 @@ if(sampleSizes) {
 		print(file.path(fn,file.name))
 if(exists('box',p)) {box(lwd=3)}
 if(save) dev.off()
-if(add.reference.lines) {return(c(Reference=xref,Reflow=lxref,Refhi=uxref))}
+#if(add.reference.lines) {return(c(Reference=xref,Reflow=lxref,Refhi=uxref))}
 if(exists('return.running',p)) {return(data.frame(yr=rmean.yr,mean=rmean))}
 	})
 }

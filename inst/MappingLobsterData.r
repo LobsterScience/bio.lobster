@@ -18,10 +18,16 @@ logsInSeason$ADJ_WEIGHT = logsInSeason$WEIGHT_KG * logsInSeason$BUMPUP
 
 #catchgrids<-lobGridPlot(subset(logsInSeason,LFA=='34'&SYEAR==2014,c("LFA","GRID_NUM","WEIGHT_KG")),lvls=c(1000,50000,100000,200000,400000,600000,800000,1000000),FUN=sum,border=NA)
 
-catchgrids<-lobGridPlot(subset(logsInSeason,LFA=='34'&SYEAR==2014 & CPUE<10,c("LFA","GRID_NUM","CPUE")),lvls = c(0.1,1.6,2.5,3.8,4.8,14.7),FUN=mean,border=NA)
+#catchgrids<-lobGridPlot(subset(logsInSeason,LFA %in% c('34')&SYEAR %in% c(2005:2015) & CPUE<10 & WOS %in% c(19:23),c("LFA","GRID_NUM","CPUE")),lvls = c(0.1,0.25,0.5,0.75,1,1.5,2.5,3.8),FUN=mean,border=NA)
+
+catchgrids<-lobGridPlot(subset(logsInSeason,LFA %in% c('34')&SYEAR %in% c(2005:2015) & CPUE<10,c("LFA","GRID_NUM","CPUE")),lvls = c(0.1,0.25,0.5,0.75,1,1.5,2.5,3.8),FUN=mean,border=NA)
+catchgrids<-lobGridPlot(subset(logsInSeason,LFA %in% c('34')&SYEAR %in% 2016 & CPUE<10,c("LFA","GRID_NUM","CPUE")),lvls = c(0.1,0.25,0.5,0.75,1,1.5,2.5,3.8),FUN=mean,border=NA)
+
 pdf(file.path( project.datadirectory("lobster"), "R","LFA34.pdf"),8,11)
 
-LobsterMap('34',poly.lst=catchgrids[1:2],title="2014 Lobster Catch")
+#LobsterMap('SWN',poly.lst=catchgrids[1:2],title="2013 April Lobster Catch")
+LobsterMap('34',poly.lst=catchgrids[1:2],title="2005 - 2015 Lobster CPUE")
+
 ContLegend("bottomleft",lvls=catchgrids$lvls,Cont.data=catchgrids,title="CPUE (kg/TH)",inset=0.02,cex=0.8,bg='white')
 ss2015<-read.csv(file.path( project.datadirectory("lobster"), "data","LFA34TrawlStations2015.csv"))
 with(subset(ss2015,TYPE%in%c('index','2014_index')),points(DDLON,DDLAT,pch=16,col='red'))
