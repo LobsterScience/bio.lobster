@@ -59,7 +59,9 @@ BubblePlotCLF(list(x),bins=seq(47.5,202.5,5),yrs=1:20,log.trans=T,filen='',prop=
 BubblePlotCLF(list(y),bins=seq(47.5,202.5,5),yrs=1:20,log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,0,0.1),graphic="R")
 BubblePlotCLF(list(z),bins=seq(47.5,202.5,5),yrs=1:20,log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,1,0.1),graphic="R")
 
+bpCLF = 
 
+BarPlotCLF2(bpCLF,yrs=1:20,bins=p$lens,filen=,LS=p$LS )
 
 p$nt = 20					# number of timesteps
 p$lens = seq(50,200,5)		# carapace length bins (mm)

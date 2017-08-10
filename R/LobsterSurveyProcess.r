@@ -10,7 +10,7 @@
 #' @export
 
 
-LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,bin.size=5){
+LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,bin.size=5,LFS=160){
   
 	lobster.db("survey")
 	RLibrary("CircStats","PBSmapping")
@@ -86,16 +86,19 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 	## berried females
 	with(subset(surveyMeasurements,SEX==3),tapply(SEX,SET_ID,length))->bfs
 	with(subset(surveyMeasurements,SEX==2),tapply(SEX,SET_ID,length))->fs
+	with(subset(surveyMeasurements,SEX%in%c(2,3)&FISH_LENGTH>LFS),tapply(SEX,SET_ID,length))->LargeFemales
 	with(subset(surveyMeasurements,SEX==1),tapply(SEX,SET_ID,length))->ms
 	with(subset(surveyMeasurements,SEX>0),tapply(SEX,SET_ID,length))->all
-	sets<-merge(data.frame(SET_ID=names(all),all),merge(data.frame(SET_ID=names(ms),ms),merge(data.frame(SET_ID=names(fs),fs),data.frame(SET_ID=names(bfs),bfs),all=T),all=T),all=T)
+	sets<-merge(data.frame(SET_ID=names(all),all),merge(data.frame(SET_ID=names(ms),ms),merge(data.frame(SET_ID=names(fs),fs),merge(data.frame(SET_ID=names(bfs),bfs),data.frame(SET_ID=names(LargeFemales),LargeFemales),all=T),all=T),all=T),all=T)
 	sets$bfs[is.na(sets$bfs)]<-0
 	sets$fs[is.na(sets$fs)]<-0
 	sets$ms[is.na(sets$ms)]<-0
+	sets$LargeFemales[is.na(sets$LargeFemales)]<-0
 	surveyLobsters<-merge(surveyLobsters,sets,all=T)
 	surveyLobsters$N_BERRIED_FEMALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$bfs/surveyLobsters$all)
 	surveyLobsters$N_FEMALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$fs/surveyLobsters$all)
 	surveyLobsters$N_MALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$ms/surveyLobsters$all)
+	surveyLobsters$N_LARGE_FEMALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$LargeFemales/surveyLobsters$all)
 
 	write.csv(surveyLobsters,file.path(project.datadirectory('bio.lobster'),"data","products","surveyLobsters.csv"),row.names=F) # Save data as csv
 	surveyLobsters<-subset(surveyLobsters,!is.na(NUM_STANDARDIZED)&LFA==lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
