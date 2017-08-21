@@ -16,39 +16,22 @@ dat = data.frame(yr = 1969:2015)
 
 
 		a =	c("DFO.restratified.All.csv",                                         
-			 "DFO.restratified.commercial.csv",                                  
-			 "DFO.restratified.immature.SexRatio.csv  ",                         
-			 "DFO.restratified.LargeFemale.csv",                                 
 			 "DFO.restratified.Mature.SexRatio.csv  ",                           
-			 "DFO.restratified.recruits.csv",                                    
 			 "Fec.maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.csv",  
 			 "Fec.maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.csv",
 			 "medianL.LengthFrequenciesLFA41NEFSCfallrestratified.csv",          
 			 "medianL.LengthFrequenciesLFA41NEFSCspringrestratified.csv",        
-			 "NEFSC.fall.restratified.commercial.csv",                           
 			 "NEFSC.Fall.Restratified.All.csv",                                      
-			 "NEFSC.fall.restratified.immature.SexRatio.csv  ",                  
 			 "NEFSC.fall.restratified.Mature.SexRatio.csv  ",                    
-			 "NEFSC.fall.restratified.recruits.csv",                             
-			 "NEFSC.spring.restratified.commercial.csv",                         
 			 "NEFSC.Spring.Restratified.All.csv",                                    
-			 "NEFSC.spring.restratified.immature.SexRatio.csv  ",                
 			 "NEFSC.spring.restratified.Mature.SexRatio.csv  ",                  
-			 "NEFSC.spring.restratified.recruits.csv",                          
-			 "restratified.NEFSC.Fall.LargeFemale.csv",                          
-			 "restratified.NEFSC.Spring.LargeFemale.csv",
-			"amo.csv",                                                          
+			 "amo.csv",                                                          
 			"commercialCatchrates.csv",                                         
 			"DFO.Georges.All.csv",                                              
-			"DFO.Georges.commercial.csv",                                       
-			"DFO.Georges.LargeFemale.csv",                                      
 			"DFO.Georges.Mature.SexRatio.csv  ",                                
-			"DFO.Georges.recruits.csv",                                         
 			"Fec.maturefemaleLengthFrequenciesLFA41dfogeorges.csv",             
-			"Georges.Bank.Summer_obslength.csv",                                
-			"Georges.Basin.Spring_obslength.csv",                               
-			"Georges.Basin.Summer_obslength.csv",                               
-			"giniCPUE.csv",                                                     
+			"Georges.Bank_no.season.obslength.csv",                                
+			"Georges.Basin_no.season.obslength.csv",                               
 			"lfa41DFOGeorgesTemps.csv",                                         
 			"lfa41DFOSummerTemps.csv",                                          
 			"lfa41NEFSCFallTemps.csv",                                          
@@ -56,9 +39,8 @@ dat = data.frame(yr = 1969:2015)
 			"medianL.LengthFrequenciesLFA41dfogeorges.csv",
 			"medianL.LengthFrequenciesLFA41polygonSummerRV.csv",
 			"predatorIndex.csv",                                                
-			"SE.Browns.Spring_obslength.csv",                                   
-			"SW.Browns.Autumn_obslength.csv",                                   
-			"SW.Browns.Summer_obslength.csv",
+			"SE.Browns_no.season.obslength.csv",                                   
+			"SW.Browns_no.season.obslength.csv",                                   
 			'sdmhabitat.csv',
 			"Fec.maturefemaleLengthFrequenciesLFA41polygonSummerRV.csv"
 			)        
@@ -101,10 +83,10 @@ for(j in 1:length(a)) {
 			dat = merge(dat,k,by='yr',all.x=T)
 	}
 		
-#		write.csv(dat,file.path(project.datadirectory('bio.lobster'),'analysis','SummaryIndicatorsrestrat.csv'))
+		write.csv(dat,file.path(project.datadirectory('bio.lobster'),'analysis','ReducedSummaryIndicatorsrestrat.csv'))
 
 	rn = read.csv(file.path(project.datadirectory('bio.lobster'),'data','RENAME_INDICATORS_RESTRAT.csv'),header=F)
-	dat = read.csv(file.path(project.datadirectory('bio.lobster'),'analysis','SummaryIndicatorsrestrat.csv'))
+	dat = read.csv(file.path(project.datadirectory('bio.lobster'),'analysis','ReducedSummaryIndicatorsrestrat.csv'))
 
 	dat = dat[,which(names(dat) %in% rn[,1])]
 	dd = rename.df(dat,rn[,1],rn[,2])
@@ -115,14 +97,13 @@ for(j in 1:length(a)) {
 	t1 = 2015
 	rownames(dd) = 1969:2015
 	dd$YR = NULL
-	dd = dd[,c(-5, -6, -8, -21, -26, -28, -37,-39,-19)]
-	jk = c(1,3,4,6,7,12,13,15,17,18,20,22,23,25,26,28,29,31,47,48,56)
+	dd$DFO_PREDATOR_BIOMASS <- NULL
+jk = c("DFO_ABUNDANCE" , "NEFSC_FALL_REP_POT",     "NEFSC_SPRING_REP_POT",  "NEFSC_FALL","NEFSC_SPRING", "GEORGES_ABUNDANCE","GEORGES_REP_POT" ,"DFO_PREDATOR_ABUNDANCE", "SDM_HABITAT",
+"DFO_REP_POT")       
 
-	for(i in jk){
-		dd[,jk] <- log(dd[,jk]+1)
-	}
+			dd[,jk] <- log(dd[,jk]+1)
 
 	fname = file.path(project.figuredirectory('bio.lobster'),'indicators')
 	dir.create(fname)
-	Y = pcaAnalyseData(dd, t0, t1,fname=fname)
+	Y = pcaAnalyseData(dd, t0, t1,fname=fname,OFN='ReducedIndicators')
 

@@ -20,6 +20,13 @@ logsInSeason$ADJ_WEIGHT = logsInSeason$WEIGHT_KG * logsInSeason$BUMPUP
 
 #catchgrids<-lobGridPlot(subset(logsInSeason,LFA %in% c('34')&SYEAR %in% c(2005:2015) & CPUE<10 & WOS %in% c(19:23),c("LFA","GRID_NUM","CPUE")),lvls = c(0.1,0.25,0.5,0.75,1,1.5,2.5,3.8),FUN=mean,border=NA)
 
+#catch rate by year within LFA 33 and LFA 34
+
+logsInSeason$mns = months(logsInSeason$DATE_FISHED)
+
+
+catchgrids<-lobGridPlot(a[,c("LFA","GRID_NUM","CPUE")],FUN=length)
+
 catchgrids<-lobGridPlot(subset(logsInSeason,LFA %in% c('34')&SYEAR %in% c(2005:2015) & CPUE<10,c("LFA","GRID_NUM","CPUE")),lvls = c(0.1,0.25,0.5,0.75,1,1.5,2.5,3.8),FUN=mean,border=NA)
 catchgrids<-lobGridPlot(subset(logsInSeason,LFA %in% c('34')&SYEAR %in% 2016 & CPUE<10,c("LFA","GRID_NUM","CPUE")),lvls = c(0.1,0.25,0.5,0.75,1,1.5,2.5,3.8),FUN=mean,border=NA)
 
