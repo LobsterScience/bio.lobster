@@ -1,7 +1,6 @@
 #reproductive potential
 #combining mature females abundance at length and fecundity at length
 require(bio.lobster)
-require(bcp)
 la()
 figfp = file.path(project.figuredirectory('bio.lobster'))
 
@@ -32,11 +31,7 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
               			}
 
       #bayesian change point
-        b = bcp(log(out$Fecm),w0 = 0.2, p0 = 0.05)
-        plot(b,xaxlab=out$yr,xlab='Year')
-        savePlot(file.path(figfp,'BCPRepPotNEFSCSpring.png'))
-     
-                   							  p=list()
+                         							  p=list()
     			                  p$add.reference.lines = F
                                   p$time.series.start.year = min(aa$yr)
                                   p$time.series.end.year = max(aa$yr)
@@ -59,16 +54,12 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                                
                            figure.stratified.analysis(x=out,out.dir = 'bio.lobster', save=F, p=p,sampleSizes=F)
        
-		             lb = median(subset(out,yr %in% 1969:2000,select=Fecm)[,1])
-                 ub = median(subset(out,yr %in% 2001:2015,select=Fecm)[,1]) * 0.4
-                nub = median(subset(out,yr %in% 1969:2015,select=Fecm)[,1])
+		             ub = median(subset(out,yr %in% 2001:2016,select=Fecm)[,1]) * 0.4
                  llb = out$Fecm[which(out$Fecm>0)]
                  llb = median(sort(llb)[1:5])
    
                  abline(h=llb,col='orange',lwd=2)
-                 abline(h=lb,col='blue',lwd=2)
                  abline(h=ub,col='green',lwd=2)
-                 abline(h=nub,col='purple',lwd=2)
                 
                 savePlot(file.path(figfp,'RefsRepPotNEFSCSpring.png'))
      
@@ -90,10 +81,7 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                     }
 
       #bayesian change point
-        b = bcp(log(out$Fecm),w0 = 0.2, p0 = 0.05)
-        plot(b,xaxlab=out$yr,xlab='Year')
-        savePlot(file.path(figfp,'BCPRepPotNEFSCAutumn.png'))
-     
+      
                                   p=list()
                             p$add.reference.lines = F
                                   p$time.series.start.year = min(aa$yr)
@@ -117,16 +105,12 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                                
                            figure.stratified.analysis(x=out,out.dir = 'bio.lobster', save=F, p=p,sampleSizes=F)
        
-                 lb = median(subset(out,yr %in% 1969:1999,select=Fecm)[,1])
-                 ub = median(subset(out,yr %in% 2000:2015,select=Fecm)[,1]) * 0.4
-                nub = median(subset(out,yr %in% 1969:2015,select=Fecm)[,1])
+                 ub = median(subset(out,yr %in% 2000:2016,select=Fecm)[,1]) * 0.4
                  llb = out$Fecm[which(out$Fecm>0)]
                  llb = median(sort(llb)[1:5])
    
                  abline(h=llb,col='orange',lwd=2)
-                 abline(h=lb,col='blue',lwd=2)
                  abline(h=ub,col='green',lwd=2)
-                 abline(h=nub,col='purple',lwd=2)
                 
                 savePlot(file.path(figfp,'RefsRepPotNEFSCAutumn.png'))
      
@@ -169,10 +153,10 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                                    p$error.polygon=F
                                   p$error.bars=T
                            figure.stratified.analysis(x=out,out.dir = 'bio.lobster', save=F, p=p,sampleSizes=F)
-                          ub = median(subset(out,yr %in% 2000:2015,select=Fecm)[,1]) * 0.4
+                          ub = median(subset(out,yr %in% 2000:2016,select=Fecm)[,1]) * 0.4
                          abline(h=ub,col='green',lwd=2)
               
-  #                          nub = median(subset(out,yr %in% 1999:2015,select=Fecm)[,1])
+  #                          nub = median(subset(out,yr %in% 1999:2016,select=Fecm)[,1])
    #                       llb = out$Fecm[which(out$Fecm>0)]
     #                      llb = median(sort(llb)[1:5])
    
@@ -221,7 +205,7 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                                   p$error.bars=T
                                
                            figure.stratified.analysis(x=out,out.dir = 'bio.lobster', save=F, p=p,sampleSizes=F)
-                           nub = median(subset(out,yr %in% 1999:2015,select=Fecm)[,1])
+                           nub = median(subset(out,yr %in% 1999:2016,select=Fecm)[,1])
                          # llb = out$Fecm[which(out$Fecm>0)]
                          # llb = median(sort(llb)[1:5])
    

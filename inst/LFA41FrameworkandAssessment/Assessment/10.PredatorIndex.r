@@ -5,7 +5,7 @@ fp = file.path(project.datadirectory('bio.groundfish'),"analysis")
 loadfunctions('bio.groundfish')
 p$strat=474:485
 p$series =c('summer')# p$series =c('4vswcod');p$series =c('georges')
-p$years.to.estimate = c(1970:2015)
+p$years.to.estimate = c(1970:2016)
 p$functional.groups = T
 yy = list()
 yy[['LobPred']] = c(10,11,12,13,40,50,200,201,203,204,300)
@@ -28,11 +28,11 @@ p$clusters = c( rep( "localhost", 7) )
 
 p = make.list(list(v=p$species, yrs=p$years.to.estimate),Y=p)
 p$runs = p$runs[order(p$runs$v),]
-parallel.run(groundfish.analysis,DS='stratified.estimates.redo',p=p,specific.allocation.to.clusters=T) #silly error arisingexit
+#parallel.run(groundfish.analysis,DS='stratified.estimates.redo',p=p,specific.allocation.to.clusters=T) #silly error arisingexit
 
 
 aout= groundfish.analysis(DS='stratified.estimates.redo',out.dir = 'bio.lobster',p=p)
-write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','predatorIndex.csv'))
+write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','indicators','predatorIndex.csv'))
                         p$ylim = NULL
               				  p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]

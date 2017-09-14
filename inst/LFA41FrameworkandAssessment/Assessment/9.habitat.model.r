@@ -2,33 +2,34 @@
 
 
 #need to rerun with new depth stuff dec 21 2016
-     p = bio.lobster::load.environment()
-	require(bio.lobster)
+    require(bio.lobster)
 	require(bio.utilities)
-	loadfunctions('bio.utilities')
-	loadfunctions('bio.temperature')
-	loadfunctions('bio.habitat')
-	loadfunctions('bio.indicators')
-	loadfunctions('bio.spacetime')
+	require(bio.temperature)
+	#require(bio.habitat)
+	require(bio.indicators)
+	require(bio.spacetime)
+	require()
 require(dismo)
 require(gbm)	
 require(lubridate)
+require(bio.groundfish)
 	#Prediction surface
-
-
-
-require(bio.lobster)	
+ p = bio.lobster::load.environment()
 require(mgcv)
 	la()
 
-	p$years = c(1970:2015)
+	p$years = c(1970:2016)
+if(redo){
+	#done Aug 28, 2017
+	b = habitat.model.data('nefsc.surveys.redo',p=p)
+	a = habitat.model.data('dfo.summer.redo',p=p)
+	d = habitat.model.data('dfo.georges.redo',p=p)
+	}
 
 	b = habitat.model.data('nefsc.surveys',p=p)
 	a = habitat.model.data('dfo.summer',p=p)
 	d = habitat.model.data('dfo.georges',p=p)
-	pre = habitat.model.data('dfo.georges',p=p)
-
-
+	
 dat = rbind(a,b,d)
 	dat$yr = year(dat$timestamp)
 	dat$z = log(dat$z)
@@ -36,6 +37,7 @@ dat = rbind(a,b,d)
 	dat = subset(dat,yr>1969)
 save(dat,file=file.path(project.datadirectory('bio.lobster'),'analysis','habitatmodellingdata.rdata'))
 
+load(file=file.path(project.datadirectory('bio.lobster'),'analysis','habitatmodellingdata.rdata'))
 require(gbm)
 require(dismo)
 #probability of occurence
@@ -48,7 +50,17 @@ require(dismo)
 dat$Y = ifelse(dat$B>0,1,0)
 dat$year = year(dat$timestamp)
 dat$Time = year(dat$timestamp) + dat$dyear
-aa2 <- gbm.step(data=na.omit(dat), gbm.x = c('Time','t','z','dZ','ddZ'), gbm.y = 'Y', family = "bernoulli", tree.complexity = 5, learning.rate = 0.01, bag.fraction = 0.5) #bernoulli is same as binomial in this formulation
+
+ii = which(dat$t>20)
+dat = dat[-ii,]
+
+ii = which(dat$dZ>20)
+dat = dat[-ii,]
+
+ii = which(dat$ddZ>15)
+dat = dat[-ii,]
+
+aa2a <- gbm.step(data=na.omit(dat), gbm.x = c('Time','t','z','dZ','ddZ'), gbm.y = 'Y', family = "bernoulli", tree.complexity = 5, learning.rate = 0.015, bag.fraction = 0.5) #bernoulli is same as binomial in this formulation
 summary(aa2)
 savePlot(file.path(project.figuredirectory('bio.lobster'),'brtinfluenceplots.png'))
 
@@ -57,7 +69,7 @@ load(file=file.path(project.datadirectory('bio.lobster'),'data','products','brtC
 
 dyear = seq(0.1,1,0.1) #autumn 
 p$yrs = unique(dat$yr)
-
+p$dyear=0.8
 outs = matrix(NA,ncol=length(dyear),nrow=length(p$yrs))
 p$annual.T.means=TRUE
 
@@ -94,17 +106,17 @@ for(i in 1:length(p$yrs)) {
 		pI$dyear = p$dyear
 		pI$z = log(pI$z)
 		pI$Time= a+.0
+		ab = predict.gbm(aa2,newdata=pI,n.trees = aa2$gbm.call$best.trees,type='response')
+		dr = seq( 0,1, length.out=100)
+		png(file=file.path(project.figuredirectory('bio.lobster'),paste('trial.continuousTimeboostedRegTree',a,'.png',sep="")),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+	o = levelplot(ab~J$plon+J$plat,aspect='iso',xlim=c(-600,100),ylim=c(-450,100),at=dr,col.regions=color.code('blue.yellow.red',dr),main=as.character(a))
+	print(o)
+	dev.off()
 		pI = pI[s2$EID,]
-		ab = predict.gbm(aa2,pI,n.trees = aa2$gbm.call$best.trees,type='response')
+		ab = predict.gbm(aa2,newdata=pI,n.trees = aa2$gbm.call$best.trees,type='response')
 		print(a)
 		outa[[i]] = ab
-		###need to prune to lfa41 and then calculate teh area above a threshold
-		
-		dr = seq( 0,1, length.out=100)
-		#png(file=file.path(project.figuredirectory('bio.lobster'),paste('trial.continuousTimeboostedRegTree',a,'.png',sep="")),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
-	#o = levelplot(ab~J$plon+J$plat,aspect='iso',xlim=c(-600,100),ylim=c(-450,100),at=dr,col.regions=color.code('blue.yellow.red',dr),main=as.character(a))
-	#print(o)
-	#dev.off()
+	
 		}
 	
 
@@ -113,10 +125,10 @@ u = c()
 			for(i in 1:length(outa)) {
 				u[i] <- sum(outa[[i]]>=0.35) / length(outa[[i]])
 			}
-plot(1970:2015,u,type='b',col='black',pch=16,xlab='Year',ylab = 'Proportion Suitable Lobster Habitat')
+plot(1970:2016,u,type='b',col='black',pch=16,xlab='Year',ylab = 'Proportion Suitable Lobster Habitat')
 savePlot(file=file.path(project.figuredirectory('bio.lobster'),'ProportionSuitableLobsterHabitat35.png'))
- a = data.frame(yr=1970:2015,sdm.habitat=u)
- write.csv(a,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators','sdmhabitat.csv')
+ a = data.frame(yr=1970:2016,sdm.habitat=u)
+ write.csv(a,file=file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','indicators','sdmhabitat.csv')
 )
 
 #predictor variables
@@ -167,8 +179,8 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),'temperature2005.png')
 levelplot(J$x.2010~J$plon+J$plat,aspect='iso',xlim=c(-600,100),ylim=c(-450,100),at=mybreaks,col.regions=mypalette,xlab='Planar Longitude', ylab = 'Planar Latitude',main='2010')
 savePlot(file.path(project.figuredirectory('bio.lobster'),'temperature2010.png'))
 
-levelplot(J$x.2015~J$plon+J$plat,aspect='iso',xlim=c(-600,100),ylim=c(-450,100),at=mybreaks,col.regions=mypalette,xlab='Planar Longitude', ylab = 'Planar Latitude',main='2015')
-savePlot(file.path(project.figuredirectory('bio.lobster'),'temperature2015.png'))
+levelplot(J$x.2016~J$plon+J$plat,aspect='iso',xlim=c(-600,100),ylim=c(-450,100),at=mybreaks,col.regions=mypalette,xlab='Planar Longitude', ylab = 'Planar Latitude',main='2016')
+savePlot(file.path(project.figuredirectory('bio.lobster'),'temperature2016.png'))
 
 
 gbm.plot(aa2,variable.no=1,plot.layout=c(1,1),write.title=F)

@@ -35,7 +35,6 @@ dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', 
          if(p$lobster.subunits==T &p$area=='SW.Browns' & p$series=='summer')    {strat = c(481,482,483,484,485); props=c(0.0509,0.2684,0.4358,0.1143,0.02197)}  
          if(p$lobster.subunits==T & p$area=='Georges.Bank' & p$series=='georges') {strat = c('5Z1','5Z2'); props = c(0.6813, 0.5474)}   
          if(p$lobster.subunits==T &p$area=='Georges.Basin' & p$series=='georges') {strat = c('5Z1','5Z2'); props = c(0.3187, 0.4537)}
-         
          if(p$area == 'custom') {strat = p$strat; props=rep(1,length(strat))}
 
          if (exists( "libs", p)) {

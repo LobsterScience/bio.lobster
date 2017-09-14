@@ -3,14 +3,14 @@
 require(bio.lobster)
 p = bio.lobster::load.environment()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+fp = file.path(project.datadirectory('bio.lobster'),"analysis",'lfa41Assessment')
 la()
 
 
-      a = c(file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41polygonSummerRV.rdata  ')	,
-            file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41dfogeorges.rdata  '),
-            file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCfallrestratified.rdata  '),
-            file.path(project.datadirectory('bio.lobster'),'analysis','sexLFA41NEFSCspringrestratified.rdata  ') )
+      a = c(file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','sexLFA41polygonSummerRV.rdata  ')	,
+            file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','sexLFA41dfogeorges.rdata  '),
+            file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','sexLFA41NEFSCfallrestratified.rdata  '),
+            file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','sexLFA41NEFSCspringrestratified.rdata  ') )
 
 
 for(i in 1:length(a)) {
@@ -29,7 +29,7 @@ for(i in 1:length(a)) {
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
                               p$ylim=c(0,1)
-                              p$file.name = paste(strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'png',sep=".")
+                              p$file.name = paste(strsplit(strsplit(a[i],"/")[[1]][7],"\\.")[[1]][1],'png',sep=".")
                               print(p$file.name)
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
@@ -52,10 +52,10 @@ for(i in 1:length(a)) {
 #Just >95mm
 
 
-        a = c(file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41polygonSummerRV.rdata  ')	,
-              file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41dfogeorges.rdata  '),
-              file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCfallrestratified.rdata  '),
-              file.path(project.datadirectory('bio.lobster'),'analysis','maturesexLFA41NEFSCspringrestratified.rdata  ') )
+        a = c(file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturesexLFA41polygonSummerRV.rdata  ')	,
+              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturesexLFA41dfogeorges.rdata  '),
+              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturesexLFA41NEFSCfallrestratified.rdata  '),
+              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturesexLFA41NEFSCspringrestratified.rdata  ') )
 
 
 for(i in 1:length(a)) {
@@ -74,7 +74,7 @@ for(i in 1:length(a)) {
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
                               p$ylim=c(0,1)
-                              p$file.name = paste(strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'png',sep=".")
+                              p$file.name = paste(strsplit(strsplit(a[i],"/")[[1]][7],"\\.")[[1]][1],'png',sep=".")
                               print(p$file.name)
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
@@ -100,10 +100,10 @@ for(i in 1:length(a)) {
 #Just <95mm
 
 
-        a = c( file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41polygonSummerRV.rdata  ') ,
-               file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41dfogeorges.rdata  '),
-               file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCfallrestratified.rdata  '),
-               file.path(project.datadirectory('bio.lobster'),'analysis','immaturesexLFA41NEFSCspringrestratified.rdata  '))
+        a = c( file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','immaturesexLFA41polygonSummerRV.rdata  ') ,
+               file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','immaturesexLFA41dfogeorges.rdata  '),
+               file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','immaturesexLFA41NEFSCfallrestratified.rdata  '),
+               file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','immaturesexLFA41NEFSCspringrestratified.rdata  '))
          
 
 
@@ -123,7 +123,7 @@ for(i in 1:length(a)) {
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
                               p$ylim=c(0,1)
-                              p$file.name = paste(strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'png',sep=".")
+                              p$file.name = paste(strsplit(strsplit(a[i],"/")[[1]][7],"\\.")[[1]][1],'png',sep=".")
                               print(p$file.name)
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year

@@ -2,7 +2,7 @@ require(bio.survey)
 require(bio.lobster)
 p = bio.lobster::load.environment()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+fp = file.path(project.datadirectory('bio.lobster'),"analysis",'lfa41Assessment')
 la()
 load_all('~/git/bio.survey/')
 #NEFSC Setup
@@ -12,7 +12,7 @@ fpp = file.path(fp,'combinedResults')
 
 
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:2015)
+      p$years.to.estimate = c(1969:2016)
       p$length.based = T
       p$size.class= c(140,300)
       p$by.sex = T
@@ -21,7 +21,13 @@ fpp = file.path(fp,'combinedResults')
       p$strata.files.return=F
       p$strata.efficiencies=F
       p$clusters = c( rep( "localhost", 7) )
-  
+                        p$season =c('spring')# p$series =c('spring');p$series =c('fall')
+                        p$lobster.subunits=F
+                        p$area = 'LFA41'
+                        p$return.both = NULL
+                      p = make.list(list(yrs=p$years.to.estimate),Y=p)
+                    
+          
       
 
       p$season =c('spring')# p$series =c('spring');p$series =c('fall')
@@ -114,7 +120,7 @@ write.csv(aout,file=file.path(fp,'indicators','restratified.NEFSC.Spring.LargeFe
       p$define.by.polygons = F
       p$lobster.subunits=F
       p$area = 'LFA41'
-      p$years.to.estimate = c(1970:2015)
+      p$years.to.estimate = c(1970:2016)
       p$length.based = T
       p$by.sex = T
       p$size.class = c(140,300)
@@ -175,7 +181,7 @@ write.csv(aout,file=file.path(fp,'indicators','restratified.NEFSC.Spring.LargeFe
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(2007:2015)
+      p$years.to.estimate = c(2007:2016)
       p$length.based = T
       p$by.sex = T
       p$sex = c(2,3)

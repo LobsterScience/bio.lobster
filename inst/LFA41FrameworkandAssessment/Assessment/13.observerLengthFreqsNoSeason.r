@@ -121,7 +121,7 @@ la()
 		}
 dev.off()
 
-O  = subset(O,yr < 2016)
+O  = subset(O,yr < 2017)
 
 				#overall pattern does not change with seasonality, not does the central tendency just go with area not season
 
@@ -159,7 +159,7 @@ for( i in 1:length(ll)) {
 			lm = merge(lm,af,by='yr')
 			names(lm)[7] = 'ObsLobs'
 			names(af) = c('x','y')
-			write.csv(lm,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators',paste(ln[i],'no.season.obslength.csv',sep="_")))
+			write.csv(lm,file=file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','indicators',paste(ln[i],'no.season.obslength.csv',sep="_")))
 
 
 			#grouped year length freq plots

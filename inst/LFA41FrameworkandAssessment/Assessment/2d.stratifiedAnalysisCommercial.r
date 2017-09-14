@@ -4,7 +4,7 @@ require(bio.survey)
 require(bio.lobster)
 p = bio.lobster::load.environment()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+fp = file.path(project.datadirectory('bio.lobster'),"analysis",'lfa41Assessment')
 la()
 load_all('~/git/bio.survey/')
 load_all('~/git/bio.groundfish/')
@@ -12,7 +12,7 @@ la()
 #NEFSC Setup
 
         p$reweight.strata = F #this subsets 
-        p$years.to.estimate = c(1969:2015)
+        p$years.to.estimate = c(1969:2016)
         p$length.based = T
         p$size.class= c(83,300)
         p$by.sex = T
@@ -21,7 +21,8 @@ la()
         p$strata.files.return=F
         p$strata.efficiencies=F
         p$clusters = c( rep( "localhost", 7) )
-        
+          p = make.list(list(yrs=p$years.to.estimate),Y=p)
+
 
 
     # Spring survey All stations including adjacent
@@ -181,7 +182,7 @@ la()
     p$define.by.polygons = F
     p$lobster.subunits=F
     p$area = 'LFA41'
-    p$years.to.estimate = c(1970:2015)
+    p$years.to.estimate = c(1970:2016)
     p$length.based = T
     p$by.sex = T
     p$size.class = c(83,300)
@@ -278,7 +279,7 @@ la()
     p$series =c('georges')# p$series =c('georges');p$series =c('fall')
     p$define.by.polygons = F
     p$lobster.subunits=F
-    p$years.to.estimate = c(2007:2015)
+    p$years.to.estimate = c(2007:2016)
     p$length.based = T
     p$by.sex = T
     p$sex = c(1,2)
@@ -294,7 +295,6 @@ la()
 
 
     # DFO survey All stations including adjacent
-    p$define.by.polygons = T
     p$lobster.subunits=F
     p$area = 'Georges.Canada'
     p$reweight.strata = F #this subsets 

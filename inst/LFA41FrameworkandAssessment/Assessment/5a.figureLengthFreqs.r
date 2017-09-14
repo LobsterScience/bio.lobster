@@ -2,10 +2,11 @@
 require(bio.lobster)
 la()
 m=0
-a = c(        file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41polygonSummerRV.rdata  '),
-		      file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCspringrestratified.rdata  '),
-      		  file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCfallrestratified.rdata  '),
-              file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41dfogeorges.rdata  '))
+fp = file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment')
+a = c(        file.path(fp,'LengthFrequenciesLFA41polygonSummerRV.rdata  '),
+		      file.path(fp,'LengthFrequenciesLFA41NEFSCspringrestratified.rdata  '),
+      		  file.path(fp,'LengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+              file.path(fp,'LengthFrequenciesLFA41dfogeorges.rdata  '))
     	###hard coded long term median values ---need to change with updates
     	lens = c(111,110,111,108,108,106,106,114,106,108)
 
@@ -25,7 +26,7 @@ for(i in 1:length(a)) {
 			g$ff = round(g$FLEN/3)*3
 			y = unique(g$yr)
 			u = aggregate(n.yst~ff,data=g,FUN=sum)              
-			fn = paste(strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],y,'pdf',sep=".")
+			fn = paste(strsplit(strsplit(a[i],"/")[[1]][7],"\\.")[[1]][1],y,'pdf',sep=".")
             nn = sum(g$ObsLobs)
             pdf(file.path(project.figuredirectory('bio.lobster'),fn))
 			plot(u$ff,u$n.yst,lwd=3,xlab='Carapace Length',ylab = 'Stratified Mean Number',type='h',ylim=c(0,yll))
@@ -48,14 +49,14 @@ for(i in 1:length(a)) {
 			}
 			out = as.data.frame(out)
 			names(out) = c('yr','medL','medLlower','medLupper','smallCatch','largeCatch','upper95','ShannonEquitability','ObsLobs')
-			fn = paste('max95',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'pdf',sep=".")
+			fn = paste('max95',strsplit(strsplit(a[i],"/")[[1]][7],"\\.")[[1]][1],'pdf',sep=".")
             nn = sum(g$ObsLobs)
             pdf(file.path(project.figuredirectory('bio.lobster'),fn))
 			plot(out$yr,out$upper95,lwd=1,xlab='Year',ylab = 'Maximum Length (mm)',type='b',ylim=c(115,195),pch=16)
 			lines(out$yr,runmed(out$upper95,k=3,endrule='median'),col='salmon',lwd=2)
 			dev.off()
 			
-			fn = paste('shannon',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'pdf',sep=".")
+			fn = paste('shannon',strsplit(strsplit(a[i],"/")[[1]][7],"\\.")[[1]][1],'pdf',sep=".")
             nn = sum(g$ObsLobs)
             oo = out[,c('yr','ShannonEquitability')]
             ii = which(is.na(oo$ShannonEquitability))
@@ -71,8 +72,8 @@ for(i in 1:length(a)) {
 			#print(fn)
 			
 #			print(median(out$medL))
-			save(out,file=file.path(project.datadirectory('bio.lobster'),'analysis',paste('medianL',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'rdata',sep=".")))
-			write.csv(out,file=file.path(project.datadirectory('bio.lobster'),'analysis','indicators',paste('medianL',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'csv',sep=".")))
+			save(out,file=file.path(fp,paste('medianL',strsplit(strsplit(a[i],"/")[[1]][7],"\\.")[[1]][1],'rdata',sep=".")))
+			write.csv(out,file=file.path(fp,'indicators',paste('medianL',strsplit(strsplit(a[i],"/")[[1]][7],"\\.")[[1]][1],'csv',sep=".")))
 				p=list()
 			                  p$add.reference.lines = F
                               p$time.series.start.year = min(aa$yr)
@@ -81,7 +82,7 @@ for(i in 1:length(a)) {
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = paste('medianL',strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],'png',sep=".")
+                              p$file.name = paste('medianL',strsplit(strsplit(a[i],"/")[[1]][7],"\\.")[[1]][1],'png',sep=".")
     		                  print(p$file.name)
 
                         p$y.maximum = NULL # NULL # if ymax is too high for one year
@@ -105,10 +106,10 @@ for(i in 1:length(a)) {
 require(bio.lobster)
 la()
 
-a = c(        file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41polygonSummerRV.rdata  '),
-		      file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCspringrestratified.rdata  '),
-      		  file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41NEFSCfallrestratified.rdata  '),
-              file.path(project.datadirectory('bio.lobster'),'analysis','LengthFrequenciesLFA41dfogeorges.rdata  '))
+a = c(        file.path(fp,'LengthFrequenciesLFA41polygonSummerRV.rdata  '),
+		      file.path(fp,'LengthFrequenciesLFA41NEFSCspringrestratified.rdata  '),
+      		  file.path(fp,'LengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+              file.path(fp,'LengthFrequenciesLFA41dfogeorges.rdata  '))
     	
 for(i in 1:length(a)) {
 	load(a[i])
@@ -141,7 +142,7 @@ for(i in 1:length(a)) {
 			y = unique(g$yr)
 			u = aggregate(n.yst~ff,data=g,FUN=mean)              
 			u$n.yst = u$n.yst / max(u$n.yst)
-			fn = paste(strsplit(strsplit(a[i],"/")[[1]][6],"\\.")[[1]][1],min(y),max(y),'pdf',sep=".")
+			fn = paste(strsplit(strsplit(a[i],"/")[[1]][7],"\\.")[[1]][1],min(y),max(y),'pdf',sep=".")
             nn = sum(g$ObsLobs)
             pdf(file.path(project.figuredirectory('bio.lobster'),fn))
 			plot(u$ff,u$n.yst,lwd=3,xlab='Carapace Length',ylab = 'Scaled Stratified Mean Number',type='h',ylim=c(0,yll))

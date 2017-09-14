@@ -7,14 +7,14 @@ la()
 
 p = bio.lobster::load.environment()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+fp = file.path(project.datadirectory('bio.lobster'),"analysis",'lfa41Assessment')
 load_all('~/git/bio.survey/')
 
 
 
 
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:2015)
+      p$years.to.estimate = c(1969:2016)
       p$length.based = T
       p$size.class= c(50,300)
       p$by.sex = F
@@ -28,8 +28,6 @@ load_all('~/git/bio.survey/')
 
 # Spring survey All stations including adjacent
                         p$season =c('spring')# p$series =c('spring');p$series =c('fall')
-                        p$define.by.polygons = F
-                        p$lobster.subunits=F
                         p$area = 'LFA41'
                         p$return.both = NULL
                       p = make.list(list(yrs=p$years.to.estimate),Y=p)
@@ -105,7 +103,7 @@ load_all('~/git/bio.survey/')
                        p$ylim = NULL
 
                  aout$subset = 'NEFSC.Spring.Restratified'
-                write.csv(aout,file=file.path(fp,'indicators','NEFSC.Spring.Restratified.csv'))
+                write.csv(aout,file=file.path(fp,'indicators','NEFSC.Spring.Restratified.All.csv'))
           
 
 
@@ -168,7 +166,7 @@ load_all('~/git/bio.survey/')
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$ylim = NULL
                 aout$subset = 'NEFSC.Fall.Restratified'
-                write.csv(aout,file=file.path(fp,'indicators','NEFSC.Fall.Restratified.csv'))
+                write.csv(aout,file=file.path(fp,'indicators','NEFSC.Fall.Restratified.All.csv'))
      
 
 
@@ -261,19 +259,11 @@ load_all('~/git/bio.survey/')
                aout$subset = 'DFO.restratified.All'
                write.csv(aout,file=file.path(fp,'indicators','DFO.restratified.All.csv'))
           
-
-
-
-
-
-     
-
-
   #DFO Georges
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(1987:2015)
+      p$years.to.estimate = c(1987:2016)
       p$length.based = F
       p$by.sex = F
       p$bootstrapped.ci=T

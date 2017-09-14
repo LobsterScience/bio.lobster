@@ -4,7 +4,7 @@ require(bio.lobster)
 require(bio.groundfish)
 p = bio.lobster::load.environment()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+fp = file.path(project.datadirectory('bio.lobster'),"analysis",'lfa41Assessment')
 la()
 load_all('~/git/bio.survey/')
 
@@ -18,7 +18,7 @@ load_all('~/git/bio.survey/')
         p$lobster.subunits=F
         p$area = 'LFA41'
         p$reweight.strata = T #this subsets 
-        p$years.to.estimate = c(1999:2015)
+        p$years.to.estimate = c(1999:2016)
         p$length.based = T
         p$by.sex = T
         p$sex=c(2,3)
@@ -40,14 +40,14 @@ load_all('~/git/bio.survey/')
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata  '))
+        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata  '))
 
 
 #NEFSC spring
 
 
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:2015)
+      p$years.to.estimate = c(1969:2016)
       p$length.based = T
       p$size.class= c(50,300)
       p$by.sex = T
@@ -57,7 +57,8 @@ load_all('~/git/bio.survey/')
       p$strata.efficiencies=F
       p$clusters = c( rep( "localhost", 7) )
   
-      
+         p = make.list(list(yrs=p$years.to.estimate),Y=p)
+
 
 # restratified
       p$season =c('spring')# p$series =c('spring');p$series =c('fall')
@@ -75,7 +76,7 @@ load_all('~/git/bio.survey/')
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata  '))
+        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata  '))
 
 
 
@@ -96,7 +97,7 @@ load_all('~/git/bio.survey/')
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata  '))
+        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata  '))
 
     
 
@@ -104,7 +105,7 @@ load_all('~/git/bio.survey/')
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(2007:2015)
+      p$years.to.estimate = c(2007:2016)
       p$length.based = T
       p$by.sex = T
       p$sex=c(2,3)
@@ -135,4 +136,4 @@ load_all('~/git/bio.survey/')
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata  '))
+        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41dfogeorges.rdata  '))

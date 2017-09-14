@@ -293,8 +293,7 @@ options(scipen=999)  # this avoids scientific notation
            }
 
           save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
-        odbcCloseAll()
-
+      
         }
 }
 
