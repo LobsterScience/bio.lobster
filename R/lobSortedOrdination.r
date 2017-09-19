@@ -1,6 +1,6 @@
 #' @export
   
-  lobSortedOrdination = function( b, colscheme="redgreen", addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ) {
+  lobSortedOrdination = function( b, colscheme="redgreen", addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ,outfilenames=NULL) {
 
     yvals=rownames(b)
     vars =colnames(b)
@@ -10,10 +10,16 @@
 
     if (is.null(title)) title = "Years"
     if (is.null(outfileroot)) outfileroot="sorted.anomalies"
-
+if(is.null(outfilenames)) {
     of1 = paste(outfileroot, "PC1.png", sep=".")
     of2 = paste(outfileroot, "PC2.png", sep=".")
     of3 = paste(outfileroot, "anomalies.png", sep=".")
+    } else {
+    of1 = paste(outfileroot,outfilenames, "PC1.png", sep=".")
+    of2 = paste(outfileroot,outfilenames, "PC2.png", sep=".")
+    of3 = paste(outfileroot,outfilenames, "anomalies.png", sep=".")
+        
+    }
     corel = cor( b, use="pairwise.complete.obs" ) # set up a correlation matrix ignoring NAs
     corel[ is.na(corel) ] = 0
     
@@ -94,7 +100,7 @@
     axis( 1 )
 
     vars = colnames(Z)
-    par(cex=0.4)
+    par(cex=0.6)
     axis( 2, at=seq(0,1,length=length(vars)), labels=vars)
     write.table(Z, file="anomalies.dat", quote=F, sep=";")
     dev.off()

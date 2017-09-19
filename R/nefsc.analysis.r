@@ -108,7 +108,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
  pi = 'base'
          if(p$define.by.polygons) {
           print('dbp')
-          pi = 'restratified'
+             pi = 'restratified'
             if(p$area=='georges.US') {return('this is not setup')}
             l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
             if(p$lobster.subunits) {
@@ -145,7 +145,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
 
         if(p$by.sex & !p$length.based) {p$size.class=c(0,1000); p$length.based=T}
 
-        if(!p$lb) { vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO','SIZE_CLASS')
+        if(!p$lb) { vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO')#,'SIZE_CLASS')
                     ca = ca[,vars.2.keep]
                 }
                 
@@ -233,6 +233,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                 }   else {
                 out[mp,] = c(yr,rep(0,22))
               }
+              
             }
           }
             if(exists('big.ci',p)) {
@@ -241,7 +242,6 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
           if(p$strata.efficiencies) {
                  return(list(effic.out,nopt.out))
               }
-  
                         lle = 'all'
                         lbs = 'not'
               if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")

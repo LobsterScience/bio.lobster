@@ -118,10 +118,8 @@ for(j in 1:length(a)) {
 	dd = dd[,c(-5, -6, -8, -21, -26, -28, -37,-39,-19)]
 	jk = c(1,3,4,6,7,12,13,15,17,18,20,22,23,25,26,28,29,31,47,48,56)
 
-	for(i in jk){
 		dd[,jk] <- log(dd[,jk]+1)
-	}
-
+	
 	fname = file.path(project.figuredirectory('bio.lobster'),'indicators')
 	dir.create(fname)
 	Y = pcaAnalyseData(dd, t0, t1,fname=fname)
