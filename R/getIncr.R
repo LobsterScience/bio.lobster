@@ -14,7 +14,7 @@ getIncr = function(p,cw){
 	
 	x = p$lens[which(p$lens==cw):length(p$lens)]
 
-	pgf = dnorm(x,cw*mgf,cw*sdgf)
+	pgf = dnorm(x,cw*mgf,cw*sdgf) # modify for decreased incr with increased size, look for data
 	
 	res = pgf/sum(pgf)
 

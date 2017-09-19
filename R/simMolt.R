@@ -14,6 +14,7 @@ simMolt = function(p,gdd=F){
 	totalPop = array(0,dim=c(p$nt,length(p$lens),p$nt,p$nt))
 	totalBerried = totalPop
 	totalRemovals = totalPop
+	totalMolts = totalPop
 	totalEggs = array(0,dim=c(p$nt,length(p$lens)))
 	
 	totalPop[1,1,1,1] = p$StartPop # start with
@@ -35,6 +36,10 @@ simMolt = function(p,gdd=F){
 			for(j in 1:t){ # of days since last molt
 
 				p$doy =  j * p$timestep # days since last molt
+				p$ddoy = p$doy
+				d = t * p$timestep
+				if(gdd) p$ddoy =  sum(p$dailytemps[(d-p$doy):d]) #degreedays since last molt
+
 				if(p$sex==2){
 						#browser()
 						bf = getBerried(p)
@@ -46,11 +51,13 @@ simMolt = function(p,gdd=F){
 						spawners = spawners + released 
 
 				}
-				gm = getGroMat(p,gdd)
+				gm = getGroMat(p)
 				totalPop[t+1,,i,j+1] = totalPop[t,,i,j] * (1 - gm$pM) #NoMolt
 				molted = totalPop[t,,i,j] %*% gm$transMatrix #Molt
 				totalPop[t+1,,i+1,1] = totalPop[t+1,,i+1,1] + molted # combine newly molted into 1 timestep since last molt slot
+				totalMolts[t,,i,j] = molted
 
+				
 			}
 		}
 
@@ -74,9 +81,11 @@ simMolt = function(p,gdd=F){
 	names(finalBerried)=paste0("CL",p$lens)
 	totalRemovals = data.frame(apply(totalRemovals,c(1,2),sum))
 	names(totalRemovals)=paste0("CL",p$lens)
+	totalMolts = data.frame(apply(totalMolts,c(1,2),sum))
+	names(totalMolts)=paste0("CL",p$lens)
 
 	print(Sys.time()-start)
 	
-	return(list(finalPop=finalPop,finalBerried=finalBerried,totalPop=totalPop,totalBerried=totalBerried,totalEggs=totalEggs,totalRemovals=totalRemovals))
+	return(list(finalPop=finalPop,finalBerried=finalBerried,totalPop=totalPop,totalBerried=totalBerried,totalEggs=totalEggs,totalRemovals=totalRemovals,totalMolts=totalMolts))
 }
 

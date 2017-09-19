@@ -220,6 +220,8 @@ if(save) {
 	if(LT){
 		addPolys(coast,col=land.col,...)
 		if(plot.rivers)addLines(rivers,...)
+		if(boundaries=='LFAs') if('lfa'%in% labels)	addLabels(subset(LFAgrid.dat,!duplicated(label)),col=rgb(0,0,0,0.8),cex=labcex)
+
 	}
 	
 	if(stippling)addStipples (coast, pch='.')

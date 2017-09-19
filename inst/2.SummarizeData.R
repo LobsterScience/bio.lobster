@@ -49,3 +49,26 @@
     logsInSeason<-lobster.db('process.logs')
     CPUEplot(logsInSeason,lfa=c('35','36','38'),yrs=2006:2015,graphic='pdf')
 
+    logsInSeason<-lobster.db('process.logs')
+    CPUE.lst = list()
+    yrs = sort(unique(year(logsInSeason$DATE_FISHED)))
+    weeks = 1:53
+
+    for (y in 1:length(yrs)){
+
+    	CPUE.lst[[y]] = list()
+
+    	for(i in weeks){
+			
+			catch = with(subset(logsInSeason,year(DATE_FISHED)==yrs[y]&week(DATE_FISHED)==i),tapply(WEIGHT_KG,GRID_NUM,sum))
+			effort = with(subset(logsInSeason,year(DATE_FISHED)==yrs[y]&week(DATE_FISHED)==i),tapply(NUM_OF_TRAPS,GRID_NUM,sum))
+			CPUE.lst[[y]][[i]] = catch / effort
+
+    	}
+    	names(CPUE.lst[[y]]) = weeks
+    }
+    names(CPUE.lst) = yrs
+
+    save(CPUE.lst,file="CPUElist.Rdata")
+
+

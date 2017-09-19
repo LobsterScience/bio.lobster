@@ -8,8 +8,12 @@
 #' @return The predicted probability of moulting
 #' @author  Brad Hubley, \email{Brad.Hubley@@dfo-mpo.gc.ca}
 #' @export
-pPrMolt = function(cw,a,b,d){ 
-a = a * log(cw)/log(100)
-b = b * 1/(log(cw)	/log(100))
-1 / (1+ exp(-(a+b*d)))
+pPrMolt = function(cw,a,b,d,x){ 
+
+		a = a * (log(cw)/log(100))^x
+		b = b * 1/(log(cw)/log(100))^x
+		pM = 1 / (1+ exp(-(a+b*d)))
+
+return(pM)
+
 }

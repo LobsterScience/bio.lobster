@@ -47,7 +47,7 @@ predMolt <- function(p,cl,doy=d,gdd=FALSE,sex) {
 						#this is GOM 20m
 					if(cl<=39)       				{ a=-1.687; b=0.0183}
 					if(cl >39& cl<=65) 				{ a=-1.951; b=0.023}
-					if(cl >65& cl<=79 & sex==1) 	{ a=--3.556; b=0.0274}
+					if(cl >65& cl<=79 & sex==1) 	{ a=-3.556; b=0.0274}
 					if(cl >65& cl<=79 & sex==2) 	{ a=-3.355; b=0.02}
 					if(cl >79& sex==1) 				{ a=-5.316; b=0.0124}
 					if(cl >79& sex==2) 				{ a=-5.177; b=0.0137}
