@@ -162,7 +162,7 @@ aa$mean[t] = 0.001
 aa$relF = aa$landings / aa$mean/1000
     
 
-hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,12))
+hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,12),labels=c('USI','LRI'))
 savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbDataDFOSurvey.png'))
 
 
@@ -170,7 +170,7 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbDataDFOSurvey.p
 ####################
 ###Georges
 #####################
-
+rm(out)
                       load(file.path(fp,'stratified.georges.Georges.Canada.base.length.all.not.sexed.rdata'))
                         aout = out
                         aout = aout[,c('yr','w.Yst')]
@@ -289,7 +289,7 @@ t = which(!is.finite(aa$relF))
 aa$mean[t] = 0.001
 aa$relF = aa$landings / aa$mean/1000
 
-hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,6))
+hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,6),labels=c('USI','LRI'))
 savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbDataGeorgesSurvey.png'))
 
 
@@ -394,7 +394,7 @@ NPropLand = (a[,3]/a[,2])
 #HCR plots
 aa = merge(bref,aa,by='yr')
 aa$relF = aa$landings/aa$mean/1000
-hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,1))
+hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,1),labels=c('USI','LRI'))
 
 savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbDataSpringSurvey.png'))
 
@@ -502,5 +502,5 @@ savePlot(file.path(figfp,'AutumnRefpointsNewArea.png'))
 #HCR plots
 aa = merge(bref,aa,by='yr')
 aa$relF = aa$landings/aa$mean/1000
-hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,1))
+hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,1),labels=c('USI','LRI'))
 savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbDataAutumnSurvey.png'))

@@ -58,9 +58,12 @@ load_all('~/git/bio.survey/')
 
 	for(i in 1:length(h)) {
 		j = h[[i]]
-		pdf(file.path(project.figuredirectory('bio.lobster'),paste('surveyBubblesNEFSCSpring',min(j$yr),max(j$yr),'pdf',sep=".")))
-		LobsterMap(xlim=c(-71,-63.5),ylim=c(39,45),boundaries='LFAs',addAmericanStrata=T,output='bio.lobster',fname='americanmapfull41.pdf',save=F,labcex =0.8,labels=T)
-		addPolys(LFA41,border='blue')
+		pdf(file.path(project.figuredirectory('bio.redfish'),paste('silverhakesurveyBubblesDFO',min(j$yr),max(j$yr),'pdf',sep=".")))
+		LobsterMap(xlim=c(-69,-57.2),ylim=c(42,47.3),boundaries='a',addSummerStrata=T,output='bio.lobster',fname='americanmapfull41.pdf',save=F,labcex =0.8,labels=T,addGrids=F)
+
+#		LobsterMap(xlim=c(-71,-63.5),ylim=c(39,45),boundaries='LFAs',addAmericanStrata=T,output='bio.lobster',fname='americanmapfull41.pdf',save=F,labcex =0.8,labels=T)
+		#addPolys(LFA41,border='blue')
+		browser()
 		j = makePBS(j,polygon=F)
 		j$Z =j$TOTNO
 		addBubbles(j,legend.pos='bottomright',legend.type='horiz',legend.cex=0.8,symbol.zero=".",symbol.bg = rgb(1,0,0,.6),max.size=0.8,z.max=1000,type='surface')
