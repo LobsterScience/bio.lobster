@@ -6,7 +6,7 @@
 \usage{
 LobsterSurveyProcess(size.range = c(0, 220), lfa = "34", yrs,
   mths = c("May", "Jun", "Jul", "Aug", "Sep", "Oct"), gear.type = NULL,
-  bin.size = 5)
+  bin.size = 5, LFS = 160)
 }
 \arguments{
 \item{size.range}{defines the minimum and maximum value and is a filter (default is 0, 220mm CW)}

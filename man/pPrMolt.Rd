@@ -4,7 +4,7 @@
 \alias{pPrMolt}
 \title{getIncr}
 \usage{
-pPrMolt(cw, a, b, d)
+pPrMolt(cw, a, b, d, x)
 }
 \arguments{
 \item{\code{cw}}{: carapace width}

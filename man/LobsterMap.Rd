@@ -14,7 +14,7 @@ LobsterMap(area = "custom", ylim = c(40, 52), xlim = c(-74, -47),
   grid = NULL, stippling = F, lol = F, labels = "lfa", labcex = 1.5,
   LT = T, plot.rivers = T, addSummerStrata = F, addsubareas = F,
   subsetSummerStrata = NULL, addGeorgesStrata = F, addAmericanStrata = F,
-  ...)
+  addGrids = T, ...)
 }
 \arguments{
 \item{area}{= 'custom' where xlim & ylim are specified or select from area list below}
