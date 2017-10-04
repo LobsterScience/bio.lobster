@@ -30,11 +30,11 @@
 		
 	# this section is to deal with the fact that there are uneven binning going on for the different size categories
 	# it creates a pseudo CL (the mid point of each size category)
-	loadfunctions('lobster')
+	p = bio.lobster::load.environment()
 	lobster.db("fsrs")
 
-	scd<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
-	mls<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","MinLegalSize.csv"))
+	scd<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
+	mls<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
 
 	scd$LENGTH<-rowMeans(scd[c("MIN_S","MAX_S")])
 	FSRS.dat<-merge(subset(fsrs,LFA<35),scd[c("SIZE_CD","LENGTH")])
@@ -80,7 +80,7 @@
 	LobsterData$B<-LobsterData$BIOMASS/LobsterData$TRAP_NO
 
 
-	LandingsUpdate<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","AnnualandSeasonalLandingsLFA27-38.LFS2015.csv"))
+	LandingsUpdate<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","AnnualandSeasonalLandingsLFA27-38.LFS2015.csv"))
 	LandingsUpdate$YEAR<-as.numeric(substr(LandingsUpdate$YEAR,1,4))
 	Landat<-merge(subset(LandingsUpdate,TYPE=="Annual"&YEAR>1998,c("YEAR","LFA27", "LFA28", "LFA29", "LFA30", "LFA31A", "LFA31B", "LFA32")),
 	subset(LandingsUpdate,TYPE=="Seasonal"&YEAR>1998,c("YEAR","LFA33", "LFA34")))

@@ -15,7 +15,7 @@ getGroMat = function(p){
 	for (i in 1:(nrow(mat)-1)){
 
 		# get probablitiy of molting		
-		pM[i] = pPrMolt(cw=p$lens[i],a=p$moltPr$a,b=p$moltPr$b,d=p$ddoy) 
+		pM[i] = pPrMolt(cw=p$lens[i],a=p$moltPr$a,b=p$moltPr$b,d=p$ddoy,x=p$moltPr$x) 
 		
 		# use molt increment mean & sd to determine which size classes to molt into then multiply by probability of molting
 		incr = getIncr(p=p,cw=p$lens[i]) * pM[i] 	

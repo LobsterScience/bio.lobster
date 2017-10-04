@@ -17,7 +17,7 @@ p$timestep = 91  			# in days
 #growth 
 p$GrowthFactorMean = 1.15	
 p$GrowthFactorSD = 0.05
-p$moltPr = list(a=-5,b=0.013)
+p$moltPr = list(a=-5,b=0.013,x=1.1)
 #p$moltPr = list(a=-5,b=0.003) # degree day growth
 
 #reproduction
@@ -33,7 +33,8 @@ p$M = 0.1
 p$F = 0.4
 
 # rough temperature generator (for degree day growth)
-p$dailytemps = rDailyTemps(x=1:(p$nt*p$timestep),b=10,m=10,s=50)
+coldestday = as.numeric(as.Date("2017-02-23") - as.Date(p$startDate) )
+p$dailytemps = rDailyTemps(x=1:(p$nt*p$timestep),b=10,m=10,s=coldestday)
 
 #run sexes seperately for now
 p$sex = 2
@@ -44,7 +45,7 @@ p$sex = 1
 
 males = simMolt(p)
 
-p$moltPr = list(a=-5,b=0.003) # degree day growth
+p$moltPr = list(a=-6,b=0.003,x=1.3) # degree day growth
 males2 = simMolt(p,gdd=T)
 
 
@@ -70,13 +71,11 @@ x = round(females$finalPop)
 x2 = round(females2$finalPop)
 z = round(females$finalBerried)
 z2 = round(females2$finalBerried)	
-m = round(males2$totalMolts)
 
 
-
-y = thinMatrix(y,4)
-x = thinMatrix(x,4)
-z = thinMatrix(z,4)
+#y = thinMatrix(y,4)
+#x = thinMatrix(x,4)
+#z = thinMatrix(z,4)
 		
 
 		# VB
@@ -98,7 +97,14 @@ BubblePlotCLF(list(y2),bins=seq(47.5,202.5,5),yrs=seq(0.25,20,0.25),log.trans=T,
 BubblePlotCLF(list(z),bins=seq(47.5,202.5,5),yrs=1:20,log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,1,0.1),graphic="R")
 
 BubblePlotCLF(list(x+z),bins=seq(47.5,202.5,5),yrs=seq(0.25,20,0.25),log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,0,0.1),graphic="R")
-BubblePlotCLF(list(m),bins=seq(47.5,202.5,5),yrs=seq(0.25,20,0.25),log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,0,0.1),graphic="R")
+
+
+
+m = round(males2$totalMolts)
+f = round(males2$totalRemovals)
+
+BubblePlotCLF(list(m),bins=seq(47.5,202.5,5),yrs=seq(0.25,20,0.25),xlim=c(0,10),log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,0,0.1),graphic="R")
+BubblePlotCLF(list(f),bins=seq(47.5,202.5,5),yrs=seq(0.25,20,0.25),xlim=c(0,10),log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(0,0,0,0.1),graphic="",add=T)
 
 	
 

@@ -382,8 +382,8 @@ for(i in 1:length(lens)){
 
 
 }
-p$moltPr = list(a=-6,b=0.004)
-dx=1:2500
+p$moltPr = list(a=-6,b=0.004,x=1.1)
+	dx=1:2500
 
 
 x11()
@@ -398,12 +398,15 @@ for(i in 1:length(lens)){
 
 
 }
+p$moltPr = list(a=-6,b=0.003,x=1.1)
 
+	dx=1:2500
+#plot(range(dx),0:1,type='n')
 
 for(i in 1:length(lens)){
 	
-	py2 = pPrMolt(cw=lens[i],a=p$moltPr$a,b=p$moltPr$b,d=dx,x=1.2) 
-	lines(dx,py2,col='red',lty=2)
+	py2 = pPrMolt(cw=lens[i],a=p$moltPr$a,b=p$moltPr$b,d=dx,x=p$moltPr$x) 
+	lines(dx,py2,col='purple',lty=2)
 
 
 }

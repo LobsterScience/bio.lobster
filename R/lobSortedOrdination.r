@@ -1,6 +1,6 @@
 #' @export
   
-  lobSortedOrdination = function( b, colscheme="redgreen", addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ,outfilenames=NULL) {
+  lobSortedOrdination = function( b, colscheme=red.green, addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ,outfilenames=NULL,groupings=NULL) {
 
     yvals=rownames(b)
     vars =colnames(b)
@@ -35,9 +35,9 @@ if(is.null(outfilenames)) {
         outscores = data.frame(x)
         outscores$yr = as.numeric(yvals)
 
-    par(cex=2, lty=2)
     
     png(file=of1,units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+    par(cex=2, lty=2)
     plot( yvals, x[,1], xlab="Years", ylab=paste("PCA1 (", round(eval[1]/sum(eval)*100, 1), "%)", sep="") )
     lines( lowess(yvals, x[,1], f=1/5 ) )
     dev.off()
@@ -74,19 +74,8 @@ if(is.null(outfilenames)) {
 
     png(file=of3,units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
     
-    par( mai=c(1, 3, 0.3, 0.5), cex=1 )
-    
-    if (colscheme=="rainbow")  {
-      cols=rainbow(length(br)-1, start=0, end=1/3)
-    } else if (colscheme=="redgreen") {
-      cols=rev(green.red(length(br)))    
-    } else if (colscheme=="bluered") {
-      cols=rev(blue.red(length(br)))    
-    } else if (colscheme=="heat") { 
-      cols=rev(heat.colors(length(br)-1))
-    } else {
-      cols=colscheme
-    }
+    par( mai=c(1, 3, 0.3, 0.8), cex=1 )
+    cols=colscheme(length(br)-1)
     image(z=Z, x=years, breaks=br, col=cols, ylab="", axes=F )
     
     for (i in seq(range(yrange)[1], range(yrange)[2], by=10)) abline( v=i-0.5, col="slategray")
@@ -102,6 +91,12 @@ if(is.null(outfilenames)) {
     vars = colnames(Z)
     par(cex=0.6)
     axis( 2, at=seq(0,1,length=length(vars)), labels=vars)
+     if(!is.null(groupings)){
+        for(i in 1:length(groupings)){
+             CurlyBraces(x0=max(years)+1,x1=max(years)+1,y0=groupings[[i]][1]/dim(Z)[2],y1=groupings[[i]][2]/dim(Z)[2],pos=1,direction=1,depth=2)
+        }
+        text(rep(max(years)+3.5,length(groupings)), unlist(lapply(groupings,mean))/dim(Z)[2], 1:length(groupings),xpd=NA,cex=2)
+    }
     write.table(Z, file="anomalies.dat", quote=F, sep=";")
     dev.off()
     out = list( id=yvals, vars=vars, correlation.matrix=corel, 

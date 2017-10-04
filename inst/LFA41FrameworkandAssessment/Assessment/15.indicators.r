@@ -105,5 +105,11 @@ jk = c("DFO_ABUNDANCE" , "NEFSC_FALL_REP_POT",     "NEFSC_SPRING_REP_POT",  "NEF
 
 	fname = file.path(project.figuredirectory('bio.lobster'),'indicators')
 	dir.create(fname)
-	Y = pcaAnalyseData(dd, t0, t1,fname=fname,OFN='ReducedIndicatorsAssessment')
-s
+                
+
+    colorfun = colorRampPalette ( RColorBrewer::brewer.pal(9,"BrBG"))
+ 
+	Y = pcaAnalyseData(dd, t0, t1,fname=fname,OFN='ReducedIndicatorsAssessment1', colscheme=colorfun,groupings=list(c(-0.5,19),c(19,40.5)))
+
+	
+ 
