@@ -19,7 +19,7 @@ simMolt = function(p,gdd=F){
 	
 	totalPop[1,1,1,1] = p$StartPop # start with
 
-	p$Fl = c(rep(0,length(which(p$lens<p$LS))),rep(p$F,length(which(p$lens>p$LS))))
+	p$Fli = c(rep(0,length(which(p$lens<p$LS))),rep(p$F,length(which(p$lens>p$LS))))
 	p$Ml = rep(p$M,length(p$lens))
 
 	p$Fadj = FadjSeason(p) # adjust annual F by 
@@ -62,7 +62,9 @@ simMolt = function(p,gdd=F){
 		}
 
 		# mortality
-		p$Fl = p$Fl * p$Fadj[t]
+		p$Fl = p$Fli * p$Fadj[t]
+
+		#if(sum(totalPop[t+1,8,,])>1)browser()
 
 		for(l in 1:length(p$lens)){
 

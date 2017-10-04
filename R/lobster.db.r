@@ -126,6 +126,7 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
 
                     #Filtering by   
                     Fish.Date<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
+                    Fish.Date = lobster.db('season.dates')
                      
                 
                           print('Not the ODBC season Dates Need to Have Updated AMC jan2017')
