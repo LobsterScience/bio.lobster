@@ -6,6 +6,14 @@ require(PBSmapping)
 require(bio.lobster)
 require(bio.utilities)
 la()
+
+
+      Update.plot=T
+       if(Update.plot==T) par(mfrow=c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
+
+#
+
+
  fp = file.path(project.datadirectory('bio.lobster'),'analysis')
 figfp = file.path(project.figuredirectory('bio.lobster'))
 outref = list()
@@ -121,8 +129,9 @@ RVPropLand = (a[,3]/a[,2])
               abline(h=llb,col='orange',lwd=2)
               abline(h=ub,col='green',lwd=2)
          
-              savePlot(file.path(figfp,'DFORefpointsNewArea.png'))
+if(Update.plot==F) {
 
+             savePlot(file.path(figfp,'DFORefpointsNewArea.png'))
 
 #relative F DFO summer
           aa = merge(ao,La,by='yr')
@@ -164,7 +173,7 @@ aa$relF = aa$landings / aa$mean/1000
 
 hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,12),labels=c('USI','LRI'))
 savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbDataDFOSurvey.png'))
-
+}
 
 
 ####################
@@ -226,6 +235,8 @@ rm(out)
               abline(h=llb,col='orange',lwd=2)
        
                   abline(h=ub,col='green',lwd=2)
+
+if(Update.plot==F) {
 
                   savePlot(file.path(figfp,'GeorgesRefpointsNewArea.png'))
 
@@ -292,6 +303,7 @@ aa$relF = aa$landings / aa$mean/1000
 hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,6),labels=c('USI','LRI'))
 savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbDataGeorgesSurvey.png'))
 
+}
 
 #######################
 ###Spring 
@@ -333,6 +345,8 @@ ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1])/1000 * 0.4
               llb = median(sort(llb)[1:5])/1000
             abline(h=llb,col='orange',lwd=2)
             abline(h=ub,col='green',lwd=2)
+
+if(Update.plot==F) {
 
 savePlot(file.path(figfp,'SpringRefpointsNewArea.png'))
 
@@ -398,7 +412,7 @@ hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,1),labels
 
 savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbDataSpringSurvey.png'))
 
-
+}
 
 
 
@@ -445,6 +459,8 @@ ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1])/1000 * 0.4
               llb = median(sort(llb)[1:5])/1000
               abline(h=llb,col='orange',lwd=2)
               abline(h=ub,col='green',lwd=2)
+
+if(Update.plot==F) {
 
 savePlot(file.path(figfp,'AutumnRefpointsNewArea.png'))
 
@@ -504,3 +520,14 @@ aa = merge(bref,aa,by='yr')
 aa$relF = aa$landings/aa$mean/1000
 hcrPlot(B=aa$mean,mF=aa$relF,USR=ub,LRP=llb,RR=NULL,yrs=aa$yr,ylim=c(0,1),labels=c('USI','LRI'))
 savePlot(file.path(project.figuredirectory('bio.lobster'),'HCRllbDataAutumnSurvey.png'))
+}
+
+                      if(Update.plot==T)  {
+
+                            mtext("Year",1,1,outer=T)
+                            mtext("Stratified Total Weight (t)",2,1,outer=T,las=0)
+                          savePlot(file.path(figfp,'RefsPrimary.png'))
+
+                          } 
+
+   
