@@ -21,6 +21,7 @@
     if (DS %in% c("complete.redo") ) {
 
         # ODBC data dump of lobster data
+        lobster.db(DS == 'port.redo')
         lobster.db( DS="logs.redo")
         lobster.db( DS="logs41.redo")
         lobster.db( DS="logs41jonah.redo")
@@ -40,6 +41,15 @@
         lobster.db(DS= "logs41.habitat.redo")
         }
       
+  if(DS %in% c('port','port.redo')){
+        if(DS == 'port') {
+                  load(file=file.path(fnODBC,'ports.rdata'))
+                return(ports)
+          }
+                  con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  ports = sqlQuery(con,'select * from LOBSTER.port')
+                  save(ports,file=file.path(fnODBC,'ports.rdata'))          
+        }
 
  if(DS %in% c('annual.landings','annual.landings.redo')) {
           if(DS == 'annual.landings') {
@@ -570,13 +580,64 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # fsrs
-        fsrs = sqlQuery(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW")
+        fsrs = sqlQuery(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
         save( fsrs, file=file.path( fnODBC, "fsrs.rdata"), compress=T)
         gc()  # garbage collection
         odbcClose(con)
       }
       load(file.path( fnODBC, "fsrs.rdata"), .GlobalEnv)
      }
+
+
+###CCIR data frames
+  if(DS %in% c('ccir','ccir.redo')){
+
+      if(DS=='ccir.redo'){
+          lobster.db('fsrs')
+          vars = c('RECORD_NUMBER','TRAP_NO','LOBSTER_NO','SEX','SIZE_CD','SHORT','VESSEL_CD','SOAK_DAYS','DEPTH','LFA','LATITUDE','LONGITUDE','TEMP','WIND_DIRECTION','WIND_SPEED','HAUL_DATE','HAUL_YEAR','LFA_GRID')
+          fsrs = fsrs[,vars]
+          fsrs = rename.df(fsrs,vars, c("Record.Number", "Trap.Number", "Lobster.Number", "Sex", "Size", "Short" , "Vessel.Code" ,"Soak.Days", "Depth", "LFA", "Latitude", "Longitude", 'Temperature',"Wind.Direction", "Wind.Speed" ,"DATE" , "YEAR",'Grid'))
+          fsrs$indY = ifelse(month(fsrs$DATE)>8,1,0)
+          fsrs$YEAR =  fsrs$YEAR + fsrs$indY #ending year required by CCIR program
+          fsrs$indY = NULL
+          fsrs$Berried = ifelse(fsrs$Sex == 3, 1, 0)
+          fsrs$Sex = ifelse(fsrs$Sex == 3, 2, fsrs$Sex)
+          fsrs$julian = round(as.numeric(julian(fsrs$DATE)))
+
+          mls<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
+          lfa = rep(unlist(lapply(strsplit(names(mls)[2:ncol(mls)],"LFA"),'[[',2)),each=nrow(mls))
+          mls = reshape(mls,idvar='Year',varying=list(2:14),v.names=c('MLS'),direction='long')
+          mls$lfa = lfa
+          i = which(mls$lfa=='31a')
+          mls$lfa[i] = '31.1'
+          i = which(mls$lfa=='31b')
+          mls$lfa[i] = '31.2'
+          mls$lfa = as.numeric(mls$lfa)
+          names(mls) = c('YEAR','ID','MLS','LFA')
+          mls$MLS_FSRS <- NA
+          scd<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
+          for(i in 1:nrow(mls)) {
+              a = mls[i,'MLS']
+               mls$MLS_FSRS[i]= scd$SIZE_CD[intersect(which(scd$MIN_S<=a),which(scd$MAX_S>=a))]
+            }
+
+            fsrs = merge(fsrs,mls,by=c('LFA','YEAR'),all.x=T)
+
+          # remove berried
+          fsrs = fsrs[order(fsrs$YEAR),]
+          fsrs = subset(fsrs,Berried==0)
+          fsrs$IsLegal <- 1-fsrs$Short
+          ccir_data = fsrs
+         save( ccir_data, file=file.path( fnODBC, "ccir_data.rdata"), compress=T)
+        gc()  # garbage collection
+      }
+      load(file.path( fnODBC, "ccir_data.rdata"), .GlobalEnv)
+     }
+        
+       
+
+
+  
 
 ### lobster catch from scallop survey  
     if (DS %in% c("scallop.redo", "scallop") ) {
