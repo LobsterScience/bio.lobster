@@ -1,16 +1,16 @@
 #9. CCIR.r
 
 require(bio.lobster)
-require(bio.ccir)
+load_all('~/git/bio.ccir')
 require(bio.utilities)
 require(car)
-
+require(rstan)
+la()
 if(redo.data) {
 	lobster.db('fsrs.redo') #this requires ODBC connection
 	lobster.db('ccir.redo') #this does not
 }
 
-lobster.db('ccir')
 
 #Need to use the extended versions of the script for CCIR. This 'extension' provides a correction to exploitation rates when the minimum legal sizes are increasing. If this is not applied then exploitation rates will increase simply due to the decreased number of lobsters available in larger size classes.
 #the work horses behind this were developed by Jaques Allard and Ross Claytor. Have had to improve data flow and streamline outputs to allow for integration into current data streams and analyses.
@@ -50,23 +50,85 @@ lobster.db('ccir')
 #
 #define your parameter file for subsetting the data
 
-p=list()
-		p$lfa 			= '27'
-		p$grid 			= NULL
-		p$year			= 1999:2016
-		p$n 			= length(p$year)
-		p$sex 			= 1
-		p$minRefCode	= 8
-		p$maxRefCode 	= 9 
-		p$minExpCode	= 10
-		p$maxExpCode	= 10
+#control list for ccir estimates
 
+inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
+ load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
+lobster.db('ccir')
 
-LFA27.m <- subset(ccir_data,LFA==27 & Sex==1)
+dat = ccir_compile_data(x = ccir_data,area.defns = Groupings, size.defns = inp)
+
+out.binomial = list()
+			attr(out.binomial,'model') <- 'binomial'
+out.beta = list()
+			attr(out.beta,'model') <- 'beta'
+
+for(i in 93:length(dat)) {
+	ds = dat[[i]]
+	ds$method = 'binomial'
+	x = ccir_stan_run(dat = ds)
+	ccir_stan_plots(x,type='predicted')
+ 	ccir_stan_plots(x,type='exploitation')
+ 	ccir_stan_plots(x,type='traceplot')
+ 	ccir_stan_plots(x,type='prior.posterior')
+ 	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')
+
+  out.binomial[[i]] <- ccir_stan_summarize(x)
+
+	ds$method = 'beta'
+	x = ccir_stan_run(dat = ds)
+	ccir_stan_plots(x,type='predicted')
+ 	ccir_stan_plots(x,type='exploitation')
+ 	ccir_stan_plots(x,type='traceplot')
+ 	ccir_stan_plots(x,type='prior.posterior')
+
+  out.beta[[i]] <- ccir_stan_summarize(x)
+	}
+
+ouBet = ccir_collapse_summary(out.beta)
+ouBin = ccir_collapse_summary(out.binomial)
+
+save(ouBet,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','comiledBetaModels.rdata'))
+save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','comiledBinomialModels.rdata'))
+
+#load each ccir stan summarize for binomials
+
+			dd = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary')
+			fl = dir(dd)
+			 i = grep('binomial',fl)
+			 j = grep('LFA',fl)
+			fl = fl[intersect(i,j)]
+
+			out = list()
+				for( i in 1:length(fl)){
+					out[[i]] <- load(file.path(dd,fl[i]))
+				}
+
+## High correlation between recruit:exp ratio and temp-- to ensure that this change is due to fishing and not temp, compare the start of year ratios and temp within LFAs
+
+	#x is the list of out from ccir_stan_summarize
+		 LFA = unlist(t(sapply(dat,"[",'LFA')))
+		 Te = sapply(t(sapply(dat,'[','Temp')),function(x) mean( x[1:5]))
+         Sex = unlist(t(sapply(dat,"[",'Sex')))
+         N =  sapply(t(sapply(dat,'[','N')),function(x) sum( x[1:5]))
+         E =  sapply(t(sapply(dat,'[','E')),function(x) sum( x[1:5]))
+		 Gr = unlist(sapply(sapply(dat,"[",'Grid'),function(x) paste(x,collapse=".")))
+		da = data.frame(LFA=LFA, Grid = Gr,Sex=Sex,Temp = Te, N=N, E= E,R = N-E, p = E/N)		 
+		da$id = paste(da$LFA,da$Grid,da$Sex,sep="-")
+
+		ij = unique(da$id)
+
+		for(i in 1:length(j)){
+			hy = subset(da,id==ij[i])
+			x11()
+			plot(hy$Te,hy$p,type='p',main = ij[i])
+			legend('topleft',paste('correlation =', round(cor.test(hy$Temp,hy$p)[[4]],2)),bty='n',cex=0.8)
+			}
+
 
 
 ##Tester for Runs
-          require(rstan)
+          require(rstan))
           load('~/git/bio.ccir/inst/trial.data.rdata')
 
           Total = apply(SublegalLegal,1,sum)

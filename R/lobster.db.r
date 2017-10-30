@@ -628,6 +628,11 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
           fsrs = subset(fsrs,Berried==0)
           fsrs$IsLegal <- 1-fsrs$Short
           ccir_data = fsrs
+          ccir_data$Y = convert.dd.dddd(c(ccir_data$Latitude))
+          ccir_data$X = convert.dd.dddd(c(ccir_data$Longitude))
+          ccir_data$DATE = format(ccir_data$DATE,'%Y-%m-%d')
+          ccir_data$LFA = ifelse(ccir_data$LFA==31.1,'31a',ccir_data$LFA)
+          ccir_data$LFA = ifelse(ccir_data$LFA==31.2,'31b',ccir_data$LFA)
          save( ccir_data, file=file.path( fnODBC, "ccir_data.rdata"), compress=T)
         gc()  # garbage collection
       }

@@ -177,7 +177,8 @@ if(save) {
 				if(labels=='grid'){
 					grids$label<-grids$SID
 	        		grids.dat<-merge(calcCentroid(grids),grids[c("PID","SID","label")])
-					#addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.8),cex=1)
+
+			#	addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.8),cex=1)
 				}
 			}
 			else {
