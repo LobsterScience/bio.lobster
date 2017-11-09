@@ -51,6 +51,17 @@
                   save(ports,file=file.path(fnODBC,'ports.rdata'))          
         }
 
+  if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
+        if(DS == 'atSea.logbook.link') {
+                  load(file=file.path(fnODBC,'atSea.logbook.link.rdata'))
+                return(links)
+          }
+                  con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  links = sqlQuery(con,'select * from LOBSTER.ATSEA_LOG_LINK;')
+                  save(links,file=file.path(fnODBC,'atSea.logbook.link.rdata'))          
+        }
+
+
  if(DS %in% c('annual.landings','annual.landings.redo')) {
           if(DS == 'annual.landings') {
                 load(file=file.path(fnODBC,'annual.landings.rdata'))
@@ -458,6 +469,41 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
       load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)
      }
 
+
+    if (DS %in% c("process.vlog.redo", "process.vlog") ) {
+
+     if (DS=="process.vlog.redo") {
+          load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)  
+          vlog$SYEAR<-as.numeric(substr(vlog$SEASON,6,9))
+          vlog$W_KG<-vlog$W_TOT*0.4536
+          vlog$CPUE<-vlog$W_KG/vlog$N_TRP
+
+          vlog$X<-convert.dd.dddd(vlog$LONGITUDE)*-1
+          vlog$Y<-convert.dd.dddd(vlog$LATITUDE)
+
+          Ports<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","Ports.csv"))
+          ports31A<-subset(Ports,LFA=='31A')$Port_Code
+          ports31B<-c(subset(Ports,LFA=='31B')$Port_Code,11799)
+          stat33E<-c(18,22,23,25,26)
+          stat33W<-c(27,28,30,31)
+          stat27N<-c(1,4)
+          stat27S<-c(6,7)
+          vlog$LFA[vlog$STAT%in%stat27N]<-"27N"
+          vlog$LFA[vlog$STAT%in%stat27S]<-"27S"
+          vlog$LFA[vlog$STAT%in%stat33E]<-"33E"
+          vlog$LFA[vlog$STAT%in%stat33W]<-"33W"
+          vlog$LFA[vlog$PORT_CODE%in%ports31A]<-"31A"
+          vlog$LFA[vlog$PORT_CODE%in%ports31B]<-"31B"
+          save( vlog, file=file.path( fnODBC, "processed.vlog.rdata"), compress=T)
+          return(vlog)
+        }
+        load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)      
+    }
+
+
+
+
+
 ### CRIS database
     if (DS %in% c("cris.redo", "cris") ) {
 
@@ -477,7 +523,15 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
       }
       load(file.path( fnODBC, "crisTrips.rdata"), .GlobalEnv)       
       load(file.path( fnODBC, "crisTraps.rdata"), .GlobalEnv)       
-      load(file.path( fnODBC, "crisSamples.rdata"), .GlobalEnv)       
+      load(file.path( fnODBC, "crisSamples.rdata"), .GlobalEnv)
+
+      fdd = file.path(project.datadirectory('bio.lobster'),'data','CRIScodetables')
+      h = dir(fdd)
+      code.tables = list()
+        for(i in h){
+          code.tables[[i]] <- read.csv(file.path(fdd,i))
+        }
+      return(code.tables)       
      }
 
 ###Observer Length Frequencies

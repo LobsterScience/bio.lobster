@@ -32,16 +32,7 @@ habitat.model.data <- function(DS, p) {
 					ab = rename.df(ab,c('TOTWGT'),c('B'))
     				return(ab)
 					}
-      #  require(raster)
-		#		              require(bio.lobster)
-		#		              require(rgdal)
-		#		              loadfunctions('bio.habitat')
-		#		              loadfunctions('bio.utilities')
-		#		              loadfunctions('bio.indicators')
-		#		              loadfunctions('bio.temperature')
-		#		              la()
-        # p = bio.lobster::load.environment()
-				
+      			
 				      p$reweight.strata = F #this subsets 
 				      p$years.to.estimate = c(1969:2016)
 				      p$length.based = T

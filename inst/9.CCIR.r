@@ -6,6 +6,9 @@ require(bio.utilities)
 require(car)
 require(rstan)
 la()
+
+redo.data = FALSE
+
 if(redo.data) {
 	lobster.db('fsrs.redo') #this requires ODBC connection
 	lobster.db('ccir.redo') #this does not
@@ -54,16 +57,21 @@ if(redo.data) {
 
 inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
  load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
+ load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
 lobster.db('ccir')
 
-dat = ccir_compile_data(x = ccir_data,area.defns = Groupings, size.defns = inp)
+dat = ccir_compile_data(x = ccir_data,area.defns = Groupings, size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
+
+#dat = ccir_compile_data(x = ccir_data,area.defns = Groupings, size.defns = inp, season.defns = Seasons, sexs = c(1,2) #Not for stock assessment, but for Simulation models
 
 out.binomial = list()
 			attr(out.binomial,'model') <- 'binomial'
+
 out.beta = list()
 			attr(out.beta,'model') <- 'beta'
 
-for(i in 93:length(dat)) {
+for(i in 1:length(dat)) {
+
 	ds = dat[[i]]
 	ds$method = 'binomial'
 	x = ccir_stan_run(dat = ds)
@@ -72,41 +80,59 @@ for(i in 93:length(dat)) {
  	ccir_stan_plots(x,type='traceplot')
  	ccir_stan_plots(x,type='prior.posterior')
  	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')
-
+	
   out.binomial[[i]] <- ccir_stan_summarize(x)
 
-	ds$method = 'beta'
-	x = ccir_stan_run(dat = ds)
-	ccir_stan_plots(x,type='predicted')
- 	ccir_stan_plots(x,type='exploitation')
- 	ccir_stan_plots(x,type='traceplot')
- 	ccir_stan_plots(x,type='prior.posterior')
-
-  out.beta[[i]] <- ccir_stan_summarize(x)
+#	ds$method = 'beta'
+#	x = ccir_stan_run(dat = ds)
+#	ccir_stan_plots(x,type='predicted')
+ #	ccir_stan_plots(x,type='exploitation')
+ #	ccir_stan_plots(x,type='traceplot')
+ #	ccir_stan_plots(x,type='prior.posterior')
+#
+ # out.beta[[i]] <- ccir_stan_summarize(x)
 	}
 
-ouBet = ccir_collapse_summary(out.beta)
+#ouBet = ccir_collapse_summary(out.beta)
 ouBin = ccir_collapse_summary(out.binomial)
 
-save(ouBet,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','comiledBetaModels.rdata'))
-save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','comiledBinomialModels.rdata'))
+#save(ouBet,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBetaModels.rdata'))
+save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels.rdata'))
 
 #load each ccir stan summarize for binomials
 
-			dd = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary')
-			fl = dir(dd)
-			 i = grep('binomial',fl)
-			 j = grep('LFA',fl)
-			fl = fl[intersect(i,j)]
+load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels.rdata'))
 
-			out = list()
-				for( i in 1:length(fl)){
-					out[[i]] <- load(file.path(dd,fl[i]))
-				}
+kl = unique(ouBin$Grid) 
+for(i in 1:length(kl)) {
+	u = subset(ouBin, Grid == kl[i])
 
+	ccir_timeseries_exploitation_plots(u)
+
+}
+
+
+
+#partial exploitation rates and logbook effort
+logs = lobster.db('process.logs')
+gg = dir(file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary'),full.names=T)
+
+gg = gg[grep('Sex.1.5',gg)] #sexes combined
+outs = list()
+for(i in 1:length(gg)){
+	print(i)
+	load(gg[i])
+	outs[[i]] = ccir_groupings_landings_effort(x=logs,ccir_model_summary=out)
+}
+	outs = rbindFill(outs)
+	outs = toNums(outs,4:21)
+
+
+
+#Partial exploitation rates
 ## High correlation between recruit:exp ratio and temp-- to ensure that this change is due to fishing and not temp, compare the start of year ratios and temp within LFAs
 
-	#x is the list of out from ccir_stan_summarize
+		#x is the list of out from ccir_stan_summarize
 		 LFA = unlist(t(sapply(dat,"[",'LFA')))
 		 Te = sapply(t(sapply(dat,'[','Temp')),function(x) mean( x[1:5]))
          Sex = unlist(t(sapply(dat,"[",'Sex')))
