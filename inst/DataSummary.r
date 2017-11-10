@@ -528,12 +528,26 @@ for(i in 1:length(lfas)){
 ### FSRS
 
 lobster.db('fsrs')
+fsrs$SYEAR<-fsrs$HAUL_YEAR
+fsrs$HAUL_DATE<-as.Date(fsrs$HAUL_DATE)
+fsrs$SYEAR[fsrs$LFA%in%c("33","34")]<-as.numeric(substr(fsrs$S_LABEL[fsrs$LFA%in%c("33","34")],6,9))
 
 fsrsT =  subset(fsrs,TEMP>-90)
 fsrsT$Dloc = paste(fsrsT$HAUL_DATE,fsrsT$LATITUDE,fsrsT$LONGITUDE)
 
 fsrsT = subset(fsrsT,!duplicated(Dloc))
-fsrsT$HAUL_DATE = as.Date(fsrsT$HAUL_DATE)
+
+
+
+lfas= c(33,32,31.1,31.2,30,29,27)
+
+for(i in 1:length(lfas)){
+pdf(paste('LFA',lfas[i],'FSRStemps.pdf'),height=8,width=11)
+
+		with(subset(fsrsT,LFA==lfas[i]),plot(HAUL_DATE,TEMP,pch=16,cex=0.3,col=rgb(0,0,0,0.2),xlab="Date",ylab="Temperature (C)"))
+	dev.off()
+}
+
 
 pdf('FSRStempsMap.pdf')
 LobsterMap('all')
@@ -555,6 +569,13 @@ dev.off()
 
 
 with(subset(fsrsT,!duplicated(paste(LATITUDE,LONGITUDE))),tapply(TEMP,LFA,length))
+
+fsrsT$d = yday(fsrsT$HAUL_DATE)
+fsrsT$cos.d = cos(fsrsT$d)
+fsrsT$sin.d = sin(fsrsT$d)
+
+mf = formula(TEMP ~ s(SYEAR, k=5, bs="ts") + s(cos.d, k=3, bs="ts") + s(sin.d, k=3, bs="ts") )
+         
 
 
 # rough daily temps

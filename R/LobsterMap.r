@@ -34,7 +34,9 @@ options(stringsAsFactors=F)
 	if(area=='custom')	{ ylim=ylim; 			xlim=xlim			}
 	
 	## Area List
-	if(area=='all')		{ ylim=c(42.5,48); 		xlim=c(-67.4,-57.8)	}
+	if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
+	if(area=='27-38')	{ ylim=c(42.5,48); 		xlim=c(-67.4,-57.8)	}
+	if(area=='27-33')	{ ylim=c(42.5,48); 		xlim=c(-66.6,-57.8)	}
 	if(area=='west')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-64)	}
 	if(area=='27')		{ ylim=c(44.9,47.9); 	xlim=c(-61,-57.8)	}
 	if(area=='28')		{ ylim=c(45.3,46);	 	xlim=c(-61.6,-60.3)	}

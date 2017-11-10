@@ -1,5 +1,5 @@
 #' @export
-figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x2=NULL,save=T) {
+figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x2=NULL,save=T,...) {
 	fn=file.path(project.datadirectory(out.dir),'figures')
 	dir.create(fn,showWarnings=F)
 	if(is.character(x)) {
@@ -46,7 +46,7 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 		
 		if(any(is.na(ylim))) ylim = NULL
 		if(sampleSizes) par(mar=c(5.1,4,4.1,4))
-			plot(xpp$year,xpp$mean,type='n',xlab='Year',ylab = paste(lev,mt,sep=" "),ylim=ylim)
+			plot(xpp$year,xpp$mean,type='n',xlab='Year',ylab = paste(lev,mt,sep=" "),ylim=ylim,...)
 		if(error.polygon)	polygon(x=c(xpp$year,rev(xpp$year)),y=c(xpp$lower,rev(xpp$upper)),col='grey60', border=NA)
 		
 		if(error.bars)  	arrows(x0=as.numeric(xpp$year),x1 = as.numeric(xpp$year), y0 = xpp$upper, y1 = xpp$lower, lwd=1, angle=90, length= 0)

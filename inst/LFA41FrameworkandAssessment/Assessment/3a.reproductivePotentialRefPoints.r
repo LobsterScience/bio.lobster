@@ -10,7 +10,9 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
               file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata  '),
               file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata  '),
               file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata  '))
-       
+
+       Update.plot=T
+       if(Update.plot==T) par(mfrow=c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
 
 #NEFSC Spring survey
   i=2
@@ -61,7 +63,7 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                  abline(h=llb,col='orange',lwd=2)
                  abline(h=ub,col='green',lwd=2)
                 
-                savePlot(file.path(figfp,'RefsRepPotNEFSCSpring.png'))
+                if(Update.plot==F) savePlot(file.path(figfp,'RefsRepPotNEFSCSpring.png'))
      
 #NEFSC Autumn survey
   i=3
@@ -112,7 +114,7 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                  abline(h=llb,col='orange',lwd=2)
                  abline(h=ub,col='green',lwd=2)
                 
-                savePlot(file.path(figfp,'RefsRepPotNEFSCAutumn.png'))
+                if(Update.plot==F) savePlot(file.path(figfp,'RefsRepPotNEFSCAutumn.png'))
      
 
 #DFO summer
@@ -164,7 +166,7 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
       #           abline(h=nub,col='purple',lwd=2)
            
 
-                          savePlot(file.path(figfp,'RefsRepPotDFO.png'))
+                        if(Update.plot==F)   savePlot(file.path(figfp,'RefsRepPotDFO.png'))
    
  #  DFO Georges
   i=4
@@ -216,5 +218,13 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
 
 
 
-                          savePlot(file.path(figfp,'RefsRepPotGeorges.png'))
+                        if(Update.plot==F)   savePlot(file.path(figfp,'RefsRepPotGeorges.png'))
+                        if(Update.plot==T)  {
+
+                            mtext("Year",1,1,outer=T)
+                            mtext("Reproductive Potential",2,1,outer=T,las=0)
+                          savePlot(file.path(figfp,'RefsRepPot.png'))
+
+                          } 
+
    
