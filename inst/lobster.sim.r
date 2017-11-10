@@ -6,26 +6,21 @@ p = bio.lobster::load.environment()
 la()
 
 p$LS = 82.5					# legal size (mm)
+p$Area = "33W"
 
 p$StartPop = 1000
-p$startDate = "2016-12-01"
+p$startDatep$startDate = as.Date("1999-12-01")
 
-p$nt = 80					# number of timesteps
+p$nt = 60					# number of timesteps
 p$lens = seq(50,200,5)		# carapace length bins (mm)
 p$timestep = 91  			# in days
-
-#growth 
-p$GrowthFactorMean = 1.15	
-p$GrowthFactorSD = 0.05
-p$moltPr = list(a=-5,b=0.013,x=1.1)
-#p$moltPr = list(a=-5,b=0.003) # degree day growth
 
 #reproduction
 p$gestation = 320
 p$brood = 360
 
 #season timing
-p$season = c("2016-11-28","2017-05-31")
+p$season = c("1999-11-28","2000-05-31")
 p$seasonThreshold = 0.33
 
 #mortality
@@ -33,24 +28,44 @@ p$M = 0.1
 p$F = 0.4
 
 # rough temperature generator (for degree day growth)
-coldestday = as.numeric(as.Date("2017-02-23") - as.Date(p$startDate) )
-p$dailytemps = rDailyTemps(x=1:(p$nt*p$timestep),b=10,m=10,s=coldestday)
+#coldestday = as.numeric(as.Date("2017-02-23") - as.Date(p$startDate) )
+#p$dailytemps = rDailyTemps(x=1:(p$nt*p$timestep),b=10,m=10,s=coldestday)
 
-#run sexes seperately for now
-p$sex = 2
+# predicted temperature from FSRS temp model (for degree day growth)
+TempModelling = FSRSTempModel()
+p$TempModel = TempModelling$Model
+p$dailytemps = TempModelPredict(p)
 
-females = simMolt(p)
+with(subset(TempModelling$Data,plot(y,TEMP,)
+
+p$mint = 10 # minimum temperature for a lobster to molt
+
+#growth 
+p$GrowthFactorMean = 1.15	
+p$GrowthFactorSD = 0.05
+p$moltPrModel = moltPrModel(p) # degree day growth
+#p$moltPr = list(a=-9,b=0.02,x=0.5) # continous molting
+#p$moltPr = list(a=-13,b=0.003,x=0.7) # degree day growth
+
+#run sexes seperately 
+#p$sex = 1
+#p$moltPr = list(a=-9,b=0.02,x=0.5)
+#males = simMolt(p)
+#
+#p$sex = 2
+#p$moltPr = list(a=-9,b=0.02,x=0.5)
+#females = simMolt(p)
+
+
 
 p$sex = 1
-
-males = simMolt(p)
-
-p$moltPr = list(a=-6,b=0.003,x=1.3) # degree day growth
 males2 = simMolt(p,gdd=T)
 
 
 p$sex = 2
 females2 = simMolt(p,gdd=T)
+
+
 
 #results
 round(males$finalPop)
@@ -66,9 +81,10 @@ plot(rowSums(males2$finalPop))
 
 
 y = round(males$finalPop)
-y2 = round(males2$finalPop)
+y0 = round(males2$finalPop)
+y2 = males2$finalPop
 x = round(females$finalPop)
-x2 = round(females2$finalPop)
+x2 = females2$finalPop
 z = round(females$finalBerried)
 z2 = round(females2$finalBerried)	
 
@@ -85,13 +101,20 @@ z2 = round(females2$finalBerried)
 
 		age=seq(1,23,0.1)
 
-BubblePlotCLF(list(x),bins=seq(47.5,202.5,5),yrs=1:20,log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,0,0.1),graphic="R")
 
-		lines(age-2.5,lvb(age,Linf[2],k[2],t0[2]))
+x1 = round(females1$finalPop)
+x2 = females2$finalPop
+
+BubblePlotCLF(list(x2),bins=seq(47.5,202.5,5),yrs=seq(0.25,20,0.25),log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,0,0.1),graphic="R")
+
+		lines(age-3.2,lvb(age,Linf[2],k[2],t0[2]))
+
+y1 = round(males1$finalPop)
+y2 = males2$finalPop
 
 BubblePlotCLF(list(y2),bins=seq(47.5,202.5,5),yrs=seq(0.25,20,0.25),log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(0,0,1,0.1),graphic="R")
 		
-		lines(age-2.8,lvb(age,Linf[1],k[1],t0[1]))
+		lines(age-3.5,lvb(age,Linf[1],k[1],t0[1]))
 
 
 BubblePlotCLF(list(z),bins=seq(47.5,202.5,5),yrs=1:20,log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,1,0.1),graphic="R")
@@ -161,4 +184,55 @@ BubblePlotCLF(list(z),bins=seq(47.5,202.5,5),yrs=1:20,log.trans=T,filen='',prop=
 
 	### Molt probs
 
+	x11()
 
+	par(mfrow=c(2,1))
+
+	p$moltPr = list(a=-9,b=0.02,x=0.5)
+
+	moltProbPlot(p)
+
+	p$moltPr = list(a=-15,b=0.002,x=0.5) # degree day growth
+
+	moltProbPlot(p,gdd=T)
+
+
+	x11()
+
+	as=c(-25,-20,-15)
+	bs=c(0.0025,0.003,0.0035)
+
+	l=length(as)
+	par(mfrow=c(l,l))
+
+	for(i in 1:l){
+		for(j in 1:l){
+			p$moltPr = list(a=as[i],b=bs[j],x=0.7) # degree day growth
+
+			moltProbPlot(p,gdd=T,main=paste('a =',as[i],', b =',bs[j]))
+
+		}
+	}
+
+
+	x11()
+
+	as=c(-15,-10,-5)
+	bs=c(0.015,0.02,0.025)
+
+	l=length(as)
+	par(mfrow=c(l,l))
+
+	for(i in 1:l){
+		for(j in 1:l){
+			p$moltPr = list(a=as[i],b=bs[j],x=0.5) # degree day growth
+
+			moltProbPlot(p,gdd=F,main=paste('a =',as[i],', b =',bs[j]))
+
+		}
+	}
+
+
+	p$moltPr = list(a=-9,b=0.0013,x=1.2) # degree day growth
+
+	moltProbPlot(p,gdd=T)

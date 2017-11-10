@@ -40,6 +40,9 @@ simMolt = function(p,gdd=F){
 				
 				if(gdd) p$ddoy =  getDegreeDays(p,t) #degreedays since last molt
 
+				#d = t * p$timestep
+				#if(gdd) p$ddoy = sum(p$dailytemps[(d-p$doy):d]) 
+
 				if(p$sex==2){
 						#browser()
 						bf = getBerried(p)
