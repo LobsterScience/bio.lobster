@@ -138,12 +138,16 @@ if (DS %in% c("logs.redo", "logs") ) {
             
           }
 
-if(DS %in% c('process.logs', 'process.logs.redo')) {
+if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                             if(DS == 'process.logs') {
                                   load(file=file.path(fnProducts,'logsInSeason.rdata'))
-                                  print("Object is 'logsInseason'")
                                   return(logsInSeason)
                                 }
+                            if(DS == 'process.logs.unfiltered') {
+                                  load(file=file.path(fnProducts,'logsInSeasonUnfiltered.rdata'))
+                                  return(logsInSeason)
+                                }
+
 
                     #Filtering by   
                     Fish.Date<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
@@ -198,7 +202,7 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
 
                     commonCols<-c("SUM_DOC_ID", "VR_NUMBER", "VESSEL_NAME", "SUBMITTER_NAME", "LICENCE_ID", "LFA", "COMMUNITY_CODE","SD_LOG_ID", "DATE_FISHED","SYEAR","WOS",'quarter',"TOTAL_NUM_TRAPS","TOTAL_WEIGHT_KG")
 
-                    logsInSeasonA<-subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS)&!is.na(NUM_OF_TRAPS),c(commonCols,"GRID_NUM", "WEIGHT_LBS", "NUM_OF_TRAPS"))
+                    logsInSeasonA<-subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS),c(commonCols,"GRID_NUM", "WEIGHT_LBS", "NUM_OF_TRAPS"))
                     logsInSeasonB<-subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_B)&!is.na(NUM_OF_TRAPS_B),c(commonCols,"GRID_NUM_B", "WEIGHT_LBS_B", "NUM_OF_TRAPS_B"))
                     logsInSeasonC<-subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_C)&!is.na(NUM_OF_TRAPS_C),c(commonCols,"GRID_NUM_C", "WEIGHT_LBS_C", "NUM_OF_TRAPS_C"))
 
@@ -211,15 +215,10 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                     centgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","lfa27_38_centgrid.csv"))
                     grid.key<-with(centgrid,paste(LFA,GRID_NUM,sep='.'))
                     
-                    logsInSeason<-subset(logsInSeason,!is.na(GRID_NUM)&paste(LFA,GRID_NUM,sep='.')%in%grid.key)
                     logsInSeason$CPUE<-logsInSeason$WEIGHT_KG/logsInSeason$NUM_OF_TRAPS
-                    logsInSeason<-subset(logsInSeason,CPUE<20)
+        
+                    
 
-                    subareas<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","LFA2733subarea.csv"))
-                    names(subareas)[2]<-"GRID_NUM"
-                    logsInSeason<-merge(logsInSeason,subareas,all.x=T)
-
-                      
                     # add BUMPUP column: total landings/sum of logs for each year  & LFA
                     bumpup=T
                     if(bumpup){
@@ -242,6 +241,14 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                         }
                       }
                     }
+                     save(logsInSeason,file=file.path( fnProducts,"logsInSeasonUnfiltered.rdata"),row.names=F)
+
+                    logsInSeason<-subset(logsInSeason,CPUE<20 & !is.na(CPUE))
+                    logsInSeason<-subset(logsInSeason,!is.na(GRID_NUM)&paste(LFA,GRID_NUM,sep='.')%in%grid.key)
+                    subareas<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","LFA2733subarea.csv"))
+                    names(subareas)[2]<-"GRID_NUM"
+                    logsInSeason<-merge(logsInSeason,subareas,all.x=T)
+
           # Save logsInSeason as working data
               save(logsInSeason,file=file.path( fnProducts,"logsInSeason.rdata"),row.names=F)
    }
