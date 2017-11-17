@@ -98,6 +98,8 @@ points(as.Date(timestamp),btemp,pch='.',col=rgb(0,0,1,0.2))
 LobsterTemp = read.csv("LobsterTempData.csv")
 InshoreScallop = read.csv(file.path(project.datadirectory('bio.lobster'),'Temperature Data','InshoreScallopTemp.csv'))
 InshoreScallop$DATE = as.Date(InshoreScallop$DATE,"%d/%m/%Y")
+InshoreScallop$LONGITUDE = convert.dd.dddd(InshoreScallop$LONGITUDE)
+InshoreScallop$LATITUDE = convert.dd.dddd(InshoreScallop$LATITUDE)
 OffshoreScallop = read.csv(file.path(project.datadirectory('bio.lobster'),'Temperature Data','OffshoreScallopTemp.csv'))
 OffshoreScallop$DATE = as.Date(OffshoreScallop$DATE,"%d/%m/%Y")
 OffshoreScallop$LONGITUDE = convert.dd.dddd(OffshoreScallop$LONGITUDE)
@@ -105,20 +107,52 @@ OffshoreScallop$LATITUDE = convert.dd.dddd(OffshoreScallop$LATITUDE)
 ScallopTemp = rbind(InshoreScallop,OffshoreScallop)
 
 TempData = rbind(
-	with(ScallopTemp,data.frame(DATE=DATE,LONGITUDE=LONGITUDE,LATITUDE=LATITUDE,TEMPERATURE=TEMPERATURE)),
-	with(LobsterTemp,data.frame(DATE=HAUL_DATE,LONGITUDE=LONG_DD,LATITUDE=LAT_DD,TEMPERATURE=TEMP)))
+	with(ScallopTemp,data.frame(DATE=DATE,LONGITUDE=LONGITUDE,LATITUDE=LATITUDE,TEMPERATURE=TEMPERATURE,DEPTH=NA)),
+	with(LobsterTemp,data.frame(DATE=HAUL_DATE,LONGITUDE=LONG_DD,LATITUDE=LAT_DD,TEMPERATURE=TEMP,DEPTH=DEPTH)))
 
 	p = spatial_parameters( type = "canada.east" )  
 
 	TempData = lonlat2planar(TempData, input_names=c("LONGITUDE", "LATITUDE"),proj.type = p$internal.projection)
 
-	baseLine = bathymetry.db(p=p, DS="baseline")
+	Complete = bathymetry.db(p=p, DS="complete")
   
     # identify locations of data relative to baseline for envionmental data
     locsmap = match( 
         lbm::array_map( "xy->1", TempData[,c("plon","plat")], gridparams=p$gridparams ), 
-        lbm::array_map( "xy->1", baseLine, gridparams=p$gridparams ) )
+        lbm::array_map( "xy->1", Complete[,c("plon","plat")], gridparams=p$gridparams ) )
       
-    a = indicators.lookup( p=p, DS="spatial", locs=baseLine)
 
-	a$
+      TempData$z = Complete$z[locsmap]
+      TempData$DEPTH = TempData$DEPTH * 1.8288
+      TempData$DEPTH[is.na(TempData$DEPTH)] = TempData$z[is.na(TempData$DEPTH)]
+      TempData$DEPTH[TempData$DEPTH<1] = 1
+
+		TempData = assignArea(TempData)
+		TempData = assignSubArea2733(TempData)
+
+      write.csv(TempData,file.path( project.datadirectory("bio.lobster"),"Temperature Data","TempData.csv"),row.names=F)
+      TempData = read.csv(file.path( project.datadirectory("bio.lobster"),"Temperature Data","TempData.csv"))
+
+	#datascale = seq(10,1000,l=50)
+
+	#planarMap( Complete[,c("plon","plat","z")],  pts=TempData[TempData,c("plon","plat")], datascale=datascale , display=T)
+
+plot(TEMP~DEPTH,TempData,pch=16,col=rgb(0,0,0,0.1))
+
+
+TempData$y = decimal_date(TempData$HAUL_DATE)
+TempData$cos.y = cos(2*pi*TempData$y)
+TempData$sin.y = sin(2*pi*TempData$y)
+
+#mf = formula(TEMP ~ s(SYEAR, k=5, bs="ts") + s(cos.d, k=3, bs="ts") + s(sin.d, k=3, bs="ts") )
+ require(mgcv)        
+
+
+TempModel <- gam(TEMP ~ s(sin.y,k=3,bs="ts")+s(cos.y,k=3,bs="ts")+s(y)+as.factor(subarea) + s(DEPTH),data=TempData)
+ summary(TempModel)
+ #plot(TempModel)
+
+plot(TEMP~y,data=subset(TempData,subarea='27N'),pch=16,col=rgb(0,0,0,0.1),cex=0.4,ylim=c(-2,25),xlim=c(1998,2027))
+y=	seq(1999,2027,0.01)
+t=predict(TempModel,data.frame(y=y,cos.y=cos(2*pi*y),sin.y=sin(2*pi*y),subarea='27N'),type='response')
+ lines(y,t,col=2)

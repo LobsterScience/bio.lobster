@@ -166,9 +166,9 @@ if(DS %in% c('process.logs', 'process.logs.redo')) {
                           logs$TOTAL_WEIGHT_KG<-logs$TOTAL_WEIGHT_LBS*0.4536
 
                     # select for records within season
-                          logs$SYEAR<-NA
                           logs$DATE_FISHED<-as.Date(logs$DATE_FISHED,"%Y-%m-%d")
-            
+                          #logs$SYEAR<-year(logs$DATE_FISHED)
+           
                         for(i in 1:length(lfa)) {
                                 h <- Fish.Date[Fish.Date$LFA==lfa[i],]  
                             for(j in 1:nrow(h)) {
