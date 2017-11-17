@@ -150,7 +150,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
 
                     #Filtering by   
-                    Fish.Date<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
+                    #Fish.Date<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
                     Fish.Date = lobster.db('season.dates')
                      
                 
@@ -159,8 +159,8 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                           
                           max_trap<-c(825,750,750,750,750,750,750,750,1126,1126,1126,1226)
                           max_lbs<-c(2750,2750,2750,2750,2750,2750,2750,10000,30000,30000,30000,30000)
-                          Fish.Date$START_DATE<-as.Date(Fish.Date$START_DATE,"%d/%m/%Y")
-                          Fish.Date$END_DATE<-as.Date(Fish.Date$END_DATE,"%d/%m/%Y")
+                          Fish.Date$START_DATE<-as.Date(Fish.Date$START_DATE)#,"%d/%m/%Y")
+                          Fish.Date$END_DATE<-as.Date(Fish.Date$END_DATE)#,"%d/%m/%Y")
 
 
                     # imported logs from marfis
@@ -170,9 +170,9 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                           logs$TOTAL_WEIGHT_KG<-logs$TOTAL_WEIGHT_LBS*0.4536
 
                     # select for records within season
-                          logs$SYEAR<-NA
                           logs$DATE_FISHED<-as.Date(logs$DATE_FISHED,"%Y-%m-%d")
-            
+                          #logs$SYEAR<-year(logs$DATE_FISHED)
+           
                         for(i in 1:length(lfa)) {
                                 h <- Fish.Date[Fish.Date$LFA==lfa[i],]  
                             for(j in 1:nrow(h)) {
