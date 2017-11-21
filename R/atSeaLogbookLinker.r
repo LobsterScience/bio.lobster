@@ -1,28 +1,23 @@
 #' @export
 
-atSeaLogbookLinker <- function(year=2016,lfa='31B') {
-    lobster.db( DS="atSea")		# at Sea sampling from materialized view
-	links = lobster.db('atSea.logbook.link') 
-	atSea = addSYEAR(atSea)
-	logsa = lobster.db('process.logs.unfiltered')
-
-       Fish.Date = lobster.db('season.dates')
-
-                    
+atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B') {
+    links = lobster.db('atSea.logbook.link') 
+	
+	Fish.Date = lobster.db('season.dates')
 
 	atSea = subset(atSea, SYEAR ==year & LFA == lfa)
+	browser()
     atSea$WOS<-NA
-                               h <- subset(Fish.Date,LFA==lfa & SYEAR == year)
-                               atSea$WOS <- floor(as.numeric(as.POSIXct(atSea$SDATE)-min(h$START_DATE))/7)+1
- 
+    h <- subset(Fish.Date,LFA==lfa & SYEAR == year)
+    atSea$WOS = 1
+	if(year>1999)    atSea$WOS <- floor(as.numeric(as.POSIXct(atSea$SDATE)-min(h$START_DATE))/7)+1
+ 	
 	tr = unique(atSea$TRIPNO)
 	links = subset(links, TRIPNO %in% tr)	
-	logsa = lobster.db('process.logs.unfiltered')
-	logsa1 = aggregate(WEIGHT_KG~GRID_NUM+SD_LOG_ID+SYEAR+BUMPUP+LFA,data=subset(logsa,LFA==lfa & SYEAR %in% year), FUN=sum)
-	logsa2 = aggregate(NUM_OF_TRAPS~GRID_NUM+SD_LOG_ID+SYEAR+BUMPUP+LFA,data=subset(logsa,LFA==lfa & SYEAR %in% year), FUN=sum)	
-	logsa3 = merge(logsa1,logsa2,all=T)
-	aa  =merge(logsa3,links,by.x='SD_LOG_ID',by.y = 'SD_LOG_ID_DO')
-	
+	if(year>2001){
+		logsa3 = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~GRID_NUM+SD_LOG_ID+SYEAR+BUMPUP+LFA,data=subset(logsa,LFA==lfa & SYEAR %in% year),na.action=NULL, FUN=sum)
+		aa  =merge(logsa3,links,by.x='SD_LOG_ID',by.y = 'SD_LOG_ID_DO')
+	}
 
 	atSea$I <- ifelse(atSea$SPECIESCODE==2550,1,0)
 
@@ -30,26 +25,49 @@ atSeaLogbookLinker <- function(year=2016,lfa='31B') {
 	LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 	atSea = makePBS(atSea,polygon=F)
 	a = which(is.na(atSea$Y) | is.na(atSea$X))
+	if(length(a)<dim(atSea)[1]){
 	if(length(a)>0) {
 		a1 = findPolys(atSea[-a,],LFAgrid,maxRows = 3e6,includeBdry=1)
 		}else{
 			a1 = findPolys(atSea,LFAgrid,maxRows = 3e6,includeBdry=1)
 		}
 	atSea = merge(atSea,a1,by='EID')
-	
+	atSea$GRIDNO = ifelse(is.na(atSea$GRIDNO),atSea$SID,atSea$GRIDNO)
+	}
 	atSea = rename.df(atSea,'GRIDNO','GRID_NUM')
-	atSea$GRID_NUM = ifelse(is.na(atSea$GRID_NUM),atSea$SID,atSea$GRID_NUM)
-	a = aggregate(CARLENGTH~TRIPNO+GRID_NUM+SYEAR,data=atSea,FUN=length)
-	trt 		= aggregate(TRAPNO~TRIPNO+LFA+GRID_NUM+SYEAR, data=atSea, FUN= function(x)length (unique(x)))
-	nLTr 	= aggregate(TRAPNO~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550), FUN= function(x)length (unique(x)))	
+	a 		= aggregate(CARLENGTH~TRIPNO+GRID_NUM+SYEAR,na.action=NULL,data=atSea,FUN=length)
+	trt 	= aggregate(TRAPNO~TRIPNO+LFA+GRID_NUM+SYEAR, data=atSea ,na.action=NULL, FUN= function(x)length (unique(x)))
+	trt 	= rename.df(trt,'TRAPNO','TrapsSampled')
+	
+	nLTr 	= aggregate(TRAPNO~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550),na.action=NULL, FUN= function(x)length (unique(x)))	
+	nLTr 	= rename.df(nLTr,'TRAPNO','TrapsSampledwLobster')
+	
+	nL 		= aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550) ,na.action=NULL, FUN= sum)	
+	nL 	= rename.df(nL ,'I','NLobster')
+	
+	nLf 	= aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550 & SEX==2) ,na.action=NULL, FUN= sum)	
+	nLf 	= rename.df(nLf ,'I','NFemaleLobster')
+	
+	nLm 	= aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550 & SEX==1) ,na.action=NULL, FUN= sum)	
+	nLm 	= rename.df(nLm ,'I','NMaleLobster')
+	
+	nLb		= aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550 & SEX==3) ,na.action=NULL, FUN= sum)	
+	nLb 	= rename.df(nLb ,'I','NBerriedLobster')
+	
+	nLc     = aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550 & !is.na(CULL)) ,na.action=NULL, FUN= length)	
+	nLc 	= rename.df(nLc ,'I','NCullLobster')
+	
+	nLv     = aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550 & !is.na(VNOTCH)) ,na.action=NULL, FUN= length)	
+	nLv 	= rename.df(nLv ,'I','NVnotchedLobster')
+		
 	
 	aS = subset(atSea,SPECIESCODE==2550)
 	aS$ids = paste(aS$TRIPNO, aS$LFA, aS$GRID_NUM,aS$WOS, aS$SYEAR,sep="-")
 	i = which(aS$CARLENGTH>=250)
 	if(length(i) >0) aS = aS[-i,]
 	IDs = unique(aS$ids)
-	aS = subset(aS,CARLENGTH %in% 2:250)
-	breaks = seq(min(aS$CARLENGTH),250,2)
+	aS = subset(aS,CARLENGTH %in% 30:250)
+	breaks = seq(30,250,1)
 	CLF = list()
 			   for(i in 1:length(IDs)){
             			CLF[[i]]<-with(subset(aS,ids==IDs[i]), {
@@ -64,12 +82,15 @@ atSeaLogbookLinker <- function(year=2016,lfa='31B') {
 			CLF = cbind(do.call(rbind,strsplit(CLF$ids,"-")),CLF)
 			names(CLF)[1:5] = c('TRIPNO','LFA','GRID_NUM','WOS','SYEAR')
 			CLF = merge(CLF,trt)
-			names(CLF)[ncol(CLF)] <- 'TrapsSampled'
 			CLF = merge(CLF,nLTr)
-			names(CLF)[ncol(CLF)] <- 'TrapsSampledwLobster'
-
+			CLF = merge(CLF,nL)
+			CLF = merge(CLF,nLf)
+			CLF = merge(CLF,nLm)
+			CLF = merge(CLF,nLb)
+			CLF = merge(CLF,nLc)
+			CLF = merge(CLF,nLv)
 			aCC = merge(CLF,aa,by=c('TRIPNO','GRID_NUM','LFA','SYEAR'),all.x=T)
-
+browser()
 	i = which(is.na(aCC$WEIGHT_KG))
 	aC = aCC[i,]
 	aCC = aCC[-i,]
@@ -104,7 +125,7 @@ atSeaLogbookLinker <- function(year=2016,lfa='31B') {
 		}
 		
 	aCC = rbind(aCC,aC)	
-browser()
+
 	if(any(aCC$TRIPNO %in% aa$TRIPNO)){
 	uo1 = which(is.na(aCC$WEIGHT_KG))
 	if(length(uo1)>1){
@@ -114,12 +135,21 @@ browser()
 	if(any(aa$TRIPNO %in% tr)) {
 		io = which(uo$TRIPNO %in% aa$TRIPNO)
 		iou = uo[io,]
-		iou = within(iou,{SD_LOG_ID =WOS= BUMPUP= WEIGHT_KG= NUM_OF_TRAPS= SD_LOG_ID_DB= SD_LOG_ID_DA = GRID_NUM=NULL}) 
+		iou = within(iou,{SD_LOG_ID = BUMPUP= WEIGHT_KG= NUM_OF_TRAPS= SD_LOG_ID_DB= SD_LOG_ID_DA =NULL}) 
+		if(all(is.na(aa$GRID_NUM))) {
+			aa$GRID_NUM = NULL
+			} else {
+			iou$GRID_NUM = NULL	
+			}
 		aW = merge(iou,aa,by=c('TRIPNO','LFA','SYEAR'),all.x=T)
 		uo = uo[-io,]
+		aCC = rbind(aCC,aW)
+		aCC = rbind(aCC,uo)
+		} else {
+	aCC = rbind(aCC,uo)
 		}
-	aCC = rbind(aCC,aW)
 
+	
 #try logbooks from day before
 	aa  =merge(logsa3,links,by.x='SD_LOG_ID',by.y = 'SD_LOG_ID_DB')
 	tr = unique(uo$TRIPNO)	
@@ -127,7 +157,7 @@ browser()
 	if(any(aa$TRIPNO %in% tr)) {
 		io = which(uo$TRIPNO %in% aa$TRIPNO)
 		iou = uo[io,]
-		iou = within(iou,{SD_LOG_ID =WOS= BUMPUP= WEIGHT_KG= NUM_OF_TRAPS= SD_LOG_ID_DB= SD_LOG_ID_DA=NULL}) 
+		iou = within(iou,{SD_LOG_ID = BUMPUP= WEIGHT_KG= NUM_OF_TRAPS= SD_LOG_ID_DB= SD_LOG_ID_DA=NULL}) 
 		aW = merge(iou,aa,by=c('TRIPNO','LFA','GRID_NUM','SYEAR'),all.x=T)
 		i = which(is.na(aW$WEIGHT_KG))
 		aC = aW[i,]
@@ -170,7 +200,7 @@ browser()
 	if(any(aa$TRIPNO %in% tr)) {
 		io = which(uo$TRIPNO %in% aa$TRIPNO)
 		iou = uo[io,]
-		iou = within(iou,{SD_LOG_ID =WOS= BUMPUP= WEIGHT_KG= NUM_OF_TRAPS= SD_LOG_ID_DB= SD_LOG_ID_DA = GRID_NUM=NULL}) 
+		iou = within(iou,{SD_LOG_ID = BUMPUP= WEIGHT_KG= NUM_OF_TRAPS= SD_LOG_ID_DB= SD_LOG_ID_DA = GRID_NUM=NULL}) 
 		aW = merge(iou,aa,by=c('TRIPNO','LFA','SYEAR'),all.x=T)
 		aW = rename.df(aW,'SD_LOG_ID_DO','SD_LOG_ID_DB')
 		uo = uo[-io,]

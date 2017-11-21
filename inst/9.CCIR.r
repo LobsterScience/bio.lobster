@@ -14,103 +14,203 @@ if(redo.data) {
 	lobster.db('ccir.redo') #this does not
 }
 
-
-#Need to use the extended versions of the script for CCIR. This 'extension' provides a correction to exploitation rates when the minimum legal sizes are increasing. If this is not applied then exploitation rates will increase simply due to the decreased number of lobsters available in larger size classes.
-#the work horses behind this were developed by Jaques Allard and Ross Claytor. Have had to improve data flow and streamline outputs to allow for integration into current data streams and analyses.
-
-#there are a few columns of data that are expected by the CCIR extended.
-#DateField  --> Date 
-#RefNotExtended --> Reference group -- not extended to account for the changing MLS
-#RefAndExtended --> This is the reference group and includes those lobsters that were exploitable but became sublegal as MLS changed == typically this size was chosen at 76-80mm or size 9 (but not expl)
-#NONRefAndExtended --> these are included in the exploitable size class but are not exploited - legal = 1
-#Exp --> fully expolitable size class used as our index between upper and low bounds
-
-#LFA 27 
-#FSRS codes
-# SIZE_CD MIN_S MAX_S
-#   0     0    50
-#   1     0    10
-#   2    11    20
-#   3    21    30
-#   4    31    40
-#   5    41    50
-#   6    51    60
-#   7    61    70
-#   8    71    75
-#   9    76    80
-#  10    81    90
-#  11    91   100
-#  12   101   110
-#  13   111   120
-#  14   121   130
-#  15   131   300
-#  16   100   300
-
-					
-#LFA 27 <- lower bounds on ref class = 8, upper bounds on ref class will change over time from 8 to 10 as MLS changes; Exp class lower bound fixed at 9 and upper bound at 10.5
-
-#Need to Run CCIR on a reginonal (sub LFA) basis, one sex at a time. Can combine exploitation rates as weighted average across regions by landings
-#
-#define your parameter file for subsetting the data
-
-#control list for ccir estimates
-
+#Groupings for seasons, and regions -- Hard coded
 inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
  load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
  load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
 lobster.db('ccir')
 
-dat = ccir_compile_data(x = ccir_data,area.defns = Groupings, size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
+logs = lobster.db('process.logs')
+logs$LFA = ifelse(logs$LFA == '31A','31a',logs$LFA)
+logs$LFA = ifelse(logs$LFA == '31B','31b',logs$LFA)
+
+
+dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings, size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 #dat = ccir_compile_data(x = ccir_data,area.defns = Groupings, size.defns = inp, season.defns = Seasons, sexs = c(1,2) #Not for stock assessment, but for Simulation models
-
-out.binomial = list()
-			attr(out.binomial,'model') <- 'binomial'
-
-out.beta = list()
-			attr(out.beta,'model') <- 'beta'
-
+redo.models =F 
+if(redo.models) {
+						#model options
+				out.normal = list() #this is the Claytor and Allard Model
+							attr(out.normal,'model') <- 'normal'
+				out.binomial = list()
+							attr(out.binomial,'model') <- 'binomial'
+				out.binomial.fishery.land = list()
+							attr(out.binomial.fishery.land,'model') <- 'binomial.fishery.land'
+				out.beta = list()
+							attr(out.beta,'model') <- 'beta'
+				out.logit.binomial = list()
+								attr(out.logit.binomial,'model') <- 'logit.binomial'
+				out.logit.binomial.cov = list()
+								attr(out.logit.binomial.cov,'model') <- 'logit.binomial.cov'
+				mm = c('binomial','binomial.fishery.land')
 for(i in 1:length(dat)) {
+print(i)
+				ds = dat[[i]]
+				if(any(mm == 'normal')){
+				ds$method = 'normal'
+				x = ccir_stan_run(dat = ds)
+				ccir_stan_plots(x,type='predicted')
+			 	ccir_stan_plots(x,type='exploitation')
+			 	ccir_stan_plots(x,type='traceplot')
+			 	ccir_stan_plots(x,type='prior.posterior')
+#			 	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')
+				
+			  out.normal[[i]] <- ccir_stan_summarize(x)
+				}
 
-	ds = dat[[i]]
-	ds$method = 'binomial'
-	x = ccir_stan_run(dat = ds)
-	ccir_stan_plots(x,type='predicted')
- 	ccir_stan_plots(x,type='exploitation')
- 	ccir_stan_plots(x,type='traceplot')
- 	ccir_stan_plots(x,type='prior.posterior')
- 	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')
-	
-  out.binomial[[i]] <- ccir_stan_summarize(x)
 
-#	ds$method = 'beta'
-#	x = ccir_stan_run(dat = ds)
-#	ccir_stan_plots(x,type='predicted')
- #	ccir_stan_plots(x,type='exploitation')
- #	ccir_stan_plots(x,type='traceplot')
- #	ccir_stan_plots(x,type='prior.posterior')
-#
- # out.beta[[i]] <- ccir_stan_summarize(x)
-	}
+		if(any(mm == 'logit.binomial')){
+				ds$method = 'logit.binomial'
+				x = ccir_stan_run(dat = ds)
+				ccir_stan_plots(x,type='predicted')
+			 	ccir_stan_plots(x,type='exploitation')
+			 	ccir_stan_plots(x,type='traceplot')
+			 	ccir_stan_plots(x,type='prior.posterior')
+#			 	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')
+			  out.logit.binomial[[i]] <- ccir_stan_summarize(x)
+				}
+		if(any(mm == 'binomial')){
+				ds$method = 'binomial'
+				x = ccir_stan_run(dat = ds)
+				ccir_stan_plots(x,type='predicted')
+			 	ccir_stan_plots(x,type='exploitation')
+			 #	ccir_stan_plots(x,type='traceplot')
+			 #	ccir_stan_plots(x,type='prior.posterior')
+#			 	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')
+			  out.binomial[[i]] <- ccir_stan_summarize(x)
+				}
 
-#ouBet = ccir_collapse_summary(out.beta)
-ouBin = ccir_collapse_summary(out.binomial)
+		if(any(mm == 'binomial.fishery.land')){
+				ds$method = 'binomial.fishery.land'
+				if(ds$Yr>2003) {
+				if(!all(is.na(ds$land))){	
+				x = ccir_stan_run(dat = ds)
+				ccir_stan_plots(x,type='predicted')
+			 	ccir_stan_plots(x,type='exploitation')
+			 #	ccir_stan_plots(x,type='traceplot')
+			 #	ccir_stan_plots(x,type='prior.posterior')
+#			 	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')
+			  out.binomial.fishery.land[[i]] <- ccir_stan_summarize(x)
+						}
+					}
+				}
 
-#save(ouBet,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBetaModels.rdata'))
-save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels.rdata'))
 
+		if(any(mm == 'logit.binomial.cov')){
+				ds$method = 'logit.binomial.cov'
+				x = ccir_stan_run(dat = ds)
+				ccir_stan_plots(x,type='predicted')
+			 	ccir_stan_plots(x,type='exploitation')
+			 	ccir_stan_plots(x,type='traceplot')
+			 	ccir_stan_plots(x,type='prior.posterior')
+#			 	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')
+				
+			  out.logit.binomial.cov[[i]] <- ccir_stan_summarize(x)
+
+			if(any(mm == 'beta')){
+				ds$method = 'beta'
+				x = ccir_stan_run(dat = ds)
+				ccir_stan_plots(x,type='predicted')
+				ccir_stan_plots(x,type='exploitation')
+				ccir_stan_plots(x,type='traceplot')
+				ccir_stan_plots(x,type='prior.posterior')
+				 out.beta[[i]] <- ccir_stan_summarize(x)
+				}
+
+				}
+			}
+			#ouBet = ccir_collapse_summary(out.beta)
+			#ouLoBin = ccir_collapse_summary(out.logit.binomial)
+			
+			ouBin = ccir_collapse_summary(out.binomial)
+			attr(ouBin,'model') <- 'binomial' 
+			
+			ouBinFish = ccir_collapse_summary(out.binomial.fishery.land)
+			attr(ouBinFish,'model') <- 'binomial.fishery.land'
+			
+			#save(ouBet,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBetaModels.rdata'))
+			save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels.rdata'))
+			save(ouBinFish,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialFisheryModels.rdata'))
+			#save(ouLoBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledlogitBinomialModels.rdata'))
+			
+			
+		}
 #load each ccir stan summarize for binomials
 
 load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels.rdata'))
+load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialFisheryModels.rdata'))
 
-kl = unique(ouBin$Grid) 
-for(i in 1:length(kl)) {
-	u = subset(ouBin, Grid == kl[i])
+outs = list()
+	kl = unique(ouBin$Grid) 
+	for(i in 1:length(kl)) {
+		u = subset(ouBin, Grid == kl[i])
+		outs[[i]] <- ccir_timeseries_exploitation_plots(u)
+	}
 
-	ccir_timeseries_exploitation_plots(u)
+	iu = c(grep('LFA 27',outs),grep('LFA 33',outs))
+	outs = outs[-c(iu)]
+	o = do.call(rbind,outs)
+	ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,LFA))
+#remove lfa 33 and 27 as treated as one
 
-}
+#Split LFAs combined for one exploitation rate
+outs = list()
+SLfa = c(27,33)
+lan = lobster.db('process.logs')
+for(i in 1:length(SLfa)) {
+	u = subset(ouBin, LFA == SLfa[i])
+	g = unique(u$Grid)
+	g = strsplit(g,"\\.")
+	o = aggregate(WEIGHT_KG~SYEAR,data=subset(lan,GRID_NUM %in% g[[1]]),FUN=sum)
+	names(o)[2] = g[[1]][1]
+	o2 = aggregate(WEIGHT_KG~SYEAR,data=subset(lan,GRID_NUM %in% g[[2]]),FUN=sum)
+	names(o2)[2] = g[[2]][1]
+	o = merge(o,o2)
+	names(o)[1] = 'Yr'
+	outs[[i]] <- ccir_timeseries_exploitation_plots(u,combined.LFA=T,landings=o)
+	}
+	oo = do.call(rbind,outs)
 
+###Model comparison time series exploitation plots
+
+	kl = unique(ouBinFish$Grid) 
+	for(i in 1:length(kl)) {
+		u = subset(ouBin, Grid == kl[i])
+		w = subset(ouBinFish, Grid == kl[i])
+		ccir_timeseries_exploitation_plots_model_comparison(u,w)
+	}
+
+
+##Exploitation and Changing Landings
+
+lSe = lobster.db('seasonal.landings')
+lA = lobster.db('annual.landings')
+
+#from above
+		o = rbind(ooo,oo)
+		o$LFA = ifelse(o$LFA == 'LFA 27 Combined','LFA 27',o$LFA)
+		o$LFA = ifelse(o$LFA == 'LFA 33 Combined','LFA 33',o$LFA)
+
+
+outs = do.call(rbind,outs)
+
+x = outs[[1]]
+y = subset(lA,select=c(YR,LFA27))
+y$D1 = c(diff(y[,2]),0)
+a = merge(x,y,by.x='Yr',by.y = 'YR')
+with(a,plot(ERfm,LFA27))
+
+x = outs[[2]]
+y = subset(lSe,select=c(SYEAR,LFA33))
+y$YR = as.numeric(substr(lSe$SYEAR,6,9))
+y$D1 = c(diff(y[,2]),0)
+a = merge(x,y,by.x='Yr',by.y = 'YR')
+with(a,plot(ERfm,LFA33))
+
+
+
+######NOT USED for FRAMEWORK FROM HERE DOWN######
 
 
 #partial exploitation rates and logbook effort
@@ -126,7 +226,7 @@ for(i in 1:length(gg)){
 }
 	outs = rbindFill(outs)
 	outs = toNums(outs,4:21)
-
+	outs$CredInt = outs[,'ERu.97.5%'] - outs[,'ERl.2.5%']
 
 
 #Partial exploitation rates
