@@ -91,18 +91,40 @@ require(PBSmapping)
    
 
 i = 2010:2016
+ll = '32'
 out = list() 
+	lobster.db('atSea')
+	atsea = atSea
+	atsea = addSYEAR(atsea)
+	ih = which(is.na(atsea$SYEAR))
+	atsea$SYEAR[ih] <- year(atsea$SDATE[ih])
+	atsea$SYEAR[ih] <- ifelse(atsea$LFA[ih] %in% 33:38 & month(atsea$SDATE[ih]) %in% c(10,11,12), year(atsea$SDATE[ih])+1,atsea$SYEAR[ih])
+	
+	logs = lobster.db('process.logs.unfiltered')
 for(a in 1:length(i)) {
-da = atSeaLogbookLinker(year=i[a],lfa='27')
-logsa = lobster.db('process.logs')
-logsa1 = aggregate(WEIGHT_KG~GRID_NUM+SD_LOG_ID+SYEAR+WOS+BUMPUP+LFA,data=subset(logsa,LFA=='27' & SYEAR %in% i[a]), FUN=sum)
-logsa2 = aggregate(NUM_OF_TRAPS~GRID_NUM+SD_LOG_ID+SYEAR+WOS+BUMPUP+LFA,data=subset(logsa,LFA=='27' & SYEAR %in% i[a]), FUN=sum)	
-logsa3 = merge(logsa1,logsa2,all=T)
 
-out[[i]] = weightedCLF(x=da,logs=logsa3)
+	##need to work  out what to do with aggregate with nas in a grouping variable...try 32 and 1981
+		da = atSeaLogbookLinker(atSea = atsea, logsa = logs, year=i[a],lfa=ll)
+		logsa = lobster.db('process.logs')
+		logsa1 = aggregate(WEIGHT_KG~GRID_NUM+SD_LOG_ID+SYEAR+WOS+BUMPUP+LFA,data=subset(logsa,LFA==ll & SYEAR %in% i[a]), FUN=sum)
+		logsa2 = aggregate(NUM_OF_TRAPS~GRID_NUM+SD_LOG_ID+SYEAR+WOS+BUMPUP+LFA,data=subset(logsa,LFA==ll & SYEAR %in% i[a]), FUN=sum)	
+		logsa3 = merge(logsa1,logsa2,all=T)
+
+out[[a]] = weightedCLF(x=da,logs=logsa3,grouping=list(WOS = 1:4))
 }
 
 
+###
+load_all('~/git/bio.growth')
 
+x = out[[7]]$none$vec
+xi = identifyModes(x,span=5)
+vi = identifyVariancesLambdas(x,xi,span=5)
+li	<- vi[[1]]
+vi	<- vi[[2]]
+
+#oo <- annualMixBoot(x=x,init.mode=xi,ni=5000,mode.thresh=6, init.lam=li,init.var=vi)
+a = gammamixEM(x,k=3)
+histAllMixtures(oo[[c(1,1)]],freq=F)
 
 

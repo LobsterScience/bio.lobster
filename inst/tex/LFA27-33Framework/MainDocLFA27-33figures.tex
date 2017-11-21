@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{pdfcomment}
+\usepackage{amsmath}
+\usepackage{lscape}
+\usepackage{hyperref}
+\usepackage[top=2.4cm, bottom=2.4cm, left=3cm, right=3cm]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\lhead{\bf Maritimes Region}
+\rhead{\bf LFA27-33 - 2018}
+\lfoot{January 10, 2018}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\newcommand{\D}{.}
+\newcommand{\tl}{\textless}
+\newcommand{\e}{/backup/bio_data/bio.lobster/figures/} %change this to set figure directory
+\newcommand{\cp}{\caption}
+
+\begin{document}
+
+\begin{landscape}
+% maps section
+\begin{figure}
+\centering
+    \pdftooltip{\includegraphics[width=1\textwidth]{\e LFAMapATL.jpg}}{Figure 1}
+    \caption{Map of the Lobster Fishing Areas in Atlantic Canada using the boundaries identified in the Atlantic fishery regulations.}
+
+\end{figure}
+
+%ccir figures
+
+\begin{figure}
+\centering
+    \pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.56\textwidth]{\e ccir/predicted\D LFA\D 27\D Year\D 2007\D 1\D Grid\D 351-355\D Season\D 4-7\D Sex\D 1\D 5\D binomial.png}}
+		\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.56\textwidth]{\e ccir/predicted\D LFA\D 33\D Year\D 2009\D 1\D Grid\D 313-484\D Season\D 1-12\D Sex\D 1\D 5\D binomial.png}}}{Figure 3}
+              \caption{Change in ratio of exploitable to total sample against cumulative scaled landings. Solid blue line represents CCIR median predictions whereas dashed blue lines represent 95\% credible intervals. Left panel represents the results from LFA 27 south in 2007. Right panel represents results from LFA 33 east in 2009.}
+
+\end{figure}
+
+\begin{figure}
+\centering
+    \pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.56\textwidth]{\e ccir/exploitation\D LFA\D 27\D Year\D 2007\D 1\D Grid\D 351-355\D Season\D 4-7\D Sex\D 1\D 5\D binomial.png}}
+		\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.56\textwidth]{\e ccir/exploitation\D LFA\D 33\D Year\D 2009\D 1\D Grid\D 313-484\D Season\D 1-12\D Sex\D 1\D 5\D binomial.png}}}{Figure 4}
+             \caption{Within season CCIR estimated exploitation indices. Solid blue line represents CCIR median predicted exploitation whereas dashed blue lines represent 95\% credible intervals. Left panel represents the results from LFA 27 south in 2007. Right panel represents results from LFA 33 east in 2009.}
+
+
+	     
+\end{figure}
+
+
+
+\end{landscape}
+
+%this section is not called hence the iffalse, but is an example of a layout for plots :)
+\iffalse
+%survey bubbles
+        \begin{figure}
+        \centering
+    \pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1970\D 1975.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1976\D 1980.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1981\D 1985.pdf}}}{Figure 5}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1986\D 1990.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1991\D 1995.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 1996\D 2000.pdf}}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2001\D 2005.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2006\D 2010.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2011\D 2015.pdf}}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.37\textwidth]{\e surveyBubblesDFOSummer\D 2016\D 2016.pdf}}\\
+        
+        
+         \caption{Map of the abundance of lobster captured during DFO's summer RV survey of the Scotian Shelf. Strata boundaries are outlined in red and LFA 41 stock boundaries are outlined in blue. Size of the symbols are scaled to the number of lobster observed within each tow. Black points represent tow locations with no lobsters.}
+        \end{figure}
+        \clearpage
+\fi
+
+
+\end{document}
+

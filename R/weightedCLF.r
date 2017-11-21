@@ -4,18 +4,22 @@ weightedCLF <- function(x, logs, weighting.scheme = c('none','time','space','tim
 	#x = aCC from CohortAnalysis
 	#logs = pruned data for entire fishery and year
 	#weighting is by landings
+	out = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),Grouping=grouping)
 	if(!is.null(grouping)) {
-		if(names(grouping)=='WOS') {
-				wos <- unlist(grouping)
+		for(i in 1:length(grouping)){
+				gr = grouping[i]
+		if(names(gr)=='WOS') {
+				wos <- unlist(gr)
 				x = subset(x,WOS %in% wos)
 				}
-		if(names(grouping)=='GRID_NUM') {
-				wos <- unlist(grouping)
+		if(names(gr)=='GRID_NUM') {
+				wos <- unlist(gr)
 				x = subset(x,GRID_NUM %in% wos)
 				}
 			}
-
-	out = list()
+		}
+browser()	
+	if(nrow(x)>1){
 	if(any(weighting.scheme=='none')) {
 
 			i = which(!is.na(as.numeric(names(x))))
@@ -23,7 +27,6 @@ weightedCLF <- function(x, logs, weighting.scheme = c('none','time','space','tim
 			lens = colSums(x[,i])
 			lens = as.numeric(rep(j,times=lens))
 			hist(lens,breaks=j)
-
 			out$none = list(vec = lens,mean = mean(lens),sd = sd(lens), quants = quantile(lens,probs=probs))
 	}
 
@@ -39,6 +42,7 @@ weightedCLF <- function(x, logs, weighting.scheme = c('none','time','space','tim
 			
 			lo = aggregate(WEIGHT_KG~GRID_NUM,data=logs,FUN=sum)
 			h = merge(h,lo)
+			if(nrow(h)>1){
 			h$WEIGHT_KG = h$WEIGHT_KG / 10000
 			oo = c()
 			i = which(!is.na(as.numeric(names(h))))
@@ -48,8 +52,10 @@ weightedCLF <- function(x, logs, weighting.scheme = c('none','time','space','tim
 			hist(oo,breaks=j)
 			out$space = list(vec = oo,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs))
 		}
+	}
 
 	if(any(weighting.scheme=='time')) {
+		
 			#ignores actual logbook links
 			if(all(is.na(x$WOS))) x$WOS=1
 			i = which(!is.na(as.numeric(names(x))))
@@ -62,6 +68,7 @@ weightedCLF <- function(x, logs, weighting.scheme = c('none','time','space','tim
 			
 			lo = aggregate(WEIGHT_KG~WOS,data=logs,FUN=sum)
 			h = merge(h,lo)
+			if(nrow(h)>1){
 			h$WEIGHT_KG = h$WEIGHT_KG / 10000
 			oo = c()
 			i = which(!is.na(as.numeric(names(h))))
@@ -70,6 +77,7 @@ weightedCLF <- function(x, logs, weighting.scheme = c('none','time','space','tim
 					}
 			hist(oo,breaks=j)
 			out$time = list(vec = oo,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs))
+			}
 		}
 
 	if(any(weighting.scheme=='time.space')) {
@@ -98,6 +106,7 @@ weightedCLF <- function(x, logs, weighting.scheme = c('none','time','space','tim
 			out$time.space = list(vec = oo,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs))
 		}
 	}
+}
 return(out)
 
 }
