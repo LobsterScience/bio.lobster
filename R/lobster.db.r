@@ -26,11 +26,14 @@
         lobster.db( DS="logs41.redo")
         lobster.db( DS="logs41jonah.redo")
         lobster.db( DS="observer41.redo")
+        lobster.db( DS="fsrs.redo")
         lobster.db( DS="atSea.redo")
+        lobster.db( DS="atSea.clean.redo")        
+        lobster.db( DS="atSea.logbook.link.redo")
         lobster.db( DS="cris.redo")
+        lobster.db( DS="ccir.redo")
         lobster.db( DS="port.redo")
         lobster.db( DS="vlog.redo")
-        lobster.db( DS="fsrs.redo")
         lobster.db( DS="scallop.redo")
         lobster.db( DS="survey.redo")
         lobster.db( DS="annual.landings.redo")
@@ -444,6 +447,52 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
           load(file.path( fnODBC, "atSea.rdata"), .GlobalEnv)
      }
 
+
+    if (DS %in% c("atSea.clean.redo", "atSea.clean") ) {
+
+          fname = 'atSea.clean.rdata'
+        if(DS == 'atSea.clean') {
+                load(file.path( fnODBC, fname), .GlobalEnv)
+        }
+        
+         if (DS=="atSea.clean.redo") {
+             lobster.db('atSea')
+             aS = atSea
+             aS = addSYEAR(aS)
+             ih = which(is.na(aS$SYEAR))
+             aS$SYEAR[ih] <- year(aS$SDATE[ih])
+             atsea$SYEAR[ih] <- ifelse(atsea$LFA[ih] %in% 33:38 & month(atsea$SDATE[ih]) %in% c(10,11,12), year(atsea$SDATE[ih])+1,atsea$SYEAR[ih])
+            LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
+            aS = makePBS(aS,polygon=F)
+          browser()  
+            a = which(is.na(aS$Y) | is.na(aS$X))
+            if(length(a)<dim(aS)[1]){
+            if(length(a)>0) {
+              a1 = findPolys(aS[-a,],LFAgrid,maxRows = 3e6,includeBdry=1)
+              }else{
+                a1 = findPolys(aS,LFAgrid,maxRows = 3e6,includeBdry=1)
+              }
+            }
+            aS = merge(aS,a1,by='EID',all.x=T)
+            i = which(is.na(aS$GRIDNO) & !is.na(aS$PID))
+            aS$GRIDNO[i] <- aS$EID[i]
+              i = which(is.na(aS$GRIDNO))
+              aS$GRIDNO[i] <- 0
+              i = which(is.na(aS$VNOTCH) & aS$SPECIESCODE==2550)
+              aS$VNOTCH[i] <- 0
+              i = which(is.na(aS$CULL) & aS$SPECIESCODE==2550)
+              aS$CULL[i] <- 0
+              i = which(aS$CARLENGTH>280 & aS$SPECIESCODE==2550)
+              aS$CARLENGTH[i] <- NA
+              aS$PID = aS$SID = aS$Bdry = NULL
+            atSea.clean = aS
+          save( atSea.clean, file=file.path( fnODBC, fname), compress=T)
+          
+          }
+     }
+
+
+
 ### port sampling 
     if (DS %in% c("port.redo", "port") ) {
 
@@ -701,9 +750,6 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
      }
         
        
-
-
-  
 
 ### lobster catch from scallop survey  
     if (DS %in% c("scallop.redo", "scallop") ) {

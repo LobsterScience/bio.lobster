@@ -1,7 +1,7 @@
 #' @export
-weightedCLF <- function(x, logs, weighting.scheme = c('none','time','space','time.space'),probs = c(0.025,0.5,0.975),grouping = NULL) {
+weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space','time.space'),probs = c(0.025,0.5,0.975),grouping = NULL,returnLF = F ) {
 	
-	#x = aCC from CohortAnalysis
+	#x = aCC from atSeaLogbookLinker
 	#logs = pruned data for entire fishery and year
 	#weighting is by landings
 	out = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),Grouping=grouping)
@@ -18,16 +18,19 @@ weightedCLF <- function(x, logs, weighting.scheme = c('none','time','space','tim
 				}
 			}
 		}
-browser()	
-	if(nrow(x)>1){
-	if(any(weighting.scheme=='none')) {
 
+	if(nrow(x)>1){
+	if(is.null(logs)) weighting.scheme = 'none' #if no log book info then don't weight at all
+	if(any(weighting.scheme=='none')) {
+	#ignores actual logbook links
 			i = which(!is.na(as.numeric(names(x))))
 			j = as.numeric(names(x[i]))
 			lens = colSums(x[,i])
 			lens = as.numeric(rep(j,times=lens))
 			hist(lens,breaks=j)
-			out$none = list(vec = lens,mean = mean(lens),sd = sd(lens), quants = quantile(lens,probs=probs))
+			vec=NULL
+			if(returnLF) vec = lens
+			out$none = list(vec = vec,mean = mean(lens),sd = sd(lens), quants = quantile(lens,probs=probs))
 	}
 
 	if(any(weighting.scheme=='space')) {
@@ -50,7 +53,9 @@ browser()
 					oo = c(oo, as.numeric(rep(j,times=h[b,i] * round(h[b,'WEIGHT_KG']))))
 					}
 			hist(oo,breaks=j)
-			out$space = list(vec = oo,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs))
+			vec=NULL
+			if(returnLF) vec = oo
+			out$space = list(vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs))
 		}
 	}
 
@@ -76,7 +81,9 @@ browser()
 					oo = c(oo, as.numeric(rep(j,times=h[b,i] * round(h[b,'WEIGHT_KG']))))
 					}
 			hist(oo,breaks=j)
-			out$time = list(vec = oo,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs))
+			vec=NULL
+			if(returnLF) vec = oo
+			out$time = list(vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs))
 			}
 		}
 
@@ -103,7 +110,9 @@ browser()
 					oo = c(oo, as.numeric(rep(j,times=h[b,i] * round(h[b,'WEIGHT_KG']))))
 					}
 			hist(oo,breaks=j)
-			out$time.space = list(vec = oo,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs))
+			vec=NULL
+			if(returnLF) vec = oo
+			out$time.space = list(vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs))
 		}
 	}
 }

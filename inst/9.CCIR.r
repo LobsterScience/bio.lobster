@@ -14,7 +14,7 @@ if(redo.data) {
 	lobster.db('ccir.redo') #this does not
 }
 
-#Groupings for seasons, and regions -- Hard coded
+#Groupings for seasons, and regions -- Hard coded---Need to be manually updated
 inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
  load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
  load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
@@ -28,7 +28,7 @@ logs$LFA = ifelse(logs$LFA == '31B','31b',logs$LFA)
 dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings, size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 #dat = ccir_compile_data(x = ccir_data,area.defns = Groupings, size.defns = inp, season.defns = Seasons, sexs = c(1,2) #Not for stock assessment, but for Simulation models
-redo.models =F 
+redo.models =T 
 if(redo.models) {
 						#model options
 				out.normal = list() #this is the Claytor and Allard Model
@@ -44,6 +44,7 @@ if(redo.models) {
 				out.logit.binomial.cov = list()
 								attr(out.logit.binomial.cov,'model') <- 'logit.binomial.cov'
 				mm = c('binomial','binomial.fishery.land')
+
 for(i in 1:length(dat)) {
 print(i)
 				ds = dat[[i]]
@@ -54,7 +55,7 @@ print(i)
 			 	ccir_stan_plots(x,type='exploitation')
 			 	ccir_stan_plots(x,type='traceplot')
 			 	ccir_stan_plots(x,type='prior.posterior')
-#			 	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')
+#			 	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')1
 				
 			  out.normal[[i]] <- ccir_stan_summarize(x)
 				}
@@ -72,7 +73,7 @@ print(i)
 				}
 		if(any(mm == 'binomial')){
 				ds$method = 'binomial'
-				x = ccir_stan_run(dat = ds)
+				x = ccir_stan_run(dat = ds,save=F)
 				ccir_stan_plots(x,type='predicted')
 			 	ccir_stan_plots(x,type='exploitation')
 			 #	ccir_stan_plots(x,type='traceplot')
@@ -148,8 +149,8 @@ outs = list()
 		outs[[i]] <- ccir_timeseries_exploitation_plots(u)
 	}
 
-	iu = c(grep('LFA 27',outs),grep('LFA 33',outs))
-	outs = outs[-c(iu)]
+#	iu = c(grep('LFA 27',outs),grep('LFA 33',outs))
+#	outs = outs[-c(iu)]
 	o = do.call(rbind,outs)
 	ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,LFA))
 #remove lfa 33 and 27 as treated as one
@@ -172,6 +173,8 @@ for(i in 1:length(SLfa)) {
 	}
 	oo = do.call(rbind,outs)
 
+oi = rbind(ooo,oo)
+
 ###Model comparison time series exploitation plots
 
 	kl = unique(ouBinFish$Grid) 
@@ -185,6 +188,7 @@ for(i in 1:length(SLfa)) {
 ##Exploitation and Changing Landings
 
 lSe = lobster.db('seasonal.landings')
+lSe$YR = as.numeric(substr(lSe$SYEAR,6,9))
 lA = lobster.db('annual.landings')
 
 #from above
