@@ -1,4 +1,4 @@
-loadfunctions("bio.lobster")
+p = bio.lobster::load.environment()
 
 RLibrary("plyr","lattice","glmmADMB","ggplot2")
 
