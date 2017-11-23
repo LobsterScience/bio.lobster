@@ -1,56 +1,76 @@
 p = bio.lobster::load.environment()
+la()
 
-tagging1.dat = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','CapeBretonTaggingData.csv'))
+	tagging1.dat = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','CapeBretonTaggingData.csv'))
 
-tagging1.dat$TagLat1 = convert.dd.dddd(tagging1.dat$TagLat)
-tagging1.dat$TagLon1 = convert.dd.dddd(tagging1.dat$TagLon)*-1
-tagging1.dat$TagDate = as.Date(tagging1.dat$TagDate,"%d-%b-%y")
-tagging1.dat$CapDate = as.Date(tagging1.dat$CapDate,"%d-%b-%y")
-tagging1.dat$TagCL = tagging1.dat$TagSize
-tagging1.dat$CapCL = tagging1.dat$CapSize
-
-
-tagging2.dat = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','crtags.csv'))
-
-tagging2.dat$Tag = tagging2.dat$TAGNUM
-tagging2.dat$TagLat = tagging2.dat$RLAT
-tagging2.dat$TagLon = tagging2.dat$RLON * -1
-tagging2.dat$CapLat = tagging2.dat$CLAT
-tagging2.dat$CapLon = tagging2.dat$CLON * -1
-tagging2.dat$TagDate = as.Date(tagging2.dat$RELDATE)
-tagging2.dat$CapDate = as.Date(tagging2.dat$CAPDATE)
-tagging2.dat$TagCL = tagging2.dat$RCLMMS
-tagging2.dat$CapCL = tagging2.dat$CAPCLMMS
-tagging2.dat$TagSex = tagging2.dat$RSEX
-tagging2.dat$CapSex = tagging2.dat$CAPSEX
-
-tagging.dat = rbind(tagging1.dat[c("Tag","TagDate","TagLon","TagLat","TagCL","TagSex","CapDate","CapLon","CapLat","CapCL","CapSex")],tagging2.dat[c("Tag","TagDate","TagLon","TagLat","TagCL","TagSex","CapDate","CapLon","CapLat","CapCL","CapSex")])
+	tagging1.dat$TagLat1 = convert.dd.dddd(tagging1.dat$TagLat)
+	tagging1.dat$TagLon1 = convert.dd.dddd(tagging1.dat$TagLon)*-1
+	tagging1.dat$TagDate = as.Date(tagging1.dat$TagDate,"%d-%b-%y")
+	tagging1.dat$CapDate = as.Date(tagging1.dat$CapDate,"%d-%b-%y")
+	tagging1.dat$TagCL = tagging1.dat$TagSize
+	tagging1.dat$CapCL = tagging1.dat$CapSize
 
 
-tagging.dat$DAL = tagging.dat$CapDate-tagging.dat$TagDate
-tagging.dat$SizeDiff = tagging.dat$CapCL-tagging.dat$TagCL
-tagging.dat$MoltIncr = tagging.dat$SizeDiff/tagging.dat$TagCL
+	tagging2.dat = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','crtags.csv'))
 
-tagging.dat$Molted = ifelse(tagging.dat$MoltIncr<0.04,0,1)
+	tagging2.dat$Tag = tagging2.dat$TAGNUM
+	tagging2.dat$TagLat = tagging2.dat$RLAT
+	tagging2.dat$TagLon = tagging2.dat$RLON * -1
+	tagging2.dat$CapLat = tagging2.dat$CLAT
+	tagging2.dat$CapLon = tagging2.dat$CLON * -1
+	tagging2.dat$TagDate = as.Date(tagging2.dat$RELDATE)
+	tagging2.dat$CapDate = as.Date(tagging2.dat$CAPDATE)
+	tagging2.dat$TagCL = tagging2.dat$RCLMMS
+	tagging2.dat$CapCL = tagging2.dat$CAPCLMMS
+	tagging2.dat$TagSex = tagging2.dat$RSEX
+	tagging2.dat$CapSex = tagging2.dat$CAPSEX
+
+	tagging.data = rbind(tagging1.dat[c("Tag","TagDate","TagLon","TagLat","TagCL","TagSex","CapDate","CapLon","CapLat","CapCL","CapSex")],tagging2.dat[c("Tag","TagDate","TagLon","TagLat","TagCL","TagSex","CapDate","CapLon","CapLat","CapCL","CapSex")])
 
 
-# clean data some
-tagging.dat = subset(tagging.dat,!is.na(SizeDiff)&MoltIncr> -0.1&MoltIncr< 2)
+	tagging.data$DAL = tagging.data$CapDate-tagging.data$TagDate
+	tagging.data$SizeDiff = tagging.data$CapCL-tagging.data$TagCL
+	tagging.data$MoltIncr = tagging.data$SizeDiff/tagging.data$TagCL
 
-badsex = with(tagging.dat,c(which(TagSex==1 & CapSex%in%(2:3)),which(CapSex==1 & TagSex%in%(2:3))))
-tagging.dat = tagging.dat[-badsex,]
+	tagging.data$Molted = ifelse(tagging.data$MoltIncr<0.04,0,1)
 
+
+	# clean data some
+	tagging.data = subset(tagging.data,!is.na(SizeDiff)&MoltIncr> -0.1&MoltIncr< 2)
+
+	badsex = with(tagging.data,c(which(TagSex==1 & CapSex%in%(2:3)),which(CapSex==1 & TagSex%in%(2:3))))
+	tagging.data = tagging.data[-badsex,]
+
+	tagging.data = subset(tagging.data,TagLon< -10&CapLon< -10&TagLat>0&CapLat>0 )
+	tagging.data = subset(tagging.data,as.Date(CapDate)>=as.Date(TagDate))
+
+
+	# add Depth
+	tagging.data = assignDepth(tagging.data, input_names = c("TagLon","TagLat"))
+	tagging.data$TagDepth = tagging.data$z
+	tagging.data = assignDepth(tagging.data, input_names = c("CapLon","CapLat"))
+	tagging.data$CapDepth = tagging.data$z
+	tagging.data$z = rowMeans(tagging.data[,c('TagDepth','CapDepth')],na.rm=T)
+
+	tagging1.data = assignArea(tagging.data, coords= c("TagLon","TagLat"))
+	tagging1.data = assignSubArea2733(tagging1.data)
+
+	tagging2.data = assignArea(tagging.data, coords= c("CapLon","CapLat"))
+	tagging2.data = assignSubArea2733(tagging2.data)
+	tag.subareas = rbind(tagging2.data[,c("EID","subarea")],subset(tagging1.data,!EID%in%tagging2.data$EID,c("EID","subarea")))
+	tag.subareas = subset(tag.subareas,!duplicated(EID))
+	tagging.data$EID = 1:nrow(tagging.data)
+	tagging.data = merge(tagging.data,tag.subareas,all.x=T)
+	
 
 	write.csv(tagging.data,file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'),row.names=F)
 	tagging.data = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'))
 
-tagging.data = subset(tagging.data,TagLon< -10&CapLon< -10&TagLat>0&CapLat>0 )
-tagging.data = subset(tagging.data,as.Date(CapDate)>=as.Date(TagDate))
 
 pdf('TaggingMap.pdf')
 LobsterMap('all')
 
-
+bioMap("SS")
 with(tagging.data,segments(TagLon,TagLat,CapLon,CapLat,col=rgb(1,0,1,0.2)))
 
 with(tagging.data,points(TagLon,TagLat,pch=16,cex=0.3,col=rgb(1,0,0,0.2)))
