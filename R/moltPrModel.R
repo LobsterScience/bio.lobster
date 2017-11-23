@@ -1,9 +1,33 @@
-moltPrModel = function(p){
+moltPrModel = function(p,redo.dd=T){
 
 	tagging.data = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'))
-	
+	tagging.data$TagDate = as.Date(tagging.data$TagDate)
+	tagging.data$CapDate = as.Date(tagging.data$CapDate)
+	if(redo.dd){
 
-	moltPrModel = glm(Molted ~ degreedays + TagCL , data = tagging.data, family = binomial(link = "logit"))
+		if(!"TempModel"%in%names(p)) {
+			TempModelling = TempModel()
+			p$TempModel = TempModelling$Model
+		}
+
+		degreedays=c()
+		cat('|-')
+		for(i in 1:nrow(tagging.data)){
+			p$Depth = ifelse(tagging.data$z[i]<100,tagging.data$z[i],100)
+			p$Area = tagging.data$subarea[i]
+			degreedays[i] = sum(TempModelPredict(p, start=tagging.data$TagDate[i], end=tagging.data$CapDate[i]))
+			if(i %in% (floor(nrow(tagging.data)/20)*1:20))cat('-')
+		}
+		cat('-|')
+
+		tagging.data$degreedays = degreedays
+
+		write.csv(tagging.data,file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'),row.names=F)
+
+	}
+	tagging.data$CL = tagging.data$TagCL
+
+	moltPrModel = glm(Molted ~ degreedays + CL , data = tagging.data, family = binomial(link = "logit"))
 	print(summary(moltPrModel))
 
 	return(moltPrModel)
