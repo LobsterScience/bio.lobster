@@ -462,9 +462,10 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
              ih = which(is.na(aS$SYEAR))
              aS$SYEAR[ih] <- year(aS$SDATE[ih])
              atsea$SYEAR[ih] <- ifelse(atsea$LFA[ih] %in% 33:38 & month(atsea$SDATE[ih]) %in% c(10,11,12), year(atsea$SDATE[ih])+1,atsea$SYEAR[ih])
+
+             aS$GRIDNO[which(aS$GRIDNO== -99)] <- NA
             LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
             aS = makePBS(aS,polygon=F)
-          browser()  
             a = which(is.na(aS$Y) | is.na(aS$X))
             if(length(a)<dim(aS)[1]){
             if(length(a)>0) {
@@ -475,7 +476,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             }
             aS = merge(aS,a1,by='EID',all.x=T)
             i = which(is.na(aS$GRIDNO) & !is.na(aS$PID))
-            aS$GRIDNO[i] <- aS$EID[i]
+            aS$GRIDNO[i] <- aS$SID[i]
               i = which(is.na(aS$GRIDNO))
               aS$GRIDNO[i] <- 0
               i = which(is.na(aS$VNOTCH) & aS$SPECIESCODE==2550)

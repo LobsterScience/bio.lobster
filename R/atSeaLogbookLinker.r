@@ -13,7 +13,7 @@ atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B') {
 	tr = unique(atSea$TRIPNO)
 	links = subset(links, TRIPNO %in% tr)	
 		
-
+browser()
 	atSea$I <- ifelse(atSea$SPECIESCODE==2550,1,0)
 	atSea = rename.df(atSea,'GRIDNO','GRID_NUM')
 	
@@ -83,8 +83,7 @@ atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B') {
 	if(any(aC$TRIPNO %in% aCk)){
 		ik = which(aC$TRIPNO %in% aCk)
 			for(j  in 1:length(ik)) {
-				print(j)
-				#if(j==14) browser()
+												#if(j==14) browser()
 				uu = which(aCC$TRIPNO==aC$TRIPNO[ik[j]])
 				ww = which(aC$TRIPNO==aC$TRIPNO[ik[j]])
 				if(length(uu)>1) uu = uu[1]
@@ -150,7 +149,7 @@ atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B') {
 		if(any(aC$TRIPNO %in% aCk)){
 		ik = which(aC$TRIPNO %in% aCk)
 			for(j  in 1:length(ik)) {
-				print(j)
+			
 				uu = which(aWW$TRIPNO==aC$TRIPNO[ik[j]])
 				ww = which(aC$TRIPNO==aC$TRIPNO[ik[j]])
 				if(length(uu)>1) uu = uu[1]

@@ -89,28 +89,28 @@ require(bio.lobster)
 require(bio.utilities)
 require(PBSmapping)
    
-
-i = 1981:2016
-ll = '32'
-out = list() 
-	lobster.db('atSea.clean')
-	atsea = atSea.clean
-	logs = lobster.db('process.logs.unfiltered')
-
-for(a in 1:length(i)) {
-
-
-		da = atSeaLogbookLinker(atSea = atsea, logsa = logs, year=i[a],lfa=ll)
-		logsa = lobster.db('process.logs')
+		lobster.db('atSea.clean')
+		
+		#data frame of available at sea data
+			ad =  as.data.frame(unique(cbind(atSea.clean$LFA,atSea.clean$SYEAR)))
+			ad = ad[order(ad[,1],ad[,2]),]
+			names(ad) = c('LFA','YEAR')
+			atsea = atSea.clean
+			logs = lobster.db('process.logs.unfiltered')
+			logsa = lobster.db('process.logs')
+	
+#run the summary statistics using different weighting strategies
+out = list()
+for(i in 1:26) {
+	print(ad[i,])
+		da = atSeaLogbookLinker(atSea = atsea, logsa = logs, year=ad[i,'YEAR'],lfa=ad[i,'LFA'])
 		logsa1 = try(aggregate(WEIGHT_KG~GRID_NUM+SD_LOG_ID+SYEAR+WOS+BUMPUP+LFA,data=subset(logsa,LFA==ll & SYEAR %in% i[a]), FUN=sum),silent=T)
 		logsa2 = try(aggregate(NUM_OF_TRAPS~GRID_NUM+SD_LOG_ID+SYEAR+WOS+BUMPUP+LFA,data=subset(logsa,LFA==ll & SYEAR %in% i[a]), FUN=sum),silent=T)	
-		logsa3 = try(merge(logsa1,logsa2,all=T))
-		if ( "try-error" %in% c(class(logsa3))) logsa3=NULL
-		      
-out[[a]] = weightedCLF(x=da,logs=logsa3,grouping=list(WOS = 1:4))
-
+		logsa3 = try(merge(logsa1,logsa2,all=T),silent=T)
+		if ( "try-error" %in% c(class(logsa3))) logsa3=NULL		
+		out[[i]] =  unlist(weightedCLF(x=da,logs=logsa3))
 }
-
+out = as.data.frame(do.call(rbind,out))
 
 ###
 load_all('~/git/bio.growth')
