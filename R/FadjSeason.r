@@ -1,3 +1,4 @@
+#' @export
 FadjSeason = function(p){
 
 	tpy = round(365/p$timestep)

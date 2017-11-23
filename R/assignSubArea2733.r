@@ -1,3 +1,4 @@
+#' @export
 assignSubArea2733 = function(Data){
 	
 	#Data = Data[,-which(names(Data)=="subarea")]

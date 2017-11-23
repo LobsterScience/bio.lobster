@@ -19,17 +19,18 @@ simMolt = function(p,gdd=F){
 	
 	totalPop[1,1,1,1] = p$StartPop # start with
 
-	p$Fli = c(rep(0,length(which(p$lens<p$LS))),rep(p$F,length(which(p$lens>p$LS))))
+	p$Fl = c(rep(0,length(which(p$lens<p$LS))),rep(p$F,length(which(p$lens>p$LS))))
 	p$Ml = rep(p$M,length(p$lens))
 
-	p$Fadj = FadjSeason(p) # adjust annual F by 
-
-
 	ty = p$timestep/365
+	Fty = FadjSeason(p) # adjust F time by amount of open season in timestep
 
-	for(t in 1:(p$nt-1)){ # years
+	cat('|')
+
+	for(t in 1:(p$nt-1)){ # time
+		cat('-')
 		spawners = 0
-
+		
 		# the molting process
 		for(i in 1:t){ # of molts
 
@@ -65,14 +66,11 @@ simMolt = function(p,gdd=F){
 		}
 
 		# mortality
-		p$Fl = p$Fli * p$Fadj[t]
-
-		#if(sum(totalPop[t+1,8,,])>1)browser()
 
 		for(l in 1:length(p$lens)){
 
-			totalRemovals[t+1,l,,] = totalPop[t+1,l,,]  * (p$Fl[l] / (p$Fl[l] + p$Ml[l])) * (1 - exp(-(p$Fl[l] + p$Ml[l]) * ty)) #Baranov
-			totalPop[t+1,l,,] = totalPop[t+1,l,,] * exp(-p$Ml[l] * ty) * exp(-p$Fl[l] * ty)
+			totalRemovals[t+1,l,,] = totalPop[t+1,l,,]  * (p$Fl[l] / (p$Fl[l] + p$Ml[l])) * (1 - exp(-(p$Fl[l] * Fty[t] + p$Ml[l] * ty))) #Baranov
+			totalPop[t+1,l,,] = totalPop[t+1,l,,] * exp(-p$Ml[l] * ty) * exp(-p$Fl[l] * Fty[t])
 			if(p$sex==2)totalBerried[t+1,l,,] = totalBerried[t+1,l,,] * exp(-p$Ml[l] * ty) 
 		}
 
@@ -80,6 +78,8 @@ simMolt = function(p,gdd=F){
 
 
 	}
+	cat('|')
+
 	finalPop = data.frame(apply(totalPop,c(1,2),sum))
 	names(finalPop)=paste0("CL",p$lens)
 	finalBerried = data.frame(apply(totalBerried,c(1,2),sum))
