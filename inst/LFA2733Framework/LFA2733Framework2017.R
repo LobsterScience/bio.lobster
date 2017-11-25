@@ -3,6 +3,7 @@
 	p = bio.lobster::load.environment()
 
     p$lfas = c("27", "28", "29", "30", "31.1", "31.2", "32", "33") # specify lfas for data summary
+
     p$syr = 2005
     p$yrs = p$syr:p$current.assessment.year
 
@@ -27,14 +28,42 @@
 	CarapaceLengthFrequencies(LFAs= p$lfas, DS='fsrs', by="LFA", bins=c(seq(0,70,10),75,seq(80,200,10)))
 
 
-	LOGcpue.dat<-read.csv(file.path( project.datadirectory("lobster"), "data","products","CommercialCPUE.csv"))
-    stdts.plt(subset(LOGcpue.dat,lfa==33,c('year','cpue')),ylim=c(0,2.5),ylab="CPUE (kg/TH)",graphic='pdf',fn='LFA33CPUE')
-
-
 
     ## CPUE
+    p$lfas = c("27", "28", "29", "30", "31A", "31B", "32", "33") # specify lfas for data summary
+    p$subareas = c("27N","27S", "28", "29", "30", "31A", "31B", "32", "33E", "33W") # specify lfas for data summary
+
+
     logsInSeason<-lobster.db('process.logs')
-    CPUEplot(logsInSeason,lfa= c("27", "28", "29", "30", "31A", "31B", "32", "33"),yrs=2006:2016,graphic='R')
+
+    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2016,graphic='R')
+    cpueSubArea.dat = CPUEplot(logsInSeason,subarea= p$subareas,yrs=2006:2016,graphic='R')
+
+
+
+
+	## Fishery Footprint
+
+	catchgrids = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR==2016,c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,place=1)
+	LobsterMap('27-33',poly.lst=catchgrids)
+
+
+
+	## FSRS MOdels
+
+	FSRSvesday<-FSRSModelData()
+	FSRSModelResultsShort = list()
+	FSRSModelResultsLegal = list()
+	for(i in 1:length( p$subareas)){
+
+		mdata = subset(FSRSvesday,subarea==p$subareas[i])
+		FSRSModelResultsShort[[i]]=FSRSmodel(LFA27north, response="SHORTS")
+		FSRSModelResultsLegal[[i]]=FSRSmodel(LFA27north, response="LEGALS")
+
+	}
+
+
+
 
 
 

@@ -1,11 +1,18 @@
 #' @export
 assignSubArea2733 = function(Data){
 	
+	tmpData = Data
 	#Data = Data[,-which(names(Data)=="subarea")]
-	if(any(names(Data) %in% c('GRID'))) Data <- rename.df(Data,n0=c('GRID'),n1=c('LFA_GRID'))
+	if(any(names(Data) %in% c('GRID'))) tmpData <- rename.df(tmpData,n0=c('GRID'),n1=c('LFA_GRID'))
+	if(any(names(Data) %in% c('GRID_NUM'))) tmpData <- rename.df(tmpData,n0=c('GRID_NUM'),n1=c('LFA_GRID'))
 
 	subareas = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","LFA2733subarea.csv"))
-	Data = merge(Data,subareas,all.x=T)
+	tmpData = merge(tmpData,subareas,all.x=T)
+
+	if(any(names(Data) %in% c('GRID'))) tmpData <- rename.df(tmpData,n0=c('LFA_GRID'),n1=c('GRID'))
+	if(any(names(Data) %in% c('GRID_NUM'))) tmpData <- rename.df(tmpData,n0=c('LFA_GRID'),n1=c('GRID_NUM'))
+
+	Data = tmpData
 
 	Data$subarea[is.na(Data$subarea)] <- as.character(Data$LFA[is.na(Data$subarea)])
 	Data$subarea[Data$subarea == "27 North"] <- "27N"
