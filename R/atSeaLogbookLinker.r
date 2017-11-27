@@ -9,11 +9,12 @@ atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B') {
     h <- subset(Fish.Date,LFA==lfa & SYEAR == year)
     atSea$WOS = 1
 	if(year>1999)    atSea$WOS <- floor(as.numeric(as.POSIXct(atSea$SDATE)-min(h$START_DATE))/7)+1
- 	
+ 	i = which(atSea$WOS<0)
+ 	if(length(i)>0) atSea = subset(atSea,WOS>0)
 	tr = unique(atSea$TRIPNO)
 	links = subset(links, TRIPNO %in% tr)	
 		
-browser()
+
 	atSea$I <- ifelse(atSea$SPECIESCODE==2550,1,0)
 	atSea = rename.df(atSea,'GRIDNO','GRID_NUM')
 	
@@ -32,9 +33,9 @@ browser()
 				
 				nLm 	= aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550 & SEX==1) ,na.action=NULL, FUN= sum)	
 				nLm 	= rename.df(nLm ,'I','NMaleLobster')
-				
-				nLb		= aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550 & SEX==3) ,na.action=NULL, FUN= sum)	
-				nLb 	= rename.df(nLb ,'I','NBerriedLobster')
+			
+				nLb		= try(aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550 & SEX==3) ,na.action=NULL, FUN= sum),silent=T)	
+				if(!is.null(nrow(nLb))) {nLb 	= rename.df(nLb ,'I','NBerriedLobster')} else {nLb = trt[,c('TRIPNO','GRID_NUM','LFA','SYEAR')]; nLb$NBerriedLobster = 0} 
 				
 				nLc     = try(aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550 & CULL>0) ,na.action=NULL, FUN= length),silent=T)	
 				if(!is.null(nrow(nLc))) {nLc	= rename.df(nLc ,'I','NCullLobster')} else {nLc = trt[,c('TRIPNO','GRID_NUM','LFA','SYEAR')]; nLc$NCullLobster = 0}
