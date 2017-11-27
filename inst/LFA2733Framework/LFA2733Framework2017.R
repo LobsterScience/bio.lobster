@@ -72,13 +72,12 @@
 	## Commercial CPUE MOdels
 
 	CPUE.data<-CPUEModelData()
-	FSRSModelResultsShort = list()
-	FSRSModelResultsLegal = list()
+	CPUEModelResultsShort = list()
+	CPUEModelResultsLegal = list()
 	for(i in 1:length( p$subareas)){
 
-		mdata = subset(FSRSvesday,subarea==p$subareas[i])
-		FSRSModelResultsShort[[i]]=FSRSmodel(LFA27north, response="SHORTS")
-		FSRSModelResultsLegal[[i]]=FSRSmodel(LFA27north, response="LEGALS")
+		mdata = subset(CPUE.data,subarea==p$subareas[i])
+		CPUEModelResultsShort[[i]]=CPUEmodel(LFA27north)
 
 	}
 

@@ -1,3 +1,4 @@
+#' @export
 TempModel = function(areas = c("27N","27S","28","29","30","31A","31B","32","33E","33W")){
 
 	require(mgcv)

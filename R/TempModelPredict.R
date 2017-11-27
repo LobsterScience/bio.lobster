@@ -1,3 +1,4 @@
+#' @export
 TempModelPredict = function(p, start = p$startDate, end = p$startDate+(p$nt*p$timestep) ){
 
 	y =	decimal_date(seq(start,end,1))

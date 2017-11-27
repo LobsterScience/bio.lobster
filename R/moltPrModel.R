@@ -1,3 +1,4 @@
+#' @export
 moltPrModel = function(p,redo.dd=T){
 
 	tagging.data = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'))

@@ -1,3 +1,4 @@
+#' @export
 TempModelPlot = function(TempModel){
 
 	y=	seq(min(TempData$y),max(TempData$y),0.01)
