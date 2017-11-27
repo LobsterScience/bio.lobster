@@ -1,3 +1,4 @@
+#' @export
 FSRSmodelData = function(){
 
 
