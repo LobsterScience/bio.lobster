@@ -7,9 +7,9 @@
 getBerried(p)
 }
 \arguments{
-\item{\code{p}}{:parameter list containing (at a minimum) lens (length bins), doy (day of year), temp (temperature at doy)}
+\item{\code{p}}{parameter list containing (at a minimum) lens (length bins), doy (day of year), temp (temperature at doy)}
 
-\item{\code{gdd}}{: logical: growth using degree-days}
+\item{\code{gdd}}{logical: growth using degree-days}
 }
 \value{
 The probability of bearing eggs at length

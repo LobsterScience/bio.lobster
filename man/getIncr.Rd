@@ -4,12 +4,12 @@
 \alias{getIncr}
 \title{getIncr}
 \usage{
-getIncr(p, cw)
+getIncr(p, cl)
 }
 \arguments{
 \item{\code{p}}{:parameter list containing (at a minimum) region, doy (day of year), temp (temperature at doy)}
 
-\item{\code{cw}}{: carapace width}
+\item{\code{cl}}{: carapace width}
 }
 \value{
 The predicted probability of moulting
