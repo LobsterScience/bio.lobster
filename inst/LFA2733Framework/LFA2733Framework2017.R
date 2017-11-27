@@ -43,10 +43,15 @@
 
 
 	## Fishery Footprint
-
-	catchgrids = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR==2016,c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,place=1)
-	LobsterMap('27-33',poly.lst=catchgrids)
-
+	catchLevels = c(0,100000,200000,300000,400000,500000,600000,700000,800000)
+	yrs = 2013:2016
+	for(i in 1:length(yrs)){
+		catchgrids = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR==yrs[i],c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,lvls=catchLevels)
+		pdf(file.path(project.datadirectory("bio.lobster"),"figures",paste0("FisheryFootprint",yrs[i],".pdf")))
+		LobsterMap('27-33',poly.lst=catchgrids)
+	    SpatialHub::contLegend('bottomright',lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (tons)",inset=0.02,cex=0.8,bg='white')
+	    dev.off()
+	}
 
 
 	## FSRS MOdels
@@ -64,47 +69,20 @@
 
 
 
+	## Commercial CPUE MOdels
+
+	CPUE.data<-CPUEModelData()
+	FSRSModelResultsShort = list()
+	FSRSModelResultsLegal = list()
+	for(i in 1:length( p$subareas)){
+
+		mdata = subset(FSRSvesday,subarea==p$subareas[i])
+		FSRSModelResultsShort[[i]]=FSRSmodel(LFA27north, response="SHORTS")
+		FSRSModelResultsLegal[[i]]=FSRSmodel(LFA27north, response="LEGALS")
+
+	}
 
 
 
-    ## Sea Sampling
 
-    lobster.db( DS="atSea", p=p)		# at Sea sampling from materialized view
-    lobster.db( DS="fsrs", p=p)		# FSRS recruitment traps
-
-
-	ss33 = subset(atSea,LFA==33)
-	ss33$SDATE=ss33$STARTDATE
-	ss33=addSYEAR(ss33)
-
-	fsrs33 = subset(fsrs,LFA==33)
-	fsrs33$SDATE=fsrs33$HAUL_DATE
-	fsrs33=addSYEAR(fsrs33)
-
-  
-  LobsterMap('33')
-  with(subset(fsrs33,SYEAR==2009),points(LONG_DD,LAT_DD,pch=16,cex=0.5,col=rgb(1,0,0,0.1)))
-
-Yrs=2009:2010
-sex=1:3
-	atSeaCLF<-CLF(subset(ss33,SYEAR%in%Yrs&SEX%in%sex,c("SYEAR","CARLENGTH","SEX")),yrs=Yrs,bins=seq(0,220,5),vers=2)
-
-
-
- with(subset(logs33,!duplicated(paste(VR_NUMBER,DATE_FISHED))),tapply(SYEAR,SYEAR,length))
-
-
-	logs34 = subset(logs,LFA==34)
-	logs34$SDATE=logs34$DATE_FISHED
-	logs34=addSYEAR(logs34)
-
-
- with(subset(logs34,!duplicated(paste(VR_NUMBER,DATE_FISHED))),tapply(SYEAR,SYEAR,length))
-
-
-    a=subset(atSea,LFA==33&year(STARTDATE)==2009)
-    
-    a$triptrap = paste(a$TRIPNO,a$TRAPNO,sep='.')
-
-    traploc = subset(a,)
 
