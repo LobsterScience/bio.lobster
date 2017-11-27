@@ -1,5 +1,5 @@
 #' @export
-weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space','time.space'),probs = c(0.025,0.5,0.975),grouping = NULL,returnLF = F ) {
+weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space','time.space'),probs = c(0.025,0.5,0.975),grouping = NULL,returnLF = F,returnHistStats=F) {
 	
 	#x = aCC from atSeaLogbookLinker
 	#logs = pruned data for entire fishery and year
@@ -42,6 +42,7 @@ weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space'
 			hist(lens,breaks=j)
 			vec=NULL
 			if(returnLF) vec = lens
+			if(returnHistStats) {return(lens)}
 			out$none = list(vec = vec,mean = mean(lens),sd = sd(lens), quants = quantile(lens,probs=probs), proportion.of.sampled.traps.w.lobster = f1, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6  )
 	}
 
@@ -119,10 +120,12 @@ weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space'
 			}
 		}
 
-	if(any(weighting.scheme=='time.space')) {
+if(any(weighting.scheme=='time.space')) {
 		#incorporates logbook links
 		if(all(is.na(x$WOS))) x$WOS=1
 			lo = aggregate(WEIGHT_KG~WOS+GRID_NUM,data=logs,FUN=sum)
+
+if(any(!is.na(x$WEIGHT_KG))){
 			wq = aggregate(cbind(TrapsSampled*WEIGHT_KG,TrapsSampledwLobster*WEIGHT_KG,NLobster*WEIGHT_KG,NMaleLobster*WEIGHT_KG,NFemaleLobster*WEIGHT_KG,NBerriedLobster*WEIGHT_KG, NCullLobster *WEIGHT_KG,NVnotchedLobster*WEIGHT_KG)~WOS+GRID_NUM,data=x,FUN=sum)
 			names(wq)[3:ncol(wq)] = c("TrapsSampled","TrapsSampledwLobster","NLobster","NMaleLobster","NFemaleLobster","NBerriedLobster", "NCullLobster" ,"NVnotchedLobster")
 			wq = merge(wq,lo,by=c('WOS','GRID_NUM'))
@@ -133,8 +136,6 @@ weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space'
 			f5 = with(wq,sum(NCullLobster/(NLobster) * WEIGHT_KG)/sum(WEIGHT_KG))
 			f6 = with(wq,sum(NVnotchedLobster/(NLobster) * WEIGHT_KG)/sum(WEIGHT_KG))
 	
-
-		if(any(!is.na(x$WEIGHT_KG))){
 			i = which(!is.na(as.numeric(names(x))))
 			j = as.numeric(names(x[i]))
 			y = cbind(x[,i],WOS=x$WOS, GRID_NUM=x$GRID_NUM, WEIGHT_KG=x$WEIGHT_KG )

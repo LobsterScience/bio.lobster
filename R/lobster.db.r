@@ -27,6 +27,7 @@
         lobster.db( DS="logs41jonah.redo")
         lobster.db( DS="observer41.redo")
         lobster.db( DS="fsrs.redo")
+        lobster.db( DS="fsrs.commercial.samples.redo")
         lobster.db( DS="atSea.redo")
         lobster.db( DS="atSea.clean.redo")        
         lobster.db( DS="atSea.logbook.link.redo")
@@ -698,6 +699,38 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       }
       load(file.path( fnODBC, "fsrs.rdata"), .GlobalEnv)
      }
+
+
+    if (DS %in% c("fsrs.commercial.samples.redo", "fsrs.commercial.samples") ) {
+                fname = 'fsrs.commercial.rdata'
+               
+               if (DS=="fsrs.commercial.samples.redo") {
+                            print('Get updated csv files from FSRS last Update Nov 2017 AMC')
+                            tr = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','fsrs.commercial.samples','CTS_Position_17.csv'),header=T)
+                            vc = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','fsrs.commercial.samples','Vessel_Code.csv'),header=T)
+                            ti = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','fsrs.commercial.samples','Trapss.csv'),header=T)
+                            
+                            tr$Y = tr$Trap.1.Latitude
+                            tr$X = tr$Trap.1.Longitude
+
+                            tr = tr[,-c(grep('Lati',names(tr)))]
+                            tr = tr[,-c(grep('Longi',names(tr)))]
+                            tr$X = convert.dd.dddd(tr$X)
+                            tr$Y = convert.dd.dddd(tr$Y)
+                            tr$Comments <- NULL
+                            tr = rename.df(tr,'ID','TR.ID')
+                            tr$Temp = ifelse(tr$Temp==0,NA,tr$Temp)
+                            tt = merge(ti,tr,by=c('Record.Number'))
+                            tt = toNums(tt,c('Short','Berried','V.Notched','Recaptured'))
+                            tt$Date = as.Date(tt$Date,format = '%d-%b-%y')
+                            fsrs.comm = tt
+                            save( fsrs, file=file.path( fnODBC, fname), compress=T)
+                            gc()  # garbage collection
+                          }
+                load(file.path( fnODBC, "fname"), .GlobalEnv)
+      
+    }
+
 
 
 ###CCIR data frames
