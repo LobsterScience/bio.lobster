@@ -153,80 +153,80 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
 
                     #Filtering by   
-                    #Fish.Date<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
+                    #Fish.Date = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
                     Fish.Date = lobster.db('season.dates')
-                     
+                    lfa  =  sort(unique(Fish.Date$LFA))
+                    
                 
-                          print('Not the ODBC season Dates Need to Have Updated AMC jan2017')
-                          lfa <- unique(Fish.Date$LFA)
+                          print('Note the ODBC season Dates Need to be Updated AMC jan2017')
                           
-                          max_trap<-c(825,750,750,750,750,750,750,750,1126,1126,1126,1226)
-                          max_lbs<-c(2750,2750,2750,2750,2750,2750,2750,10000,30000,30000,30000,30000)
-                          Fish.Date$START_DATE<-as.Date(Fish.Date$START_DATE)#,"%d/%m/%Y")
-                          Fish.Date$END_DATE<-as.Date(Fish.Date$END_DATE)#,"%d/%m/%Y")
+                          #lfa "27"  "28"  "29"  "30"  "31A" "31B" "32"  "33"  "34"  "35"  "36"  "38" 
+
+                          max_trap = c(825,750,750,750,750,750,750,750,1126,1126,1126,1226)
+                          #max_lbs = c(2750,2750,2750,2750,2750,2750,2750,10000,30000,30000,30000,30000)
+                          Fish.Date$START_DATE = as.Date(Fish.Date$START_DATE)#,"%d/%m/%Y")
+                          Fish.Date$END_DATE = as.Date(Fish.Date$END_DATE)#,"%d/%m/%Y")
 
 
                     # imported logs from marfis
                           lobster.db('logs')
-                          logs$TOTAL_NUM_TRAPS<-rowSums(logs[c('NUM_OF_TRAPS','NUM_OF_TRAPS_B','NUM_OF_TRAPS_C')],na.rm=T)
-                          logs$TOTAL_WEIGHT_LBS<-rowSums(logs[c('WEIGHT_LBS','WEIGHT_LBS_B','WEIGHT_LBS_C')],na.rm=T)
-                          logs$TOTAL_WEIGHT_KG<-logs$TOTAL_WEIGHT_LBS*0.4536
+                          logs$TOTAL_NUM_TRAPS = rowSums(logs[c('NUM_OF_TRAPS','NUM_OF_TRAPS_B','NUM_OF_TRAPS_C')],na.rm=T)
+                          logs$TOTAL_WEIGHT_LBS = rowSums(logs[c('WEIGHT_LBS','WEIGHT_LBS_B','WEIGHT_LBS_C')],na.rm=T)
+                          logs$TOTAL_WEIGHT_KG = logs$TOTAL_WEIGHT_LBS*0.4536
 
                     # select for records within season
-                          logs$DATE_FISHED<-as.Date(logs$DATE_FISHED,"%Y-%m-%d")
-                          #logs$SYEAR<-year(logs$DATE_FISHED)
+                          logs$DATE_FISHED = as.Date(logs$DATE_FISHED,"%Y-%m-%d")
+                          #logs$SYEAR = year(logs$DATE_FISHED)
            
                         for(i in 1:length(lfa)) {
-                                h <- Fish.Date[Fish.Date$LFA==lfa[i],]  
+                                h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
                             for(j in 1:nrow(h)) {
-                                logs$SYEAR[logs$LFA==lfa[i]&logs$DATE_FISHED>=h[j,'START_DATE']&logs$DATE_FISHED<=h[j,'END_DATE']]<-h[j,'SYEAR']
+                                logs$SYEAR[logs$LFA==lfa[i]&logs$DATE_FISHED>=h[j,'START_DATE']&logs$DATE_FISHED<=h[j,'END_DATE']] = h[j,'SYEAR']
                                 }
                               }
                         
-                        logs<-subset(logs,!is.na(SYEAR))
+                        logs = subset(logs,!is.na(SYEAR))
                    
                     # add week of season (WOS) variable
-                        logs$WOS<-NA
+                        logs$WOS = NA
                           
                             for(i in 1:length(lfa)) {
-                                  h <- Fish.Date[Fish.Date$LFA==lfa[i],]  
+                                  h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
                                for(j in unique(logs$SYEAR[logs$LFA==lfa[i]])){
-                                   logs$WOS[logs$LFA==lfa[i]&logs$SYEAR==j]<-floor(as.numeric(logs$DATE_FISHED[logs$LFA==lfa[i]&logs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                   logs$WOS[logs$LFA==lfa[i]&logs$SYEAR==j] = floor(as.numeric(logs$DATE_FISHED[logs$LFA==lfa[i]&logs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
                               }
 
                     # add quarter
-                      logs$quarter<-NA
-                      logs$quarter[month(logs$DATE_FISHED)%in%1:3]<-1
-                      logs$quarter[month(logs$DATE_FISHED)%in%4:6]<-2
-                      logs$quarter[month(logs$DATE_FISHED)%in%7:9]<-3
-                      logs$quarter[month(logs$DATE_FISHED)%in%10:12]<-4
+                      logs$quarter = NA
+                      logs$quarter[month(logs$DATE_FISHED)%in%1:3] = 1
+                      logs$quarter[month(logs$DATE_FISHED)%in%4:6] = 2
+                      logs$quarter[month(logs$DATE_FISHED)%in%7:9] = 3
+                      logs$quarter[month(logs$DATE_FISHED)%in%10:12] = 4
 
 
-                    commonCols<-c("SUM_DOC_ID", "VR_NUMBER", "VESSEL_NAME", "SUBMITTER_NAME", "LICENCE_ID", "LFA", "COMMUNITY_CODE","SD_LOG_ID", "DATE_FISHED","SYEAR","WOS",'quarter',"TOTAL_NUM_TRAPS","TOTAL_WEIGHT_KG")
+                    commonCols = c("SUM_DOC_ID", "VR_NUMBER", "VESSEL_NAME", "SUBMITTER_NAME", "LICENCE_ID", "LFA", "COMMUNITY_CODE","SD_LOG_ID", "DATE_FISHED","SYEAR","WOS",'quarter',"TOTAL_NUM_TRAPS","TOTAL_WEIGHT_KG")
 
-                    logsInSeasonA<-subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS),c(commonCols,"GRID_NUM", "WEIGHT_LBS", "NUM_OF_TRAPS"))
-                    logsInSeasonB<-subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_B)&!is.na(NUM_OF_TRAPS_B),c(commonCols,"GRID_NUM_B", "WEIGHT_LBS_B", "NUM_OF_TRAPS_B"))
-                    logsInSeasonC<-subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_C)&!is.na(NUM_OF_TRAPS_C),c(commonCols,"GRID_NUM_C", "WEIGHT_LBS_C", "NUM_OF_TRAPS_C"))
+                    logsInSeasonA = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS),c(commonCols,"GRID_NUM", "WEIGHT_LBS", "NUM_OF_TRAPS"))
+                    logsInSeasonB = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_B)&!is.na(NUM_OF_TRAPS_B),c(commonCols,"GRID_NUM_B", "WEIGHT_LBS_B", "NUM_OF_TRAPS_B"))
+                    logsInSeasonC = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_C)&!is.na(NUM_OF_TRAPS_C),c(commonCols,"GRID_NUM_C", "WEIGHT_LBS_C", "NUM_OF_TRAPS_C"))
 
-                    names(logsInSeasonB)<-names(logsInSeasonA)
-                    names(logsInSeasonC)<-names(logsInSeasonA)
+                    names(logsInSeasonB) = names(logsInSeasonA)
+                    names(logsInSeasonC) = names(logsInSeasonA)
 
-                    logsInSeason<-rbind(logsInSeasonA,logsInSeasonB,logsInSeasonC)
-                    logsInSeason$WEIGHT_KG<-logsInSeason$WEIGHT_LBS*0.4536
+                    logsInSeason = rbind(logsInSeasonA,logsInSeasonB,logsInSeasonC)
+                    logsInSeason$WEIGHT_KG = logsInSeason$WEIGHT_LBS*0.4536
 
-                    centgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","lfa27_38_centgrid.csv"))
-                    grid.key<-with(centgrid,paste(LFA,GRID_NUM,sep='.'))
-                    
-                    logsInSeason$CPUE<-logsInSeason$WEIGHT_KG/logsInSeason$NUM_OF_TRAPS
+                     
+                    logsInSeason$CPUE = logsInSeason$WEIGHT_KG/logsInSeason$NUM_OF_TRAPS
         
                     
 
                     # add BUMPUP column: total landings/sum of logs for each year  & LFA
                     bumpup=T
                     if(bumpup){
-                      seasonLandings<-lobster.db('seasonal.landings')
-                      annualLandings<-lobster.db('annual.landings')
+                      seasonLandings = lobster.db('seasonal.landings')
+                      annualLandings = lobster.db('annual.landings')
                       sl=reshape(seasonLandings,idvar="SYEAR",times=substr(names(seasonLandings)[-1],4,6),timevar="LFA",varying=list(names(seasonLandings)[-1]),direction='long')
                       sl$SYEAR=substr(sl$SYEAR,6,9)
                       names(sl)=c("SYEAR","LFA","C")
@@ -234,24 +234,38 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       names(al)=c("SYEAR","LFA","C")
                       TotalLandings=rbind(subset(al,SYEAR>2000&!LFA%in%unique(sl$LFA)),subset(sl,SYEAR>2000))
 
-                      logsInSeason$BUMPUP<-NA
-                      lfa<-unique(TotalLandings$LFA)  
+                      logsInSeason$BUMPUP = NA
                       for(i in 1:length(lfa)){
-                        tmplogs<-subset(logsInSeason,LFA==lfa[i])
-                        yrs<-sort(unique(tmplogs$SYEAR))
+                        tmplogs = subset(logsInSeason,LFA==lfa[i])
+                        yrs = sort(unique(tmplogs$SYEAR))
                         for(y in 1:length(yrs)){
-                          logsInSeason$BUMPUP[logsInSeason$SYEAR==yrs[y]&logsInSeason$LFA==lfa[i]]<-TotalLandings$C[TotalLandings$SYEAR==yrs[y]&TotalLandings$LFA==lfa[i]]*1000/sum(tmplogs$WEIGHT_KG[tmplogs$SYEAR==yrs[y]],na.rm=T)
+                          logsInSeason$BUMPUP[logsInSeason$SYEAR==yrs[y]&logsInSeason$LFA==lfa[i]] = TotalLandings$C[TotalLandings$SYEAR==yrs[y]&TotalLandings$LFA==lfa[i]]*1000/sum(tmplogs$WEIGHT_KG[tmplogs$SYEAR==yrs[y]],na.rm=T)
                         }
                       }
                     }
                      save(logsInSeason,file=file.path( fnProducts,"logsInSeasonUnfiltered.rdata"),row.names=F)
 
-                    logsInSeason<-subset(logsInSeason,CPUE<20 & !is.na(CPUE))
-                    logsInSeason<-subset(logsInSeason,!is.na(GRID_NUM)&paste(LFA,GRID_NUM,sep='.')%in%grid.key)
-                    subareas<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","LFA2733subarea.csv"))
-                    names(subareas)[2]<-"GRID_NUM"
-                    logsInSeason<-merge(logsInSeason,subareas,all.x=T)
+                    
 
+                    # filter by max trap
+                    logsInSeason.lst = list()
+                    for(i in 1:length(lfa)){
+                      logsInSeason.lst[[i]] = subset(logsInSeason,LFA==lfa[i]&TOTAL_NUM_TRAPS<max_trap[i])
+                    }
+                    logsInSeason = do.call("rbind",logsInSeason.lst)
+
+                    # filter by cpue
+                    logsInSeason = subset(logsInSeason,CPUE<20 & !is.na(CPUE))
+                    
+
+                    # filter by grid
+                    centgrid = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","lfa27_38_centgrid.csv"))
+                    grid.key = with(centgrid,paste(LFA,GRID_NUM,sep='.'))
+                    logsInSeason = subset(logsInSeason,!is.na(GRID_NUM)&paste(LFA,GRID_NUM,sep='.')%in%grid.key)
+
+                    logsInSeason = assignSubArea2733(logsInSeason)
+                    
+  
           # Save logsInSeason as working data
               save(logsInSeason,file=file.path( fnProducts,"logsInSeason.rdata"),row.names=F)
    }
@@ -264,10 +278,10 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                 con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                 
                 # logs from LFA 41 Cheryl's query for adjusted catch and assigning subareas
-                query41<-"select * from lobster.logs41"
-                slipquery41<-"select  * from lobster.slips41"
-                ziffquery41 <- "select * from lobster.ziff41"
-                offquery41 <- "select * from lobster.crislog41;" # table not view
+                query41 = "select * from lobster.logs41"
+                slipquery41 = "select  * from lobster.slips41"
+                ziffquery41  =  "select * from lobster.ziff41"
+                offquery41  =  "select * from lobster.crislog41;" # table not view
 
                 slip41 = sqlQuery(con, slipquery41)
                 logs41 = sqlQuery(con, query41)
@@ -276,7 +290,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
             
                 off41 = subset(off41,DATE_FISHED < '1995-01-01')
 
-                logs41$DDLON<-logs41$DDLON*-1
+                logs41$DDLON = logs41$DDLON*-1
                 save( logs41, file=file.path( fnODBC, "logs41.rdata"), compress=T)
                 save( slip41, file=file.path( fnODBC, "slip41.rdata"), compress=T)
                 save( ziff41, file=file.path( fnODBC, "ziff41.rdata"), compress=T)
@@ -335,7 +349,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
             a41 = habitat.lookup(a41,p=p,DS='depth')
 
             #clean up some errors
-            a41$z[which(a41$z>450)] <- NA
+            a41$z[which(a41$z>450)]  =  NA
 
             hist(a41$z,'fd',xlab='Depth',main="")
 
@@ -360,10 +374,10 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
               con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
               
               # logs from LFA 41 Cheryl's query for adjusted catch and assigning subareas
-              query41<-'NEED TO IDENITFY'
+              query41 = 'NEED TO IDENITFY'
                
               logs41jonah = sqlQuery(con, query41)
-              logs41jonah$DDLON<-logs41jonah$DDLON*-1
+              logs41jonah$DDLON = logs41jonah$DDLON*-1
               save( logs41jonah, file=file.path( fnODBC, "logs41jonah.rdata"), compress=T)
               gc()  # garbage collection
               odbcClose(con)
@@ -399,7 +413,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
   #Define a list of VRNs from offshore lobster vrns
 
 
-      vms.q <- paste("SELECT rownum vesid,
+      vms.q  =  paste("SELECT rownum vesid,
                   p.longitude lon, p.latitude lat, 
                  NVL(v.vessel_name,p.vr_number) vessel_name, 
                  p.vr_number vrn,
@@ -410,15 +424,15 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                  AND p.vr_number IN ('",vrn.vector,"')",
                   sep="" )
 
-      vms.data <- sqlQuery(con, vms.q, believeNRows=FALSE)  
+      vms.data  =  sqlQuery(con, vms.q, believeNRows=FALSE)  
       odbcClose(con)
-        vms.data$VMSDATE <- as.POSIXct(vms.data$VMSDATE,tz="GMT")  # VMS data is in UTC, assign timezone
+        vms.data$VMSDATE  =  as.POSIXct(vms.data$VMSDATE,tz="GMT")  # VMS data is in UTC, assign timezone
   
   # Create date and time variables in local time
-      vms.data$DATE <- format(strftime(vms.data$VMSDATE,format="%Y-%m-%d"), tz="America/Halifax",usetz=TRUE)
-      vms.data$TIME <- format(strftime(vms.data$VMSDATE,format="%H:%M:%S"), tz="America/Halifax",usetz=TRUE)
-      vms.data$YEAR <- format(strftime(vms.data$VMSDATE,format="%Y"), tz="America/Halifax",usetz=TRUE)
-      vms.data$VMSDATElocal <- as.POSIXct(paste(vms.data$DATE, vms.data$TIME), format="%Y-%m-%d %H:%M:%S",tz="America/Halifax")
+      vms.data$DATE  =  format(strftime(vms.data$VMSDATE,format="%Y-%m-%d"), tz="America/Halifax",usetz=TRUE)
+      vms.data$TIME  =  format(strftime(vms.data$VMSDATE,format="%H:%M:%S"), tz="America/Halifax",usetz=TRUE)
+      vms.data$YEAR  =  format(strftime(vms.data$VMSDATE,format="%Y"), tz="America/Halifax",usetz=TRUE)
+      vms.data$VMSDATElocal  =  as.POSIXct(paste(vms.data$DATE, vms.data$TIME), format="%Y-%m-%d %H:%M:%S",tz="America/Halifax")
 
       save(vms.data,file=file.path( fnODBC,"vms.data.rdata"))
       return(paste('File is saved as', file.path( fnODBC,"vms.data.rdata"),sep=" "))
@@ -531,26 +545,26 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
      if (DS=="process.vlog.redo") {
           load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)  
-          vlog$SYEAR<-as.numeric(substr(vlog$SEASON,6,9))
-          vlog$W_KG<-vlog$W_TOT*0.4536
-          vlog$CPUE<-vlog$W_KG/vlog$N_TRP
+          vlog$SYEAR = as.numeric(substr(vlog$SEASON,6,9))
+          vlog$W_KG = vlog$W_TOT*0.4536
+          vlog$CPUE = vlog$W_KG/vlog$N_TRP
 
-          vlog$X<-convert.dd.dddd(vlog$LONGITUDE)*-1
-          vlog$Y<-convert.dd.dddd(vlog$LATITUDE)
+          vlog$X = convert.dd.dddd(vlog$LONGITUDE)*-1
+          vlog$Y = convert.dd.dddd(vlog$LATITUDE)
 
-          Ports<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","Ports.csv"))
-          ports31A<-subset(Ports,LFA=='31A')$Port_Code
-          ports31B<-c(subset(Ports,LFA=='31B')$Port_Code,11799)
-          stat33E<-c(18,22,23,25,26)
-          stat33W<-c(27,28,30,31)
-          stat27N<-c(1,4)
-          stat27S<-c(6,7)
-          vlog$LFA[vlog$STAT%in%stat27N]<-"27N"
-          vlog$LFA[vlog$STAT%in%stat27S]<-"27S"
-          vlog$LFA[vlog$STAT%in%stat33E]<-"33E"
-          vlog$LFA[vlog$STAT%in%stat33W]<-"33W"
-          vlog$LFA[vlog$PORT_CODE%in%ports31A]<-"31A"
-          vlog$LFA[vlog$PORT_CODE%in%ports31B]<-"31B"
+          Ports = read.csv(file.path( project.datadirectory("lobster"), "data","inputs","Ports.csv"))
+          ports31A = subset(Ports,LFA=='31A')$Port_Code
+          ports31B = c(subset(Ports,LFA=='31B')$Port_Code,11799)
+          stat33E = c(18,22,23,25,26)
+          stat33W = c(27,28,30,31)
+          stat27N = c(1,4)
+          stat27S = c(6,7)
+          vlog$LFA[vlog$STAT%in%stat27N] = "27N"
+          vlog$LFA[vlog$STAT%in%stat27S] = "27S"
+          vlog$LFA[vlog$STAT%in%stat33E] = "33E"
+          vlog$LFA[vlog$STAT%in%stat33W] = "33W"
+          vlog$LFA[vlog$PORT_CODE%in%ports31A] = "31A"
+          vlog$LFA[vlog$PORT_CODE%in%ports31B] = "31B"
           save( vlog, file=file.path( fnODBC, "processed.vlog.rdata"), compress=T)
           return(vlog)
         }
@@ -586,7 +600,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
       h = dir(fdd)
       code.tables = list()
         for(i in h){
-          code.tables[[i]] <- read.csv(file.path(fdd,i))
+          code.tables[[i]]  =  read.csv(file.path(fdd,i))
         }
       return(code.tables)       
      }
@@ -599,7 +613,7 @@ if(DS %in% c('lfa41.observer.samples.redo','lfa41.observer.samples')) {
         con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # Denton Script Sept 28 2016
-        obs.samp <- sqlQuery(con, paste("
+        obs.samp  =  sqlQuery(con, paste("
 SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, st.fishset_id
                                         FROM isdb.istrips trip, isdb.isfishsets st,   isdb.iscatches ca, isdb.isfish fish,
                                                                           (SELECT 
@@ -715,7 +729,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
           fsrs$Sex = ifelse(fsrs$Sex == 3, 2, fsrs$Sex)
           fsrs$julian = round(as.numeric(julian(fsrs$DATE)))
 
-          mls<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
+          mls = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
           lfa = rep(unlist(lapply(strsplit(names(mls)[2:ncol(mls)],"LFA"),'[[',2)),each=nrow(mls))
           mls = reshape(mls,idvar='Year',varying=list(2:14),v.names=c('MLS'),direction='long')
           mls$lfa = lfa
@@ -725,8 +739,8 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
           mls$lfa[i] = '31.2'
           mls$lfa = as.numeric(mls$lfa)
           names(mls) = c('YEAR','ID','MLS','LFA')
-          mls$MLS_FSRS <- NA
-          scd<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
+          mls$MLS_FSRS  =  NA
+          scd = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
           for(i in 1:nrow(mls)) {
               a = mls[i,'MLS']
                mls$MLS_FSRS[i]= scd$SIZE_CD[intersect(which(scd$MIN_S<=a),which(scd$MAX_S>=a))]
@@ -737,7 +751,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
           # remove berried
           fsrs = fsrs[order(fsrs$YEAR),]
           fsrs = subset(fsrs,Berried==0)
-          fsrs$IsLegal <- 1-fsrs$Short
+          fsrs$IsLegal  =  1-fsrs$Short
           ccir_data = fsrs
           ccir_data$Y = convert.dd.dddd(c(ccir_data$Latitude))
           ccir_data$X = convert.dd.dddd(c(ccir_data$Longitude))
@@ -778,23 +792,23 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         # survey
         require(RODBC)
         con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-        ILTSTowDepth<-sqlQuery(con, "select * from FRAILC.MARPORT_DEPTH")
-        ILTSTowSpread<-sqlQuery(con, "select * from FRAILC.MARPORT_SPREAD")
-        ILTSTowDist<-sqlQuery(con, "select * from FRAILC.MARPORT_TOWDIST")
-        ILTSTemp<-sqlQuery(con, "select * from FRAILC.MINILOG_TEMP")
-        NM1<-merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
-        netMensuration<-merge( NM1,ILTSTowDist)#merge net mensuration into one file
-        netMensuration$TTIME<-NULL #remove load date from merged file
-        surveyCatch<-sqlQuery(con, "select * from lobster.ILTSSETS_MV")
-        surveyMeasurements<-sqlQuery(con, "select * from lobster.ILTSDETAILS_MV")
+        ILTSTowDepth = sqlQuery(con, "select * from FRAILC.MARPORT_DEPTH")
+        ILTSTowSpread = sqlQuery(con, "select * from FRAILC.MARPORT_SPREAD")
+        ILTSTowDist = sqlQuery(con, "select * from FRAILC.MARPORT_TOWDIST")
+        ILTSTemp = sqlQuery(con, "select * from FRAILC.MINILOG_TEMP")
+        NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
+        netMensuration = merge( NM1,ILTSTowDist)#merge net mensuration into one file
+        netMensuration$TTIME = NULL #remove load date from merged file
+        surveyCatch = sqlQuery(con, "select * from lobster.ILTSSETS_MV")
+        surveyMeasurements = sqlQuery(con, "select * from lobster.ILTSDETAILS_MV")
         with(surveyMeasurements,paste(TRIP_ID,SET_NO,sep=''))->surveyMeasurements$SET_ID
         with(surveyCatch,paste(TRIP_ID,SET_NO,sep=''))->surveyCatch$SET_ID
-        surveyCatch$SET_LONG<-surveyCatch$SET_LONG*-1
-        surveyCatch$HAUL_LONG<-surveyCatch$HAUL_LONG*-1
-        surveyCatch$YEAR<-year(surveyCatch$BOARD_DATE)
-        surveyMeasurements$SET_LON<-surveyMeasurements$SET_LON*-1
-        surveyMeasurements$HAUL_LON<-surveyMeasurements$HAUL_LON*-1
-        surveyStationID<-sqlQuery(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
+        surveyCatch$SET_LONG = surveyCatch$SET_LONG*-1
+        surveyCatch$HAUL_LONG = surveyCatch$HAUL_LONG*-1
+        surveyCatch$YEAR = year(surveyCatch$BOARD_DATE)
+        surveyMeasurements$SET_LON = surveyMeasurements$SET_LON*-1
+        surveyMeasurements$HAUL_LON = surveyMeasurements$HAUL_LON*-1
+        surveyStationID = sqlQuery(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
         save(netMensuration, file=file.path( fnODBC, "netMensuration.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)
         save(surveyMeasurements, file=file.path(fnODBC, "surveyMeasurements.rdata"), compress=T)
@@ -849,7 +863,7 @@ if(DS %in% c('rv.survey.samples.redo','rv.survey.samples.samples')) {
                 d.fwt,
                 d.clen"
 
-        rv.samp <- sqlQuery(con, sql)
+        rv.samp  =  sqlQuery(con, sql)
 
 
         save( rv.samp, file=file.path( fnODBC, "rv.survey.samples.rdata"), compress=T)

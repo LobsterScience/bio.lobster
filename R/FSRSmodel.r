@@ -24,27 +24,33 @@ FSRSmodel<-function(FSRS,response="SHORTS",redo=T,interaction=F, theta =1){
   if(response=="SHORTS"){
     if(redo){
       print(Sys.time())
-browser()
+#browser()
       if(interaction==F)S <- glmer(SHORTS ~ fYEAR + LEGALS + TEMP + offset(logTRAPS) + (1 | VESSEL), family = MASS::negative.binomial(theta = theta), data = FSRS)
       if(interaction==T)S <- glmer(SHORTS ~ fYEAR + LEGALS + TEMP + LEGALS*TEMP + offset(logTRAPS) + (1 | VESSEL),family = MASS::negative.binomial(theta = theta), data = FSRS)
       print(Sys.time())
       print(summary(S))
     
-      
     pData<-with(S@frame,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= mean(TEMP),logTRAPS= log(2),LEGALS= mean(LEGALS), VESSEL = unique(VESSEL)[1]))
-    #P <- predict(S, newdata = pData, se = TRUE)
-    
     P <- predict(S, newdata = pData, type = 'response')
-   boots<- lme4::bootMer(S, function(x) predict(x, newdata = pData, re.form = NULL, type = 'response'), nsim = 100)
-    
-   data.frame(fit = apply(boot$t, 2, function(x) mean(x)),
-              lower = apply(boot$t, 2, function(x) as.numeric(quantile(x, probs=.05, na.rm=TRUE))),
-              upper = apply(boot$t, 2, function(x) as.numeric(quantile(x, probs=.95, na.rm=TRUE)))) -> PI.boot
+   
+    #confint(S)
+    #PI <- predictInterval(S, newdata = pData, which = 'fixed', type='linear.prediction', stat = 'median')
+    #PI.arm.sims = arm::sim(S,1000)
+    #PI.arm <- data.frame( 
+    #  fit=apply(fitted(PI.arm.sims, S), 1, function(x) quantile(x, 0.500)),
+    #  upr=apply(fitted(PI.arm.sims, S), 1, function(x) quantile(x, 0.975)),
+    #  lwr=apply(fitted(PI.arm.sims, S), 1, function(x) quantile(x, 0.025)))
+
+   #boots<- lme4::bootMer(S, function(x) predict(x, newdata = pData, re.form = NULL, type = 'response'), nsim = 10,use.u=T,parallel = 'multicore', ncpus = 4,type='parametric')
+   # 
+   #data.frame(fit = apply(boot$t, 2, function(x) mean(x)),
+   #           lower = apply(boot$t, 2, function(x) as.numeric(quantile(x, probs=.05, na.rm=TRUE))),
+   #           upper = apply(boot$t, 2, function(x) as.numeric(quantile(x, probs=.95, na.rm=TRUE)))) -> PI.boot
    
     
       #P <- confint(S, newdata = pData, method = "Wald")
       pData$YEAR <- as.numeric(as.character(pData$fYEAR))
-      #pData$mu <- exp(P$fit)
+      pData$mu <- P
       #pData$ub <- exp(P$fit + 1.96 * P$se.fit)
       #pData$lb <- exp(P$fit - 1.96 * P$se.fit)
       print(Sys.time())

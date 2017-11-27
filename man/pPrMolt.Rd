@@ -2,24 +2,20 @@
 % Please edit documentation in R/pPrMolt.R
 \name{pPrMolt}
 \alias{pPrMolt}
-\title{getIncr}
+\title{pPrMolt}
 \usage{
-pPrMolt(cw, a, b, d, x)
+pPrMolt(p, cl)
 }
 \arguments{
-\item{\code{cw}}{: carapace width}
+\item{\code{cl}}{: carapace length}
 
-\item{\code{a}}{: molt probability parameter}
-
-\item{\code{b}}{: molt probability parameter}
-
-\item{\code{d}}{: days since last molt}
+\item{\code{p}}{: parameter list with moltPrModel and degreedays (ddoy)}
 }
 \value{
 The predicted probability of moulting
 }
 \description{
-Made up function that gives you probability of moulting based on day since last moult, size and can include temperature through a degree day metric. Needs to be calibrated with real data.
+probability of moulting based on degreedays since last moult, size.
 }
 \author{
 Brad Hubley, \email{Brad.Hubley@dfo-mpo.gc.ca}
