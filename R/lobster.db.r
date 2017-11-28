@@ -552,7 +552,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
           vlog$X = convert.dd.dddd(vlog$LONGITUDE)*-1
           vlog$Y = convert.dd.dddd(vlog$LATITUDE)
 
-          Ports = read.csv(file.path( project.datadirectory("lobster"), "data","inputs","Ports.csv"))
+          Ports = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","Ports.csv"))
           ports31A = subset(Ports,LFA=='31A')$Port_Code
           ports31B = c(subset(Ports,LFA=='31B')$Port_Code,11799)
           stat33E = c(18,22,23,25,26)

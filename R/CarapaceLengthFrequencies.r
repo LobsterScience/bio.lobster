@@ -1,10 +1,9 @@
 
 #' @export
-CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,220,5), Yrs=2005:2016, by=NULL, sex=1:2, fn='',GEAR='280 BALLOON',ss=F,vers=1,... ) {
+CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,220,5), Yrs=2005:2016, by=NULL, sex=1:2, fn='',GEAR='280 BALLOON',ss=NULL,vers=1, rootdir=file.path(project.datadirectory('bio.lobster'),'figures'),... ) {
 
     ### Carapace Length Frequencies (CLF)
 
-        rootdir=file.path(project.datadirectory('bio.lobster'),'figures')
 
         #MLS
         mls<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
@@ -90,13 +89,12 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
             atSeaCLF<-CLF(subset(atSeaData,SYEAR%in%Yrs&SEX%in%sex,c("SYEAR","CARLENGTH",by)),yrs=Yrs,bins=bins,vers=vers)
 
             
-            if(ss){
+            if(!is.null){
                 ss = unlist(lapply(with(subset(atSeaData,SYEAR%in%Yrs&SEX%in%sex),tapply(paste(SYEAR,TRIPNO),SYEAR,unique)),length))
                 ss = data.frame(Year=names(ss),N=ss)
                 ss = merge(data.frame(Year=Yrs),ss,all=T)
                 ss = ss$N
             }
-            else ss = NULL
 
             #browser()
 
@@ -137,10 +135,11 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
             LFdat<-merge(fsrs,scd[c("SIZE_CD","LENGTH")])
 
             # Construct CLF
-            fsrsCLF<-CLF(subset(LFdat,SYEAR%in%Yrs&SEX%in%sex&LFA%in%LFAs,c("SYEAR","LENGTH",by)),yrs=Yrs,bins=bins)
+            fsrsCLF<-CLF(subset(LFdat,SYEAR%in%Yrs&SEX%in%sex&LFA%in%LFAs,c("SYEAR","LENGTH",by)),yrs=Yrs,bins=bins,vers=vers)
             # plot
-            BarPlotCLF(fsrsCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFfsrs",fn,".pdf")),rel=T,LS=mls,wd=9,...)
-            return(fsrsCLF)
+            if(vers==1)BarPlotCLF(fsrsCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFfsrs",fn,".pdf")),rel=T,LS=mls,wd=9,...)
+            if(vers==2)BarPlotCLF2(fsrsCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFfsrs",fn,".pdf")),LS= as.vector(mls), sample.size=ss,...)
+           return(fsrsCLF)
         }
 
 
