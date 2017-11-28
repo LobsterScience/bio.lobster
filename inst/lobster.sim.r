@@ -30,7 +30,7 @@ p$season = c("1999-11-28","2000-05-31") # 33
 
 #mortality
 p$M = 0.1
-p$F = 0.4
+p$F = 0.7
 
 # rough temperature generator (for degree day growth)
 #coldestday = as.numeric(as.Date("2017-02-23") - as.Date(p$startDate) )

@@ -1,5 +1,5 @@
 #' @export
-CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,effort.min=10,export=F,...){
+CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,effort.min=10,export=F,path=file.path( project.figuredirectory("bio.lobster"),"figures"),...){
 
 	if(is.null(lfa)&&is.null(subarea))stop("specify LFA or subarea")
 
@@ -36,7 +36,7 @@ CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,
 	daily.dat<-merge(daily.dat,merge(dates,data.frame(LFA=lfa)),all=T)
 	annual.dat<-do.call("rbind",annual)
 
-	if(graphic=='pdf')pdf(file.path( project.figuredirectory("bio.lobster"),"figures",paste0("CPUE",lab,".pdf")),wd,ht)
+	if(graphic=='pdf')pdf(file.path( path,paste0("CPUE",lab,".pdf")),wd,ht)
 
 	par(mfrow=c(length(lfa),1),mar=c(0,0,0,0),omi=c(0.5,1,0.5,0.5),las=1)
 
