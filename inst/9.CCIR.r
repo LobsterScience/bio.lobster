@@ -43,11 +43,12 @@ if(redo.models) {
 								attr(out.logit.binomial,'model') <- 'logit.binomial'
 				out.logit.binomial.cov = list()
 								attr(out.logit.binomial.cov,'model') <- 'logit.binomial.cov'
-				mm = c('binomial','binomial.fishery.land')
+				mm = c('binomial'),'binomial.fishery.land')
 
 for(i in 1:length(dat)) {
 print(i)
 				ds = dat[[i]]
+
 				if(any(mm == 'normal')){
 				ds$method = 'normal'
 				x = ccir_stan_run(dat = ds)
