@@ -1,6 +1,6 @@
 #' @export
 
-atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B') {
+atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B',females.only=T) {
     links = lobster.db('atSea.logbook.link') 
 	Fish.Date = lobster.db('season.dates')
 	atSea = subset(atSea, SYEAR ==year & LFA == lfa)
@@ -47,6 +47,8 @@ atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B') {
 			trSum = na.zero(trSum)
 
 	aS = subset(atSea,SPECIESCODE==2550)
+	if(females.only) aS = subset(aS,SEX %in% c(2,3))
+
 	aS$ids = paste(aS$TRIPNO, aS$LFA, aS$GRID_NUM,aS$WOS, aS$SYEAR,sep="-")
 	i = which(aS$CARLENGTH>=250)
 	if(length(i) >0) aS = aS[-i,]

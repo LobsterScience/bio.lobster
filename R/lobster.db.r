@@ -43,6 +43,7 @@
         lobster.db( DS="season.dates.redo")
         lobster.db(DS = "lfa41.vms.redo")
         lobster.db(DS= "logs41.habitat.redo")
+        lobster.db(DS = 'landings.by.port.redo')
         }
       
   if(DS %in% c('port','port.redo')){
@@ -64,6 +65,41 @@
                   links = sqlQuery(con,'select * from LOBSTER.ATSEA_LOG_LINK;')
                   save(links,file=file.path(fnODBC,'atSea.logbook.link.rdata'))          
         }
+
+if(DS %in% c('landings.by.port.redo','landings.by.port')) {
+
+  if(DS == 'landings.by.port.redo') {
+     con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                          #1975 - 1996
+                          oldd = sqlQuery(con,paste("SELECT date_landed da, prov_code||district||port_code port, cfv boatvesid, wt_lbs, lfa FROM
+                                  (SELECT date_landed,
+                                prov_code,    CASE      WHEN district = ' 1'      THEN '01'      WHEN district = ' 2'      THEN '02'      WHEN district = ' 3'      THEN '03'      WHEN district = ' 4'      THEN '04'      WHEN district = ' 5'      THEN '05'
+                                  WHEN district = ' 6'      THEN '06'      WHEN district = ' 7'      THEN '07'      WHEN district = ' 8'      THEN '08'      WHEN district = ' 9'      THEN '09'      ELSE district    END district,
+                                CASE      WHEN port_code = ' 1'      THEN '01'      WHEN port_code = ' 2'      THEN '02'      WHEN port_code = ' 3'      THEN '03'      WHEN port_code = ' 4'      THEN '04'      WHEN port_code = ' 5'      THEN '05'
+                                  WHEN port_code = ' 6'      THEN '06'      WHEN port_code = ' 7'      THEN '07'      WHEN port_code = ' 8'      THEN '08'      WHEN port_code = ' 9'      THEN '09'      ELSE port_code    END port_code,    match_cfv CFV,
+                                landed_qty_lbs_n WT_LBS,    CASE      WHEN lobster_district = '1'      THEN '36'      WHEN lobster_district = '2'      THEN '38'      WHEN lobster_district = '3'      THEN '35'      WHEN lobster_district = '5'
+                                  THEN '31_32'      WHEN lobster_district = '5A'      THEN '32'      WHEN lobster_district = '5B'      THEN '31A'      WHEN lobster_district = '5B1'      THEN '31B'      WHEN lobster_district = '6A'      THEN '30'
+                                  WHEN lobster_district = '6B'      THEN '27'      WHEN lobster_district = '7A'      THEN '29'      WHEN lobster_district = '7A1'      THEN '28'      WHEN lobster_district       = 'A'      AND SUBSTR(date_landed,1,4) > 1976
+                                  THEN '41'      WHEN match_cfv             IN ('000530','000790','001614','005366','005461','005569','012136','012148')     AND SUBSTR(date_landed,1,4) = 1975      THEN '41'  WHEN match_cfv             IN ('000530','001614','005366','005461','005569','012148')
+                                  AND SUBSTR(date_landed,1,4) = 1976     THEN '41'   WHEN lobster_district = '4B'  AND match_cfv NOT    IN ('000115','000530','000790','001530','001532','001540','001550','001614','004005','004034','004056', '005366','005461','005569','005611','005690','012136','012148','100989','101315','100990')
+                                  THEN '33'     WHEN lobster_district = '4A'  AND match_cfv NOT    IN ('000115','000530','000790','001530','001532','001540','001550','001614','004005','004034','004056', '005366','005461','005569','005611','005690','012136','012148','100989','101315','100990')
+                                  THEN '34'  WHEN lobster_district = '7B'   THEN '7B'   ELSE 'NA'   END LFA  FROM FRAILC.LD_SPELVL_LOB  WHERE species_code          = 700  AND SUBSTR(date_landed,1,4) <1997 ) WHERE lfa IN ('27','28','29','30','31A','31B','32','33')"))
+                           oldd <- transform(oldd, DA = as.Date(as.character(DA), "%Y%m%d"))
+
+                        #1997 - 2001
+                          midd = sqlQuery(con,paste("SELECT date_fished da,  port_landed port,  licence_id boatvesid,  weight_lbs wt_lbs,  lfa FROM lobster.LOB_LOG_EST_1997_2001 WHERE lfa IN ('27','28','29','30','31A','31B','32','33')"))
+
+                        #2002 - current
+                          newd = sqlQuery(con,paste("SELECT date_fished da,  community_code port ,  licence_id boatvesid,  NVL(weight_lbs,0)+NVL(weight_lbs_b,0)+NVL(weight_lbs_c,0) wt_lbs,  lfa FROM marfissci.lobster_sd_log"))
+
+                    dats = rbind(oldd,midd,newd)
+}
+
+      
+          }
+
+
+
 
 
  if(DS %in% c('annual.landings','annual.landings.redo')) {

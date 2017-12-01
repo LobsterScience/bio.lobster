@@ -1,5 +1,5 @@
 #' @export
-weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space','time.space'),probs = c(0.025,0.5,0.975),grouping = NULL,returnLF = F,returnHistStats=F) {
+weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space','time.space'),probs = c(0.025,0.5,0.975),grouping = NULL,returnLF = F,one.output=F) {
 	
 	#x = aCC from atSeaLogbookLinker
 	#logs = pruned data for entire fishery and year
@@ -21,7 +21,8 @@ weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space'
 		
 		jk=NULL
 		if(any(names(x)=='WEIGHT_KG')) jh = (nrow(x[!is.na(x$WEIGHT_KG),])/nrow(x))
-	out = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),Grouping=grouping,NTrips = length(unique(x$TRIPNO)),N_Grids = length(unique(x$GRID_NUM)),TotalLobsters = sum(x$NLobster), TotalTraps = sum(x$TrapsSampled),prop.linked.to.trips=jk)
+	outa = out = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),Grouping=grouping,NTrips = length(unique(x$TRIPNO)),N_Grids = length(unique(x$GRID_NUM)),TotalLobsters = sum(x$NLobster), TotalTraps = sum(x$TrapsSampled),prop.linked.to.trips=jk)
+	
 	if(nrow(x)>1){
 	if(is.null(logs)) weighting.scheme = 'none' #if no log book info then don't weight at all
 	if(any(weighting.scheme=='none')) {
@@ -42,13 +43,12 @@ weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space'
 			hist(lens,breaks=j)
 			vec=NULL
 			if(returnLF) vec = lens
-			if(returnHistStats) {return(lens)}
-			out$none = list(vec = vec,mean = mean(lens),sd = sd(lens), quants = quantile(lens,probs=probs), proportion.of.sampled.traps.w.lobster = f1, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6  )
+			
+		outa$out = 	out$none = list(vec = vec,mean = mean(lens),sd = sd(lens), quants = quantile(lens,probs=probs), proportion.of.sampled.traps.w.lobster = f1, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6  )
 	}
 
 	if(any(weighting.scheme=='space')) {
 		#ignores actual logbook links
-
 			lo = aggregate(WEIGHT_KG~GRID_NUM,data=logs,FUN=sum)
 			wq = aggregate(cbind(TrapsSampled,TrapsSampledwLobster,NLobster,NMaleLobster,NFemaleLobster,NBerriedLobster, NCullLobster ,NVnotchedLobster)~GRID_NUM,data=x,FUN=sum)
 			wq = merge(wq,lo,by='GRID_NUM')
@@ -77,7 +77,7 @@ weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space'
 			hist(oo,breaks=j)
 			vec=NULL
 			if(returnLF) vec = oo
-			out$space = list(vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), proportion.of.sampled.traps.w.lobster = f1, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6  )
+		outa$out = out$space = list(vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), proportion.of.sampled.traps.w.lobster = f1, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6  )
 		}
 	}
 
@@ -116,7 +116,7 @@ weightedCLF <- function(x, logs=NULL, weighting.scheme = c('none','time','space'
 			hist(oo,breaks=j)
 			vec=NULL
 			if(returnLF) vec = oo
-			out$time = list(vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), proportion.of.sampled.traps.w.lobster = f1, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6  )
+			outa$out = out$time = list(vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), proportion.of.sampled.traps.w.lobster = f1, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6  )
 			}
 		}
 
@@ -158,10 +158,11 @@ if(any(!is.na(x$WEIGHT_KG))){
 			hist(oo,breaks=j)
 			vec=NULL
 			if(returnLF) vec = oo
-			out$time.space = list(vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), proportion.of.sampled.traps.w.lobster = f1, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6  )
+			outa$out = out$time.space = list(vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), proportion.of.sampled.traps.w.lobster = f1, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6  )
 		}
 	}
 }
-return(out)
+if(!one.output) return(out)
+if(one.output) return(outa)
 
 }
