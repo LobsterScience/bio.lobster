@@ -1,5 +1,5 @@
 #' @export
-FSRSmodelData = function(){
+FSRSModelData = function(){
 
 
 
