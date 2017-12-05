@@ -16,7 +16,6 @@ CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,
 	}
 
 	for(i in 1:length(lfa)){
-#browser()		
 		# daily
 		catch<-with(subset(logs,LFA==lfa[i]),tapply(WEIGHT_KG,DATE_FISHED,sum,na.rm=T))
 		effort<-with(subset(logs,LFA==lfa[i]),tapply(NUM_OF_TRAPS,DATE_FISHED,sum,na.rm=T))
@@ -50,7 +49,7 @@ CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,
 
 	if(graphic=='pdf')dev.off()
 
-	if(export)write.csv(cpue.dat,file.path( project.datadirectory("bio.lobster"), "data","products","CommercialCPUE.csv"),row.names=F)
+	if(export)write.csv(annual.dat,file.path( project.datadirectory("bio.lobster"), "data","products","CommercialCPUE.csv"),row.names=F)
 
 
 	return(list(daily.data=daily.dat,annual.data=annual.dat))

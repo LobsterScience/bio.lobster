@@ -45,10 +45,12 @@
 
     logsInSeason<-lobster.db('process.logs')
 
+    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2016,graphic='R',export=T)
     cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2016,graphic='pdf',path=figdir)
     cpueSubArea.dat = CPUEplot(logsInSeason,subarea= p$subareas,yrs=2006:2016,graphic='R')
 
-
+	#write.csv(cpueLFA.dat$annual.data,"CPUEannualData.csv",row.names=F)
+	#write.csv(na.omit(cpueLFA.dat$daily.data),"CPUEdailyData.csv",row.names=F)
 
 
 	## Fishery Footprint
