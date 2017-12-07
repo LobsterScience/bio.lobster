@@ -1,6 +1,7 @@
     
   
 	p = bio.lobster::load.environment()
+	la()
 
 
     p$syr = 2005
@@ -43,6 +44,7 @@
     p$subareas = c("27N","27S", "28", "29", "30", "31A", "31B", "32", "33E", "33W") # specify lfas for data summary
 
 
+    logsInSeason<-lobster.db('process.logs.redo')
     logsInSeason<-lobster.db('process.logs')
 
     cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2016,graphic='R',export=T)
@@ -73,8 +75,8 @@
 	for(i in 1:length( p$subareas)){
 
 		mdata = subset(FSRSvesday,subarea==p$subareas[i])
-		FSRSModelResultsShort[[i]]=FSRSmodel(LFA27north, response="SHORTS")
-		FSRSModelResultsLegal[[i]]=FSRSmodel(LFA27north, response="LEGALS")
+		FSRSModelResultsShort[[i]]=FSRSmodel(mdata, response="SHORTS")
+		FSRSModelResultsLegal[[i]]=FSRSmodel(mdata, response="LEGALS")
 
 	}
 
@@ -82,7 +84,7 @@
 
 	## Commercial CPUE MOdels
 
-	CPUE.data<-CPUEModelData()
+	CPUE.data<-CPUEModelData(p)
 	CPUEModelResults = list()
 	for(i in 1:length( p$subareas)){
 

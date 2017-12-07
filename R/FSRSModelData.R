@@ -20,7 +20,7 @@ FSRSModelData = function(){
 
 	# this section is to deal with the fact that there are uneven binning going on for the different size categories
 	# it creates a pseudo CL (the mid point of each size category)
-	scd<-read.csv(file.path( project.datadirectory("lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
+	scd<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
 	scd$LENGTH<-rowMeans(scd[c("MIN_S","MAX_S")])
 	FSRS.dat<-merge(FSRS.dat,scd[c("SIZE_CD","LENGTH")])
 

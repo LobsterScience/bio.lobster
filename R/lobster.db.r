@@ -191,7 +191,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     #Filtering by   
                     #Fish.Date = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
-                    Fish.Date = lobster.db('season.dates')
+                      Fish.Date = lobster.db('season.dates')
                     lfa  =  sort(unique(Fish.Date$LFA))
                     
                 
@@ -214,7 +214,8 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     # select for records within season
                           logs$DATE_FISHED = as.Date(logs$DATE_FISHED,"%Y-%m-%d")
                           #logs$SYEAR = year(logs$DATE_FISHED)
-           
+
+
                         for(i in 1:length(lfa)) {
                                 h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
                             for(j in 1:nrow(h)) {
@@ -223,7 +224,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                               }
                         
                         logs = subset(logs,!is.na(SYEAR))
-                   
+
                     # add week of season (WOS) variable
                         logs$WOS = NA
                           
@@ -240,7 +241,6 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       logs$quarter[month(logs$DATE_FISHED)%in%4:6] = 2
                       logs$quarter[month(logs$DATE_FISHED)%in%7:9] = 3
                       logs$quarter[month(logs$DATE_FISHED)%in%10:12] = 4
-
 
                     commonCols = c("SUM_DOC_ID", "VR_NUMBER", "VESSEL_NAME", "SUBMITTER_NAME", "LICENCE_ID", "LFA", "COMMUNITY_CODE","SD_LOG_ID", "DATE_FISHED","SYEAR","WOS",'quarter',"TOTAL_NUM_TRAPS","TOTAL_WEIGHT_KG")
 
@@ -302,7 +302,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     logsInSeason = assignSubArea2733(logsInSeason)
                     
-  
+
           # Save logsInSeason as working data
               save(logsInSeason,file=file.path( fnProducts,"logsInSeason.rdata"),row.names=F)
    }
@@ -575,6 +575,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
         odbcClose(con)
       }
       load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)
+      return(vlog)
      }
 
 
@@ -582,7 +583,24 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
      if (DS=="process.vlog.redo") {
           load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)  
-          vlog$SYEAR = as.numeric(substr(vlog$SEASON,6,9))
+          
+          vlog$SYEAR = NA
+
+          Fish.Date = lobster.db('season.dates')
+          Fish.Date = backFillSeasonDates(Fish.Date)
+
+          lfa  =  sort(unique(Fish.Date$LFA))
+
+          for(i in 1:length(lfa)) {
+                  h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
+              for(j in 1:nrow(h)) {
+                  vlog$SYEAR[vlog$LFA==lfa[i]&vlog$FDATE>=h[j,'START_DATE']&vlog$FDATE<=h[j,'END_DATE']] = h[j,'SYEAR']
+                  }
+                }
+          
+          vlog = subset(vlog,!is.na(SYEAR))
+
+
           vlog$W_KG = vlog$W_TOT*0.4536
           vlog$CPUE = vlog$W_KG/vlog$N_TRP
 
@@ -606,6 +624,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
           return(vlog)
         }
         load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)      
+        return(vlog)
     }
 
 
