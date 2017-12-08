@@ -1,19 +1,14 @@
 #' @export
 
-atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B',females.only=T) {
+atSeaLandingsLinker <- function(atSea,logsa,comGrid,comLand,year=2016,lfa='31B',females.only=T) {
     links = lobster.db('atSea.logbook.link') 
 	Fish.Date = lobster.db('season.dates')
 	atSea = subset(atSea, SYEAR ==year & LFA == lfa)
 	
-    atSea$WOS<-NA
     h <- subset(Fish.Date,LFA==lfa & SYEAR == year)
-    atSea$WOS = 1
-	if(year>1999)    atSea$WOS <- floor(as.numeric(as.POSIXct(atSea$SDATE)-min(h$START_DATE))/7)+1
- 	i = which(atSea$WOS<0)
- 	if(length(i)>0) atSea = subset(atSea,WOS>0)
-	tr = unique(atSea$TRIPNO)
+    tr = unique(atSea$TRIPNO)
 	links = subset(links, TRIPNO %in% tr)	
-		
+	
 
 	atSea$I <- ifelse(atSea$SPECIESCODE==2550,1,0)
 	atSea = rename.df(atSea,'GRIDNO','GRID_NUM')
@@ -49,7 +44,7 @@ atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B',females.only=T) {
 	aS = subset(atSea,SPECIESCODE==2550)
 	if(females.only) aS = subset(aS,SEX %in% c(2,3))
 
-	aS$ids = paste(aS$TRIPNO, aS$LFA, aS$GRID_NUM,aS$WOS, aS$SYEAR,sep="-")
+	aS$ids = paste(aS$TRIPNO, aS$LFA, aS$GRID_NUM,aS$WOS, aS$SYEAR,aS$PORT,sep="-")
 	i = which(aS$CARLENGTH>=250)
 	if(length(i) >0) aS = aS[-i,]
 	IDs = unique(aS$ids)
@@ -67,11 +62,20 @@ atSeaLogbookLinker <- function(atSea,logsa,year=2016,lfa='31B',females.only=T) {
 			names(CLF) <- c('ids',breaks[-1])
 			CLF = toNums(CLF,2:ncol(CLF))
 			CLF = cbind(do.call(rbind,strsplit(CLF$ids,"-")),CLF)
-			names(CLF)[1:5] = c('TRIPNO','LFA','GRID_NUM','WOS','SYEAR')
+			names(CLF)[1:6] = c('TRIPNO','LFA','GRID_NUM','WOS','SYEAR','PORT')
 			aCC = CLF = merge(CLF,trSum)
-			
 
+		
 
+#using landings by port or by stat dist
+if(year<=2001){
+		cg = aggregate(PropLand~LFA+WOS+GRID_NUM,data=comGrid,FUN=sum)
+		CC = merge(CLF,cg,all.x=T)
+
+##need to finish this AMC Dec 1, 2017
+
+}
+#using logbook linker
 	if(year>2001){
 		logsa3 = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~GRID_NUM+SD_LOG_ID+SYEAR+BUMPUP+LFA,data=subset(logsa,LFA==lfa & SYEAR %in% year),na.action=NULL, FUN=sum)
 		aa  =merge(logsa3,links,by.x='SD_LOG_ID',by.y = 'SD_LOG_ID_DO')

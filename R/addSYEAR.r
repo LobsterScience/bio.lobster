@@ -16,6 +16,10 @@ addSYEAR<-function(data,date.field="STARTDATE"){
 			data$SYEAR[data$LFA==lfa[i]&data$SDATE>=h[j,'START_DATE']&data$SDATE<=h[j,'END_DATE']]<-h[j,'SYEAR']
 		}
 	}
+	if(any(is.na(data$SYEAR))) {
+			ih = which(is.na(data$SYEAR))
+			data$SYEAR[ih] = ifelse(data$LFA[ih] >32 & month(data$SDATE[ih]) %in% c(10,11,12),year(data$SDATE[ih])+1,year(data$SDATE[ih]) )
+	}
 	data
 
 
