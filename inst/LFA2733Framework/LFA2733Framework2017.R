@@ -51,6 +51,34 @@
     cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2016,graphic='pdf',path=figdir)
     cpueSubArea.dat = CPUEplot(logsInSeason,subarea= p$subareas,yrs=2006:2016,graphic='R')
 
+
+
+	## Commercial CPUE MOdels
+
+	TempModelling = TempModel()
+	#CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
+	CPUE.data<-CPUEModelData(p,redo=F)
+
+	CPUEModelResults = list()
+	CPUEModelResults2 = list()
+	for(i in 1:length( p$subareas)){
+
+		mdata = subset(CPUE.data,subarea==p$subareas[i])
+		CPUEModelResults[[i]]=CPUEmodel(mdata,dos=14)
+		CPUEModelResults2[[i]]=CPUEmodel(mdata,interaction=T,dos=14)
+
+	}
+	names(CPUEModelResults) = p$subareas
+	names(CPUEModelResults2) = p$subareas
+
+
+
+	out=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("33W","33E"),xlim=c(2014,2017.5),ylim=c(0,20),wd=15)
+	out1=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5))
+	out2=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5))
+
+
+
 	#write.csv(cpueLFA.dat$annual.data,"CPUEannualData.csv",row.names=F)
 	#write.csv(na.omit(cpueLFA.dat$daily.data),"CPUEdailyData.csv",row.names=F)
 
@@ -79,21 +107,5 @@
 		FSRSModelResultsLegal[[i]]=FSRSmodel(mdata, response="LEGALS")
 
 	}
-
-
-
-	## Commercial CPUE MOdels
-
-	CPUE.data<-CPUEModelData(p)
-	CPUEModelResults = list()
-	for(i in 1:length( p$subareas)){
-
-		mdata = subset(CPUE.data,subarea==p$subareas[i])
-		CPUEModelResults[[i]]=CPUEmodel(LFA27north)
-
-	}
-
-
-
 
 
