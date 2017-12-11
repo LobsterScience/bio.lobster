@@ -1,14 +1,16 @@
 #' @export
-CPUEmodel=function(CPUE,redo=T,interaction=F, dos=1){
+CPUEmodel=function(mf,CPUE, combined=F){
+
+  require(lme4)
 	
   lfa = ifelse(!is.na(unique(CPUE$subarea)),unique(CPUE$subarea),unique(CPUE$LFA))
 
   fn.root =  file.path( project.datadirectory('bio.lobster'), "R", "CPUE", "ModelResults")
   
-  if(redo){
-    
+    CPUE = CPUE[order(CPUE$subarea,CPUE$SYEAR),]
     # create factor year
     CPUE$fYEAR=as.factor(CPUE$SYEAR)
+    CPUE$fAREA=as.factor(CPUE$subarea)
 
     # filter out NAs and zero catches
     CPUE = na.omit(CPUE)
@@ -16,26 +18,40 @@ CPUEmodel=function(CPUE,redo=T,interaction=F, dos=1){
 
     # create log traps
     CPUE$logTRAPS=log(CPUE$NUM_OF_TRAPS)
+    CPUE$logWEIGHT=log(CPUE$TOTAL_WEIGHT_KG)
   
 
-    if(interaction==F)G = glm(log(TOTAL_WEIGHT_KG) ~ fYEAR + DOS + TEMP , offset= logTRAPS, family=gaussian(link='identity'),data = CPUE)
-    if(interaction==T)G = glm(log(TOTAL_WEIGHT_KG) ~ fYEAR + DOS + TEMP + DOS * TEMP , offset= logTRAPS, family=gaussian(link='identity'),data = CPUE)
-
-
-
-    pData=with(G$data,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= mean(TEMP),DOS=dos,logTRAPS=log(1)))
-    PG = predict(G, newdata = pData, type = 'response',se.fit=T)
-  
-      pData$YEAR = as.numeric(as.character(pData$fYEAR))
-      pData$mu = exp(PG$fit)
-      pData$ub = exp(PG$fit + 1.96 * PG$se.fit)
-      pData$lb = exp(PG$fit - 1.96 * PG$se.fit)
-      output = list(model=G,pData=pData)
-      save( output, file=file.path( fn.root, paste0(lfa,"glm.rdata")), compress=T)
-    }
-    else {
-      load(file.path( fn.root, paste0(lfa,"glm.rdata")))
-    }
+    if(combined==F){
+     G = glm(mf , offset= logTRAPS, family=gaussian(link='identity'),data = CPUE)
+      
+      pData=with(G$data,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= mean(TEMP),DOS=mean(DOS),logTRAPS=log(1)))
+      PG = predict(G, newdata = pData, type = 'response',se.fit=T)
     
+        pData$YEAR = as.numeric(as.character(pData$fYEAR))
+        pData$mu = exp(PG$fit)
+        pData$ub = exp(PG$fit + 1.96 * PG$se.fit)
+        pData$lb = exp(PG$fit - 1.96 * PG$se.fit)
+        output = list(model=G,pData=pData,mData=CPUE)
+        save( output, file=file.path( fn.root, paste0(lfa,"glm.rdata")), compress=T)
+     
+    }
+
+    if(combined==T){
+
+      G = lmer(mf, offset= logTRAPS, data = CPUE)
+
+      pData=subset(CPUE,!duplicated(paste(fYEAR,fAREA)),c("fYEAR","fAREA"))
+      pData=data.frame(pData,TEMP= mean(CPUE$TEMP),DOS= mean(CPUE$DOS),logTRAPS=log(1))
+      PG = predict(G, newdata = pData, type = 'response')
+    
+        pData$YEAR = as.numeric(as.character(pData$fYEAR))
+        pData$mu = exp(PG)
+        output = list(model=G,pData=pData,mData=CPUE)
+        save( output, file=file.path( fn.root, "combinedglm.rdata"), compress=T)
+    
+    }
+
+
+   
     return(output)
   }

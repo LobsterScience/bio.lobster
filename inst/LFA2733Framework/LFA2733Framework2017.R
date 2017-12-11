@@ -54,28 +54,56 @@
 
 
 	## Commercial CPUE MOdels
+	mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)
+	mf2 = formula(logWEIGHT ~ fYEAR + DOS + TEMP)
+	mf3 = formula(logWEIGHT ~ fYEAR + DOS)
+	mf4 = formula(logWEIGHT ~ fYEAR + TEMP)
+	mf5 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + (1 | fYEAR/fAREA)) # combined
+
 
 	TempModelling = TempModel()
 	#CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
 	CPUE.data<-CPUEModelData(p,redo=F)
-
-	CPUEModelResults = list()
+	CPUEModelResults1 = list()
 	CPUEModelResults2 = list()
+	CPUEModelResults3 = list()
+	CPUEModelResults4 = list()
+	AICs1 = c()
+	AICs2 = c()
+	AICs3 = c()
+	AICs4 = c()
 	for(i in 1:length( p$subareas)){
 
 		mdata = subset(CPUE.data,subarea==p$subareas[i])
-		CPUEModelResults[[i]]=CPUEmodel(mdata,dos=14)
-		CPUEModelResults2[[i]]=CPUEmodel(mdata,interaction=T,dos=14)
+		CPUEModelResults1[[i]] = CPUEmodel(mf1,mdata)
+		CPUEModelResults2[[i]] = CPUEmodel(mf2,mdata)
+		CPUEModelResults3[[i]] = CPUEmodel(mf3,mdata)
+		CPUEModelResults4[[i]] = CPUEmodel(mf4,mdata)
+		AICs1[i] = CPUEModelResults1[[i]]$model$aic
+		AICs2[i] = CPUEModelResults2[[i]]$model$aic
+		AICs3[i] = CPUEModelResults3[[i]]$model$aic
+		AICs4[i] = CPUEModelResults4[[i]]$model$aic
+
 
 	}
-	names(CPUEModelResults) = p$subareas
+	names(CPUEModelResults1) = p$subareas
 	names(CPUEModelResults2) = p$subareas
+	names(CPUEModelResults3) = p$subareas
+	names(CPUEModelResults4) = p$subareas
 
 
+	for(i in 1:length(CPUEModelResults))
+
+	CPUECombinedModelResults = CPUEmodel(mf5,CPUE.data,combined=T)
+
+	cpue1c=CPUEModelPlot(CPUECombinedModelResults,TempModelling,combined=T,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab='1c')
+	cpue2c=CPUEModelPlot(CPUECombinedModelResults,TempModelling,combined=T,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='pdf',path=figdir,lab='2c')
 
 	out=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("33W","33E"),xlim=c(2014,2017.5),ylim=c(0,20),wd=15)
 	out1=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5))
 	out2=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5))
+	cpue1=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='pdf',path=figdir,lab=1)
+	cpue2=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='pdf',path=figdir,lab=2)
 
 
 
