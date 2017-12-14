@@ -67,6 +67,17 @@ la()
 	tagging.data = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'))
 
 
+	tagging.data$CL = tagging.data$TagCL
+
+	moltPrModel = glm(Molted ~ degreedays + CL , data = tagging.data, family = binomial(link = "logit"))
+	print(summary(moltPrModel))
+
+
+	moltIncrModel = glm(MoltIncr ~ CL , data = subset(tagging.data,Molted==1&MoltIncr<0.4))
+	print(summary(moltIncrModel))
+
+
+
 pdf('TaggingMap.pdf')
 LobsterMap('all')
 
