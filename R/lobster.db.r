@@ -212,7 +212,7 @@ if(DS %in% c('season.dates','season.dates.redo')) {
                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                   print('This is not updated--Check with AMC')
                 
-                #using dats from landings by port redo AMC Dec 1 2017
+              #using dats from landings by port redo AMC Dec 1 2017
               #  a = aggregate(mns~SYEAR+LFA+SDATE,data=dats,FUN=length)
               #  dd = as.data.frame(unique(cbind(a$LFA,a$SYEAR)))
               #  names(dd) = c('LFA','SYEAR')
@@ -274,7 +274,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     #Filtering by   
                     #Fish.Date = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
-                      Fish.Date = lobster.db('season.dates')
+                    Fish.Date = lobster.db('season.dates')
                     lfa  =  sort(unique(Fish.Date$LFA))
                     
                 
@@ -297,8 +297,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     # select for records within season
                           logs$DATE_FISHED = as.Date(logs$DATE_FISHED,"%Y-%m-%d")
                           #logs$SYEAR = year(logs$DATE_FISHED)
-
-
+           
                         for(i in 1:length(lfa)) {
                                 h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
                             for(j in 1:nrow(h)) {
@@ -307,7 +306,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                               }
                         
                         logs = subset(logs,!is.na(SYEAR))
-
+                   
                     # add week of season (WOS) variable
                         logs$WOS = NA
                           
@@ -324,6 +323,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       logs$quarter[month(logs$DATE_FISHED)%in%4:6] = 2
                       logs$quarter[month(logs$DATE_FISHED)%in%7:9] = 3
                       logs$quarter[month(logs$DATE_FISHED)%in%10:12] = 4
+
 
                     commonCols = c("SUM_DOC_ID", "VR_NUMBER", "VESSEL_NAME", "SUBMITTER_NAME", "LICENCE_ID", "LFA", "COMMUNITY_CODE","SD_LOG_ID", "DATE_FISHED","SYEAR","WOS",'quarter',"TOTAL_NUM_TRAPS","TOTAL_WEIGHT_KG")
 
@@ -385,7 +385,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     logsInSeason = assignSubArea2733(logsInSeason)
                     
-
+  
           # Save logsInSeason as working data
               save(logsInSeason,file=file.path( fnProducts,"logsInSeason.rdata"),row.names=F)
    }
@@ -651,16 +651,44 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
         con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # port
-        port = sqlQuery(con, "select a.SAMPLE_SEQ,a.SAMPLE_NO,a.SDATE,a.SEASON,a.NTRAPS,a.LATITUDE,a.LONGITUDE,a.GRADE, b.L_SIZE,b.N_MALES,b.N_FEM,b.NBF, c.LFA,c.PORT,c.COUNTY,c.STAT,c.PORT_CODE,c.LATITUDE port_lat,c.LONGITUDE port_lon from lobster.CRLENGCODE a, lobster.CRLENGFREQ b, lobster.CRLOCATIONS c where a.sample_seq = b.sample_seq and a.port = c.port and a.type = 'P' ")
+        port = sqlQuery(con, "select a.SAMPLE_SEQ,a.SAMPLE_NO,a.SDATE,a.SEASON,a.NTRAPS,a.LATITUDE,a.LONGITUDE,a.GRADE, b.L_SIZE,b.N_MALES,b.N_FEM,b.NBF, d.LFA,c.PORT,c.COUNTY,c.STAT,c.PORT_CODE,c.LATITUDE port_lat,c.LONGITUDE port_lon from lobster.CRLENGCODE a, lobster.CRLENGFREQ b, lobster.CRLOCATIONS c, frailc.lfa_port d where a.sample_seq = b.sample_seq and a.port = c.port and c.PORT_CODE = d.port(+) and a.type = 'P' ")
         port = addSYEAR(port)
-
-         season.dates = lobster.db('season.dates')
-                        lfa = unique(port$LFA) 
+        season.dates = lobster.db('season.dates')
+         m=0
+         port = subset(port,LFA %in% c('27','28','29','30','31A','31B','32','33'))
+         lfa = as.character(na.omit(unique(port$LFA) ))
+        port$WOS = NA
                             for(i in 1:length(lfa)) {
                                   h  = season.dates[season.dates$LFA==lfa[i],]  
-                                  k = na.omit(unique(port$SYEAR[port$LFA==lfa[i]]))
+                                  if(lfa[i] == '31A') h  = as.data.frame(rbind(season.dates[season.dates$LFA=='31_32',],season.dates[season.dates$LFA=='31A',] )) 
+                                  if(lfa[i] == '31B') h  = as.data.frame(rbind(season.dates[season.dates$LFA=='31_32',],season.dates[season.dates$LFA=='31B',] )) 
+                                  rr = 1980:2016
+    
+                                  if(length(rr) != nrow(h)){
+                                      rr=data.frame(SYEAR=rr)
+                                      h = merge(rr,h,all.x=T)
+                                      tr = which(is.na(h$START_DATE))
+                                      if(length(tr)>0){
+                                      if(any(tr==1)) {
+                                                   trr = min(which(!is.na(h$START_DATE)))
+                                            for(up in trr:1){
+                                                    h[(up-1),c('START_DATE','END_DATE')] <- h[up,c('START_DATE','END_DATE')] - 365                                                  
+                                            }
+                                      }
+                                    }
+                                   tr = which(is.na(h$START_DATE))
+                                     if(length(tr)>0){
+                                   for(gg in 1:length(tr)){
+                                          h[tr[gg],c('START_DATE','END_DATE')] <- h[(tr[gg]-1),c('START_DATE','END_DATE')] + 365  
+                                          }
+                                        }
+                                      }
+                                  k = as.numeric(na.omit(unique(port$SYEAR[port$LFA==lfa[i]])))
+                                  if(any(k<1980)) k = subset(k,k>=1980)
                                for(j in k){
-                                   port$WOS[port$LFA==lfa[i] & port$SYEAR==j] = floor(as.numeric(port$SDATE[port$LFA==lfa[i] & port$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                m=m+1
+                                print(m)
+                                   port[which(port$LFA==lfa[i] & port$SYEAR==j),'WOS'] = floor(as.numeric(port[which(port$LFA==lfa[i] & port$SYEAR==j),'SDATE']-h$START_DATE[h$SYEAR==j])/7)+1
                                 }
                           }
                           if(any(!is.finite(port$WOS))) {kl = which(!is.finite(port$WOS)); port$WOS[kl] = NA}
@@ -685,7 +713,6 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
         odbcClose(con)
       }
       load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)
-      return(vlog)
      }
 
 
@@ -693,24 +720,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
      if (DS=="process.vlog.redo") {
           load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)  
-          
-          vlog$SYEAR = NA
-
-          Fish.Date = lobster.db('season.dates')
-          Fish.Date = backFillSeasonDates(Fish.Date)
-
-          lfa  =  sort(unique(Fish.Date$LFA))
-
-          for(i in 1:length(lfa)) {
-                  h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
-              for(j in 1:nrow(h)) {
-                  vlog$SYEAR[vlog$LFA==lfa[i]&vlog$FDATE>=h[j,'START_DATE']&vlog$FDATE<=h[j,'END_DATE']] = h[j,'SYEAR']
-                  }
-                }
-          
-          vlog = subset(vlog,!is.na(SYEAR))
-
-
+          vlog$SYEAR = as.numeric(substr(vlog$SEASON,6,9))
           vlog$W_KG = vlog$W_TOT*0.4536
           vlog$CPUE = vlog$W_KG/vlog$N_TRP
 
@@ -734,7 +744,6 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
           return(vlog)
         }
         load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)      
-        return(vlog)
     }
 
 

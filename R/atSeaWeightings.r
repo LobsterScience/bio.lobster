@@ -1,8 +1,8 @@
 #' @export
 
-atSeaWeightings <- function(atSea,comGridHist,comGridCont,year=2016,lfa='31B',females.only=T, fsrs.commercial.samples = F,port.samples=F) {
+atSeaWeightings <- function(atSea,comGridHist,comGridCont,year=2016,lfa='31B',mls,females.only=T, at.sea.samples=F, fsrs.commercial.samples = F,port.samples=F,fsrs.recruit.samples=F) {
   
-   if(!fsrs.commercial.samples & !port.samples){
+   if(at.sea.samples){
 	 atSea = subset(atSea, SYEAR ==year & LFA == lfa)
 	if(any( atSea$WOS<0) | any(is.na(atSea$WOS))) { u = which(is.na(atSea$WOS) | atSea$WOS<0); atSea$WOS[u] <- NA}
 	atSea$I <- ifelse(atSea$SPECIESCODE==2550,1,0)
@@ -61,7 +61,6 @@ atSeaWeightings <- function(atSea,comGridHist,comGridCont,year=2016,lfa='31B',fe
 			aCC = CLF = merge(CLF,trSum)
 
 		
-
 #using landings by port or by stat dist
 if(year<=2004){
 		cg = aggregate(PropLand~LFA+WOS+GRID_NUM,data=comGridHist,FUN=sum)
@@ -85,6 +84,11 @@ if(year<=2004){
 		if(nrow(comGridCont)>0) cg = aggregate(PropLand~LFA+WOS+GRID_NUM+SYEAR,data=comGridCont,FUN=sum)
 		 
 		CC = merge(CLF,cg,all.x=T)
+		ii = is.na(CC$PropLand)
+		if(sum(!ii*1)/length(ii)<0.6) cg = aggregate(PropLand~WOS+GRID_NUM,data=comGridHist,FUN=sum)
+		CC = merge(CLF,cg,all.x=T)
+
+
 	if(any(is.na(CC$PropLand))) {
 			v = which(is.na(CC$PropLand))
 				for(l in v){
@@ -99,33 +103,34 @@ if(year<=2004){
 
 	}
 }
-if(fsrs.commercial.samples & ! port.samples) {
+if(fsrs.commercial.samples) {
+	
 			   	atSea = subset(atSea, SYEAR ==year)
 				if(any( atSea$WOS<0) | any(is.na(atSea$WOS))) { u = which(is.na(atSea$WOS) | atSea$WOS<0); atSea$WOS[u] <- NA}
 				h = which(atSea$Size==10 & atSea$Short==0)
 				atSea$Size[h] = 10.5
 				a 		= aggregate(Size~GRID_NUM+SYEAR,na.action=NULL,data=atSea,FUN=length)
-				trt 	= aggregate(paste(Trap.Number,TR.ID,sep="")~GRID_NUM+SYEAR, data=atSea ,na.action=NULL, FUN= function(x)length (unique(x)))
+				trt 	= aggregate(paste(Trap.Number,TR.ID,sep="")~GRID_NUM+WOS+SYEAR, data=atSea ,na.action=NULL, FUN= function(x)length (unique(x)))
 				trt 	= rename.df(trt,'paste(Trap.Number, TR.ID, sep = "")','TrapsSampled')
 				
 				atSea$I <- 1
-				nL 		= aggregate(I~GRID_NUM+SYEAR, data=subset(atSea) ,na.action=NULL, FUN= sum)	
+				nL 		= aggregate(I~GRID_NUM+SYEAR+WOS, data=subset(atSea) ,na.action=NULL, FUN= sum)	
 				nL 	= rename.df(nL ,'I','NLobster')
 				
-				nLf 	= aggregate(I~GRID_NUM+SYEAR, data=subset(atSea, Sex==2) ,na.action=NULL, FUN= sum)	
+				nLf 	= aggregate(I~GRID_NUM+SYEAR+WOS, data=subset(atSea, Sex==2) ,na.action=NULL, FUN= sum)	
 				nLf 	= rename.df(nLf ,'I','NFemaleLobster')
 				
-				nLm 	= aggregate(I~GRID_NUM+SYEAR, data=subset(atSea, Sex==1) ,na.action=NULL, FUN= sum)	
+				nLm 	= aggregate(I~GRID_NUM+SYEAR+WOS, data=subset(atSea, Sex==1) ,na.action=NULL, FUN= sum)	
 				nLm 	= rename.df(nLm ,'I','NMaleLobster')
 			
-				nLu 	= aggregate(I~GRID_NUM+SYEAR, data=subset(atSea, Sex==0) ,na.action=NULL, FUN= sum)	
+				nLu 	= aggregate(I~GRID_NUM+SYEAR+WOS, data=subset(atSea, Sex==0) ,na.action=NULL, FUN= sum)	
 				nLu 	= rename.df(nLu ,'I','NUnSexedLobster')
 			
 
-				nLb		= try(aggregate(Berried~GRID_NUM+SYEAR, data=atSea ,na.action=NULL, FUN= sum),silent=T)	
+				nLb		= try(aggregate(Berried~GRID_NUM+SYEAR+WOS, data=atSea ,na.action=NULL, FUN= sum),silent=T)	
 				if(!is.null(nrow(nLb))) {nLb 	= rename.df(nLb ,'Berried','NBerriedLobster')} else {nLb = trt[,c('GRID_NUM','SYEAR')]; nLb$NBerriedLobster = 0} 
 				
-				nLv     = try(aggregate(V.Notched~GRID_NUM+SYEAR, data=atSea ,na.action=NULL, FUN= sum),silent=T)	
+				nLv     = try(aggregate(V.Notched~GRID_NUM+SYEAR+WOS, data=atSea ,na.action=NULL, FUN= sum),silent=T)	
 				if(!is.null(nrow(nLv))) {nLv 	= rename.df(nLv ,'V.Notched','NVnotchedLobster')} else {nLv = trt[,c('GRID_NUM','SYEAR')]; nLv$NVnotchedLobster = 0}
 			
 			trSum = Reduce(function(...) merge(...,all=T),list(trt,nL,nLm,nLf,nLu,nLb,nLv))
@@ -159,6 +164,11 @@ if(fsrs.commercial.samples & ! port.samples) {
 	
 	 
 		CC = merge(CLF,cg,all.x=T)
+			ii = is.na(CC$PropLand)
+		if(sum(!ii*1)/length(ii)<0.6) cg = aggregate(PropLand~WOS+GRID_NUM,data=comGridHist,FUN=sum)
+		
+		CC = merge(CLF,cg,all.x=T)
+
 	if(any(is.na(CC$PropLand))) {
 			v = which(is.na(CC$PropLand))
 				for(l in v){
@@ -171,15 +181,15 @@ if(fsrs.commercial.samples & ! port.samples) {
 				}
 			}
 		}
- if(!fsrs.commercial.samples & port.samples){
+ if(port.samples){
 	 atSea = subset(atSea, SYEAR ==year & LFA == lfa)
 	if(any( atSea$WOS<0) | any(is.na(atSea$WOS))) { u = which(is.na(atSea$WOS) | atSea$WOS<0); atSea$WOS[u] <- NA}
-	
+				atSea$NL = atSea$N_FEM+atSea$N_MALES
 				trt 	= aggregate(SAMPLE_SEQ~PORT_CODE+WOS+LFA+SYEAR, data=atSea ,na.action=NULL, FUN= function(x)length (unique(x)))
 				trt 	= rename.df(trt,'SAMPLE_SEQ','SAMPLES_BY_PORT')
 
-				nL 		= aggregate(N_MALES+N_FEM+NBF~PORT_CODE+WOS+LFA+SYEAR, data=atSea ,na.action=NULL, FUN= sum)	
-				nL 	= rename.df(nL ,'N_MALES + N_FEM + NBF','NLobster')
+				nL 		= aggregate(NL~PORT_CODE+WOS+LFA+SYEAR, data=atSea ,na.action=NULL, FUN= sum)	
+				nL 	= rename.df(nL ,'NL','NLobster')
 				
 				nLf 	= aggregate(N_FEM~LFA+PORT_CODE+WOS+SYEAR, data=atSea ,na.action=NULL, FUN= sum)	
 				nLf 	= rename.df(nLf ,'N_FEM','NFemaleLobster')
@@ -189,8 +199,9 @@ if(fsrs.commercial.samples & ! port.samples) {
 			
 			trSum = Reduce(function(...) merge(...,all=T),list(trt,nL,nLm,nLf))
 			trSum = na.zero(trSum)
+	
 
-	atSea$NL = atSea$N_FEM+atSea$N_MALES
+	
 	if(females.only) atSea$NL = atSea$N_FEM
 	aS = atSea
 
@@ -220,7 +231,8 @@ if(fsrs.commercial.samples & ! port.samples) {
 				aCC = CLF = merge(CLF,trSum)
 				CLF = rename.df(CLF,'PORT_CODE','PORT')
 		
-
+	
+			
 #using landings by port or by stat dist
 if(year<=2004){
 		cg = aggregate(PropLand~LFA+WOS+PORT,data=comGridHist,FUN=sum)
@@ -240,10 +252,15 @@ if(year<=2004){
 }
 
 	if(year>2004){
-		if(nrow(comGridCont)==0) cg = aggregate(PropLand~LFA+WOS+GRID_NUM,data=comGridHist,FUN=sum)
-		if(nrow(comGridCont)>0) cg = aggregate(PropLand~LFA+WOS+GRID_NUM+SYEAR,data=comGridCont,FUN=sum)
+		if(nrow(comGridCont)==0) cg = aggregate(PropLand~LFA+WOS+PORT,data=comGridHist,FUN=sum)
+		if(nrow(comGridCont)>0) cg = aggregate(PropLand~LFA+WOS+PORT+SYEAR,data=comGridCont,FUN=sum)
 		 
 		CC = merge(CLF,cg,all.x=T)
+			ii = is.na(CC$PropLand)
+		if(sum(!ii*1)/length(ii)<0.6) cg = aggregate(PropLand~WOS+PORT,data=comGridHist,FUN=sum)
+		
+		CC = merge(CLF,cg,all.x=T)
+
 	if(any(is.na(CC$PropLand))) {
 			v = which(is.na(CC$PropLand))
 				for(l in v){
@@ -258,6 +275,85 @@ if(year<=2004){
 
 	}
 }
-	CC = subset(CC,NLobster>=15)
+if(fsrs.recruit.samples) {
+				h = which(atSea$SIZE_CD==mls & atSea$SHORT==0)
+				atSea$SIZE_CD[h] = mls+0.5
+				breaks = c(na.omit(as.numeric(unique(atSea$SIZE_CD))))	
+				breaks = breaks[order(breaks)]
+				 atSea = subset(atSea, SYEAR ==year & LFA == lfa)
+				if(any( atSea$WOS<0) | any(is.na(atSea$WOS))) { u = which(is.na(atSea$WOS) | atSea$WOS<0); atSea$WOS[u] <- NA}
+				atSea = rename.df(atSea,'LFA_GRID','GRID_NUM')
+	
+				
+				trt 	= aggregate(paste(TRAP_NO,RECORD_NUMBER,sep="")~GRID_NUM+WOS+SYEAR, data=atSea ,na.action=NULL, FUN= function(x)length (unique(x)))
+				trt 	= rename.df(trt,'paste(TRAP_NO, RECORD_NUMBER, sep = "")','TrapsSampled')
+				
+				atSea$I <- 1
+				nL 		= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea) ,na.action=NULL, FUN= sum)	
+				nL 	= rename.df(nL ,'I','NLobster')
+				
+				nLf 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, SEX==2) ,na.action=NULL, FUN= sum)	
+				nLf 	= rename.df(nLf ,'I','NFemaleLobster')
+				
+				nLm 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, SEX==1) ,na.action=NULL, FUN= sum)	
+				nLm 	= rename.df(nLm ,'I','NMaleLobster')			
+				
+				nLb		= try(aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, SEX==3) ,na.action=NULL, FUN= sum),silent=T)	
+				if(!is.null(nrow(nLb))) {nLb 	= rename.df(nLb ,'I','NBerriedLobster')} else {nLb = trt[,c('GRID_NUM','WOS','SYEAR')]; nLb$NBerriedLobster = 0} 
+				
+				nLv     = try(aggregate(V_NOTCHED~GRID_NUM+WOS+SYEAR, data=atSea ,na.action=NULL, FUN= sum),silent=T)	
+				if(!is.null(nrow(nLv))) {nLv 	= rename.df(nLv ,'V_NOTCHED','NVnotchedLobster')} else {nLv = trt[,c('GRID_NUM','WOS','SYEAR')]; nLv$NVnotchedLobster = 0}
+			
+			trSum = Reduce(function(...) merge(...,all=T),list(trt,nL,nLm,nLf,nLb,nLv))
+			trSum = na.zero(trSum)
+
+	aS = aggregate(I~GRID_NUM+WOS+SYEAR+SIZE_CD,data=atSea,FUN=sum)
+	if(females.only) aS = subset(aS,SEX %in% c(2))
+
+	aS$ids = paste(aS$GRID_NUM,aS$WOS, aS$SYEAR,sep="-")
+	IDs = unique(aS$ids)
+	aS = subset(aS,SIZE_CD %in% breaks)
+	CLF = list()
+			   for(i in 1:length(IDs)){
+            			CLF[[i]]<-with(subset(aS,ids==IDs[i]), {
+            			g = c(IDs[i],hist(SIZE_CD,breaks = breaks,plot=F)$counts)
+            			return(g)
+            			})
+        		}
+	
+			CLF = as.data.frame(do.call(rbind,CLF))
+			names(CLF) <- c('ids',breaks[-1])
+			CLF = toNums(CLF,2:ncol(CLF))
+			CLF = cbind(do.call(rbind,strsplit(CLF$ids,"-")),CLF)
+			names(CLF)[1:3] = c('GRID_NUM','WOS','SYEAR')
+			aCC = CLF = merge(CLF,trSum)
+
+		if(nrow(comGridCont)==0) cg = aggregate(PropLand~WOS+GRID_NUM,data=comGridHist,FUN=sum)
+		if(nrow(comGridCont)>0)  cg = aggregate(PropLand~WOS+GRID_NUM+SYEAR,data=comGridCont,FUN=sum)
+	
+	 
+		CC = merge(CLF,cg,all.x=T)
+		ii = is.na(CC$PropLand)
+		if(sum(!ii*1)/length(ii)<0.6) cg = aggregate(PropLand~WOS+GRID_NUM,data=comGridHist,FUN=sum)
+		
+		CC = merge(CLF,cg,all.x=T)
+			
+	if(any(is.na(CC$PropLand))) {
+			v = which(is.na(CC$PropLand))
+				for(l in v){
+						if(!is.na(CC$WOS[l]) & is.na(CC$GRID_NUM[l])) CC$PropLand[l] = median(cg$PropLand[cg$WOS==CC$WOS[l]],na.rm=T)
+						if(is.na(CC$WOS[l]) & !is.na(CC$GRID_NUM[l])) CC$PropLand[l] = median(cg$PropLand[cg$GRID_NUM==CC$GRID_NUM[l]],na.rm=T)
+						if((is.na(CC$WOS[l]) &  is.na(CC$GRID_NUM[l])) |( !is.na(CC$WOS[l]) &  !is.na(CC$GRID_NUM[l]))) CC$PropLand[l] = median(cg$PropLand,na.rm=T)
+						if(CC$GRID_NUM[l] %ni% cg$GRID_NUM) CC$PropLand[l] = median(cg$PropLand[cg$WOS==CC$WOS[l]],na.rm=T)
+						if(CC$WOS[l] %ni% cg$WOS) CC$PropLand[l] = median(cg$PropLand[cg$GRID_NUM==CC$GRID_NUM[l]],na.rm=T)
+						if(CC$WOS[l] %ni% cg$WOS & CC$GRID_NUM[l] %ni% cg$GRID_NUM) CC$PropLand[l] = quantile(cg$PropLand,0.25,na.rm=T)
+				}
+			}
+		}
+
+	if(nrow(CC)>0) {
+		CC = subset(CC,NLobster>=15)
+	CC$LFA = lfa
 		return(CC)
+	}
 	}

@@ -24,12 +24,11 @@
 #' LobsterMap('all',poly.lst=catchgrids[1:2],title="2007 Lobster Catch")
 #' ContLegend("bottomright",lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (t)",inset=0.02,cex=0.8,bg='white')
 #' @export
-LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, output = 'bio.lobster',fname = 'one.pdf',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,...){
+LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, output = 'bio.lobster',fname = 'one.pdf',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,...){
 
 options(stringsAsFactors=F)		
 	require(PBSmapping)|| stop("Install PBSmapping Package")
 	require(fields)|| stop("Install fields Package")
-	
 	# Custom area
 	if(area=='custom')	{ ylim=ylim; 			xlim=xlim			}
 	
@@ -59,6 +58,7 @@ options(stringsAsFactors=F)
 	coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline",mapRes,".csv")))
 	rivers<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("rivers",mapRes,".csv")))
 	attr(coast,"projection")<-"LL"
+	if(land.only){		addPolys(coast,col=land.col,...); return(1)}	
 
 		# comment
 
@@ -95,7 +95,7 @@ if(save) {
 	
 	# Bathymetry
 		sn<-ifelse(sum(isobaths/10)==sum(round(isobaths/10)),"",1)
-		#browser()
+		
 		if(!is.null(isobaths)){
 			bath.lst<-list()
 			for(i in unique(ceiling(isobaths/1000))){

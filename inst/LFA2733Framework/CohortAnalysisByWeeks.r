@@ -38,7 +38,9 @@ if(landings.numbers){
 				yo = ad[i,'YEAR']
 				mm = ad[i,'MLS_MM']
 				da = atSeaWeightings(atSea = atsea, comGridHist =subset(cG,LFA==ad[i,'LFA']),comGridCont = subset(cH,LFA==ad[i,'LFA'] & SYEAR==ad[i,'YEAR']), year=ad[i,'YEAR'],lfa=ad[i,'LFA'],females.only=F,at.sea.samples=T)
-				op = weightedCLF(x=da,returnLF=T,at.sea.samples=T)
+				io= list(WOS=c(3,4,5,6))
+				if(po ==  33) io= list(WOS=c(4:25))
+				op = weightedCLF(x=da,returnLF=T,at.sea.samples=T,grouping=io)
 				os = op
 				os$vec<-NULL
 			outS[[i]] <- unlist(os)
@@ -98,17 +100,17 @@ if(landings.numbers){
 			}
 			out = as.data.frame(do.call(rbind,out))
 			out = toNums(out,2:ncol(out))
-			save(out,file = file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNumbersLandedLFA27-33.rdata'))
-			load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNumbersLandedLFA27-33.rdata'))
+			save(out,file = file.path(project.datadirectory('bio.lobster'),'outputs','SubsetWksatSeaIndicatorsNumbersLandedLFA27-33.rdata'))
+			load(file.path(project.datadirectory('bio.lobster'),'outputs','SubsetWksatSeaIndicatorsNumbersLandedLFA27-33.rdata'))
 
 			outN = as.data.frame(do.call(rbind,outN))
-			save(outN,file = file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNatSizeLFA27-33.rdata'))
-			load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNatSizeLFA27-33.rdata'))
+			save(outN,file = file.path(project.datadirectory('bio.lobster'),'outputs','SubsetWksatSeaIndicatorsNatSizeLFA27-33.rdata'))
+			load(file.path(project.datadirectory('bio.lobster'),'outputs','SubsetWksatSeaIndicatorsNatSizeLFA27-33.rdata'))
 
 			outS = as.data.frame(do.call(rbind,outS))
 			outS = toNums(outS,2:ncol(outS))
-		   save(outS,file = file.path(project.datadirectory('bio.lobster'),'outputs','SummaryatSeaIndicatorsDataLFA27-33.rdata'))
-		   load(file = file.path(project.datadirectory('bio.lobster'),'outputs','SummaryatSeaIndicatorsDataLFA27-33.rdata'))
+		   save(outS,file = file.path(project.datadirectory('bio.lobster'),'outputs','SubsetWksSummaryatSeaIndicatorsDataLFA27-33.rdata'))
+		   load(file = file.path(project.datadirectory('bio.lobster'),'outputs','SubsetWksSummaryatSeaIndicatorsDataLFA27-33.rdata'))
 		
 	#####three year windowed expls using the data loaded above
 runLCA = list()
@@ -121,11 +123,11 @@ m=0
 
 					if(lfa[i]==27) yrs = list(1990:1992, 1991:1993, 1992:1994, 1993:1995, 1994:1997,1995:1999,1997:2000,1999:2001, 2000:2002,2001:2003, 2002:2004,2003:2005,2004:2007,2005:2009,2007:2010,2009:2011,2010:2012,2011:2013,2012:2014,2013:2015)
 					if(lfa[i]==29) yrs = list(1990:1993, 2008:2015)
-					if(lfa[i]==30) yrs = list(1999:2001,2000:2002,2001:2003,2002:2004,2003:2005,2004:2007,2005:2008,2007:2009)
+					if(lfa[i]==30) yrs = list(1999:2001,2000:2002,2001:2003,2002:2004)#,2003:2005,2004:2007,2005:2008,2007:2009)
 					if(lfa[i]=='31A') yrs = list(2001:2003, 2007:2009,2008:2010,2009:2011,2010:2012,2011:2013,2012:2014,2013:2015)
 					if(lfa[i]=='31B') yrs = list(2002:2004,2008:2010,2009:2011,2010:2012,2011:2013,2012:2014,2013:2015)
 					if(lfa[i]=='32') yrs = list(2001:2003,2002:2004,2009:2011,2010:2012,2011:2013,2012:2014,2013:2015)
-					if(lfa[i]=='33') yrs = list(1985:1987,2001:2003,2002:2004,2009:2012,2010:2014)
+					if(lfa[i]=='33') yrs = list(2009:2012)
 					
 				if(lfa[i] == 27) 	{dt = DTs[[grep('27N',names(DTs))]]; Tc = 0.67}
 				if(lfa[i] == 29) 	{dt = DTs[[grep('29',names(DTs))]]; Tc = 0.67}
@@ -137,6 +139,7 @@ m=0
 
 				for(j in 1:length(yrs)){
 						m =m+1
+				#		if(m==49) browser()
 						print(m)
 						p = subset(o,Year %in% yrs[[j]])
 						mm = max(unique(p$MLS))
@@ -151,7 +154,7 @@ m=0
 				p = merge(p,dt1,by.x='LCA',by.y = 'brks')
 				p$I = 1
 				LCAN = aggregate(cbind(N,I,dt)~LCA,data = p,FUN=sum)
-				w = which.max(LCAN$LCA[LCAN$I==15])
+				w = which.max(LCAN$LCA[LCAN$I==min(LCAN$I)])
 				LCAN = LCAN[1:w,]
 						LCAN$dt = LCAN$dt/LCAN$I
 						k = which(LCAN$N==0)[1]
@@ -163,163 +166,37 @@ m=0
 		
 			runLCA = as.data.frame(do.call(rbind,runLCA))
 			runLCA = toNums(runLCA,c('Year.min','Year.max','F','expl'))
-		save(runLCA,file = file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
-		load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsExploitationAggregatedLFA27-33.rdata')	)	
+		save(runLCA,file = file.path(project.datadirectory('bio.lobster'),'outputs','SubsetWksatSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
+		load(file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksatSeaIndicatorsExploitationAggregatedLFA27-33.rdata')	)	
 }
-
-
-
-
-#sensitivity analysis
-oo = c()
-tf = seq(0.1,2,by=0.1)
-for(i in tf){
-oo = c(oo,cohortAnalysis(lens = LCAN$LCA, N = LCAN$N, dt = LCAN$dt,M=i)$wF)
-}
-
-plot(tf,oo,xlab='Terminal F',ylab='Estimated Exploitation',type='b',ylim=c(0.45,0.7))
-plot(tf,oo,xlab='Terminal F',ylab='Estimated Exploitation',type='b',ylim=c(0.5,0.65))
-savePlot(file='/backup/bio_data/bio.lobster/figures/CAsensitivityToTermF.png',type='png')
-
-oo = c()
-for(i in tf){
-tf = seq(0.1,0.2,by=0.01)
-oo = c()
-for(i in tf){
-oo = c(oo,cohortAnalysis(lens = LCAN$LCA, N = LCAN$N, dt = LCAN$dt,M=i)$expl)
-}
-plot(tf,oo,xlab='Natural Mortality',ylab='Estimated Exploitation',type='b',ylim=c(0.5,0.65))
-savePlot(file='/backup/bio_data/bio.lobster/figures/CAsensitivityToM.png',type='png')
-
-
 
 
 
 #Cohort Analysis Plots
 
-load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNumbersLandedLFA27-33.rdata'))
-load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
+load(file.path(project.datadirectory('bio.lobster'),'outputs','SubsetWksatSeaIndicatorsNumbersLandedLFA27-33.rdata'))
+		load(file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksatSeaIndicatorsExploitationAggregatedLFA27-33.rdata')	)	
 
-CAplots(ann = out, yr3 = runLCA)
+CAplots(ann = out, yr3 = runLCA,subset=T)
 
 
 #sample sizes
-load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsLFA27-33.rdata'))
-ouS = out[,c('LFA','Year','TotalLobsters')]
-
-load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNumbersLandedLFA27-33.rdata'))
-out$Year = out$YEAR
 
 
 
 
 
-####FSRS commercial samples
+####FSRS commercial samples #full seasons so no need to reduce
 
-fsrs.commercial.samples = T
-if(fsrs.commercial.samples){		
-			lobster.db('fsrs.commercial.samples')
-			fs = subset(fsrs.comm,SYEAR>2002)
-			p = lobster.db('seasonal.landings')
-			load(file.path(project.datadirectory('bio.lobster'),'outputs','deltaTsSimBH.rdata')) #DTs
- 			dt  = DTs[grep('33',names(DTs))]
-			ad = 2004:2016
-			cH = lobster.db('community.to.grid.contemporary')		
-			cH = subset(cH, LFA==33)
-			cG = lobster.db('community.to.grid.historic')		
-			cG = subset(cG, LFA==33)
-	
-		outN = list()
-		out = list()
-		outS = list()
-		for(i in 1:length(ad)) {
-			print(ad[i])
-				
-				da = atSeaWeightings(atSea = fs, comGridCont = subset(cH, SYEAR==ad[i]),comGridHist = cG, year=ad[i],females.only=F,fsrs.commercial.samples=T)
-					op = weightedCLF(x=da,returnLF=T,fsrs.commercial.samples=T)
-					os = op
-				os$vec<-NULL
-			outS[[i]] <- unlist(os)
-		
-			#Tc is fractional year of catch
-				ll = 'LFA33'
-				lle = 'LFA33'
-				yo = ad[i]
-				mm = 10.5
-			
-				lp = p[,c('SYEAR',names(p)[grep(ll,names(p))])]
-				lp = rename.df(lp,'SYEAR','YR')
-				dt = DTs[[grep('33W',names(DTs))]]
-				dt = dt[which(names(dt)==85):which(names(dt)==130)]
-				dt = c(dt[1],mean(dt[2:3]),mean(dt[4:5]),mean(dt[6:7]),mean(dt[8:9]))
-				Tc = 0.3
-
-				if(!is.null(op)){
-				
-				vec = c(10.5,11,12,13,14)
-				oo = op$vec[op$vec>=mm & op$vec<15]
-				v0 = table(oo)
-				
-				wts = lobLW(c(85,95,105,115,125))
-				bwts = v0 * wts
-				
-				
-				le = subset(lp,substr(YR,6,9) == yo)[,2] 
-				acWt = bwts / sum(bwts) * le
-				N = acWt / wts # tons / g = #'s in '000000
-				outN[[i]]  = data.frame(N = N, Len = names(v0),Year = yo,MLS=mm)
-
- 				outS[[i]] = c(outS[[i]], new.rec = as.numeric(v0[1] / sum(v0)))
- 
-				ca = cohortAnalysis(lens = as.numeric(names(N)), N = as.numeric(N), dt = c(dt[1],dt[2:length(dt)]*2)/365) #annual
-
-				LCA$Year = yo
-				LCA$MLS = mm
-				out[[i]] = c(YEAR=yo, MLS=mm, N = sum(N),Land = le,expl =ca$expl, F = ca$wF,M = ca$M,tF = ca$termF)
-				}
-			}
-
-			out = as.data.frame(do.call(rbind,out))
-			out = toNums(out,2:ncol(out))
-			out$LFA=33
-			save(out,file = file.path(project.datadirectory('bio.lobster'),'outputs','fsrsNumbersLanded33.rdata'))
 			load(file.path(project.datadirectory('bio.lobster'),'outputs','fsrsNumbersLanded33.rdata'))
-
-			outN = as.data.frame(do.call(rbind,outN))
-			save(outN,file = file.path(project.datadirectory('bio.lobster'),'outputs','fsrsNatSizeLFA33.rdata'))
 			load(file.path(project.datadirectory('bio.lobster'),'outputs','fsrsNatSizeLFA33.rdata'))
+			load(file.path(project.datadirectory('bio.lobster'),'outputs','SummaryfsrsCommercialSamplesLanded33.rdata'))
+			load(file = file.path(project.datadirectory('bio.lobster'),'outputs','fsrsExploitationAggregated33.rdata'))
 
-			outS = as.data.frame(do.call(rbind,outS))
-			outS = toNums(outS,2:ncol(outS))
-			save(outS,file = file.path(project.datadirectory('bio.lobster'),'outputs','SummaryfsrsCommercialSamplesLanded33.rdata'))
-#3-year running
-			o = outN
-			runLCA = list()
-			#specific years where data was available for ~3 in a row
+			load(file.path(project.datadirectory('bio.lobster'),'outputs','fsrsNatSizeLFA33.rdata'))
+			load(file = file.path(project.datadirectory('bio.lobster'),'outputs','fsrsExploitationAggregated33.rdata'))
 
-				 yrs = list(2004:2006,2005:2007,2006:2008,2007:2009,2008:2010,2009:2011,2010:2012,2011:2013,2012:2014,2013:2015,2014:2016)
-				dt = DTs[[grep('33W',names(DTs))]]
-				dt = dt[which(names(dt)==85):which(names(dt)==130)]
-				dt = c(dt[1],mean(dt[2:3])*2,mean(dt[4:5])*2,mean(dt[6:7])*2,mean(dt[8:9])*2) / 365
-			
-				for(j in 1:length(yrs)){
-						p = subset(o,Year %in% yrs[[j]])
-						
-				LCAN=aggregate(N.Freq~Len,data=p,FUN=sum)
-				ca = cohortAnalysis(lens = as.numeric(LCAN$Len), N = LCAN$N.Freq, dt = as.numeric(dt))
-					runLCA[[j]] = c(Year.min = min(yrs[[j]]),Year.max = max(yrs[[j]]),F = ca$wF, expl = ca$expl)
-					}
-		
-			runLCA = as.data.frame(do.call(rbind,runLCA))
-			runLCA = toNums(runLCA,c('Year.min','Year.max','F','expl'))
-			runLCA$LFA=33
-		save(runLCA,file = file.path(project.datadirectory('bio.lobster'),'outputs','fsrsExploitationAggregated33.rdata'))
-	load(file = file.path(project.datadirectory('bio.lobster'),'outputs','fsrsExploitationAggregated33.rdata'))
-
-##fsrs ca plots
-					load(file.path(project.datadirectory('bio.lobster'),'outputs','fsrsNatSizeLFA33.rdata'))
-					load(file = file.path(project.datadirectory('bio.lobster'),'outputs','fsrsExploitationAggregated33.rdata'))
-CAplots(ann=out,yr3=runLCA,fsrs=T)
+			CAplots(ann=out,yr3=runLCA,fsrs=T)
 }
 
 
@@ -354,9 +231,12 @@ if(redo.port.samples){
 				mm = ad[i,'MLS_MM']
 				da = atSeaWeightings(atSea = port, comGridHist =subset(cG,LFA==ad[i,'LFA']),comGridCont = subset(cH,LFA==ad[i,'LFA'] & SYEAR==ad[i,'YEAR']), year=ad[i,'YEAR'],lfa=ad[i,'LFA'],females.only=F,fsrs.commercial.samples=F,port.samples=T)
 				op = NULL
+				io= list(WOS=c(3,4,5,6))
+				if(po ==  33) io= list(WOS=c(4:25))
 				
+
 				if(!is.null(da)) {
-					op = weightedCLF(x=da,returnLF=T,port.samples=T)
+				op = weightedCLF(x=da,returnLF=T,at.sea.samples=F,port.samples=T,grouping=io)
 					os = op
 					os$vec<-NULL
 					outS[[i]] <- unlist(os)
@@ -416,34 +296,33 @@ if(redo.port.samples){
 		}
 			out = as.data.frame(do.call(rbind,out))
 			out = toNums(out,2:ncol(out))
-			save(out,file = file.path(project.datadirectory('bio.lobster'),'outputs','portNumbersLanded27-33.rdata'))
-			load(file.path(project.datadirectory('bio.lobster'),'outputs','portNumbersLanded27-33.rdata'))
+			save(out,file = file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksportNumbersLanded27-33.rdata'))
+			load(file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksportNumbersLanded27-33.rdata'))
 
 			outN = as.data.frame(do.call(rbind,outN))
-			save(outN,file = file.path(project.datadirectory('bio.lobster'),'outputs','portNatSizeLFA27-33.rdata'))
-			load(file.path(project.datadirectory('bio.lobster'),'outputs','portNatSizeLFA27-33.rdata'))
+			save(outN,file = file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksportNatSizeLFA27-33.rdata'))
+			load(file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksportNatSizeLFA27-33.rdata'))
 
 			outS = as.data.frame(do.call(rbind,outS))
 			outS = toNums(outS,2:ncol(outS))
-			save(outS,file = file.path(project.datadirectory('bio.lobster'),'outputs','portSummaryLFA27-33.rdata'))
-			load(file.path(project.datadirectory('bio.lobster'),'outputs','portSummaryLFA27-33.rdata'))
+			save(outS,file = file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksportSummaryLFA27-33.rdata'))
+			load(file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksportSummaryLFA27-33.rdata'))
 		
 	
 	#####three year windowed expls using the data loaded above
 runLCA = list()
 m=0
-			lfa = c(27,29,'31A','31B',32,33)
+			lfa = c(27,29,'31A',32,33)
 			for(i in 1:length(lfa)){
 					o = subset(outN,LFA==lfa[i])
 				
 					#specific years where data was available for ~3 in a row
 
-					if(lfa[i]==27) yrs = list(1989:1991,1990:1994, 1994:1996, 1995:1997, 1996:1998, 1997:1999,1998:2001,1999:2002,2001:2003)
-					if(lfa[i]==29) yrs = list(1989:1993, 1990:1994, 1993:1995, 1994:1997, 1995:1998, 1997:1999, 1998:2000, 1999:2001, 2000:2002, 2001:2003)
-					if(lfa[i]=='31A') yrs = list(1985:1987,1986:1988,1987:1989, 1988:1990, 1989:1991, 1990:1992, 1991:1993, 1992:1994, 1998:2000,1999:2001,2000:2002,2001:2003,2002:2004, 2003:2005, 2004:2006)
-					if(lfa[i]=='31B') yrs = list(1986:1988,1987:1989, 1988:1990, 1989:1992, 1990:1993, 1992:1994, 1993:1996, 1994:1998,1996:1999,1998:2000,1999:2001,2000:2002,2001:2003, 2002:2004, 2003:2005)
-					if(lfa[i]=='32') yrs = list(1985:1987,1986:1988,1987:1989, 1988:1991, 1989:1992, 1991:1993, 1992:1994, 1993:1996, 1994:1998,1996:1999,1998:2000,1999:2001,2000:2002,2001:2003)
-					if(lfa[i]=='33') yrs = list(1992:1994, 1993:1995, 1994:1996, 1995:1997, 1996:1998, 1997:1999, 2007:2010, 2009:2011, 2010:2013)
+					if(lfa[i]==27) yrs = list(1985:1990,1989:1991, 1996:1998, 1997:1999, 1998:2000, 1999:2003)
+					if(lfa[i]==29) yrs = list(1989:1991, 1995:1998, 1996:1999, 1998:2000, 1999:2001)
+					if(lfa[i]=='31A') yrs = list(2000:2003,2002:2004,2003:2007)
+					if(lfa[i]=='32') yrs = list(1999:2004)
+					if(lfa[i]=='33') yrs = list(1987:1989,1988:1990,1989:1991,1990:1992,1991:1993, 1992:1994, 1993:1995, 1994:1998, 1998:2000, 2009:2010)
 					
 				if(lfa[i] == 27) 	{dt = DTs[[grep('27N',names(DTs))]]; Tc = 0.67}
 				if(lfa[i] == 29) 	{dt = DTs[[grep('29',names(DTs))]]; Tc = 0.67}
@@ -481,9 +360,9 @@ m=0
 		
 			runLCA = as.data.frame(do.call(rbind,runLCA))
 			runLCA = toNums(runLCA,c('Year.min','Year.max','F','expl'))
-		save(runLCA,file = file.path(project.datadirectory('bio.lobster'),'outputs','PORTatSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
-		load(file = file.path(project.datadirectory('bio.lobster'),'outputs','PORTatSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
-CAplots(ann=out,yr3=runLCA,port=T)
+		save(runLCA,file = file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksPORTatSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
+		load(file = file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksPORTatSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
+CAplots(ann=out,yr3=runLCA,port=T,subset=T)
 
 
 }
@@ -493,52 +372,7 @@ CAplots(ann=out,yr3=runLCA,port=T)
 
 #############
 
-fsrs.recruit.samples = T
-if(fsrs.recruit.samples){		
-			lobster.db('fsrs')
-			fsrs$LFA = ifelse(fsrs$LFA=='31.1','31A',fsrs$LFA)
-			fsrs$LFA = ifelse(fsrs$LFA=='31.2','31B',fsrs$LFA)
-			#these shouldbe in lobster.db
-			fsrs = addSYEAR(fsrs,date.field='HAUL_DATE')
-            season.dates = lobster.db('season.dates')
-
-			      fsrs$WOS = NA
-                        lfa = unique(fsrs$LFA) 
-                            for(i in 1:length(lfa)) {
-                                  h  = season.dates[season.dates$LFA==lfa[i],]  
-                               for(j in unique(fsrs$SYEAR[fsrs$LFA==lfa[i]])){
-                                   fsrs$WOS[fsrs$LFA==lfa[i] & fsrs$SYEAR==j] = floor(as.numeric(fsrs$SDATE[fsrs$LFA==lfa[i] & fsrs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
-                                }
-                          }
-                  
-			fsrs = subset(fsrs,SYEAR>2003)
-			p = lobster.db('seasonal.landings')
-			g = lobster.db('annual.landings')
-			p = lobster.db('seasonal.landings')
-			mls = mls2fsrs()
-			mls = rename.df(mls,'Year','YEAR')
-			load(file.path(project.datadirectory('bio.lobster'),'outputs','deltaTsSimBH.rdata')) #DTs
-			ad =  as.data.frame(unique(cbind(fsrs$LFA,fsrs$SYEAR)))
-			ad = ad[order(ad[,1],ad[,2]),]
-			names(ad) = c('LFA','YEAR')
-			ad = merge(ad,mls)
-			ad = subset(ad,YEAR<2017 & LFA<34)
-			cG = lobster.db('community.to.grid.historic')		
-			cH = lobster.db('community.to.grid.contemporary')		
-	
-		outS = list()
-		for(i in 1:nrow(ad)) {
-			print(ad[i,])
-	
-				da = atSeaWeightings(atSea = fsrs, comGridHist =subset(cG,LFA==ad[i,'LFA']),comGridCont = subset(cH,LFA==ad[i,'LFA'] & SYEAR==ad[i,'YEAR']),mls=ad[i,'fsrs'], year=ad[i,'YEAR'],lfa=ad[i,'LFA'],females.only=F,fsrs.recruit.samples=T)
-				op = weightedCLF(x=da,returnLF=T,fsrs.recruit.samples=T)
-							os = op
-				os$vec<-NULL
-			outS[[i]] <- unlist(os)
-		####No cohort analysis
-}
-			outS = as.data.frame(do.call(rbind,outS))
-			outS = toNums(outS,2:ncol(outS))
+#fsrs.recruit.samples  no need for subsetting
 			save(outS,file = file.path(project.datadirectory('bio.lobster'),'outputs','SummaryfsrsrecruitmentSamplesLanded27-33.rdata'))
 #3-year running
 }
@@ -548,14 +382,14 @@ if(fsrs.recruit.samples){
 
 
 #Overall plots
-		load(file = file.path(project.datadirectory('bio.lobster'),'outputs','PORTatSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
+		load(file = file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksPORTatSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
 po = runLCA
 		load(file = file.path(project.datadirectory('bio.lobster'),'outputs','fsrsExploitationAggregated33.rdata'))
 fs = runLCA
-		load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
+		load(file.path(project.datadirectory('bio.lobster'),'outputs','subsetweeksatSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
 aS = runLCA
 
 
-CAplotsMultDataSets(atSea = aS, fsrs = fs, port = po)
+CAplotsMultDataSets(atSea = aS, fsrs = fs, port = po,subset=T)
 
 
