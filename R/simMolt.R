@@ -19,7 +19,7 @@ simMolt = function(p,gdd=T){
 	
 	totalPop[1,1,1,1] = p$StartPop # start with
 
-	if(length(p$F) == 1) p$Fl = getFvec(p$F,p$LS,p$lens)
+	if(length(p$F) == 1) p$Fl = getFvec(p$F,p$LS,p$lens,p$window)
 		else p$Fl = p$F
 
 	p$Ml = rep(p$M,length(p$lens))
