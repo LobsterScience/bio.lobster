@@ -24,7 +24,7 @@ FSRSmodel<-function(FSRS,response="SHORTS",redo=T,interaction=F, theta =1){
   if(response=="SHORTS"){
     if(redo){
       print(Sys.time())
-#browser()
+browser()
       if(interaction==F)S <- glmer(SHORTS ~ fYEAR + LEGALS + TEMP + offset(logTRAPS) + (1 | VESSEL), family = MASS::negative.binomial(theta = theta), data = FSRS)
       if(interaction==T)S <- glmer(SHORTS ~ fYEAR + LEGALS + TEMP + LEGALS*TEMP + offset(logTRAPS) + (1 | VESSEL),family = MASS::negative.binomial(theta = theta), data = FSRS)
       print(Sys.time())
