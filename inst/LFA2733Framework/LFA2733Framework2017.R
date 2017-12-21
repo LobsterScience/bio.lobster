@@ -210,32 +210,33 @@
 	#Bayes
 
 	FSRSvesday<-FSRSModelData()
-	FSRSvesdayComm<-FSRSModelData(trap.type="commercial")
 	FSRSModelResultsRecruit = list()
 	FSRSModelResultsShort = list()
 	FSRSModelResultsLegal = list()
 	shorts.lst = list()
 	legals.lst = list()
 	recruit.lst = list()
+	st = Sys.time()
 
 	for(i in 1:length( p$subareas)){
 
 		mdata = subset(FSRSvesday,subarea==p$subareas[i])
 
-		FSRSModelResultsShort[[i]]=FSRSmodel(mdata, response="SHORTS",interaction=F,type="Bayesian")
+		FSRSModelResultsShort[[i]]=FSRSmodel(mdata, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
 		pdata	= 	FSRSModelResultsShort[[i]]$pData
 		pdata$Area = p$subareas[i]
 		shorts.lst[[i]] = pdata
 
-		FSRSModelResultsLegal[[i]]=FSRSmodel(mdata, response="LEGALS",interaction=F,type="Bayesian")
+		FSRSModelResultsLegal[[i]]=FSRSmodel(mdata, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
 		pdata	= 	FSRSModelResultsLegal[[i]]$pData
 		pdata$Area = p$subareas[i]
 		legals.lst[[i]] = pdata
 
-		FSRSModelResultsRecruit[[i]]=FSRSmodel(mdata, response="RECRUITS",interaction=F,type="Bayesian")
+		FSRSModelResultsRecruit[[i]]=FSRSmodel(mdata, response="RECRUITS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
 		pdata	= 	FSRSModelResultsRecruit[[i]]$pData
 		pdata$Area = p$subareas[i]
 		recruit.lst[[i]] = pdata
+		print( Sys.time() - st)
 
 
 	}
@@ -250,47 +251,14 @@
 
 	library(ggplot2)
 
-	pdf(file.path( figdir,"FSRSmodelBayes1.pdf"),8, 10)
-
-	sp <- ggplot()
-	sp <- sp + geom_point(data = shorts, aes(y = mu, x = YEAR), shape = 16, size = 2)
-	sp <- sp + xlab("Year") + ylab("Lobsters / Trap")
-	sp <- sp + theme(text = element_text(size=15)) + theme_bw()
-	sp <- sp + geom_line(data = shorts, aes(x = YEAR, y = mu), colour = "black")
-	sp <- sp + geom_ribbon(data = shorts, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
-	sp <- sp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
-	sp
-
-	lp <- ggplot()
-	lp <- lp + geom_point(data = legals, aes(y = mu, x = YEAR), shape = 16, size = 2)
-	lp <- lp + xlab("Year") + ylab("Lobsters / Trap")
-	lp <- lp + theme(text = element_text(size=15)) + theme_bw()
-	lp <- lp + geom_line(data = legals, aes(x = YEAR, y = mu), colour = "black")
-	lp <- lp + geom_ribbon(data = legals, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
-	lp <- lp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
-	lp
-
-	rp <- ggplot()
-	rp <- rp + geom_point(data = recruit, aes(y = mu, x = YEAR), shape = 16, size = 2)
-	rp <- rp + xlab("Year") + ylab("Lobsters / Trap")
-	rp <- rp + theme(text = element_text(size=15)) + theme_bw()
-	rp <- rp + geom_line(data = recruit, aes(x = YEAR, y = mu), colour = "black")
-	rp <- rp + geom_ribbon(data = recruit, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
-	rp <- rp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
-	rp
-
-	dev.off()
-
-
-
-	pdf(file.path( figdir,"FSRSmodelBayes2.pdf"),8, 10)
+	pdf(file.path( figdir,"FSRSmodelBayes.pdf"),8, 10)
 
 	sp <- ggplot()
 	sp <- sp + geom_point(data = shorts, aes(y = median, x = YEAR), shape = 16, size = 2)
 	sp <- sp + xlab("Year") + ylab("Lobsters / Trap")
 	sp <- sp + theme(text = element_text(size=15)) + theme_bw()
 	sp <- sp + geom_line(data = shorts, aes(x = YEAR, y = median), colour = "black")
-	sp <- sp + geom_ribbon(data = shorts, aes(x = YEAR, ymax = q2, ymin = q1 ), alpha = 0.5)
+	sp <- sp + geom_ribbon(data = shorts, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
 	sp <- sp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
 	sp
 
@@ -299,7 +267,7 @@
 	lp <- lp + xlab("Year") + ylab("Lobsters / Trap")
 	lp <- lp + theme(text = element_text(size=15)) + theme_bw()
 	lp <- lp + geom_line(data = legals, aes(x = YEAR, y = median), colour = "black")
-	lp <- lp + geom_ribbon(data = legals, aes(x = YEAR, ymax = q2, ymin = q1 ), alpha = 0.5)
+	lp <- lp + geom_ribbon(data = legals, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
 	lp <- lp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
 	lp
 
@@ -308,10 +276,86 @@
 	rp <- rp + xlab("Year") + ylab("Lobsters / Trap")
 	rp <- rp + theme(text = element_text(size=15)) + theme_bw()
 	rp <- rp + geom_line(data = recruit, aes(x = YEAR, y = median), colour = "black")
-	rp <- rp + geom_ribbon(data = recruit, aes(x = YEAR, ymax = q2, ymin = q1 ), alpha = 0.5)
+	rp <- rp + geom_ribbon(data = recruit, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
 	rp <- rp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
 	rp
 
 	dev.off()
 
+
+	FSRSvesdayComm = FSRSModelData(trap.type="commercial")
+	FSRSvesdayComm$GRID_NUM[FSRSvesdayComm$subarea==33] = NA
+	FSRSvesdayComm$subarea[FSRSvesdayComm$subarea==33] = "33W"
+	FSRSvesdayComm$TEMP = FSRSvesdayComm$Temp
+	FSRSvesdayComm$VESSEl_CD = FSRSvesdayComm$Vessel.Code
+
+	cssa = c("33W","33E")
+	FSRSModelResultsRecruitComm = list()
+	FSRSModelResultsShortComm = list()
+	FSRSModelResultsLegalComm = list()
+	shortsComm.lst = list()
+	legalsComm.lst = list()
+	recruitComm.lst = list()
+
+	for(i in 1:2){
+
+		mdata = subset(FSRSvesdayComm,subarea==cssa[i])
+
+		FSRSModelResultsShortComm[[i]]=FSRSmodel(mdata, response="SHORTS",interaction=F,type="bayesian",iter=5000,tag="Comm",ptraps=1000)
+		pdata	= 	FSRSModelResultsShortComm[[i]]$pData
+		pdata$Area = cssa[i]
+		shortsComm.lst[[i]] = pdata
+
+		FSRSModelResultsLegalComm[[i]]=FSRSmodel(mdata, response="LEGALS",interaction=F,type="bayesian",iter=5000,tag="Comm",ptraps=1000)
+		pdata	= 	FSRSModelResultsLegalComm[[i]]$pData
+		pdata$Area = cssa[i]
+		legalsComm.lst[[i]] = pdata
+
+		FSRSModelResultsRecruitComm[[i]]=FSRSmodel(mdata, response="RECRUITS",interaction=F,type="bayesian",iter=5000,tag="Comm",ptraps=1000)
+		pdata	= 	FSRSModelResultsRecruitComm[[i]]$pData
+		pdata$Area = cssa[i]
+		recruitComm.lst[[i]] = pdata
+	}
+
+
+	names(FSRSModelResultsShortComm) = cssa
+	names(FSRSModelResultsLegalComm) = cssa
+	names(FSRSModelResultsRecruitComm) = cssa
+	
+	shortsComm = do.call("rbind",shortsComm.lst)
+	legalsComm = do.call("rbind",legalsComm.lst)
+	recruitComm = do.call("rbind",recruitComm.lst)
+
+	library(ggplot2)
+
+	pdf(file.path( figdir,"FSRSmodelBayesComm.pdf"),8, 4)
+
+	sp <- ggplot()
+	sp <- sp + geom_point(data = shortsComm, aes(y = median, x = YEAR), shape = 16, size = 2)
+	sp <- sp + xlab("Year") + ylab("Lobsters / Trap")
+	sp <- sp + theme(text = element_text(size=15)) + theme_bw()
+	sp <- sp + geom_line(data = shortsComm, aes(x = YEAR, y = median), colour = "black")
+	sp <- sp + geom_ribbon(data = shortsComm, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
+	sp <- sp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
+	sp
+
+	lp <- ggplot()
+	lp <- lp + geom_point(data = legalsComm, aes(y = median, x = YEAR), shape = 16, size = 2)
+	lp <- lp + xlab("Year") + ylab("Lobsters / Trap")
+	lp <- lp + theme(text = element_text(size=15)) + theme_bw()
+	lp <- lp + geom_line(data = legalsComm, aes(x = YEAR, y = median), colour = "black")
+	lp <- lp + geom_ribbon(data = legalsComm, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
+	lp <- lp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
+	lp
+
+	rp <- ggplot()
+	rp <- rp + geom_point(data = recruitComm, aes(y = median, x = YEAR), shape = 16, size = 2)
+	rp <- rp + xlab("Year") + ylab("Lobsters / Trap")
+	rp <- rp + theme(text = element_text(size=15)) + theme_bw()
+	rp <- rp + geom_line(data = recruitComm, aes(x = YEAR, y = median), colour = "black")
+	rp <- rp + geom_ribbon(data = recruitComm, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
+	rp <- rp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
+	rp
+
+	dev.off()
 

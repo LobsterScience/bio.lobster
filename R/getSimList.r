@@ -3,9 +3,6 @@ getSimList = function(p,sex=1, LS=82.5, Fadj = 1, Sadj = 1, Sclose='end', window
 
 	plist = list()
 
-	if(!is.null(window))Fadj = Fadj * getWindow(LS=LS,window=window,lens)
-
-
 	for(i in 1:length(p$lfas)){
 	
 		p$sex = sex					# run sexes seperately
@@ -42,8 +39,10 @@ getSimList = function(p,sex=1, LS=82.5, Fadj = 1, Sadj = 1, Sclose='end', window
 		#mortality
 		p$M = 0.1
 		p$F = getFccir(p)
+
+		#window
+		p$window = window
 		
-		if(!is.null(window))Fadj = Fadj * getWindow(LS=LS,window=window,lens=p$lens)
 
 		# fishing mortality adjustment
 		p$F = p$F * Fadj
