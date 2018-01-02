@@ -118,16 +118,20 @@ FSRSModelData = function(trap.type='recruitment'){
 		trap.dat<-data.frame(VES_DATE=names(trap.lst),TOTAL_TRAPS=as.vector(unlist(trap.lst)))
 
 		short.lst<-with(subset(FSRScom.dat,Short==1),tapply(Trap.Number,VES_DATE,length)) 
-		short.dat<-data.frame(VES_DATE=names(short.lst),SHORTS=short.lst)
+		short.dat<-data.frame(VES_DATE=names(short.lst),SHORTS=as.numeric(short.lst))
 
 		legal.lst<-with(subset(FSRScom.dat,Short==0),tapply(Trap.Number,VES_DATE,length)) 
-		legal.dat<-data.frame(VES_DATE=names(legal.lst),LEGALS=legal.lst)
+		legal.dat<-data.frame(VES_DATE=names(legal.lst),LEGALS=as.numeric(legal.lst))
 
-		recruit.lst<-with(subset(FSRScom.dat,Short==1&Size>7),tapply(WEIGHT,VES_DATE,sum)) 
-		recruit.dat<-data.frame(VES_DATE=names(recruit.lst),RECRUITS=recruit.lst)
+		recruit.lst<-with(subset(FSRScom.dat,Short==1&Size>7),tapply(Trap.Number,VES_DATE,length)) 
+		recruit.dat<-data.frame(VES_DATE=names(recruit.lst),RECRUITS=as.numeric(recruit.lst))
+
+		recbm.lst<-with(subset(FSRScom.dat,Short==1&Size>7),tapply(WEIGHT,VES_DATE,sum)) 
+		recbm.dat<-data.frame(VES_DATE=names(recbm.lst),RECMASS=as.numeric(recbm.lst))
 
 		legalbm.lst<-with(subset(FSRScom.dat,Short==0),tapply(WEIGHT,VES_DATE,sum)) 
-		legalbm.dat<-data.frame(VES_DATE=names(legalbm.lst),BIOMASS=legalbm.lst)
+		legalbm.dat<-data.frame(VES_DATE=names(legalbm.lst),BIOMASS=as.numeric(legalbm.lst))
+		
 
 		FSRS_1.dat <- aggregate(cbind(Vessel.Code, SDATE, LFA, GRID_NUM, Temp, Y, X, SYEAR)~VES_DATE,data=FSRScom.dat,mean,na.rm=T)
 		FSRS_2.dat<-merge(trap.dat,merge(recruit.dat,merge(legalbm.dat,merge(short.dat,legal.dat,all=T),all=T),all=T),all=T)
@@ -149,7 +153,11 @@ FSRSModelData = function(trap.type='recruitment'){
 			}
 		
 		FSRSvesday<-assignSubArea2733(FSRSvesday)
-
+		FSRSvesday$GRID_NUM[FSRSvesday$subarea==33] = NA
+		FSRSvesday$subarea[FSRSvesday$subarea==33] = "33W"
+		FSRSvesday <- rename.df(FSRSvesday,n0=c('Temp','Vessel.Code'),n1=c('TEMP','VESSEl_CD'))
+		
+		FSRSvesday = subset(FSRSvesday,SYEAR>2005)
 
 		write.csv(FSRSvesday,file.path( project.datadirectory("bio.lobster"), "data","products","FSRSrectraps.csv"),row.names=F)
 

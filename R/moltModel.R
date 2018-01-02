@@ -1,6 +1,7 @@
 #' @export
 moltModel = function(p,redo.dd=T){
 
+    require(rstanarm)
 	tagging.data = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'))
 	tagging.data$TagDate = as.Date(tagging.data$TagDate)
 	tagging.data$CapDate = as.Date(tagging.data$CapDate)
@@ -34,11 +35,16 @@ moltModel = function(p,redo.dd=T){
 
 	tagging.data$MoltProb = moltPrModel$fitted.values
 
-	moltincr.data = subset(tagging.data,Molted==1&MoltProb<0.9)
+	malemoltincr.data = subset(tagging.data,Molted==1&MoltProb<0.9&TagSex==1&CL>50)
+	femalemoltincr.data = subset(tagging.data,Molted==1&MoltProb<0.9&TagSex%in%2:3&CL>50)
 
-	moltIncrModel = stan_glm(log(MoltIncr) ~ CL , data = moltincr.data, family=gaussian(link='identity'),iter=20000)
- 	print(summary(moltIncrModel))
+	maleMoltIncrModel = stan_glm(log(SizeDiff) ~ CL , data = malemoltincr.data, family=gaussian(link='identity'),iter=20000)
+	femaleMoltIncrModel = stan_glm(log(SizeDiff) ~ CL , data = femalemoltincr.data, family=gaussian(link='identity'),iter=20000)
+ 	print(summary(maleMoltIncrModel))
+ 	print(summary(femaleMoltIncrModel))
 
 
-	return(list(moltPrModel=moltPrModel,moltIncrModel=moltIncrModel))
+
+
+	return(list(moltPrModel=moltPrModel,maleMoltIncrModel=maleMoltIncrModel,femaleMoltIncrModel=femaleMoltIncrModel,tagging.data=tagging.data,malemoltincr.data=malemoltincr.data,femalemoltincr.data=femalemoltincr.data))
 }

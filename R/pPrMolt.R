@@ -7,7 +7,7 @@
 #' @export
 pPrMolt = function(p,cl){ 
 
-	pM=predict(p$moltPrModel,data.frame(degreedays=p$ddoy,CL=cl),type='response')
+	pM=predict(p$moltModel$moltPrModel,data.frame(degreedays=p$ddoy,CL=cl),type='response')
 
 return(pM)
 

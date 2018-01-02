@@ -1,5 +1,5 @@
 #' @export
-FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag='', pTemp=7, pLegals=3, pDos=0.5,quants=c(0.25,0.5,0.75),iter=2000,ptraps=100){
+FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag='', years, pTemp=7, pLegals=3, pDos=0.5,quants=c(0.25,0.5,0.75),iter=2000,ptraps=100){
 	
   lfa = ifelse(!is.na(unique(FSRS$subarea)),unique(FSRS$subarea),unique(FSRS$LFA))
 
@@ -12,7 +12,7 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
   FSRS$LEGALS=as.numeric(FSRS$LEGALS)
   
   # create factor vessel
-  FSRS$VESSEL=as.factor(FSRS$VESSEL_CD)
+  #FSRS$VESSEL=as.factor(FSRS$VESSEL_CD)
 
   # remove temp nas
   FSRS$TEMP[FSRS$TEMP==-99]=NA
@@ -35,7 +35,9 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(S))
       
-      pData=with(FSRS,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= pTemp,logTRAPS= log(1),LEGALS= pLegals))
+
+      if(missing(years))years = sort(unique(fYEAR))
+      pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,logTRAPS= log(1),LEGALS= pLegals))
       P = predict(S, newdata = pData, type = 'response',se.fit=T)
 
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
@@ -54,7 +56,8 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(S))
       
-      pData=with(FSRS,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
+      if(missing(years))years = sort(unique(fYEAR))
+      pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
       P = predict(S, newdata = pData, type = 'response',re.form=NA)
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
       pData$mu = P
@@ -70,8 +73,9 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       }
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(S))
-      
-      pData=with(FSRS,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
+
+      if(missing(years))years = sort(unique(fYEAR))
+      pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
       P = posterior_predict(S, newdata = pData,offset=rep(log(ptraps),nrow(pData)))
       x = apply(P,2,quantile,quants)/ptraps
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
@@ -100,7 +104,8 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       print(summary(L))
     
       
-      pData=with(FSRS,data.frame(fYEAR=sort(unique(fYEAR)), TEMP= pTemp, logTRAPS=log(1), DOS=round(max(DOS)*pDos)))
+      if(missing(years))years = sort(unique(fYEAR))
+      pData=with(FSRS,data.frame(fYEAR=as.factor(years), TEMP= pTemp, logTRAPS=log(1), DOS=round(max(DOS)*pDos)))
       P = predict(L, newdata = pData, type = 'response',se.fit=T)
 
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
@@ -118,7 +123,8 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(L))
 
-      pData=with(FSRS,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= pTemp, DOS=round(max(DOS)*pDos)))#, VESSEL = unique(VESSEL)[1]))
+      if(missing(years))years = sort(unique(fYEAR))
+      pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp, DOS=round(max(DOS)*pDos)))#, VESSEL = unique(VESSEL)[1]))
       P = predict(L, newdata = pData, type = 'response',re.form=NA)
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
       pData$mu = P
@@ -136,7 +142,8 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(L))
 
-      pData=with(FSRS,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= pTemp,DOS= round(max(DOS)*pDos)))#, VESSEL = unique(VESSEL)[1]))
+      if(missing(years))years = sort(unique(fYEAR))
+      pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,DOS= round(max(DOS)*pDos)))#, VESSEL = unique(VESSEL)[1]))
       P = posterior_predict(L, newdata = pData,offset=rep(log(ptraps),nrow(pData)))
       x = apply(P,2,quantile,quants)/ptraps
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
@@ -164,7 +171,8 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(R))
       
-      pData=with(FSRS,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= pTemp,logTRAPS= log(1),LEGALS= pLegals))
+      if(missing(years))years = sort(unique(fYEAR))
+      pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,logTRAPS= log(1),LEGALS= pLegals))
       P = predict(R, newdata = pData, type = 'response',se.fit=T)
 
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
@@ -182,7 +190,8 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       }
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(R))
-      pData=with(FSRS,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
+      if(missing(years))years = sort(unique(fYEAR))
+      pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
       P = predict(R, newdata = pData, type = 'response',re.form=NA)
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
       pData$mu = P
@@ -195,12 +204,12 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
 
         if(interaction==F)  R = stan_glm.nb(RECRUITS ~ fYEAR + LEGALS + TEMP, offset=logTRAPS, data = FSRS,iter=iter)
         if(interaction==T)  R = stan_glm.nb(RECRUITS ~ fYEAR + LEGALS + TEMP + LEGALS*TEMP , offset=logTRAPS, data = FSRS)
-        save( R, file=file.path( fn.root, paste0(lfa,response,tag,type,"glm.rdata")), compress=T)
+        save( R, file=file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")), compress=T)
       }
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(R))
-
-      pData=with(FSRS,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
+      if(missing(years))years = sort(unique(fYEAR))
+      pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
       P = posterior_predict(R, newdata = pData,offset=rep(log(ptraps),nrow(pData)))
       x = apply(P,2,quantile,quants)/ptraps
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
@@ -251,7 +260,7 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
 #			if(interaction==T)S = glmmadmb(SHORTS ~ fYEAR + LEGALS + TEMP + LEGALS*TEMP + offset(logTRAPS) + (1 | VESSEL), family = "nbinom", data = FSRS,save.dir="tmp")
 #			print(Sys.time())
 #			print(summary(S))
-#			pData=with(S$frame,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= mean(TEMP),logTRAPS= log(2),LEGALS= mean(LEGALS)))
+#			pData=with(S$frame,data.frame(fYEAR=as.factor(years),TEMP= mean(TEMP),logTRAPS= log(2),LEGALS= mean(LEGALS)))
 #			P = predict(S, newdata = pData, se = TRUE)
 #			pData$YEAR = as.numeric(as.character(pData$fYEAR))
 #			pData$mu = exp(P$fit)
@@ -276,7 +285,7 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
 #			if(interaction==T)L = glmmadmb(LEGALS ~ fYEAR + DOS + TEMP + DOS*TEMP + offset(logTRAPS) + (1 | VESSEL), family = "nbinom", data = FSRS,save.dir="tmp")
 #			print(Sys.time())
 #			print(summary(L))
-#			pData=with(L$frame,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= mean(TEMP),logTRAPS= log(2),DOS= mean(DOS)))
+#			pData=with(L$frame,data.frame(fYEAR=as.factor(years),TEMP= mean(TEMP),logTRAPS= log(2),DOS= mean(DOS)))
 #			P = predict(L, newdata = pData, se = TRUE)
 #			pData$YEAR = as.numeric(as.character(pData$fYEAR))
 	#		pData$mu = exp(P$fit)

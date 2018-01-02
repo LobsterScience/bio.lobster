@@ -13,7 +13,7 @@ getBerried = function(p){
 	pR =  1 / (1+exp(-0.1*(p$doy-(p$gestation+p$brood))))
 
 
-	pB = pB * pMat(lfa="LFA27-30", cl=p$lens)
+	pB = pB * pMat(p, cl=p$lens)
 	
 	return(list(pB=pB,pR=pR))
 }

@@ -59,9 +59,8 @@ getSimList = function(p,sex=1, LS=82.5, Fadj = 1, Sadj = 1, Sclose='end', window
 		p$mint = 10 # minimum temperature for a lobster to molt
 	
 		#growth 
-		p$GrowthFactorMean = 1.15	
-		p$GrowthFactorSD = 0.05
-	
+		p$Incr = getIncr(p)
+		
 		p$maxMolts = 15
 		p$maxTime = 20
 

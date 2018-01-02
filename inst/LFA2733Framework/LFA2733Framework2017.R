@@ -216,9 +216,9 @@
 	shorts.lst = list()
 	legals.lst = list()
 	recruit.lst = list()
-	st = Sys.time()
 
 	for(i in 1:length( p$subareas)){
+	st = Sys.time()
 
 		mdata = subset(FSRSvesday,subarea==p$subareas[i])
 
@@ -284,10 +284,6 @@
 
 
 	FSRSvesdayComm = FSRSModelData(trap.type="commercial")
-	FSRSvesdayComm$GRID_NUM[FSRSvesdayComm$subarea==33] = NA
-	FSRSvesdayComm$subarea[FSRSvesdayComm$subarea==33] = "33W"
-	FSRSvesdayComm$TEMP = FSRSvesdayComm$Temp
-	FSRSvesdayComm$VESSEl_CD = FSRSvesdayComm$Vessel.Code
 
 	cssa = c("33W","33E")
 	FSRSModelResultsRecruitComm = list()
@@ -298,6 +294,7 @@
 	recruitComm.lst = list()
 
 	for(i in 1:2){
+		st = Sys.time()
 
 		mdata = subset(FSRSvesdayComm,subarea==cssa[i])
 
@@ -315,6 +312,7 @@
 		pdata	= 	FSRSModelResultsRecruitComm[[i]]$pData
 		pdata$Area = cssa[i]
 		recruitComm.lst[[i]] = pdata
+		print( Sys.time() - st)
 	}
 
 
@@ -328,11 +326,11 @@
 
 	library(ggplot2)
 
-	pdf(file.path( figdir,"FSRSmodelBayesComm.pdf"),8, 4)
+	pdf(file.path( figdir,"FSRSmodelBayesComm.pdf"),8, 2.5)
 
 	sp <- ggplot()
 	sp <- sp + geom_point(data = shortsComm, aes(y = median, x = YEAR), shape = 16, size = 2)
-	sp <- sp + xlab("Year") + ylab("Lobsters / Trap")
+	sp <- sp + xlab("Year") + ylab("Lobsters / Trap") + xlim(1999,2016)
 	sp <- sp + theme(text = element_text(size=15)) + theme_bw()
 	sp <- sp + geom_line(data = shortsComm, aes(x = YEAR, y = median), colour = "black")
 	sp <- sp + geom_ribbon(data = shortsComm, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
@@ -341,7 +339,7 @@
 
 	lp <- ggplot()
 	lp <- lp + geom_point(data = legalsComm, aes(y = median, x = YEAR), shape = 16, size = 2)
-	lp <- lp + xlab("Year") + ylab("Lobsters / Trap")
+	lp <- lp + xlab("Year") + ylab("Lobsters / Trap") + xlim(1999,2016)
 	lp <- lp + theme(text = element_text(size=15)) + theme_bw()
 	lp <- lp + geom_line(data = legalsComm, aes(x = YEAR, y = median), colour = "black")
 	lp <- lp + geom_ribbon(data = legalsComm, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
@@ -350,7 +348,7 @@
 
 	rp <- ggplot()
 	rp <- rp + geom_point(data = recruitComm, aes(y = median, x = YEAR), shape = 16, size = 2)
-	rp <- rp + xlab("Year") + ylab("Lobsters / Trap")
+	rp <- rp + xlab("Year") + ylab("Lobsters / Trap") + xlim(1999,2016)
 	rp <- rp + theme(text = element_text(size=15)) + theme_bw()
 	rp <- rp + geom_line(data = recruitComm, aes(x = YEAR, y = median), colour = "black")
 	rp <- rp + geom_ribbon(data = recruitComm, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
@@ -359,3 +357,176 @@
 
 	dev.off()
 
+
+
+
+
+
+######################## sim Molt
+
+
+# som
+
+	pl = data.frame(LFA=c("LFA27-30","LFA29","LFA28,30","LFA31A","LFA32","LFA32x","LFA33","LFA33x","LFA34"),
+		a=c(14.266, 14.173, 16.505, 14.53521, 10.4, 18.99223, 14.23,24.87275,22.37302),
+		b=c(-0.1959, -0.1727, -0.2132,-0.20347, -0.112,-0.21128, -0.144,-0.25725,-0.23187))
+
+cl=50:130
+plot(cl,seq(0,1,l=length(cl)),type='n',xlab='CL',ylab='SoM')
+
+for(i in 1:nrow(pl)){
+
+	pMat = with(pl[i,],	1/(1+(exp(a+(b*cl)))))	
+
+	lines(cl,pMat,lty=i,col=i)
+}
+
+legend('bottomright',pl$LFA,lty=1:nrow(pl),col=1:nrow(pl))
+
+
+
+	p$lfas = c("27N","27S", "28", "29", "30", "31A", "31B", "32", "33E", "33W") 
+
+								# carapace length bins (mm)
+	TempModelling = TempModel(areas = 'subarea')
+	p$TempModel = TempModelling$Model
+	moltModel = moltPrModel(p,redo.dd=F)
+	p$moltPrModel = moltModel # degree day growth
+
+
+	plist = getSimList(p,sex=1)
+
+	
+	DTs = list()
+	dt = c()
+
+for(l in 1:length(p$lfas)){
+
+	plist[[l]]$ddoy = cumsum(plist[[l]]$dailytemps)
+	for(i in 1:length(plist[[l]]$lens))	{
+		dt[i] = min(which(pPrMolt(plist[[l]],cl=plist[[l]]$lens[i])>0.5))
+	}
+	names(dt) = plist[[l]]$lens
+
+	DTs[[l]] = dt
+
+}
+
+names(DTs) = p$lfas
+
+save(DTs,file="deltaTs.rdata")
+
+	
+ plot(p$lens,dt2,type='l',ylim=c(0,1000),xlab='CL (mm)',ylab='days')
+ lines(p$lens,dt1,lty=2)
+ lines(p$lens,dt3,lty=2)
+
+
+plot(yrs,rowSums(males$finalPop),type='l')
+lines(yrs,rowSums(females$finalPop+females$finalBerried),lty=2)
+
+# VB
+Linf=c(281,207)
+k=c(0.065,0.089)
+t0=c(0.76,0.42)
+age=seq(1,23,0.1)
+
+
+BubblePlotCLF(list(x),bins=bins,yrs=yrs,log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,0,0.1),graphic="R")
+
+		lines(age-3.2,lvb(age,Linf[2],k[2],t0[2]))
+
+BubblePlotCLF(list(y),bins=bins,yrs=yrs,log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(0,0,1,0.1),graphic="R")
+		
+		lines(age-3.5,lvb(age,Linf[1],k[1],t0[1]))
+
+BubblePlotCLF(list(z),bins=bins,yrs=yrs,log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,1,0.1),graphic="R")
+
+BubblePlotCLF(list(x+z),bins=bins,yrs=yrs,log.trans=T,filen='',prop=F,LS=82.5,inch=0.2,bg=rgb(1,0,0,0.1),graphic="R")
+
+	
+#BubblePlotCLF(list(males$finalPop),bins=bins,yrs=yrs,log.trans=T,filen='1',prop=F,LS=82.5,inch=0.2,bg=rgb(0,0,1,0.1),graphic="pdf",ylim=c(40,150),xlim=c(0,10))
+BubblePlotCLF(list(y),bins=bins,yrs=yrs,log.trans=T,filen='2',prop=F,LS=82.5,inch=0.2,bg=rgb(0,0,1,0.1),graphic="pdf",ylim=c(40,150),xlim=c(0,10))
+
+
+
+################################
+
+
+bpCLF = 
+
+BarPlotCLF2(bpCLF,yrs=1:20,bins=p$lens,filen=,LS=p$LS )
+	
+
+	####### Growth Parameters 
+	#######
+
+		# [1=male, 2=female, 3=berried]
+		# length-weight 
+		a=c(0.000608,0.001413,0.00482)
+		b=c(3.0583,2.8746,2.638)
+
+		# VB
+		Linf=c(281,207)
+		k=c(0.065,0.089)
+		t0=c(0.76,0.42)
+
+		age=seq(4,23,0.1)
+		lines(age-3,lvb(age,Linf[1],k[1],t0[1])
+
+
+
+	### Molt probs
+
+	x11()
+
+	par(mfrow=c(2,1))
+
+	p$moltPr = list(a=-9,b=0.02,x=0.5)
+
+	moltProbPlot(p)
+
+	p$moltPr = list(a=-15,b=0.002,x=0.5) # degree day growth
+
+	moltProbPlot(p,gdd=T)
+
+
+	x11()
+
+	as=c(-25,-20,-15)
+	bs=c(0.0025,0.003,0.0035)
+
+	l=length(as)
+	par(mfrow=c(l,l))
+
+	for(i in 1:l){
+		for(j in 1:l){
+			p$moltPr = list(a=as[i],b=bs[j],x=0.7) # degree day growth
+
+			moltProbPlot(p,gdd=T,main=paste('a =',as[i],', b =',bs[j]))
+
+		}
+	}
+
+
+	x11()
+
+	as=c(-15,-10,-5)
+	bs=c(0.015,0.02,0.025)
+
+	l=length(as)
+	par(mfrow=c(l,l))
+
+	for(i in 1:l){
+		for(j in 1:l){
+			p$moltPr = list(a=as[i],b=bs[j],x=0.5) # degree day growth
+
+			moltProbPlot(p,gdd=F,main=paste('a =',as[i],', b =',bs[j]))
+
+		}
+	}
+
+
+	p$moltPr = list(a=-9,b=0.0013,x=1.2) # degree day growth
+
+	moltProbPlot(p,gdd=T)
