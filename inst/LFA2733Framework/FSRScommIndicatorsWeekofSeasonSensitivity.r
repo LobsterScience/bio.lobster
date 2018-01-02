@@ -69,6 +69,7 @@ if(sensitivity.to.seasonality){
 				acWt = bwts / sum(bwts) * le
 				N = acWt / wts # tons / g = #'s in '000000
 				outN[[i]]  = data.frame(N = N, Len = names(v0),Year = yo,MLS=mm)
+ 			outS[[i]] = c(outS[[i]], new.rec = as.numeric(v0[1] / sum(v0)))
  
 				ca = cohortAnalysis(lens = as.numeric(names(N)), N = as.numeric(N), dt = c(dt[1],dt[2:length(dt)]*2)/365) #annual
 				out[[i]] = c(YEAR=yo, MLS=mm, N = sum(N),Land = le,expl =ca$expl, F = ca$wF,M = ca$M,tF = ca$termF)
@@ -205,7 +206,7 @@ savePlot(file = file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors
 #boxplots by weeks of season
 
 
-boxplot(prop.female~W,data=h,ylab='Proportion Female',xaxt='n',xlab='Weeks of Season')
+boxplot(prop.female~W,data=h,ylab='Sex Ratio',xaxt='n',xlab='Weeks of Season')
 axis(side=1,at=c(1:8),labels = c('1-4','5-8','9-12','13-16','17-20','21-24','25-28','All'))
 savePlot(file = file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors','FSRSCommSensPropFemale.png'),type='png')
 
@@ -213,3 +214,24 @@ savePlot(file = file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors
 boxplot(prop.berried~W,data=h,ylab='Proportion Berried',xaxt='n',xlab='Weeks of Season')
 axis(side=1,at=c(1:8),labels = c('1-4','5-8','9-12','13-16','17-20','21-24','25-28','All'))
 savePlot(file = file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors','FSRSCommSensPropBerried.png'),type='png')
+
+boxplot(expl~W,data=a,ylab='Exploitation',xaxt='n',xlab='Weeks of Season')
+axis(side=1,at=c(1:8),labels = c('1-4','5-8','9-12','13-16','17-20','21-24','25-28','All'))
+savePlot(file = file.path(project.figuredirectory('bio.lobster'),'CohortAnalysisPlots','FSRSCommSensExploitation.png'),type='png')
+
+
+
+h = rename.df(h,'quants.50%','Median')
+boxplot(Median~W,data=h,ylab='Median Size',xaxt='n',xlab='Weeks of Season')
+axis(side=1,at=c(1:8),labels = c('1-4','5-8','9-12','13-16','17-20','21-24','25-28','All'))
+savePlot(file = file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors','FSRSCommSensMedianSize.png'),type='png')
+
+h = rename.df(h,'quants.97.5%','Max')
+boxplot(Max~W,data=h,ylab='Maximum Size',xaxt='n',xlab='Weeks of Season')
+axis(side=1,at=c(1:8),labels = c('1-4','5-8','9-12','13-16','17-20','21-24','25-28','All'))
+savePlot(file = file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors','FSRSCommSensMaxSize.png'),type='png')
+
+boxplot(new.rec~W,data=h,ylab='Proportion New Recruits',xaxt='n',xlab='Weeks of Season')
+axis(side=1,at=c(1:8),labels = c('1-4','5-8','9-12','13-16','17-20','21-24','25-28','All'))
+savePlot(file = file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors','FSRSCommSensNewRec.png'),type='png')
+

@@ -5,8 +5,9 @@ atSeaWeightings <- function(atSea,comGridHist,comGridCont,year=2016,lfa='31B',ml
    if(at.sea.samples){
 	 atSea = subset(atSea, SYEAR ==year & LFA == lfa)
 	if(any( atSea$WOS<0) | any(is.na(atSea$WOS))) { u = which(is.na(atSea$WOS) | atSea$WOS<0); atSea$WOS[u] <- NA}
-	atSea$I <- ifelse(atSea$SPECIESCODE==2550,1,0)
 	atSea = rename.df(atSea,'GRIDNO','GRID_NUM')
+	aS = atSea = subset(atSea,SPECIESCODE==2550)
+	atSea$I <- ifelse(atSea$SPECIESCODE==2550,1,0)
 	
 				a 		= aggregate(CARLENGTH~TRIPNO+GRID_NUM+SYEAR,na.action=NULL,data=atSea,FUN=length)
 				trt 	= aggregate(TRAPNO~TRIPNO+LFA+GRID_NUM+SYEAR, data=atSea ,na.action=NULL, FUN= function(x)length (unique(x)))
@@ -32,16 +33,30 @@ atSeaWeightings <- function(atSea,comGridHist,comGridCont,year=2016,lfa='31B',ml
 				
 				nLv     = try(aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea,SPECIESCODE==2550 & VNOTCH>0) ,na.action=NULL, FUN= length),silent=T)	
 				if(!is.null(nrow(nLv))) {nLv 	= rename.df(nLv ,'I','NVnotchedLobster')} else {nLv = trt[,c('TRIPNO','GRID_NUM','LFA','SYEAR')]; nLv$NVnotchedLobster = 0}
-			
-			trSum = Reduce(function(...) merge(...,all=T),list(trt,nLTr,nL,nLm,nLf,nLb,nLc,nLv))
-			trSum = na.zero(trSum)
+		
+				nLsf 	= aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea, SEX==2 & CARLENGTH<mls) ,na.action=NULL, FUN= sum)	
+				nLsf 	= rename.df(nLsf ,'I','NFemaleShortLobster')
 
-	aS = subset(atSea,SPECIESCODE==2550)
+				nLlf 	= aggregate(I~TRIPNO+LFA+GRID_NUM+SYEAR, data=subset(atSea, SEX==2 & CARLENGTH>=mls) ,na.action=NULL, FUN= sum)	
+				nLlf 	= rename.df(nLlf ,'I','NFemalelegalLobster')
+				
+				nLm 	= aggregate(I~TRIPNO+GRID_NUM+LFA+SYEAR, data=subset(atSea, SEX==1) ,na.action=NULL, FUN= sum)	
+				nLm 	= rename.df(nLm ,'I','NMaleLobster')			
+
+				nLsm 	= aggregate(I~TRIPNO+GRID_NUM+LFA+SYEAR, data=subset(atSea, SEX==1 & CARLENGTH<mls) ,na.action=NULL, FUN= sum)	
+				nLsm 	= rename.df(nLsm ,'I','NmaleShortLobster')
+
+				nLlm 	= aggregate(I~TRIPNO+GRID_NUM+LFA+SYEAR, data=subset(atSea, SEX==1 & CARLENGTH>=mls) ,na.action=NULL, FUN= sum)	
+				nLlm 	= rename.df(nLlm ,'I','NmalelegalLobster')
+				
+							
+			trSum = Reduce(function(...) merge(...,all=T),list(trt,nL,nLm,nLf,nLsf,nLlf,nLsm,nLlm,nLb,nLv,nLc))
+			trSum = na.zero(trSum)
+	
+
 	if(females.only) aS = subset(aS,SEX %in% c(2,3))
 
 	aS$ids = paste(aS$TRIPNO, aS$LFA, aS$GRID_NUM,aS$WOS, aS$SYEAR,aS$PORT,sep="-")
-	i = which(aS$CARLENGTH>=250)
-	if(length(i) >0) aS = aS[-i,]
 	IDs = unique(aS$ids)
 	aS = subset(aS,CARLENGTH %in% 30:250)
 	breaks = seq(30,250,1)
@@ -52,7 +67,6 @@ atSeaWeightings <- function(atSea,comGridHist,comGridCont,year=2016,lfa='31B',ml
             			return(g)
             			})
         		}
-	
 			CLF = as.data.frame(do.call(rbind,CLF))
 			names(CLF) <- c('ids',breaks[-1])
 			CLF = toNums(CLF,2:ncol(CLF))
@@ -60,7 +74,6 @@ atSeaWeightings <- function(atSea,comGridHist,comGridCont,year=2016,lfa='31B',ml
 			names(CLF)[1:6] = c('TRIPNO','LFA','GRID_NUM','WOS','SYEAR','PORT')
 			aCC = CLF = merge(CLF,trSum)
 
-		
 #using landings by port or by stat dist
 if(year<=2004){
 		cg = aggregate(PropLand~LFA+WOS+GRID_NUM,data=comGridHist,FUN=sum)
@@ -120,21 +133,32 @@ if(fsrs.commercial.samples) {
 				nLf 	= aggregate(I~GRID_NUM+SYEAR+WOS, data=subset(atSea, Sex==2) ,na.action=NULL, FUN= sum)	
 				nLf 	= rename.df(nLf ,'I','NFemaleLobster')
 				
-				nLm 	= aggregate(I~GRID_NUM+SYEAR+WOS, data=subset(atSea, Sex==1) ,na.action=NULL, FUN= sum)	
-				nLm 	= rename.df(nLm ,'I','NMaleLobster')
 			
-				nLu 	= aggregate(I~GRID_NUM+SYEAR+WOS, data=subset(atSea, Sex==0) ,na.action=NULL, FUN= sum)	
-				nLu 	= rename.df(nLu ,'I','NUnSexedLobster')
-			
+				nLsf 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, Sex==2 & Size<=mls) ,na.action=NULL, FUN= sum)	
+				nLsf 	= rename.df(nLsf ,'I','NFemaleShortLobster')
 
-				nLb		= try(aggregate(Berried~GRID_NUM+SYEAR+WOS, data=atSea ,na.action=NULL, FUN= sum),silent=T)	
-				if(!is.null(nrow(nLb))) {nLb 	= rename.df(nLb ,'Berried','NBerriedLobster')} else {nLb = trt[,c('GRID_NUM','SYEAR')]; nLb$NBerriedLobster = 0} 
+				nLlf 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, Sex==2 & Size>mls) ,na.action=NULL, FUN= sum)	
+				nLlf 	= rename.df(nLlf ,'I','NFemalelegalLobster')
 				
-				nLv     = try(aggregate(V.Notched~GRID_NUM+SYEAR+WOS, data=atSea ,na.action=NULL, FUN= sum),silent=T)	
-				if(!is.null(nrow(nLv))) {nLv 	= rename.df(nLv ,'V.Notched','NVnotchedLobster')} else {nLv = trt[,c('GRID_NUM','SYEAR')]; nLv$NVnotchedLobster = 0}
+				nLm 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, Sex==1) ,na.action=NULL, FUN= sum)	
+				nLm 	= rename.df(nLm ,'I','NMaleLobster')			
+
+				nLsm 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, Sex==1 & Size<=mls) ,na.action=NULL, FUN= sum)	
+				nLsm 	= rename.df(nLsm ,'I','NmaleShortLobster')
+
+				nLlm 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, Sex==1 & Size>mls) ,na.action=NULL, FUN= sum)	
+				nLlm 	= rename.df(nLlm ,'I','NmalelegalLobster')
+				
+				nLb		= try(aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, Sex==3) ,na.action=NULL, FUN= sum),silent=T)	
+				if(!is.null(nrow(nLb))) {nLb 	= rename.df(nLb ,'I','NBerriedLobster')} else {nLb = trt[,c('GRID_NUM','WOS','SYEAR')]; nLb$NBerriedLobster = 0} 
+				
+				nLv     = try(aggregate(V_NOTCHED~GRID_NUM+WOS+SYEAR, data=atSea ,na.action=NULL, FUN= sum),silent=T)	
+				if(!is.null(nrow(nLv))) {nLv 	= rename.df(nLv ,'V_NOTCHED','NVnotchedLobster')} else {nLv = trt[,c('GRID_NUM','WOS','SYEAR')]; nLv$NVnotchedLobster = 0}
 			
-			trSum = Reduce(function(...) merge(...,all=T),list(trt,nL,nLm,nLf,nLu,nLb,nLv))
-			trSum = na.zero(trSum)
+			trSum = Reduce(function(...) merge(...,all=T),list(trt,nL,nLm,nLf,nLsf,nLlf,nLsm,nLlm,nLb,nLv))
+			
+trSum = na.zero(trSum)
+
 
 	aS = atSea
 	if(females.only) aS = subset(aS,SEX %in% c(2))
@@ -147,7 +171,8 @@ if(fsrs.commercial.samples) {
 	CLF = list()
 			   for(i in 1:length(IDs)){
             			CLF[[i]]<-with(subset(aS,ids==IDs[i]), {
-            			g = c(IDs[i],hist(Size,breaks = breaks,plot=F)$counts)
+            				lpo = rep(Size,times=I)	
+            				g = c(IDs[i],hist(lpo,breaks = breaks,plot=F)$counts)
             			return(g)
             			})
         		}
@@ -181,6 +206,8 @@ if(fsrs.commercial.samples) {
 				}
 			}
 		}
+
+
  if(port.samples){
 	 atSea = subset(atSea, SYEAR ==year & LFA == lfa)
 	if(any( atSea$WOS<0) | any(is.na(atSea$WOS))) { u = which(is.na(atSea$WOS) | atSea$WOS<0); atSea$WOS[u] <- NA}
@@ -295,8 +322,20 @@ if(fsrs.recruit.samples) {
 				nLf 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, SEX==2) ,na.action=NULL, FUN= sum)	
 				nLf 	= rename.df(nLf ,'I','NFemaleLobster')
 				
+				nLsf 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, SEX==2 & SIZE_CD<=mls) ,na.action=NULL, FUN= sum)	
+				nLsf 	= rename.df(nLsf ,'I','NFemaleShortLobster')
+
+				nLlf 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, SEX==2 & SIZE_CD>mls) ,na.action=NULL, FUN= sum)	
+				nLlf 	= rename.df(nLlf ,'I','NFemalelegalLobster')
+				
 				nLm 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, SEX==1) ,na.action=NULL, FUN= sum)	
 				nLm 	= rename.df(nLm ,'I','NMaleLobster')			
+
+				nLsm 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, SEX==1 & SIZE_CD<=mls) ,na.action=NULL, FUN= sum)	
+				nLsm 	= rename.df(nLsm ,'I','NmaleShortLobster')
+
+				nLlm 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, SEX==1 & SIZE_CD>mls) ,na.action=NULL, FUN= sum)	
+				nLlm 	= rename.df(nLlm ,'I','NmalelegalLobster')
 				
 				nLb		= try(aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, SEX==3) ,na.action=NULL, FUN= sum),silent=T)	
 				if(!is.null(nrow(nLb))) {nLb 	= rename.df(nLb ,'I','NBerriedLobster')} else {nLb = trt[,c('GRID_NUM','WOS','SYEAR')]; nLb$NBerriedLobster = 0} 
@@ -304,8 +343,9 @@ if(fsrs.recruit.samples) {
 				nLv     = try(aggregate(V_NOTCHED~GRID_NUM+WOS+SYEAR, data=atSea ,na.action=NULL, FUN= sum),silent=T)	
 				if(!is.null(nrow(nLv))) {nLv 	= rename.df(nLv ,'V_NOTCHED','NVnotchedLobster')} else {nLv = trt[,c('GRID_NUM','WOS','SYEAR')]; nLv$NVnotchedLobster = 0}
 			
-			trSum = Reduce(function(...) merge(...,all=T),list(trt,nL,nLm,nLf,nLb,nLv))
+			trSum = Reduce(function(...) merge(...,all=T),list(trt,nL,nLm,nLf,nLsf,nLlf,nLsm,nLlm,nLb,nLv))
 			trSum = na.zero(trSum)
+	
 
 	aS = aggregate(I~GRID_NUM+WOS+SYEAR+SIZE_CD,data=atSea,FUN=sum)
 	if(females.only) aS = subset(aS,SEX %in% c(2))
@@ -316,7 +356,8 @@ if(fsrs.recruit.samples) {
 	CLF = list()
 			   for(i in 1:length(IDs)){
             			CLF[[i]]<-with(subset(aS,ids==IDs[i]), {
-            			g = c(IDs[i],hist(SIZE_CD,breaks = breaks,plot=F)$counts)
+            			lpo = rep(SIZE_CD,times=I)	
+            			g = c(IDs[i],hist(lpo,breaks = breaks,plot=F)$counts)
             			return(g)
             			})
         		}

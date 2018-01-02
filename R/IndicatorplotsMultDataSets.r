@@ -1,6 +1,6 @@
 #' @export
 
-IndicatorplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL,indicator, fsrs.rec = NULL, out.dir='bio.lobster',mls=NULL,secondary.axis=F,save=T) {
+IndicatorplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL,indicator, fsrs.rec = NULL, out.dir='bio.lobster',mls=NULL,secondary.axis=F,save=T,subset=F) {
 		#using the three year aggregated LCAs
 
 			fd = file.path(project.figuredirectory(out.dir),'AtSeaIndictors')
@@ -16,6 +16,7 @@ IndicatorplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL,indicato
 		outs = list()
 		for(i in lf){
 			fname = paste('CombinedData',indicator,i,'.png',sep="")
+			if(subset) fname = paste('subset',fname,sep="")
 			cols = c()
 			nn = c()
 			yt = c()
@@ -87,10 +88,9 @@ IndicatorplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL,indicato
 						if(indicator=='Median.Size') yr[1] = 65
 						if(indicator=='Maximum.Size') yr[1] = 80
 					
-				
-
+		
 				if(secondary.axis) par(mar=c(4,5,2,5))
-							
+			if(all(!is.finite(xr))) next()				
 				plot(1,1,type='n',xlab='Year',ylab = indicator,main=paste('LFA',i),xlim=xr,ylim=yr)
 				
 				if(!is.null(atSea)& nrow(o)>0) with(o,lines(Year,Indi,lty=1,col='black',lwd=2,pch=16,type='b'))
@@ -129,17 +129,16 @@ IndicatorplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL,indicato
 	if(save)			dev.off()
 				print(fname)
 				coll = c('LFA','Year','Indi','ID')
-				o$ID = 'atSea'
-				oo = o[,coll]
+				if(nrow(o)>0) {o$ID = 'atSea';oo = o[,coll]}
 				
 
 				if(c(!is.null(fsrs) | !is.null(fsrs.rec))) {
-							if(exists('r')) {if(nrow(r)>0) {r$ID = 'fsrs.comm';oo = rbind(oo,r[,coll])}}
-							if(exists('v')) {if(nrow(v)>0)  {v$ID = 'fsrs';oo = rbind(oo,v[,coll])}}
+							if(exists('r')) {if(nrow(r)>0) {r$ID = 'fsrs.comm'; if(exists('oo')) {oo = rbind(oo,r[,coll])}; if(!exists('oo')){ oo = r[,coll]}}}
+							if(exists('v')) {if(nrow(v)>0)  {v$ID = 'fsrs'; if(exists('oo')) {oo = rbind(oo,v[,coll])}; if(!exists('oo')){ oo = v[,coll]}}}
 							
 						}
 				
-				if(nrow(p)>0 & indicator %ni% 'Proportion.Berried'){ p$ID = 'port';oo = rbind(oo,p[,coll])}
+				if(nrow(p)>0 & indicator %ni% 'Proportion.Berried'){ p$ID = 'port';; if(exists('oo')) {oo = rbind(oo,p[,coll])}; if(!exists('oo')){ oo = p[,coll]}}
 				outs[[i]] <- oo
 		}
 		return(outs)

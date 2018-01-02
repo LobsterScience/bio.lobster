@@ -1,6 +1,6 @@
 #' @export
 
-CAplots <- function(ann , yr3,out.dir='bio.lobster',fsrs=F,port=F,subset=T) {
+CAplots <- function(ann , yr3,out.dir='bio.lobster',fsrs=F,port=F,subset=F) {
 			fd = file.path(project.figuredirectory('bio.lobster'),'CohortAnalysisPlots')
 			dir.create( fd, recursive = TRUE, showWarnings = FALSE )
 		

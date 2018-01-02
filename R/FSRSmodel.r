@@ -71,7 +71,7 @@ FSRSmodel<-function(FSRS,response="SHORTS",redo=T,interaction=F, theta =1){
 
 
       }
-
+}
       output=list(model=S,pData=pData)
 
       save( output, file=file.path( fn.root, paste0(lfa,response,type,"glm.rdata")), compress=T)
@@ -108,7 +108,7 @@ browser()
       print(Sys.time())
       output<-list(model=S,pData=pData)
       save( output, file=file.path( fn.root, paste0(lfa,response,"glmm.rdata")), compress=T)
-    else {
+   }   else {
       load(file.path( fn.root, paste0(lfa,response,type,"glm.rdata")))
     }
     
@@ -219,7 +219,7 @@ browser()
 
 
       }
-
+}
       output=list(model=S,pData=pData)
 
       save( output, file=file.path( fn.root, paste0(lfa,response,type,"glm.rdata")), compress=T)
