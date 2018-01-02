@@ -1,6 +1,6 @@
 #' @export
 
-CAplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL, out.dir='bio.lobster',subset=T) {
+CAplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL, out.dir='bio.lobster',subset=F) {
 		#using the three year aggregated LCAs
 
 			fd = file.path(project.figuredirectory(out.dir),'CohortAnalysisPlots')

@@ -18,14 +18,15 @@ if(at.sea.samples){
 		
 	if(nrow(x)>1){
 	
-			f1 = with(x,sum(TrapsSampledwLobster/TrapsSampled * PropLand)/sum(PropLand))
+	#		f1 = with(x,sum(TrapsSampledwLobster/TrapsSampled * PropLand)/sum(PropLand))
 			f2 = with(x,sum(NLobster/TrapsSampled * PropLand)/sum(PropLand))
 			f3 = with(x,sum(NFemaleLobster/(NMaleLobster + NFemaleLobster) * PropLand)/sum(PropLand))
 			f4 = with(x,sum(NBerriedLobster/(NLobster) * PropLand)/sum(PropLand))
 			f5 = with(x,sum(NCullLobster/(NLobster) * PropLand)/sum(PropLand))
 			f6 = with(x,sum(NVnotchedLobster/(NLobster) * PropLand)/sum(PropLand))
 			f7 = with(x,sum(PropLand))
-			
+			f8 = with(x,sum(NFemaleShortLobster/(NmaleShortLobster + NFemaleShortLobster) * PropLand)/sum(PropLand))
+			f9 = with(x,sum(NFemalelegalLobster/(NmalelegalLobster + NFemalelegalLobster) * PropLand)/sum(PropLand))
 			i = which(!is.na(as.numeric(names(x))))
 			j = as.numeric(names(x[i]))
 			x$PropLand = x$PropLand / max(x$PropLand) * repper
@@ -36,7 +37,7 @@ if(at.sea.samples){
 			hist(oo,breaks=j)
 			vec=NULL
 			if(returnLF) vec = oo
-		outa = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),NWeeks = length(unique(x$WOS)), NTrips = length(unique(x$TRIPNO)),N_Grids = length(unique(x$GRID_NUM)),TotalLobsters = sum(x$NLobster), TotalTraps = sum(x$TrapsSampled), vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs),PropLandings = f7, proportion.of.sampled.traps.w.lobster = f1, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6  )
+		outa = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),NWeeks = length(unique(x$WOS)), NTrips = length(unique(x$TRIPNO)),N_Grids = length(unique(x$GRID_NUM)),TotalLobsters = sum(x$NLobster), TotalTraps = sum(x$TrapsSampled), vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs),PropLandings = f7, catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.cull = f5, prop.vnotched = f6 , prop.female.short = f8, prop.female.legal = f9 )
 		}
 	}
 if(fsrs.commercial.samples | fsrs.recruit.samples)	{
@@ -61,6 +62,8 @@ if(fsrs.commercial.samples | fsrs.recruit.samples)	{
 			f4 = with(x,sum(NBerriedLobster/(NLobster) * PropLand)/sum(PropLand))
 			f6 = with(x,sum(NVnotchedLobster/(NLobster) * PropLand)/sum(PropLand))
 			f7 = with(x,sum(PropLand))
+			f8 = with(x,sum(NFemaleShortLobster/(NmaleShortLobster + NFemaleShortLobster) * PropLand)/sum(PropLand))
+			f9 = with(x,sum(NFemalelegalLobster/(NmalelegalLobster + NFemalelegalLobster) * PropLand)/sum(PropLand))
 			
 			i = which(!is.na(as.numeric(names(x))))
 			j = as.numeric(names(x[i]))
@@ -72,7 +75,7 @@ if(fsrs.commercial.samples | fsrs.recruit.samples)	{
 			hist(oo,breaks=j)
 			vec=NULL
 			if(returnLF) vec = oo
-		outa = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),Grouping=grouping,NWeeks = length(unique(x$WOS)),NTrips = length(unique(x$ids)),N_Grids = length(unique(x$GRID_NUM)),TotalLobsters = sum(x$NLobster), TotalTraps = sum(x$TrapsSampled), PropLandings = sum(x$PropLand),vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.vnotched = f6  )
+		outa = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),Grouping=grouping,NWeeks = length(unique(x$WOS)),NTrips = length(unique(x$ids)),N_Grids = length(unique(x$GRID_NUM)),TotalLobsters = sum(x$NLobster), TotalTraps = sum(x$TrapsSampled), PropLandings = sum(x$PropLand),vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.vnotched = f6 ,prop.female.short=f8,prop.female.legal=f9 )
 		}
 	}
 

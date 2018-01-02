@@ -37,7 +37,7 @@ if(landings.numbers){
 				po = ad[i,'LFA']
 				yo = ad[i,'YEAR']
 				mm = ad[i,'MLS_MM']
-				da = atSeaWeightings(atSea = atsea, comGridHist =subset(cG,LFA==ad[i,'LFA']),comGridCont = subset(cH,LFA==ad[i,'LFA'] & SYEAR==ad[i,'YEAR']), year=ad[i,'YEAR'],lfa=ad[i,'LFA'],females.only=F,at.sea.samples=T)
+				da = atSeaWeightings(atSea = atsea, comGridHist =subset(cG,LFA==ad[i,'LFA']),comGridCont = subset(cH,LFA==ad[i,'LFA'] & SYEAR==ad[i,'YEAR']), year=ad[i,'YEAR'],lfa=ad[i,'LFA'],females.only=F,at.sea.samples=T,mls=mm)
 				op = weightedCLF(x=da,returnLF=T,at.sea.samples=T)
 				os = op
 				os$vec<-NULL
@@ -69,7 +69,7 @@ if(landings.numbers){
 				outN[[i]]  = data.frame(N = v0$N, Len = v0$mids,LFA = po, Year = yo,MLS=mm)
  				
  				#newly recruited fraction
- 				outS[[i]] = c(outS[[i]], new.rec = sum(v0$N[v0$mids %in% seq(mm,mm+11,by=0.5)]) / sum(v0$N))
+ 				outS[[i]] = c(outS[[i]], new.rec = sum(v0$N[v0$mids %in% seq(mm,mm+11,by=0.5)]) / sum(v0$N[v0$mids %in% seq(mm,mm+100,by=0.5)]))
 
 
 
@@ -235,7 +235,7 @@ if(fsrs.commercial.samples){
 		for(i in 1:length(ad)) {
 			print(ad[i])
 				
-				da = atSeaWeightings(atSea = fs, comGridCont = subset(cH, SYEAR==ad[i]),comGridHist = cG, year=ad[i],females.only=F,fsrs.commercial.samples=T)
+				da = atSeaWeightings(atSea = fs, comGridCont = subset(cH, SYEAR==ad[i]),comGridHist = cG, year=ad[i],females.only=F,fsrs.commercial.samples=T,mls=10)
 					op = weightedCLF(x=da,returnLF=T,fsrs.commercial.samples=T)
 					os = op
 				os$vec<-NULL
@@ -268,6 +268,8 @@ if(fsrs.commercial.samples){
 				acWt = bwts / sum(bwts) * le
 				N = acWt / wts # tons / g = #'s in '000000
 				outN[[i]]  = data.frame(N = N, Len = names(v0),Year = yo,MLS=mm)
+
+
 
  				outS[[i]] = c(outS[[i]], new.rec = as.numeric(v0[1] / sum(v0)))
  
@@ -387,7 +389,7 @@ if(redo.port.samples){
 				v0$N = v0$acWt / v0$wts # tons / g = #'s in '000000
 				outN[[i]]  = data.frame(N = v0$N, Len = v0$mids,LFA = po, Year = yo,MLS=mm)
  
-		 		outS[[i]] = c(outS[[i]], new.rec = sum(v0$N[v0$mids %in% seq(mm,mm+11,by=0.5)]) / sum(v0$N))
+		 		outS[[i]] = c(outS[[i]], new.rec = sum(v0$N[v0$mids %in% seq(mm,mm+11,by=0.5)]) / sum(v0$N[v0$mids %in% seq(mm,mm+110,by=0.5)]))
 
 
 				brks = seq(mm,max(as.numeric(names(dt))),by=5)
