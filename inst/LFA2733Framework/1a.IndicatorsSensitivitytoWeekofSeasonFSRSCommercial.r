@@ -33,7 +33,7 @@ if(sensitivity.to.seasonality){
 				po = 33
 				yo = ad[i]
 				mm = 82.5
-				da = atSeaWeightings(atSea = fs, fsrs.commercial.samples=T, comGridHist =subset(cG,LFA==33),comGridCont = subset(cH,LFA==33 & SYEAR==ad[i]), year=ad[i],lfa=33,females.only=F)
+				da = atSeaWeightings(atSea = fs, fsrs.commercial.samples=T, comGridHist =subset(cG,LFA==33),comGridCont = subset(cH,LFA==33 & SYEAR==ad[i]), year=ad[i],lfa=33,females.only=F,mls=10)
 				op = weightedCLF(x=da,returnLF=T,grouping = io,fsrs.commercial.samples=T)
 				os = op
 				os$Grouping = os$vec<-NULL
@@ -42,7 +42,7 @@ if(sensitivity.to.seasonality){
 				ll = 'LFA33'
 				lle = 'LFA33'
 				yo = ad[i]
-				mm = 10.5
+				mls=mm = 10.5
 			
 				lp = p[,c('SYEAR',names(p)[grep(ll,names(p))])]
 				lp = rename.df(lp,'SYEAR','YR')
@@ -51,7 +51,7 @@ if(sensitivity.to.seasonality){
 				dt = c(dt[1],mean(dt[2:3]),mean(dt[4:5]),mean(dt[6:7]),mean(dt[8:9]))
 				Tc = 0.3
 
-				#not finished dec13
+	
 
 				if(!is.null(op)){
 				

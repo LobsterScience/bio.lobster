@@ -11,6 +11,8 @@ IndicatorplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL,indicato
 		if(indicator == 'Proportion.Berried') y = 'prop.berried'
 		if(indicator == 'Proportion.Landings') y = 'PropLandings'
 		if(indicator == 'New.Recruits') y = 'new.rec'
+		if(indicator == 'Probability.Mature') y = 'PropMating'
+		if(indicator == 'Reproductive.Potential') y = 'EggProduction'
 		
 		lf = c("27" , "28" , "29" , "30" , "31A" ,"31B" ,"32" , "33" )
 		outs = list()
@@ -95,7 +97,7 @@ IndicatorplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL,indicato
 				
 				if(!is.null(atSea)& nrow(o)>0) with(o,lines(Year,Indi,lty=1,col='black',lwd=2,pch=16,type='b'))
 				if(!is.null(port)& nrow(p)>0 & any(names(p)=='Indi')) with(p,lines(Year,Indi,lty=2,col='red',lwd=2,pch=16,type='b'))
-				if(indicator %ni% c('Median.Size','Maximum.Size') & !is.null(fsrs) & nrow(r)>0) with(r,lines(Year,Indi,lty=3,col='blue',lwd=2,pch=16,type='b'))
+				if(indicator %ni% c('Median.Size','Maximum.Size') & !is.null(fsrs)){ if(nrow(r)>0) with(r,lines(Year,Indi,lty=3,col='blue',lwd=2,pch=16,type='b'))}
 				if(indicator %ni% c('Median.Size','Maximum.Size') & !is.null(fsrs.rec)) {
 					if(nrow(v)>0) with(v,lines(Year,Indi,lty=4,col='orange',lwd=2,pch=16,type='b'))
 				}

@@ -1,5 +1,5 @@
 #' @export
-FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag='', years, pTemp=7, pLegals=3, pDos=0.5,quants=c(0.25,0.5,0.75),iter=2000,ptraps=100){
+FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag='', years, pTemp=7, pLegals=3, pDos=0.5,quants=c(0.25,0.5,0.75),iter=2000,ptraps=100){ {
 	
   lfa = ifelse(!is.na(unique(FSRS$subarea)),unique(FSRS$subarea),unique(FSRS$LFA))
 
@@ -266,15 +266,15 @@ browser()
 
     output=list(model=R,pData=pData)
 
-  }
+  
 
   print(paste(lfa,response,type))
 
   return(output)
       
-} 
+
   
-  
+  }
   
   
   

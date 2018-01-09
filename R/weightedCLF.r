@@ -75,7 +75,7 @@ if(fsrs.commercial.samples | fsrs.recruit.samples)	{
 			hist(oo,breaks=j)
 			vec=NULL
 			if(returnLF) vec = oo
-		outa = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),Grouping=grouping,NWeeks = length(unique(x$WOS)),NTrips = length(unique(x$ids)),N_Grids = length(unique(x$GRID_NUM)),TotalLobsters = sum(x$NLobster), TotalTraps = sum(x$TrapsSampled), PropLandings = sum(x$PropLand),vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.vnotched = f6 ,prop.female.short=f8,prop.female.legal=f9 )
+		outa = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),NWeeks = length(unique(x$WOS)),NTrips = length(unique(x$ids)),N_Grids = length(unique(x$GRID_NUM)),TotalLobsters = sum(x$NLobster), TotalTraps = sum(x$TrapsSampled), PropLandings = sum(x$PropLand),vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.vnotched = f6 ,prop.female.short=f8,prop.female.legal=f9 )
 		}
 	}
 
@@ -104,7 +104,7 @@ if(port.samples)	{
 			hist(oo,breaks=j)
 			vec=NULL
 			if(returnLF) vec = oo
-		outa = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),Grouping=grouping,NSamples =sum(x$SAMPLES_BY_PORT) ,NWeeks = length(unique(x$WOS)), N_Ports =length(unique(x$PORT)) ,TotalLobsters = sum(x$NLobster), vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), prop.female = f3 ,PropLandings = f4)
+		outa = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),NSamples =sum(x$SAMPLES_BY_PORT) ,NWeeks = length(unique(x$WOS)), N_Ports =length(unique(x$PORT)) ,TotalLobsters = sum(x$NLobster), vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), prop.female = f3 ,PropLandings = f4)
 		}
 }
 		return(outa)

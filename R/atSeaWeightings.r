@@ -117,7 +117,7 @@ if(year<=2004){
 	}
 }
 if(fsrs.commercial.samples) {
-	
+			lfa=33
 			   	atSea = subset(atSea, SYEAR ==year)
 				if(any( atSea$WOS<0) | any(is.na(atSea$WOS))) { u = which(is.na(atSea$WOS) | atSea$WOS<0); atSea$WOS[u] <- NA}
 				h = which(atSea$Size==10 & atSea$Short==0)
@@ -149,8 +149,8 @@ if(fsrs.commercial.samples) {
 				nLlm 	= aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, Sex==1 & Size>mls) ,na.action=NULL, FUN= sum)	
 				nLlm 	= rename.df(nLlm ,'I','NmalelegalLobster')
 				
-				nLb		= try(aggregate(I~GRID_NUM+WOS+SYEAR, data=subset(atSea, Sex==3) ,na.action=NULL, FUN= sum),silent=T)	
-				if(!is.null(nrow(nLb))) {nLb 	= rename.df(nLb ,'I','NBerriedLobster')} else {nLb = trt[,c('GRID_NUM','WOS','SYEAR')]; nLb$NBerriedLobster = 0} 
+				nLb		= try(aggregate(Berried~GRID_NUM+WOS+SYEAR, data=subset(atSea) ,na.action=NULL, FUN= sum),silent=T)	
+				if(!is.null(nrow(nLb))) {nLb 	= rename.df(nLb ,'Berried','NBerriedLobster')} else {nLb = trt[,c('GRID_NUM','WOS','SYEAR')]; nLb$NBerriedLobster = 0} 
 				
 				nLv     = try(aggregate(V_NOTCHED~GRID_NUM+WOS+SYEAR, data=atSea ,na.action=NULL, FUN= sum),silent=T)	
 				if(!is.null(nrow(nLv))) {nLv 	= rename.df(nLv ,'V_NOTCHED','NVnotchedLobster')} else {nLv = trt[,c('GRID_NUM','WOS','SYEAR')]; nLv$NVnotchedLobster = 0}
