@@ -13,7 +13,7 @@ simSummary = function(runs=c("LS70","LS75","Base","LS90"), lfas = c("27N", "29",
 
 			load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResults",runs[r],".rdata")))
 
-			for(i in 1:length(rlist$plist[[1]]$lfas)){
+			for(i in 1:length(lfas)){
 				lens = rlist$plist[[lfas[i]]]$lens
 				bins = lens+2.5
 				mwv = a[1]*bins^b[1]

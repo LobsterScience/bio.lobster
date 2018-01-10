@@ -5,7 +5,7 @@ pMat = function(p,cl,lfa=NULL){
 	if(is.null(lfa)){
 		if(p$Area == "27N" || p$Area == "27S" || p$Area == "27")  lfa = "LFA27-30" # 27
 		if(p$Area == "29")                                        lfa = "LFA29" # 29
-		if(p$Area == "30")                                        lfa = "LFA28,30" # 30
+		if(p$Area == "28" || p$Area == "30")                      lfa = "LFA28,30" # 30
 		if(p$Area == "31A")                                       lfa = "LFA29" # 31A
 		if(p$Area == "31B" || p$Area == "32")                     lfa = "LFA32" # 31B & 32
 		if(p$Area == "33E" || p$Area == "33W" || p$Area == "33")  lfa = "LFA33" # 33

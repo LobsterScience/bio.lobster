@@ -720,6 +720,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
      if (DS=="process.vlog.redo") {
           load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)  
+          vlog = addSYEAR(vlog,date.field="FDATE")
           vlog$SYEAR = as.numeric(substr(vlog$SEASON,6,9))
           vlog$W_KG = vlog$W_TOT*0.4536
           vlog$CPUE = vlog$W_KG/vlog$N_TRP

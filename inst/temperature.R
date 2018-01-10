@@ -70,7 +70,32 @@ dev.off()
  p$dyears = (c(1:p$nw)-1) / p$nw # intervals of decimal years... fractional year breaks
 
 	TempData = read.csv("LobsterTempData.csv")
+	
+
 	TempData = lonlat2planar(TempData, input_names=c("LONG_DD", "LAT_DD"),proj.type = p$internal.projection)
+
+	LobTempData = TempData
+
+	names(LobTempData)[1:3]=c("SDATE","lat","lon")
+	LobTempData = assignArea(LobTempData)
+	LobTempData = assignSubArea2733(LobTempData)
+	LobTempData = addSYEAR(LobTempData)
+	LobTempData$subarea[LobTempData$subarea==311]="31A"
+	LobTempData$subarea[LobTempData$subarea==312]="31B"
+ 	write.csv(LobTempData,file.path( project.datadirectory("bio.lobster"),"Temperature Data","LobsterTempData2.csv"),row.names=F)
+
+	lfas = c("27N", "27S", "29", "30", "31A", "31B", "32", "33E", "33W")
+	
+
+
+	fsrsTemp=list()
+ 	for(i in 1:length(lfas)){
+ 		t=with(subset(LobTempData,subarea==lfas[i]),tapply(TEMP,SYEAR,mean))
+ 		t.sd=with(subset(LobTempData,subarea==lfas[i]),tapply(TEMP,SYEAR,sd))
+ 		fsrsTemp[[i]] = data.frame(Area=lfas[i],year=as.numeric(names(t)),t=t,t.sd=t.sd)
+ 	}
+	fsrsTemp = do.call("rbind",fsrsTemp)
+
 
 	baseLine = bathymetry.db(p=p, DS="baseline")
  

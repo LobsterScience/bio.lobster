@@ -1,9 +1,9 @@
 #' @export
-CPUEmodel=function(mf,CPUE, combined=F){
+CPUEmodel=function(mf,CPUE, combined=F,lfa){
 
   require(lme4)
 	
-  lfa = ifelse(!is.na(unique(CPUE$subarea)),unique(CPUE$subarea),unique(CPUE$LFA))
+  if(missing(lfa))  lfa = ifelse(!is.na(unique(CPUE$subarea)),unique(CPUE$subarea),unique(CPUE$LFA))
 
   fn.root =  file.path( project.datadirectory('bio.lobster'), "R", "CPUE", "ModelResults")
   
@@ -14,11 +14,11 @@ CPUEmodel=function(mf,CPUE, combined=F){
 
     # filter out NAs and zero catches
     CPUE = na.omit(CPUE)
-    CPUE = subset(CPUE,TOTAL_WEIGHT_KG>0)
+    CPUE = subset(CPUE,WEIGHT_KG>0)
 
     # create log traps
     CPUE$logTRAPS=log(CPUE$NUM_OF_TRAPS)
-    CPUE$logWEIGHT=log(CPUE$TOTAL_WEIGHT_KG)
+    CPUE$logWEIGHT=log(CPUE$WEIGHT_KG)
   
 
     if(combined==F){
