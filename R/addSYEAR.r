@@ -20,6 +20,7 @@ addSYEAR<-function(data,date.field="STARTDATE"){
 			ih = which(is.na(data$SYEAR))
 			data$SYEAR[ih] = ifelse(data$LFA[ih] >32 & month(data$SDATE[ih]) %in% c(10,11,12),year(data$SDATE[ih])+1,year(data$SDATE[ih]) )
 	}
+ 	names(data)[which(names(data)=='SDATE')]<-date.field
 	data
 
 

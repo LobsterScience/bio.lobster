@@ -4,20 +4,24 @@ CPUEModelData = function(p,redo=T,TempModelling){
 	if(redo){
 
 		logs = lobster.db("process.logs")
-		vlogs = lobster.db("process.vlog")
+		vlog = lobster.db("process.vlog.redo")
 
-		tmp1 = subset(logs,select=c("DATE_FISHED","SYEAR","TOTAL_WEIGHT_KG","NUM_OF_TRAPS","subarea","GRID_NUM"))
+		tmp1 = subset(logs,select=c("DATE_FISHED","SYEAR","WEIGHT_KG","NUM_OF_TRAPS","subarea","GRID_NUM"))
 		tmp1$type = 'mandatory'
-		tmp2 = subset(vlogs,select=c("FDATE","SYEAR","W_KG","N_TRP","LFA","X","Y"))
-		names(tmp2) = c("DATE_FISHED","SYEAR","TOTAL_WEIGHT_KG","NUM_OF_TRAPS","subarea","X","Y")
+		tmp2 = subset(vlog,select=c("FDATE","SYEAR","W_KG","N_TRP","LFA","X","Y"))
+		names(tmp2) = c("DATE_FISHED","SYEAR","WEIGHT_KG","NUM_OF_TRAPS","subarea","X","Y")
 		tmp2 = assignArea(tmp2,coords=c("X","Y"))
-		tmp2 = subset(tmp2,select=c("DATE_FISHED","SYEAR","TOTAL_WEIGHT_KG","NUM_OF_TRAPS","subarea","LFA_GRID"))
+		tmp2 = subset(tmp2,select=c("DATE_FISHED","SYEAR","WEIGHT_KG","NUM_OF_TRAPS","subarea","LFA_GRID"))
 		tmp2$type = 'voluntary'
 	    names(tmp2) = names(tmp1)
 
 	    tmp = rbind(tmp2,tmp1)
 
 	    tmp = subset(tmp,subarea %in% p$subareas)
+
+	    tmp$LFA = tmp$subarea
+	    tmp$LFA[tmp$subarea%in%c("27N","27S")] = "27"
+	    tmp$LFA[tmp$subarea%in%c("33W","33E")] = "33"
 
 	    depths = getGridVar(grids=sort(unique(tmp$GRID_NUM)))
 	    names(depths)[1] = "GRID_NUM"
@@ -41,7 +45,7 @@ CPUEModelData = function(p,redo=T,TempModelling){
 	    
 
 	 
-			if(missing(TempModelling)) TempModelling = TempModel()
+			if(missing(TempModelling)) TempModelling = TempModel(annual.by.area=F)
 		#	save(TempModelling,file=file.path( project.datadirectory('bio.lobster'), "data","products","TempModelling.rdata"))
 		#	}else load(file.path( project.datadirectory('bio.lobster'), "data","products","TempModelling.rdata"))
 

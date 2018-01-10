@@ -27,7 +27,7 @@ CPUEModelPlot = function(CPUEModelResult, TempModelling, lfa, combined=F,graphic
     }
     if(combined==T)Mdata = subset(Alldata,fAREA==lfa[i])
 
-    Mdata$CPUE = Mdata$TOTAL_WEIGHT_KG/Mdata$NUM_OF_TRAPS
+    Mdata$CPUE = Mdata$WEIGHT_KG/Mdata$NUM_OF_TRAPS
     MD = subset(Mdata,!duplicated(y))
     MD = MD[order(MD$y),]
     D = median(Mdata$DEPTH)

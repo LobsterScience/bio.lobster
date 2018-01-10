@@ -1,5 +1,5 @@
 #' @export
-TempModel = function(areas = 'subarea'){
+TempModel = function(areas = 'subarea', annual.by.area=F){
 
 	require(mgcv)
 
@@ -18,7 +18,8 @@ TempModel = function(areas = 'subarea'){
 	if(areas == 'lfa')		TempData$area = as.factor(TempData$LFA)
 
 		# fit GAM model 
-		TempModel <- gam(TEMPERATURE ~ sin.y + cos.y + s(y) + area + s(DEPTH, cos.y, sin.y), data=TempData)
+		if(annual.by.area==F)TempModel <- gam(TEMPERATURE ~ sin.y + cos.y + s(y) + area + s(DEPTH, cos.y, sin.y), data=TempData)
+		if(annual.by.area==T)TempModel <- gam(TEMPERATURE ~ sin.y + cos.y + s(y) + s(y,by=area) + area + s(DEPTH, cos.y, sin.y), data=TempData)
 	
 		print(summary(TempModel))
 

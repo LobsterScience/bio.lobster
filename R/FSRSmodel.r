@@ -1,7 +1,7 @@
 #' @export
-FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag='', years, pTemp=7, pLegals=3, pDos=0.5,quants=c(0.25,0.5,0.75),iter=2000,ptraps=100){ {
+FSRSmodel=function(FSRS,lfa,response="SHORTS",redo=T,interaction=F,type="base" ,tag='', years, pTemp=7, pLegals=3, pDos=0.5,quants=c(0.25,0.5,0.75),iter=2000,ptraps=100){
 	
-  lfa = ifelse(!is.na(unique(FSRS$subarea)),unique(FSRS$subarea),unique(FSRS$LFA))
+  if(missing(lfa))lfa = ifelse(!is.na(unique(FSRS$subarea)),unique(FSRS$subarea),unique(FSRS$LFA))
 
   fn.root =  file.path( project.datadirectory('bio.lobster'), "R", "FSRS", "ModelResults")
   # create factor year
@@ -36,7 +36,7 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       print(summary(S))
       
 
-      if(missing(years))years = sort(unique(fYEAR))
+      if(missing(years))years = sort(unique(FSRS$fYEAR))
       pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,logTRAPS= log(1),LEGALS= pLegals))
       P = predict(S, newdata = pData, type = 'response',se.fit=T)
 
@@ -56,7 +56,7 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(S))
       
-      if(missing(years))years = sort(unique(fYEAR))
+      if(missing(years))years = sort(unique(FSRS$fYEAR))
       pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
       P = predict(S, newdata = pData, type = 'response',re.form=NA)
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
@@ -65,6 +65,7 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
 
     if(type=="bayesian"){
       require(rstanarm)
+
       if(redo){
         options(mc.cores = parallel::detectCores())
         if(interaction==F)  S = stan_glm.nb(SHORTS ~ fYEAR + LEGALS + TEMP, offset=logTRAPS, data = FSRS,iter=iter)
@@ -74,7 +75,7 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(S))
 
-      if(missing(years))years = sort(unique(fYEAR))
+      if(missing(years))years = sort(unique(FSRS$fYEAR))
       pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
       P = posterior_predict(S, newdata = pData,offset=rep(log(ptraps),nrow(pData)))
       x = apply(P,2,quantile,quants)/ptraps
@@ -86,46 +87,6 @@ FSRSmodel=function(FSRS,response="SHORTS",redo=T,interaction=F,type="base" ,tag=
       pData$sd =apply(P,2,sd)/ptraps
 
 
-
-}
-      output=list(model=S,pData=pData)
-
-      save( output, file=file.path( fn.root, paste0(lfa,response,type,"glm.rdata")), compress=T)
-      print(Sys.time())
-browser()
-      if(interaction==F)S <- glmer(SHORTS ~ fYEAR + LEGALS + TEMP + offset(logTRAPS) + (1 | VESSEL), family = MASS::negative.binomial(theta = theta), data = FSRS)
-      if(interaction==T)S <- glmer(SHORTS ~ fYEAR + LEGALS + TEMP + LEGALS*TEMP + offset(logTRAPS) + (1 | VESSEL),family = MASS::negative.binomial(theta = theta), data = FSRS)
-      print(Sys.time())
-      print(summary(S))
-    
-    pData<-with(S@frame,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= mean(TEMP),logTRAPS= log(2),LEGALS= mean(LEGALS), VESSEL = unique(VESSEL)[1]))
-    P <- predict(S, newdata = pData, type = 'response')
-   
-    #confint(S)
-    #PI <- predictInterval(S, newdata = pData, which = 'fixed', type='linear.prediction', stat = 'median')
-    #PI.arm.sims = arm::sim(S,1000)
-    #PI.arm <- data.frame( 
-    #  fit=apply(fitted(PI.arm.sims, S), 1, function(x) quantile(x, 0.500)),
-    #  upr=apply(fitted(PI.arm.sims, S), 1, function(x) quantile(x, 0.975)),
-    #  lwr=apply(fitted(PI.arm.sims, S), 1, function(x) quantile(x, 0.025)))
-
-   #boots<- lme4::bootMer(S, function(x) predict(x, newdata = pData, re.form = NULL, type = 'response'), nsim = 10,use.u=T,parallel = 'multicore', ncpus = 4,type='parametric')
-   # 
-   #data.frame(fit = apply(boot$t, 2, function(x) mean(x)),
-   #           lower = apply(boot$t, 2, function(x) as.numeric(quantile(x, probs=.05, na.rm=TRUE))),
-   #           upper = apply(boot$t, 2, function(x) as.numeric(quantile(x, probs=.95, na.rm=TRUE)))) -> PI.boot
-   
-    
-      #P <- confint(S, newdata = pData, method = "Wald")
-      pData$YEAR <- as.numeric(as.character(pData$fYEAR))
-      pData$mu <- P
-      #pData$ub <- exp(P$fit + 1.96 * P$se.fit)
-      #pData$lb <- exp(P$fit - 1.96 * P$se.fit)
-      print(Sys.time())
-      output<-list(model=S,pData=pData)
-      save( output, file=file.path( fn.root, paste0(lfa,response,"glmm.rdata")), compress=T)
-   }   else {
-      load(file.path( fn.root, paste0(lfa,response,type,"glm.rdata")))
     }
 
     output=list(model=S,pData=pData)
@@ -144,7 +105,7 @@ browser()
       print(summary(L))
     
       
-      if(missing(years))years = sort(unique(fYEAR))
+      if(missing(years))years = sort(unique(FSRS$fYEAR))
       pData=with(FSRS,data.frame(fYEAR=as.factor(years), TEMP= pTemp, logTRAPS=log(1), DOS=round(max(DOS)*pDos)))
       P = predict(L, newdata = pData, type = 'response',se.fit=T)
 
@@ -163,7 +124,7 @@ browser()
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(L))
 
-      if(missing(years))years = sort(unique(fYEAR))
+      if(missing(years))years = sort(unique(FSRS$fYEAR))
       pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp, DOS=round(max(DOS)*pDos)))#, VESSEL = unique(VESSEL)[1]))
       P = predict(L, newdata = pData, type = 'response',re.form=NA)
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
@@ -182,7 +143,7 @@ browser()
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(L))
 
-      if(missing(years))years = sort(unique(fYEAR))
+      if(missing(years))years = sort(unique(FSRS$fYEAR))
       pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,DOS= round(max(DOS)*pDos)))#, VESSEL = unique(VESSEL)[1]))
       P = posterior_predict(L, newdata = pData,offset=rep(log(ptraps),nrow(pData)))
       x = apply(P,2,quantile,quants)/ptraps
@@ -211,7 +172,7 @@ browser()
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(R))
       
-      if(missing(years))years = sort(unique(fYEAR))
+      if(missing(years))years = sort(unique(FSRS$fYEAR))
       pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,logTRAPS= log(1),LEGALS= pLegals))
       P = predict(R, newdata = pData, type = 'response',se.fit=T)
 
@@ -230,7 +191,7 @@ browser()
       }
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(R))
-      if(missing(years))years = sort(unique(fYEAR))
+      if(missing(years))years = sort(unique(FSRS$fYEAR))
       pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
       P = predict(R, newdata = pData, type = 'response',re.form=NA)
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
@@ -248,7 +209,7 @@ browser()
       }
       else load(file.path( fn.root, paste0(lfa,response,type,tag,"glm.rdata")))
       print(summary(R))
-      if(missing(years))years = sort(unique(fYEAR))
+      if(missing(years))years = sort(unique(FSRS$fYEAR))
       pData=with(FSRS,data.frame(fYEAR=as.factor(years),TEMP= pTemp,LEGALS= pLegals))#, VESSEL = unique(VESSEL)[1]))
       P = posterior_predict(R, newdata = pData,offset=rep(log(ptraps),nrow(pData)))
       x = apply(P,2,quantile,quants)/ptraps
@@ -259,22 +220,20 @@ browser()
       pData$mu = apply(P,2,mean)/ptraps
       pData$sd =apply(P,2,sd)/ptraps
 
-}
-      output=list(model=S,pData=pData)
 
     }
 
     output=list(model=R,pData=pData)
 
-  
+  }
 
   print(paste(lfa,response,type))
 
   return(output)
       
-
+} 
   
-  }
+  
   
   
   

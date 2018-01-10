@@ -75,6 +75,8 @@ FSRSModelData = function(trap.type='recruitment'){
 			}
 		
 		FSRSvesday<-assignSubArea2733(FSRSvesday)
+		FSRSvesday$LFA[FSRSvesday$LFA==31.1] = "31A"
+		FSRSvesday$LFA[FSRSvesday$LFA==31.2] = "31B"
 
 		write.csv(FSRSvesday,file.path( project.datadirectory("bio.lobster"), "data","products","FSRSrectraps.csv"),row.names=F)
 
