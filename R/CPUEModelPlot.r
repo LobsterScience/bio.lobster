@@ -16,6 +16,7 @@ CPUEModelPlot = function(CPUEModelResult, TempModelling, lfa, combined=F,graphic
   pData.list = list()
 
   if(graphic=='pdf')pdf(file.path( path,paste0("CPUEmodel",lab,".pdf")),width=wd,height=ht)
+  if(graphic=='png')png(file.path(path,paste0("CPUEmodel",lab,".png")),width=wd,height=ht,units='in',res=200)
   if(graphic=='R')x11(width=wd,height=ht)
 
   par(mfrow=c(length(lfa),1),mar=c(0,0,0,0),omi=c(0.5,1,0.5,0.5),las=1)

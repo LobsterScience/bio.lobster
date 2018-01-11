@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.11.27)  10 JAN 2018 08:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.11.27)  11 JAN 2018 13:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -852,24 +852,24 @@ Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CL
 Ffsrs33.pdf used on input line 217.
 (pdftex.def)             Requested size: 443.57848pt x 532.29742pt.
 
-<~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel1.pdf, id=84, 578
+<~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel1.png, id=84, 578
 .16pt x 794.97pt>
-File: ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel1.pdf Graphi
-c file (type pdf)
+File: ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel1.png Graphi
+c file (type png)
 
-<use ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel1.pdf>
+<use ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel1.png>
 Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CP
-UEmodel1.pdf used on input line 227.
+UEmodel1.png used on input line 227.
 (pdftex.def)             Requested size: 443.57848pt x 609.9211pt.
 
-<~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel2.pdf, id=85, 578
+<~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel2.png, id=85, 578
 .16pt x 794.97pt>
-File: ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel2.pdf Graphi
-c file (type pdf)
+File: ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel2.png Graphi
+c file (type png)
 
-<use ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel2.pdf>
+<use ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel2.png>
 Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA2733Framework2018/CP
-UEmodel2.pdf used on input line 236.
+UEmodel2.png used on input line 236.
 (pdftex.def)             Requested size: 443.57848pt x 609.9211pt.
 
 <~/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodelAnnualIndex.pdf, 
@@ -1390,64 +1390,64 @@ a/bio.lobster/figures/LFA2733Framework2018/CLFfsrs31B.pdf>] [17 </home/hubleyb/
 bio.data/bio.lobster/figures/LFA2733Framework2018/CLFfsrs32.pdf>] [18 </home/hu
 bleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/CLFfsrs33.pdf>]
 [19 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/CPUEmodel1
-.pdf>] [20 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/CPU
-Emodel2.pdf>] [21 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2
-018/CPUEmodelAnnualIndex.pdf>] [22 </home/hubleyb/bio.data/bio.lobster/figures/
-LFA2733Framework2018/FSRSmodelBayesShorts.pdf>] [23 </home/hubleyb/bio.data/bio
-.lobster/figures/LFA2733Framework2018/FSRSmodelBayesLegals.pdf>] [24 </home/hub
-leyb/bio.data/bio.lobster/figures/LFA2733Framework2018/FSRSmodelBayesRecruits.p
-df>] [25 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/FSRSm
-odelBayesCommShorts.pdf> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Fra
-mework2018/FSRSmodelBayesCommLegals.pdf> </home/hubleyb/bio.data/bio.lobster/fi
-gures/LFA2733Framework2018/FSRSmodelBayesCommRecruits.pdf>] [26 </home/hubleyb/
-bio.data/bio.lobster/figures/LFA2733Framework2018/TempDataAnnual.png (PNG copy)
->] [27 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/TempDat
-aMap.png (PNG copy)>] [28 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Fr
-amework2018/TempModel27N.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/fi
-gures/LFA2733Framework2018/TempModel33W.png (PNG copy)>] [29 </home/hubleyb/bio
-.data/bio.lobster/figures/LFA2733Framework2018/TempModelAnnual.png (PNG copy)>]
-[30 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/MoltProbMo
-del.png (PNG copy)>] [31 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Fra
-mework2018/MoltIncrModel.png (PNG copy)>] [32 </home/hubleyb/bio.data/bio.lobst
-er/figures/LFA2733Framework2018/SoM.png (PNG copy)>] [33 </home/hubleyb/bio.dat
-a/bio.lobster/figures/LFA2733Framework2018/sim/LC27NmalesBase.png (PNG copy)> <
-/home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC27Nfemale
-sBase.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framew
-ork2018/sim/LC27NberriedBase.png (PNG copy)>] [34 </home/hubleyb/bio.data/bio.l
-obster/figures/LFA2733Framework2018/sim/LC30malesBase.png (PNG copy)> </home/hu
-bleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC30femalesBase.png
- (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/s
-im/LC30berriedBase.png (PNG copy)>] [35 </home/hubleyb/bio.data/bio.lobster/fig
-ures/LFA2733Framework2018/sim/LC33WmalesBase.png (PNG copy)> </home/hubleyb/bio
-.data/bio.lobster/figures/LFA2733Framework2018/sim/LC33WfemalesBase.png (PNG co
-py)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC33W
-berriedBase.png (PNG copy)>] [36 </home/hubleyb/bio.data/bio.lobster/figures/LF
-A2733Framework2018/sim/LC27NmalesLS90.png (PNG copy)> </home/hubleyb/bio.data/b
-io.lobster/figures/LFA2733Framework2018/sim/LC27NfemalesLS90.png (PNG copy)> </
-home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC27Nberried
-LS90.png (PNG copy)>] [37 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Fr
-amework2018/sim/LC30malesLS90.png (PNG copy)> </home/hubleyb/bio.data/bio.lobst
-er/figures/LFA2733Framework2018/sim/LC30femalesLS90.png (PNG copy)> </home/hubl
-eyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC30berriedLS90.png (
-PNG copy)>] [38 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework201
-8/sim/LC33WmalesLS90.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figure
-s/LFA2733Framework2018/sim/LC33WfemalesLS90.png (PNG copy)> </home/hubleyb/bio.
-data/bio.lobster/figures/LFA2733Framework2018/sim/LC33WberriedLS90.png (PNG cop
-y)>] [39 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/L
-C27NmalesSS5.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA273
-3Framework2018/sim/LC27NfemalesSS5.png (PNG copy)> </home/hubleyb/bio.data/bio.
-lobster/figures/LFA2733Framework2018/sim/LC27NberriedSS5.png (PNG copy)>]
-[40 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC30ma
-lesSS5.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Frame
-work2018/sim/LC30femalesSS5.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster
-/figures/LFA2733Framework2018/sim/LC30berriedSS5.png (PNG copy)>] [41 </home/hu
-bleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC33WmalesSS5.png (
-PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim
-/LC33WfemalesSS5.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LF
-A2733Framework2018/sim/LC33WberriedSS5.png (PNG copy)>] [42 </home/hubleyb/bio.
-data/bio.lobster/figures/LFA2733Framework2018/simSumLegalSize.png (PNG copy)>]
-[43 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/simSumSeas
-on.png (PNG copy)>]
+.png (PNG copy)>] [20 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framew
+ork2018/CPUEmodel2.png (PNG copy)>] [21 </home/hubleyb/bio.data/bio.lobster/fig
+ures/LFA2733Framework2018/CPUEmodelAnnualIndex.pdf>] [22 </home/hubleyb/bio.dat
+a/bio.lobster/figures/LFA2733Framework2018/FSRSmodelBayesShorts.pdf>] [23 </hom
+e/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/FSRSmodelBayesLegal
+s.pdf>] [24 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/FS
+RSmodelBayesRecruits.pdf>] [25 </home/hubleyb/bio.data/bio.lobster/figures/LFA2
+733Framework2018/FSRSmodelBayesCommShorts.pdf> </home/hubleyb/bio.data/bio.lobs
+ter/figures/LFA2733Framework2018/FSRSmodelBayesCommLegals.pdf> </home/hubleyb/b
+io.data/bio.lobster/figures/LFA2733Framework2018/FSRSmodelBayesCommRecruits.pdf
+>] [26 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/TempDat
+aAnnual.png (PNG copy)>] [27 </home/hubleyb/bio.data/bio.lobster/figures/LFA273
+3Framework2018/TempDataMap.png (PNG copy)>] [28 </home/hubleyb/bio.data/bio.lob
+ster/figures/LFA2733Framework2018/TempModel27N.png (PNG copy)> </home/hubleyb/b
+io.data/bio.lobster/figures/LFA2733Framework2018/TempModel33W.png (PNG copy)>]
+[29 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/TempModelA
+nnual.png (PNG copy)>] [30 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733F
+ramework2018/MoltProbModel.png (PNG copy)>] [31 </home/hubleyb/bio.data/bio.lob
+ster/figures/LFA2733Framework2018/MoltIncrModel.png (PNG copy)>] [32 </home/hub
+leyb/bio.data/bio.lobster/figures/LFA2733Framework2018/SoM.png (PNG copy)>]
+[33 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC27Nm
+alesBase.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Fra
+mework2018/sim/LC27NfemalesBase.png (PNG copy)> </home/hubleyb/bio.data/bio.lob
+ster/figures/LFA2733Framework2018/sim/LC27NberriedBase.png (PNG copy)>]
+[34 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC30ma
+lesBase.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Fram
+ework2018/sim/LC30femalesBase.png (PNG copy)> </home/hubleyb/bio.data/bio.lobst
+er/figures/LFA2733Framework2018/sim/LC30berriedBase.png (PNG copy)>] [35 </home
+/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC33WmalesBase.p
+ng (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018
+/sim/LC33WfemalesBase.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figur
+es/LFA2733Framework2018/sim/LC33WberriedBase.png (PNG copy)>] [36 </home/hubley
+b/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC27NmalesLS90.png (PNG
+ copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC
+27NfemalesLS90.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2
+733Framework2018/sim/LC27NberriedLS90.png (PNG copy)>] [37 </home/hubleyb/bio.d
+ata/bio.lobster/figures/LFA2733Framework2018/sim/LC30malesLS90.png (PNG copy)> 
+</home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC30female
+sLS90.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framew
+ork2018/sim/LC30berriedLS90.png (PNG copy)>] [38 </home/hubleyb/bio.data/bio.lo
+bster/figures/LFA2733Framework2018/sim/LC33WmalesLS90.png (PNG copy)> </home/hu
+bleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC33WfemalesLS90.pn
+g (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/
+sim/LC33WberriedLS90.png (PNG copy)>] [39 </home/hubleyb/bio.data/bio.lobster/f
+igures/LFA2733Framework2018/sim/LC27NmalesSS5.png (PNG copy)> </home/hubleyb/bi
+o.data/bio.lobster/figures/LFA2733Framework2018/sim/LC27NfemalesSS5.png (PNG co
+py)> </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC27N
+berriedSS5.png (PNG copy)>] [40 </home/hubleyb/bio.data/bio.lobster/figures/LFA
+2733Framework2018/sim/LC30malesSS5.png (PNG copy)> </home/hubleyb/bio.data/bio.
+lobster/figures/LFA2733Framework2018/sim/LC30femalesSS5.png (PNG copy)> </home/
+hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/sim/LC30berriedSS5.pn
+g (PNG copy)>] [41 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework
+2018/sim/LC33WmalesSS5.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figu
+res/LFA2733Framework2018/sim/LC33WfemalesSS5.png (PNG copy)> </home/hubleyb/bio
+.data/bio.lobster/figures/LFA2733Framework2018/sim/LC33WberriedSS5.png (PNG cop
+y)>] [42 </home/hubleyb/bio.data/bio.lobster/figures/LFA2733Framework2018/simSu
+mLegalSize.png (PNG copy)>] [43 </home/hubleyb/bio.data/bio.lobster/figures/LFA
+2733Framework2018/simSumSeason.png (PNG copy)>]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 491.
  (./MainDocLFA27-33figuresBH.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 491.
@@ -1467,10 +1467,10 @@ Here is how much of TeX's memory you used:
  44i,10n,43p,274b,359s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-Output written on MainDocLFA27-33figuresBH.pdf (43 pages, 60532764 bytes).
+Output written on MainDocLFA27-33figuresBH.pdf (43 pages, 27308117 bytes).
 PDF statistics:
- 993 PDF objects out of 1000 (max. 8388607)
- 736 compressed objects within 8 object streams
+ 977 PDF objects out of 1000 (max. 8388607)
+ 722 compressed objects within 8 object streams
  148 named destinations out of 1000 (max. 500000)
  818 words of extra memory for PDF output out of 10000 (max. 10000000)
 
