@@ -64,7 +64,7 @@
 
 	TempModelling = TempModel( annual.by.area=F)
 	#CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
-	CPUE.data<-CPUEModelData(p,redo=T)
+	CPUE.data<-CPUEModelData(p,redo=F)
 	
 	#CPUE.data$WEIGHT_KG = CPUE.data$TOTAL_WEIGHT_KG
     cpueSubArea.dat = CPUEplot(CPUE.data,subarea= p$subareas,yrs=1981:2016,graphic='R')
@@ -115,8 +115,8 @@
 	#out=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("33W","33E"),xlim=c(2014,2017.5),ylim=c(0,20),wd=15)
 	#out1=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5))
 	#out2=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5))
-	cpue1=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1)
-	cpue2=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=2)
+	cpue1=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='png',path=figdir,lab=1)
+	cpue2=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='png',path=figdir,lab=2)
 	#cpue1=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("27", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1)
 	#cpue2=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("31A", "31B", "32", "33"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=2)
 	cpue=rbind(cpue1,cpue2)
