@@ -30,20 +30,20 @@ dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings, s
 #dat = ccir_compile_data(x = ccir_data,area.defns = Groupings, size.defns = inp, season.defns = Seasons, sexs = c(1,2) #Not for stock assessment, but for Simulation models
 redo.models =T 
 if(redo.models) {
-						#model options
-				out.normal = list() #this is the Claytor and Allard Model
-							attr(out.normal,'model') <- 'normal'
-				out.binomial = list()
-							attr(out.binomial,'model') <- 'binomial'
-				out.binomial.fishery.land = list()
-							attr(out.binomial.fishery.land,'model') <- 'binomial.fishery.land'
-				out.beta = list()
-							attr(out.beta,'model') <- 'beta'
-				out.logit.binomial = list()
-								attr(out.logit.binomial,'model') <- 'logit.binomial'
-				out.logit.binomial.cov = list()
-								attr(out.logit.binomial.cov,'model') <- 'logit.binomial.cov'
-				mm = c('binomial'),'binomial.fishery.land')
+							#model options
+					out.normal = list() #this is the Claytor and Allard Model
+								attr(out.normal,'model') <- 'normal'
+					out.binomial = list()
+								attr(out.binomial,'model') <- 'binomial'
+					out.binomial.fishery.land = list()
+								attr(out.binomial.fishery.land,'model') <- 'binomial.fishery.land'
+					out.beta = list()
+								attr(out.beta,'model') <- 'beta'
+					out.logit.binomial = list()
+									attr(out.logit.binomial,'model') <- 'logit.binomial'
+					out.logit.binomial.cov = list()
+									attr(out.logit.binomial.cov,'model') <- 'logit.binomial.cov'
+					mm = c('binomial'),'binomial.fishery.land')
 
 for(i in 1:length(dat)) {
 print(i)
@@ -75,8 +75,8 @@ print(i)
 		if(any(mm == 'binomial')){
 				ds$method = 'binomial'
 				x = ccir_stan_run(dat = ds,save=F)
-				ccir_stan_plots(x,type='predicted')
-			 	ccir_stan_plots(x,type='exploitation')
+			#	ccir_stan_plots(x,type='predicted')
+			 #	ccir_stan_plots(x,type='exploitation')
 			 #	ccir_stan_plots(x,type='traceplot')
 			 #	ccir_stan_plots(x,type='prior.posterior')
 #			 	if(length(ds$p) == length(ds$Temp))ccir_stan_plots(x,type='Temp.by.Expl')
@@ -153,7 +153,7 @@ outs = list()
 #	iu = c(grep('LFA 27',outs),grep('LFA 33',outs))
 #	outs = outs[-c(iu)]
 	o = do.call(rbind,outs)
-	ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,LFA))
+	ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,LFA,ERf75))
 #remove lfa 33 and 27 as treated as one
 
 #Split LFAs combined for one exploitation rate
@@ -175,7 +175,7 @@ for(i in 1:length(SLfa)) {
 	oo = do.call(rbind,outs)
 
 oi = rbind(ooo,oo)
-save(oi,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR.rdata')))
+save(oi,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR.rdata'))
 ###Model comparison time series exploitation plots
 
 	kl = unique(ouBinFish$Grid) 

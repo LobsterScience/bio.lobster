@@ -151,13 +151,29 @@ allS = merge(allS,tempData,all=T)
 
 
 #CPUE raw data
-	load(file=file.path(project.datadirectory('bio.lobster'),'outputs','rawcpueIndicators27-33.rdata')) 
+		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','rawcpueIndicators27-33B.rdata')) 
+	
 hq = rename.df(cpueData2,'YEAR','YR')
 hq$DATE = hq$CATCH = hq$EFFORT <- NULL
 
 allS = merge(allS,hq,all=T)
 
+#FSRS models
+	load(file=file.path(project.datadirectory('bio.lobster'),'outputs','fsrsModelIndicatorsJan2018.rdata')) 
+lF = rename.df(legalsLFA,c('YEAR','Area','mu'),c('YR','LFA','FSRS.Legal.CPUE'))
+lF = lF[,c('YR','LFA','FSRS.Legal.CPUE')]
+
+rF = rename.df(recruitLFA,c('YEAR','Area','mu'),c('YR','LFA','FSRS.Recruit.CPUE'))
+rF = rF[,c('YR','LFA','FSRS.Recruit.CPUE')]
+
+sF = rename.df(shortsLFA,c('YEAR','Area','mu'),c('YR','LFA','FSRS.Shorts.CPUE'))
+sF = sF[,c('YR','LFA','FSRS.Shorts.CPUE')]
+
+allS = Reduce(function(...) merge(...,all=T),list(allS,lF,rF,sF))
+#
+
 allS = subset(allS,YR<2016)
+
 
 	save(allS,	file=file.path(project.datadirectory('bio.lobster'),'outputs','CompiledIndicatorsLFA27-33.rdata')) 
 	
@@ -165,7 +181,7 @@ load(file=file.path(project.datadirectory('bio.lobster'),'outputs','CompiledIndi
 
 
 	 old = c('YR','LFA','AtSea.prop.female','AtSea.PropMating','AtSea.EggProduction','AtSea.median','AtSea.max','AtSea.new.rec','AtSea.prop.berried','AtSea.N','AtSea.expl','FSRSComm.median','FSRSComm.max','FSRSComm.prop.female','FSRSComm.prop.berried','FSRSComm.new.rec','FSRSComm.N','FSRSComm.expl','Port.prop.female','Port.PropMating','Port.EggProduction','Port.median','Port.max','Port.new.rec','Port.N','Port.expl','FSRSRec.median','FSRSRec.max','FSRSRec.prop.female','FSRSRec.prop.berried','Landings','RecruitmentBiomass','CCIR.Exploitation','Temperature')
-	 new = c('YR','LFA','At.Sea.SexRatio','At.Sea.Prob.Mature','At.Sea.Reprod.Pot','At.Sea.Median.CL','At.Sea.Max.CL','At.Sea.Prop.NewRec','At.Sea.Prop.Berried','At.Sea.Landed.Abund.','At.Sea.CA.Exploit','FSRS.Comm.Median.CL','FSRS.Comm.Max.CL','FSRS.Comm.SexRatio','FSRS.Comm.Prop.Berried','FSRS.Comm.Prop.NewRec','FSRS.Comm.Landed.Abund','FSRS.Comm.CA.Exploit','Port.SexRatio','Port.Prob.Mature','Port.Reprod.Pot','Port.Median.CL','Port.Max.CL','Port.Prop.NewRec','Port.Landed.Abund','Port.CA.Exploit','FSRS.Rec.Median.CL','FSRS.Rec.Max.CL','FSRS.Rec.SexRatio','FSRS.Rec.Prop.Berried','Landings.Wt','BiomassRecruits','ExploitationCCIR','Temperature')
+	 new = c('YR','LFA','At.Sea.SexRatio','At.Sea.Prop.Mature','At.Sea.Reprod.Pot','At.Sea.Median.CL','At.Sea.Max.CL','At.Sea.Prop.NewRec','At.Sea.Prop.Berried','At.Sea.Landed.Abund.','At.Sea.CA.Exploit','FSRS.Comm.Median.CL','FSRS.Comm.Max.CL','FSRS.Comm.SexRatio','FSRS.Comm.Prop.Berried','FSRS.Comm.Prop.NewRec','FSRS.Comm.Landed.Abund','FSRS.Comm.CA.Exploit','Port.SexRatio','Port.Prop.Mature','Port.Reprod.Pot','Port.Median.CL','Port.Max.CL','Port.Prop.NewRec','Port.Landed.Abund','Port.CA.Exploit','FSRS.Rec.Median.CL','FSRS.Rec.Max.CL','FSRS.Rec.SexRatio','FSRS.Rec.Prop.Berried','Landings.Wt','BiomassRecruits','ExploitationCCIR','Temperature')
 
 allS = rename.df(allS,old,new)
 
