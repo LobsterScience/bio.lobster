@@ -185,11 +185,11 @@ x = IndicatorplotsMultDataSets(atSea=aS, port=pS, fsrs=fS,fsrs.rec = fR, indicat
 
 
 
-x = IndicatorplotsMultDataSets(atSea=aS, port=pS,  indicator = 'Probability.Mature', out.dir='bio.lobster',mls=mls,subset=sset)
+x = IndicatorplotsMultDataSets(atSea=aS, port=pS,  indicator = 'Proportion.Mature', out.dir='bio.lobster',mls=mls,subset=sset)
 		
 				y = as.data.frame(do.call(rbind,x))
 				w = subset(y,ID %in% c('port','atSea'))
-				boxplot(Indi~ID,data=w,xaxt='n',ylab='Probability Mature',col= c('grey','red'),notch=F,border=c('black','black'))
+				boxplot(Indi~ID,data=w,xaxt='n',ylab='Proportion Mature',col= c('grey','red'),notch=F,border=c('black','black'))
 				axis(side=1,at=c(1,2),labels=c('At-Sea','Port'))
 				savePlot(file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors','MethodMated.png'),type='png')
 
@@ -197,7 +197,7 @@ x = IndicatorplotsMultDataSets(atSea=aS, port=pS,  indicator = 'Probability.Matu
 				if(sset) ats = c(1,2,4,5,7,8)
 				if(!sset) ats = c(1,2,4,5,7,8,10,11)
  				cc = c('grey','red')
-				boxplot(Indi~ID+LFA,data=db1,at=ats,col=cc,xaxt='n',ylab='Probability Mature',ylim=c(0.1,1),notch=F,border=c('black','black'))
+				boxplot(Indi~ID+LFA,data=db1,at=ats,col=cc,xaxt='n',ylab='Proportion Mature',ylim=c(0.1,1),notch=F,border=c('black','black'))
 				if(sset) axis(side=1,at=c(1.5,4.5,7.5),labels=c('LFA27','LFA29','LFA30'))
 				if(!sset) axis(side=1,at=c(1.5,4.5,7.5,10.5),labels=c('LFA27','LFA28','LFA29','LFA30'))
 				legend('topright',legend=c('AtSea','Port'),pch=15,col=cc,cex=0.8,pt.cex=1.3,bty='n')
@@ -207,7 +207,7 @@ x = IndicatorplotsMultDataSets(atSea=aS, port=pS,  indicator = 'Probability.Matu
 				db2 = subset(y,LFA %in% c('31A','31B','32','33'))
 				ats = c(1,2,4,5,7,8,10,11)
 				cc = c('grey','red')
-				boxplot(Indi~ID+LFA,data=na.omit(db2),at=ats,col=cc,xaxt='n',ylab='Probability Mature',ylim=c(0,1),notch=F,border=c('black','black'))
+				boxplot(Indi~ID+LFA,data=na.omit(db2),at=ats,col=cc,xaxt='n',ylab='Proportion Mature',ylim=c(0,1),notch=F,border=c('black','black'))
 				axis(side=1,at=c(1.5,4.5,7.5,10.5),labels=c('LFA31A','LFA31B','LFA32','LFA33'))
 				legend('topright',legend=c('AtSea','Port'),pch=15,col=cc,cex=0.8,pt.cex=1.3,bty='n')
 				if(sset) savePlot(file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors','subsetCombinedPropMatedLFA31A-33.png'),type='png')

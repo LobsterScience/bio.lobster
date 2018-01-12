@@ -1,6 +1,5 @@
 
 
-load(file='/backup/bio_data/bio.lobster/data/maps/LFA27-33100mIsobath.rdata') #Isob100 the 100 m isobath for 27-33
 
 require(bio.lobster)
 require(bio.utilities)
@@ -211,9 +210,6 @@ ouS = out[,c('LFA','Year','TotalLobsters')]
 
 load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNumbersLandedLFA27-33.rdata'))
 out$Year = out$YEAR
-
-
-
 
 
 ####FSRS commercial samples
