@@ -1,9 +1,10 @@
 #' @export
-moltPrModel = function(p,redo.dd=T){
+moltModel = function(p,redo.dd=T){
 
 	tagging.data = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'))
 	tagging.data$TagDate = as.Date(tagging.data$TagDate)
 	tagging.data$CapDate = as.Date(tagging.data$CapDate)
+	
 	if(redo.dd){
 
 		if(!"TempModel"%in%names(p)) {
@@ -31,5 +32,13 @@ moltPrModel = function(p,redo.dd=T){
 	moltPrModel = glm(Molted ~ degreedays + CL , data = tagging.data, family = binomial(link = "logit"))
 	print(summary(moltPrModel))
 
-	return(moltPrModel)
+	tagging.data$MoltProb = moltPrModel$fitted.values
+
+	moltincr.data = subset(tagging.data,Molted==1&MoltProb<0.9)
+
+	moltIncrModel = stan_glm(log(MoltIncr) ~ CL , data = moltincr.data, family=gaussian(link='identity'),iter=20000)
+ 	print(summary(moltIncrModel))
+
+
+	return(list(moltPrModel=moltPrModel,moltIncrModel=moltIncrModel))
 }

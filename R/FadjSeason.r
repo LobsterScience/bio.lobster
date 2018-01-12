@@ -11,9 +11,9 @@ FadjSeason = function(p){
 	for(i in 1:tpy){
 		x = max(q) 
 		q = x + (1:p$timestep)
-		pvec[i] = ifelse(sum(q%in%season)/p$timestep>p$seasonThreshold,1,0)
-	}
+		pvec[i] = sum(season%in%q)/365
 
-	pvec[pvec==1] = tpy/sum(pvec)
-	return(rep(pvec,p$nt/tpy))
+	}
+	pvec = rep(pvec,p$nt/tpy)
+	return(pvec)
 }

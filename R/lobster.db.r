@@ -27,12 +27,13 @@
         lobster.db( DS="logs41jonah.redo")
         lobster.db( DS="observer41.redo")
         lobster.db( DS="fsrs.redo")
+        lobster.db( DS="fsrs.commercial.samples.redo")
         lobster.db( DS="atSea.redo")
         lobster.db( DS="atSea.clean.redo")        
         lobster.db( DS="atSea.logbook.link.redo")
         lobster.db( DS="cris.redo")
         lobster.db( DS="ccir.redo")
-        lobster.db( DS="port.redo")
+        lobster.db( DS="port.samples.redo")
         lobster.db( DS="vlog.redo")
         lobster.db( DS="scallop.redo")
         lobster.db( DS="survey.redo")
@@ -42,6 +43,7 @@
         lobster.db( DS="season.dates.redo")
         lobster.db(DS = "lfa41.vms.redo")
         lobster.db(DS= "logs41.habitat.redo")
+        lobster.db(DS = 'landings.by.port.redo')
         }
       
   if(DS %in% c('port','port.redo')){
@@ -63,6 +65,102 @@
                   links = sqlQuery(con,'select * from LOBSTER.ATSEA_LOG_LINK;')
                   save(links,file=file.path(fnODBC,'atSea.logbook.link.rdata'))          
         }
+
+if(DS %in% c('landings.by.port.redo','landings.by.port')) {
+
+  if(DS == 'landings.by.port.redo') {
+
+     con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                          #1975 - 1996
+                          oldd = sqlQuery(con,paste("SELECT date_landed da, prov_code||district||port_code port, cfv boatvesid, wt_lbs, lfa FROM
+                                  (SELECT date_landed,
+                                prov_code,    CASE      WHEN district = ' 1'      THEN '01'      WHEN district = ' 2'      THEN '02'      WHEN district = ' 3'      THEN '03'      WHEN district = ' 4'      THEN '04'      WHEN district = ' 5'      THEN '05'
+                                  WHEN district = ' 6'      THEN '06'      WHEN district = ' 7'      THEN '07'      WHEN district = ' 8'      THEN '08'      WHEN district = ' 9'      THEN '09'      ELSE district    END district,
+                                CASE      WHEN port_code = ' 1'      THEN '01'      WHEN port_code = ' 2'      THEN '02'      WHEN port_code = ' 3'      THEN '03'      WHEN port_code = ' 4'      THEN '04'      WHEN port_code = ' 5'      THEN '05'
+                                  WHEN port_code = ' 6'      THEN '06'      WHEN port_code = ' 7'      THEN '07'      WHEN port_code = ' 8'      THEN '08'      WHEN port_code = ' 9'      THEN '09'      ELSE port_code    END port_code,    match_cfv CFV,
+                                landed_qty_lbs_n WT_LBS,    CASE      WHEN lobster_district = '1'      THEN '36'      WHEN lobster_district = '2'      THEN '38'      WHEN lobster_district = '3'      THEN '35'      WHEN lobster_district = '5'
+                                  THEN '31_32'      WHEN lobster_district = '5A'      THEN '32'      WHEN lobster_district = '5B'      THEN '31A'      WHEN lobster_district = '5B1'      THEN '31B'      WHEN lobster_district = '6A'      THEN '30'
+                                  WHEN lobster_district = '6B'      THEN '27'      WHEN lobster_district = '7A'      THEN '29'      WHEN lobster_district = '7A1'      THEN '28'      WHEN lobster_district       = 'A'      AND SUBSTR(date_landed,1,4) > 1976
+                                  THEN '41'      WHEN match_cfv             IN ('000530','000790','001614','005366','005461','005569','012136','012148')     AND SUBSTR(date_landed,1,4) = 1975      THEN '41'  WHEN match_cfv             IN ('000530','001614','005366','005461','005569','012148')
+                                  AND SUBSTR(date_landed,1,4) = 1976     THEN '41'   WHEN lobster_district = '4B'  AND match_cfv NOT    IN ('000115','000530','000790','001530','001532','001540','001550','001614','004005','004034','004056', '005366','005461','005569','005611','005690','012136','012148','100989','101315','100990')
+                                  THEN '33'     WHEN lobster_district = '4A'  AND match_cfv NOT    IN ('000115','000530','000790','001530','001532','001540','001550','001614','004005','004034','004056', '005366','005461','005569','005611','005690','012136','012148','100989','101315','100990')
+                                  THEN '34'  WHEN lobster_district = '7B'   THEN '7B'   ELSE 'NA'   END LFA  FROM lobster.lob_log_est_1975_1996  WHERE species_code          = 700  AND SUBSTR(date_landed,1,4) <1997 ) "))
+                           oldd <- transform(oldd, DA = as.Date(as.character(DA), "%Y%m%d"))
+                           oldd = subset(oldd,year(oldd$DA)>1979)
+                        #1997 - 2001
+                          midd = sqlQuery(con,paste("SELECT date_fished da,  port_landed port,  licence_id boatvesid,  weight_lbs wt_lbs,  lfa FROM lobster.LOB_LOG_EST_1997_2001"))
+
+                        #2002 - current
+                            newd = sqlQuery(con,paste("SELECT date_fished da,  community_code port ,  licence_id boatvesid,  NVL(weight_lbs,0)+NVL(weight_lbs_b,0)+NVL(weight_lbs_c,0) wt_lbs,  lfa FROM marfissci.lobster_sd_log"))
+                         
+                          dats = rbind(oldd,midd,newd)
+                          dats = subset(dats,LFA<41)
+                          dats = addSYEAR(dats,'DA')
+                          season.dates = lobster.db('season.dates')
+
+                        dats$WOS = NA
+                        lfa = unique(dats$LFA) 
+                            for(i in 1:length(lfa)) {
+                                  h  = season.dates[season.dates$LFA==lfa[i],]  
+                               for(j in unique(dats$SYEAR[dats$LFA==lfa[i]])){
+                                   dats$WOS[dats$LFA==lfa[i] & dats$SYEAR==j] = floor(as.numeric(dats$SDATE[dats$LFA==lfa[i] & dats$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                }
+                          }
+                          
+                        dats$WEIGHT_KG = dats$WT_LBS*0.453592
+                      if(any(!is.finite(dats$WOS))) {kl = which(!is.finite(dats$WOS)); dats$WOS[kl] = NA}
+                      dats = aggregate(WEIGHT_KG~PORT+SDATE+WOS+SYEAR+LFA,data=dats,FUN=sum)
+                      dats = subset(dats,WOS>0)
+                       save(dats,file=file.path(fnProducts,'landings.by.port.rdata'))
+                  }
+               
+               load(file=file.path(fnProducts,'landings.by.port.rdata'))
+               return(dats)
+      
+          }
+
+if(DS %in% c('community.to.grid.historic.redo','community.to.grid.historic')){
+
+  if(grepl('redo',DS)) {
+      #proportion of old by grid using proportions of landings by WOS and Community into grids using logs from 2002-2009
+                a = lobster.db('process.logs')
+                b = aggregate(WEIGHT_KG~LFA+GRID_NUM+COMMUNITY_CODE+WOS,data=subset(a,SYEAR<2009),FUN=sum)
+                bb = aggregate(WEIGHT_KG~LFA,data=subset(a,SYEAR<2009),FUN=sum)
+                    require(bio.utilities)
+                    bb = rename.df(bb,'WEIGHT_KG','TOTWGT')
+                    bbb = merge(b,bb,all.x=T)
+                    bbb$p = bbb$WEIGHT_KG / bbb$TOTWGT
+                    bbb = bbb[,c('LFA','COMMUNITY_CODE','WOS','GRID_NUM','p')]
+                    names(bbb) =c('LFA','PORT','WOS','GRID_NUM','PropLand')
+                    bbb$SD = substr(bbb$PORT,2,3)
+                    com2grid = bbb
+                    save(com2grid,file=file.path(fnODBC,'community.to.grid.historic.rdata'))
+                 }
+          load(file.path(fnODBC,'community.to.grid.historic.rdata'))
+          return(com2grid)
+}
+
+
+if(DS %in% c('community.to.grid.contemporary.redo','community.to.grid.contemporary')){
+
+  if(grepl('redo',DS)) {
+      #proportion of old by grid using proportions of landings by WOS and Community into grids using logs from 2002-2009
+                a = lobster.db('process.logs')
+                b = aggregate(WEIGHT_KG~LFA+GRID_NUM+COMMUNITY_CODE+WOS+SYEAR,data=a,FUN=sum)
+                bb = aggregate(WEIGHT_KG~LFA+SYEAR,data=a,FUN=sum)
+                    require(bio.utilities)
+                    bb = rename.df(bb,'WEIGHT_KG','TOTWGT')
+                    bbb = merge(b,bb,all.x=T)
+                    bbb$p = bbb$WEIGHT_KG / bbb$TOTWGT
+                    bbb = bbb[,c('LFA','SYEAR','COMMUNITY_CODE','WOS','GRID_NUM','p')]
+                    names(bbb) =c('LFA','SYEAR','PORT','WOS','GRID_NUM','PropLand')
+                    bbb$SD = substr(bbb$PORT,2,3)
+                    com2grid = bbb
+                    save(com2grid,file=file.path(fnODBC,'community.to.grid.contemporary.rdata'))
+                 }
+          load(file.path(fnODBC,'community.to.grid.contemporary.rdata'))
+          return(com2grid)
+}
 
 
  if(DS %in% c('annual.landings','annual.landings.redo')) {
@@ -112,8 +210,30 @@ if(DS %in% c('season.dates','season.dates.redo')) {
                 return(season.dates)
                   }
                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  season.dates = sqlQuery(con,'select * from LOBSTER.FISHING_SEASONS')
-                  save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
+                  print('This is not updated--Check with AMC')
+                
+                #using dats from landings by port redo AMC Dec 1 2017
+              #  a = aggregate(mns~SYEAR+LFA+SDATE,data=dats,FUN=length)
+              #  dd = as.data.frame(unique(cbind(a$LFA,a$SYEAR)))
+              #  names(dd) = c('LFA','SYEAR')
+              #  outs=list()
+              #          for(j  in 1:nrow(dd)){
+              #                      d2 = subset(a,LFA == dd[j,'LFA'] & SYEAR==dd[j,'SYEAR'])
+              #                      x = d2$mns
+              #                      i = ave(x, FUN = function(x) cumsum(x >= 30 & with(rle(x >= 30), rep(lengths, lengths)) >= 3)) 
+              #                      ii = c(which(i>0)[1],which.max(i))
+              #                      outs[[j]] = cbind(d2[ii[1],],d2[ii[2],'SDATE'])
+              #                      }
+              #    at = as.data.frame(do.call(rbind,outs))
+              #    names(at) = c('SYEAR','LFA','START_DATE','nn','END_DATE')
+              #    at$nn = NULL
+
+
+
+
+
+                  #season.dates = sqlQuery(con,'select * from LOBSTER.FISHING_SEASONS')
+                  #save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
             }
 
 
@@ -154,7 +274,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     #Filtering by   
                     #Fish.Date = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
-                    Fish.Date = lobster.db('season.dates')
+                      Fish.Date = lobster.db('season.dates')
                     lfa  =  sort(unique(Fish.Date$LFA))
                     
                 
@@ -177,7 +297,8 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     # select for records within season
                           logs$DATE_FISHED = as.Date(logs$DATE_FISHED,"%Y-%m-%d")
                           #logs$SYEAR = year(logs$DATE_FISHED)
-           
+
+
                         for(i in 1:length(lfa)) {
                                 h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
                             for(j in 1:nrow(h)) {
@@ -186,7 +307,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                               }
                         
                         logs = subset(logs,!is.na(SYEAR))
-                   
+
                     # add week of season (WOS) variable
                         logs$WOS = NA
                           
@@ -203,7 +324,6 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       logs$quarter[month(logs$DATE_FISHED)%in%4:6] = 2
                       logs$quarter[month(logs$DATE_FISHED)%in%7:9] = 3
                       logs$quarter[month(logs$DATE_FISHED)%in%10:12] = 4
-
 
                     commonCols = c("SUM_DOC_ID", "VR_NUMBER", "VESSEL_NAME", "SUBMITTER_NAME", "LICENCE_ID", "LFA", "COMMUNITY_CODE","SD_LOG_ID", "DATE_FISHED","SYEAR","WOS",'quarter',"TOTAL_NUM_TRAPS","TOTAL_WEIGHT_KG")
 
@@ -265,7 +385,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     logsInSeason = assignSubArea2733(logsInSeason)
                     
-  
+
           # Save logsInSeason as working data
               save(logsInSeason,file=file.path( fnProducts,"logsInSeason.rdata"),row.names=F)
    }
@@ -466,7 +586,8 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
           fname = 'atSea.clean.rdata'
         if(DS == 'atSea.clean') {
-                load(file.path( fnODBC, fname), .GlobalEnv)
+                load(file.path( fnODBC, fname))
+                return(atSea.clean)
         }
         
          if (DS=="atSea.clean.redo") {
@@ -474,8 +595,6 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
              aS = atSea
              aS = addSYEAR(aS)
              ih = which(is.na(aS$SYEAR))
-             aS$SYEAR[ih] <- year(aS$SDATE[ih])
-             atsea$SYEAR[ih] <- ifelse(atsea$LFA[ih] %in% 33:38 & month(atsea$SDATE[ih]) %in% c(10,11,12), year(atsea$SDATE[ih])+1,atsea$SYEAR[ih])
 
              aS$GRIDNO[which(aS$GRIDNO== -99)] <- NA
             LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
@@ -500,7 +619,23 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
               i = which(aS$CARLENGTH>280 & aS$SPECIESCODE==2550)
               aS$CARLENGTH[i] <- NA
               aS$PID = aS$SID = aS$Bdry = NULL
-            atSea.clean = aS
+         
+
+                      season.dates = lobster.db('season.dates')
+                       aS$WOS = NA
+                        lfa = unique(aS$LFA) 
+                            for(i in 1:length(lfa)) {
+                                  h  = season.dates[season.dates$LFA==lfa[i],]  
+                                  k = na.omit(unique(aS$SYEAR[aS$LFA==lfa[i]]))
+                               for(j in k){
+                                   aS$WOS[aS$LFA==lfa[i] & aS$SYEAR==j] = floor(as.numeric(aS$SDATE[aS$LFA==lfa[i] & aS$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                }
+                          }
+                          if(any(!is.finite(aS$WOS))) {kl = which(!is.finite(aS$WOS)); aS$WOS[kl] = NA}
+                          aS = subset(aS,WOS>0)
+
+           atSea.clean = aS
+
           save( atSea.clean, file=file.path( fnODBC, fname), compress=T)
           
           }
@@ -509,14 +644,26 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
 
 ### port sampling 
-    if (DS %in% c("port.redo", "port") ) {
+    if (DS %in% c("port.sampling.redo", "port.sampling") ) {
 
-     if (DS=="port.redo") {
+     if (DS=="port.sampling.redo") {
         require(RODBC)
         con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # port
         port = sqlQuery(con, "select a.SAMPLE_SEQ,a.SAMPLE_NO,a.SDATE,a.SEASON,a.NTRAPS,a.LATITUDE,a.LONGITUDE,a.GRADE, b.L_SIZE,b.N_MALES,b.N_FEM,b.NBF, c.LFA,c.PORT,c.COUNTY,c.STAT,c.PORT_CODE,c.LATITUDE port_lat,c.LONGITUDE port_lon from lobster.CRLENGCODE a, lobster.CRLENGFREQ b, lobster.CRLOCATIONS c where a.sample_seq = b.sample_seq and a.port = c.port and a.type = 'P' ")
+        port = addSYEAR(port)
+
+         season.dates = lobster.db('season.dates')
+                        lfa = unique(port$LFA) 
+                            for(i in 1:length(lfa)) {
+                                  h  = season.dates[season.dates$LFA==lfa[i],]  
+                                  k = na.omit(unique(port$SYEAR[port$LFA==lfa[i]]))
+                               for(j in k){
+                                   port$WOS[port$LFA==lfa[i] & port$SYEAR==j] = floor(as.numeric(port$SDATE[port$LFA==lfa[i] & port$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                }
+                          }
+                          if(any(!is.finite(port$WOS))) {kl = which(!is.finite(port$WOS)); port$WOS[kl] = NA}
         save( port, file=file.path( fnODBC, "port.rdata"), compress=T)
         gc()  # garbage collection
         odbcClose(con)
@@ -538,6 +685,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
         odbcClose(con)
       }
       load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)
+      return(vlog)
      }
 
 
@@ -545,14 +693,31 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
      if (DS=="process.vlog.redo") {
           load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)  
-          vlog$SYEAR = as.numeric(substr(vlog$SEASON,6,9))
+          
+          vlog$SYEAR = NA
+
+          Fish.Date = lobster.db('season.dates')
+          Fish.Date = backFillSeasonDates(Fish.Date)
+
+          lfa  =  sort(unique(Fish.Date$LFA))
+
+          for(i in 1:length(lfa)) {
+                  h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
+              for(j in 1:nrow(h)) {
+                  vlog$SYEAR[vlog$LFA==lfa[i]&vlog$FDATE>=h[j,'START_DATE']&vlog$FDATE<=h[j,'END_DATE']] = h[j,'SYEAR']
+                  }
+                }
+          
+          vlog = subset(vlog,!is.na(SYEAR))
+
+
           vlog$W_KG = vlog$W_TOT*0.4536
           vlog$CPUE = vlog$W_KG/vlog$N_TRP
 
           vlog$X = convert.dd.dddd(vlog$LONGITUDE)*-1
           vlog$Y = convert.dd.dddd(vlog$LATITUDE)
 
-          Ports = read.csv(file.path( project.datadirectory("lobster"), "data","inputs","Ports.csv"))
+          Ports = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","Ports.csv"))
           ports31A = subset(Ports,LFA=='31A')$Port_Code
           ports31B = c(subset(Ports,LFA=='31B')$Port_Code,11799)
           stat33E = c(18,22,23,25,26)
@@ -569,6 +734,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
           return(vlog)
         }
         load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)      
+        return(vlog)
     }
 
 
@@ -712,6 +878,64 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       }
       load(file.path( fnODBC, "fsrs.rdata"), .GlobalEnv)
      }
+
+
+    if (DS %in% c("fsrs.commercial.samples.redo", "fsrs.commercial.samples") ) {
+                fname = 'fsrs.commercial.rdata'
+               
+               if (DS=="fsrs.commercial.samples.redo") {
+                            print('Get updated csv files from FSRS last Update Nov 2017 AMC')
+                            tr = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','fsrs.commercial.samples','CTS_Position_17.csv'),header=T)
+                            vc = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','fsrs.commercial.samples','Vessel_Code.csv'),header=T)
+                            ti = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','fsrs.commercial.samples','Trapss.csv'),header=T)
+                            
+                            tr$Y = tr$Trap.1.Latitude
+                            tr$X = tr$Trap.1.Longitude
+
+                            tr = tr[,-c(grep('Lati',names(tr)))]
+                            tr = tr[,-c(grep('Longi',names(tr)))]
+                            tr$X = convert.dd.dddd(tr$X)*-1
+                            tr$Y = convert.dd.dddd(tr$Y)
+                            tr$Comments <- NULL
+                            LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
+                            
+                            tr = makePBS(tr,polygon=F)
+                            a = which(is.na(tr$Y) | is.na(tr$X))
+                             if(length(a)<dim(tr)[1]){
+                                if(length(a)>0) {
+                                       a1 = findPolys(tr[-a,],LFAgrid,maxRows = 3e6,includeBdry=1)
+                                    }else{
+                                       a1 = findPolys(tr,LFAgrid,maxRows = 3e6,includeBdry=1)
+                                }
+                              }  
+                            tr = merge(tr,a1,by='EID',all.x=T)
+                            tr$PID = tr$Bdry <- NULL
+                            tr = rename.df(tr,c('ID','SID'),c('TR.ID','GRID_NUM'))
+                            tr$Temp = ifelse(tr$Temp==0,NA,tr$Temp)
+                            tr$Temp = ifelse(tr$Temp==-99,NA,tr$Temp)
+                            
+                            tt = merge(ti,tr,by=c('Record.Number'))
+                            tt = toNums(tt,c('Short','Berried','V.Notched','Recaptured'))
+                            tt$Date = as.Date(tt$Date,format = '%d-%b-%y')
+                            tt = subset(tt,LFA==33)
+                            tt = addSYEAR(tt,'Date')
+                            tt = subset(tt,!is.na(SDATE))
+                            tt$WOS = NA
+                            Fish.Date = lobster.db('season.dates')
+                               h  =  Fish.Date[Fish.Date$LFA==33,]  
+                               for(j in unique(tt$SYEAR)){
+                                   tt$WOS[tt$SYEAR==j] = floor(as.numeric(tt$SDATE[tt$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                }
+                            tt = subset(tt,WOS>0)
+                            fsrs.comm = tt
+                            
+                            save( fsrs.comm, file=file.path( fnODBC, fname), compress=T)
+                            gc()  # garbage collection
+                          }
+                load(file.path( fnODBC, fname), .GlobalEnv)
+      
+    }
+
 
 
 ###CCIR data frames

@@ -1,5 +1,5 @@
 #' @export
-CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,effort.min=10,export=F,...){
+CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,effort.min=10,export=F,path=file.path( project.figuredirectory("bio.lobster"),"figures"),...){
 
 	if(is.null(lfa)&&is.null(subarea))stop("specify LFA or subarea")
 
@@ -16,7 +16,6 @@ CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,
 	}
 
 	for(i in 1:length(lfa)){
-#browser()		
 		# daily
 		catch<-with(subset(logs,LFA==lfa[i]),tapply(WEIGHT_KG,DATE_FISHED,sum,na.rm=T))
 		effort<-with(subset(logs,LFA==lfa[i]),tapply(NUM_OF_TRAPS,DATE_FISHED,sum,na.rm=T))
@@ -36,7 +35,7 @@ CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,
 	daily.dat<-merge(daily.dat,merge(dates,data.frame(LFA=lfa)),all=T)
 	annual.dat<-do.call("rbind",annual)
 
-	if(graphic=='pdf')pdf(file.path( project.figuredirectory("bio.lobster"),"figures",paste0("CPUE",lab,".pdf")),wd,ht)
+	if(graphic=='pdf')pdf(file.path( path,paste0("CPUE",lab,".pdf")),wd,ht)
 
 	par(mfrow=c(length(lfa),1),mar=c(0,0,0,0),omi=c(0.5,1,0.5,0.5),las=1)
 
@@ -50,7 +49,7 @@ CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,
 
 	if(graphic=='pdf')dev.off()
 
-	if(export)write.csv(cpue.dat,file.path( project.datadirectory("bio.lobster"), "data","products","CommercialCPUE.csv"),row.names=F)
+	if(export)write.csv(annual.dat,file.path( project.datadirectory("bio.lobster"), "data","products","CommercialCPUE.csv"),row.names=F)
 
 
 	return(list(daily.data=daily.dat,annual.data=annual.dat))

@@ -6,7 +6,7 @@
 #' @author  Brad Hubley, \email{Brad.Hubley@@dfo-mpo.gc.ca}
 #' @export
 
-simMolt = function(p,gdd=F){
+simMolt = function(p,gdd=T){
 
 	start = Sys.time()
 
@@ -19,7 +19,9 @@ simMolt = function(p,gdd=F){
 	
 	totalPop[1,1,1,1] = p$StartPop # start with
 
-	p$Fl = c(rep(0,length(which(p$lens<p$LS))),rep(p$F,length(which(p$lens>p$LS))))
+	if(length(p$F) == 1) p$Fl = getFvec(p$F,p$LS,p$lens)
+		else p$Fl = p$F
+
 	p$Ml = rep(p$M,length(p$lens))
 
 	ty = p$timestep/365
@@ -28,13 +30,16 @@ simMolt = function(p,gdd=F){
 	cat('|')
 
 	for(t in 1:(p$nt-1)){ # time
-		cat('-')
 		spawners = 0
-		
-		# the molting process
-		for(i in 1:t){ # of molts
+		I = ifelse(t<p$maxMolts,t,p$maxMolts)
 
-			for(j in 1:t){ # of days since last molt
+		# the molting process
+		for(i in 1:I){ # of molts
+
+
+			J = ifelse(t<p$maxTime,t,p$maxTime)
+
+			for(j in 1:J){ # of days since last molt
 
 				p$doy =  j * p$timestep # days since last molt
 				p$ddoy = p$doy
@@ -47,11 +52,11 @@ simMolt = function(p,gdd=F){
 				if(p$sex==2){
 						#browser()
 						bf = getBerried(p)
-						notBerried = totalPop[t,,i,j] * (1 - bf$pB) #NotBerried
-						berried = totalPop[t,,i,j] * (bf$pB) #Berried
+						notBerried = totalPop[t,,i,j] * (1 - bf$pB) # Not Berried
+						berried = totalPop[t,,i,j] * (bf$pB) # Berried
 						released = totalBerried[t,,i,j] * bf$pR
 						totalBerried[t+1,,i,j+1] = totalBerried[t,,i,j] + berried - released #add to totalBerried
-						totalPop[t,,i,j] = notBerried + released #Return berried that release eggs to total Pop
+						totalPop[t,,i,j] = notBerried + released # Return berried that release eggs to total Pop
 						spawners = spawners + released 
 
 				}
@@ -69,13 +74,16 @@ simMolt = function(p,gdd=F){
 
 		for(l in 1:length(p$lens)){
 
-			totalRemovals[t+1,l,,] = totalPop[t+1,l,,]  * (p$Fl[l] / (p$Fl[l] + p$Ml[l])) * (1 - exp(-(p$Fl[l] * Fty[t] + p$Ml[l] * ty))) #Baranov
-			totalPop[t+1,l,,] = totalPop[t+1,l,,] * exp(-p$Ml[l] * ty) * exp(-p$Fl[l] * Fty[t])
+			totalRemovals[t+1,l,,] = totalPop[t+1,l,,]  * ((p$Fl[l] * Fty[t]) / (p$Fl[l] * Fty[t] + p$Ml[l]* ty)) * (1 - exp(-(p$Fl[l] * Fty[t] + p$Ml[l] * ty))) #Baranov
+			safe = totalPop[t+1,l,,] * p$reserve * exp(-p$Ml[l] * ty)
+			totalPop[t+1,l,,] = totalPop[t+1,l,,] * (1 - p$reserve)
+			totalPop[t+1,l,,] = totalPop[t+1,l,,] * exp(-p$Ml[l] * ty) * exp(-p$Fl[l] * Fty[t]) + safe
 			if(p$sex==2)totalBerried[t+1,l,,] = totalBerried[t+1,l,,] * exp(-p$Ml[l] * ty) 
 		}
 
 		if(p$sex==2)totalEggs[t+1,] = spawners * Fecundity(cl = p$lens)
 
+		cat('-')
 
 	}
 	cat('|')

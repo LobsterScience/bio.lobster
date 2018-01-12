@@ -33,6 +33,7 @@ BarPlotCLF2<-function(CLF,yrs=2005:2016,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF.
         if(i==length(CLF)){
             axis(1,at=pretty(xlm),lab=pretty(xlm)*diff(bins)[1])
         }
+        
         if(!is.null(LS))abline(v=LS[i]/diff(bins)[1],lwd=2,col='red')
         if(!is.null(recline))abline(v=recline,lty=2,col='red')
         
