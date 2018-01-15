@@ -33,7 +33,7 @@ CPUEModelPlot = function(CPUEModelResult, TempModelling, lfa, combined=F,graphic
     MD = MD[order(MD$y),]
     D = median(Mdata$DEPTH)
     Temp = predict(TempModelling$Model, newdata = data.frame(y=MD$y, cos.y=cos(2*pi*MD$y), sin.y=sin(2*pi*MD$y), DEPTH=D, area=lfa[i]), type='response')
-
+browser()
     pData=data.frame(DOS=MD$DOS,TEMP= Temp,logTRAPS=log(1), fYEAR=MD$fYEAR, fAREA=MD$fAREA)
     PM = predict(M, newdata = pData, type = 'response')
 
