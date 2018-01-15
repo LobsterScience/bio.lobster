@@ -11,7 +11,7 @@ IndicatorplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL,indicato
 		if(indicator == 'Proportion.Berried') y = 'prop.berried'
 		if(indicator == 'Proportion.Landings') y = 'PropLandings'
 		if(indicator == 'New.Recruits') y = 'new.rec'
-		if(indicator == 'Probability.Mature') y = 'PropMating'
+		if(indicator == 'Proportion.Mature') y = 'PropMating'
 		if(indicator == 'Reproductive.Potential') y = 'EggProduction'
 		
 		lf = c("27" , "28" , "29" , "30" , "31A" ,"31B" ,"32" , "33" )

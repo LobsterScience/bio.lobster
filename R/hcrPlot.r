@@ -1,6 +1,6 @@
 #' @export
 
-hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass') {
+hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F) {
 	
 	
           if(is.null(ylims)) ylims = c(0, (max(mF,RR)*1.05))
@@ -11,15 +11,16 @@ hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR
           polygon(x=c(USR,max(xlims)*1.3,max(xlims)*1.3, USR),y=c(-0.1,-0.1,max(ylims)*1.3,max(ylims)*1.3),col='lightgreen',border=NA)
           polygon(x=c(LRP,USR,USR, LRP),y=c(-0.1,-0.1,max(ylims)*1.3,max(ylims)*1.3),col='lightgoldenrod',border=NA)
           polygon(x=c(-100,LRP,LRP, -100),y=c(-0.1,-0.1,max(ylims)*1.3,max(ylims)*1.3),col='darksalmon',border=NA)
-	      lines( B, mF,  col="darkblue", cex=0.8, lwd=2, xlab="", ylab="", pch=20 ,lty=1)
+	      lines( B, mF,  col="darkblue", cex=0.8, lwd=2, xlab="", ylab="", pch=20 ,lty=1,type='b')
           if(!is.null('RR')) {
                     arrows(x0 = USR, x1 = USR*1000, length=0,y0 = RR, lty="solid", col="black", lwd=2 )
                     text( USR+USR*0.2, RR+RR*0.1, labels[3], lwd=2 )
            if(RRdec) arrows(x0 = LRP, x1 = USR, length=0,y1 = RR,y0=0, lty="solid", col="black", lwd=2 );text( USR+USR*0.2, RR+RR*0.1, labels[3], lwd=2 )
+           #if(!RRdec) arrows(x0 = 0, x1 = USR*1000, length=0,y0 = RR, lty="solid", col="black", lwd=2 )
                     abline (v=USR, lty="dotted")
                     abline (v=LRP, lty="dotted")
-                    text( USR-0.01*USR, RR+RR*0.1, labels[1] , srt=90, pos=3)
-                    text( LRP-0.01*USR, RR+RR*0.1, labels[2] , srt=90, pos=3)
+                    text( USR-0.01*USR, RR-RR*0.1, labels[1] , srt=90, pos=3)
+                    text( LRP-0.01*USR, RR-RR*0.1, labels[2] , srt=90, pos=3)
                 } 
           if(is.null(RR)){                    
                     abline (v=USR, lty="dotted")
@@ -28,6 +29,7 @@ hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR
                     mtext(side=3, at=LRP,  labels[2] , las=2, line=.2)
                }
 
-          text( B, mF,  labels=yrs, pos=3, cex= 0.8 )
+          if(!yr.ends) text( B, mF,  labels=yrs, pos=3, cex= 0.8 )
+          if(yr.ends) text( B[c(1,length(B))], mF[c(1,length(B))],  labels=yrs[c(1,length(B))], pos=3, cex= 0.8 )
 
 }

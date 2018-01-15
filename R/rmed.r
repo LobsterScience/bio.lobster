@@ -8,7 +8,6 @@ rmed <- function(yr,x) {
 				xpy = yr[-ik]
 				rmean = runmed(xpo,k=3,endrule='median')
 				yp = data.frame(mean = rmean, year=xpy)
-				lines(yp$year,yp$mean,lty=1,lwd=3,col='salmon')
 				rmean.yr = yp$year; rmean = yp$mean
 		  	} else {
       	rmean = runmed(x,k=3,endrule='median')
