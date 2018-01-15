@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.11.27)  12 JAN 2018 11:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.11.27)  14 JAN 2018 18:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -398,14 +398,14 @@ LaTeX Info: Redefining \nameref on input line 23.
 
 
 <~/bio.data/bio.lobster/figures/LFA2733Framework2018/Landings.pdf, id=4, 578.16
-pt x 433.62pt>
+pt x 722.7pt>
 File: ~/bio.data/bio.lobster/figures/LFA2733Framework2018/Landings.pdf Graphic 
 file (type pdf)
 
 <use ~/bio.data/bio.lobster/figures/LFA2733Framework2018/Landings.pdf>
 Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA2733Framework2018/La
 ndings.pdf used on input line 41.
-(pdftex.def)             Requested size: 443.57848pt x 332.68423pt.
+(pdftex.def)             Requested size: 443.57848pt x 554.47371pt.
 
 <~/bio.data/bio.lobster/figures/LFA2733Framework2018/CLFSeaSampling27.pdf, id=5
 , 722.7pt x 867.24pt>
@@ -1468,7 +1468,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 500.
 Here is how much of TeX's memory you used:
  8007 strings out of 494945
  143089 string characters out of 6181031
- 232563 words of memory out of 5000000
+ 232560 words of memory out of 5000000
  11013 multiletter control sequences out of 15000+600000
  7361 words of font info for 27 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -1476,10 +1476,10 @@ Here is how much of TeX's memory you used:
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on MainDocLFA27-33figuresBH.pdf (43 pages, 26568154 bytes).
+Output written on MainDocLFA27-33figuresBH.pdf (43 pages, 26594309 bytes).
 PDF statistics:
- 989 PDF objects out of 1000 (max. 8388607)
- 732 compressed objects within 8 object streams
+ 1016 PDF objects out of 1200 (max. 8388607)
+ 759 compressed objects within 8 object streams
  148 named destinations out of 1000 (max. 500000)
  818 words of extra memory for PDF output out of 10000 (max. 10000000)
 

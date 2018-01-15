@@ -1,15 +1,19 @@
 
 #' @export
-CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,220,5), Yrs=2005:2016, by=NULL, sex=1:2, fn='',GEAR='280 BALLOON',ss=NULL,vers=1, rootdir=file.path(project.datadirectory('bio.lobster'),'figures'),... ) {
+CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,220,5), Yrs=2005:2016, by=NULL, sex=1:2, fn='',GEAR='280 BALLOON',ss=T,vers=1, rootdir=file.path(project.datadirectory('bio.lobster'),'figures'),... ) {
 
     ### Carapace Length Frequencies (CLF)
 
 
         #MLS
         mls<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
-        mlslfas<-as.numeric(substr(names(mls[-1]),4,5))
-        if(31.1%in%LFAs) mlslfas[which(mlslfas==31)]<-c(31.1,31.2)
-        mls=cbind(mls[mls$Year%in%Yrs,which(mlslfas%in%LFAs)+1])
+        #mlslfas<-as.numeric(substr(names(mls[-1]),4,5))
+
+
+        if(LFAs%in% c('31a','31A','31.1')){ll = 'LFA31a'; mls = mls[,c('Year',ll)] }
+        if(LFAs%in% c('31b','31B','31.2')){ll = 'LFA31b'; mls = mls[,c('Year',ll)] }
+        
+          mls=as.numeric(subset(mls,Year %in% Yrs)[,2])
         
   
         if(length(LFAs)==1&&LFAs=='34'){
@@ -77,9 +81,9 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
 
         if(DS=='atSea'){
         # from At Sea Sampling
-
+      
             lobster.db('atSea')
-            
+         
             # add columns for year, quarter
             atSeaData<-addSYEAR(subset(atSea,LFA%in%LFAs))
             atSeaData$YEAR<-year(atSeaData$SDATE)
@@ -88,15 +92,15 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
             # Construct CLF
             atSeaCLF<-CLF(subset(atSeaData,SYEAR%in%Yrs&SEX%in%sex,c("SYEAR","CARLENGTH",by)),yrs=Yrs,bins=bins,vers=vers)
 
-            
-            if(!is.null){
+           
+            if(!is.null(ss)){
+              
                 ss = unlist(lapply(with(subset(atSeaData,SYEAR%in%Yrs&SEX%in%sex),tapply(paste(SYEAR,TRIPNO),SYEAR,unique)),length))
                 ss = data.frame(Year=names(ss),N=ss)
                 ss = merge(data.frame(Year=Yrs),ss,all=T)
                 ss = ss$N
             }
-
-            #browser()
+         
 
             # plot
             if(vers==1)BarPlotCLF(atSeaCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFSeaSampling",fn,".pdf")),LS=mls, sample.size=ss,...)

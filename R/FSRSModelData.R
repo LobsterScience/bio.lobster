@@ -1,5 +1,5 @@
 #' @export
-FSRSModelData = function(trap.type='recruitment'){
+FSRSModelData = function(trap.type='recruitment',TempModelling){
 
 	if(trap.type=='recruitment'){
 
@@ -56,7 +56,7 @@ FSRSModelData = function(trap.type='recruitment'){
 
 		FSRS_1.dat <- aggregate(cbind(VESSEL_CD, HAUL_DATE, DEPTH, LFA, LFA_GRID, TEMP, LAT_DD, LONG_DD, HAUL_YEAR, SYEAR)~VES_DATE,data=FSRS.dat,mean,na.rm=T)
 		FSRS_2.dat<-merge(trap.dat,merge(recruit.dat,merge(legalbm.dat,merge(short.dat,legal.dat,all=T),all=T),all=T),all=T)
-		FSRS_2.dat$SHORTS[is.na(FSRS_2.dat$RECRUITS)]<-0
+		FSRS_2.dat$RECRUITS[is.na(FSRS_2.dat$RECRUITS)]<-0
 		FSRS_2.dat$SHORTS[is.na(FSRS_2.dat$SHORTS)]<-0
 		FSRS_2.dat$LEGALS[is.na(FSRS_2.dat$LEGALS)]<-0
 		FSRSvesday<-merge(FSRS_1.dat,FSRS_2.dat,all.x=T)
@@ -95,7 +95,7 @@ FSRSModelData = function(trap.type='recruitment'){
 		FSRScom.dat$VES_DATE<-paste(FSRScom.dat$Vessel.Code,FSRScom.dat$SDATE,sep='.')
 		FSRScom.dat$SDATE<-as.Date(FSRScom.dat$SDATE)
 
-		FSRScom.dat<-subset(FSRScom.dat,Soak.Days<6)	# Remove soak days greater than 5,  do not iclude berried females
+		#FSRScom.dat<-subset(FSRScom.dat,Soak.Days<6)	# Remove soak days greater than 5,  do not iclude berried females
 		FSRScom.dat$SDATE<-as.Date(FSRScom.dat$SDATE)
 		FSRScom.dat$Temp[FSRScom.dat$Temp>30] = NA
 
@@ -135,12 +135,41 @@ FSRSModelData = function(trap.type='recruitment'){
 		legalbm.dat<-data.frame(VES_DATE=names(legalbm.lst),BIOMASS=as.numeric(legalbm.lst))
 		
 
-		FSRS_1.dat <- aggregate(cbind(Vessel.Code, SDATE, LFA, GRID_NUM, Temp, Y, X, SYEAR)~VES_DATE,data=FSRScom.dat,mean,na.rm=T)
+		FSRS_1.dat <- aggregate(cbind(Vessel.Code, SDATE, LFA, GRID_NUM, Temp, Y, X, SYEAR)~VES_DATE,data=FSRScom.dat,mean,na.rm=T,na.action=NULL)
 		FSRS_2.dat<-merge(trap.dat,merge(recruit.dat,merge(legalbm.dat,merge(short.dat,legal.dat,all=T),all=T),all=T),all=T)
 		FSRS_2.dat$SHORTS[is.na(FSRS_2.dat$SHORTS)]<-0
 		FSRS_2.dat$LEGALS[is.na(FSRS_2.dat$LEGALS)]<-0
+		FSRS_2.dat$RECRUITS[is.na(FSRS_2.dat$RECRUITS)]<-0
 		FSRSvesday<-merge(FSRS_1.dat,FSRS_2.dat,all.x=T)
+		FSRSvesday<-assignSubArea2733(FSRSvesday)
+		FSRSvesday$SDATE=as.Date(FSRSvesday$SDATE, origin = "1970-01-01")
 
+
+		### get temps where missing
+		library(bio.spacetime)
+		library(bio.bathymetry)
+
+		grids.dat = with(FSRSvesday,data.frame(VES_DATE=VES_DATE,y=decimal_date(SDATE),subarea=subarea,X=X,Y=Y))
+		grids.dat$subarea[grids.dat$subarea==33] <- "33W"
+
+
+			p = spatial_parameters( type = "canada.east" ) 
+			grids.dat = lonlat2planar(grids.dat, input_names=c("X", "Y"),proj.type = p$internal.projection)
+			Complete = bathymetry.db(p=p, DS="complete")
+ 
+		 	# identify locations of data relative to baseline for envionmental data
+			 locsmap = match( 
+			  lbm::array_map( "xy->1", grids.dat[,c("plon","plat")], gridparams=p$gridparams ), 
+			  lbm::array_map( "xy->1", Complete[,c("plon","plat")], gridparams=p$gridparams ) )
+
+		 	grids.dat$DEPTH = Complete$z[locsmap]
+			if(missing(TempModelling)) TempModelling = TempModel(annual.by.area=F)
+
+	    newdata = with(grids.dat,data.frame(y=y, cos.y=cos(2*pi*y), sin.y=sin(2*pi*y), DEPTH=DEPTH, area=subarea))
+		grids.dat$Temp2 = predict(TempModelling$Model, newdata, type='response')
+		grids.dat = na.omit(subset(grids.dat,Temp2>0&DEPTH<500&DEPTH>0))
+		FSRSvesday<-merge(FSRSvesday,na.omit(grids.dat[c("VES_DATE","Temp2")]),all.x=T)
+		FSRSvesday$Temp[is.na(FSRSvesday$Temp)]<-FSRSvesday$Temp2[is.na(FSRSvesday$Temp)]
 
 			# Create column for week and day of season (WOS, DOS)
 			lfas<-unique(FSRSvesday$LFA[!is.na(FSRSvesday$LFA)])
@@ -154,7 +183,6 @@ FSRSModelData = function(trap.type='recruitment'){
 				}
 			}
 		
-		FSRSvesday<-assignSubArea2733(FSRSvesday)
 		FSRSvesday$GRID_NUM[FSRSvesday$subarea==33] = NA
 		FSRSvesday$subarea[FSRSvesday$subarea==33] = "33W"
 		FSRSvesday <- rename.df(FSRSvesday,n0=c('Temp','Vessel.Code'),n1=c('TEMP','VESSEl_CD'))
