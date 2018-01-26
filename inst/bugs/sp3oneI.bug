@@ -26,7 +26,7 @@ model {
 
 #####Prior on r######
 
-		r~dnorm(r.a,r.b);
+		r~runif(r.a,r.b);
 				
 #####Prior on k######
 		i.k.b<-1/k.b

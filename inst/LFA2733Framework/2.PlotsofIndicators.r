@@ -87,7 +87,7 @@ x = IndicatorplotsMultDataSets(atSea=aS, port=pS, fsrs=fS,fsrs.rec = fR, indicat
 				db2 = subset(y,LFA %in% c('31A','31B','32','33'))
 				ats = c(1,2,3,4,6,7,8,9,11,12,13,14,16,17,18,19)
 				cc = c('grey','orange','blue','red')
-				boxplot(Indi~ID+LFA,data=na.omit(db2),at=ats,col=cc,xaxt='n',ylab='Maximum.Size',ylim=c(90,140),notch=F,border=c('black','black','black','black'))
+				boxplot(Indi~ID+LFA,data=na.omit(db2),at=ats,col=cc,xaxt='n',ylab='Maximum.Size',ylim=c(90,160),notch=F,border=c('black','black','black','black'))
 				axis(side=1,at=c(2.5,7.5,12.5,17.5),labels=c('LFA31A','LFA31B','LFA32','LFA33'))
 				legend('topright',legend=c('AtSea','FSRSRec','FSRSComm','Port'),pch=15,col=cc,cex=0.8,pt.cex=1.3,bty='n')
 				if(sset) savePlot(file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors','subsetCombinedMaxSizeByLFA31A-33.png'),type='png')
