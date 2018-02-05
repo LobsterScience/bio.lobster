@@ -5,7 +5,7 @@ TempModelPlot = function(TempModel,graphic='R',depths=c(5,25,50,100),wd=12,ht=5,
 
 	if(1%in%type){
 		# Data map
-		if(graphic=='png')png(file.path(project.datadirectory('bio.lobster'),'figures','TempDataMap.png'))
+		if(graphic=='png')png(file.path(project.datadirectory('bio.lobster'),'figures','TempDataMap.png'),width=7,height=7,units='in',res=200)
 		if(graphic=='R')x11()
 		LobsterMap('27-33')
 		with(TempModel$Data,points(X,Y,pch='.',col=rgb(1,0,0,0.1)))

@@ -312,7 +312,7 @@
 	#Bayes
 
 	FSRSvesday<-FSRSModelData()
-	FSRSvesdayComm<-FSRSModelData(trap.type="commercial")
+	#FSRSvesdayComm<-FSRSModelData(trap.type="commercial")
 	FSRSModelResultsRecruit = list()
 	FSRSModelResultsShort = list()
 	FSRSModelResultsLegal = list()
@@ -354,7 +354,8 @@
 
 	library(ggplot2)
 
-	pdf(file.path( figdir,"FSRSmodelBayesShorts.pdf"),8, 10)
+	#pdf(file.path( figdir,"FSRSmodelBayesShorts.pdf"),8, 10)
+	png(file.path(figdir,"FSRSmodelBayesShorts.png"),width=8,height=10,units='in',res=200)
 	sp <- ggplot()
 	sp <- sp + geom_point(data = shorts, aes(y = median, x = YEAR), shape = 16, size = 2)
 	sp <- sp + xlab("Year") + ylab("Lobsters / Trap")
@@ -365,7 +366,8 @@
 	sp
 	dev.off()
 
-	pdf(file.path( figdir,"FSRSmodelBayesLegals.pdf"),8, 10)
+	#pdf(file.path( figdir,"FSRSmodelBayesLegals.pdf"),8, 10)
+	png(file.path(figdir,"FSRSmodelBayesLegals.png"),width=8,height=10,units='in',res=200)
 	lp <- ggplot()
 	lp <- lp + geom_point(data = legals, aes(y = median, x = YEAR), shape = 16, size = 2)
 	lp <- lp + xlab("Year") + ylab("Lobsters / Trap")
@@ -376,7 +378,8 @@
 	lp
 	dev.off()
 
-	pdf(file.path( figdir,"FSRSmodelBayesRecruits.pdf"),8, 10)
+	#pdf(file.path( figdir,"FSRSmodelBayesRecruits.pdf"),8, 10)
+	png(file.path(figdir,"FSRSmodelBayesRecruits.png"),width=8,height=10,units='in',res=200)
 	rp <- ggplot()
 	rp <- rp + geom_point(data = recruit, aes(y = median, x = YEAR), shape = 16, size = 2)
 	rp <- rp + xlab("Year") + ylab("Lobsters / Trap")
@@ -404,17 +407,17 @@
 
 		mdata = subset(FSRSvesdayComm,subarea==cssa[i])
 
-		FSRSModelResultsShortComm[[i]]=FSRSmodel(mdata, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=T,tag="Comm",ptraps=1000)
+		FSRSModelResultsShortComm[[i]]=FSRSmodel(mdata, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=F,tag="Comm",ptraps=1000)
 		pdata	= 	FSRSModelResultsShortComm[[i]]$pData
 		pdata$Area = cssa[i]
 		shortsComm.lst[[i]] = pdata
 
-		FSRSModelResultsLegalComm[[i]]=FSRSmodel(mdata, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=T,tag="Comm",ptraps=1000)
+		FSRSModelResultsLegalComm[[i]]=FSRSmodel(mdata, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=F,tag="Comm",ptraps=1000)
 		pdata	= 	FSRSModelResultsLegalComm[[i]]$pData
 		pdata$Area = cssa[i]
 		legalsComm.lst[[i]] = pdata
 
-		FSRSModelResultsRecruitComm[[i]]=FSRSmodel(mdata, response="RECRUITS",interaction=F,type="bayesian",iter=5000,redo=T,tag="Comm",ptraps=1000)
+		FSRSModelResultsRecruitComm[[i]]=FSRSmodel(mdata, response="RECRUITS",interaction=F,type="bayesian",iter=5000,redo=F,tag="Comm",ptraps=1000)
 		pdata	= 	FSRSModelResultsRecruitComm[[i]]$pData
 		pdata$Area = cssa[i]
 		recruitComm.lst[[i]] = pdata
@@ -432,7 +435,8 @@
 
 	library(ggplot2)
 
-	pdf(file.path( figdir,"FSRSmodelBayesCommShorts.pdf"),8, 2.5)
+	#pdf(file.path( figdir,"FSRSmodelBayesCommShorts.pdf"),8, 2.5)
+	png(file.path(figdir,"FSRSmodelBayesCommShorts.png"),width=8,height=2.5,units='in',res=200)
 
 	sp <- ggplot()
 	sp <- sp + geom_point(data = shortsComm, aes(y = median, x = YEAR), shape = 16, size = 2)
@@ -444,7 +448,8 @@
 	sp
 	dev.off()
 
-	pdf(file.path( figdir,"FSRSmodelBayesCommLegals.pdf"),8, 2.5)
+	#pdf(file.path( figdir,"FSRSmodelBayesCommLegals.pdf"),8, 2.5)
+	png(file.path(figdir,"FSRSmodelBayesCommLegals.png"),width=8,height=2.5,units='in',res=200)
 	lp <- ggplot()
 	lp <- lp + geom_point(data = legalsComm, aes(y = median, x = YEAR), shape = 16, size = 2)
 	lp <- lp + xlab("") + ylab("Lobsters / Trap") + xlim(1999,2016)
@@ -455,7 +460,8 @@
 	lp
 	dev.off()
 
-	pdf(file.path( figdir,"FSRSmodelBayesCommRecruits.pdf"),8, 2.5)
+	#pdf(file.path( figdir,"FSRSmodelBayesCommRecruits.pdf"),8, 2.5)
+	png(file.path(figdir,"FSRSmodelBayesCommRecruits.png"),width=8,height=2.5,units='in',res=200)
 	rp <- ggplot()
 	rp <- rp + geom_point(data = recruitComm, aes(y = median, x = YEAR), shape = 16, size = 2)
 	rp <- rp + xlab("Year") + ylab("") + xlim(1999,2016)

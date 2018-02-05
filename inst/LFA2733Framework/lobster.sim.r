@@ -191,21 +191,21 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 
 ############# Plots
 
-	load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim1ResultsBase.rdata"))
-	simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018","sim"),fn='Base')
+	load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","simResultsBase.rdata"))
+	simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018","sim"),fn='Base',cex.lab=2,cex.axis=1.5)
 
 
 	for(i in 1:length(ShorterSeason)){
 
 		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResults",names(ShorterSeason)[i],".rdata")))
-		simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018","sim"),fn=names(ShorterSeason)[i])
+		simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018","sim"),fn=names(ShorterSeason)[i],cex.lab=2,cex.axis=1.5)
 
 	}
 
 	for(i in 1:length(LegalSize)){
 
 		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResults",names(LegalSize)[i],".rdata")))
-		simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018","sim"),fn=names(LegalSize)[i])
+		simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018","sim"),fn=names(LegalSize)[i],cex.lab=2,cex.axis=1.5)
 
 	}
 
@@ -213,6 +213,59 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 
 	simSumLegalSize = simSummary(runs=c("LS70","LS72.5","LS75","LS77.5","LS80","Base","LS85","LS87.5","LS90"),lfas=LFAs)
 	simSumSeason = simSummary(runs=c("Base","SS9","SS8","SS7","SS6","SS5"),lfas=LFAs)
+
+
+	LStab1 = data.frame(rbind(
+		round(100*(simSumLegalSize[[1]][9,]/simSumLegalSize[[1]][6,]-1)),
+		round(100*(simSumLegalSize[[1]][8,]/simSumLegalSize[[1]][6,]-1)),
+		round(100*(simSumLegalSize[[1]][7,]/simSumLegalSize[[1]][6,]-1))
+		))
+	names(LStab1) = LFAs
+	write.csv(LStab1,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStab1.csv"),row.names=F)
+
+	LStab2 = data.frame(rbind(
+		round(100*(simSumLegalSize[[2]][9,]/simSumLegalSize[[2]][6,]-1)),
+		round(100*(simSumLegalSize[[2]][8,]/simSumLegalSize[[2]][6,]-1)),
+		round(100*(simSumLegalSize[[2]][7,]/simSumLegalSize[[2]][6,]-1))
+		))
+	names(LStab2) = LFAs
+	write.csv(LStab2,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStab2.csv"),row.names=F)
+
+	LStab3 = data.frame(rbind(
+		round(100*(simSumLegalSize[[3]][9,]/simSumLegalSize[[3]][6,]-1)),
+		round(100*(simSumLegalSize[[3]][8,]/simSumLegalSize[[3]][6,]-1)),
+		round(100*(simSumLegalSize[[3]][7,]/simSumLegalSize[[3]][6,]-1))
+		))
+	names(LStab3) = LFAs
+	write.csv(LStab3,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStab3.csv"),row.names=F)
+
+	OStab1 = data.frame(rbind(
+		round(100*(simSumSeason[[1]][6,]/simSumSeason[[1]][1,]-1)),
+		round(100*(simSumSeason[[1]][5,]/simSumSeason[[1]][1,]-1)),
+		round(100*(simSumSeason[[1]][4,]/simSumSeason[[1]][1,]-1)),
+		round(100*(simSumSeason[[1]][3,]/simSumSeason[[1]][1,]-1)),
+		round(100*(simSumSeason[[1]][2,]/simSumSeason[[1]][1,]-1))
+		))
+	names(OStab1) = LFAs
+	write.csv(OStab1,file.path(project.datadirectory("bio.lobster"),"outputs","sim","OStab1.csv"),row.names=F)
+	OStab2 = data.frame(rbind(
+		round(100*(simSumSeason[[2]][6,]/simSumSeason[[2]][1,]-1)),
+		round(100*(simSumSeason[[2]][5,]/simSumSeason[[2]][1,]-1)),
+		round(100*(simSumSeason[[2]][4,]/simSumSeason[[2]][1,]-1)),
+		round(100*(simSumSeason[[2]][3,]/simSumSeason[[2]][1,]-1)),
+		round(100*(simSumSeason[[2]][2,]/simSumSeason[[2]][1,]-1))
+		))
+	names(OStab2) = LFAs
+	write.csv(OStab2,file.path(project.datadirectory("bio.lobster"),"outputs","sim","OStab2.csv"),row.names=F)
+	OStab3 = data.frame(rbind(
+		round(100*(simSumSeason[[3]][6,]/simSumSeason[[3]][1,]-1)),
+		round(100*(simSumSeason[[3]][5,]/simSumSeason[[3]][1,]-1)),
+		round(100*(simSumSeason[[3]][4,]/simSumSeason[[3]][1,]-1)),
+		round(100*(simSumSeason[[3]][3,]/simSumSeason[[3]][1,]-1)),
+		round(100*(simSumSeason[[3]][2,]/simSumSeason[[3]][1,]-1))
+		))
+	names(OStab3) = LFAs
+	write.csv(OStab3,file.path(project.datadirectory("bio.lobster"),"outputs","sim","OStab3.csv"),row.names=F)
 
 
 	cols=tim.colors(9)
@@ -225,11 +278,14 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 	par(mfrow=c(3,1),mar=c(0,5,0,0),omi=c(0.75,0,0.5,0.5),las=1)
 
 	matplot(x=seq(70,90,2.5),simSumLegalSize$landnum,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Catch (#s)',ylim=c(0,2000))
+	axis(4)
 	abline(v=82.5,lty=3,col='grey')
 	legend('bottomleft',LFAs,col=cols,lty=ltys,inset=0.03,bty='n', pch=pchs)
 	matplot(x=seq(70,90,2.5),simSumLegalSize$landkg,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Catch (kg)',ylim=c(0,2000))
+	axis(4)
 	abline(v=82.5,lty=3,col='grey')
 	matplot(x=seq(70,90,2.5),simSumLegalSize$eggs/10^6,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Eggs (millions)',ylim=c(0,25))
+	axis(4)
 	abline(v=82.5,lty=3,col='grey')
 	mtext("Minimum Legal Size (mm)",1,3)
 
@@ -239,13 +295,149 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 	png(file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018','simSumSeason.png'),width=8,height=8,units='in',res=200)
 	par(mfrow=c(3,1),mar=c(0,5,0,0),omi=c(0.75,0,0.5,0.5),las=1)
 
-	matplot(x=seq(0,50,10),simSumSeason$landnum,type = 'b', pch=16,col=cols,lty=ltys,ylab='Catch (#s)',ylim=c(0,2000))
+	matplot(x=seq(0,50,10),simSumSeason$landnum,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Catch (#s)',ylim=c(0,2000))
+	axis(4)
 	#abline(v=0,lty=3,col='grey')
 	legend('bottomleft',LFAs,col=cols,lty=ltys,inset=0.03,bty='n', pch=pchs)
-	matplot(x=seq(0,50,10),simSumSeason$landkg,type = 'b', pch=16,col=cols,lty=ltys,ylab='Catch (kg)',ylim=c(0,2000))
+	matplot(x=seq(0,50,10),simSumSeason$landkg,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Catch (kg)',ylim=c(0,2000))
+	axis(4)
 	#abline(v=0,lty=3,col='grey')
-	matplot(x=seq(0,50,10),simSumSeason$eggs/10^6,type = 'b', pch=16,col=cols,lty=ltys,ylab='Eggs (millions)',ylim=c(0,25))
+	matplot(x=seq(0,50,10),simSumSeason$eggs/10^6,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Eggs (millions)',ylim=c(0,25))
+	axis(4)
 	#abline(v=0,lty=3,col='grey')
 	mtext("Season reduction (%)",1,3)
 
 	dev.off()
+
+
+
+	#####
+	x11()
+	#png(file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018','simSumLegalSize.png'),width=8,height=8,units='in',res=200)
+	par(mfrow=c(3,1),mar=c(0,5,0,0),omi=c(0.75,0,0.5,0.5),las=1)
+
+	matplot(x=seq(82.5,90,2.5),simSumLegalSize$landnum[6:9,],type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Catch (#s)',ylim=c(0,2000))
+	par(new=T)
+	matplot(x=seq(0,50,10),simSumSeason$landnum,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Catch (#s)',ylim=c(0,2000))
+	
+
+
+	#abline(v=82.5,lty=3,col='grey')
+	#legend('bottomleft',LFAs,col=cols,lty=ltys,inset=0.03,bty='n', pch=pchs)
+	matplot(x=seq(82.5,90,2.5),simSumLegalSize$landkg[6:9,],type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Catch (kg)',ylim=c(0,2000))
+	par(new=T)
+	matplot(x=seq(0,50,10),simSumSeason$landkg,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Catch (kg)',ylim=c(0,2000))
+	#abline(v=82.5,lty=3,col='grey')
+	matplot(x=seq(82.5,90,2.5),simSumLegalSize$eggs[6:9,]/10^6,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Eggs (millions)',ylim=c(0,25))
+	par(new=T)
+	matplot(x=seq(0,50,10),simSumSeason$eggs/10^6,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Eggs (millions)',ylim=c(0,25))
+	#abline(v=82.5,lty=3,col='grey')
+	mtext("Minimum Legal Size (mm)",1,3)
+
+	#dev.off()
+	par(new=T)
+	#x11()
+	#png(file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018','simSumSeason.png'),width=8,height=8,units='in',res=200)
+	par(mfrow=c(3,1),mar=c(0,5,0,0),omi=c(0.75,0,0.5,0.5),las=1)
+
+	matplot(x=seq(0,50,10),simSumSeason$landnum,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Catch (#s)',ylim=c(0,2000))
+	#abline(v=0,lty=3,col='grey')
+	legend('bottomleft',LFAs,col=cols,lty=ltys,inset=0.03,bty='n', pch=pchs)
+	matplot(x=seq(0,50,10),simSumSeason$landkg,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Catch (kg)',ylim=c(0,2000))
+	#abline(v=0,lty=3,col='grey')
+	matplot(x=seq(0,50,10),simSumSeason$eggs/10^6,type = 'b', pch=pchs,col=cols,lty=ltys,ylab='Eggs (millions)',ylim=c(0,25))
+	#abline(v=0,lty=3,col='grey')
+	mtext("Season reduction (%)",1,3)
+
+	dev.off()
+
+
+# from 1.IndicatorEstimation.CohortAnalysis.r
+ad
+outS
+bins=seq(80,150,5)
+
+### LFA 27
+
+is=which(ad$LFA==27&ad$YEAR>2008)
+CLF.lst=list()
+lens=NULL
+for(i in is) lens = c(lens,outS[[i]])
+
+CLF.lst[[1]]=hist(lens[lens>82.5&lens<max(bins)],breaks=bins,plot=F)$counts
+
+load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","simResultsBase.rdata"))
+
+CLF.lst[[2]]=
+colSums(rlist$mlist$'27N'$totalRemovals[,7:31])+
+colSums(rlist$mlist$'27S'$totalRemovals[,7:31])+
+colSums(rlist$flist$'27N'$totalRemovals[,7:31])+
+colSums(rlist$flist$'27S'$totalRemovals[,7:31])
+
+
+compareCLF(CLF.lst,bins=bins,col='grey',rel=T,graphic='pdf',filen=file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018',"CLFcompareLFA27a.pdf"),LS=c(82.5,82.5),xl=c(0,length(bins)),title="LFA 27 (2009-2015)",labels=c("At Sea Sampling","Simulation"))
+
+### LFA 33
+
+is=which(ad$LFA==33&ad$YEAR>2001)
+CLF.lst=list()
+lens=NULL
+for(i in is) lens = c(lens,outS[[i]])
+
+CLF.lst[[1]]=hist(lens[lens>82.5&lens<max(bins)],breaks=bins,plot=F)$counts
+
+#load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","simResultsBase.rdata"))
+
+CLF.lst[[2]]=
+colSums(rlist$mlist$'33W'$totalRemovals[,7:31])+
+colSums(rlist$mlist$'33E'$totalRemovals[,7:31])+
+colSums(rlist$flist$'33W'$totalRemovals[,7:31])+
+colSums(rlist$flist$'33E'$totalRemovals[,7:31])
+
+compareCLF(CLF.lst,bins=bins,col='grey',rel=T,graphic='pdf',filen=file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018',"CLFcompareLFA33.pdf"),LS=c(82.5,82.5),xl=c(0,length(bins)),title="LFA 33",labels=c("At Sea Sampling","Simulation"))
+
+
+
+
+### LFA 30
+
+is=which(ad$LFA==30&ad$YEAR>1999)
+CLF.lst=list()
+lens=NULL
+for(i in is) lens = c(lens,outS[[i]])
+
+CLF.lst[[1]]=hist(lens[lens>82.5&lens<max(bins)],breaks=bins,plot=F)$counts
+
+#load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","simResultsBase.rdata"))
+
+CLF.lst[[2]]=
+colSums(rlist$mlist$'30'$totalRemovals[,7:31])+
+colSums(rlist$flist$'30'$totalRemovals[,7:31])
+
+compareCLF(CLF.lst,bins=bins,col='grey',rel=T,graphic='pdf',filen=file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018',"CLFcompareLFA30.pdf"),LS=c(82.5,82.5),xl=c(0,length(bins)),title="LFA 30",labels=c("At Sea Sampling","Simulation"))
+
+
+
+### LFA 27
+bins=seq(70,150,5)
+
+is=which(ad$LFA==27&ad$YEAR<2001)
+CLF.lst=list()
+lens=NULL
+for(i in is) lens = c(lens,outS[[i]])
+
+CLF.lst[[1]]=hist(lens[lens>70&lens<max(bins)],breaks=bins,plot=F)$counts
+
+load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","simResultsLS70.rdata"))
+
+CLF.lst[[2]]=
+colSums(rlist$mlist$'27N'$totalRemovals[,7:31])+
+colSums(rlist$mlist$'27S'$totalRemovals[,7:31])+
+colSums(rlist$flist$'27N'$totalRemovals[,7:31])+
+colSums(rlist$flist$'27S'$totalRemovals[,7:31])
+
+
+compareCLF(CLF.lst,bins=bins,col='grey',rel=T,graphic='pdf',filen=file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018',"CLFcompareLFA27b.pdf"),LS=c(70,70),xl=c(0,length(bins)),title="LFA 27 (1985-1999)",labels=c("At Sea Sampling","Simulation"))
+
+
+

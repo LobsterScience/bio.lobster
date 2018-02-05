@@ -40,7 +40,12 @@ if(landings.numbers){
 				op = weightedCLF(x=da,returnLF=T,at.sea.samples=T)
 				os = op
 				os$vec<-NULL
-			outS[[i]] <- unlist(os)
+			outS[[i]] <- op
+		# brad ran to here to get data for a plot
+		#outS[[i]] <- op$vec
+		#} 
+		#save(outS,file=file.path(project.datadirectory("bio.lobster"),"outputs","atSeaCLF.rdata"))
+
 			#Tc is fractional year of catch
 				if(po == 27) 	{ll = "LFA27-30"; 	lle = 'all areas'; lp = g[,c('YR',names(g)[grep(po,names(g))])]; dt = DTs[[grep('27N',names(DTs))]]; Tc = 0.67}
 				if(po == 28) 	{ll = 'LFA28,30'; 	lle = 'all areas'; lp = g[,c('YR',names(g)[grep(po,names(g))])]; dt = DTs[[grep('28',names(DTs))]]; Tc = 0.67}

@@ -78,11 +78,12 @@ la()
 
 
 
-pdf('TaggingMap.pdf')
+pdf(file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018','TaggingMap.pdf'))
+png(file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018',"TaggingMap.png"),width=7,height=7,units='in',res=200)
 LobsterMap('all')
 
-bioMap("SS")
-with(tagging.data,segments(TagLon,TagLat,CapLon,CapLat,col=rgb(1,0,1,0.2)))
+#bioMap("SS")
+with(tagging.data,segments(TagLon,TagLat,CapLon,CapLat,col=rgb(1,0,1,0.2)).lwd=0.5)
 
 with(tagging.data,points(TagLon,TagLat,pch=16,cex=0.3,col=rgb(1,0,0,0.2)))
 with(tagging.data,points(CapLon,CapLat,pch=16,cex=0.3,col=rgb(0,0,1,0.2)))

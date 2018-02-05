@@ -44,7 +44,7 @@ simMolt = function(p,gdd=T){
 				p$doy =  j * p$timestep # days since last molt
 				p$ddoy = p$doy
 				
-				if(gdd) p$ddoy =  getDegreeDays(p,t) #degreedays since last molt
+				if(gdd) p$ddoy =  getDegreeDays	(p,t) #degreedays since last molt
 
 				#d = t * p$timestep
 				#if(gdd) p$ddoy = sum(p$dailytemps[(d-p$doy):d]) 
