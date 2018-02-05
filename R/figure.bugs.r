@@ -1,5 +1,5 @@
 
-  figure.bugs = function( vname="", type="density", sb=NULL, y=NULL, fn=NULL, xlab="" ,save.plot=T) {
+  figure.bugs = function( vname="", type="density", sb=NULL, y=NULL, fn=NULL, xlab="" ,save.plot=T,yrs) {
   sb$IOA = sb$I
     yrs0 = sb$yr
     yrs = sb$yr
@@ -189,7 +189,7 @@
     # --------------
 
     if ( type=="timeseries" ) {
-      yrs0 = yrs=1982:2015
+      yrs0 = yrs= yrs
       if (vname=="biomass") { 
 
         SI =  apply( y$q, 1, mean, na.rm=T  )
@@ -223,7 +223,7 @@
           prs = seq( from=0.25, to=0.75, length.out=1000)
           Fi = apply( y$F[1:sb$N,,], 1, quantile, probs=prs, na.rm=T )
           
-          yran = c(0, 1.5)
+          yran = c(0, 4)
           #yran = pmin( yran, 1.2 )
           plot( yrs0, Fi[1,], type="n", ylim=yran, xlab="", ylab="" )
           cols = gray.colors( floor(length( prs)/2) )

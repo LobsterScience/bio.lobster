@@ -368,12 +368,13 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     
 
                     # filter by max trap
+                    if(length(max_trap)==length(lfa)){   #these do not match Jan 31, 2018 this code was added but not checked LFA 38 gets dropped
                     logsInSeason.lst = list()
                     for(i in 1:length(lfa)){
                       logsInSeason.lst[[i]] = subset(logsInSeason,LFA==lfa[i]&TOTAL_NUM_TRAPS<max_trap[i])
                     }
                     logsInSeason = do.call("rbind",logsInSeason.lst)
-
+                    }
                     # filter by cpue
                     logsInSeason = subset(logsInSeason,CPUE<20 & !is.na(CPUE))
                     
