@@ -4,7 +4,7 @@
 \alias{getIncr}
 \title{getIncr}
 \usage{
-getIncr(p, cl)
+getIncr(p)
 }
 \arguments{
 \item{\code{p}}{:parameter list containing (at a minimum) region, doy (day of year), temp (temperature at doy)}
