@@ -574,7 +574,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
            con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
             
             # atSea
-            atSea = sqlQuery(con, "select * from FRAILC.LOBSTER_ATSEA_VW")
+            atSea = sqlQuery(con, "select * from lobster.LOBSTER_ATSEA_VW")
             save( atSea, file=file.path( fnODBC, "atSea.rdata"), compress=T)
             gc()  # garbage collection
             odbcClose(con)
