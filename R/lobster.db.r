@@ -275,6 +275,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     #Filtering by   
                     #Fish.Date = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
                     Fish.Date = lobster.db('season.dates')
+                    Fish.Date = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
                     lfa  =  sort(unique(Fish.Date$LFA))
                     
                 
@@ -1027,13 +1028,13 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         # survey
         require(RODBC)
         con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-        ILTSTowDepth = sqlQuery(con, "select * from FRAILC.MARPORT_DEPTH")
-        ILTSTowSpread = sqlQuery(con, "select * from FRAILC.MARPORT_SPREAD")
-        ILTSTowDist = sqlQuery(con, "select * from FRAILC.MARPORT_TOWDIST")
+        ILTS2016TowDepth = sqlQuery(con, "select * from FRAILC.MARPORT_DEPTH")
+        ILTS2016TowSpread = sqlQuery(con, "select * from FRAILC.MARPORT_SPREAD")
+        ILTS2016Tracks = sqlQuery(con, "select * from FRAILC.MARPORT_TRACKS")
         ILTSTemp = sqlQuery(con, "select * from FRAILC.MINILOG_TEMP")
-        NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
-        netMensuration = merge( NM1,ILTSTowDist)#merge net mensuration into one file
-        netMensuration$TTIME = NULL #remove load date from merged file
+        #NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
+        #netMensuration = merge( NM1,ILTS2016Tracks)#merge net mensuration into one file
+        #netMensuration$TTIME = NULL #remove load date from merged file
         surveyCatch = sqlQuery(con, "select * from lobster.ILTSSETS_MV")
         surveyMeasurements = sqlQuery(con, "select * from lobster.ILTSDETAILS_MV")
         with(surveyMeasurements,paste(TRIP_ID,SET_NO,sep=''))->surveyMeasurements$SET_ID
@@ -1044,7 +1045,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         surveyMeasurements$SET_LON = surveyMeasurements$SET_LON*-1
         surveyMeasurements$HAUL_LON = surveyMeasurements$HAUL_LON*-1
         surveyStationID = sqlQuery(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
-        save(netMensuration, file=file.path( fnODBC, "netMensuration.rdata"), compress=T)
+        save(ILTS2016TowDepth,ILTS2016TowSpread,ILTS2016Tracks , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)
         save(surveyMeasurements, file=file.path(fnODBC, "surveyMeasurements.rdata"), compress=T)
         save(ILTSTemp, file=file.path(fnODBC, "ILTSTemp.rdata"), compress=T)
@@ -1052,7 +1053,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         
         gc()  # garbage collection
       }
-      load(file.path( fnODBC, "netMensuration.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "MarPort2016.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyCatch.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyMeasurements.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "ILTSTemp.rdata"), .GlobalEnv)
