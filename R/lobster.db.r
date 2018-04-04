@@ -1057,7 +1057,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         surveyMeasurements$SET_LON = surveyMeasurements$SET_LON*-1
         surveyMeasurements$HAUL_LON = surveyMeasurements$HAUL_LON*-1
         surveyStationID = sqlQuery(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
-        save(ILTS2016TowDepth,ILTS2016TowSpread,ILTS2016Tracks , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
+        save(list=c("ILTS2016TowDepth","ILTS2016TowSpread","ILTS2016Tracks") , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)
         save(surveyMeasurements, file=file.path(fnODBC, "surveyMeasurements.rdata"), compress=T)
         save(ILTSTemp, file=file.path(fnODBC, "ILTSTemp.rdata"), compress=T)
