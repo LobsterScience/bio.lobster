@@ -41,7 +41,7 @@
 
 
 
-
+logsInSeason=lobster.db("process.logs")
 
 
 	## Fishery Footprint - Landings
@@ -325,17 +325,17 @@
 
 		mdata = subset(FSRSvesday,subarea==p$subareas[i])
 
-		FSRSModelResultsShort[[i]]=FSRSmodel(mdata, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
+		FSRSModelResultsShort[[i]]=FSRSmodel(mdata, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
 		pdata	= 	FSRSModelResultsShort[[i]]$pData
 		pdata$Area = p$subareas[i]
 		shorts.lst[[i]] = pdata
 		
-		FSRSModelResultsLegal[[i]]=FSRSmodel(mdata, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
+		FSRSModelResultsLegal[[i]]=FSRSmodel(mdata, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
 		pdata	= 	FSRSModelResultsLegal[[i]]$pData
 		pdata$Area = p$subareas[i]
 		legals.lst[[i]] = pdata
 
-		FSRSModelResultsRecruit[[i]]=FSRSmodel(mdata, response="RECRUITS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
+		FSRSModelResultsRecruit[[i]]=FSRSmodel(mdata, response="RECRUITS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
 		pdata	= 	FSRSModelResultsRecruit[[i]]$pData
 		pdata$Area = p$subareas[i]
 		recruit.lst[[i]] = pdata

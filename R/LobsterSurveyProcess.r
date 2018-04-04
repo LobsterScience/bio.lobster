@@ -13,7 +13,7 @@
 LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,bin.size=5,LFS=160){
   
 	lobster.db("survey")
-	RLibrary("CircStats","PBSmapping")
+	RLibrary("CircStats","PBSmapping","SpatialHub","spatstat")
 	if(missing(yrs))yrs<-sort(unique(surveyCatch$YEAR))
 
 	# add column for LFA
@@ -54,7 +54,7 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 	surveyLobsters$MONTH<-as.character(month(surveyLobsters$HAUL_DATE,T))
 	
 	#Use trawl gear wingspread specification
-	
+	browser()
 	x = as.data.frame(with(surveyLobsters,unique(cbind(YEAR,GEAR))))
 	out <- list()
 	for(i in 1:nrow(x)){
