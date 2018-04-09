@@ -1044,6 +1044,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         ILTS2016TowSpread = sqlQuery(con, "select * from FRAILC.MARPORT_SPREAD")
         ILTS2016Tracks = sqlQuery(con, "select * from FRAILC.MARPORT_TRACKS")
         ILTSTemp = sqlQuery(con, "select * from FRAILC.MINILOG_TEMP")
+        ILTS2016Tracks = ILTS2016Tracks[order(ILTS2016Tracks$TTIME),]
         #NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
         #netMensuration = merge( NM1,ILTS2016Tracks)#merge net mensuration into one file
         #netMensuration$TTIME = NULL #remove load date from merged file

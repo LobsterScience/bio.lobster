@@ -43,6 +43,7 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 	lon2<-surveyLobsters$HAUL_LONG
 	surveyLobsters$LENGTH<-6371.3*acos(cos(rad(90-lat1))*cos(rad(90-lat2))+sin(rad(90-lat1))*sin(rad(90-lat2))*cos(rad(lon1-lon2))) #dist in km
 
+
 	# Save list of tows with length outliers
 	write.csv(subset(surveyLobsters,(LENGTH<0.67|LENGTH>3.5)&HAULCCD_ID==1),file.path(project.datadirectory('bio.lobster'),"data","longTows.csv"),row.names=F)
 
@@ -54,7 +55,7 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 	surveyLobsters$MONTH<-as.character(month(surveyLobsters$HAUL_DATE,T))
 	
 	#Use trawl gear wingspread specification
-	browser()
+	#browser()
 	x = as.data.frame(with(surveyLobsters,unique(cbind(YEAR,GEAR))))
 	out <- list()
 	for(i in 1:nrow(x)){
@@ -69,8 +70,23 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 	
 	
 	surveyLobsters = do.call(rbind,out)
-	surveyLobsters$NUM_STANDARDIZED<-surveyLobsters$NUM_CAUGHT/surveyLobsters$LENGTH
-	surveyLobsters$AREA_SWEPT<-surveyLobsters$LENGTH*(surveyLobsters$GEAR_WIDTH/1000)
+
+	# Net mensuration data available for 2016
+	
+	#surveyLobsters
+	
+	dist = calcAreaSwept()
+
+	surveyLobsters = merge(surveyLobsters,dist,all=T)
+
+	surveyLobsters$DIST_KM[is.na(surveyLobsters$DIST_KM)] = surveyLobsters$LENGTH[is.na(surveyLobsters$DIST_KM)]
+	surveyLobsters$WING_SPREAD[is.na(surveyLobsters$WING_SPREAD)] = surveyLobsters$GEAR_WIDTH[is.na(surveyLobsters$WING_SPREAD)]
+
+	#browser()
+	#surveyLobsters[surveyLobsters$YEAR==2016&SET_NO%in%]
+
+	surveyLobsters$NUM_STANDARDIZED<-surveyLobsters$NUM_CAUGHT/surveyLobsters$DIST_KM
+	surveyLobsters$AREA_SWEPT<-surveyLobsters$DIST_KM*(surveyLobsters$WING_SPREAD/1000)
 	surveyLobsters$LobDen<-surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT
 	surveyLobsters<-subset(surveyLobsters,!is.na(NUM_STANDARDIZED) & LFA==lfa & HAULCCD_ID==1 & YEAR %in% yrs & MONTH %in% mths)
 	
