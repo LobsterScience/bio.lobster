@@ -63,3 +63,19 @@ for(i in 1:niter){
 			rho = mu / (1-mu+nu)
 			ou[,i] = rho
 			}
+
+save(ou,file=file.path(project.datadirectory('bio.lobster'),'data','survey','bootRhoNestBall.rdata'))
+
+sou = as.data.frame(cbind(newd[,1],t(apply(ou,1,quantile,c(0.5,.0275,.975))),(apply(ou,1,mean)),(apply(ou,1,sd))))
+names(sou) = c('Length','Median','L95','U95','Mean','SD')
+sou$CV = sou$SD / sou$Mean
+save(sou,file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall.rdata'))
+
+
+with(sou,{
+	plot(Length,Median,xlab='Carapace Length (mm)',ylab=expression(paste('Conversion Coefficient (',rho,')')),type='l',lwd=1.5,ylim=c(0,18))
+	lines(Length,L95,type='l',lwd=1.5,lty=2)
+	lines(Length,U95,type='l',lwd=1.5,lty=2)
+	points(ov$Length,ov$C,pch=16,cex=.75)
+})
+
