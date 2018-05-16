@@ -78,4 +78,7 @@ with(sou,{
 	lines(Length,U95,type='l',lwd=1.5,lty=2)
 	points(ov$Length,ov$C,pch=16,cex=.75)
 })
+savePlot(file=file.path(project.datadirectory('bio.lobster'),'data','survey','ConvNestBall.png'),type='png')
 
+plot(sou$Length,sou$CV,type='l',xlab = 'Carapace Length',ylab = expression(paste('CV of ',rho)),lwd=1.5,ylim=c(0,.6))
+savePlot(file=file.path(project.datadirectory('bio.lobster'),'data','survey','CVConvNestBall.png'),type='png')

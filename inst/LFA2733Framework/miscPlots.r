@@ -1,6 +1,11 @@
-    
-  
-	p = bio.lobster::load.environment()
+#misc plots
+
+require(bio.lobster)
+require(bio.utilities)
+require(PBSmapping)
+fd = file.path(project.datadirectory('bio.lobster'),'assessments','LFA27-33','framework2018','DataFiles')
+
+p = bio.lobster::load.environment()
 
 
     p$syr = 2005
@@ -136,33 +141,9 @@
   }
 	
 	
-	###Models need to be fixed for following 
 
-	## FSRS MOdels
-
-	FSRSvesday<-FSRSModelData()
-	FSRSModelResultsShort = list()
-	FSRSModelResultsLegal = list()
-	for(i in 1:length( p$subareas)){
-
-		mdata = subset(FSRSvesday,subarea==p$subareas[i])
-		FSRSModelResultsShort[[i]]=FSRSmodel(LFA27north, response="SHORTS")
-		FSRSModelResultsLegal[[i]]=FSRSmodel(LFA27north, response="LEGALS")
-	} 
-
-
-	## Commercial CPUE MOdels
-
-	CPUE.data<-CPUEModelData()
-	CPUEModelResults = list()
-	for(i in 1:length( p$subareas)){
-
-		mdata = subset(CPUE.data,subarea==p$subareas[i])
-		CPUEModelResults[[i]]=CPUEmodel(LFA27north)
-
-	}
-
-
-
-
+atS = lobster.db('atSea.clean')
+aS = aggregate(cbind(X,Y)~TRIPNO+LFA,data=atS,FUN=mean)
+aS = subset(aS, LFA<34)
+write.csv(aS,file=file.path(fd,'Figure8.csv'))
 
