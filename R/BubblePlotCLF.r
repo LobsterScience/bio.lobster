@@ -1,5 +1,5 @@
 #' @export
-BubblePlotCLF<-function(CLF,bins=seq(0,220,5),yrs=2005:2014,log.trans=F,filen='',prop=F,LS=82.5,graphic='pdf',wd=11,ht=8,path=file.path(project.datadirectory('bio.lobster'),'figures'),label=NULL,...){
+BubblePlotCLF<-function(CLF,bins=seq(0,220,5),yrs=2005:2014,log.trans=F,filen='',prop=F,LS=82.5,window=NULL,graphic='pdf',wd=11,ht=8,path=file.path(project.datadirectory('bio.lobster'),'figures'),label=NULL,...){
 
 	mids<-bins[-1]-diff(bins)/2
 
@@ -15,6 +15,10 @@ BubblePlotCLF<-function(CLF,bins=seq(0,220,5),yrs=2005:2014,log.trans=F,filen=''
 		#browser()
 		symbols(rep(yrs,length(mids)),rep(mids,each=length(yrs)),circles=z,ylab="Carapace Length (mm)",xlab="Year",main=names(CLF)[i],...)
 		abline(h=LS,col='red')
+		if(!is.null(window)){
+			abline(h=window[1],col='grey')
+			if(window[2]!=200)abline(h=window[2],col='grey')
+		}
 		text(max(yrs),max(mids),label,cex=2)
 	}
 	if(graphic!='R')dev.off()

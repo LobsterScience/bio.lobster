@@ -1,4 +1,4 @@
-
+	
 
 ### season timing
 
@@ -42,7 +42,7 @@ dev.off()
 	bins=seq(0,200,5)
 	Yrs=2005:2015
 
-	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2015,mths=c("Jul","Jun"),bin.size=diff(bins)[1])
+	surveyLobsters34<-LobsterSurveyProcess(lfa="34")
 
 	## Plot Survey Index
 	plotSurveyIndex(surveyLobsters34,moving.avg=F,ref.points=F,fn="Abundance")
@@ -55,7 +55,7 @@ dev.off()
 	## Plot Distribution
 
 		# interpolate abundance
-		interp.data<-na.omit(subset(surveyLobsters34,YEAR==2015,c('SET_ID','SET_LONG','SET_LAT','NUM_STANDARDIZED')))
+		interp.data<-na.omit(subset(surveyLobsters34,YEAR==2017,c('SET_ID','SET_LONG','SET_LAT','NUM_STANDARDIZED')))
 		lob.contours<-interpolation(interp.data,ticks='define',place=3,nstrata=5,str.min=0,interp.method='gstat',blank=T,res=0.005,smooth=F,idp=3.5,blank.dist=0.2)
 
 		# define contour lines
@@ -71,8 +71,8 @@ dev.off()
 		#pdf(file.path( project.datadirectory("lobster"), "R","Distribution.pdf"),8,11)
 		png(file.path( project.datadirectory("lobster"), "R","Distribution.png"),800,1100)
 		LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.15,-65.2),mapRes="UR",contours=cont.lst,title="LFA 34 Lobster Density",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
-		points(SET_LAT~SET_LONG,surveyLobsters34,subset=YEAR==2015,pch=21,cex=0.5,bg='red')#,col=rgb(0,0,0,0.5))
-		ContLegend("topright",lvls=lvls,Cont.data=cont.lst$Cont.data,title="#/standard tow",inset=0.02,cex=0.8,bg='white')
+		points(SET_LAT~SET_LONG,surveyLobsters34,subset=YEAR==2017,pch=21,cex=0.5,bg='red')#,col=rgb(0,0,0,0.5))
+		contLegend("topright",lvls=lvls,Cont.data=cont.lst$Cont.data,title="#/standard tow",inset=0.02,cex=0.8,bg='white')
 		dev.off()
 
 # 

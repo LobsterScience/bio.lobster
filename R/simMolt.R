@@ -6,7 +6,7 @@
 #' @author  Brad Hubley, \email{Brad.Hubley@@dfo-mpo.gc.ca}
 #' @export
 
-simMolt = function(p,gdd=T,continuous.recruitment=T){
+simMolt = function(p,gdd=T,continuous.recruitment=F){
 
 	start = Sys.time()
 

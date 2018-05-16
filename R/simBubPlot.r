@@ -16,12 +16,12 @@ simBubPlot = function(rlist,fn='',...){
 		m = round(rlist$flist[[i]]$totalMolts + rlist$mlist[[i]]$totalMolts)
 		print(i)
 		#browser()
-		BubblePlotCLF(list(y),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'males',fn),prop=F,LS=p$LS,inch=0.2,bg=rgb(0,0,1,0.1),label='males',...)
-		BubblePlotCLF(list(x),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'females',fn),prop=F,LS=p$LS,inch=0.2,bg=rgb(1,0,0,0.1),label='females',...)
-		BubblePlotCLF(list(z),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'berried',fn),prop=F,LS=p$LS,inch=0.2,bg=rgb(1,0,1,0.1),label='berried',...)
-		BubblePlotCLF(list(e),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'eggs',fn),prop=F,LS=p$LS,inch=0.2,bg=rgb(0,0.9,0.3,0.1),label='eggs',...)
-		BubblePlotCLF(list(r),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'removals',fn),prop=F,LS=p$LS,inch=0.2,bg=rgb(1,0.5,0,0.1),label='removals',...)
-		BubblePlotCLF(list(m),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'molts',fn),prop=F,LS=p$LS,inch=0.2,bg=rgb(0.5,1,0.3,0.1),label='molts',...)
+		BubblePlotCLF(list(y),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'males',fn),prop=F,LS=p$LS,window=p$window,inch=0.2,bg=rgb(0,0,1,0.1),label='males',...)
+		BubblePlotCLF(list(x),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'females',fn),prop=F,LS=p$LS,window=p$window,inch=0.2,bg=rgb(1,0,0,0.1),label='females',...)
+		BubblePlotCLF(list(z),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'berried',fn),prop=F,LS=p$LS,window=p$window,inch=0.2,bg=rgb(1,0,1,0.1),label='berried',...)
+		BubblePlotCLF(list(e),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'eggs',fn),prop=F,LS=p$LS,window=p$window,inch=0.2,bg=rgb(0,0.9,0.3,0.1),label='eggs',...)
+		BubblePlotCLF(list(r),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'removals',fn),prop=F,LS=p$LS,window=p$window,inch=0.2,bg=rgb(1,0.5,0,0.1),label='removals',...)
+		BubblePlotCLF(list(m),bins=bins,yrs=yrs,log.trans=T,filen=paste0(lfas[i],'molts',fn),prop=F,LS=p$LS,window=p$window,inch=0.2,bg=rgb(0.5,1,0.3,0.1),label='molts',...)
 	}
 
 }
