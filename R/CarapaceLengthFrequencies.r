@@ -86,8 +86,8 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
          
             # add columns for year, quarter
             atSeaData<-addSYEAR(subset(atSea,LFA%in%LFAs))
-            atSeaData$YEAR<-year(atSeaData$SDATE)
-            atSeaData$Q<-quarter(atSeaData$SDATE)
+            atSeaData$YEAR<-year(atSeaData$STARTDATE)
+            atSeaData$Q<-quarter(atSeaData$STARTDATE)
 
             # Construct CLF
             atSeaCLF<-CLF(subset(atSeaData,SYEAR%in%Yrs&SEX%in%sex,c("SYEAR","CARLENGTH",by)),yrs=Yrs,bins=bins,vers=vers)
