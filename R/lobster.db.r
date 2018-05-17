@@ -1050,7 +1050,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         #netMensuration$TTIME = NULL #remove load date from merged file
         surveyCatch = sqlQuery(con, "select * from lobster.ILTSSETS_MV")
         surveyMeasurements = sqlQuery(con, "select * from lobster.ILTSDETAILS_MV")
-        fishMeasurements = sqlQuery(con, "select * from lobster.isfishlengths")
+        #fishMeasurements = sqlQuery(con, "select * from lobster.isfishlengths")
         with(surveyMeasurements,paste(TRIP_ID,SET_NO,sep=''))->surveyMeasurements$SET_ID
         with(surveyCatch,paste(TRIP_ID,SET_NO,sep=''))->surveyCatch$SET_ID
         surveyCatch$SET_LONG = surveyCatch$SET_LONG*-1
@@ -1062,6 +1062,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         save(list=c("ILTS2016TowDepth","ILTS2016TowSpread","ILTS2016Tracks") , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)
         save(surveyMeasurements, file=file.path(fnODBC, "surveyMeasurements.rdata"), compress=T)
+        #save(fishMeasurements, file=file.path(fnODBC, "fishMeasurements.rdata"), compress=T)
         save(ILTSTemp, file=file.path(fnODBC, "ILTSTemp.rdata"), compress=T)
         save(surveyStationID, file=file.path(fnODBC, "surveyStationID.rdata"), compress=T)
         
@@ -1070,7 +1071,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       load(file.path( fnODBC, "MarPort2016.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyCatch.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyMeasurements.rdata"), .GlobalEnv)
-      load(file.path( fnODBC, "fishMeasurements.rdata"), .GlobalEnv)
+      #load(file.path( fnODBC, "fishMeasurements.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "ILTSTemp.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyStationID.rdata"), .GlobalEnv)
       
