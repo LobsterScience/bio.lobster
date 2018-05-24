@@ -3,6 +3,7 @@ require(bio.utilities)
 require(gamlss)
 options(stringsAsFactors=F)
 load(file.path(project.datadirectory('bio.lobster'),'data','survey','ComparativeSurvey1MMTmens.rdata'))
+	ComparativeSurvey = readRDS(file=file.path(project.datadirectory('bio.lobster'),"outputs","comarativeSurvey2.rds"))
 
 i = ComparativeSurvey$STATION[which(ComparativeSurvey$AREA_SWEPT<0.005)]
 ComparativeSurvey = subset(ComparativeSurvey,!STATION %in% i)
@@ -69,7 +70,7 @@ save(ou,file=file.path(project.datadirectory('bio.lobster'),'data','survey','boo
 sou = as.data.frame(cbind(newd[,1],t(apply(ou,1,quantile,c(0.5,.0275,.975))),(apply(ou,1,mean)),(apply(ou,1,sd))))
 names(sou) = c('Length','Median','L95','U95','Mean','SD')
 sou$CV = sou$SD / sou$Mean
-save(sou,file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall.rdata'))
+saveRDS(sou,file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall.rds'))
 
 
 with(sou,{

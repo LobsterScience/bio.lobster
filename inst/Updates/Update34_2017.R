@@ -2,6 +2,7 @@
 require(bio.lobster)
 la()
 
+redo.data=T
 
 p = bio.lobster::load.environment()
 
