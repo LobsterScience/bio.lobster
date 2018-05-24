@@ -19,35 +19,42 @@ p = bio.lobster::load.environment()
     ## Carapace Length Frequency Plots
 	
 	# at Sea Sampling
-	CarapaceLengthFrequencies(LFAs= '27', DS='atSea', by='SEX', fn='27',Yrs = c(2011:2016),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '29', DS='atSea', by='SEX', fn='29',Yrs = c(2013, 2015, 2016),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '30', DS='atSea', by='SEX', fn='30',Yrs = c(2012),vers=2,rootdir=figdir) 
-	CarapaceLengthFrequencies(LFAs= '31A', DS='atSea', by='SEX', fn='31A',Yrs = c(2011:2016),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '31B', DS='atSea', by='SEX', fn='31B',Yrs = c(2011:2016),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '32', DS='atSea', by='SEX', fn='32',Yrs = c(2011:2016),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '33', DS='atSea', by='SEX', fn='33',Yrs = c(2012:2014),vers=2,rootdir=figdir)
+	a=CarapaceLengthFrequencies(LFAs= '27', DS='atSea', by='SEX', fn='27',Yrs = c(2011:2016),vers=2,rootdir=figdir)
+	
+	saveRDS(a,file=file.path(fd,'Figure9.rds'))
+	a=CarapaceLengthFrequencies(LFAs= '31A', DS='atSea', by='SEX', fn='31A',Yrs = c(2011:2016),vers=2,rootdir=figdir)
+	saveRDS(a,file=file.path(fd,'Figure10.rds'))
+	a=CarapaceLengthFrequencies(LFAs= '31B', DS='atSea', by='SEX', fn='31B',Yrs = c(2011:2016),vers=2,rootdir=figdir)
+	saveRDS(a,file=file.path(fd,'Figure11.rds'))
+	a=CarapaceLengthFrequencies(LFAs= '32', DS='atSea', by='SEX', fn='32',Yrs = c(2011:2016),vers=2,rootdir=figdir)
+	saveRDS(a,file=file.path(fd,'Figure12.rds'))
 	
 	
 	 p$lfas = c("27", "28", "29", "30", "31.1", "31.2", "32", "33") # specify lfas for data summary
 	# FSRS recruitment traps
-	CarapaceLengthFrequencies(LFAs= p$lfas, DS='fsrs', by="LFA", bins=seq(0,140,10),rootdir=figdir)
+
+	lobster.db('fsrs')
+ 	f= aggregate(cbind(LAT_DD,LONG_DD)~RECORD_NUMBER,data=fsrs,FUN=mean)
+	ff = makePBS(f)
+	ff[,c('X','Y')] <- round(ff[,c('X','Y')]
+	saveRDS(ff,file=file.path())
+
+
+	a=CarapaceLengthFrequencies(LFAs= '27', fn= '27', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
+	saveRDS(a,file=file.path(fd,'Figure14.rds'))
+	a=CarapaceLengthFrequencies(LFAs= '29', fn= '29', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
+	saveRDS(a,file=file.path(fd,'Figure15.rds'))
+	a=CarapaceLengthFrequencies(LFAs= '30', fn= '30', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
+	saveRDS(a,file=file.path(fd,'Figure16.rds'))
+	a=CarapaceLengthFrequencies(LFAs= 31.1, fn= '31A', DS='fsrs', by="SEX", bins=seq(0,140,10),vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
+	saveRDS(a,file=file.path(fd,'Figure17.rds'))
+	a=CarapaceLengthFrequencies(LFAs= 31.2, fn= '31B', DS='fsrs', by="SEX", bins=seq(0,140,10),vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
+	saveRDS(a,file=file.path(fd,'Figure18.rds'))
+	a=CarapaceLengthFrequencies(LFAs= '32', fn= '32', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
+	saveRDS(a,file=file.path(fd,'Figure19.rds'))
+	a=CarapaceLengthFrequencies(LFAs= '33', fn= '33', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
+	saveRDS(a,file=file.path(fd,'Figure20.rds'))
 	
-	CarapaceLengthFrequencies(LFAs= '27', fn= '27', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= '29', fn= '29', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= '30', fn= '30', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= 31.1, fn= '31A', DS='fsrs', by="SEX", bins=seq(0,140,10),vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= 31.2, fn= '31B', DS='fsrs', by="SEX", bins=seq(0,140,10),vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= '32', fn= '32', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= '33', fn= '33', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-
-	CarapaceLengthFrequencies(LFAs= '27', fn= '27', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '29', fn= '29', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '30', fn= '30', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= 31.1, fn= '31A', DS='fsrs', by="SEX", bins=seq(0,140,10),vers=2,Yrs = c(2011:2016),rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= 31.2, fn= '31B', DS='fsrs', by="SEX", bins=seq(0,140,10),vers=2,Yrs = c(2011:2016),rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '32', fn= '32', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '33', fn= '33', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir)
-
 	
 
     ## CPUE
@@ -140,7 +147,7 @@ p = bio.lobster::load.environment()
   dev.off()
   }
 	
-	
+
 
 atS = lobster.db('atSea.clean')
 aS = aggregate(cbind(X,Y)~TRIPNO+LFA,data=atS,FUN=mean)
