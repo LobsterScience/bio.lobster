@@ -10,7 +10,7 @@
 #' @export
 
 
-LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,bin.size=5,LFS=160){
+LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,sex=1:3,bin.size=5,LFS=160,Net=NULL){
   
 	lobster.db("survey")
 	RLibrary("CircStats","PBSmapping","SpatialHub","spatstat")
@@ -81,43 +81,61 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 
 	surveyLobsters$DIST_KM[is.na(surveyLobsters$DIST_KM)] = surveyLobsters$LENGTH[is.na(surveyLobsters$DIST_KM)]
 	surveyLobsters$WING_SPREAD[is.na(surveyLobsters$WING_SPREAD)] = surveyLobsters$GEAR_WIDTH[is.na(surveyLobsters$WING_SPREAD)]
-
-	#browser()
-	#surveyLobsters[surveyLobsters$YEAR==2016&SET_NO%in%]
-
-	surveyLobsters$NUM_STANDARDIZED<-surveyLobsters$NUM_CAUGHT/surveyLobsters$DIST_KM
 	surveyLobsters$AREA_SWEPT<-surveyLobsters$DIST_KM*(surveyLobsters$WING_SPREAD/1000)
-	surveyLobsters$LobDen<-surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT
-	surveyLobsters<-subset(surveyLobsters,!is.na(NUM_STANDARDIZED) & LFA==lfa & HAULCCD_ID==1 & YEAR %in% yrs & MONTH %in% mths)
-	
+	surveyLobsters$SUBSAMPLE <- surveyLobsters$LOBSTERS_MEASURED/surveyLobsters$NUM_CAUGHT
+	#surveyLobsters$SUBSAMPLE[is.na(surveyLobsters$SUBSAMPLE)] = 1
+
+	LongForm = aggregate(FISH_NO~floor(FISH_LENGTH)+SEX+SET_ID,data=surveyMeasurements,FUN=length)
+	names(LongForm)[1] = "FISH_LENGTH"
+	x = readRDS(file=file.path(project.datadirectory('bio.lobster'),"survey","summarybootRhoNestBall.rds"))
+	NetConv = with(x,data.frame(FISH_LENGTH=Length,NestCF=Median))
+	LongForm = merge(LongForm,NetConv,all=T)
+	LongForm$NestCF[LongForm$FISH_LENGTH<min(NetConv$FISH_LENGTH)] <- NetConv$NestCF[NetConv$FISH_LENGTH==min(NetConv$FISH_LENGTH)]
+	LongForm$NestCF[LongForm$FISH_LENGTH>max(NetConv$FISH_LENGTH)] <- NetConv$NestCF[NetConv$FISH_LENGTH==max(NetConv$FISH_LENGTH)]
+	LongForm = merge(surveyLobsters[,c("SET_ID","GEAR","AREA_SWEPT","SUBSAMPLE")],LongForm)
+	LongForm$BalloonCF = 1/LongForm$NestCF
+	LongForm$NestCF[LongForm$GEAR=="NEST"] = 1
+	LongForm$BalloonCF[LongForm$GEAR=="280 BALLOON"] = 1
+	LongForm$DENSITY = LongForm$FISH_NO/LongForm$AREA_SWEPT/LongForm$SUBSAMPLE
+	LongForm$NEST_DENSITY = LongForm$DENSITY * LongForm$NestCF
+	LongForm$BALLOON_DENSITY = LongForm$DENSITY * LongForm$BalloonCF
 
 	# add columns for length bins
 	bins<-seq(size.range[1],size.range[2],bin.size)
-	sets<-unique(surveyMeasurements$SET_ID)
-	CLF<-data.frame(SET_ID=sets,t(sapply(sets,function(s){with(subset(surveyMeasurements,SET_ID==s&FISH_LENGTH>=min(bins)&FISH_LENGTH<max(bins)),hist(FISH_LENGTH,breaks=bins,plot=F)$count)})))
-	names(CLF)[-1]<-paste0("CL",bins[-length(bins)])
+	LongForm$BIN = ceiling(LongForm$FISH_LENGTH/bin.size) * bin.size
+	if(is.null(Net))CLF = aggregate(DENSITY~BIN+SET_ID,data=subset(LongForm,SEX%in%sex),FUN=sum)
+	else {
+		if(Net=="NEST")CLF = aggregate(NEST_DENSITY~BIN+SET_ID,data=subset(LongForm,SEX%in%sex),FUN=sum)
+		if(Net=="280 BALLOON")CLF = aggregate(BALLOON_DENSITY~BIN+SET_ID,data=subset(LongForm,SEX%in%sex),FUN=sum)
+	}
+	names(CLF)[3] = "CL"
+	CLF = merge(CLF,data.frame(SET_ID=CLF$SET_ID[1],BIN=bins[-1]),all=T)
+	CLF = reshape(CLF[order(CLF$BIN),],idvar='SET_ID',timevar='BIN',direction='wide',sep='')
+	CLF[is.na(CLF)] = 0
 	surveyLobsters<-merge(surveyLobsters,CLF,all=T)
-	surveyLobsters[,which(names(surveyLobsters)%in%names(CLF)[-1])]<-sweep(surveyLobsters[,which(names(surveyLobsters)%in%names(CLF)[-1])],1,FUN="/", surveyLobsters$AREA_SWEPT)
+	surveyLobsters[surveyLobsters$NUM_CAUGHT==0,which(names(surveyLobsters)%in%names(CLF)[-1])] <- 0
+	surveyLobsters$LobDenNC<-rowSums(surveyLobsters[,which(names(surveyLobsters)%in%names(CLF)[-1])])
+	surveyLobsters$LobDen<-surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT
 
 	## berried females
-	with(subset(surveyMeasurements,SEX==3),tapply(SEX,SET_ID,length))->bfs
-	with(subset(surveyMeasurements,SEX==2),tapply(SEX,SET_ID,length))->fs
-	with(subset(surveyMeasurements,SEX%in%c(2,3)&FISH_LENGTH>LFS),tapply(SEX,SET_ID,length))->LargeFemales
-	with(subset(surveyMeasurements,SEX==1),tapply(SEX,SET_ID,length))->ms
-	with(subset(surveyMeasurements,SEX>0),tapply(SEX,SET_ID,length))->all
-	sets<-merge(data.frame(SET_ID=names(all),all),merge(data.frame(SET_ID=names(ms),ms),merge(data.frame(SET_ID=names(fs),fs),merge(data.frame(SET_ID=names(bfs),bfs),data.frame(SET_ID=names(LargeFemales),LargeFemales),all=T),all=T),all=T),all=T)
-	sets$bfs[is.na(sets$bfs)]<-0
-	sets$fs[is.na(sets$fs)]<-0
-	sets$ms[is.na(sets$ms)]<-0
-	sets$LargeFemales[is.na(sets$LargeFemales)]<-0
-	surveyLobsters<-merge(surveyLobsters,sets,all=T)
-	surveyLobsters$N_BERRIED_FEMALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$bfs/surveyLobsters$all)
-	surveyLobsters$N_FEMALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$fs/surveyLobsters$all)
-	surveyLobsters$N_MALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$ms/surveyLobsters$all)
-	surveyLobsters$N_LARGE_FEMALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$LargeFemales/surveyLobsters$all)
+	#with(subset(surveyMeasurements,SEX==3),tapply(SEX,SET_ID,length))->bfs
+	#with(subset(surveyMeasurements,SEX==2),tapply(SEX,SET_ID,length))->fs
+	#with(subset(surveyMeasurements,SEX%in%c(2,3)&FISH_LENGTH>LFS),tapply(SEX,SET_ID,length))->LargeFemales
+	#with(subset(surveyMeasurements,SEX==1),tapply(SEX,SET_ID,length))->ms
+	#with(subset(surveyMeasurements,SEX>0),tapply(SEX,SET_ID,length))->all
+	#sets<-merge(data.frame(SET_ID=names(all),all),merge(data.frame(SET_ID=names(ms),ms),merge(data.frame(SET_ID=names(fs),fs),merge(data.frame(SET_ID=names(bfs),bfs),data.frame(SET_ID=names(LargeFemales),LargeFemales),all=T),all=T),all=T),all=T)
+	#sets$bfs[is.na(sets$bfs)]<-0
+	#sets$fs[is.na(sets$fs)]<-0
+	#sets$ms[is.na(sets$ms)]<-0
+	#sets$LargeFemales[is.na(sets$LargeFemales)]<-0
+	#surveyLobsters<-merge(surveyLobsters,sets,all=T)
+	#surveyLobsters$N_BERRIED_FEMALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$bfs/surveyLobsters$all)
+	#surveyLobsters$N_FEMALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$fs/surveyLobsters$all)
+	#surveyLobsters$N_MALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$ms/surveyLobsters$all)
+	#surveyLobsters$N_LARGE_FEMALES<-surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$LargeFemales/surveyLobsters$all)
 
 	write.csv(surveyLobsters,file.path(project.datadirectory('bio.lobster'),"data","products","surveyLobsters.csv"),row.names=F) # Save data as csv
-	surveyLobsters<-subset(surveyLobsters,!is.na(NUM_STANDARDIZED)&LFA==lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
+	surveyLobsters<-subset(surveyLobsters,LFA==lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
 	
 	if(!is.null(gear.type)) {
 			surveyLobsters = subset(surveyLobsters, GEAR==gear.type)

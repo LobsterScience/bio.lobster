@@ -39,7 +39,7 @@ ScallopSurveyProcess<-function(size.range=c(0,220),SPA,Yrs,bin.size=5,log=F){
 	sets<-unique(ScalSurvLob.dat$TOW_SEQ)
 
 	CLF<-data.frame(TOW_SEQ=sets,t(sapply(sets,function(s){with(subset(ScalSurvLob.dat,TOW_SEQ==s&MEAS_VAL>=min(bins)&MEAS_VAL<max(bins)),hist(MEAS_VAL,breaks=bins,plot=F)$count)})))
-	names(CLF)[-1]<-paste0("CL",bins[-length(bins)])
+	names(CLF)[-1]<-paste0("CL",bins[-1])
 	
 	ScalSurvLob<-merge(ScalSurvLob,CLF,all=T)
 

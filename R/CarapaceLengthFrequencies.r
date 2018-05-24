@@ -27,7 +27,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
                 LS32stns<-read.csv(file.path(project.datadirectory('bio.lobster'),"data","products","survey32Stations.csv"))
                 
                 # Construct CLF
-                LobsterSurveyCLF<-t(sapply(Yrs,function(y){colMeans(subset(surveyLobsters34,YEAR==y&SID%in%LS32stns$SID,paste0("CL",bins[-length(bins)])),na.rm=T)}))
+                LobsterSurveyCLF<-t(sapply(Yrs,function(y){colMeans(subset(surveyLobsters34,YEAR==y&SID%in%LS32stns$SID,paste0("CL",bins[-1])),na.rm=T)}))
 
                 # plot
                 BarPlotCLF(list(LobsterSurveyCLF),yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFLobSurvLFA34",fn,".pdf")),LS=mls, ...)
@@ -46,8 +46,8 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
                 
                 # Construct CLF
                 ScalSurvey<-list()
-                ScalSurvey$ScallopSurvey3<-t(sapply(Yrs,function(y){colMeans(subset(SCALSURV3.dat,YEAR==y,paste0("CL",bins[-length(bins)])),na.rm=T)}))
-                ScalSurvey$ScallopSurvey29<-t(sapply(Yrs,function(y){colMeans(subset(SCALSURV29.dat,YEAR==y,paste0("CL",bins[-length(bins)])),na.rm=T)}))
+                ScalSurvey$ScallopSurvey3<-t(sapply(Yrs,function(y){colMeans(subset(SCALSURV3.dat,YEAR==y,paste0("CL",bins[-1])),na.rm=T)}))
+                ScalSurvey$ScallopSurvey29<-t(sapply(Yrs,function(y){colMeans(subset(SCALSURV29.dat,YEAR==y,paste0("CL",bins[-1])),na.rm=T)}))
                 
                # plot
 
@@ -66,7 +66,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
             ScalSurvey<-list()
             for(i in 1:length(LFAs)){
 
-                ScalSurvey[[i]]<-t(sapply(Yrs,function(y){colMeans(subset(SCALSURV.dat,YEAR==y&LFA==LFAs[i],paste0("CL",bins[-length(bins)])),na.rm=T)}))
+                ScalSurvey[[i]]<-t(sapply(Yrs,function(y){colMeans(subset(SCALSURV.dat,YEAR==y&LFA==LFAs[i],paste0("CL",bins[-1])),na.rm=T)}))
               
             }
             names(ScalSurvey) <- paste("LFA",LFAs)
