@@ -112,18 +112,12 @@ p$yrs = 1947:p$current.assessment.year
 			
 	## ILTS Survey
 	
-	surveyLobsters1<-LobsterSurveyProcess(lfa="34",yrs=1996:2016,mths=c("Jul","Jun"),bin.size=5,gear.type='280 BALLOON')
-	#surveyLobsters2<-LobsterSurveyProcess(lfa="34",yrs=2016,mths=c("Aug","Jul","Jun"),bin.size=5,gear.type='NEST')
-	surveyLobsters2<-LobsterSurveyProcess(lfa="34",yrs=2017,mths=c("Aug","Jul","Jun"),bin.size=5)
-	surveyLobsters34<-rbind(surveyLobsters1,surveyLobsters2)#,surveyLobsters3)
 
 	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='280 BALLOON')
 	#surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
 
 	## Plot Survey Index Figure 4
-	plotSurveyIndex(surveyLobsters34,se=T,graphic="R",index.variable="NUM_STANDARDIZED")
-	plotSurveyIndex(surveyLobsters34,se=T,graphic="R",index.variable="LobDen")
-	plotSurveyIndex(surveyLobsters34,se=T,graphic="R",index.variable="LobDenNotCorrected")
+	plotSurveyIndex(surveyLobsters34,yrs=1996:2016,se=T,graphic="png",index.variable="LobDen")
 
 ## Landings
 

@@ -1072,7 +1072,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         save(list=c("ILTS2016TowDepth","ILTS2016TowSpread","ILTS2016Tracks") , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)
         save(surveyMeasurements, file=file.path(fnODBC, "surveyMeasurements.rdata"), compress=T)
-        #save(fishMeasurements, file=file.path(fnODBC, "fishMeasurements.rdata"), compress=T)
+        save(fishMeasurements, file=file.path(fnODBC, "fishMeasurements.rdata"), compress=T)
         save(ILTSTemp, file=file.path(fnODBC, "ILTSTemp.rdata"), compress=T)
         save(surveyStationID, file=file.path(fnODBC, "surveyStationID.rdata"), compress=T)
         
