@@ -10,7 +10,7 @@
 #' @export
 
 
-LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,sex=1:3,bin.size=5,LFS=160,Net=NULL){
+LobsterSurveyProcess<-function(species = 2550, size.range=c(0,220),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,sex=1:3,bin.size=5,LFS=160,Net=NULL){
   
 	lobster.db("survey")
 	RLibrary("CircStats","PBSmapping","SpatialHub","spatstat")
@@ -35,6 +35,8 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 	NLM<-with(surveyMeasurements,tapply(SET_ID,SET_ID,length))
 	surveyLobsters<-merge(surveyLobsters,data.frame(SET_ID=names(NLM),LOBSTERS_MEASURED=NLM),by='SET_ID',all=T)
 	surveyLobsters <- subset(surveyLobsters,GEAR !='3/4 OTTER TRAWL') # Remove 2015 survey portion on Fundy Spray
+	surveyLobsters$GEAR[surveyLobsters$YEAR==2017] <- "NEST" # Incorrectly entered as BALLOON in 2017
+
 	
 	# add column for tow length
 	lat1<-surveyLobsters$SET_LAT
@@ -61,7 +63,7 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 	for(i in 1:nrow(x)){
 	    g = subset(surveyLobsters,YEAR==x[i,1] & GEAR == x[i,2])
 	    mL = mean(g$LENGTH,na.rm=T)
-	    g$LENGTH[is.na(g$LENGTH)]<-mL
+	    #g$LENGTH[is.na(g$LENGTH)]<-mL
 	    g$GEAR_WIDTH <- NA
 	    if(x[i,2]=='280 BALLOON') g$GEAR_WIDTH <- 20
 	    if(x[i,2]=='NEST') g$GEAR_WIDTH <- 13
@@ -87,7 +89,7 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 
 	LongForm = aggregate(FISH_NO~floor(FISH_LENGTH)+SEX+SET_ID,data=surveyMeasurements,FUN=length)
 	names(LongForm)[1] = "FISH_LENGTH"
-	x = readRDS(file=file.path(project.datadirectory('bio.lobster'),"survey","summarybootRhoNestBall.rds"))
+	x = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data',"survey","summarybootRhoNestBall.rds"))
 	NetConv = with(x,data.frame(FISH_LENGTH=Length,NestCF=Median))
 	LongForm = merge(LongForm,NetConv,all=T)
 	LongForm$NestCF[LongForm$FISH_LENGTH<min(NetConv$FISH_LENGTH)] <- NetConv$NestCF[NetConv$FISH_LENGTH==min(NetConv$FISH_LENGTH)]
@@ -107,6 +109,7 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 	else {
 		if(Net=="NEST")CLF = aggregate(NEST_DENSITY~BIN+SET_ID,data=subset(LongForm,SEX%in%sex),FUN=sum)
 		if(Net=="280 BALLOON")CLF = aggregate(BALLOON_DENSITY~BIN+SET_ID,data=subset(LongForm,SEX%in%sex),FUN=sum)
+
 	}
 	names(CLF)[3] = "CL"
 	CLF = merge(CLF,data.frame(SET_ID=CLF$SET_ID[1],BIN=bins[-1]),all=T)
@@ -114,9 +117,12 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 	CLF[is.na(CLF)] = 0
 	surveyLobsters<-merge(surveyLobsters,CLF,all=T)
 	surveyLobsters[surveyLobsters$NUM_CAUGHT==0,which(names(surveyLobsters)%in%names(CLF)[-1])] <- 0
-	surveyLobsters$LobDenNC<-rowSums(surveyLobsters[,which(names(surveyLobsters)%in%names(CLF)[-1])])
-	surveyLobsters$LobDen<-surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT
-
+	surveyLobsters$LobDenCorrected<-rowSums(surveyLobsters[,which(names(surveyLobsters)%in%names(CLF)[-1])])
+	surveyLobsters$LobDenNotCorrected<-surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT
+	surveyLobsters$LobDen<-surveyLobsters$LobDenCorrected
+	surveyLobsters$LobDen[is.na(surveyLobsters$LobDenCorrected)]<-surveyLobsters$LobDenNotCorrected[is.na(surveyLobsters$LobDenCorrected)]
+	surveyLobsters$NUM_STANDARDIZED<-surveyLobsters$NUM_CAUGHT/surveyLobsters$DIST_KM
+	if(!is.null(Net)) surveyLobsters =surveyLobsters[which(!(surveyLobsters$YEAR==2016&surveyLobsters$GEAR!=Net)),]
 	## berried females
 	#with(subset(surveyMeasurements,SEX==3),tapply(SEX,SET_ID,length))->bfs
 	#with(subset(surveyMeasurements,SEX==2),tapply(SEX,SET_ID,length))->fs
@@ -140,7 +146,7 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 	if(!is.null(gear.type)) {
 			surveyLobsters = subset(surveyLobsters, GEAR==gear.type)
 	}
-	if(lfa==34){
+	if(lfa=='34'){
 
 	#	 STATIONS assigned based on proximity
 		ITQspat34<-subset(surveyLobsters,select=c("SET_ID","SET_LONG","SET_LAT","HAUL_LONG","HAUL_LAT","STATION","GEAR"))
@@ -148,7 +154,8 @@ LobsterSurveyProcess<-function(size.range=c(0,220),lfa='34',yrs,mths=c("May","Ju
 		ITQspat34$EID<-1:nrow(ITQspat34)
 		pdf(file.path( project.datadirectory('bio.lobster'), "figures","LFA34ITQSurveyStations.pdf"),8,11)
 		ITQspat34<-ITQspat34[complete.cases(ITQspat34),]
-		ITQspat34ns<-assignStation(ITQspat34,lines=T,map=T)
+		#browser()
+		ITQspat34ns<-assignStation(ITQspat34,lines=T,map='lfa34')
 		dev.off()
 		write.csv(ITQspat34ns$events,file.path(project.datadirectory('bio.lobster'),"data","products","surveyTows.csv"),row.names=F)
 		write.csv(ITQspat34ns$stations,file.path(project.datadirectory('bio.lobster'),"data","products","surveyStations.csv"),row.names=F)
