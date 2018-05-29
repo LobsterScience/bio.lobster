@@ -1051,7 +1051,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         surveyCatch = sqlQuery(con, "select * from lobster.ILTSSETS_MV")
         surveyMeasurements = sqlQuery(con, "select * from lobster.ILTSDETAILS_MV")
         fishMeasurements = sqlQuery(con, "select * from lobster.ILTSFISHLENGTHS_MV")
-        
+       
         
         with(surveyMeasurements,paste(TRIP_ID,SET_NO,sep=''))->surveyMeasurements$SET_ID
         with(surveyCatch,paste(TRIP_ID,SET_NO,sep=''))->surveyCatch$SET_ID

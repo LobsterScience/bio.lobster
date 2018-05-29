@@ -16,6 +16,7 @@ plotSurveyIndex<-function(trend.dat,yrs,graphic='pdf',index.variable="LobDen",mo
 		h = aggregate(YEAR~SID,data=h,FUN=max)
 		h = subset(h,YEAR==max(trend.dat$YEAR))$SID
 		trend.dat = subset(trend.dat,SID %in% h)
+		print(h)
 		if(graphic=='R')x11()
 		bioMap('lfa34')
 		points(SET_LAT~SET_LONG,trend.dat)

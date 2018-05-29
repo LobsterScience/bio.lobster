@@ -10,7 +10,7 @@
 #' @export
 
 
-LobsterSurveyProcess<-function(species = 2550, size.range=c(0,220),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,sex=1:3,bin.size=5,LFS=160,Net=NULL){
+LobsterSurveyProcess<-function(species = 2550, size.range=c(0,200),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,sex=c(1:3,NA),bin.size=5,LFS=160,Net=NULL){
   
 	lobster.db("survey")
 	RLibrary("CircStats","PBSmapping","SpatialHub","spatstat")
@@ -29,13 +29,14 @@ LobsterSurveyProcess<-function(species = 2550, size.range=c(0,220),lfa='34',yrs,
 	setNames<-c("SET_ID", "TRIP_ID", "TRIPCD_ID", "SURVEY_TYPE", "CFV", "VESSEL_NAME", "BOARD_DATE", "LANDING_DATE","HAULCCD_ID", "SET_NO","GEAR","FISHSET_ID",
 	        "STATION", "STRATUM_ID", "SET_LAT", "SET_LONG", "SET_DEPTH", "SET_TIME", "SET_DATE", "HAUL_LAT", "HAUL_LONG", "HAUL_DEPTH", "HAUL_TIME", 
 	        "HAUL_DATE", "YEAR", "LFA")           
-	surveyLobsters<-merge(subset(surveyCatch,SPECCD_ID==2550),subset(surveyCatch,!duplicated(SET_ID),setNames),all=T) #includes zeros
+	surveyLobsters<-merge(subset(surveyCatch,SPECCD_ID==species),subset(surveyCatch,!duplicated(SET_ID),setNames),all=T) #includes zeros
 	# number of lobsters with detailed data
 	
-	NLM<-with(surveyMeasurements,tapply(SET_ID,SET_ID,length))
-	surveyLobsters<-merge(surveyLobsters,data.frame(SET_ID=names(NLM),LOBSTERS_MEASURED=NLM),by='SET_ID',all=T)
+	if(species == 2550)NLM<-with(surveyMeasurements,tapply(SET_ID,SET_ID,length))
+	else NLM<-with(subset(fishMeasurements,SPECCD_ID%in%species),tapply(NUM_AT_LENGTH,paste0(TRIP_ID,SET_NO),sum))
+	surveyLobsters<-merge(surveyLobsters,data.frame(SET_ID=names(NLM),NUM_MEASURED=NLM),by='SET_ID',all=T)
 	surveyLobsters <- subset(surveyLobsters,GEAR !='3/4 OTTER TRAWL') # Remove 2015 survey portion on Fundy Spray
-	surveyLobsters$GEAR[surveyLobsters$YEAR==2017] <- "NEST" # Incorrectly entered as BALLOON in 2017
+	#surveyLobsters$GEAR[surveyLobsters$YEAR==2017] <- "NEST" # Incorrectly entered as BALLOON in 2017 # fixed in lobster.db
 
 	
 	# add column for tow length
@@ -84,23 +85,29 @@ LobsterSurveyProcess<-function(species = 2550, size.range=c(0,220),lfa='34',yrs,
 	surveyLobsters$DIST_KM[is.na(surveyLobsters$DIST_KM)] = surveyLobsters$LENGTH[is.na(surveyLobsters$DIST_KM)]
 	surveyLobsters$WING_SPREAD[is.na(surveyLobsters$WING_SPREAD)] = surveyLobsters$GEAR_WIDTH[is.na(surveyLobsters$WING_SPREAD)]
 	surveyLobsters$AREA_SWEPT<-surveyLobsters$DIST_KM*(surveyLobsters$WING_SPREAD/1000)
-	surveyLobsters$SUBSAMPLE <- surveyLobsters$LOBSTERS_MEASURED/surveyLobsters$NUM_CAUGHT
+	surveyLobsters$SUBSAMPLE <- surveyLobsters$NUM_MEASURED/surveyLobsters$NUM_CAUGHT
 	#surveyLobsters$SUBSAMPLE[is.na(surveyLobsters$SUBSAMPLE)] = 1
 
-	LongForm = aggregate(FISH_NO~floor(FISH_LENGTH)+SEX+SET_ID,data=surveyMeasurements,FUN=length)
-	names(LongForm)[1] = "FISH_LENGTH"
-	x = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data',"survey","summarybootRhoNestBall.rds"))
-	NetConv = with(x,data.frame(FISH_LENGTH=Length,NestCF=Median))
-	LongForm = merge(LongForm,NetConv,all=T)
-	LongForm$NestCF[LongForm$FISH_LENGTH<min(NetConv$FISH_LENGTH)] <- NetConv$NestCF[NetConv$FISH_LENGTH==min(NetConv$FISH_LENGTH)]
-	LongForm$NestCF[LongForm$FISH_LENGTH>max(NetConv$FISH_LENGTH)] <- NetConv$NestCF[NetConv$FISH_LENGTH==max(NetConv$FISH_LENGTH)]
+	if(species == 2550){
+		LongForm = aggregate(FISH_NO~floor(FISH_LENGTH)+SEX+SET_ID,data=surveyMeasurements,FUN=length)
+		names(LongForm) = c("FISH_LENGTH","SEX","SET_ID","NUM_AT_LENGTH")
+		x = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data',"survey","summarybootRhoNestBall.rds"))
+		NetConv = with(x,data.frame(FISH_LENGTH=Length,NestCF=Median))
+		LongForm = merge(LongForm,NetConv,all=T)
+		LongForm$NestCF[LongForm$FISH_LENGTH<min(NetConv$FISH_LENGTH)] <- NetConv$NestCF[NetConv$FISH_LENGTH==min(NetConv$FISH_LENGTH)]
+		LongForm$NestCF[LongForm$FISH_LENGTH>max(NetConv$FISH_LENGTH)] <- NetConv$NestCF[NetConv$FISH_LENGTH==max(NetConv$FISH_LENGTH)]
+	} else {
+		LongForm = with(subset(fishMeasurements,SPECCD_ID%in%species),data.frame(FISH_LENGTH,SEX=NA,SET_ID=paste0(TRIP_ID,SET_NO),NUM_AT_LENGTH))
+		LongForm$NestCF = 1
+	}
 	LongForm = merge(surveyLobsters[,c("SET_ID","GEAR","AREA_SWEPT","SUBSAMPLE")],LongForm)
 	LongForm$BalloonCF = 1/LongForm$NestCF
 	LongForm$NestCF[LongForm$GEAR=="NEST"] = 1
 	LongForm$BalloonCF[LongForm$GEAR=="280 BALLOON"] = 1
-	LongForm$DENSITY = LongForm$FISH_NO/LongForm$AREA_SWEPT/LongForm$SUBSAMPLE
+	LongForm$DENSITY = LongForm$NUM_AT_LENGTH/LongForm$AREA_SWEPT/LongForm$SUBSAMPLE
 	LongForm$NEST_DENSITY = LongForm$DENSITY * LongForm$NestCF
 	LongForm$BALLOON_DENSITY = LongForm$DENSITY * LongForm$BalloonCF
+
 
 	# add columns for length bins
 	bins<-seq(size.range[1],size.range[2],bin.size)
