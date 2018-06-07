@@ -12,6 +12,8 @@ p=  list()
 p$current.assessment.year=2017
 p$yrs = 1947:p$current.assessment.year
 
+redo.data=T
+
 #lobster map
  LobsterMap(xlim=c(-67.5,-64), ylim=c(42.5,46),mapRes='HR',labcex=1.1)
 
