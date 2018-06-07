@@ -117,7 +117,7 @@ p$yrs = 1947:p$current.assessment.year
 	#surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
 
 	## Plot Survey Index Figure 4
-	plotSurveyIndex(surveyLobsters34,yrs=1996:2016,se=T,graphic="png",index.variable="LobDen")
+	plotSurveyIndex(surveyLobsters34,yrs=1996:2016,se=T,graphic="R",index.variable="LobDen")
 
 ## Landings
 

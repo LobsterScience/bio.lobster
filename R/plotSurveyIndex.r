@@ -2,24 +2,10 @@
 plotSurveyIndex<-function(trend.dat,yrs,graphic='pdf',index.variable="LobDen",moving.avg=T,moving.median=T,ref.points=T,index.stations=T,fn="SurveyIndex",yLabel=expression(paste("Mean N / ", km^2)),wd=8,ht=6,se=F,add.legend=F,legend.specs = list(leg.place='topleft',lty=c(1,2,1),col=c('orange','green','rgb(0,0,1,0.5)'))){
 
 	## Plot Survey Index Figure 4
-	if(graphic=='pdf')pdf(file.path( project.figuredirectory("bio.lobster"), paste0(fn,".pdf")),wd,ht)
 
 	if(index.stations){
-		#Stns<-read.csv(file.path(project.datadirectory('bio.lobster'),'data',"survey32Stations.csv"))
-		#trend.dat<-subset(trend.dat,SID%in%Stns$SID)
-		
-		h = as.data.frame(unique(cbind(trend.dat$SID,trend.dat$YEAR)))
-		names(h) = c('SID','YEAR')
-		g = aggregate(YEAR~SID,data=h,FUN=length)
-		g = subset(g,YEAR>=16)$SID
-		h = subset(h,SID %in% c(g))
-		h = aggregate(YEAR~SID,data=h,FUN=max)
-		h = subset(h,YEAR==max(trend.dat$YEAR))$SID
-		trend.dat = subset(trend.dat,SID %in% h)
-		print(h)
-		if(graphic=='R')x11()
-		bioMap('lfa34')
-		points(SET_LAT~SET_LONG,trend.dat)
+
+			trend.dat = calcIndexStations(trend.dat,n=16, map=F, include.current.year=F)
 
 		}
 
@@ -36,6 +22,7 @@ plotSurveyIndex<-function(trend.dat,yrs,graphic='pdf',index.variable="LobDen",mo
 	rmLPT <- mavg(LPT)
 
 	
+	if(graphic=='pdf')pdf(file.path( project.figuredirectory("bio.lobster"), paste0(fn,".pdf")),wd,ht)
 	if(graphic=='png')png(file=file.path(project.figuredirectory("bio.lobster"), paste0(fn,".png")),units='in',width=wd,height=ht,pointsize=12, res=300,type='cairo')	
 	if(graphic=='R')x11()
 	plot(yrs,LPT,pch=16,ylim=c(0,max(LPT+LPTse)),xlab='',ylab=yLabel,las=1)
@@ -50,9 +37,11 @@ plotSurveyIndex<-function(trend.dat,yrs,graphic='pdf',index.variable="LobDen",mo
 		#text(max(yrs)+.5,median(LPT[1:14]*0.8)*.85,"Upper Stock Reference",col=rgb(0,0,1,0.5),pos=2,cex=0.8)
 	print(median(LPT[1:14]*0.8))
 	}
-	print(paste('Plot is saved in',file.path( project.figuredirectory('bio.lobster'), paste0(fn,".pdf")),sep=""))
 	if(add.legend){with(legend.specs)
 
 	}
-	if(graphic!='R')dev.off()
+	if(graphic!='R'){
+		print(paste('Plot is saved in',file.path( project.figuredirectory('bio.lobster'), paste0(fn,".pdf")),sep=""))
+		dev.off()
+	}
 }

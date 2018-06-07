@@ -1,6 +1,6 @@
 
 #' @export
-CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,220,5), Yrs=2005:2016, by=NULL, sex=1:2, fn='',GEAR='280 BALLOON',ss=T,vers=1, rootdir=file.path(project.datadirectory('bio.lobster'),'figures'),... ) {
+CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,200,5), Yrs=2005:2016, by=NULL, sex=1:3, fn='',gear.type=NULL,Net=NULL,species=2550,index.stations=T,ss=T,vers=1, rootdir=file.path(project.datadirectory('bio.lobster'),'figures'),... ) {
 
     ### Carapace Length Frequencies (CLF)
 
@@ -21,14 +21,17 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
         
             if(DS=='LobsterSurvey'){
                 # Gets Lobster Survey Data
-                surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=Yrs,mths=c("Jul","Jun"),size.range=range(bins),bin.size=diff(bins)[1], gear.type = GEAR)
-
+                #sy = ifelse(gear.type == "Nest",2016,1996)
+                #browser()
+                surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:year(Sys.time()),mths=c("Aug","Jul","Jun"),size.range=range(bins),bin.size=diff(bins)[1], sex=sex, gear.type = gear.type, Net = Net,species = species)
+                #browser()
+                if(index.stations)  surveyLobsters34 = calcIndexStations(surveyLobsters34,n=16, map=F)
+                surveyLobsters34 = subset(surveyLobsters34,YEAR%in%Yrs)
                 # Limit data to 32 selected index stations
-                LS32stns<-read.csv(file.path(project.datadirectory('bio.lobster'),"data","products","survey32Stations.csv"))
+                #LS32stns<-read.csv(file.path(project.datadirectory('bio.lobster'),"data","products","survey32Stations.csv"))
                 
                 # Construct CLF
-                LobsterSurveyCLF<-t(sapply(Yrs,function(y){colMeans(subset(surveyLobsters34,YEAR==y&SID%in%LS32stns$SID,paste0("CL",bins[-1])),na.rm=T)}))
-
+                LobsterSurveyCLF<-t(sapply(Yrs,function(y){colMeans(subset(surveyLobsters34,YEAR==y,paste0("CL",bins[-1])),na.rm=T)}))
                 # plot
                 BarPlotCLF(list(LobsterSurveyCLF),yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFLobSurvLFA34",fn,".pdf")),LS=mls, ...)
                 return(LobsterSurveyCLF)

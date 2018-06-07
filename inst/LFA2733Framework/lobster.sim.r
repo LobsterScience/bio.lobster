@@ -379,87 +379,96 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 	simSumMaxSize = simSummary(runs=c("Base","FMax125","FMax130","FMax135","Max125","Max130","Max135"),lfas=LFAs)
 
 
-	LStab1 = data.frame(rbind(
+	LStabRP = data.frame(rbind(
 		round(100*(simSumLegalSize[[1]][9,]/simSumLegalSize[[1]][6,]-1)),
 		round(100*(simSumLegalSize[[1]][8,]/simSumLegalSize[[1]][6,]-1)),
 		round(100*(simSumLegalSize[[1]][7,]/simSumLegalSize[[1]][6,]-1))
 		))
-	names(LStab1) = LFAs
-	write.csv(LStab1,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStab1.csv"),row.names=F)
+	names(LStabRP) = LFAs
+	rownames(LStabRP) = c("LS90", "LS87.5", "LS85")
+	write.csv(LStabRP,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabRP.csv"),row.names=T)
 
-	LStab2 = data.frame(rbind(
+	LStabNo = data.frame(rbind(
 		round(100*(simSumLegalSize[[2]][9,]/simSumLegalSize[[2]][6,]-1)),
 		round(100*(simSumLegalSize[[2]][8,]/simSumLegalSize[[2]][6,]-1)),
 		round(100*(simSumLegalSize[[2]][7,]/simSumLegalSize[[2]][6,]-1))
 		))
-	names(LStab2) = LFAs
-	write.csv(LStab2,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStab2.csv"),row.names=F)
+	names(LStabNo) = LFAs
+	rownames(LStabNo) = c("LS90", "LS87.5", "LS85")
+	write.csv(LStabNo,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabNo.csv"),row.names=T)
 
-	LStab3 = data.frame(rbind(
+	LStabKg = data.frame(rbind(
 		round(100*(simSumLegalSize[[3]][9,]/simSumLegalSize[[3]][6,]-1)),
 		round(100*(simSumLegalSize[[3]][8,]/simSumLegalSize[[3]][6,]-1)),
 		round(100*(simSumLegalSize[[3]][7,]/simSumLegalSize[[3]][6,]-1))
 		))
-	names(LStab3) = LFAs
-	write.csv(LStab3,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStab3.csv"),row.names=F)
+	names(LStabKg) = LFAs
+	rownames(LStabKg) = c("LS90", "LS87.5", "LS85")
+	write.csv(LStabKg,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabKg.csv"),row.names=T)
 
-	OStab1 = data.frame(rbind(
+	OStabRP = data.frame(rbind(
 		round(100*(simSumSeason[[1]][6,]/simSumSeason[[1]][1,]-1)),
 		round(100*(simSumSeason[[1]][5,]/simSumSeason[[1]][1,]-1)),
 		round(100*(simSumSeason[[1]][4,]/simSumSeason[[1]][1,]-1)),
 		round(100*(simSumSeason[[1]][3,]/simSumSeason[[1]][1,]-1)),
 		round(100*(simSumSeason[[1]][2,]/simSumSeason[[1]][1,]-1))
 		))
-	names(OStab1) = LFAs
-	write.csv(OStab1,file.path(project.datadirectory("bio.lobster"),"outputs","sim","OStab1.csv"),row.names=F)
-	OStab2 = data.frame(rbind(
+	names(OStabRP) = LFAs
+	rownames(OStabRP) = c("SS5", "SS6", "SS7", "SS8", "SS9")
+	write.csv(OStabRP,file.path(project.datadirectory("bio.lobster"),"outputs","sim","OStabRP.csv"),row.names=T)
+	OStabNo = data.frame(rbind(
 		round(100*(simSumSeason[[2]][6,]/simSumSeason[[2]][1,]-1)),
 		round(100*(simSumSeason[[2]][5,]/simSumSeason[[2]][1,]-1)),
 		round(100*(simSumSeason[[2]][4,]/simSumSeason[[2]][1,]-1)),
 		round(100*(simSumSeason[[2]][3,]/simSumSeason[[2]][1,]-1)),
 		round(100*(simSumSeason[[2]][2,]/simSumSeason[[2]][1,]-1))
 		))
-	names(OStab2) = LFAs
-	write.csv(OStab2,file.path(project.datadirectory("bio.lobster"),"outputs","sim","OStab2.csv"),row.names=F)
-	OStab3 = data.frame(rbind(
+	names(OStabNo) = LFAs
+	rownames(OStabNo) = c("SS5", "SS6", "SS7", "SS8", "SS9")
+	write.csv(OStabNo,file.path(project.datadirectory("bio.lobster"),"outputs","sim","OStabNo.csv"),row.names=T)
+	OStabKg = data.frame(rbind(
 		round(100*(simSumSeason[[3]][6,]/simSumSeason[[3]][1,]-1)),
 		round(100*(simSumSeason[[3]][5,]/simSumSeason[[3]][1,]-1)),
 		round(100*(simSumSeason[[3]][4,]/simSumSeason[[3]][1,]-1)),
 		round(100*(simSumSeason[[3]][3,]/simSumSeason[[3]][1,]-1)),
 		round(100*(simSumSeason[[3]][2,]/simSumSeason[[3]][1,]-1))
 		))
-	names(OStab3) = LFAs
-	write.csv(OStab3,file.path(project.datadirectory("bio.lobster"),"outputs","sim","OStab3.csv"),row.names=F)
+	names(OStabKg) = LFAs
+	rownames(OStabNo) = c("SS5", "SS6", "SS7", "SS8", "SS9")
+	write.csv(OStabKg,file.path(project.datadirectory("bio.lobster"),"outputs","sim","OStabKg.csv"),row.names=T)
 
-
-	Wintab1 = data.frame(rbind(
+	WintabRP = data.frame(rbind(
 		round(100*(simSumWindow[[1]][5,]/simSumWindow[[1]][1,]-1)),
 		round(100*(simSumWindow[[1]][4,]/simSumWindow[[1]][1,]-1)),
 		round(100*(simSumWindow[[1]][3,]/simSumWindow[[1]][1,]-1)),
 		round(100*(simSumWindow[[1]][2,]/simSumWindow[[1]][1,]-1))
 		))
-	names(Wintab1) = LFAs
-	write.csv(Wintab1,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Wintab1.csv"),row.names=F)
-	Wintab2 = data.frame(rbind(
+	names(WintabRP) = LFAs
+	rownames(WintabRP) = c("BigWin", "SmallWin","FBigWin", "FSmallWin")
+	write.csv(WintabRP,file.path(project.datadirectory("bio.lobster"),"outputs","sim","WintabRP.csv"),row.names=T)
+	WintabNo = data.frame(rbind(
 		round(100*(simSumWindow[[2]][5,]/simSumWindow[[2]][1,]-1)),
 		round(100*(simSumWindow[[2]][4,]/simSumWindow[[2]][1,]-1)),
 		round(100*(simSumWindow[[2]][3,]/simSumWindow[[2]][1,]-1)),
 		round(100*(simSumWindow[[2]][2,]/simSumWindow[[2]][1,]-1))
 		))
-	names(Wintab2) = LFAs
-	write.csv(Wintab2,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Wintab2.csv"),row.names=F)
-	Wintab3 = data.frame(rbind(
+	names(WintabNo) = LFAs
+	rownames(WintabNo) = c("BigWin", "SmallWin","FBigWin", "FSmallWin")
+	write.csv(WintabNo,file.path(project.datadirectory("bio.lobster"),"outputs","sim","WintabNo.csv"),row.names=T)
+	WintabKg = data.frame(rbind(
 		round(100*(simSumWindow[[3]][5,]/simSumWindow[[3]][1,]-1)),
 		round(100*(simSumWindow[[3]][4,]/simSumWindow[[3]][1,]-1)),
 		round(100*(simSumWindow[[3]][3,]/simSumWindow[[3]][1,]-1)),
 		round(100*(simSumWindow[[3]][2,]/simSumWindow[[3]][1,]-1))
 		))
-	names(Wintab3) = LFAs
-	write.csv(Wintab3,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Wintab3.csv"),row.names=F)
+	names(WintabKg) = LFAs
+	rownames(WintabKg) = c("BigWin", "SmallWin","FBigWin", "FSmallWin")
+	write.csv(WintabKg,file.path(project.datadirectory("bio.lobster"),"outputs","sim","WintabKg.csv"),row.names=T)
 
 
 
-	Maxtab1 = data.frame(rbind(
+
+	MaxtabRP = data.frame(rbind(
 		round(100*(simSumMaxSize[[1]][7,]/simSumMaxSize[[1]][1,]-1)),
 		round(100*(simSumMaxSize[[1]][6,]/simSumMaxSize[[1]][1,]-1)),
 		round(100*(simSumMaxSize[[1]][5,]/simSumMaxSize[[1]][1,]-1)),
@@ -467,9 +476,10 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 		round(100*(simSumMaxSize[[1]][3,]/simSumMaxSize[[1]][1,]-1)),
 		round(100*(simSumMaxSize[[1]][2,]/simSumMaxSize[[1]][1,]-1))
 		))
-	names(Maxtab1) = LFAs
-	write.csv(Maxtab1,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Maxtab1.csv"),row.names=F)
-	Maxtab2 = data.frame(rbind(
+	names(MaxtabRP) = LFAs
+	rownames(MaxtabRP) = c("Max135", "Max130", "Max125", "FMax135", "FMax130", "FMax125")
+	write.csv(MaxtabRP,file.path(project.datadirectory("bio.lobster"),"outputs","sim","MaxtabRP.csv"),row.names=T)
+	MaxtabNo = data.frame(rbind(
 		round(100*(simSumMaxSize[[2]][7,]/simSumMaxSize[[2]][1,]-1)),
 		round(100*(simSumMaxSize[[2]][6,]/simSumMaxSize[[2]][1,]-1)),
 		round(100*(simSumMaxSize[[2]][5,]/simSumMaxSize[[2]][1,]-1)),
@@ -477,9 +487,10 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 		round(100*(simSumMaxSize[[2]][3,]/simSumMaxSize[[2]][1,]-1)),
 		round(100*(simSumMaxSize[[2]][2,]/simSumMaxSize[[2]][1,]-1))
 		))
-	names(Maxtab2) = LFAs
-	write.csv(Maxtab2,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Maxtab2.csv"),row.names=F)
-	Maxtab3 = data.frame(rbind(
+	names(MaxtabNo) = LFAs
+	rownames(MaxtabNo) = c("Max135", "Max130", "Max125", "FMax135", "FMax130", "FMax125")
+	write.csv(MaxtabNo,file.path(project.datadirectory("bio.lobster"),"outputs","sim","MaxtabNo.csv"),row.names=T)
+	MaxtabKg = data.frame(rbind(
 		round(100*(simSumMaxSize[[3]][7,]/simSumMaxSize[[3]][1,]-1)),
 		round(100*(simSumMaxSize[[3]][6,]/simSumMaxSize[[3]][1,]-1)),
 		round(100*(simSumMaxSize[[3]][5,]/simSumMaxSize[[3]][1,]-1)),
@@ -487,8 +498,18 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 		round(100*(simSumMaxSize[[3]][3,]/simSumMaxSize[[3]][1,]-1)),
 		round(100*(simSumMaxSize[[3]][2,]/simSumMaxSize[[3]][1,]-1))
 		))
-	names(Maxtab3) = LFAs
-	write.csv(Maxtab3,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Maxtab3.csv"),row.names=F)
+	names(MaxtabKg) = LFAs
+	rownames(MaxtabKg) = c("Max135", "Max130", "Max125", "FMax135", "FMax130", "FMax125")
+	write.csv(MaxtabKg,file.path(project.datadirectory("bio.lobster"),"outputs","sim","MaxtabKg.csv"),row.names=T)
+
+	for(i in 1:9){
+
+		LS=data.frame(Eggs=LStabRP[,i],Numbers=LStabNo[,i],Weight=LStabKg[,i],row.names= c("LS90", "LS87.5", "LS85"))
+		OS=data.frame(Eggs=OStabRP[,i],Numbers=OStabNo[,i],Weight=OStabKg[,i],row.names= c("SS5", "SS6", "SS7", "SS8", "SS9"))
+		Win=data.frame(Eggs=WintabRP[,i],Numbers=WintabNo[,i],Weight=WintabKg[,i],row.names= c("BigWin", "SmallWin","FBigWin", "FSmallWin"))
+		Max=data.frame(Eggs=MaxtabRP[,i],Numbers=MaxtabNo[,i],Weight=MaxtabKg[,i],row.names= c("Max135", "Max130", "Max125", "FMax135", "FMax130", "FMax125"))
+		write.csv(rbind(LS,OS,Win,Max),file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("LFA",LFAs[i],".csv")),row.names=T)
+	}
 
 
 	cols=tim.colors(9)

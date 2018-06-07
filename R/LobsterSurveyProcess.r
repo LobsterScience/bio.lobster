@@ -150,9 +150,6 @@ LobsterSurveyProcess<-function(species = 2550, size.range=c(0,200),lfa='34',yrs,
 	write.csv(surveyLobsters,file.path(project.datadirectory('bio.lobster'),"data","products","surveyLobsters.csv"),row.names=F) # Save data as csv
 	surveyLobsters<-subset(surveyLobsters,LFA==lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
 	
-	if(!is.null(gear.type)) {
-			surveyLobsters = subset(surveyLobsters, GEAR==gear.type)
-	}
 	if(lfa=='34'){
 
 	#	 STATIONS assigned based on proximity
@@ -170,6 +167,9 @@ LobsterSurveyProcess<-function(species = 2550, size.range=c(0,200),lfa='34',yrs,
 	#	 add assigned stations to data
 		surveyLobsters<-merge(surveyLobsters,subset(ITQspat34ns$events,select=c("SET_ID","SID")),all=T)
 		}
+	if(!is.null(gear.type)) {
+			surveyLobsters = subset(surveyLobsters, GEAR==gear.type)
+	}
 	
 	return(surveyLobsters)
 }
