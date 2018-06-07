@@ -275,6 +275,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     #Filtering by   
                     #Fish.Date = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
                     Fish.Date = lobster.db('season.dates')
+                    Fish.Date = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
                     lfa  =  sort(unique(Fish.Date$LFA))
                     
                 
@@ -574,7 +575,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
            con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
             
             # atSea
-            atSea = sqlQuery(con, "select * from FRAILC.LOBSTER_ATSEA_VW")
+            atSea = sqlQuery(con, "select * from lobster.LOBSTER_ATSEA_VW")
             save( atSea, file=file.path( fnODBC, "atSea.rdata"), compress=T)
             gc()  # garbage collection
             odbcClose(con)
@@ -582,6 +583,18 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
           load(file.path( fnODBC, "atSea.rdata"), .GlobalEnv)
      }
 
+     if(DS %in% c('atSea.CatchLevel.redo','atSea.CatchLevel')){
+           require(RODBC)
+           con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        if(DS == 'atSea.CatchLevel.redo') {    
+            # atSea
+            atSeaCatchLevel = sqlQuery(con, "select * from lobster.atseacatchlevel;")
+            save( atSeaCatchLevel, file=file.path( fnODBC, "atSeaCatchLevel.rdata"), compress=T)
+            gc()  # garbage collection
+            odbcClose(con)
+          }
+          load(file.path( fnODBC, "atSeaCatchLevel.rdata"), .GlobalEnv)
+     }
 
     if (DS %in% c("atSea.clean.redo", "atSea.clean") ) {
 
@@ -1027,15 +1040,19 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         # survey
         require(RODBC)
         con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-        ILTSTowDepth = sqlQuery(con, "select * from FRAILC.MARPORT_DEPTH")
-        ILTSTowSpread = sqlQuery(con, "select * from FRAILC.MARPORT_SPREAD")
-        ILTSTowDist = sqlQuery(con, "select * from FRAILC.MARPORT_TOWDIST")
+        ILTS2016TowDepth = sqlQuery(con, "select * from FRAILC.MARPORT_DEPTH")
+        ILTS2016TowSpread = sqlQuery(con, "select * from FRAILC.MARPORT_SPREAD")
+        ILTS2016Tracks = sqlQuery(con, "select * from FRAILC.MARPORT_TRACKS")
         ILTSTemp = sqlQuery(con, "select * from FRAILC.MINILOG_TEMP")
-        NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
-        netMensuration = merge( NM1,ILTSTowDist)#merge net mensuration into one file
-        netMensuration$TTIME = NULL #remove load date from merged file
+        ILTS2016Tracks = ILTS2016Tracks[order(ILTS2016Tracks$TTIME),]
+        #NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
+        #netMensuration = merge( NM1,ILTS2016Tracks)#merge net mensuration into one file
+        #netMensuration$TTIME = NULL #remove load date from merged file
         surveyCatch = sqlQuery(con, "select * from lobster.ILTSSETS_MV")
         surveyMeasurements = sqlQuery(con, "select * from lobster.ILTSDETAILS_MV")
+        fishMeasurements = sqlQuery(con, "select * from lobster.ILTSFISHLENGTHS_MV")
+       
+        
         with(surveyMeasurements,paste(TRIP_ID,SET_NO,sep=''))->surveyMeasurements$SET_ID
         with(surveyCatch,paste(TRIP_ID,SET_NO,sep=''))->surveyCatch$SET_ID
         surveyCatch$SET_LONG = surveyCatch$SET_LONG*-1
@@ -1043,18 +1060,28 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         surveyCatch$YEAR = year(surveyCatch$BOARD_DATE)
         surveyMeasurements$SET_LON = surveyMeasurements$SET_LON*-1
         surveyMeasurements$HAUL_LON = surveyMeasurements$HAUL_LON*-1
+        
+        if(unique(subset(surveyCatch,YEAR==2017,select=GEAR))[,1]=='280 BALLOON') {
+        	j = which(surveyCatch$YEAR==2017)
+        	surveyCatch$GEAR[j] = 'NEST'
+        	j = which(surveyMeasurements$YEAR==2017)
+        	surveyMeasurements$GEAR[j] = 'NEST'
+        }
+
         surveyStationID = sqlQuery(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
-        save(netMensuration, file=file.path( fnODBC, "netMensuration.rdata"), compress=T)
+        save(list=c("ILTS2016TowDepth","ILTS2016TowSpread","ILTS2016Tracks") , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)
         save(surveyMeasurements, file=file.path(fnODBC, "surveyMeasurements.rdata"), compress=T)
+        save(fishMeasurements, file=file.path(fnODBC, "fishMeasurements.rdata"), compress=T)
         save(ILTSTemp, file=file.path(fnODBC, "ILTSTemp.rdata"), compress=T)
         save(surveyStationID, file=file.path(fnODBC, "surveyStationID.rdata"), compress=T)
         
         gc()  # garbage collection
       }
-      load(file.path( fnODBC, "netMensuration.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "MarPort2016.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyCatch.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyMeasurements.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "fishMeasurements.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "ILTSTemp.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyStationID.rdata"), .GlobalEnv)
       

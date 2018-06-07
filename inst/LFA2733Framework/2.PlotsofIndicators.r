@@ -35,6 +35,9 @@ if(!sset)			IndicatorplotsMultDataSets(atSea=aS, port=pS, fsrs=fS,fsrs.rec = fR,
 			
 x =  IndicatorplotsMultDataSets(atSea=aS, port=pS, fsrs=fS,fsrs.rec = fR, indicator = 'Median.Size', out.dir='bio.lobster',mls=mls,subset=sset)
 
+require(data.table)
+aa = as.data.frame(rbindlist(list(aS,pS,fR),fill=T))
+write.csv(aa,file=file.path(fd,'Figs21-70.csv'))
 				
 				y = as.data.frame(do.call(rbind,x))
 				w = subset(y,ID %in% c('fsrs','port','atSea'))

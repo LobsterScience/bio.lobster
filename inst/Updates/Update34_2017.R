@@ -2,6 +2,7 @@
 require(bio.lobster)
 la()
 
+redo.data=T
 
 p = bio.lobster::load.environment()
 
@@ -113,10 +114,12 @@ redo.data=T
 			
 	## ILTS Survey
 	
-	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2016,mths=c("Jul","Jun"),bin.size=5,gear.type='280 BALLOON')
+
+	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='280 BALLOON')
+	#surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
 
 	## Plot Survey Index Figure 4
-	plotSurveyIndex(surveyLobsters34,se=T)
+	plotSurveyIndex(surveyLobsters34,yrs=1996:2016,se=T,graphic="png",index.variable="LobDen")
 
 ## Landings
 

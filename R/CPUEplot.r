@@ -1,10 +1,10 @@
 #' @export
-CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,effort.min=10,export=F,path=file.path( project.figuredirectory("bio.lobster"),"figures"),...){
+CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,effort.min=10,export=F,path=file.path( project.figuredirectory("bio.lobster")),...){
 
 	if(is.null(lfa)&&is.null(subarea))stop("specify LFA or subarea")
 
 	if(missing(yrs))yrs<-unique(logData$SYEAR)
-	#logs<-subset(logData,LFA%in%lfa&SYEAR%in%yrs,c("SYEAR","LFA","DATE_FISHED","WEIGHT_KG","NUM_OF_TRAPS","subarea"))
+	if(!is.null(lfa))logs<-subset(logs,LFA%in%lfa&SYEAR%in%yrs,c("SYEAR","LFA","DATE_FISHED","WEIGHT_KG","NUM_OF_TRAPS","subarea"))
 	logs$DATE_FISHED<-as.Date(logs$DATE_FISHED)
 	dates<-data.frame(DATE=seq(min(logs$DATE_FISHED),max(logs$DATE_FISHED),1))
 	daily<-list()
@@ -17,6 +17,7 @@ CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,
 
 	for(i in 1:length(lfa)){
 		# daily
+		#browser()
 		catch<-with(subset(logs,LFA==lfa[i]),tapply(WEIGHT_KG,DATE_FISHED,sum,na.rm=T))
 		effort<-with(subset(logs,LFA==lfa[i]),tapply(NUM_OF_TRAPS,DATE_FISHED,sum,na.rm=T))
 		daily[[i]]<-merge(data.frame(LFA=lfa[i],DATE=as.Date(names(catch)),CATCH=catch),data.frame(LFA=lfa[i],DATE=as.Date(names(effort)),EFFORT=effort),all=T)

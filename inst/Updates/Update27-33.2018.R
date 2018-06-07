@@ -2,7 +2,7 @@
 p = bio.lobster::load.environment()
 la()
 
-lobster.db('logs.redo',p=p)
+#lobster.db('logs.redo',p=p)
 lobster.db(DS='process.logs.redo', p=p)
 logsInSeason<-lobster.db('process.logs')
 
@@ -30,20 +30,109 @@ p$subareas = c("27N","27S", "28", "29", "30", "31A", "31B", "32", "33E", "33W") 
 #for update
 
 	
-	long.term.mean<-ddply(subset(manlogs,YEAR>2007), .(LFA), summarize, lt.mean=mean(CPUE))
+	#long.term.mean<-ddply(subset(manlogs,YEAR>2007), .(LFA), summarize, lt.mean=mean(CPUE))
 
 
 	png(file.path(project.figuredirectory('bio.lobster'),'CommercialCPUELFA27332018.png'),width=8,height=10,units='in',res=200)
-				p1 = ggplot(vollogs,aes(x=as.factor(YEAR),y=CPUE, group=LFA, colour="red")) + geom_line () + facet_wrap(~LFA, ncol=2) +
-				  geom_segment(aes(x='2008', y=lt.mean,xend='2015',yend=lt.mean,group=LFA), colour="cornflowerblue", linetype="dashed",
-				  data=long.term.mean) + geom_line(data=manlogs,colour="black") + 
-				  geom_point(data=manlogs,colour="black") +scale_y_continuous(limits=c(0,2.2), breaks=c(0,1,2)) + 
-				  scale_x_discrete(breaks=seq(1981,2016,4))+ 
-				  theme_bw() + theme(axis.text.x=element_text(angle=0,hjust=0.5,size=9.0),strip.text=element_text(size=12.0),legend.position="none") +
-				  xlab("Year") + ylab("CPUE (Kg/Trap Haul)")
+				p1 = ggplot(vollogs,aes(x=as.factor(YEAR),y=CPUE, group=LFA, colour="red")) + 
+				  geom_line () + 
+				  facet_wrap(~LFA, ncol=2) +
+				  #geom_segment(aes(x='2008', y=lt.mean,xend='2017',yend=lt.mean,group=LFA), colour="cornflowerblue", linetype="dashed", data=long.term.mean) + 
+				  geom_line(data=manlogs,colour="black") + 
+				  geom_point(data=manlogs,colour="black") +
+				  scale_y_continuous(limits=c(0,2.3), breaks=c(0,1,2)) + 
+				  scale_x_discrete(breaks=seq(1980,2020,5))+ 
+				  theme_bw() + 
+				  theme(axis.text.x=element_text(angle=0,hjust=0.5,size=9.0),strip.text=element_text(size=12.0),legend.position="none") +
+				  xlab("Year") + 
+				  ylab("CPUE (Kg/Trap Haul)")
 				  p1
 	dev.off()
 	
+	# FSRS model plot 
+
+	FSRSvesday<-FSRSModelData()
+	#FSRSvesdayComm<-FSRSModelData(trap.type="commercial")
+	FSRSModelResultsRecruit = list()
+	FSRSModelResultsShort = list()
+	FSRSModelResultsLegal = list()
+	shorts.lst = list()
+	legals.lst = list()
+	recruit.lst = list()
+
+	for(i in 1:length( p$subareas)){
+	st = Sys.time()
+
+		mdata = subset(FSRSvesday,subarea==p$subareas[i])
+
+		FSRSModelResultsShort[[i]]=FSRSmodel(mdata, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
+		pdata	= 	FSRSModelResultsShort[[i]]$pData
+		pdata$Area = p$subareas[i]
+		shorts.lst[[i]] = pdata
+		
+		#FSRSModelResultsLegal[[i]]=FSRSmodel(mdata, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
+		#pdata	= 	FSRSModelResultsLegal[[i]]$pData
+		#pdata$Area = p$subareas[i]
+		#legals.lst[[i]] = pdata
+		#	
+
+		#FSRSModelResultsRecruit[[i]]=FSRSmodel(mdata, response="RECRUITS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
+		#pdata	= 	FSRSModelResultsRecruit[[i]]$pData
+		#pdata$Area = p$subareas[i]
+		#recruit.lst[[i]] = pdata
+		print( Sys.time() - st)
+
+
+	}
+
+	names(FSRSModelResultsShort) = p$subareas
+	#names(FSRSModelResultsLegal) = p$subareas
+	#names(FSRSModelResultsRecruit) = p$subareas
+	
+	shorts = do.call("rbind",shorts.lst)
+	#legals = do.call("rbind",legals.lst)
+	#recruit = do.call("rbind",recruit.lst)
+	shorts = subset(shorts,YEAR<2018)
+
+	library(ggplot2)
+
+	#pdf(file.path( project.figuredirectory('bio.lobster'),"FSRSmodelBayesShorts.pdf"),8, 10)
+	png(file.path(project.figuredirectory('bio.lobster'),"FSRSmodelBayesShorts.png"),width=8,height=10,units='in',res=200)
+	sp <- ggplot()
+	sp <- sp + geom_point(data = shorts, aes(y = median, x = YEAR), shape = 16, size = 2)
+	sp <- sp + xlab("Year") + ylab("Lobsters / Trap")
+	sp <- sp + theme(text = element_text(size=15)) + theme_bw()
+	sp <- sp + geom_line(data = shorts, aes(x = YEAR, y = median), colour = "black")
+	sp <- sp + geom_ribbon(data = shorts, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
+	sp <- sp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
+	sp
+	dev.off()
+
+	##pdf(file.path( project.figuredirectory('bio.lobster'),"FSRSmodelBayesLegals.pdf"),8, 10)
+	#png(file.path(project.figuredirectory('bio.lobster'),"FSRSmodelBayesLegals.png"),width=8,height=10,units='in',res=200)
+	#lp <- ggplot()
+	#lp <- lp + geom_point(data = legals, aes(y = median, x = YEAR), shape = 16, size = 2)
+	#lp <- lp + xlab("Year") + ylab("Lobsters / Trap")
+	#lp <- lp + theme(text = element_text(size=15)) + theme_bw()
+	#lp <- lp + geom_line(data = legals, aes(x = YEAR, y = median), colour = "black")
+	#lp <- lp + geom_ribbon(data = legals, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
+	#lp <- lp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
+	#lp
+	#dev.off()
+
+	##pdf(file.path( project.figuredirectory('bio.lobster'),"FSRSmodelBayesRecruits.pdf"),8, 10)
+	#png(file.path(project.figuredirectory('bio.lobster'),"FSRSmodelBayesRecruits.png"),width=8,height=10,units='in',res=200)
+	#rp <- ggplot()
+	#rp <- rp + geom_point(data = recruit, aes(y = median, x = YEAR), shape = 16, size = 2)
+	#rp <- rp + xlab("Year") + ylab("Lobsters / Trap")
+	#rp <- rp + theme(text = element_text(size=15)) + theme_bw()
+	#rp <- rp + geom_line(data = recruit, aes(x = YEAR, y = median), colour = "black")
+	#rp <- rp + geom_ribbon(data = recruit, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
+	#rp <- rp + facet_wrap(  ~Area, ncol=2,scales = "fixed")
+	#rp
+
+	dev.off()
+
 	
 	# Landings
 	LandingsUpdate<-lobster.db('annual.landings')
@@ -152,3 +241,6 @@ p$subareas = c("27N","27S", "28", "29", "30", "31A", "31B", "32", "33E", "33W") 
 	LobsterMap('33',poly.lst=list(subset(LFAgrid,PID==33),polyprop33),boundaries='none',isobaths=c(seq(50,450,50),seq(500,1000,100)),bathcol=rgb(0,0,1,0.3))
 	legend('bottomright',c("West","East"),fill=c(rgb(1,0,0,0.5),rgb(0,0,1,0.5)))
 	dev.off()
+
+
+

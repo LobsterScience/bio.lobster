@@ -6,7 +6,7 @@
 #' @author  Brad Hubley, \email{Brad.Hubley@@dfo-mpo.gc.ca}
 #' @export
 
-simMolt = function(p,gdd=T){
+simMolt = function(p,gdd=T,continuous.recruitment=F){
 
 	start = Sys.time()
 
@@ -15,9 +15,11 @@ simMolt = function(p,gdd=T){
 	totalBerried = totalPop
 	totalRemovals = totalPop
 	totalMolts = totalPop
+	moltProbs = totalPop
 	totalEggs = array(0,dim=c(p$nt,length(p$lens)))
 	
 	totalPop[1,1,1,1] = p$StartPop # start with
+	if(continuous.recruitment)totalPop[,1,1,1] = p$StartPop # start with
 
 	if(length(p$F) == 1) p$Fl = getFvec(p$F,p$LS,p$lens,p$window)
 		else p$Fl = p$F
@@ -65,6 +67,7 @@ simMolt = function(p,gdd=T){
 				molted = totalPop[t,,i,j] %*% gm$transMatrix #Molt
 				totalPop[t+1,,i+1,1] = totalPop[t+1,,i+1,1] + molted # combine newly molted into 1 timestep since last molt slot
 				totalMolts[t,,i,j] = molted
+				moltProbs[t,,i,j] = gm$pM
 
 				
 			}
@@ -99,6 +102,6 @@ simMolt = function(p,gdd=T){
 
 	print(Sys.time()-start)
 	
-	return(list(finalPop=finalPop,finalBerried=finalBerried,totalPop=totalPop,totalBerried=totalBerried,totalEggs=totalEggs,totalRemovals=totalRemovals,totalMolts=totalMolts))
+	return(list(finalPop=finalPop,finalBerried=finalBerried,totalPop=totalPop,totalBerried=totalBerried,totalEggs=totalEggs,totalRemovals=totalRemovals,totalMolts=totalMolts,moltProbs=moltProbs))
 }
 

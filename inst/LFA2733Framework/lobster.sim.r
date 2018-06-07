@@ -10,15 +10,17 @@ la()
 
 
 	TempModelling = TempModel(areas = 'subarea')
-	TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='R')
+	#TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='R')
 	p$TempModel = TempModelling$Model
 
 	MoltModelling = moltModel(p,redo.dd=F)
 	p$moltModel = MoltModelling
-	moltModelPlot(p$moltModel,graphic='png')
+	#moltModelPlot(p$moltModel,graphic='png')
 
 
 p$lfas = c("27N","27S", "29", "30") # specify lfas in 2 batches
+
+####### Base
 
 	plist = getSimList(p,sex=1)
 	names(plist) = p$lfas
@@ -35,6 +37,11 @@ p$lfas = c("27N","27S", "29", "30") # specify lfas in 2 batches
 
 	rlist = list(plist=plist,mlist=mlist,flist=flist)
 	save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim1ResultsBase.rdata"))
+
+
+		simBubPlot(rlist,graphic='R',cex.lab=2,cex.axis=1.5)
+		round(rlist$mlist$'27N'$moltProb[,,1,1],2)
+
 
 ##### Legal Size
 
@@ -82,6 +89,53 @@ p$lfas = c("27N","27S", "29", "30") # specify lfas in 2 batches
 		rlist = list(plist=plist,mlist=mlist,flist=flist)
 		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim1Results",names(ShorterSeason)[i],".rdata")))
 
+	}
+
+
+##### Window size 
+
+	WindowSize = list(c(115,125),c(105,125))
+	names(WindowSize) = c("SmallWin","BigWin")
+
+	for(i in 1:length(WindowSize)){
+		
+		plist = getSimList(p,sex=1,window=WindowSize[[i]])
+		names(plist) = p$lfas
+
+		mlist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(mlist) = p$lfas
+
+		plist = getSimList(p,sex=2,window=WindowSize[[i]])
+		names(plist) = p$lfas
+
+		flist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(flist) = p$lfas
+
+		rlist = list(plist=plist,mlist=mlist,flist=flist)
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim1Results",names(WindowSize)[i],".rdata")))
+	}
+
+##### Max size 
+
+	MaxSize = list(c(135,210),c(130,210),c(125,210))
+	names(MaxSize) = paste0("Max",lapply(MaxSize,min))
+
+	for(i in 1:length(MaxSize)){
+		
+		plist = getSimList(p,sex=1,window=MaxSize[[i]])
+		names(plist) = p$lfas
+
+		mlist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(mlist) = p$lfas
+
+		plist = getSimList(p,sex=2,window=MaxSize[[i]])
+		names(plist) = p$lfas
+
+		flist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(flist) = p$lfas
+
+		rlist = list(plist=plist,mlist=mlist,flist=flist)
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim1Results",names(MaxSize)[i],".rdata")))
 	}
 
 
@@ -156,13 +210,64 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 
 	}
 
+
+
+##### Window size 
+
+	WindowSize = list(c(115,125),c(105,125))
+	names(WindowSize) = c("SmallWin","BigWin")
+
+	for(i in 1:length(WindowSize)){
+		
+		plist = getSimList(p,sex=1,window=WindowSize[[i]])
+		names(plist) = p$lfas
+
+		mlist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(mlist) = p$lfas
+
+		plist = getSimList(p,sex=2,window=WindowSize[[i]])
+		names(plist) = p$lfas
+
+		flist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(flist) = p$lfas
+
+		rlist = list(plist=plist,mlist=mlist,flist=flist)
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim2Results",names(WindowSize)[[i]],".rdata")))
+	}
+
+
+##### Max size 
+
+	MaxSize = list(c(135,210),c(130,210),c(125,210))
+	names(MaxSize) = paste0("Max",lapply(MaxSize,min))
+
+	for(i in 1:length(MaxSize)){
+		
+		plist = getSimList(p,sex=1,window=MaxSize[[i]])
+		names(plist) = p$lfas
+
+		mlist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(mlist) = p$lfas
+
+		plist = getSimList(p,sex=2,window=MaxSize[[i]])
+		names(plist) = p$lfas
+
+		flist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(flist) = p$lfas
+
+		rlist = list(plist=plist,mlist=mlist,flist=flist)
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim2Results",names(MaxSize)[i],".rdata")))
+	}
+
+
+
 ###### combine all areas to one rdata object
 
 	load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim1ResultsBase.rdata"))
 	rlist1 = rlist
 	load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim2ResultsBase.rdata"))
 	rlist2 = rlist
-	rlist = list(plist=c(rlist1$plist[c(1,2,4,5)],rlist2$plist),mlist=c(rlist1$mlist[c(1,2,4,5)],rlist2$mlist),flist=c(rlist1$flist[c(1,2,4,5)],rlist2$flist))
+	rlist = list(plist=c(rlist1$plist,rlist2$plist),mlist=c(rlist1$mlist,rlist2$mlist),flist=c(rlist1$flist,rlist2$flist))
 
 	save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","simResultsBase.rdata"))
 
@@ -172,7 +277,7 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 		rlist1 = rlist
 		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim2Results",names(ShorterSeason)[i],".rdata")))
 		rlist2 = rlist
-		rlist = list(plist=c(rlist1$plist[c(1,2,4,5)],rlist2$plist),mlist=c(rlist1$mlist[c(1,2,4,5)],rlist2$mlist),flist=c(rlist1$flist[c(1,2,4,5)],rlist2$flist))
+		rlist = list(plist=c(rlist1$plist,rlist2$plist),mlist=c(rlist1$mlist,rlist2$mlist),flist=c(rlist1$flist,rlist2$flist))
 		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResults",names(ShorterSeason)[i],".rdata")))
 
 	}
@@ -183,9 +288,48 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 		rlist1 = rlist
 		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim2Results",names(LegalSize)[i],".rdata")))
 		rlist2 = rlist
-		rlist = list(plist=c(rlist1$plist[c(1,2,4,5)],rlist2$plist),mlist=c(rlist1$mlist[c(1,2,4,5)],rlist2$mlist),flist=c(rlist1$flist[c(1,2,4,5)],rlist2$flist))
+		rlist = list(plist=c(rlist1$plist,rlist2$plist),mlist=c(rlist1$mlist,rlist2$mlist),flist=c(rlist1$flist,rlist2$flist))
 		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResults",names(LegalSize)[i],".rdata")))
 
+	}
+
+	for(i in 1:length(WindowSize)){
+
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim1Results",names(WindowSize)[i],".rdata")))
+		rlist1 = rlist
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim2Results",names(WindowSize)[i],".rdata")))
+		rlist2 = rlist
+		rlist = list(plist=c(rlist1$plist,rlist2$plist),mlist=c(rlist1$mlist,rlist2$mlist),flist=c(rlist1$flist,rlist2$flist))
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResults",names(WindowSize)[i],".rdata")))
+
+		#females only
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim1ResultsBase.rdata"))
+		rlistb1 = rlist
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim2ResultsBase.rdata"))
+		rlistb2 = rlist
+		rlist = list(plist=c(rlist1$plist,rlist2$plist),mlist=c(rlistb1$mlist,rlistb2$mlist),flist=c(rlist1$flist,rlist2$flist))
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResultsF",names(WindowSize)[i],".rdata")))
+
+
+
+	}
+
+	for(i in 1:length(MaxSize)){
+
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim1Results",names(MaxSize)[i],".rdata")))
+		rlist1 = rlist
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim2Results",names(MaxSize)[i],".rdata")))
+		rlist2 = rlist
+		rlist = list(plist=c(rlist1$plist,rlist2$plist),mlist=c(rlist1$mlist,rlist2$mlist),flist=c(rlist1$flist,rlist2$flist))
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResults",names(MaxSize)[i],".rdata")))
+
+		#females only
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim1ResultsBase.rdata"))
+		rlistb1 = rlist
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim2ResultsBase.rdata"))
+		rlistb2 = rlist
+		rlist = list(plist=c(rlist1$plist,rlist2$plist),mlist=c(rlistb1$mlist,rlistb2$mlist),flist=c(rlist1$flist,rlist2$flist))
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResultsF",names(MaxSize)[i],".rdata")))
 	}
 
 
@@ -209,10 +353,30 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 
 	}
 
+	for(i in 1:length(WindowSize)){
+
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResults",names(WindowSize)[i],".rdata")))
+		simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018","sim"),fn=names(WindowSize)[i],cex.lab=2,cex.axis=1.5)
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResultsF",names(WindowSize)[i],".rdata")))
+		simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018","sim"),fn=paste0("F",names(WindowSize)[i]),cex.lab=2,cex.axis=1.5)
+
+	}
+
+	for(i in 1:length(MaxSize)){
+
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResults",names(MaxSize)[i],".rdata")))
+		simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018","sim"),fn=names(MaxSize)[i],cex.lab=2,cex.axis=1.5)
+		load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("simResultsF",names(MaxSize)[i],".rdata")))
+		simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018","sim"),fn=paste0("F",names(MaxSize)[i]),cex.lab=2,cex.axis=1.5)
+
+	}
+
 	LFAs = c("27N","27S",  "29", "30","31A","31B", "32", "33E", "33W")
 
 	simSumLegalSize = simSummary(runs=c("LS70","LS72.5","LS75","LS77.5","LS80","Base","LS85","LS87.5","LS90"),lfas=LFAs)
 	simSumSeason = simSummary(runs=c("Base","SS9","SS8","SS7","SS6","SS5"),lfas=LFAs)
+	simSumWindow = simSummary(runs=c("Base","FSmallWin","FBigWin","SmallWin","BigWin"),lfas=LFAs)
+	simSumMaxSize = simSummary(runs=c("Base","FMax125","FMax130","FMax135","Max125","Max130","Max135"),lfas=LFAs)
 
 
 	LStab1 = data.frame(rbind(
@@ -266,6 +430,65 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 		))
 	names(OStab3) = LFAs
 	write.csv(OStab3,file.path(project.datadirectory("bio.lobster"),"outputs","sim","OStab3.csv"),row.names=F)
+
+
+	Wintab1 = data.frame(rbind(
+		round(100*(simSumWindow[[1]][5,]/simSumWindow[[1]][1,]-1)),
+		round(100*(simSumWindow[[1]][4,]/simSumWindow[[1]][1,]-1)),
+		round(100*(simSumWindow[[1]][3,]/simSumWindow[[1]][1,]-1)),
+		round(100*(simSumWindow[[1]][2,]/simSumWindow[[1]][1,]-1))
+		))
+	names(Wintab1) = LFAs
+	write.csv(Wintab1,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Wintab1.csv"),row.names=F)
+	Wintab2 = data.frame(rbind(
+		round(100*(simSumWindow[[2]][5,]/simSumWindow[[2]][1,]-1)),
+		round(100*(simSumWindow[[2]][4,]/simSumWindow[[2]][1,]-1)),
+		round(100*(simSumWindow[[2]][3,]/simSumWindow[[2]][1,]-1)),
+		round(100*(simSumWindow[[2]][2,]/simSumWindow[[2]][1,]-1))
+		))
+	names(Wintab2) = LFAs
+	write.csv(Wintab2,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Wintab2.csv"),row.names=F)
+	Wintab3 = data.frame(rbind(
+		round(100*(simSumWindow[[3]][5,]/simSumWindow[[3]][1,]-1)),
+		round(100*(simSumWindow[[3]][4,]/simSumWindow[[3]][1,]-1)),
+		round(100*(simSumWindow[[3]][3,]/simSumWindow[[3]][1,]-1)),
+		round(100*(simSumWindow[[3]][2,]/simSumWindow[[3]][1,]-1))
+		))
+	names(Wintab3) = LFAs
+	write.csv(Wintab3,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Wintab3.csv"),row.names=F)
+
+
+
+	Maxtab1 = data.frame(rbind(
+		round(100*(simSumMaxSize[[1]][7,]/simSumMaxSize[[1]][1,]-1)),
+		round(100*(simSumMaxSize[[1]][6,]/simSumMaxSize[[1]][1,]-1)),
+		round(100*(simSumMaxSize[[1]][5,]/simSumMaxSize[[1]][1,]-1)),
+		round(100*(simSumMaxSize[[1]][4,]/simSumMaxSize[[1]][1,]-1)),
+		round(100*(simSumMaxSize[[1]][3,]/simSumMaxSize[[1]][1,]-1)),
+		round(100*(simSumMaxSize[[1]][2,]/simSumMaxSize[[1]][1,]-1))
+		))
+	names(Maxtab1) = LFAs
+	write.csv(Maxtab1,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Maxtab1.csv"),row.names=F)
+	Maxtab2 = data.frame(rbind(
+		round(100*(simSumMaxSize[[2]][7,]/simSumMaxSize[[2]][1,]-1)),
+		round(100*(simSumMaxSize[[2]][6,]/simSumMaxSize[[2]][1,]-1)),
+		round(100*(simSumMaxSize[[2]][5,]/simSumMaxSize[[2]][1,]-1)),
+		round(100*(simSumMaxSize[[2]][4,]/simSumMaxSize[[2]][1,]-1)),
+		round(100*(simSumMaxSize[[2]][3,]/simSumMaxSize[[2]][1,]-1)),
+		round(100*(simSumMaxSize[[2]][2,]/simSumMaxSize[[2]][1,]-1))
+		))
+	names(Maxtab2) = LFAs
+	write.csv(Maxtab2,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Maxtab2.csv"),row.names=F)
+	Maxtab3 = data.frame(rbind(
+		round(100*(simSumMaxSize[[3]][7,]/simSumMaxSize[[3]][1,]-1)),
+		round(100*(simSumMaxSize[[3]][6,]/simSumMaxSize[[3]][1,]-1)),
+		round(100*(simSumMaxSize[[3]][5,]/simSumMaxSize[[3]][1,]-1)),
+		round(100*(simSumMaxSize[[3]][4,]/simSumMaxSize[[3]][1,]-1)),
+		round(100*(simSumMaxSize[[3]][3,]/simSumMaxSize[[3]][1,]-1)),
+		round(100*(simSumMaxSize[[3]][2,]/simSumMaxSize[[3]][1,]-1))
+		))
+	names(Maxtab3) = LFAs
+	write.csv(Maxtab3,file.path(project.datadirectory("bio.lobster"),"outputs","sim","Maxtab3.csv"),row.names=F)
 
 
 	cols=tim.colors(9)

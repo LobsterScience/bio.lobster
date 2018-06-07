@@ -138,6 +138,7 @@ if(save) {
 			  b = b[which(b$PID %in% c(subsetSummerStrata)),]
 				}
 			  b = within(b,{POS <- ave(PID,list(PID),FUN=seq_along)})
+			  attr(b,'projection') <- "LL"
 			  addPolys(b,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
 			 # addLabels(a,cex=0.6)
 			}
@@ -151,7 +152,8 @@ if(save) {
   if(addAmericanStrata) {
 			  require('bio.polygons')
 			   b = importShapefile(find.bio.gis('bts',return.one.match=F))
-			  addPolys(b,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
+			   attr(b,'projection') <- "LL"
+			  addPolys(b,lty=1,border='blue',col=adjustcolor('white',alpha.f=0))
 				}
 
   # 
