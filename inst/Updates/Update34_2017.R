@@ -13,8 +13,6 @@ p=  list()
 p$current.assessment.year=2017
 p$yrs = 1947:p$current.assessment.year
 
-redo.data=T
-
 #lobster map
  LobsterMap(xlim=c(-67.5,-64), ylim=c(42.5,46),mapRes='HR',labcex=1.1)
 
@@ -115,11 +113,14 @@ redo.data=T
 	## ILTS Survey
 	
 
-	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='280 BALLOON')
+	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2016,mths=c("Aug","Jul","Jun"),bin.size=5,Net='280 BALLOON',gear.type='280 BALLOON')
 	#surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
+	#surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,gear.type='280 BALLOON')
 
 	## Plot Survey Index Figure 4
-	plotSurveyIndex(surveyLobsters34,yrs=1996:2016,se=T,graphic="R",index.variable="LobDen")
+	plotSurveyIndex(surveyLobsters34,yrs=1996:2017,se=T,graphic="R",index.variable="LobDen")
+
+	CarapaceLengthFrequencies(LFAs='34',DS='LobsterSurvey', Yrs=2005:2017, Net='280 BALLOON', index.stations = T,pdf=F )
 
 ## Landings
 
