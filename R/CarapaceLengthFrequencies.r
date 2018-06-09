@@ -1,19 +1,18 @@
 
 #' @export
-CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34"),  bins=seq(0,200,5), Yrs=2005:2016, by=NULL, sex=1:3, fn='',gear.type=NULL,Net=NULL,species=2550,index.stations=T,ss=T,vers=1, rootdir=file.path(project.datadirectory('bio.lobster'),'figures'),... ) {
+CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "31A", "31B", "32", "33", "34"),  bins=seq(0,200,5), Yrs=2005:2016, by=NULL, sex=1:3, fn='',gear.type=NULL,Net=NULL,comparative=F,species=2550,index.stations=T,ss=T,vers=1, rootdir=file.path(project.datadirectory('bio.lobster'),'figures'),... ) {
 
     ### Carapace Length Frequencies (CLF)
 
 
         #MLS
         mls<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
-        #mlslfas<-as.numeric(substr(names(mls[-1]),4,5))
+        mlslfas<-as.numeric(substr(names(mls[-1]),4,5))
+        if("31A"%in%LFAs||"31B"%in%LFAs) mlslfas[which(mlslfas==31)]<-c("31A","31B")
+        mls=cbind(mls[mls$Year%in%Yrs,which(mlslfas%in%LFAs)+1])
 
 
-        if(LFAs%in% c('31a','31A','31.1')){ll = 'LFA31a'; mls = mls[,c('Year',ll)] }
-        if(LFAs%in% c('31b','31B','31.2')){ll = 'LFA31b'; mls = mls[,c('Year',ll)] }
         
-          mls=as.numeric(subset(mls,Year %in% Yrs)[,2])
         
   
         if(length(LFAs)==1&&LFAs=='34'){
@@ -23,7 +22,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
                 # Gets Lobster Survey Data
                 #sy = ifelse(gear.type == "Nest",2016,1996)
                 #browser()
-                surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:year(Sys.time()),mths=c("Aug","Jul","Jun"),size.range=range(bins),bin.size=diff(bins)[1], sex=sex, gear.type = gear.type, Net = Net,species = species)
+                surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:year(Sys.time()),mths=c("Aug","Jul","Jun"),size.range=range(bins),bin.size=diff(bins)[1], sex=sex, gear.type = gear.type, Net = Net,comparative=comparative,species = species)
                 #browser()
                 if(index.stations)  surveyLobsters34 = calcIndexStations(surveyLobsters34,n=16, map=F)
                 surveyLobsters34 = subset(surveyLobsters34,YEAR%in%Yrs)
@@ -33,7 +32,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
                 # Construct CLF
                 LobsterSurveyCLF<-t(sapply(Yrs,function(y){colMeans(subset(surveyLobsters34,YEAR==y,paste0("CL",bins[-1])),na.rm=T)}))
                 # plot
-                BarPlotCLF(list(LobsterSurveyCLF),yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFLobSurvLFA34",fn,".pdf")),LS=mls, ...)
+                BarPlotCLF(list(LobsterSurveyCLF),yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFLobSurvLFA34",fn)),LS=mls, ...)
                 return(LobsterSurveyCLF)
             }
 
@@ -54,7 +53,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
                 
                # plot
 
-                BarPlotCLF(ScalSurvey,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFScalSurvLFA34",fn,".pdf")),LS=mls, ...)
+                BarPlotCLF(ScalSurvey,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFScalSurvLFA34",fn)),LS=mls, ...)
                 #BubblePlotCLF(ScalSurvey,inch=0.2,bg=rgb(0,1,0,0.1),yrs=Yrs,bins=bins,filen="ScalSurveyLFA34",prop=T)
                 return(ScalSurvey)
             }
@@ -75,7 +74,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
             names(ScalSurvey) <- paste("LFA",LFAs)
             
             # plot
-            BarPlotCLF(ScalSurvey,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFScalSurv",fn,".pdf")),LS=mls, ...)
+            BarPlotCLF(ScalSurvey,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFScalSurv",fn)),LS=mls, ...)
             #BubblePlotCLF(ScalSurvey,inch=0.2,bg=rgb(0,1,0,0.1),yrs=Yrs,bins=bins,filen="ScalSurveyLFA34",prop=T)
             return(ScalSurvey)
         }
@@ -106,8 +105,8 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
          
 
             # plot
-            if(vers==1)BarPlotCLF(atSeaCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFSeaSampling",fn,".pdf")),LS=mls, sample.size=ss,...)
-            if(vers==2)BarPlotCLF2(atSeaCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFSeaSampling",fn,".pdf")),LS= as.vector(mls), sample.size=ss,...)
+            if(vers==1)BarPlotCLF(atSeaCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFSeaSampling",fn)),LS=mls, sample.size=ss,...)
+            if(vers==2)BarPlotCLF2(atSeaCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFSeaSampling",fn)),LS= as.vector(mls), sample.size=ss,...)
             #BubblePlotCLF(atSeaCLF$CLF,inch=0.2,bg=rgb(0,1,0,0.1),prop=T,bins=bins,filen="SeaSamplingLFA34",yrs=Yrs)
             return(atSeaCLF)
         }
@@ -120,7 +119,7 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
 
             seX<-c("M","F","B")[sex]
             portCLF<-CLF(subset(PS$portlengths,SEX%in%seX,c("SYEAR","LENGTH",by)),yrs=Yrs,bins=bins)
-            BarPlotCLF(portCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFPortSampling",fn,".pdf")),LS=mls,...)
+            BarPlotCLF(portCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFPortSampling",fn)),LS=mls,...)
             #BubblePlotCLF(portCLF$CLF,inch=0.2,bg=rgb(0,1,0,0.1),bins=bins,prop=T,filen="PortSamplingLFA34",yrs=Yrs,LS=82.5)
             return(portCLF)
         }
@@ -144,8 +143,8 @@ CarapaceLengthFrequencies<-function(DS="atSea", LFAs=c("27", "28", "29", "30", "
             # Construct CLF
             fsrsCLF<-CLF(subset(LFdat,SYEAR%in%Yrs&SEX%in%sex&LFA%in%LFAs,c("SYEAR","LENGTH",by)),yrs=Yrs,bins=bins,vers=vers)
             # plot
-            if(vers==1)BarPlotCLF(fsrsCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFfsrs",fn,".pdf")),rel=T,LS=mls,wd=9,...)
-            if(vers==2)BarPlotCLF2(fsrsCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFfsrs",fn,".pdf")),LS= as.vector(mls), sample.size=ss,...)
+            if(vers==1)BarPlotCLF(fsrsCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFfsrs",fn)),rel=T,LS=mls,wd=9,...)
+            if(vers==2)BarPlotCLF2(fsrsCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFfsrs",fn)),LS= as.vector(mls), sample.size=ss,...)
            return(fsrsCLF)
         }
 

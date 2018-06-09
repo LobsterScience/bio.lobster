@@ -10,7 +10,7 @@
 #' @export
 
 
-LobsterSurveyProcess<-function(species = 2550, size.range=c(0,200),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,sex=c(1:3,NA),bin.size=5,LFS=160,Net=NULL){
+LobsterSurveyProcess<-function(species = 2550, size.range=c(0,200),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,sex=c(1:3,NA),bin.size=5,LFS=160,Net=NULL,comparative=F){
   
 	lobster.db("survey")
 	RLibrary("CircStats","PBSmapping","SpatialHub","spatstat")
@@ -129,7 +129,12 @@ LobsterSurveyProcess<-function(species = 2550, size.range=c(0,200),lfa='34',yrs,
 	surveyLobsters$LobDen<-surveyLobsters$LobDenCorrected
 	surveyLobsters$LobDen[is.na(surveyLobsters$LobDenCorrected)]<-surveyLobsters$LobDenNotCorrected[is.na(surveyLobsters$LobDenCorrected)]
 	surveyLobsters$NUM_STANDARDIZED<-surveyLobsters$NUM_CAUGHT/surveyLobsters$DIST_KM
+	if(comparative){
+		comparativeStations = sort(subset(surveyLobsters,YEAR==2016&GEAR=="280 BALLOON")$STATION)
+		surveyLobsters =surveyLobsters[which(!(surveyLobsters$YEAR==2016&!surveyLobsters$STATION%in%comparativeStations)),]
+	}
 	if(!is.null(Net)) surveyLobsters =surveyLobsters[which(!(surveyLobsters$YEAR==2016&surveyLobsters$GEAR!=Net)),]
+
 	## berried females
 	#with(subset(surveyMeasurements,SEX==3),tapply(SEX,SET_ID,length))->bfs
 	#with(subset(surveyMeasurements,SEX==2),tapply(SEX,SET_ID,length))->fs
