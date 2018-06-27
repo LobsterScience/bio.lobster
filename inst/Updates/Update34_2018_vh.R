@@ -49,14 +49,15 @@ redo.data=T
 # Plot Landings (1892-present) Figure 2
 		png(file.path( project.figuredirectory("bio.lobster"), "LFA34Landings2017.png"),units='in',width=15,height=12,pointsize=24, res=300,type='cairo')
 
-		
-			with(Annual34[which(Annual34$YR<p$current.assessment.year),],plot(YR,LFA34,xlab='Year',ylab='Landings (t)',type='n',lwd=4, ylim=c(2000,max(c(Seasonal34$LFA34,Annual34$LFA34))),xaxt='n'))
-			with(Annual34[which(Annual34$YR %in% 1880:1975),],lines(YR,LFA34,xlab='Year',ylab='Landings (t)',type='h',lwd=10,col='grey'))
-			with(Seasonal34[which(Seasonal34$YR<p$current.assessment.year),],lines(YR,LFA34,type='h',lwd=10,col='black'))
-			lines(1976:2017,Rmed,col='green',lwd=3,lty=2)
+		par(mar=c(3,5,2,2))
+			with(Annual34[which(Annual34$YR<p$current.assessment.year),],plot(YR,LFA34, las=1,ylab=' ',type='n',lwd=4, ylim=c(2000,max(c(Seasonal34$LFA34,Annual34$LFA34))),xaxt='n'))
+			mtext("Landings (t)", 2,3.5)
+			with(Annual34[which(Annual34$YR %in% 1880:1975),],lines(YR,LFA34,xlab='Year',ylab='Landings (t)',type='h',lwd=10,col='black'))
+			with(Seasonal34[which(Seasonal34$YR<p$current.assessment.year),],lines(YR,LFA34,type='h',lwd=10,col='grey'))
+			lines(1976:2017,Rmed,col='green',lwd=4,lty=2)
 			axis(side=1,at=round(seq(min(Annual34$YR),p$current.assessment.year-1,length.out=7),0))
-			abline(h=USR,col='blue',lwd=2)
-			with(Rm, lines(YR, Run.Mean, col='red',lwd=4,lty=3))
+			abline(h=USR,col='blue',lwd=4)
+			with(Rm, lines(YR, Run.Mean, col='red',lwd=5,lty=3))
 
 			#legend('topleft',lwd=3,col=c('grey','black','blue','red','green'),c('Annual','Seasonal','Upper Stock Reference','3-year Running Mean','3-year Running Median'),bty='n',cex=0.8,lty=c(1,1,1,3,2))
 			
