@@ -1,5 +1,5 @@
 #' @export
-BarPlotCLF<-function(CLF,yrs=2005:2016,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF.pdf',rows=length(yrs),pdf=T,xl,rel=T,mean.line=F,ylp=0.1,ymax,LS=82.5,sample.size=NULL,recline=NULL,wd=10,ht=12,bx=F,xlab="Carapace Length (mm)",ylab="Mean N / standard tow",...){
+BarPlotCLF<-function(CLF,yrs=2005:2016,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF',rows=length(yrs),graphic='pdf',xl,rel=T,mean.line=F,ylp=0.1,ymax,LS=82.5,sample.size=NULL,recline=NULL,wd=10,ht=12,bx=F,xlab="Carapace Length (mm)",ylab=expression(paste("Mean N / ", km^2)),...){
     
     mids<-bins[-1]-diff(bins)/2
     
@@ -9,7 +9,10 @@ BarPlotCLF<-function(CLF,yrs=2005:2016,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF.p
         if(ncol(LS)==1)LS=matrix(LS,length(yrs),length(CLF))
     }
 
-    if(pdf) pdf(filen, width = wd, height = ht)
+    if(graphic=='pdf') pdf(paste0(filen,".pdf"), width = wd, height = ht)
+    if(graphic=='png') png(paste0(filen,".png"), width = wd, height = ht,units='in',pointsize=12, res=300,type='cairo')
+    print(filen)
+    if(graphic=='R') x11(width = wd, height = ht)
     par(mfcol=c(rows,ceiling(length(yrs)/rows)), mar = c(0,2,0,0.5), omi = c(0.85, 0.75, 0.75, 0.5))
     
     for(i in 1:length(CLF)){
@@ -55,6 +58,6 @@ BarPlotCLF<-function(CLF,yrs=2005:2016,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF.p
         if(bx)box()
 
     }
-if(pdf)dev.off()    
+    if(graphic!='R')dev.off()    
 }
 

@@ -9,6 +9,7 @@
 
 getIncr = function(p){
 
+    require(rstanarm)
 	res = matrix(NA,length(p$lens),length(p$lens))
 
 	for(i in 1:(length(p$lens)-1)){
