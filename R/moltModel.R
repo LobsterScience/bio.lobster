@@ -5,6 +5,8 @@ moltModel = function(p,redo.dd=T){
 	tagging.data = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'))
 	tagging.data$TagDate = as.Date(tagging.data$TagDate)
 	tagging.data$CapDate = as.Date(tagging.data$CapDate)
+	tagging.data$TagQ = quarter(tagging.data$TagDate)
+	tagging.data$CapQ = quarter(tagging.data$CapDate)
 	
 	if(redo.dd){
 
