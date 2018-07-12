@@ -187,6 +187,9 @@ if(save) {
 			}
 			else {
 				addPolys(LFAgrid,border=rgb(0,0,0,0.2),col=NULL)
+				LFAgrid$label<-LFAgrid$SID
+	        	grids.dat<-merge(calcCentroid(LFAgrid),LFAgrid[c("PID","SID","label")])
+
 			}
 		}
 			#browser()
