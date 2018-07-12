@@ -69,7 +69,7 @@ dev.off()
 
 		# plot Map
 		#pdf(file.path( project.datadirectory("lobster"), "R","Distribution.pdf"),8,11)
-		png(file.path( project.datadirectory("lobster"), "R","Distribution.png"),800,1100)
+		png(file.path( project.datadirectory("lobster"), "R","Distribution2017.png"),800,1100)
 		LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.15,-65.2),mapRes="UR",contours=cont.lst,title="LFA 34 Lobster Density",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
 		points(SET_LAT~SET_LONG,surveyLobsters34,subset=YEAR==2017,pch=21,cex=0.5,bg='red')#,col=rgb(0,0,0,0.5))
 		contLegend("topright",lvls=lvls,Cont.data=cont.lst$Cont.data,title="#/standard tow",inset=0.02,cex=0.8,bg='white')

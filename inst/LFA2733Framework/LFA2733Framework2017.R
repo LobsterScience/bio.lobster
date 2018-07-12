@@ -8,6 +8,7 @@
     p$yrs = p$syr:p$current.assessment.year
 
     figdir = file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018")
+    datadir = file.path(project.datadirectory("bio.lobster"),"data","products","LFA2733Framework2018")
 
     p$lfas = c("27", "28", "29", "30", "31A", "31B", "32", "33") # specify lfas for data summary
   
@@ -226,8 +227,11 @@ logsInSeason=lobster.db("process.logs")
 
 	save(list=c("cpueModel","cpueData"),file=file.path(project.datadirectory("bio.lobster"),"outputs","cpueIndicators.rdata"))
 	save(cpueData2,file=file.path(project.datadirectory("bio.lobster"),"outputs","cpueIndicators2.rdata"))
+	load(file.path(project.datadirectory("bio.lobster"),"outputs","cpueIndicators.rdata"))
 	#write.csv(cpueLFA.dat$annual.data,"CPUEannualData.csv",row.names=F)
 	#write.csv(na.omit(cpueLFA.dat$daily.data),"CPUEdailyData.csv",row.names=F)
+	write.csv(cpueModel,  file.path(datadir,'figure102model.csv'))
+	write.csv(cpueData,  file.path(datadir,'figure102data.csv'))
 
 
 	## FSRS MOdels
@@ -516,6 +520,10 @@ logsInSeason=lobster.db("process.logs")
 	recruitLFA = do.call("rbind",recruitLFA.lst)
 
  	save(list=c("shortsLFA","legalsLFA","recruitLFA"),file=file.path(project.datadirectory("bio.lobster"),"outputs","fsrsModelIndicators.rdata"))
+ 	load(file=file.path(project.datadirectory("bio.lobster"),"outputs","fsrsModelIndicators.rdata"))
+	write.csv(shortsLFA,  file.path(datadir,'figure104.csv'))
+	write.csv(legalsLFA,  file.path(datadir,'figure105.csv'))
+	write.csv(recruitLFA,  file.path(datadir,'figure106.csv'))
 
 	pdf(file.path( figdir,"FSRSmodelBayesLFAShorts.pdf"),8, 2.5)
 

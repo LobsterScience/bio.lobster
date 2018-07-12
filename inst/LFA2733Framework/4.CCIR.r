@@ -1,7 +1,9 @@
 #9. CCIR.r
 
 require(bio.lobster)
-load_all('~/git/bio.ccir')
+#load_all('~/bio/bio.ccir')
+require(bio.ccir)
+
 require(bio.utilities)
 require(car)
 require(rstan)
@@ -43,7 +45,7 @@ if(redo.models) {
 									attr(out.logit.binomial,'model') <- 'logit.binomial'
 					out.logit.binomial.cov = list()
 									attr(out.logit.binomial.cov,'model') <- 'logit.binomial.cov'
-					mm = c('binomial'),'binomial.fishery.land')
+					mm = c('binomial')#,'binomial.fishery.land')
 
 for(i in 1:length(dat)) {
 print(i)

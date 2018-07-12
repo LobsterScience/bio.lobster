@@ -152,6 +152,7 @@ FSRSModelData = function(trap.type='recruitment',TempModelling){
 		grids.dat = with(FSRSvesday,data.frame(VES_DATE=VES_DATE,y=decimal_date(SDATE),subarea=subarea,X=X,Y=Y))
 		grids.dat$subarea[grids.dat$subarea==33] <- "33W"
 
+browser()
 
 			p = spatial_parameters( type = "canada.east" ) 
 			grids.dat = lonlat2planar(grids.dat, input_names=c("X", "Y"),proj.type = p$internal.projection)
