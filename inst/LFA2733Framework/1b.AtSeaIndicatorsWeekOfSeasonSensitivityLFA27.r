@@ -121,6 +121,8 @@ if(sensitivity.to.seasonality){
 
 a = do.call(rbind,oAll)
 h = do.call(rbind,outSall)
+save(a,file=file.path(project.datadirectory('bio.lobster'),'outputs','sensitivity.expl.to.seasonality.LFA27.rdata'))
+save(h,file=file.path(project.datadirectory('bio.lobster'),'outputs','sensitivity.to.seasonality.LFA27.rdata'))
 #by weeks boxplot
 
 

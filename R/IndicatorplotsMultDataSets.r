@@ -90,7 +90,11 @@ IndicatorplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL,indicato
 						if(indicator=='Median.Size') yr[1] = 65
 						if(indicator=='Maximum.Size') yr[1] = 80
 					
-		
+		mls = read.csv(file=file.path(project.datadirectory('bio.lobster'),'data','inputs','MLS.Changes.all.LFA.csv'))
+			mp = subset(mls,LFA==i & Year %in% c(xr[1]: xr[2]))
+			
+			if(indicator == 'Proportion.Mature'){	secondary.axis=T }
+
 				if(secondary.axis) par(mar=c(4,5,2,5))
 			if(all(!is.finite(xr))) next()				
 				plot(1,1,type='n',xlab='Year',ylab = indicator,main=paste('LFA',i),xlim=xr,ylim=yr)
@@ -101,8 +105,14 @@ IndicatorplotsMultDataSets <- function(atSea=NULL, port=NULL, fsrs=NULL,indicato
 				if(indicator %ni% c('Median.Size','Maximum.Size') & !is.null(fsrs.rec)) {
 					if(nrow(v)>0) with(v,lines(Year,Indi,lty=4,col='orange',lwd=2,pch=16,type='b'))
 				}
+			if(indicator == 'Proportion.Mature') {
+					par(new=T)
+					ylimss = c(69, 90)
+					with(mp,plot(Year,MLS_MM, type='l', lty=3,xaxt='n',xlab='',yaxt='n',ylab='',col='green',ylim = ylimss,lwd=2))
+							axis(side=4,at=c(70,75,80,85,90),srt=90)
+							mtext(side=4,'Minimum Legal Size',line=3,col='black')
+					}
 			
-
 				if(!secondary.axis & indicator %in% c('Median.Size','Maximum.Size') & c(!is.null(fsrs) | !is.null(fsrs.rec))) {
 					if(c(nrow(r)>0 | nrow(v)>0)) {
 					

@@ -196,6 +196,7 @@ x = IndicatorplotsMultDataSets(atSea=aS, port=pS,  indicator = 'Proportion.Matur
 				axis(side=1,at=c(1,2),labels=c('At-Sea','Port'))
 				savePlot(file.path(project.figuredirectory('bio.lobster'),'AtSeaIndictors','MethodMated.png'),type='png')
 
+		
 				db1 = subset(y,LFA %in% c(27,28,29,30))
 				if(sset) ats = c(1,2,4,5,7,8)
 				if(!sset) ats = c(1,2,4,5,7,8,10,11)

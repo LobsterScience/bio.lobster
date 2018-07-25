@@ -26,7 +26,7 @@ la()
 	g = subset(g,YR>=1980)
 		
 	ad = c(27,28,29,30,'31A','31B',32,33)
-	
+	oo = list()
 	for(i in 1:length(ad)) {
 			print(ad[i])
 				po = ad[i]
@@ -40,10 +40,21 @@ la()
 				if(po == 33) 	{ lp = p[,c('SYEAR',names(p)[grep(po,names(p))])]; lp = rename.df(lp,'SYEAR','YR'); lp$YR = as.numeric(substr(lp$YR,6,9)); lp = subset(lp,YR>=1980)}
 				op = list()
 				op[[1]] = subset(aS,LFA == ad[i],select=c(YEAR,N))
+				if(nrow(op[[1]])>0) {op[[1]]$ID = 'atSea'; op[[1]]$LFA <- ad[i]}
 				op[[2]] = subset(pS,LFA == ad[i],select=c(YEAR,N))
-				if(ad[i] == 33) op[[3]] = subset(fS,LFA == ad[i],select=c(YEAR,N))
-
-				LandAbundPlot(land = lp,abund = op,lfa = ad[i])
+				if(nrow(op[[2]])>0) {op[[2]]$ID = 'port'; op[[2]]$LFA <- ad[i]}
+				if(ad[i] == 33) {op[[3]] = subset(fS,LFA == ad[i],select=c(YEAR,N)); op[[3]]$ID <- 'FSRScomm' ; op[[3]]$LFA <- ad[i]}
+				
+				aj = do.call(rbind,op)
+				aj$Units = 'Nx10E6'
+				ap = lp
+				names(ap) = c('YEAR','N')
+				ap$ID = 'Landings'
+				ap$LFA = ad[i]
+				ap$Units = 'Tons'
+				oo[[i]] = as.data.frame(rbind(aj,ap))
+			
+			#	LandAbundPlot(land = lp,abund = op,lfa = ad[i])
 			}
 
 

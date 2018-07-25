@@ -220,20 +220,27 @@ if(DS %in% c('season.dates','season.dates.redo')) {
               #          for(j  in 1:nrow(dd)){
               #                      d2 = subset(a,LFA == dd[j,'LFA'] & SYEAR==dd[j,'SYEAR'])
               #                      x = d2$mns
-              #                      i = ave(x, FUN = function(x) cumsum(x >= 30 & with(rle(x >= 30), rep(lengths, lengths)) >= 3)) 
+              #  i1=15
+              #      if(dd[j,'LFA'] %in% c(28:30)) i1 = 3
+
+              #                      i = ave(x, FUN = function(x) cumsum(x >= i1 & with(rle(x >= i1), rep(lengths, lengths)) >= 3)) 
               #                      ii = c(which(i>0)[1],which.max(i))
               #                      outs[[j]] = cbind(d2[ii[1],],d2[ii[2],'SDATE'])
               #                      }
               #    at = as.data.frame(do.call(rbind,outs))
               #    names(at) = c('SYEAR','LFA','START_DATE','nn','END_DATE')
               #    at$nn = NULL
+              #    season.dates=at
+              #         save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
 
-
+                    Fish.Date = lobster.db('season.dates')
+                    season.dates = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
+              
 
 
 
                   #season.dates = sqlQuery(con,'select * from LOBSTER.FISHING_SEASONS')
-                  #save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
+                  save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
             }
 
 
@@ -609,6 +616,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
              aS = atSea
              aS = addSYEAR(aS)
              ih = which(is.na(aS$SYEAR))
+             aS$SDATE = aS$STARTDATE
 
              aS$GRIDNO[which(aS$GRIDNO== -99)] <- NA
             LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
@@ -641,6 +649,8 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                             for(i in 1:length(lfa)) {
                                   h  = season.dates[season.dates$LFA==lfa[i],]  
                                   k = na.omit(unique(aS$SYEAR[aS$LFA==lfa[i]]))
+                                  h = na.omit(h)
+                                  k = intersect(k,h$SYEAR)
                                for(j in k){
                                    aS$WOS[aS$LFA==lfa[i] & aS$SYEAR==j] = floor(as.numeric(aS$SDATE[aS$LFA==lfa[i] & aS$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
