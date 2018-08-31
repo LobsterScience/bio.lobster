@@ -1,5 +1,5 @@
 #' @export
-ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex=0:3){
+ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex=0:3,convert2nest=F){
 	
 	require(lubridate)
 
@@ -28,6 +28,12 @@ ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex
 	ScalSurvLob.dat$lon<-convert.dd.dddd(ScalSurvLob.dat$START_LONG)
 	ScalSurvLob.dat$lat<-convert.dd.dddd(ScalSurvLob.dat$START_LAT)
 
+	if(convert2nest == T){
+		x = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data',"survey","RhoLobScal.rds"))
+		NetConv = with(x,data.frame(MEAS_VAL=length,LobSurvCF=rho))
+		ScalSurvLob.dat = merge(ScalSurvLob.dat,NetConv,all=T)
+		ScalSurvLob.dat$NLobs = ScalSurvLob.dat$NLobs * ScalSurvLob.dat$LobSurvCF
+	} 
 
 	tmp<-with(ScalSurvLob.dat,tapply(NLobs,TOW_SEQ,sum))
 	d1<-subset(ScalSurvLob.dat,!duplicated(TOW_SEQ),c('TOW_SEQ','YEAR','TOW_DATE','MGT_AREA_ID','AREA_SWEPT','lon','lat'))
@@ -40,7 +46,8 @@ ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex
 
 	CLF<-data.frame(TOW_SEQ=sets,t(sapply(sets,function(s){with(subset(ScalSurvLob.dat,TOW_SEQ==s&MEAS_VAL>=min(bins)&MEAS_VAL<max(bins)),hist(MEAS_VAL,breaks=bins,plot=F)$count)})))
 	names(CLF)[-1]<-paste0("CL",bins[-1])
-	
+	#if(convert2nest == T){
+
 	ScalSurvLob<-merge(ScalSurvLob,CLF,all=T)
 
 	# standardized to 4000 m^2
