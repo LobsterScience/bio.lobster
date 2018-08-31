@@ -2,8 +2,14 @@ require(bio.lobster)
 require(bio.utilities)
 require(gamlss)
 options(stringsAsFactors=F)
-load(file.path(project.datadirectory('bio.lobster'),'data','survey','ComparativeSurvey1MMTmens.rdata'))
-	ComparativeSurvey = readRDS(file=file.path(project.datadirectory('bio.lobster'),"outputs","comarativeSurvey2.rds"))
+
+	#surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Jul","Jun"),bin.size=1)
+ 	#comparativeStations = sort(subset(surveyLobsters34,YEAR==2016&GEAR=="280 BALLOON")$STATION)
+	#ComparativeSurvey = subset(surveyLobsters34,YEAR==2016&STATION%in%comparativeStations)
+	#saveRDS(ComparativeSurvey,file=file.path(project.datadirectory('bio.lobster'),"outputs","comparativeSurvey2.rds"))
+	
+
+ComparativeSurvey = readRDS(file=file.path(project.datadirectory('bio.lobster'),"outputs","comparativeSurvey2.rds"))
 
 i = ComparativeSurvey$STATION[which(ComparativeSurvey$AREA_SWEPT<0.005)]
 ComparativeSurvey = subset(ComparativeSurvey,!STATION %in% i)

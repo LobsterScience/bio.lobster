@@ -24,7 +24,7 @@
 #' LobsterMap('all',poly.lst=catchgrids[1:2],title="2007 Lobster Catch")
 #' ContLegend("bottomright",lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (t)",inset=0.02,cex=0.8,bg='white')
 #' @export
-LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, output = 'bio.lobster',fname = 'one.pdf',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,...){
+LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, fname = 'LobsterMap',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,...){
 
 options(stringsAsFactors=F)		
 	require(PBSmapping)|| stop("Install PBSmapping Package")
@@ -64,9 +64,8 @@ options(stringsAsFactors=F)
 
 
 if(save) {
-	print('only pdf and png are setup to save')
-	if(grepl('pdf',fname)) pdf(file.path(project.figuredirectory(output),fname), width=6.5, height=5)
-	if(grepl('png',fname)) png(file.path(project.figuredirectory(output),fname), width=3072, height=2304, pointsize=40, res=300)
+	print('pdf and png saved')
+	pdf(file.path(project.figuredirectory("bio.lobster"),paste0(fname,'.pdf')), width=6.5, height=5)
 	}
 	#par(...)
 	plotMap(coast,xlim=xlim,ylim=ylim,border=NA,...)
@@ -280,7 +279,7 @@ if(save) {
 	title(main=title)
 if(save){
 	dev.off()
-	print('saved')
+	pdf2png(file.path(project.figuredirectory("bio.lobster"),fname))
 	
 }	
 

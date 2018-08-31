@@ -1,5 +1,5 @@
 #' @export
-ScallopSurveyProcess<-function(size.range=c(0,220),SPA,Yrs,bin.size=5,log=F,sex=0:3){
+ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex=0:3){
 	
 	require(lubridate)
 
@@ -10,7 +10,7 @@ ScallopSurveyProcess<-function(size.range=c(0,220),SPA,Yrs,bin.size=5,log=F,sex=
 	# calculate area swept for bycatch
 	scallop.tows$GEAR_WIDTH_BYCATCH<-with(scallop.tows,DRAG_WIDTH*(NUM_LINED+NUM_UNLINED)*0.3048)
 	scallop.tows$GEAR_WIDTH_BYCATCH[scallop.tows$MGT_AREA_ID=='29']<-18*0.3048
-	scallop.tows$AREA_SWEPT<-with(scallop.tows,GEAR_WIDTH_BYCATCH*TOW_LEN)
+	scallop.tows$AREA_SWEPT<-with(scallop.tows,GEAR_WIDTH_BYCATCH*TOW_LEN)/10^6
 
 	# select for lobsters
 	lobster.catch<-subset(scallop.catch,SPECCD_ID==2550&SEX_ID%in%sex,c(2,5:8))
@@ -44,9 +44,9 @@ ScallopSurveyProcess<-function(size.range=c(0,220),SPA,Yrs,bin.size=5,log=F,sex=
 	ScalSurvLob<-merge(ScalSurvLob,CLF,all=T)
 
 	# standardized to 4000 m^2
-	ScalSurvLob$NLobsStd<-ScalSurvLob$NLobs/ScalSurvLob$AREA_SWEPT*4000
-	ScalSurvLob$LobDen<-ScalSurvLob$NLobs/ScalSurvLob$AREA_SWEPT*10^6
-	ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])]<-sweep(ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])],1,FUN="/", ScalSurvLob$AREA_SWEPT/4000)
+	#ScalSurvLob$NLobsStd<-ScalSurvLob$NLobs/ScalSurvLob$AREA_SWEPT*4000
+	ScalSurvLob$LobDen<-ScalSurvLob$NLobs/ScalSurvLob$AREA_SWEPT
+	ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])]<-sweep(ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])],1,FUN="/", ScalSurvLob$AREA_SWEPT)
 
     # add LFA column
     events <- with(ScalSurvLob,data.frame(EID=TOW_SEQ,X=lon,Y=lat))
