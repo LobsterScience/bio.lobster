@@ -25,9 +25,9 @@ calcAreaSwept = function(sensors="Marport",GearSpreadRange=list("NEST"=c(5,15),"
 		for(i in 1:length(tows)){
 
 
-			plot(lat~lon,subset(ILTS2016Tracks,TOW==tows[i]),pch='.',main=tows[i],asp=aspr)
+			plot(lat~lon,subset(ILTS2016Tracks,TOW==tows[i]),type='l',main=tows[i],asp=aspr)
 			smoothline = loess(lat~lon,subset(ILTS2016Tracks,TOW==tows[i]))
-			with(smoothline,lines(x,fitted,col='red'))
+			with(smoothline,lines(x,fitted,col=rgb(1,0,0,0.7)))
 			line = data.frame(PID=1,POS=1:length(smoothline$x),X=smoothline$x,Y=smoothline$fitted)
 			names(line)
 			X = seq(smoothline$x[1],smoothline$x[length(smoothline$x)],l=100)

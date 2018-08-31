@@ -35,6 +35,15 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	if(species == 2550){
 		NLM = with(surveyMeasurements,tapply(SET_ID,SET_ID,length))
 		MEAN_LENGTH = with(surveyMeasurements,tapply(FISH_LENGTH,SET_ID,mean,na.rm=T))
+
+		#shell
+		SOFT_SHELL =  with(subset(surveyMeasurements,SHELL<5),tapply(SHELL,SET_ID,length))
+		HARD_SHELL =  with(subset(surveyMeasurements,SHELL>4),tapply(SHELL,SET_ID,length))
+		shell = merge(data.frame(SET_ID=names(SOFT_SHELL),SOFT_SHELL=SOFT_SHELL),data.frame(SET_ID=names(HARD_SHELL),HARD_SHELL=HARD_SHELL),by='SET_ID',all=T)
+		shell[is.na(shell)]=0
+		shell$pSOFT = shell$SOFT_SHELL / (shell$SOFT_SHELL + shell$HARD_SHELL)
+		surveyLobsters = merge(surveyLobsters,shell[,c("SET_ID","pSOFT")],by='SET_ID',all=T)
+
 	}
 	else {
 		NLM = with(subset(fishMeasurements,SPECCD_ID%in%species),tapply(NUM_AT_LENGTH,paste0(TRIP_ID,SET_NO),sum))

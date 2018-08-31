@@ -127,7 +127,7 @@ FSRScpue.dat = read.csv(file.path( project.datadirectory("bio.lobster"), "data",
 		SCALSURV3.dat = ScallopSurveyProcess(SPA="3",Years=Yrs,size.range=range(bins),bin.size=diff(bins)[1])
 		SCALSURV29.dat = ScallopSurveyProcess(SPA="29",Years=Yrs,size.range=range(bins),bin.size=diff(bins)[1])
 		ScalSurvey$ScallopSurvey3 = t(sapply(Yrs,function(y){colMeans(subset(SCALSURV3.dat,YEAR==y,paste0("CL",bins[-length(bins)])),na.rm=T)}))
-		ScalSurvey$ScallopSudata.frame(PID=1,POS=1:nrow(x),X=x$SET_LONG,Y=x$SET_LAT)rvey29 = t(sapply(Yrs,function(y){colMeans(subset(SCALSURV29.dat,YEAR==y,paste0("CL",bins[-length(bins)])),na.rm=T)}))
+		ScalSurvey$ScallopSurvey29 = t(sapply(Yrs,function(y){colMeans(subset(SCALSURV29.dat,YEAR==y,paste0("CL",bins[-length(bins)])),na.rm=T)}))
 		BubblePlotCLF(ScalSurvey,inch=0.2,bg=rgb(0,1,0,0.1),yrs=Yrs,bins=bins,filen="ScalSurveyLFA34",prop=T)
 		BarPlotCLF(ScalSurvey,yrs=Yrs,bins=bins,col='grey',filen="ScalSurveyLFA34",rel=T)
 		

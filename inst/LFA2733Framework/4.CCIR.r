@@ -155,7 +155,7 @@ outs = list()
 #	iu = c(grep('LFA 27',outs),grep('LFA 33',outs))
 #	outs = outs[-c(iu)]
 	o = do.call(rbind,outs)
-	ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,LFA,ERf75))
+	ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,LFA))
 #remove lfa 33 and 27 as treated as one
 
 #Split LFAs combined for one exploitation rate

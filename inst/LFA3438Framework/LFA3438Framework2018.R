@@ -7,66 +7,254 @@
     p$syr = 2005
     p$yrs = p$syr:p$current.assessment.year
 
-    figdir = file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018")
-    datadir = file.path(project.datadirectory("bio.lobster"),"data","products","LFA2733Framework2018")
+    figdir = file.path(project.datadirectory("bio.lobster"),"figures","LFA3438Framework2018")
 
-    p$lfas = c("27", "28", "29", "30", "31A", "31B", "32", "33") # specify lfas for data summary
+    p$lfas = c("34", "35", "36", "38") # specify lfas for data summary
   
-    p$subareas = c("27N","27S", "28", "29", "30", "31A", "31B", "32", "33E", "33W") # specify lfas for data summary
+
+### LobsterSurvey
+
+
+	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,gear.type='NEST')
+
+
+	CarapaceLengthFrequencies(LFAs='34',DS='LobsterSurvey', Yrs=2016, gear.type='NEST', index.stations = F,graphic="png" ,rel=F,wd=8,ht=5,ymax=1600,fn="NEST",comparative=T)
+	CarapaceLengthFrequencies(LFAs='34',DS='LobsterSurvey', Yrs=2016, gear.type='280 BALLOON', index.stations = F,graphic="png" ,rel=F,wd=8,ht=5,ymax=1600,fn="BALLOON")
+
+
+	CarapaceLengthFrequencies(LFAs='34',DS='LobsterSurvey', Yrs=2005:2017, Net='280 BALLOON', index.stations = T,graphic="R" )
+	CarapaceLengthFrequencies(LFAs='34',DS='LobsterSurvey', Yrs=2017, gear.type='NEST', Net='NEST', index.stations = F,graphic="R",fn="ILTS2017",wd=8,ht=8,rel=F )
+
+
+	## Plot Distribution
+
+		# interpolate abundance
+		interp.data<-na.omit(subset(surveyLobsters34,YEAR==2017,c('SET_ID','SET_LONG','SET_LAT','LobDen')))
+		lob.contours<-interpolation(interp.data,ticks='define',place=3,nstrata=5,str.min=0,interp.method='gstat',blank=T,res=0.005,smooth=F,idp=3.5,blank.dist=0.2)
+
+		# define contour lines
+		print(lob.contours$str.def)
+		lvls=c(1, 50, 100, 500, 1000, 5000, 10000)
+
+		# generate contour lines
+		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+
+		cont.lst<-contourGen(lob.contours$image.dat,lvls,subset(LFAs,PID==34),col="YlGn",colorAdj=1)
+
+		# plot Map
+		pdf(file.path( project.datadirectory("bio.lobster"), "figures","Distribution2017.pdf"),8,11)
+		#png(file.path( project.datadirectory("bio.lobster"), "figures","Distribution2017.png"),8,11,units='in',pointsize=12, res=300,type='cairo')
+		LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.15,-65.2),mapRes="UR",contours=cont.lst,title="LFA 34 Lobster Density",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
+		points(SET_LAT~SET_LONG,surveyLobsters34,subset=YEAR==2017,pch=21,cex=0.5,bg='red')#,col=rgb(0,0,0,0.5))
+		contLegend("topright",lvls=lvls,Cont.data=cont.lst$Cont.data,title="#/square km",inset=0.02,cex=0.8,bg='white')
+		dev.off()
+
+
+	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,gear.type='NEST')
+	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
+		plotSurveyIndex(surveyLobsters34,yrs=2005:2017,se=T,graphic="R",index.variable="LobDen")
+
+	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),size.range=c(85,210),bin.size=2.5,Net='NEST')
+		plotSurveyIndex(surveyLobsters34,yrs=2005:2017,se=T,graphic="R",index.variable="LobDen")
+
+	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),size.range=c(77.5,82.5),bin.size=2.5,Net='NEST')
+		plotSurveyIndex(surveyLobsters34,yrs=2005:2017,se=T,graphic="R",index.variable="LobDen")
+
+	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
+
+	surveyLobsters34 = LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
+	surveyLobsters34m = LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST',sex=1)
+	surveyLobsters34f = LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST',sex=2)
+	surveyLobsters34b = LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST',sex=3)
+	
+	data = subset(surveyLobsters34,YEAR==2017,c("SET_LONG","SET_LAT","LobDen","MEAN_LENGTH"))
+	datam = subset(surveyLobsters34m,YEAR==2017,c("SET_LONG","SET_LAT","LobDen","MEAN_LENGTH"))
+	dataf = subset(surveyLobsters34f,YEAR==2017,c("SET_LONG","SET_LAT","LobDen","MEAN_LENGTH"))
+	datab = subset(surveyLobsters34b,YEAR==2017,c("SET_LONG","SET_LAT","LobDen","MEAN_LENGTH"))
+	names(data) = c("x","y","den","ml")
+	data$denm = datam$LobDen
+	data$denf = dataf$LobDen
+	data$denb = datab$LobDen
+	
+	zeros = subset(data,den==0)
+	data = subset(data,den>0)
+	
+	# map
+	LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.25,-65.2),mapRes="UR",title="LFA 34 Lobster Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
+	points(y~x,zeros,pch=4)
+	surveyBubbles(data,scaler=0.1,pie=T)
+
+	LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.25,-65.2),mapRes="UR",title="LFA 34 Lobster Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
+	surveyLobsters34index = calcIndexStations(surveyLobsters34)
+	surveyLobsters34index$X = surveyLobsters34index$SET_LONG
+	surveyLobsters34index$Y = surveyLobsters34index$SET_LAT
+	surveyHistMap(surveyLobsters34index)
+
+### ScallopSurvey
+
+
+	CarapaceLengthFrequencies(LFAs='34',DS='ScallopSurvey', Yrs=2005:2017,graphic="R" )
+
+
+	scalSurv<-ScallopSurveyProcess()
+	scalSurvm<-ScallopSurveyProcess(sex=1)
+	scalSurvf<-ScallopSurveyProcess(sex=2)
+	scalSurvb<-ScallopSurveyProcess(sex=3)
+
+
+	data = subset(scalSurv,YEAR==2017&LFA==34,c("lon","lat","LobDen"))
+	datam = subset(scalSurvm,YEAR==2017&LFA==34,c("lon","lat","LobDen"))
+	dataf = subset(scalSurvf,YEAR==2017&LFA==34,c("lon","lat","LobDen"))
+	datab = subset(scalSurvb,YEAR==2017&LFA==34,c("lon","lat","LobDen"))
+	names(data) = c("x","y","den")
+	data$denm = datam$LobDen
+	data$denf = dataf$LobDen
+	data$denb = datab$LobDen
+	
+	zeros = subset(data,den==0)
+	data = subset(data,den>0)
+	
+	# map
+	LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.25,-65.2),mapRes="UR",title="LFA 34 Scallop Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
+	points(y~x,zeros,pch=4)
+	surveyBubbles(data,scaler=0.1,pie=T)
+
+
+
+	data = subset(scalSurv,YEAR==2017&LFA==35,c("lon","lat","LobDen"))
+	datam = subset(scalSurvm,YEAR==2017&LFA==35,c("lon","lat","LobDen"))
+	dataf = subset(scalSurvf,YEAR==2017&LFA==35,c("lon","lat","LobDen"))
+	datab = subset(scalSurvb,YEAR==2017&LFA==35,c("lon","lat","LobDen"))
+	names(data) = c("x","y","den")
+	data$denm = datam$LobDen
+	data$denf = dataf$LobDen
+	data$denb = datab$LobDen
+	
+	zeros = subset(data,den==0)
+	data = subset(data,den>0)
+	
+	# map
+	LobsterMap("35",mapRes="UR",title="LFA 35 Scallop Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
+	points(y~x,zeros,pch=4)
+	surveyBubbles(data,scaler=0.1,pie=T)
+
+
+
+
+		# interpolate abundance
+		interp.data<-na.omit(subset(scalSurv,YEAR==2017&LFA==34,c("TOW_SEQ","lon","lat","LobDen")))
+		lob.contours<-interpolation(interp.data,ticks='define',place=3,nstrata=5,str.min=0,interp.method='gstat',blank=T,res=0.005,smooth=F,idp=3.5,blank.dist=0.2)
+
+		# define contour lines
+		print(lob.contours$str.def)
+		lvls=c(1, 50, 100, 500, 1000, 5000, 10000)
+
+		# generate contour lines
+		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+
+		cont.lst<-contourGen(lob.contours$image.dat,lvls,subset(LFAs,PID==34),col="YlGn",colorAdj=1)
+
+		# plot Map
+		pdf(file.path( project.datadirectory("bio.lobster"), "figures","LFA34Distribution2017scal.pdf"),8,11)
+		#png(file.path( project.datadirectory("bio.lobster"), "figures","Distribution2017.png"),8,11,units='in',pointsize=12, res=300,type='cairo')
+		LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.15,-65.2),mapRes="UR",contours=cont.lst,title="LFA 34 Lobster Density",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
+		points(lat~lon,scalSurv,subset=YEAR==2017,pch=21,cex=0.5,bg='red')#,col=rgb(0,0,0,0.5))
+		contLegend("topright",lvls=lvls,Cont.data=cont.lst$Cont.data,title="#/square km",inset=0.02,cex=0.8,bg='white')
+		dev.off()
+
+
+
+
+
+
+
+
+
+	surveyLobsters2017 = LobsterSurveyProcess(lfa="34",yrs=2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
+	surveyLobsters2016 = LobsterSurveyProcess(lfa="34",yrs=2016,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
+	scalSurv<-ScallopSurveyProcess()
+	scalSurv2017 = subset(scalSurv,YEAR==2017&MGT_AREA_ID==3)
+	scalSurv2016 = subset(scalSurv,YEAR==2016&MGT_AREA_ID==3)
+
+
+	events = scalSurv2017
+	events$X = events$lon
+	events$Y = events$lat
+	tows = surveyLobsters2017
+	tows$X = tows$SET_LONG
+	tows$Y = tows$SET_LAT
+
+
+	lt.list = linkTows(events,tows,mindist=10)
+
+	LobsterMap('34')
+	points(SET_LAT~SET_LONG,lt.list$tows,col=EID)
+ 	points(lat~lon,lt.list$events,pch=16,cex=.5,col=NNwhich)
+
+ 	
+lt.list$events
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ## Carapace Length Frequency Plots
 	
 
 	
 	# at Sea Sampling
-	CarapaceLengthFrequencies(LFAs= '27', DS='atSea', by='SEX', fn='27',Yrs = c(2011:2016),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '29', DS='atSea', by='SEX', fn='29',Yrs = c(2013, 2015, 2016),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '30', DS='atSea', by='SEX', fn='30',Yrs = c(2012),vers=2,rootdir=figdir) 
-	CarapaceLengthFrequencies(LFAs= '31A', DS='atSea', by='SEX', fn='31A',Yrs = c(2011:2016),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '31B', DS='atSea', by='SEX', fn='31B',Yrs = c(2011:2016),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '32', DS='atSea', by='SEX', fn='32',Yrs = c(2011:2016),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '33', DS='atSea', by='SEX', fn='33',Yrs = c(2012:2014),vers=2,rootdir=figdir)
+	CarapaceLengthFrequencies(LFAs= '34', DS='atSea', by='SEX', fn='34',Yrs = c(2011:2017),vers=2,rootdir=figdir)
+	CarapaceLengthFrequencies(LFAs= '36', DS='atSea', by='SEX', fn='36',Yrs = c(2013, 2015, 2017),vers=2,rootdir=figdir)
+	CarapaceLengthFrequencies(LFAs= '38', DS='atSea', by='SEX', fn='38',Yrs = c(2012),vers=2,rootdir=figdir) 
 	
 	
-	 p$lfas = c("27", "28", "29", "30", "31.1", "31.2", "32", "33") # specify lfas for data summary
 	# FSRS recruitment traps
 	CarapaceLengthFrequencies(LFAs= p$lfas, DS='fsrs', by="LFA", bins=seq(0,140,10),rootdir=figdir)
 	
-	CarapaceLengthFrequencies(LFAs= '27', fn= '27', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= '29', fn= '29', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= '30', fn= '30', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= 31.1,fn= '31A', DS='fsrs', by="SEX", bins=seq(0,140,10),vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= 31.2,fn= '31B', DS='fsrs', by="SEX", bins=seq(0,140,10),vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= '32', fn= '32', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-	CarapaceLengthFrequencies(LFAs= '33', fn= '33', DS='fsrs', by="SEX", bins=seq(0,140,10), vers=2,Yrs = c(2011:2016),rootdir=figdir,ss=NULL)
-
 
 
 logsInSeason=lobster.db("process.logs")
 
-catchgrids.lst=list()
 
 	## Fishery Footprint - Landings
 	catchLevels = c(0,100000,200000,300000,400000,500000,600000,700000,800000)
-	yrs = 2011:2016
+	yrs = 2011:2017
 	for(i in 1:length(yrs)){
-		catchgrids.lst[[i]] = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR==yrs[i],c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,lvls=catchLevels)
-		#pdf(file.path(figdir,paste0("FisheryFootprint",yrs[i],".pdf")))
-		#LobsterMap('27-33',poly.lst=catchgrids)
-	  	#title(yrs[i],line=-3,cex.main=2,adj=0.3)
-	    #SpatialHub::contLegend('bottomright',lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (tons)",inset=0.02,cex=0.8,bg='white')
-	    #dev.off()
+		catchgrids = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR==yrs[i],c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,lvls=catchLevels)
+		pdf(file.path(figdir,paste0("FisheryFootprint",yrs[i],".pdf")))
+		LobsterMap('34-38',poly.lst=catchgrids)
+	  	title(yrs[i],line=-3,cex.main=2,adj=0.3)
+	    SpatialHub::contLegend('bottomright',lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (tons)",inset=0.02,cex=0.8,bg='white')
+	    dev.off()
 	}
 
 	## Fishery Footprint - CPUE
 	
 	cpueLevels = c(0,0.2,0.4,0.6,0.8,0.9,1,2,3)
-	yrs = 2011:2016
+	yrs = 2011:2017
 	#logsInSeason$logCPUE = log(logsInSeason$CPUE+1)
 	for(i in 1:length(yrs)){
 	  cpuegrids = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR == yrs[i],c("LFA","GRID_NUM","CPUE")),FUN=median,lvls=cpueLevels)	
 	  pdf(file.path(figdir,paste0("FishFootcpue", yrs[i],".pdf")))
-	  LobsterMap('27-33',poly.lst=cpuegrids)
+	  LobsterMap('34-38',poly.lst=cpuegrids)
 	  	title(yrs[i],line=-3,cex.main=2,adj=0.3)
 	  SpatialHub::contLegend('bottomright',lvls=cpuegrids$lvls,Cont.data=cpuegrids,title="CPUE (kg/TH)",inset=0.02,cex=0.8,bg='white')
 	  dev.off()
@@ -75,11 +263,11 @@ catchgrids.lst=list()
 	## Fishery Footprint - Mean Pots Hauled 
 	
 	potLevels = c (0,1000,100000,200000,300000,400000,500000,600000)
-	yrs = 2011:2016
+	yrs = 2011:2017
 	for(i in 1:length(yrs)){
 	potgrids = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR == yrs[i],c("LFA","GRID_NUM","NUM_OF_TRAPS")),FUN=sum,lvls=potLevels) 
 	pdf(file.path(figdir,paste0("FishFootpot", yrs[i],".pdf")))
-	LobsterMap('27-33',poly.lst=potgrids)
+	LobsterMap('34-38',poly.lst=potgrids)
 	  	title(yrs[i],line=-3,cex.main=2,adj=0.3)
 	SpatialHub::contLegend('bottomright',lvls=potgrids$lvls/1000,Cont.data=potgrids,title="Pots Hauled (000s)",inset=0.02,cex=0.8,bg='white')
 	dev.off()
@@ -89,11 +277,11 @@ catchgrids.lst=list()
 	## Fishery Footprint - Days Fished
 	daysLevels = c(0,500,1000,1500,2000,2500,3000)
 	daysFished<-aggregate(DATE_FISHED ~ SYEAR + LFA + GRID_NUM + LICENCE_ID, data=logsInSeason,FUN= function(x) length(unique(x)))	
-	yrs = 2011:2016
+	yrs = 2011:2017
 	for (i in 1: length(yrs)){
 	  daysgrids = lobGridPlot(subset(daysFished, LFA%in%p$lfas&SYEAR == yrs[i],c("LFA", "GRID_NUM", "DATE_FISHED")),FUN=sum, lvls= daysLevels)
 	  pdf(file.path(figdir,paste0("FishFootDaysFished", yrs[i],".pdf")))
-	  LobsterMap('27-33',poly.lst=daysgrids)
+	  LobsterMap('34-38',poly.lst=daysgrids)
 	  	title(yrs[i],line=-3,cex.main=2,adj=0.3)
 	  SpatialHub::contLegend('bottomright',lvls=daysgrids$lvls,Cont.data=daysgrids,title="Total Days Fished",inset=0.02,cex=0.8,bg='white')
 	  dev.off()
@@ -103,12 +291,12 @@ catchgrids.lst=list()
 	## Fishery Footprint - Licences Fished
 	
 	licenceLevels = c(0,15,30,45,60,75,90,105,120)
-	yrs=2011:2016
+	yrs=2011:2017
 	daysFished$LICENCE<-1
 	for(i in 1: length(yrs)){
 	  licencegrids = lobGridPlot(subset(daysFished, LFA%in%p$lfas&SYEAR==yrs[i], c("LFA", "GRID_NUM", "LICENCE")), FUN=sum, lvls= licenceLevels)
 	 pdf(file.path(figdir,paste0("FishFootLicenceFished", yrs[i],".pdf")))
-	 LobsterMap('27-33', poly.lst=licencegrids)
+	 LobsterMap('34-38', poly.lst=licencegrids)
 	  	title(yrs[i],line=-3,cex.main=2,adj=0.3)
 	 SpatialHub::contLegend('bottomright', lvls=licencegrids$lvls, Cont.data=licencegrids, title= "Number of Licence Fished", inset =0.02,cex=0.8,bg='white')
 	  dev.off()
@@ -116,16 +304,14 @@ catchgrids.lst=list()
 	
 
     ## CPUE
-    p$lfas = c("27", "28", "29", "30", "31A", "31B", "32", "33") # specify lfas for data summary
-    p$subareas = c("27N","27S", "28", "29", "30", "31A", "31B", "32", "33E", "33W") # specify lfas for data summary
 
 
     logsInSeason<-lobster.db('process.logs.redo')
     logsInSeason<-lobster.db('process.logs')
 
-    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2016,graphic='R',export=T)
-    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2016,graphic='pdf',path=figdir)
-    cpueSubArea.dat = CPUEplot(logsInSeason,subarea= p$subareas,yrs=2006:2016,graphic='R')
+    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2017,graphic='R',export=T)
+    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2017,graphic='pdf',path=figdir)
+    cpueSubArea.dat = CPUEplot(logsInSeason,subarea= p$subareas,yrs=2006:2017,graphic='R')
 
 
 
@@ -142,7 +328,7 @@ catchgrids.lst=list()
 	CPUE.data<-CPUEModelData(p,redo=F)
 	
 	#CPUE.data$WEIGHT_KG = CPUE.data$TOTAL_WEIGHT_KG
-    cpueSubArea.dat = CPUEplot(CPUE.data,subarea= p$subareas,yrs=1981:2016,graphic='R')
+    cpueSubArea.dat = CPUEplot(CPUE.data,subarea= p$subareas,yrs=1981:2017,graphic='R')
 
 
 	CPUEModelResults1 = list()
@@ -184,19 +370,15 @@ catchgrids.lst=list()
 
 	#CPUECombinedModelResults = CPUEmodel(mf5,CPUE.data,combined=T)	
 
-	#cpue1c=CPUEModelPlot(CPUECombinedModelResults,TempModelling,combined=T,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab='1c')
-	#cpue2c=CPUEModelPlot(CPUECombinedModelResults,TempModelling,combined=T,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='pdf',path=figdir,lab='2c')
+	#cpue1c=CPUEModelPlot(CPUECombinedModelResults,TempModelling,combined=T,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2017.4),ylim=c(0,10.5),graphic='R',path=figdir,lab='1c')
+	#cpue2c=CPUEModelPlot(CPUECombinedModelResults,TempModelling,combined=T,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2017.4),ylim=c(0,10.5),graphic='pdf',path=figdir,lab='2c')
 
 	#out=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("33W","33E"),xlim=c(2014,2017.5),ylim=c(0,20),wd=15)
-	#out1=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5))
-	#out2=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5))
-	cpue1=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1)
-	cpue2=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=2)
-	#cpue1=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("27", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1)
-	#cpue2=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("31A", "31B", "32", "33"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=2)
-	cpue=rbind(cpue1,cpue2)
-	write.csv(cpue1,  file.path(datadir,'figure100.csv'))
-	write.csv(cpue2,  file.path(datadir,'figure101.csv'))
+	#out1=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2017.4),ylim=c(0,10.5))
+	#out2=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2017.4),ylim=c(0,10.5))
+	cpue1=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("34", "35", "36", "38"),xlim=c(2010,2017.4),ylim=c(0,10.5),graphic='png',path=figdir,lab=1)
+	#cpue1=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("27", "28", "29", "30"),xlim=c(2010,2017.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1)
+	#cpue2=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("31A", "31B", "32", "33"),xlim=c(2010,2017.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=2)
 
 	cpue.annual=list()
 	for(i in 1:length(p$subareas)){
@@ -226,19 +408,15 @@ catchgrids.lst=list()
 	mtext("CPUE (kg/TH)", 2, 3, outer = T, cex = 1,las=0)	
 	dev.off()
 	
-	cpueData2=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2016,graphic='R')$annual.data
+	cpueData2=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2017,graphic='R')$annual.data
 
 	save(list=c("cpueModel","cpueData"),file=file.path(project.datadirectory("bio.lobster"),"outputs","cpueIndicators.rdata"))
 	save(cpueData2,file=file.path(project.datadirectory("bio.lobster"),"outputs","cpueIndicators2.rdata"))
-	load(file.path(project.datadirectory("bio.lobster"),"outputs","cpueIndicators.rdata"))
 	#write.csv(cpueLFA.dat$annual.data,"CPUEannualData.csv",row.names=F)
 	#write.csv(na.omit(cpueLFA.dat$daily.data),"CPUEdailyData.csv",row.names=F)
-	write.csv(cpueModel,  file.path(datadir,'figure102model.csv'))
-	write.csv(cpueData,  file.path(datadir,'figure102data.csv'))
 
 
 	## FSRS MOdels
-    p$subareas = c("27N","27S", "28", "29", "30", "31A", "31B", "32", "33E", "33W") # specify lfas for data summary
 
 	#Base
 
@@ -439,10 +617,6 @@ catchgrids.lst=list()
 	shortsComm = do.call("rbind",shortsComm.lst)
 	legalsComm = do.call("rbind",legalsComm.lst)
 	recruitComm = do.call("rbind",recruitComm.lst)
-	
-	write.csv(shortsComm,  file.path(datadir,'figure107shorts.csv'))
-	write.csv(legalsComm,  file.path(datadir,'figure107legals.csv'))
-	write.csv(recruitComm,  file.path(datadir,'figure107recruits.csv'))
 
 	library(ggplot2)
 
@@ -451,7 +625,7 @@ catchgrids.lst=list()
 
 	sp <- ggplot()
 	sp <- sp + geom_point(data = shortsComm, aes(y = median, x = YEAR), shape = 16, size = 2)
-	sp <- sp + xlab("") + ylab("") + xlim(1999,2016)
+	sp <- sp + xlab("") + ylab("") + xlim(1999,2017)
 	sp <- sp + theme(text = element_text(size=15)) + theme_bw()
 	sp <- sp + geom_line(data = shortsComm, aes(x = YEAR, y = median), colour = "black")
 	sp <- sp + geom_ribbon(data = shortsComm, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
@@ -463,7 +637,7 @@ catchgrids.lst=list()
 	png(file.path(figdir,"FSRSmodelBayesCommLegals.png"),width=8,height=2.5,units='in',res=200)
 	lp <- ggplot()
 	lp <- lp + geom_point(data = legalsComm, aes(y = median, x = YEAR), shape = 16, size = 2)
-	lp <- lp + xlab("") + ylab("Lobsters / Trap") + xlim(1999,2016)
+	lp <- lp + xlab("") + ylab("Lobsters / Trap") + xlim(1999,2017)
 	lp <- lp + theme(text = element_text(size=15)) + theme_bw()
 	lp <- lp + geom_line(data = legalsComm, aes(x = YEAR, y = median), colour = "black")
 	lp <- lp + geom_ribbon(data = legalsComm, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
@@ -475,7 +649,7 @@ catchgrids.lst=list()
 	png(file.path(figdir,"FSRSmodelBayesCommRecruits.png"),width=8,height=2.5,units='in',res=200)
 	rp <- ggplot()
 	rp <- rp + geom_point(data = recruitComm, aes(y = median, x = YEAR), shape = 16, size = 2)
-	rp <- rp + xlab("Year") + ylab("") + xlim(1999,2016)
+	rp <- rp + xlab("Year") + ylab("") + xlim(1999,2017)
 	rp <- rp + theme(text = element_text(size=15)) + theme_bw()
 	rp <- rp + geom_line(data = recruitComm, aes(x = YEAR, y = median), colour = "black")
 	rp <- rp + geom_ribbon(data = recruitComm, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
@@ -527,16 +701,12 @@ catchgrids.lst=list()
 	recruitLFA = do.call("rbind",recruitLFA.lst)
 
  	save(list=c("shortsLFA","legalsLFA","recruitLFA"),file=file.path(project.datadirectory("bio.lobster"),"outputs","fsrsModelIndicators.rdata"))
- 	load(file=file.path(project.datadirectory("bio.lobster"),"outputs","fsrsModelIndicators.rdata"))
-	write.csv(shortsLFA,  file.path(datadir,'figure104.csv'))
-	write.csv(legalsLFA,  file.path(datadir,'figure105.csv'))
-	write.csv(recruitLFA,  file.path(datadir,'figure106.csv'))
 
 	pdf(file.path( figdir,"FSRSmodelBayesLFAShorts.pdf"),8, 2.5)
 
 	sp <- ggplot()
 	sp <- sp + geom_point(data = shortsLFA, aes(y = median, x = YEAR), shape = 16, size = 2)
-	sp <- sp + xlab("") + ylab("") + xlim(1999,2016)
+	sp <- sp + xlab("") + ylab("") + xlim(1999,2017)
 	sp <- sp + theme(text = element_text(size=15)) + theme_bw()
 	sp <- sp + geom_line(data = shortsLFA, aes(x = YEAR, y = median), colour = "black")
 	sp <- sp + geom_ribbon(data = shortsLFA, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
@@ -547,7 +717,7 @@ catchgrids.lst=list()
 	pdf(file.path( figdir,"FSRSmodelBayesLFALegals.pdf"),8, 2.5)
 	lp <- ggplot()
 	lp <- lp + geom_point(data = legalsLFA, aes(y = median, x = YEAR), shape = 16, size = 2)
-	lp <- lp + xlab("") + ylab("Lobsters / Trap") + xlim(1999,2016)
+	lp <- lp + xlab("") + ylab("Lobsters / Trap") + xlim(1999,2017)
 	lp <- lp + theme(text = element_text(size=15)) + theme_bw()
 	lp <- lp + geom_line(data = legalsLFA, aes(x = YEAR, y = median), colour = "black")
 	lp <- lp + geom_ribbon(data = legalsLFA, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
@@ -558,7 +728,7 @@ catchgrids.lst=list()
 	pdf(file.path( figdir,"FSRSmodelBayesLFARecruits.pdf"),8, 2.5)
 	rp <- ggplot()
 	rp <- rp + geom_point(data = recruitLFA, aes(y = median, x = YEAR), shape = 16, size = 2)
-	rp <- rp + xlab("Year") + ylab("") + xlim(1999,2016)
+	rp <- rp + xlab("Year") + ylab("") + xlim(1999,2017)
 	rp <- rp + theme(text = element_text(size=15)) + theme_bw()
 	rp <- rp + geom_line(data = recruitLFA, aes(x = YEAR, y = median), colour = "black")
 	rp <- rp + geom_ribbon(data = recruitLFA, aes(x = YEAR, ymax = ub, ymin = lb ), alpha = 0.5)
@@ -581,71 +751,3 @@ catchgrids.lst=list()
 
 
 ######################## sim Molt
-
-
-# som
-
-	pl = data.frame(LFA=c("LFA27-30","LFA29","LFA28,30","LFA31A","LFA32","LFA32x","LFA33","LFA33x","LFA34"),
-		a=c(14.266, 14.173, 16.505, 14.53521, 10.4, 18.99223, 14.23,24.87275,22.37302),
-		b=c(-0.1959, -0.1727, -0.2132,-0.20347, -0.112,-0.21128, -0.144,-0.25725,-0.23187))
-
-cl=50:130
-plot(cl,seq(0,1,l=length(cl)),type='n',xlab='CL',ylab='SoM')
-
-for(i in 1:nrow(pl)){
-
-	pMat = with(pl[i,],	1/(1+(exp(a+(b*cl)))))	
-
-	lines(cl,pMat,lty=i,col=i)
-}
-
-legend('bottomright',pl$LFA,lty=1:nrow(pl),col=1:nrow(pl))
-
-
-
-#	p$lfas = c("27N","27S", "28", "29", "30", "31A", "31B", "32", "33E", "33W") 
-#
-#								# carapace length bins (mm)
-#	TempModelling = TempModel(areas = 'subarea')
-#	p$TempModel = TempModelling$Model
-#	moltModel = moltPrModel(p,redo.dd=F)
-#	p$moltPrModel = moltModel # degree day growth
-#
-#
-#	plist = getSimList(p,sex=1)
-#
-#	
-#	DTs = list()
-#	dt = c()
-#
-#for(l in 1:length(p$lfas)){
-#
-#	plist[[l]]$ddoy = cumsum(plist[[l]]$dailytemps)
-#	for(i in 1:length(plist[[l]]$lens))	{
-#		dt[i] = min(which(pPrMolt(plist[[l]],cl=plist[[l]]$lens[i])>0.5))
-#	}
-#	names(dt) = plist[[l]]$lens
-#
-#	DTs[[l]] = dt
-#
-#}
-#
-#names(DTs) = p$lfas
-#
-#save(DTs,file="deltaTs.rdata")
-#
-#	
-# plot(p$lens,dt2,type='l',ylim=c(0,1000),xlab='CL (mm)',ylab='days')
-# lines(p$lens,dt1,lty=2)
-# lines(p$lens,dt3,lty=2)
-#
-#
-#plot(yrs,rowSums(males$finalPop),type='l')
-#lines(yrs,rowSums(females$finalPop+females$finalBerried),lty=2)
-#
-## VB
-#Linf=c(281,207)
-#k=c(0.065,0.089)
-#t0=c(0.76,0.42)
-#age=seq(1,23,0.1)
-
