@@ -1,9 +1,10 @@
 require(bio.lobster)
 
 a = lobster.db('seasonal.landings')
-a = lobster.db('annual.landings')
 
 b = read.table(file.path(project.datadirectory('bio.lobster'),'data','MaineLandingsto2015Tons.txt'),sep="\t",header=T)
+
+
 
 a$Cana = rowSums(a[,c('LFA33','LFA34','LFA35','LFA36','LFA38')])
 a$Year = substr(a$SYEAR,1,4)
@@ -18,6 +19,11 @@ lines(b,col='red')
 require(bcp)
       h = bcp(log(a$Cana),w0 = 0.2, p0 = 0.05)
       plot(h,xaxlab=a$Year,xlab='Year')
+
+     x11()
+	 h = bcp(log(b$tons),w0 = 0.2, p0 = 0.05)
+      plot(h,xaxlab=b$Year,xlab='Year')
+
 
 #Annual
 
