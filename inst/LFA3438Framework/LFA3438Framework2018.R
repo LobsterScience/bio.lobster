@@ -94,6 +94,7 @@
 
 
 	CarapaceLengthFrequencies(LFAs='34',DS='ScallopSurvey', Yrs=2005:2017,graphic="R" )
+	CarapaceLengthFrequencies(LFAs='35',DS='ScallopSurvey', Yrs=2005:2018,graphic="R" )
 
 
 	scalSurv<-ScallopSurveyProcess()
@@ -164,53 +165,7 @@
 
 
 
-
-
-
-
-
-
-	surveyLobsters2017 = LobsterSurveyProcess(lfa="34",yrs=2017,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
-	surveyLobsters2016 = LobsterSurveyProcess(lfa="34",yrs=2016,mths=c("Aug","Jul","Jun"),bin.size=5,Net='NEST')
 	scalSurv<-ScallopSurveyProcess()
-	scalSurv2017 = subset(scalSurv,YEAR==2017&MGT_AREA_ID==3)
-	scalSurv2016 = subset(scalSurv,YEAR==2016&MGT_AREA_ID==3)
-
-
-	events = scalSurv2017
-	events$X = events$lon
-	events$Y = events$lat
-	tows = surveyLobsters2017
-	tows$X = tows$SET_LONG
-	tows$Y = tows$SET_LAT
-
-
-	lt.list = linkTows(events,tows,mindist=10)
-
-	LobsterMap('34')
-	points(SET_LAT~SET_LONG,lt.list$tows,col=EID)
- 	points(lat~lon,lt.list$events,pch=16,cex=.5,col=NNwhich)
-
- 	
-lt.list$events
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
