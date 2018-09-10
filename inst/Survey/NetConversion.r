@@ -37,16 +37,20 @@ dat = merge(CSn,CSb,by=c('STATION','Length'))
 dat$NEST = round(dat$NEST)
 dat$BALL = round(dat$BALL) 
 dat = subset(dat,Length>45)
-#dat = subset(dat,!STATION %in% '83H')
+dat = subset(dat,!STATION %in% '83H')
+
 out = gamlss(cbind(NEST,BALL)~cs(Length,df=3),nu.formula=~cs(Length,df=3),data=dat,family=ZIBB())
 newd = data.frame(Length=46:144)
 mu = predict(out,what='mu',type='response',newdata=newd)
 nu = predict(out,what='nu',type='response',newdata=newd)
-
 rho = mu / (1-mu+nu)
 
 ov = aggregate(cbind(NEST,BALL)~Length,data=dat,FUN=sum)
 ov$C = ov$NEST / ov$BALL
+out = gamlss(cbind(NEST,BALL)~cs(Length,df=3),data=ov,family=BB())
+newd = data.frame(Length=46:144)
+mu = predict(out,what='mu',type='response',newdata=newd)
+rho = mu / (1-mu)
 
 with(ov,plot(Length,C))
 lines(newd[,1],rho)
