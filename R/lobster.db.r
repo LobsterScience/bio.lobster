@@ -233,13 +233,14 @@ if(DS %in% c('season.dates','season.dates.redo')) {
               #    season.dates=at
               #         save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
 
-                    Fish.Date = lobster.db('season.dates')
+                    #Fish.Date = lobster.db('season.dates')
+                    Fish.Date = season.dates = sqlQuery(con,'select * from LOBSTER.FISHING_SEASONS')
                     season.dates = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
               
 
 
 
-                  #season.dates = sqlQuery(con,'select * from LOBSTER.FISHING_SEASONS')
+                  
                   save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
             }
 
