@@ -4,7 +4,7 @@ a = lobster.db('seasonal.landings')
 
 b = read.table(file.path(project.datadirectory('bio.lobster'),'data','MaineLandingsto2015Tons.txt'),sep="\t",header=T)
 
-
+d = read.csv(file.path(project.datadirectory('bio.lobster'),'data','USLobsterLandingsbyState.csv'),header=T)
 
 a$Cana = rowSums(a[,c('LFA33','LFA34','LFA35','LFA36','LFA38')])
 a$Year = substr(a$SYEAR,1,4)
