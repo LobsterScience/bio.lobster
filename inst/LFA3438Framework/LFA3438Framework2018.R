@@ -7,7 +7,7 @@
     p$syr = 2005
     p$yrs = p$syr:p$current.assessment.year
 
-    figdir = file.path(project.datadirectory("bio.lobster"),"figures","LFA3438Framework2018")
+    figdir = file.path(project.datadirectory("bio.lobster"),"figures","LFA3438Framework2019")
 
     p$lfas = c("34", "35", "36", "38") # specify lfas for data summary
   
@@ -80,9 +80,11 @@
 	data = subset(data,den>0)
 	
 	# map
-	LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.25,-65.2),mapRes="UR",title="LFA 34 Lobster Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
+		pdf(file.path( figdir,"LobsterSurveyBubbles2017.pdf"),8,11)
+	LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.25,-65.2),mapRes="UR",title="LFA 34 Lobster Survey 2017",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
 	points(y~x,zeros,pch=4)
 	surveyBubbles(data,scaler=0.1,pie=T)
+	dev.off()
 
 	LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.25,-65.2),mapRes="UR",title="LFA 34 Lobster Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
 	surveyLobsters34index = calcIndexStations(surveyLobsters34)
@@ -93,8 +95,10 @@
 ### ScallopSurvey
 
 
-	CarapaceLengthFrequencies(LFAs='34',DS='ScallopSurvey', Yrs=2005:2017,graphic="R" )
-	CarapaceLengthFrequencies(LFAs='35',DS='ScallopSurvey', Yrs=2005:2018,graphic="R" )
+	CarapaceLengthFrequencies(LFAs='34',DS='ScallopSurvey', Yrs=2006:2017,graphic="pdf", rootdir= figdir, fn="LFA34" )
+	CarapaceLengthFrequencies(LFAs='35',DS='ScallopSurvey', Yrs=2006:2017,graphic="pdf", rootdir= figdir, fn="LFA35" )
+	CarapaceLengthFrequencies(LFAs='36',DS='ScallopSurvey', Yrs=2006:2017,graphic="pdf", rootdir= figdir, fn="LFA36"  )
+	CarapaceLengthFrequencies(LFAs='38',DS='ScallopSurvey', Yrs=2006:2017,graphic="pdf", rootdir= figdir, fn="LFA38"  )
 
 
 	scalSurv<-ScallopSurveyProcess()
@@ -103,10 +107,10 @@
 	scalSurvb<-ScallopSurveyProcess(sex=3)
 
 
-	data = subset(scalSurv,YEAR==2017&LFA==34,c("lon","lat","LobDen"))
-	datam = subset(scalSurvm,YEAR==2017&LFA==34,c("lon","lat","LobDen"))
-	dataf = subset(scalSurvf,YEAR==2017&LFA==34,c("lon","lat","LobDen"))
-	datab = subset(scalSurvb,YEAR==2017&LFA==34,c("lon","lat","LobDen"))
+	data = subset(scalSurv,YEAR==2017,c("lon","lat","LobDen"))
+	datam = subset(scalSurvm,YEAR==2017,c("lon","lat","LobDen"))
+	dataf = subset(scalSurvf,YEAR==2017,c("lon","lat","LobDen"))
+	datab = subset(scalSurvb,YEAR==2017,c("lon","lat","LobDen"))
 	names(data) = c("x","y","den")
 	data$denm = datam$LobDen
 	data$denf = dataf$LobDen
@@ -116,10 +120,18 @@
 	data = subset(data,den>0)
 	
 	# map
+		pdf(file.path( figdir,"ScallopSurveyBubblesLFA342017.pdf"),8,11)
 	LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.25,-65.2),mapRes="UR",title="LFA 34 Scallop Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
 	points(y~x,zeros,pch=4)
-	surveyBubbles(data,scaler=0.1,pie=T)
+	surveyBubbles(data,scaler=0.08,pie=T)
+	dev.off()
 
+	# map
+		pdf(file.path( figdir,"ScallopSurveyBubblesBoF2017.pdf"),11,8)
+	LobsterMap("BoF",mapRes="UR",title="BoF Scallop Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
+	points(y~x,zeros,pch=4)
+	surveyBubbles(data,scaler=0.08,pie=T)
+	dev.off()
 
 
 	data = subset(scalSurv,YEAR==2017&LFA==35,c("lon","lat","LobDen"))
