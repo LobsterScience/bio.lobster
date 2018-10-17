@@ -1,7 +1,7 @@
 
 #### Import lobster data from various databases
 require(bio.lobster)
-
+la()
 
 p = bio.lobster::load.environment()
 

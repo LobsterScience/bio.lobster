@@ -210,7 +210,6 @@ if(DS %in% c('season.dates','season.dates.redo')) {
                 return(season.dates)
                   }
                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  print('This is not updated--Check with AMC')
                 
               #using dats from landings by port redo AMC Dec 1 2017
               #  a = aggregate(mns~SYEAR+LFA+SDATE,data=dats,FUN=length)
@@ -287,7 +286,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     lfa  =  sort(unique(Fish.Date$LFA))
                     
                 
-                          print('Note the ODBC season Dates Need to be Updated AMC jan2017')
+                          print('Note the ODBC season Dates Were Updated AMC Sept2018')
                           
                           #lfa "27"  "28"  "29"  "30"  "31A" "31B" "32"  "33"  "34"  "35"  "36"  "38" 
 

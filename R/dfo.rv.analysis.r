@@ -263,8 +263,8 @@ pi='base'
                       bsN = list(NA,NA,NA)
                       nt = NA
                if(p$bootstrapped.ci) {
-                  bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='BC')
-                  bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
+                  bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='Percentile')
+                  bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='Percentile')
                   nt  = sum(sW$Nh)/1000
                 }
                      if(exists('big.ci',p)) {

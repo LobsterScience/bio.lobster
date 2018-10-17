@@ -1,6 +1,6 @@
 #' @export
   
-  lobSortedOrdination = function( b, colscheme='redgreen', addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ,outfilenames=NULL,groupings=NULL) {
+  lobSortedOrdination = function( b, colscheme='redgreen', addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ,outfilenames=NULL,groupings=NULL,addAttributes=F,attributetype='ecosystemIndicators') {
 
     yvals=rownames(b)
     vars =colnames(b)
@@ -20,6 +20,7 @@ if(is.null(outfilenames)) {
     of3 = paste(outfileroot,outfilenames, "anomalies.png", sep=".")
         
     }
+    
     corel = cor( b, use="pairwise.complete.obs" ) # set up a correlation matrix ignoring NAs
     corel[ is.na(corel) ] = 0
     
@@ -71,8 +72,8 @@ if(is.null(outfilenames)) {
     a = max( abs( min(Z, na.rm=T) ), abs( max( Z, na.rm=T) ) )
     br = seq( -a, a, .1)
 
-    png(file=of3,units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
-     
+    png(file=of3,units='in',width=17,height=13,pointsize=25, res=300,type='cairo')
+    if(!is.function(colscheme)){ 
     if (colscheme=="rainbow")  {
       cols=rainbow(length(br)-1, start=0, end=1/3)
     } else if (colscheme=="redgreen") {
@@ -81,12 +82,13 @@ if(is.null(outfilenames)) {
       cols=rev(blue.red(length(br)))    
     } else if (colscheme=="heat") { 
       cols=rev(heat.colors(length(br)-1))
+    }
     } else {
-      cols=colscheme
+      cols=colscheme(length(br)-1)
     }
 
 
-    par( mai=c(1, 3, 0.3, 0.8), cex=1 )
+    par( mai=c(1, 3, 0.3, 1.1), cex=1 )
     
     image(z=Z, x=years, breaks=br, col=cols, ylab="", axes=F )
     
@@ -103,6 +105,11 @@ if(is.null(outfilenames)) {
     vars = colnames(Z)
     par(cex=0.6)
     axis( 2, at=seq(0,1,length=length(vars)), labels=vars)
+    
+    if(addAttributes){
+            g = indicatorAttributesMatrixPlot(x=vars,groupings='default',attribute=attributetype)
+            axis( 4, at=seq(0,1,length=length(vars)), labels=g,cex.lab=4)
+        }
      if(!is.null(groupings)){
         for(i in 1:length(groupings)){
              CurlyBraces(x0=max(years)+1,x1=max(years)+1,y0=groupings[[i]][1]/dim(Z)[2],y1=groupings[[i]][2]/dim(Z)[2],pos=1,direction=1,depth=2)
@@ -113,7 +120,6 @@ if(is.null(outfilenames)) {
     dev.off()
     out = list( id=yvals, vars=vars, correlation.matrix=corel, 
                 eigenvectors=evec, eigenvalues=eval, projections.id=x, projections.vars=y)
-
     print( str( out)) 
 
     return(out)
