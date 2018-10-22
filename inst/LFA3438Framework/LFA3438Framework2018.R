@@ -179,6 +179,8 @@
 
 	scalSurv<-ScallopSurveyProcess()
 
+LobsterMap(ylim=c(43,46),xlim=c(-67.8,-64),isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy',title="Scallop Survey Locations 2017")
+points(lat~lon,subset(scalSurv,YEAR==2017),pch=21,cex=0.8,bg='red')
 
 
 

@@ -1,5 +1,5 @@
 #' @export
-weightedCLF <- function(x, probs = c(0.025,0.5,0.975),grouping = NULL,returnLF = F,repper = 100,at.sea.samples=F,fsrs.commercial.samples=F,port.samples=F,fsrs.recruit.samples=F) {
+weightedCLF <- function(x, probs = c(0.025,0.5,0.975),grouping = NULL,returnLF = F,repper = 100,at.sea.samples=F,fsrs.commercial.samples=F,port.samples=F,fsrs.recruit.samples=F,lab=NULL) {
 if(at.sea.samples){	
 	if(!is.null(grouping)) {
 		for(i in 1:length(grouping)){
@@ -72,7 +72,7 @@ if(fsrs.commercial.samples | fsrs.recruit.samples)	{
 			for(b in 1:nrow(x)){
 					oo = c(oo, as.numeric(rep(j,times=x[b,i] * round(x[b,'PropLand1']))))
 					}
-			hist(oo,breaks=j)
+			hist(oo,breaks=j,main=lab)
 			vec=NULL
 			if(returnLF) vec = oo
 		outa = list(LFA = unique(x$LFA), Year = unique(x$SYEAR),NWeeks = length(unique(x$WOS)),NTrips = length(unique(x$ids)),N_Grids = length(unique(x$GRID_NUM)),TotalLobsters = sum(x$NLobster), TotalTraps = sum(x$TrapsSampled), PropLandings = sum(x$PropLand),vec = vec,mean = mean(oo),sd = sd(oo), quants = quantile(oo,probs=probs), catch.rate.n = f2, prop.female = f3, prop.berried = f4, prop.vnotched = f6 ,prop.female.short=f8,prop.female.legal=f9 )

@@ -1,6 +1,6 @@
 #' @export
   
-  lobSortedOrdination = function( b, colscheme='redgreen', addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ,outfilenames=NULL,groupings=NULL) {
+  lobSortedOrdination = function( b, colscheme='redgreen', addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ,outfilenames=NULL,groupings=NULL,ht=c(12,12),wd=c(15,15)) {
 
     yvals=rownames(b)
     vars =colnames(b)
@@ -35,13 +35,13 @@ if(is.null(outfilenames)) {
         outscores = data.frame(x)
         outscores$yr = as.numeric(yvals)
 
-    png(file=of1,units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+    png(file=of1,units='in',width=wd[1],height=ht[1],pointsize=18, res=300,type='cairo')
 #    par(cex=2, lty=2)
     plot( yvals, x[,1], xlab="Years", ylab=paste("PCA1 (", round(eval[1]/sum(eval)*100, 1), "%)", sep="") )
     lines( lowess(yvals, x[,1], f=1/5 ) )
     dev.off()
     print(of2)
-    png(file=of2,units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+    png(file=of2,units='in',width=wd[1],height=ht[1],pointsize=18, res=300,type='cairo')
     plot( yvals, x[,2], xlab="Years", ylab=paste("PCA2 (", round(eval[2]/sum(eval)*100, 1), "%)", sep="" ) )
     lines( lowess(yvals, x[,2], f=1/5) )
     dev.off()
@@ -71,7 +71,7 @@ if(is.null(outfilenames)) {
     a = max( abs( min(Z, na.rm=T) ), abs( max( Z, na.rm=T) ) )
     br = seq( -a, a, .1)
 
-    png(file=of3,units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+    png(file=of3,units='in',width=wd[2],height=ht[2],pointsize=18, res=300,type='cairo')
      
     if (colscheme=="rainbow")  {
       cols=rainbow(length(br)-1, start=0, end=1/3)
@@ -86,7 +86,7 @@ if(is.null(outfilenames)) {
     }
 
 
-    par( mai=c(1, 3, 0.3, 0.8), cex=1 )
+    par( mai=c(1, 3.2, 0.3, 0.5), cex=1 )
     
     image(z=Z, x=years, breaks=br, col=cols, ylab="", axes=F )
     
@@ -110,6 +110,7 @@ if(is.null(outfilenames)) {
         text(rep(max(years)+3.5,length(groupings)), unlist(lapply(groupings,mean))/dim(Z)[2], 1:length(groupings),xpd=NA,cex=2)
     }
     write.table(Z, file="anomalies.dat", quote=F, sep=";")
+    box()
     dev.off()
     out = list( id=yvals, vars=vars, correlation.matrix=corel, 
                 eigenvectors=evec, eigenvalues=eval, projections.id=x, projections.vars=y)

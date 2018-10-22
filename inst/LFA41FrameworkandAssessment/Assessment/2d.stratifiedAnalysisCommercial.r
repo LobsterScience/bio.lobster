@@ -1,18 +1,22 @@
-#redone nov 18 2016
+#redone nov 18 assessment.year
 
 require(bio.survey)
 require(bio.lobster)
+require(bio.groundfish)
 p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis",'lfa41Assessment')
 la()
-load_all('~/git/bio.survey/')
-load_all('~/git/bio.groundfish/')
+#load_all('~/git/bio.survey/')
+#load_all('~/git/bio.groundfish/')
 la()
 #NEFSC Setup
 
+assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
+
+
         p$reweight.strata = F #this subsets 
-        p$years.to.estimate = c(1969:2016)
+        p$years.to.estimate = c(1969:assessment.year)
         p$length.based = T
         p$size.class= c(83,300)
         p$by.sex = T
@@ -105,6 +109,8 @@ la()
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
+      p$years.to.estimate = c(1969:(assessment.year-1)) # -1 because update is in the Fall
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
        aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
@@ -182,7 +188,7 @@ la()
     p$define.by.polygons = F
     p$lobster.subunits=F
     p$area = 'LFA41'
-    p$years.to.estimate = c(1970:2016)
+    p$years.to.estimate = c(1970:assessment.year)
     p$length.based = T
     p$by.sex = T
     p$size.class = c(83,300)
@@ -279,7 +285,7 @@ la()
     p$series =c('georges')# p$series =c('georges');p$series =c('fall')
     p$define.by.polygons = F
     p$lobster.subunits=F
-    p$years.to.estimate = c(2007:2016)
+    p$years.to.estimate = c(2007:assessment.year)
     p$length.based = T
     p$by.sex = T
     p$sex = c(1,2)
