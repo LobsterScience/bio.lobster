@@ -571,11 +571,11 @@ catchgrids.lst=list()
 	TempModelling = TempModel(areas = 'subarea')
 	TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='png',type=1:2)
 
- tempModel=TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='png',type=3)
- tempData=TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='png',type=4)
+ tempModel=TempModelPlot(TempModelling,xlim=c(1980,2018),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='png',type=3)
+ tempData=TempModelPlot(TempModelling,xlim=c(1980,2018),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='png',type=4)
  save(list=c("tempModel","tempData"),file=file.path(project.datadirectory("bio.lobster"),"outputs","tempIndicators.rdata"))
 
- tempData2=TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27", "33"),lfa=T,graphic='R',type=4)
+ tempData2=TempModelPlot(TempModelling,xlim=c(1980,2018),depths=c(5,25,50),Area=c("27", "33"),lfa=T,graphic='R',type=4)
  save(tempData2,file=file.path(project.datadirectory("bio.lobster"),"outputs","tempIndicators2.rdata"))
 
 

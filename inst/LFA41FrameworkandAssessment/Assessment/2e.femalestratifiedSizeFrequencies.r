@@ -11,6 +11,7 @@ load_all('~/git/bio.survey/')
 
 #by length for histograms
 #
+assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
  
 
         p$series =c('summer')# p$series =c('georges');p$series =c('fall')
@@ -18,7 +19,7 @@ load_all('~/git/bio.survey/')
         p$lobster.subunits=F
         p$area = 'LFA41'
         p$reweight.strata = T #this subsets 
-        p$years.to.estimate = c(1999:2016)
+        p$years.to.estimate = c(1999:assessment.year)
         p$length.based = T
         p$by.sex = T
         p$sex=c(2,3)
@@ -47,7 +48,7 @@ load_all('~/git/bio.survey/')
 
 
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:2016)
+      p$years.to.estimate = c(1969:assessment.year)
       p$length.based = T
       p$size.class= c(50,300)
       p$by.sex = T
@@ -87,6 +88,8 @@ load_all('~/git/bio.survey/')
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
+      p$years.to.estimate = c(1969:(assessment.year-1)) # -1 because update is in the Fall
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
       
    	    a = seq(90,200,1)
         out = list()
@@ -105,7 +108,7 @@ load_all('~/git/bio.survey/')
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(2007:2016)
+      p$years.to.estimate = c(2007:assessment.year)
       p$length.based = T
       p$by.sex = T
       p$sex=c(2,3)

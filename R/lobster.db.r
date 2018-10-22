@@ -952,12 +952,12 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
                             tt$Date = as.Date(tt$Date,format = '%d-%b-%y')
                             tt = subset(tt,LFA==33)
                             tt = addSYEAR(tt,'Date')
-                            tt = subset(tt,!is.na(SDATE))
+                            tt = subset(tt,!is.na(Date))
                             tt$WOS = NA
                             Fish.Date = lobster.db('season.dates')
                                h  =  Fish.Date[Fish.Date$LFA==33,]  
                                for(j in unique(tt$SYEAR)){
-                                   tt$WOS[tt$SYEAR==j] = floor(as.numeric(tt$SDATE[tt$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                   tt$WOS[tt$SYEAR==j] = floor(as.numeric(tt$Date[tt$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
                             tt = subset(tt,WOS>0)
                             fsrs.comm = tt

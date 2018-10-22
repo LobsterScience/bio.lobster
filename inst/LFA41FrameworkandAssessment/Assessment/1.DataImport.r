@@ -18,8 +18,8 @@ load_all('~/git/bio.survey/')
         lobster.db( DS = "cris.redo",    p=p)     # CRIS database
         lobster.db( DS = 'annual.landings.redo', p=p) #static annual landings tabke needs to be updated by CDenton
         lobster.db( DS = 'seasonal.landings.redo', p=p) #static seasonal landings table needs to be updated by CDenton
-        lobster.db( DS = "lfa41.vms.redo")
-        lobster.db( DS="logs41jonah.redo")
+        #lobster.db( DS = "lfa41.vms.redo")
+        #lobster.db( DS="logs41jonah.redo")
         nefsc.db( DS = 'odbc.dump.redo',fn.root = file.path(project.datadirectory('lobster'),'data'),p=p)
         lobster.db(DS = 'lfa41.observer.samples.redo') 
 

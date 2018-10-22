@@ -8,7 +8,7 @@ options(stringsAsFactors=F)
 	dat = data.frame(yr = 1969:2016)
 
 
-			a =	c("DFO.restratified.All.csv",                                         
+			a =	c("DFO.restratified.All.csv",                                         			
 				 "DFO.restratified.Mature.SexRatio.csv  ",                           
 				 "Fec.maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.csv",  
 				 "Fec.maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.csv",

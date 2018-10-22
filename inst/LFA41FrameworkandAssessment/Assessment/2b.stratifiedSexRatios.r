@@ -7,7 +7,10 @@ p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis",'lfa41Assessment')
 la()
-load_all('~/git/bio.survey/')
+#load_all('~/git/bio.survey/')
+
+assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
+
 
 #DFO RV Analysis
 
@@ -16,7 +19,7 @@ load_all('~/git/bio.survey/')
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T
-      p$years.to.estimate = c(1999:2016)
+      p$years.to.estimate = c(1999:assessment.year)
       p$length.based = F
       p$by.sex = T
       p$bootstrapped.ci=F
@@ -46,7 +49,7 @@ load_all('~/git/bio.survey/')
 
 
 #NEFSC spring
-      p$years.to.estimate = c(1969:2016)
+      p$years.to.estimate = c(1969:assessment.year)
       p$length.based = T
       p$size.class= c(50,300)
       p$by.sex = T
@@ -90,6 +93,8 @@ load_all('~/git/bio.survey/')
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
+      p$years.to.estimate = c(1969:(assessment.year-1)) # -1 because update is in the Fall
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
       
    	    a = list(1,c(2,3))
         out = list()
@@ -108,7 +113,7 @@ load_all('~/git/bio.survey/')
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(2007:2016)
+      p$years.to.estimate = c(2007:assessment.year)
       p$length.based = F
       p$by.sex = T
       p$bootstrapped.ci=F
@@ -150,14 +155,14 @@ load_all('~/git/bio.survey/')
         p$libs = NULL
 
         la()
-        load_all('~/git/bio.survey/')
+        #load_all('~/git/bio.survey/')
 
         p$series =c('summer')# p$series =c('georges');p$series =c('fall')
         p$define.by.polygons = T
         p$lobster.subunits=F
         p$area = 'LFA41'
         p$reweight.strata = T #this subsets 
-        p$years.to.estimate = c(1999:2016)
+        p$years.to.estimate = c(1999:assessment.year)
         p$length.based = T
         p$by.sex = T
         p$bootstrapped.ci=F
@@ -184,7 +189,7 @@ load_all('~/git/bio.survey/')
 #NEFSC spring
 
       p$season  = 'spring'
-      p$years.to.estimate = c(1969:2016)
+      p$years.to.estimate = c(1969:assessment.year)
       p$length.based = T
       p$size.class= c(92,300)
       p$by.sex = T
@@ -219,6 +224,8 @@ load_all('~/git/bio.survey/')
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
+      p$years.to.estimate = c(1969:(assessment.year-1)) # -1 because update is in the Fall
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
       
    	    a = list(1,c(2,3))
         out = list()
@@ -238,7 +245,7 @@ load_all('~/git/bio.survey/')
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(2007:2016)
+      p$years.to.estimate = c(2007:assessment.year)
       p$length.based = T
       p$by.sex = T
       p$bootstrapped.ci=F
@@ -284,7 +291,7 @@ write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.Mature.SexRatio.csv  ')
         p$lobster.subunits=F
         p$area = 'LFA41'
         p$reweight.strata = T #this subsets 
-        p$years.to.estimate = c(1999:2016)
+        p$years.to.estimate = c(1999:assessment.year)
         p$length.based = T
         p$by.sex = T
         p$bootstrapped.ci=F
@@ -311,7 +318,7 @@ write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.Mature.SexRatio.csv  ')
 
 
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:2016)
+      p$years.to.estimate = c(1969:assessment.year)
       p$length.based = T
       p$size.class= c(50,91)
       p$by.sex = T
@@ -350,6 +357,8 @@ write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.Mature.SexRatio.csv  ')
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
+      p$years.to.estimate = c(1969:(assessment.year-1)) # -1 because update is in the Fall
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
       
         a = list(1,2)
         out = list()
@@ -367,7 +376,7 @@ write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.Mature.SexRatio.csv  ')
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(2007:2016)
+      p$years.to.estimate = c(2007:assessment.year)
       p$length.based = T
       p$by.sex = T
       p$bootstrapped.ci=F
