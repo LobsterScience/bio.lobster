@@ -22,7 +22,7 @@ if(landings.numbers){
 			names(ad) = c('LFA','YEAR')
 			names(mls)[1] <- 'YEAR'
 			ad = merge(ad,mls)
-			ad = subset(ad,YEAR<2017 & LFA<34)
+			ad = subset(ad,YEAR<2019 & LFA<34)
 			atsea = atSea.clean
 			cG = lobster.db('community.to.grid.historic')		
 			cH = lobster.db('community.to.grid.contemporary')		
@@ -226,7 +226,7 @@ if(fsrs.commercial.samples){
 			p = lobster.db('seasonal.landings')
 			load(file.path(project.datadirectory('bio.lobster'),'outputs','deltaTsSimBH.rdata')) #DTs
  			dt  = DTs[grep('33',names(DTs))]
-			ad = 2004:2016
+			ad = 2004:2017
 			cH = lobster.db('community.to.grid.contemporary')		
 			cH = subset(cH, LFA==33)
 			cG = lobster.db('community.to.grid.historic')		
@@ -271,7 +271,7 @@ if(fsrs.commercial.samples){
 				acWt = bwts / sum(bwts) * le
 				N = acWt / wts # tons / g = #'s in '000000
 				outN[[i]]  = data.frame(N = N, Len = names(v0),Year = yo,MLS=mm)
-
+				if(i==13)browser()
 
 
  				outS[[i]] = c(outS[[i]], new.rec = as.numeric(v0[1] / sum(v0)))
@@ -342,7 +342,7 @@ if(redo.port.samples){
 			names(ad) = c('LFA','YEAR')
 			names(mls)[1] <- 'YEAR'
 			ad = merge(ad,mls)
-			ad = subset(ad,YEAR<2017 & LFA<34)
+			ad = subset(ad, LFA<34)
 			cG = lobster.db('community.to.grid.historic')		
 			cH = lobster.db('community.to.grid.contemporary')		
 	
@@ -517,7 +517,7 @@ if(fsrs.recruit.samples){
                             for(i in 1:length(lfa)) {
                                   h  = season.dates[season.dates$LFA==lfa[i],]  
                                for(j in unique(fsrs$SYEAR[fsrs$LFA==lfa[i]])){
-                                   fsrs$WOS[fsrs$LFA==lfa[i] & fsrs$SYEAR==j] = floor(as.numeric(fsrs$SDATE[fsrs$LFA==lfa[i] & fsrs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                   fsrs$WOS[fsrs$LFA==lfa[i] & fsrs$SYEAR==j] = floor(as.numeric(fsrs$HAUL_DATE[fsrs$LFA==lfa[i] & fsrs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
                           }
                   
@@ -532,7 +532,7 @@ if(fsrs.recruit.samples){
 			ad = ad[order(ad[,1],ad[,2]),]
 			names(ad) = c('LFA','YEAR')
 			ad = merge(ad,mls)
-			ad = subset(ad,YEAR<2017 & LFA<34)
+			ad = subset(ad,YEAR<2019 & LFA<34)
 			cG = lobster.db('community.to.grid.historic')		
 			cH = lobster.db('community.to.grid.contemporary')		
 	
@@ -541,7 +541,7 @@ if(fsrs.recruit.samples){
 			print(ad[i,])
 	
 				da = atSeaWeightings(atSea = fsrs, comGridHist =subset(cG,LFA==ad[i,'LFA']),comGridCont = subset(cH,LFA==ad[i,'LFA'] & SYEAR==ad[i,'YEAR']),mls=ad[i,'fsrs'], year=ad[i,'YEAR'],lfa=ad[i,'LFA'],females.only=F,fsrs.recruit.samples=T)
-				op = weightedCLF(x=da,returnLF=T,fsrs.recruit.samples=T)
+					op = weightedCLF(x=da,returnLF=T,fsrs.recruit.samples=T,lab=paste("LFA",ad[i,"LFA"],ad[i,"YEAR"]))
 							os = op
 				os$vec<-NULL
 			outS[[i]] <- unlist(os)

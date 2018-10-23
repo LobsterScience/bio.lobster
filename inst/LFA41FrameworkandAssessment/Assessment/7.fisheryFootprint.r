@@ -5,6 +5,8 @@ p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment')
 
+assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
+
 require(bio.lobster)
 require(bio.utilities)
 la()
@@ -65,7 +67,7 @@ p$running.median=T
 p$file.name = 'giniFootprintCPUE.png'
 p$measure = 'mean'
 p$time.series.start.year=1981
-p$time.series.end.year=2016
+p$time.series.end.year=assessment.year
 p$error.polygon=F
 p$error.bars=F
 p$running.mean=F

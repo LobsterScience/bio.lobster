@@ -8,6 +8,7 @@
     p$yrs = p$syr:p$current.assessment.year
 
     figdir = file.path(project.datadirectory("bio.lobster"),"figures","LFA2733Framework2018")
+    datadir = file.path(project.datadirectory("bio.lobster"),"data","products","LFA2733Framework2018")
 
     p$lfas = c("27", "28", "29", "30", "31A", "31B", "32", "33") # specify lfas for data summary
   
@@ -43,17 +44,18 @@
 
 logsInSeason=lobster.db("process.logs")
 
+catchgrids.lst=list()
 
 	## Fishery Footprint - Landings
 	catchLevels = c(0,100000,200000,300000,400000,500000,600000,700000,800000)
 	yrs = 2011:2016
 	for(i in 1:length(yrs)){
-		catchgrids = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR==yrs[i],c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,lvls=catchLevels)
-		pdf(file.path(figdir,paste0("FisheryFootprint",yrs[i],".pdf")))
-		LobsterMap('27-33',poly.lst=catchgrids)
-	  	title(yrs[i],line=-3,cex.main=2,adj=0.3)
-	    SpatialHub::contLegend('bottomright',lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (tons)",inset=0.02,cex=0.8,bg='white')
-	    dev.off()
+		catchgrids.lst[[i]] = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR==yrs[i],c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,lvls=catchLevels)
+		#pdf(file.path(figdir,paste0("FisheryFootprint",yrs[i],".pdf")))
+		#LobsterMap('27-33',poly.lst=catchgrids)
+	  	#title(yrs[i],line=-3,cex.main=2,adj=0.3)
+	    #SpatialHub::contLegend('bottomright',lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (tons)",inset=0.02,cex=0.8,bg='white')
+	    #dev.off()
 	}
 
 	## Fishery Footprint - CPUE
@@ -188,11 +190,13 @@ logsInSeason=lobster.db("process.logs")
 	#out=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("33W","33E"),xlim=c(2014,2017.5),ylim=c(0,20),wd=15)
 	#out1=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5))
 	#out2=CPUEModelPlot(CPUEModelResults,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5))
-	cpue1=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='png',path=figdir,lab=1)
-	cpue2=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='png',path=figdir,lab=2)
+	cpue1=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("27N","27S", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1)
+	cpue2=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("31A", "31B", "32", "33E", "33W"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=2)
 	#cpue1=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("27", "28", "29", "30"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1)
 	#cpue2=CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = c("31A", "31B", "32", "33"),xlim=c(2010,2016.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=2)
 	cpue=rbind(cpue1,cpue2)
+	write.csv(cpue1,  file.path(datadir,'figure100.csv'))
+	write.csv(cpue2,  file.path(datadir,'figure101.csv'))
 
 	cpue.annual=list()
 	for(i in 1:length(p$subareas)){
@@ -226,8 +230,11 @@ logsInSeason=lobster.db("process.logs")
 
 	save(list=c("cpueModel","cpueData"),file=file.path(project.datadirectory("bio.lobster"),"outputs","cpueIndicators.rdata"))
 	save(cpueData2,file=file.path(project.datadirectory("bio.lobster"),"outputs","cpueIndicators2.rdata"))
+	load(file.path(project.datadirectory("bio.lobster"),"outputs","cpueIndicators.rdata"))
 	#write.csv(cpueLFA.dat$annual.data,"CPUEannualData.csv",row.names=F)
 	#write.csv(na.omit(cpueLFA.dat$daily.data),"CPUEdailyData.csv",row.names=F)
+	write.csv(cpueModel,  file.path(datadir,'figure102model.csv'))
+	write.csv(cpueData,  file.path(datadir,'figure102data.csv'))
 
 
 	## FSRS MOdels
@@ -432,6 +439,10 @@ logsInSeason=lobster.db("process.logs")
 	shortsComm = do.call("rbind",shortsComm.lst)
 	legalsComm = do.call("rbind",legalsComm.lst)
 	recruitComm = do.call("rbind",recruitComm.lst)
+	
+	write.csv(shortsComm,  file.path(datadir,'figure107shorts.csv'))
+	write.csv(legalsComm,  file.path(datadir,'figure107legals.csv'))
+	write.csv(recruitComm,  file.path(datadir,'figure107recruits.csv'))
 
 	library(ggplot2)
 
@@ -516,6 +527,10 @@ logsInSeason=lobster.db("process.logs")
 	recruitLFA = do.call("rbind",recruitLFA.lst)
 
  	save(list=c("shortsLFA","legalsLFA","recruitLFA"),file=file.path(project.datadirectory("bio.lobster"),"outputs","fsrsModelIndicators.rdata"))
+ 	load(file=file.path(project.datadirectory("bio.lobster"),"outputs","fsrsModelIndicators.rdata"))
+	write.csv(shortsLFA,  file.path(datadir,'figure104.csv'))
+	write.csv(legalsLFA,  file.path(datadir,'figure105.csv'))
+	write.csv(recruitLFA,  file.path(datadir,'figure106.csv'))
 
 	pdf(file.path( figdir,"FSRSmodelBayesLFAShorts.pdf"),8, 2.5)
 
@@ -556,11 +571,11 @@ logsInSeason=lobster.db("process.logs")
 	TempModelling = TempModel(areas = 'subarea')
 	TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='png',type=1:2)
 
- tempModel=TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='png',type=3)
- tempData=TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='png',type=4)
+ tempModel=TempModelPlot(TempModelling,xlim=c(1980,2018),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='png',type=3)
+ tempData=TempModelPlot(TempModelling,xlim=c(1980,2018),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='png',type=4)
  save(list=c("tempModel","tempData"),file=file.path(project.datadirectory("bio.lobster"),"outputs","tempIndicators.rdata"))
 
- tempData2=TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27", "33"),lfa=T,graphic='R',type=4)
+ tempData2=TempModelPlot(TempModelling,xlim=c(1980,2018),depths=c(5,25,50),Area=c("27", "33"),lfa=T,graphic='R',type=4)
  save(tempData2,file=file.path(project.datadirectory("bio.lobster"),"outputs","tempIndicators2.rdata"))
 
 

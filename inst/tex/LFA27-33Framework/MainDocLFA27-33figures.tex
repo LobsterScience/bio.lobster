@@ -7,18 +7,19 @@
 \usepackage{hyperref}
 \usepackage[top=2.4cm, bottom=2.4cm, left=3cm, right=3cm]{geometry}
 \usepackage{fancyhdr}
+\usepackage{datetime}
 \pagestyle{fancy}
 
 \lhead{\bf Maritimes Region}
 \rhead{\bf LFA27-33 - 2018}
-\lfoot{January 10, 2018}
+\lfoot{\today}
 \cfoot{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 \newcommand{\D}{.}
 \newcommand{\tl}{\textless}
-\newcommand{\e}{/backup/bio_data/bio.lobster/figures/} %change this to set figure directory
-\newcommand{\ebh}{/backup/bio_data/bio.lobster/figures/LFA2733Framework2018/} %change this to set figure directory
+\newcommand{\e}{/SpinDr/backup/bio_data/bio.lobster/figures/} %change this to set figure directory
+\newcommand{\ebh}{/SpinDr/backup/bio_data/bio.lobster/figures/LFA2733Framework2018/} %change this to set figure directory
 \newcommand{\cp}{\caption}
 
 \begin{document}
@@ -36,7 +37,7 @@
    \begin{figure}
     \centering
         %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFSeaSampling27.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh Landings.pdf}
+        \pdftooltip{\includegraphics[width=1\textwidth]{\ebh Landings.pdf}}{Figure 2}
         \caption{Time series of Lobster landings by LFA.}
 
     \end{figure}
@@ -45,9 +46,9 @@
 
   \begin{figure}
         \centering
-    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+    \pdftooltip{
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2011.pdf}}
-                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2012.pdf}}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2012.pdf}}}{Figure 3}\\
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2014.pdf}}\\
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2015.pdf}}
@@ -60,9 +61,9 @@
 % Fishery Footprint
         \begin{figure}
         \centering
-    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+    \pdftooltip{
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2011.pdf}}
-                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2012.pdf}}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2012.pdf}}}{Figure 4}\\
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2013.pdf}}
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2014.pdf}}\\
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2015.pdf}}
@@ -76,9 +77,9 @@
 % Fishery Footprint
         \begin{figure}
         \centering
-    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+    \pdftooltip{
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2011.pdf}}
-                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2012.pdf}}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2012.pdf}}}{Figure 5}\\
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2013.pdf}}
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2014.pdf}}\\
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2015.pdf}}
@@ -90,9 +91,9 @@
 
                 \begin{figure}
         \centering
-    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+    \pdftooltip{
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2011.pdf}}
-                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2012.pdf}}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2012.pdf}}}{Figure 6}\\
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2013.pdf}}
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2014.pdf}}\\
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2015.pdf}}
@@ -106,9 +107,9 @@
 % Fishery Footprint
         \begin{figure}
         \centering
-    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+    \pdftooltip{
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2011.pdf}}
-                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2012.pdf}}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2012.pdf}}}{Figure 7}\\
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2013.pdf}}
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2014.pdf}}\\
                 \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2015.pdf}}
@@ -125,39 +126,38 @@
 
 \begin{figure}
         \centering
-         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e atSeaSamples27-33.png}}}{Figure 5}\\
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e atSeaSamples27-33.png}}}{Figure 8}\\
                      \caption{Centroid of the at sea sampling trips across LFA 27-33 bewteen 1977 and current.}
         \end{figure}
 
 % Carapace Length Frequencies Sea samples
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFSeaSampling27.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling27.pdf}
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling27.pdf}}{Figure 9}
         \caption{Carapace Length Frequencies from at sea sampling in LFA 27. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
 
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFSeaSampling32.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling31A.pdf}
+        \pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFSeaSampling31A.pdf}}{Figure 10}
         \caption{Carapace Length Frequencies from at sea sampling in LFA 31A. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
 
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFSeaSampling32.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling31B.pdf}
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling31B.pdf}}{Figure 11}
         \caption{Carapace Length Frequencies from at sea sampling in LFA 31B. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
 
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFSeaSampling32.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling32.pdf}
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling32.pdf}}{Figure 12}
         \caption{Carapace Length Frequencies from at sea sampling in LFA 32. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
@@ -165,7 +165,7 @@
 
 \begin{figure}
 \centering
-         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e FSRSsamplesall.png}}}{Figure 5}\\
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e FSRSsamplesall.png}}}{Figure 13}\\
                      \caption{Location of the FSRS recruitment trap samples collected between 2004 and 2017.}
         
 \end{figure}
@@ -173,8 +173,8 @@
 % FSRS length frequecies
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFfsrs27.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFfsrs27.pdf}
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFfsrs27.pdf}}{Figure 14}
         \caption{Carapace Length Frequencies from at FSRS recruitment traps in LFA 27. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
@@ -182,8 +182,8 @@
 
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFfsrs27.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFfsrs29.pdf}
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFfsrs29.pdf}}{Figure 15}
         \caption{Carapace Length Frequencies from at FSRS recruitment traps in LFA 29. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
@@ -191,8 +191,8 @@
 
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFfsrs32.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFfsrs30.pdf}
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFfsrs30.pdf}}{Figure 16}
         \caption{Carapace Length Frequencies from at FSRS recruitment traps in LFA 30. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
@@ -200,8 +200,8 @@
 
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFfsrs32.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFfsrs31A.pdf}
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFfsrs31A.pdf}}{Figure 17}
         \caption{Carapace Length Frequencies from at FSRS recruitment traps in LFA 31A. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
@@ -209,8 +209,8 @@
 
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFfsrs32.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFfsrs31B.pdf}
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFfsrs31B.pdf}}{Figure 18}
         \caption{Carapace Length Frequencies from at FSRS recruitment traps in LFA 31B. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
@@ -218,8 +218,8 @@
 
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFfsrs33.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFfsrs32.pdf}
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFfsrs32.pdf}}{Figure 19}
         \caption{Carapace Length Frequencies from at FSRS recruitment traps in LFA 32. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
@@ -227,8 +227,8 @@
 
     \begin{figure}
     \centering
-        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFfsrs33.pdf}}{Figure x}
-        \includegraphics[width=1\textwidth]{\ebh CLFfsrs33.pdf}
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFfsrs33.pdf}}{Figure 20}
         \caption{Carapace Length Frequencies from at FSRS recruitment traps in LFA 33. Dark grey: males, light grey: females, red line: minimum legal size.}
 
     \end{figure}
@@ -236,7 +236,7 @@
 %fsrs commercial samples
 \begin{figure}
         \centering
-         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e FSRScommercialSamples.png}}}{Figure 5}\\
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e FSRScommercialSamples.png}}}{Figure 21}\\
                      \caption{Location of the FSRS commercial trap samples collected between 2004 and 2017.}
         \end{figure}
 
@@ -246,7 +246,7 @@
 \begin{figure}
         \centering
          \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Landings27.png}}
-                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Landings28.png}}}{Figure 5}\\
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Landings28.png}}}{Figure 22}\\
                      \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Landings29.png}}
                      \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Landings30.png}}
                     
@@ -256,7 +256,7 @@
 \begin{figure}
         \centering
          \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Landings31A.png}}
-                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Landings31B.png}}}{Figure 5}\\
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Landings31B.png}}}{Figure 23}\\
                      \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Landings32.png}}
                      \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Landings33.png}}
                     
@@ -272,7 +272,7 @@
 
 \begin{figure}
         \centering
-         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e AtSeaIndictors/MethodMedianSize.png}}}{Figure 5}\\
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e AtSeaIndictors/MethodMedianSize.png}}}{Figure 24}\\
                      \caption{Boxplot of the combined estimates of median size by data source.}
         \end{figure}
 
@@ -280,26 +280,26 @@
 
 \begin{figure}
         \centering
-         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e AtSeaIndictors/CombinedMedianSizeByLFA27-30.png}}}{Figure 5}\\
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e AtSeaIndictors/CombinedMedianSizeByLFA27-30.png}}}{Figure 25}\\
                      \caption{Boxplot of the annual estimates of median size by data source for LFA 27-30.}
         \end{figure}
 
 
 \begin{figure}
         \centering
-         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e AtSeaIndictors/CombinedMedianSizeByLFA31A-33.png}}}{Figure 5}\\
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e AtSeaIndictors/CombinedMedianSizeByLFA31A-33.png}}}{Figure 26}\\
                      \caption{Boxplot of the annual estimates of median sizes by data source for LFA 31A-33.}
         \end{figure}
 
 \begin{figure}
         \centering
-         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e AtSeaIndictors/SensitivityLFA27BoxplotsMedian.png}}}{Figure 5}\\
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e AtSeaIndictors/SensitivityLFA27BoxplotsMedian.png}}}{Figure 27}\\
                      \caption{Boxplots of estimated median carapace length from sea sampling dates (weeks of season) observed from LFA 27 during the 2011-2015 seasons. }
         \end{figure}
 
 \begin{figure}
         \centering
-         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e AtSeaIndictors/FSRSCommSensMedianSize.png}}}{Figure 5}\\
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e AtSeaIndictors/FSRSCommSensMedianSize.png}}}{Figure 28}\\
                      \caption{Boxplots of estimated median carapace length from FSRS commercial sampling dates (weeks of season) observed from LFA 33 during the 2004-2016 seasons. }
         \end{figure}
 
@@ -601,22 +601,22 @@
 \begin{landscape}
 \begin{figure}
         \centering
-         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mated27.png}}
-                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mated28.png}}}{Figure 5}\\
-                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mated29.png}}
-                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mated30.png}}
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mature27.png}}
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mature28.png}}}{Figure 5}\\
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mature29.png}}
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mature30.png}}
                     
-                    \caption{Time series of the proportion mature lobster in the landings from at sea samples, and /or  port samples. }
+                    \caption{Time series of the proportion mature lobster in the landings from at sea samples, and /or  port samples. Time series of changes in minimum legal sizes are shown in green.}
         \end{figure}
 
 \begin{figure}
         \centering
-         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mated31A.png}}
-                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mated31B.png}}}{Figure 5}\\
-                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mated32.png}}
-                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mated33.png}}
-                    
-                    \caption{Time series of the proportion mature lobster in the landings at sea samples, and /or  port samples.}
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mature31A.png}}
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mature31B.png}}}{Figure 5}\\
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mature32.png}}
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/CombinedDataProportion\D Mature33.png}}
+                     
+                    \caption{Time series of the proportion mature lobster in the landings at sea samples, and /or  port samples. Time series of changes in minimum legal sizes are shown in green.}
         \end{figure}
 
 %\begin{figure}
@@ -938,6 +938,31 @@
                      \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/FSRSTemp33.png}}
                     
                     \caption{Time series of bottom temperatures across LFAs. Data represents the mean and standard deviation of the fishing season from the FSRS recruitment traps.}
+        \end{figure}
+
+\end{landscape}
+
+%Fishing Effort
+
+\begin{landscape}
+\begin{figure}
+        \centering
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA27.png}}
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA28.png}}}{Figure 5}\\
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA29.png}}
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA30.png}}
+                    
+                    \caption{Time series of fishing effort in thousands of trap hauls across LFAs.}
+        \end{figure}
+
+\begin{figure}
+        \centering
+         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA31A.png}}
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA31B.png}}}{Figure 5}\\
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA32.png}}
+                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA33.png}}
+                    
+                    \caption{Time series of fishing effort in thousands of trap hauls across LFAs.}
         \end{figure}
 
 \end{landscape}
@@ -1495,32 +1520,32 @@
         \centering
          \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR27.png}}}{Figure 5}
                      \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR29.png}}
-                    \caption{Phase plot using the three year running median of landings and three year running median of CCIR exploitation index compared against the proposed upper stock and limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the maximum exploitation index respectively.}
+                    \caption{Phase plot using the three year running median of CPUE and three year running median of CCIR exploitation index compared against the proposed upper stock and limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the maximum exploitation index respectively.}
         \end{figure}
 
 \begin{figure}
         \centering
          \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR30.png}}}{Figure 5}
                      \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR31A.png}}
-               \caption{Phase plot using the three year running median of landings and three year running median of CCIR exploitation index compared against the proposed upper stock and limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the maximum exploitation index respectively.}
+               \caption{Phase plot using the three year running median of CPUE and three year running median of CCIR exploitation index compared against the proposed upper stock and limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the maximum exploitation index respectively.}
         \end{figure}
 
 \begin{figure}
         \centering
          \pdftooltip{      \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR31B.png}}}{Figure 5}
             \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR32.png}}
-                    \caption{Phase plot using the three year running median of landings and three year running median of CCIR exploitation index compared against the proposed upper stock and limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the maximum exploitation index respectively.}
+                    \caption{Phase plot using the three year running median of CPUE and three year running median of CCIR exploitation index compared against the proposed upper stock and limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the maximum exploitation index respectively.}
         \end{figure}
 
 \end{landscape}
 \begin{figure}
         \centering
          \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR33.png}}}{Figure 5}
-                    \caption{Phase plot using the three year running median of landings and three year running median of CCIR exploitation index compared against the proposed upper stock and limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the maximum exploitation index respectively.}
+                    \caption{Phase plot using the three year running median of CPUE and three year running median of CCIR exploitation index compared against the proposed upper stock and limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the maximum exploitation index respectively.}
         \end{figure}
 
 
-\iffalse
+%\iffalse
 % Molt model
 
     \begin{figure}
@@ -1978,8 +2003,267 @@
     \end{figure}
     
 
+%----------
 
 
+    %## windows 
+     \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NmalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NremovalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NfemalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NmoltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NberriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NeggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population where a small window (115-125 mm) was implemented for LFA 27N. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    
+    \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SmalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SremovalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SfemalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SmoltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SberriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SeggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a small window (115-125 mm) was implemented for LFA 27S. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    
+   \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC29malesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC29removalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC29femalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC29moltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC29berriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC29eggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a small window (115-125 mm) was implemented for LFA 29. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    
+    \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC30malesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC30removalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC30femalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC30moltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC30berriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC30eggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a small window (115-125 mm) was implemented for LFA 30. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    
+   \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AmalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AremovalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AfemalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AmoltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AberriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AeggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a small window (115-125 mm) was implemented for LFA 31A. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage
+   \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BmalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BremovalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BfemalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BmoltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BberriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BeggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a small window (115-125 mm) was implemented for LFA 31B. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+    \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC32malesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC32removalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC32femalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC32moltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC32berriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC32eggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a small window (115-125 mm) was implemented for LFA 32. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+    \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EmalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EremovalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EfemalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EmoltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EberriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EeggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a small window (115-125 mm) was implemented for LFA 33E. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+    \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WmalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WremovalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WfemalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WmoltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WberriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WeggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a small window (115-125 mm) was implemented for LFA 33W. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    
+    \clearpage
+%-----------
+
+    %## max size
+     \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NmalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NremovalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NfemalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NmoltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NberriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27NeggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population where a maximum size of 125 mm was implemented for LFA 27N. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+    \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SmalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SremovalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SfemalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SmoltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SberriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC27SeggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a maximum size of 125 mm was implemented for LFA 27S. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+   \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC29malesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC29removalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC29femalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC29moltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC29berriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC29eggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a maximum size of 125 mm was implemented for LFA 29. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+    \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC30malesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC30removalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC30femalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC30moltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC30berriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC30eggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a maximum size of 125 mm was implemented for LFA 30. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+   \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AmalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AremovalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AfemalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AmoltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AberriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31AeggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a maximum size of 125 mm was implemented for LFA 31A. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+   \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BmalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BremovalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BfemalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BmoltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BberriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC31BeggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a maximum size of 125 mm was implemented for LFA 31B. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+    \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC32malesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC32removalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC32femalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC32moltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC32berriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC32eggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a maximum size of 125 mm was implemented for LFA 32. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+    \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EmalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EremovalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EfemalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EmoltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EberriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33EeggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a maximum size of 125 mm was implemented for LFA 33E. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+    \begin{figure}
+    \centering
+    %\pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WmalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WremovalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WfemalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WmoltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WberriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC33WeggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plot showing the simulated population where a maximum size of 125 mm was implemented for LFA 33W. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+
+    \clearpage
     \begin{figure}
     \centering
         %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFfsrs33.pdf}}{Figure x}
@@ -1995,6 +2279,6 @@
         \caption{Summary of simulation model results for season reduction in each LFA.}   
 
     \end{figure}    
-\fi  
+%\fi  
 \end{document}
 

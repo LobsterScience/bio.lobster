@@ -210,7 +210,6 @@ if(DS %in% c('season.dates','season.dates.redo')) {
                 return(season.dates)
                   }
                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  print('This is not updated--Check with AMC')
                 
               #using dats from landings by port redo AMC Dec 1 2017
               #  a = aggregate(mns~SYEAR+LFA+SDATE,data=dats,FUN=length)
@@ -220,20 +219,28 @@ if(DS %in% c('season.dates','season.dates.redo')) {
               #          for(j  in 1:nrow(dd)){
               #                      d2 = subset(a,LFA == dd[j,'LFA'] & SYEAR==dd[j,'SYEAR'])
               #                      x = d2$mns
-              #                      i = ave(x, FUN = function(x) cumsum(x >= 30 & with(rle(x >= 30), rep(lengths, lengths)) >= 3)) 
+              #  i1=15
+              #      if(dd[j,'LFA'] %in% c(28:30)) i1 = 3
+
+              #                      i = ave(x, FUN = function(x) cumsum(x >= i1 & with(rle(x >= i1), rep(lengths, lengths)) >= 3)) 
               #                      ii = c(which(i>0)[1],which.max(i))
               #                      outs[[j]] = cbind(d2[ii[1],],d2[ii[2],'SDATE'])
               #                      }
               #    at = as.data.frame(do.call(rbind,outs))
               #    names(at) = c('SYEAR','LFA','START_DATE','nn','END_DATE')
               #    at$nn = NULL
+              #    season.dates=at
+              #         save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
+
+                    #Fish.Date = lobster.db('season.dates')
+                    Fish.Date = season.dates = sqlQuery(con,'select * from LOBSTER.FISHING_SEASONS')
+                    season.dates = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
+              
 
 
 
-
-
-                  #season.dates = sqlQuery(con,'select * from LOBSTER.FISHING_SEASONS')
-                  #save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
+                  
+                  save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
             }
 
 
@@ -275,11 +282,11 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     #Filtering by   
                     #Fish.Date = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FishingSeasonDates.csv"))
                     Fish.Date = lobster.db('season.dates')
-                    Fish.Date = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
+                    Fish.Date = backFillSeasonDates(Fish.Date,eyr=year(Sys.time()))
                     lfa  =  sort(unique(Fish.Date$LFA))
                     
                 
-                          print('Note the ODBC season Dates Need to be Updated AMC jan2017')
+                          print('Note the ODBC season Dates Were Updated AMC Sept2018')
                           
                           #lfa "27"  "28"  "29"  "30"  "31A" "31B" "32"  "33"  "34"  "35"  "36"  "38" 
 
@@ -354,7 +361,6 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       al=reshape(annualLandings,idvar="YR",times=substr(names(annualLandings)[-1],4,6),timevar="LFA",varying=list(names(annualLandings)[-1]),direction='long')
                       names(al)=c("SYEAR","LFA","C")
                       TotalLandings=rbind(subset(al,SYEAR>2000&!LFA%in%unique(sl$LFA)),subset(sl,SYEAR>2000))
-
                       logsInSeason$BUMPUP = NA
                       for(i in 1:length(lfa)){
                         tmplogs = subset(logsInSeason,LFA==lfa[i])
@@ -609,6 +615,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
              aS = atSea
              aS = addSYEAR(aS)
              ih = which(is.na(aS$SYEAR))
+             aS$SDATE = aS$STARTDATE
 
              aS$GRIDNO[which(aS$GRIDNO== -99)] <- NA
             LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
@@ -641,6 +648,8 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                             for(i in 1:length(lfa)) {
                                   h  = season.dates[season.dates$LFA==lfa[i],]  
                                   k = na.omit(unique(aS$SYEAR[aS$LFA==lfa[i]]))
+                                  h = na.omit(h)
+                                  k = intersect(k,h$SYEAR)
                                for(j in k){
                                    aS$WOS[aS$LFA==lfa[i] & aS$SYEAR==j] = floor(as.numeric(aS$SDATE[aS$LFA==lfa[i] & aS$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
@@ -943,12 +952,12 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
                             tt$Date = as.Date(tt$Date,format = '%d-%b-%y')
                             tt = subset(tt,LFA==33)
                             tt = addSYEAR(tt,'Date')
-                            tt = subset(tt,!is.na(SDATE))
+                            tt = subset(tt,!is.na(Date))
                             tt$WOS = NA
                             Fish.Date = lobster.db('season.dates')
                                h  =  Fish.Date[Fish.Date$LFA==33,]  
                                for(j in unique(tt$SYEAR)){
-                                   tt$WOS[tt$SYEAR==j] = floor(as.numeric(tt$SDATE[tt$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                   tt$WOS[tt$SYEAR==j] = floor(as.numeric(tt$Date[tt$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
                             tt = subset(tt,WOS>0)
                             fsrs.comm = tt

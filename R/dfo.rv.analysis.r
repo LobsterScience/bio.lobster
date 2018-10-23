@@ -128,7 +128,6 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             iy = which(year(set$sdate) %in% yr)
             iv = which(cas$spec==2550)
 pi='base'
-
         if(p$define.by.polygons) {
                if(p$area=='LFA41') {
                 l = l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
@@ -161,6 +160,7 @@ pi='base'
                 } else {
                               iz = which(set$strat %in% c(strat))
                 }
+   
                 se = set[intersect(iy,iz),]
                 se$EID = 1:nrow(se)
                 ca = cas[iv,]
@@ -263,8 +263,8 @@ pi='base'
                       bsN = list(NA,NA,NA)
                       nt = NA
                if(p$bootstrapped.ci) {
-                  bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='BC')
-                  bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
+                  bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='Percentile')
+                  bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='Percentile')
                   nt  = sum(sW$Nh)/1000
                 }
                      if(exists('big.ci',p)) {

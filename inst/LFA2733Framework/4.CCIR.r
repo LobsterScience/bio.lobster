@@ -1,7 +1,9 @@
 #9. CCIR.r
 
 require(bio.lobster)
-load_all('~/git/bio.ccir')
+#load_all('~/bio/bio.ccir')
+require(bio.ccir)
+
 require(bio.utilities)
 require(car)
 require(rstan)
@@ -43,7 +45,7 @@ if(redo.models) {
 									attr(out.logit.binomial,'model') <- 'logit.binomial'
 					out.logit.binomial.cov = list()
 									attr(out.logit.binomial.cov,'model') <- 'logit.binomial.cov'
-					mm = c('binomial'),'binomial.fishery.land')
+					mm = c('binomial')#,'binomial.fishery.land')
 
 for(i in 1:length(dat)) {
 print(i)
@@ -153,7 +155,7 @@ outs = list()
 #	iu = c(grep('LFA 27',outs),grep('LFA 33',outs))
 #	outs = outs[-c(iu)]
 	o = do.call(rbind,outs)
-	ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,LFA,ERf75))
+	ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,LFA))
 #remove lfa 33 and 27 as treated as one
 
 #Split LFAs combined for one exploitation rate

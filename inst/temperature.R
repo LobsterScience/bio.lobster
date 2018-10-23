@@ -19,44 +19,21 @@ fsrsT = subset(fsrsT,!duplicated(Dloc))
 lfas = c("27", "28", "29", "30", "31A", "31B", "32", "33")
 nLFAs = c(27, 28, 29, 30, 31.1, 31.2, 32, 33)
 
-fsrsT = subset(fsrsT,LFA%in%nLFAs&DEPTH<20&SYEAR>1999)
+TempData = subset(fsrsT,LFA%in%nLFAs&DEPTH<20&SYEAR>1999,c("HAUL_DATE", "LAT_DD", "LONG_DD", "DEPTH", "TEMP"))
+ write.csv(TempData,file.path( project.datadirectory("bio.lobster"),"Temperature Data","LobsterTempData.csv"),row.names=F)
 
 pdf('FSRStempsMap.pdf')
 LobsterMap('all')
 
-with(fsrsT,points(LONG_DD,LAT_DD,pch=16,cex=0.3,col=rgb(1,0,0,0.1)))
-with(ScallopTemp,points(LONGITUDE,LATITUDE,pch=16,cex=0.3,col=rgb(0,0,1,0.1)))
+with(TempData,points(LONG_DD,LAT_DD,pch=16,cex=0.3,col=rgb(1,0,0,0.1)))
+#with(ScallopTemp,points(LONGITUDE,LATITUDE,pch=16,cex=0.3,col=rgb(0,0,1,0.1)))
 dev.off()
 
-
-with(subset(fsrsT,!duplicated(paste(LATITUDE,LONGITUDE))),tapply(TEMP,LFA,length))
-
-fsrsT$y = decimal_date(fsrsT$HAUL_DATE)
-fsrsT$cos.y = cos(2*pi*fsrsT$y)
-fsrsT$sin.y = sin(2*pi*fsrsT$y)
-
-#mf = formula(TEMP ~ s(SYEAR, k=5, bs="ts") + s(cos.d, k=3, bs="ts") + s(sin.d, k=3, bs="ts") )
- require(mgcv)  
-
-
-TempModel <- gam(TEMP ~ s(sin.y,k=3,bs="ts")+s(cos.y,k=3,bs="ts")+s(y)+as.factor(subarea),data=fsrsT)
- summary(TempModel)
- #plot(TempModel)
-
-plot(TEMP~y,data=subset(fsrsT,subarea='27N'),pch=16,col=rgb(0,0,0,0.1),cex=0.4,ylim=c(-2,25),xlim=c(1998,2027))
-y=	seq(1999,2027,0.01)
-t=predict(TempModel,data.frame(y=y,cos.y=cos(2*pi*y),sin.y=sin(2*pi*y),subarea='27N'),type='response')
- lines(y,t,col=2)
-y=	seq(1998.4,2027.4,1)
-t=predict(TempModel,data.frame(y=y,cos.y=cos(2*pi*y),sin.y=sin(2*pi*y),subarea='27N'),type='response')
-
- lines(y,t,col=2,lty=2,lwd=2)
 
 pdf('FSRStemps.pdf',height=11,width=8)
 par(mfrow=c(5,1),mar=c(3,3,3,3),las=1)
 for(i in 1:length(lfas)){
-	plot(TEMP~HAUL_DATE,subset(fsrsT,LFA==nLFAs[i]),pch='.',col=rgb(0,0,0,0.2),main=paste("LFA",lfas[i]),ylim=c(-1,18))
-	#lines(rDailyTemps
+	plot(TEMP~HAUL_DATE,subset(TempData,LFA==nLFAs[i]),pch='.',col=rgb(0,0,0,0.2),main=paste("LFA",lfas[i]),ylim=c(-1,18))
 
 }
 dev.off()
@@ -88,13 +65,13 @@ dev.off()
 	
 
 
-	fsrsTemp=list()
- 	for(i in 1:length(lfas)){
- 		t=with(subset(LobTempData,subarea==lfas[i]),tapply(TEMP,SYEAR,mean))
- 		t.sd=with(subset(LobTempData,subarea==lfas[i]),tapply(TEMP,SYEAR,sd))
- 		fsrsTemp[[i]] = data.frame(Area=lfas[i],year=as.numeric(names(t)),t=t,t.sd=t.sd)
- 	}
-	fsrsTemp = do.call("rbind",fsrsTemp)
+	#fsrsTemp=list()
+ #	for(i in 1:length(lfas)){
+ #		t=with(subset(LobTempData,subarea==lfas[i]),tapply(TEMP,SYEAR,mean))
+ #		t.sd=with(subset(LobTempData,subarea==lfas[i]),tapply(TEMP,SYEAR,sd))
+ #		fsrsTemp[[i]] = data.frame(Area=lfas[i],year=as.numeric(names(t)),t=t,t.sd=t.sd)
+ #	}
+	#fsrsTemp = do.call("rbind",fsrsTemp)
 
 
 	baseLine = bathymetry.db(p=p, DS="baseline")
@@ -121,6 +98,7 @@ points(as.Date(timestamp),btemp,pch='.',col=rgb(0,0,1,0.2))
 
 RLibrary("bio.bathymetry")
 LobsterTemp = read.csv("LobsterTempData.csv")
+
 InshoreScallop = read.csv(file.path(project.datadirectory('bio.lobster'),'Temperature Data','InshoreScallopTemp.csv'))
 InshoreScallop$DATE = as.Date(InshoreScallop$DATE,"%d/%m/%Y")
 InshoreScallop$LONGITUDE = convert.dd.dddd(InshoreScallop$LONGITUDE)
@@ -155,7 +133,7 @@ TempData = rbind(
  TempData = TempData1
 
 		TempData = assignArea(TempData)
-		TempData = assignSubArea2733(TempData)
+		TempData = assignSubArea2733(TempData)B
 
  write.csv(TempData,file.path( project.datadirectory("bio.lobster"),"Temperature Data","TempData.csv"),row.names=F)
  TempData = read.csv(file.path( project.datadirectory("bio.lobster"),"Temperature Data","TempData.csv"))

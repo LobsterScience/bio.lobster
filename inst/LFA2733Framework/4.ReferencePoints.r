@@ -32,7 +32,7 @@ la()
 				if(po == 33) 	{ lp = p[,c('SYEAR',names(p)[grep(po,names(p))])]; lp = rename.df(lp,'SYEAR','YR'); lp$YR = as.numeric(substr(lp$YR,6,9)); lp = subset(lp,YR>=1985)}
 				op = list()
 				
-				LandPlot(land = lp,usr = usr[i],lrp=lrp[i],lfa = ad[i])
+				LandPlot(lp,usr = usr[i],lrp=lrp[i],lfa = ad[i])
 			}
 
 
@@ -54,7 +54,7 @@ mu = aggregate(CPUE~LFA,data=subset(hq,YR %in% 1990:2016),FUN=median)
 	
 	for(i in 1:length(ad)) {
 		lp = subset(hq,LFA==ad[i],select=c(YR,CPUE))
-		CatchRatePlot(land = lp,usr = usr[i],lrp=lrp[i],lfa = ad[i])
+		CatchRatePlot(lp,usr = usr[i],lrp=lrp[i],lfa = ad[i])
 	}
 
 
@@ -85,9 +85,9 @@ for(i in 1:length(ad)){
 
 		ip = subset(iop,LFA==ad[i])
 		lp = subset(allS,LFA==ad[i],select=c(YR,FSRS.Legal.CPUE))
-		FSRSCatchRatePlot(land = lp,usr = ip$usrL,lrp=ip$lrpL,lfa = ad[i],recruit=F)
+		FSRSCatchRatePlot(lp,usr = ip$usrL,lrp=ip$lrpL,lfa = ad[i],recruit=F)
 		lp = subset(allS,LFA==ad[i],select=c(YR,FSRS.Recruit.CPUE))
-		FSRSCatchRatePlot(land = lp,usr = ip$usrR,lrp=ip$lrpR,lfa = ad[i],recruit=T)
+		FSRSCatchRatePlot(lp,usr = ip$usrR,lrp=ip$lrpR,lfa = ad[i],recruit=T)
 	
 	}
 
@@ -117,7 +117,7 @@ ad = c(27,29,30,'31A','31B',32,33)
 				RR = subset(RRs,LFA==poi)$ERfm
 				RR7 = subset(RR75,LFA==poi)$ERf75
 
-			ExploitationRatePlots(land = oo,usr = RR,lrp=RR7,lfa = ad[i])
+			ExploitationRatePlots(oo,usr = RR,lrp=RR7,lfa = ad[i])
 			
 
 			}

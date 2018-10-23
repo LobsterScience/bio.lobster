@@ -36,7 +36,7 @@ p$lfas = c("27N","27S", "29", "30") # specify lfas in 2 batches
 	names(flist) = p$lfas
 
 	rlist = list(plist=plist,mlist=mlist,flist=flist)
-	save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim1ResultsBase.rdata"))
+	save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim3ResultsBase.rdata"))
 
 
 		simBubPlot(rlist,graphic='R',cex.lab=2,cex.axis=1.5)
@@ -685,3 +685,10 @@ compareCLF(CLF.lst,bins=bins,col='grey',rel=T,graphic='pdf',filen=file.path(proj
 
 
 
+##############
+
+
+
+	load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim3ResultsBase.rdata"))
+
+	transMat = getTransMatrix(rlist)

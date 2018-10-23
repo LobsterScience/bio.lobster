@@ -1,5 +1,5 @@
 #' @export
-lobGridPlot <- function(Data,lvls,bcol="YlGnBu",border=1,FUN=mean,place=0,rev=F) {  
+lobGridPlot <- function(Data,lvls,bcol="YlGnBu",border=1,FUN=mean,place=2,rev=F) {  
 
 	require(PBSmapping)
 	require(RColorBrewer)
@@ -19,6 +19,7 @@ lobGridPlot <- function(Data,lvls,bcol="YlGnBu",border=1,FUN=mean,place=0,rev=F)
 	cols   <- brewer.pal(length(lvls),bcol) 
 	if(rev) cols = rev(cols)
 	lvls<-c(lvls,max(lvls)*100)
+	#browser()
 	
 	pdata  <- makeProps(pdata, lvls, "col", cols) 
 	pdata$border<-border

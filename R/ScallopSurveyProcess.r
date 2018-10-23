@@ -1,5 +1,5 @@
 #' @export
-ScallopSurveyProcess<-function(size.range=c(0,220),SPA,Yrs,bin.size=5,log=F){
+ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex=0:3,convert2nest=F){
 	
 	require(lubridate)
 
@@ -10,10 +10,10 @@ ScallopSurveyProcess<-function(size.range=c(0,220),SPA,Yrs,bin.size=5,log=F){
 	# calculate area swept for bycatch
 	scallop.tows$GEAR_WIDTH_BYCATCH<-with(scallop.tows,DRAG_WIDTH*(NUM_LINED+NUM_UNLINED)*0.3048)
 	scallop.tows$GEAR_WIDTH_BYCATCH[scallop.tows$MGT_AREA_ID=='29']<-18*0.3048
-	scallop.tows$AREA_SWEPT<-with(scallop.tows,GEAR_WIDTH_BYCATCH*TOW_LEN)
+	scallop.tows$AREA_SWEPT<-with(scallop.tows,GEAR_WIDTH_BYCATCH*TOW_LEN)/10^6
 
 	# select for lobsters
-	lobster.catch<-subset(scallop.catch,SPECCD_ID==2550,c(2,5:8))
+	lobster.catch<-subset(scallop.catch,SPECCD_ID==2550&SEX_ID%in%sex,c(2,5:8))
 	
 	# merge with tow data
 	ScalSurvLob.dat<-merge(scallop.tows,lobster.catch,all=T)
@@ -28,6 +28,12 @@ ScallopSurveyProcess<-function(size.range=c(0,220),SPA,Yrs,bin.size=5,log=F){
 	ScalSurvLob.dat$lon<-convert.dd.dddd(ScalSurvLob.dat$START_LONG)
 	ScalSurvLob.dat$lat<-convert.dd.dddd(ScalSurvLob.dat$START_LAT)
 
+	if(convert2nest == T){
+		x = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data',"survey","RhoLobScal.rds"))
+		NetConv = with(x,data.frame(MEAS_VAL=length,LobSurvCF=rho))
+		ScalSurvLob.dat = merge(ScalSurvLob.dat,NetConv,all=T)
+		ScalSurvLob.dat$NLobs = ScalSurvLob.dat$NLobs * ScalSurvLob.dat$LobSurvCF
+	} 
 
 	tmp<-with(ScalSurvLob.dat,tapply(NLobs,TOW_SEQ,sum))
 	d1<-subset(ScalSurvLob.dat,!duplicated(TOW_SEQ),c('TOW_SEQ','YEAR','TOW_DATE','MGT_AREA_ID','AREA_SWEPT','lon','lat'))
@@ -40,13 +46,14 @@ ScallopSurveyProcess<-function(size.range=c(0,220),SPA,Yrs,bin.size=5,log=F){
 
 	CLF<-data.frame(TOW_SEQ=sets,t(sapply(sets,function(s){with(subset(ScalSurvLob.dat,TOW_SEQ==s&MEAS_VAL>=min(bins)&MEAS_VAL<max(bins)),hist(MEAS_VAL,breaks=bins,plot=F)$count)})))
 	names(CLF)[-1]<-paste0("CL",bins[-1])
-	
+	#if(convert2nest == T){
+
 	ScalSurvLob<-merge(ScalSurvLob,CLF,all=T)
 
 	# standardized to 4000 m^2
-	ScalSurvLob$NLobsStd<-ScalSurvLob$NLobs/ScalSurvLob$AREA_SWEPT*4000
-	ScalSurvLob$LobDen<-ScalSurvLob$NLobs/ScalSurvLob$AREA_SWEPT*1000
-	ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])]<-sweep(ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])],1,FUN="/", ScalSurvLob$AREA_SWEPT/4000)
+	#ScalSurvLob$NLobsStd<-ScalSurvLob$NLobs/ScalSurvLob$AREA_SWEPT*4000
+	ScalSurvLob$LobDen<-ScalSurvLob$NLobs/ScalSurvLob$AREA_SWEPT
+	ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])]<-sweep(ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])],1,FUN="/", ScalSurvLob$AREA_SWEPT)
 
     # add LFA column
     events <- with(ScalSurvLob,data.frame(EID=TOW_SEQ,X=lon,Y=lat))

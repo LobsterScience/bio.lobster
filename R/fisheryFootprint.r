@@ -59,7 +59,7 @@ fisheryFootprint <- function(x,res=0.1,var = 'CPUE',gini = T, propArea=NULL){
 			pdf(file.path(fn,paste('fisheryFootprint',lab,y,'pdf',sep=".")))
 			LobsterMap(title=y,'41',labels='nn',addSummerStrata=F,poly.lst = list(grid,xx))
 			
-			ContLegend('bottomright',bty='n',cex=0.8,lvls = xll,Cont.data = data.frame(col=cols),title=ti)
+			contLegend('bottomright',bty='n',cex=0.8,lvls = xll,Cont.data = data.frame(col=cols),title=ti)
  			dev.off()
  			m=m+1
  	#add in gini index

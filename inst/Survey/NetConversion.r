@@ -2,8 +2,14 @@ require(bio.lobster)
 require(bio.utilities)
 require(gamlss)
 options(stringsAsFactors=F)
-load(file.path(project.datadirectory('bio.lobster'),'data','survey','ComparativeSurvey1MMTmens.rdata'))
-	ComparativeSurvey = readRDS(file=file.path(project.datadirectory('bio.lobster'),"outputs","comarativeSurvey2.rds"))
+
+	#surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Jul","Jun"),bin.size=1)
+ 	#comparativeStations = sort(subset(surveyLobsters34,YEAR==2016&GEAR=="280 BALLOON")$STATION)
+	#ComparativeSurvey = subset(surveyLobsters34,YEAR==2016&STATION%in%comparativeStations)
+	#saveRDS(ComparativeSurvey,file=file.path(project.datadirectory('bio.lobster'),"outputs","comparativeSurvey2.rds"))
+	
+
+ComparativeSurvey = readRDS(file=file.path(project.datadirectory('bio.lobster'),"outputs","comparativeSurvey2.rds"))
 
 i = ComparativeSurvey$STATION[which(ComparativeSurvey$AREA_SWEPT<0.005)]
 ComparativeSurvey = subset(ComparativeSurvey,!STATION %in% i)
@@ -31,16 +37,20 @@ dat = merge(CSn,CSb,by=c('STATION','Length'))
 dat$NEST = round(dat$NEST)
 dat$BALL = round(dat$BALL) 
 dat = subset(dat,Length>45)
-#dat = subset(dat,!STATION %in% '83H')
+dat = subset(dat,!STATION %in% '83H')
+
 out = gamlss(cbind(NEST,BALL)~cs(Length,df=3),nu.formula=~cs(Length,df=3),data=dat,family=ZIBB())
 newd = data.frame(Length=46:144)
 mu = predict(out,what='mu',type='response',newdata=newd)
 nu = predict(out,what='nu',type='response',newdata=newd)
-
 rho = mu / (1-mu+nu)
 
 ov = aggregate(cbind(NEST,BALL)~Length,data=dat,FUN=sum)
 ov$C = ov$NEST / ov$BALL
+out = gamlss(cbind(NEST,BALL)~cs(Length,df=3),data=ov,family=BB())
+newd = data.frame(Length=46:144)
+mu = predict(out,what='mu',type='response',newdata=newd)
+rho = mu / (1-mu)
 
 with(ov,plot(Length,C))
 lines(newd[,1],rho)

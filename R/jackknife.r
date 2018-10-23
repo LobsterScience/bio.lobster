@@ -11,7 +11,7 @@ jackknife<-function(data,err='sd',run=T){
 	Cf<-catch/effort
 	n<-with(data,tapply(effort,time,length))
 
-	out.dat<-data.frame(time=t,n,catch,effort,cpue=Cf,cpue.var=rep(NA,length(t)))
+	out.dat<-data.frame(time=t,n,catch,effort,cpue=Cf)
 	
 	if(run){
 		for (i in 1:length(t)){
@@ -26,7 +26,10 @@ jackknife<-function(data,err='sd',run=T){
 			out.dat$cpue[i]<-mean(Rj)
 			if(err=='sd')out.dat$cpue.var[i]<-var(Rj)
 			if(err=='se')out.dat$cpue.var[i]<-1/(n[i]*(n[i]-1))*sum((Rj-mean(Rj))^2)
-			
+			if(err=='both'){
+				out.dat$cpue.sd[i]<-var(Rj)
+				out.dat$cpue.se[i]<-1/(n[i]*(n[i]-1))*sum((Rj-mean(Rj))^2)
+			}
 		}
 	}
 	print(Sys.time()-start)

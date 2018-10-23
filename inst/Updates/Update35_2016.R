@@ -1,5 +1,5 @@
 ####### Update 35: May 2015
-loadfunctions('bio.lobster')
+require('bio.lobster')
 
 	## Landings
 
