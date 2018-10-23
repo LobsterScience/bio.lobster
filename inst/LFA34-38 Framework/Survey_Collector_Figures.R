@@ -39,4 +39,9 @@ LobsterMap(ylim=c(44.1,45.7),xlim=c(-62.2,-60), addGrids= F, title= "Collector S
 points(latitude~longitude, collector, pch = 21, cex=0.5, bg='red')
 
 
+#Dive Transect locations
+pdf(file.path(project.datadirectory("bio.lobster"), "figures","collectors","divesite.pdf"),8,11)
+LobsterMap(ylim=c(43.45,43.85),xlim=c(-66.2,-65.7), addGrids= F, title= "Collector Site Locations")
+points(latitude~longitude, collector, pch = 21, cex=1, bg='red')
 
+	
