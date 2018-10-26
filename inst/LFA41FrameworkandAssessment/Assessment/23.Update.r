@@ -1,11 +1,13 @@
 ### Update!!! ####
  
- 
+#static tables need to be updated by CDenton
+# logs41, annual.landings, seasonal.landings
+
+
 p = bio.lobster::load.environment()
- 
-# run this for update plots:
-Update.plots=T
-source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','1.DataImport.r'))
+
+# run these to get and update data objects 
+source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','1.DataImport.r')) # on windows with connection
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','2.stratifiedAnalysis.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','2a.stratifiedLargeFemales.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','2b.stratifiedSexRatios.r'))
@@ -16,7 +18,8 @@ source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41Frameworkand
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','3.reproductivePotential.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','5a.figureLengthFreqs.r'))
 
-
+# run this for update plots:
+Update.plots=T
 
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','15.indicators.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','3a.reproductivePotentialRefPoints.r'))
