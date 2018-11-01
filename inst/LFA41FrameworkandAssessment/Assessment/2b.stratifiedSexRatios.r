@@ -43,8 +43,8 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
 		aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'sexLFA41polygonSummerRV.rdata  '))
-    write.csv(aa,file=file.path(fp,'indicators','DFO.restratified.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'sexLFA41polygonSummerRV.rdata'))
+    write.csv(aa,file=file.path(fp,'indicators','DFO.restratified.SexRatio.csv'))
 
 
 
@@ -80,8 +80,8 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'sexLFA41NEFSCspringrestratified.rdata  '))
-     write.csv(aa,file=file.path(fp,'indicators','NEFSC.spring.restratified.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'sexLFA41NEFSCspringrestratified.rdata'))
+     write.csv(aa,file=file.path(fp,'indicators','NEFSC.spring.restratified.SexRatio.csv'))
 
 
 
@@ -105,8 +105,8 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'sexLFA41NEFSCfallrestratified.rdata  '))
-        write.csv(aa,file=file.path(fp,'indicators','NEFSC.fall.restratified.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'sexLFA41NEFSCfallrestratified.rdata'))
+        write.csv(aa,file=file.path(fp,'indicators','NEFSC.fall.restratified.SexRatio.csv'))
 
 
 #DFO Georges
@@ -140,8 +140,8 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'sexLFA41dfogeorges.rdata  '))
-        write.csv(aa,file=file.path(fp,'indicators','DFO.georges.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'sexLFA41dfogeorges.rdata'))
+        write.csv(aa,file=file.path(fp,'indicators','DFO.georges.SexRatio.csv'))
 
 ##################################### 
 #####mature lobster sex ratios
@@ -182,8 +182,9 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
 		aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'maturesexLFA41polygonSummerRV.rdata  '))
-    write.csv(aa,file=file.path(fp,'indicators','DFO.restratified.Mature.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'maturesexLFA41polygonSummerRV.rdata'))
+        load(file=file.path(fp,'maturesexLFA41polygonSummerRV.rdata'))
+    write.csv(aa,file=file.path(fp,'indicators','DFO.restratified.Mature.SexRatio.csv'))
 
 
 #NEFSC spring
@@ -214,8 +215,8 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'maturesexLFA41NEFSCspringrestratified.rdata  '))
-  write.csv(aa,file=file.path(fp,'indicators','NEFSC.spring.restratified.Mature.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'maturesexLFA41NEFSCspringrestratified.rdata'))
+  write.csv(aa,file=file.path(fp,'indicators','NEFSC.spring.restratified.Mature.SexRatio.csv'))
 
 # Fall survey 
 # restratified
@@ -236,8 +237,8 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'maturesexLFA41NEFSCfallrestratified.rdata  '))
-  write.csv(aa,file=file.path(fp,'indicators','NEFSC.fall.restratified.Mature.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'maturesexLFA41NEFSCfallrestratified.rdata'))
+  write.csv(aa,file=file.path(fp,'indicators','NEFSC.fall.restratified.Mature.SexRatio.csv'))
 
 
 
@@ -275,8 +276,8 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'maturesexLFA41dfogeorges.rdata  '))
-write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.Mature.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'maturesexLFA41dfogeorges.rdata'))
+write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.Mature.SexRatio.csv'))
     
 
 
@@ -311,8 +312,8 @@ write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.Mature.SexRatio.csv  ')
 
         aa = do.call(rbind,out)
     aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'immaturesexLFA41polygonSummerRV.rdata  '))
-     write.csv(aa,file=file.path(fp,'indicators','DFO.restratified.immature.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'immaturesexLFA41polygonSummerRV.rdata'))
+     write.csv(aa,file=file.path(fp,'indicators','DFO.restratified.immature.SexRatio.csv'))
 
 #NEFSC spring
 
@@ -346,8 +347,8 @@ write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.Mature.SexRatio.csv  ')
 
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'immaturesexLFA41NEFSCspringrestratified.rdata  '))
-     write.csv(aa,file=file.path(fp,'indicators','NEFSC.spring.restratified.immature.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'immaturesexLFA41NEFSCspringrestratified.rdata'))
+     write.csv(aa,file=file.path(fp,'indicators','NEFSC.spring.restratified.immature.SexRatio.csv'))
 
 
 
@@ -369,8 +370,8 @@ write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.Mature.SexRatio.csv  ')
 
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'immaturesexLFA41NEFSCfallrestratified.rdata  '))
-  write.csv(aa,file=file.path(fp,'indicators','NEFSC.fall.restratified.immature.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'immaturesexLFA41NEFSCfallrestratified.rdata'))
+write.csv(aa,file=file.path(fp,'indicators','NEFSC.fall.restratified.immature.SexRatio.csv'))
 
 #DFO Georges
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
@@ -406,8 +407,8 @@ write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.Mature.SexRatio.csv  ')
 
         aa = do.call(rbind,out)
         aa$sex = rep(c('male','femberr'),each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'immaturesexLFA41dfogeorgeshi.rdata  '))
-      write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.base.immature.SexRatio.csv  '))
+        save(aa,file=file.path(fp,'immaturesexLFA41dfogeorgeshi.rdata'))
+      write.csv(aa,file=file.path(fp,'indicators','DFO.Georges.base.immature.SexRatio.csv'))
 
 
 

@@ -13,17 +13,17 @@ lobster.db('logs41') #make sure to do a database recapture through logs41.redo b
 
 
 logs41 = rename.df(logs41,c('FV_FISHED_DATETIME'),c('DATE_FISHED'))
+off41 = rename.df(off41,c('LOB_EST_LBS','ADJ_LOB_LBS'),c('EST_WEIGHT_LOG_LBS','ADJCATCH'))													
 
 logs41$yr = year(logs41$DATE_FISHED) #2002 to present
 ziff41$yr = year(ziff41$DATE_FISHED) #1995 to 2001
 ziff41$DDLON = ziff41$DDLON * -1
 off41$yr  = year(off41$DATE_FISHED) #1981 to 1994
  
-off41 = subset(off41,  select=c('MON_DOC_ID','VR_NUMBER','DATE_FISHED','DDLAT','DDLON','NUM_OF_TRAPS','LOB_EST_LBS','ADJ_LOB_LBS','yr'))
+off41 = subset(off41,  select=c('MON_DOC_ID','VR_NUMBER','DATE_FISHED','DDLAT','DDLON','NUM_OF_TRAPS','EST_WEIGHT_LOG_LBS','ADJCATCH','yr'))
 ziff41 = subset(ziff41,select=c('MON_DOC_ID','VR_NUMBER','DATE_FISHED','DDLAT','DDLON','NUM_OF_TRAPS','EST_WEIGHT_LOG_LBS','ADJCATCH','yr'))
 logs41 = subset(logs41, select=c('MON_DOC_ID','VR_NUMBER','DATE_FISHED','DDLAT','DDLON','NUM_OF_TRAPS','EST_WEIGHT_LOG_LBS','ADJCATCH','yr'))
 
-off41 = rename.df(off41,c('LOB_EST_LBS','ADJ_LOB_LBS'),c('EST_WEIGHT_LOG_LBS','ADJCATCH'))													
 
 #oct16-oct15 fishing year until 2005 switch to Jan 1 to Dec 31
 
