@@ -50,13 +50,13 @@ d = fisheryFootprint(pra41,var='EFFORT',res=0.05,propArea=.95)
 
 
 #similar patterns for Landings with prop of landings and gini, but what about changing resolution, which remains robust
-rr = c(.05,.1,.15,.2,.25,.5)
-out = list()
-for(i in 1:length(rr)) {
-		out[[i]] = fisheryFootprint(pra41,var='LANDINGS',propArea=0.95,res=rr[i])
-	}
-
-correlationMatrix(cbind(out[[c(1,2)]][,1],out[[c(2,2)]][,1],out[[c(3,2)]][,1],out[[c(4,2)]][,1],out[[c(5,2)]][,1],out[[c(6,2)]][,1]))
+#rr = c(.05,.1,.15,.2,.25,.5)
+#out = list()
+#for(i in 1:length(rr)) {
+#		out[[i]] = fisheryFootprint(pra41,var='LANDINGS',propArea=0.95,res=rr[i])
+#	}
+#
+#correlationMatrix(cbind(out[[c(1,2)]][,1],out[[c(2,2)]][,1],out[[c(3,2)]][,1],out[[c(4,2)]][,1],out[[c(5,2)]][,1],out[[c(6,2)]][,1]))
 
 #gini is a better metric than integer of an arbitrary number of squares and the resolution
 

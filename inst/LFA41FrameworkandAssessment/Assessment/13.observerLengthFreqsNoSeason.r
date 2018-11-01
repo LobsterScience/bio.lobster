@@ -97,7 +97,7 @@ la()
 
 #seasonal and annual changes by area
 	l = unique(O$Area)
-	pdf('~/tmp/Olenfeq.pdf')
+	#pdf('~/tmp/Olenfeq.pdf')
 
 	for(j in l) {
 			P = subset(O,Area==j)
@@ -119,9 +119,9 @@ la()
 
 				}
 		}
-dev.off()
+#dev.off()
 
-O  = subset(O,yr < 2017)
+#O  = subset(O,yr < 2017)
 
 				#overall pattern does not change with seasonality, not does the central tendency just go with area not season
 

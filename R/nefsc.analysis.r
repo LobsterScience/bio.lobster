@@ -181,6 +181,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                 }
 
             if(nrow(ca)>=1) {
+#browser()
 		        ca = aggregate(cbind(TOTWGT,TOTNO)~MISSION+SETNO,data=ca,FUN=sum)
                   sc = merge(se,ca,by=c('MISSION','SETNO'),all.x=T)
                   sc[,c('TOTWGT','TOTNO')] = na.zero(sc[,c('TOTWGT','TOTNO')])
@@ -196,7 +197,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                   if(p$reweight.strata) st$NH = st$NH * st$Pr #weights the strata based on area in selected region
                
                   if(exists('temperature',p)) {sc = sc[!is.na(sc$BOTTEMP),] ; sc$TOTNO = sc$BOTTEMP; sc$TOTWGT = sc$BOTTEMP }
-        
+                  if(nrow(sc)==0)next()
                   st = st[order(st$Strata),]
                   st = Prepare.strata.file(st)
                   sc1= sc

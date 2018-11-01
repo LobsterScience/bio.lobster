@@ -15,13 +15,17 @@ la()
 lobster.db('logs41') #make sure to do a database recapture through logs41.redo before moving on
 
 logs41 = rename.df(logs41,c('FV_FISHED_DATETIME'),c('DATE_FISHED'))
+off41 = rename.df(off41,c('LOB_EST_LBS','ADJ_LOB_LBS'),c('EST_WEIGHT_LOG_LBS','ADJCATCH'))													
 
 logs41$yr = year(logs41$DATE_FISHED) #2002 to present
 ziff41$yr = year(ziff41$DATE_FISHED) #1995 to 2001
 ziff41$DDLON = ziff41$DDLON * -1
 off41$yr  = year(off41$DATE_FISHED) #1981 to 1994
+ 
+off41 = subset(off41,  select=c('MON_DOC_ID','VR_NUMBER','DATE_FISHED','DDLAT','DDLON','NUM_OF_TRAPS','EST_WEIGHT_LOG_LBS','ADJCATCH','yr'))
+ziff41 = subset(ziff41,select=c('MON_DOC_ID','VR_NUMBER','DATE_FISHED','DDLAT','DDLON','NUM_OF_TRAPS','EST_WEIGHT_LOG_LBS','ADJCATCH','yr'))
+logs41 = subset(logs41, select=c('MON_DOC_ID','VR_NUMBER','DATE_FISHED','DDLAT','DDLON','NUM_OF_TRAPS','EST_WEIGHT_LOG_LBS','ADJCATCH','yr'))
 
-logs41$OFFAREA = NULL	
 
 #oct16-oct15 fishing year until 2005 switch to Jan 1 to Dec 31
 
@@ -51,16 +55,3 @@ for(i in 1:length(fy)) {
 	}
 
 }
-
- pdf(file.path( project.datadirectory("bio.surfclam"), "figures","SeasonalFishingPattern.pdf"),8,11)
- 
- 
-  p$yrs= 2007:2015
-  par(mfrow=c(3,3),mar=c(0,0,0,0))
-  for (i in 1:length(p$yrs)) {
-      fishing.season(subset(fisheryList$log.data,year%in%p$yrs[[i]]&bank==1,c('record_date','area')),smooth=0.01,title="")
-      mtext("Relative effort",3,-2,cex=1.2,outer=T)
-    }
-    # Apparently they fish pretty much all year round except for the winter of 2015, when presumably Banquereau was under 15ft of snow like everywhere else
-  dev.off()
- 

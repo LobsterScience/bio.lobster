@@ -37,7 +37,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'LengthFrequenciesLFA41polygonSummerRV.rdata  '))
+        save(aa,file=file.path(fp,'LengthFrequenciesLFA41polygonSummerRV.rdata'))
 #Done Aug 22 2017
 
 #NEFSC spring
@@ -74,7 +74,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp, 'LengthFrequenciesLFA41NEFSCspringrestratified.rdata  '))
+        save(aa,file=file.path(fp, 'LengthFrequenciesLFA41NEFSCspringrestratified.rdata'))
 
 
 # fall
@@ -93,7 +93,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'LengthFrequenciesLFA41NEFSCfallrestratified.rdata  '))
+        save(aa,file=file.path(fp,'LengthFrequenciesLFA41NEFSCfallrestratified.rdata'))
 
 
 #DFO Georges
@@ -128,4 +128,4 @@ require(bio.groundfish)
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'LengthFrequenciesLFA41dfogeorges.rdata  '))
+        save(aa,file=file.path(fp,'LengthFrequenciesLFA41dfogeorges.rdata'))

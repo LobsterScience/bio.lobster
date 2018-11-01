@@ -125,7 +125,7 @@ la()
 		}
 dev.off()
 
-O  = subset(O,yr < 2016)
+#O  = subset(O,yr < 2016)
 
 #not all seasons and areas have adequate data the combinations to use are as determined by ACook Sept 2016
 
