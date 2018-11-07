@@ -15,6 +15,7 @@
 	    figdir = file.path(project.datadirectory("bio.lobster"),"figures","Assessment","LFA33")
 
 	    p$lfas = "33" # specify lfa
+    	p$subareas = c("33E", "33W") # specify subareas for data summary
 
 	    # update data through ROracle
 	    lobster.db('fsrs.redo')

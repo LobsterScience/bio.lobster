@@ -1,11 +1,11 @@
 #' @export
 
-hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F) {
+hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F,...) {
 	
 	
           if(is.null(ylims)) ylims = c(0, (max(mF,RR)*1.05))
           if(is.null(xlims)) xlims = c(0, (max(B,USR)*1.05))
-          plot( B, mF,  type="b", xlim=xlims, ylim=ylims, col="darkorange", cex=0.8, lwd=2, xlab="", ylab="", pch=20,yaxs='i',xaxs='i' )
+          plot( B, mF,  type="b", xlim=xlims, ylim=ylims, col="darkorange", cex=0.8, lwd=2, xlab="", ylab="", pch=20,yaxs='i',xaxs='i',... )
           title( xlab=xlab ) 
           title( ylab=ylab ) 
           polygon(x=c(USR,max(xlims)*1.3,max(xlims)*1.3, USR),y=c(-0.1,-0.1,max(ylims)*1.3,max(ylims)*1.3),col='lightgreen',border=NA)

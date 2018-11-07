@@ -111,7 +111,7 @@ jk = c("DFO_ABUNDANCE" , "NEFSC_FALL_REP_POT",     "NEFSC_SPRING_REP_POT",  "NEF
 	dir.create(fname)
                 
 
-    colorfun = colorRampPalette ( RColorBrewer::brewer.pal(9,"BrBG"))
+    colorfun = colorRampPalette ( RColorBrewer::brewer.pal(9,"PRGn"))
  
 	Y = pcaAnalyseData(dd, t0, t1,fname=fname,OFN='ReducedIndicatorsAssessment1', colscheme=colorfun,groupings=list(c(-0.5,19),c(19,40.5)))
 

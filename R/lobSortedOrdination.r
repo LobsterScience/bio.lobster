@@ -87,7 +87,7 @@ if(is.null(outfilenames)) {
       cols=colscheme(length(br)-1)
     }
 
-    par( mai=c(1, 3.2, 0.3, 0.5), cex=1 )
+    par( mai=c(1, 3.2, 0.3, 1), cex=1 )
     
     image(z=Z, x=years, breaks=br, col=cols, ylab="", axes=F )
     
