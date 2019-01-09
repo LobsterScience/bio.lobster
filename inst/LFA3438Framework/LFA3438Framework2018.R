@@ -15,7 +15,7 @@
 ### LobsterSurvey
 
 
-	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2017,mths=c("Aug","Jul","Jun"),bin.size=5,gear.type='NEST')
+	surveyLobsters34<-LobsterSurveyProcess(lfa="34",yrs=1996:2018,mths=c("Aug","Jul","Jun"),bin.size=5,gear.type='NEST')
 
 
 	CarapaceLengthFrequencies(LFAs='34',DS='LobsterSurvey', Yrs=2016, gear.type='NEST', index.stations = F,graphic="png" ,rel=F,wd=8,ht=5,ymax=1600,fn="NEST",comparative=T)

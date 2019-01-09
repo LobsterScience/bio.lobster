@@ -66,6 +66,8 @@ TempModelData = function(){
 	moreTempData = rename.df(moreTempData,n0=c('t','date'),n1=c('TEMPERATURE',"DATE"))
 
  	TempData = rbind(TempData,moreTempData[,c("LFA", "LFA_GRID", "EID", "DATE", "X", "Y", "TEMPERATURE", "DEPTH", "plon", "plat", "z",  "subarea")])
+
+ 	TempData = subset(TempData,DATE<Sys.time())
 	
 	write.csv(TempData,file.path( project.datadirectory("bio.lobster"),"Temperature Data","TempData.csv"),row.names=F)
 

@@ -14,13 +14,13 @@ hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR
 	      lines( B, mF,  col="darkblue", cex=0.8, lwd=2, xlab="", ylab="", pch=20 ,lty=1,type='b')
           if(!is.null('RR')) {
                     arrows(x0 = USR, x1 = USR*1000, length=0,y0 = RR, lty="solid", col="black", lwd=2 )
-                    text( USR+USR*0.2, RR+RR*0.1, labels[3], lwd=2 )
-           if(RRdec) arrows(x0 = LRP, x1 = USR, length=0,y1 = RR,y0=0, lty="solid", col="black", lwd=2 );text( USR+USR*0.2, RR+RR*0.1, labels[3], lwd=2 )
+                    text( xlims[2]*0.75, RR+RR*0.05, labels[3], lwd=2 )
+           if(RRdec) arrows(x0 = LRP, x1 = USR, length=0,y1 = RR,y0=0, lty="dashed", col="black", lwd=2 );text( xlims[2]*0.75, RR+RR*0.05, labels[3], lwd=2 )
            #if(!RRdec) arrows(x0 = 0, x1 = USR*1000, length=0,y0 = RR, lty="solid", col="black", lwd=2 )
                     abline (v=USR, lty="dotted")
                     abline (v=LRP, lty="dotted")
-                    text( USR-0.01*USR, RR-RR*0.1, labels[1] , srt=90, pos=3)
-                    text( LRP-0.01*USR, RR-RR*0.1, labels[2] , srt=90, pos=3)
+                    text( USR-0.01*USR, RR+RR*0.05, labels[1] , srt=90, pos=3)
+                    text( LRP-0.01*USR, RR+RR*0.05, labels[2] , srt=90, pos=3)
                 } 
           if(is.null(RR)){                    
                     abline (v=USR, lty="dotted")

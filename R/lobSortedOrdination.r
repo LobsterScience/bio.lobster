@@ -1,6 +1,6 @@
 #' @export
   
-  lobSortedOrdination = function( b, colscheme='redgreen', addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ,outfilenames=NULL,groupings=NULL,addAttributes=F,attributetype='ecosystemIndicators',ht=c(12,12),wd=c(15,15)) {
+  lobSortedOrdination = function( b, colscheme='redgreen', addscores=F, sortdecreasing=F, title=NULL, outfileroot=NULL ,outfilenames=NULL,groupings=NULL,addAttributes=F,attributetype='ecosystemIndicators',ht=c(12,12),wd=c(15,15),labs=T,margins=c(1, 3.2, 0.3, 1)) {
 
     yvals=rownames(b)
     vars =colnames(b)
@@ -11,13 +11,13 @@
     if (is.null(title)) title = "Years"
     if (is.null(outfileroot)) outfileroot="sorted.anomalies"
 if(is.null(outfilenames)) {
-    of1 = paste(outfileroot, "PC1.png", sep=".")
-    of2 = paste(outfileroot, "PC2.png", sep=".")
-    of3 = paste(outfileroot, "anomalies.png", sep=".")
+    of1 = file.path(outfileroot, "PC1.png")
+    of2 = file.path(outfileroot, "PC2.png")
+    of3 = file.path(outfileroot, "anomalies.png")
     } else {
-    of1 = paste(outfileroot,outfilenames, "PC1.png", sep=".")
-    of2 = paste(outfileroot,outfilenames, "PC2.png", sep=".")
-    of3 = paste(outfileroot,outfilenames, "anomalies.png", sep=".")
+    of1 = file.path(outfileroot,paste(outfilenames, "PC1.png", sep="."))
+    of2 = file.path(outfileroot,paste(outfilenames, "PC2.png", sep="."))
+    of3 = file.path(outfileroot,paste(outfilenames, "anomalies.png", sep="."))
         
     }
     
@@ -57,9 +57,10 @@ if(is.null(outfilenames)) {
     ordered = sort( as.numeric( as.character( q$V1 ) ), index.return=T, decreasing=F )
     qq = q[ ordered$ix, ]
 
+    sc1 = round(as.numeric(as.character(qq$V1)),2)
+    sc2 =   round(as.numeric(as.character(qq$V2)),2)
     if (addscores) {
-      varnames = paste(qq$vars, " {", round(as.numeric(as.character(qq$V1)),2), ", ",
-                 round(as.numeric(as.character(qq$V2)),2), "}", sep="")
+      varnames = paste(qq$vars, " {", sc1, ", ",sc2, "}", sep="")
     } else { 
       varnames = qq$vars 
     }
@@ -87,7 +88,7 @@ if(is.null(outfilenames)) {
       cols=colscheme(length(br)-1)
     }
 
-    par( mai=c(1, 3.2, 0.3, 1), cex=1 )
+    par( mai=margins, cex=1 )
     
     image(z=Z, x=years, breaks=br, col=cols, ylab="", axes=F )
     
@@ -102,8 +103,18 @@ if(is.null(outfilenames)) {
     axis( 1 )
 
     vars = colnames(Z)
+    nums = length(vars):1
+
+    #browser()
+
+    var.table = data.frame(Rank=rev(nums),Variable=rev(vars),PCA1=rev(sc1),PCA2=rev(sc2))
+
     par(cex=0.6)
-    axis( 2, at=seq(0,1,length=length(vars)), labels=vars)
+    if(labs){
+        axis( 2, at=seq(0,1,length=length(vars)), labels=vars)
+    } else{
+         axis( 2, at=seq(0,1,length=length(vars)), labels=nums)
+     }
     
     if(addAttributes){
             g = indicatorAttributesMatrixPlot(x=vars,groupings='default',attribute=attributetype)
@@ -119,7 +130,7 @@ if(is.null(outfilenames)) {
     box()
     dev.off()
     out = list( id=yvals, vars=vars, correlation.matrix=corel, 
-                eigenvectors=evec, eigenvalues=eval, projections.id=x, projections.vars=y)
+                eigenvectors=evec, eigenvalues=eval, projections.id=x, projections.vars=y, var.table=var.table)
     print( str( out)) 
 
     return(out)

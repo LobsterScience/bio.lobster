@@ -365,6 +365,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       for(i in 1:length(lfa)){
                         tmplogs = subset(logsInSeason,LFA==lfa[i])
                         yrs = sort(unique(tmplogs$SYEAR))
+                        yrs = yrs[yrs<=p$current.assessment.year]
                         for(y in 1:length(yrs)){
                           logsInSeason$BUMPUP[logsInSeason$SYEAR==yrs[y]&logsInSeason$LFA==lfa[i]] = TotalLandings$C[TotalLandings$SYEAR==yrs[y]&TotalLandings$LFA==lfa[i]]*1000/sum(tmplogs$WEIGHT_KG[tmplogs$SYEAR==yrs[y]],na.rm=T)
                         }
@@ -641,14 +642,15 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
               aS$CARLENGTH[i] <- NA
               aS$PID = aS$SID = aS$Bdry = NULL
          
+                    season.dates = backFillSeasonDates(lobster.db('season.dates'),eyr=year(Sys.time()))
 
-                      season.dates = lobster.db('season.dates')
+                     # season.dates = lobster.db('season.dates')
                        aS$WOS = NA
                         lfa = unique(aS$LFA) 
                             for(i in 1:length(lfa)) {
                                   h  = season.dates[season.dates$LFA==lfa[i],]  
                                   k = na.omit(unique(aS$SYEAR[aS$LFA==lfa[i]]))
-                                  h = na.omit(h)
+                                  #h = na.omit(h)
                                   k = intersect(k,h$SYEAR)
                                for(j in k){
                                    aS$WOS[aS$LFA==lfa[i] & aS$SYEAR==j] = floor(as.numeric(aS$SDATE[aS$LFA==lfa[i] & aS$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
@@ -1052,7 +1054,9 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         ILTS2016TowDepth = sqlQuery(con, "select * from FRAILC.MARPORT_DEPTH")
         ILTS2016TowSpread = sqlQuery(con, "select * from FRAILC.MARPORT_SPREAD")
         ILTS2016Tracks = sqlQuery(con, "select * from FRAILC.MARPORT_TRACKS")
-        ILTSTemp = sqlQuery(con, "select * from FRAILC.MINILOG_TEMP")
+        #ILTSTemp = sqlQuery(con, "select * from FRAILC.MINILOG_TEMP")
+        ILTSTemp = sqlQuery(con, "select * from lobster.ILTS_TEMPERATURE")
+        ILTSSensor = sqlQuery(con, "select * from lobster.ILTS_SENSORS")
         ILTS2016Tracks = ILTS2016Tracks[order(ILTS2016Tracks$TTIME),]
         #NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
         #netMensuration = merge( NM1,ILTS2016Tracks)#merge net mensuration into one file
@@ -1070,19 +1074,16 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         surveyMeasurements$SET_LON = surveyMeasurements$SET_LON*-1
         surveyMeasurements$HAUL_LON = surveyMeasurements$HAUL_LON*-1
         
-        if(unique(subset(surveyCatch,YEAR==2017,select=GEAR))[,1]=='280 BALLOON') {
-        	j = which(surveyCatch$YEAR==2017)
-        	surveyCatch$GEAR[j] = 'NEST'
-        	j = which(surveyMeasurements$YEAR==2017)
-        	surveyMeasurements$GEAR[j] = 'NEST'
-        }
-#browser()
+ 
+
+ #browser()
         surveyStationID = sqlQuery(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
         save(list=c("ILTS2016TowDepth","ILTS2016TowSpread","ILTS2016Tracks") , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)
         save(surveyMeasurements, file=file.path(fnODBC, "surveyMeasurements.rdata"), compress=T)
         save(fishMeasurements, file=file.path(fnODBC, "fishMeasurements.rdata"), compress=T)
         save(ILTSTemp, file=file.path(fnODBC, "ILTSTemp.rdata"), compress=T)
+        save(ILTSSensor, file=file.path(fnODBC, "ILTSSensor.rdata"), compress=T)
         save(surveyStationID, file=file.path(fnODBC, "surveyStationID.rdata"), compress=T)
         
         gc()  # garbage collection
@@ -1092,6 +1093,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       load(file.path( fnODBC, "surveyMeasurements.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "fishMeasurements.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "ILTSTemp.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "ILTSSensor.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyStationID.rdata"), .GlobalEnv)
       
     }

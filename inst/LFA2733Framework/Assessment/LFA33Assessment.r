@@ -4,7 +4,7 @@
 #	  ---~<.     ))))))) 3
 #	 _____ `,-----%%%%% \3
 #	 `>___;- |}}}	 
-#            
+#           
  
 	p = bio.lobster::load.environment()
 	la()
@@ -21,13 +21,21 @@
 	    lobster.db('fsrs.redo')
 	    lobster.db('logs.redo')
 	    logs=lobster.db('process.logs.redo')
-		CPUE.data<-CPUEModelData(p,redo=T)
+		#CPUE.data<-CPUEModelData(p,redo=T)
 	 
+# Map ################
+
+		x11(width=5, height=5)
+		LobsterMap('33')
+		text(x=c(-65.5,-65.5,-64.5),y=c(43.1,42.7,42.7),labels=c(34,40,41),col=rgb(0,0,0,0.8),cex=1.5)
+
+		savePlot(file.path(figdir,'LFA33map.png'),type='png')
+
 
 # CPUE ###############
 		
 		logs=lobster.db("process.logs")
-		CPUE.data<-CPUEModelData(p,redo=F)
+		CPUE.data<-CPUEModelData(p,redo=T)
 		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2018,graphic='R')$annual.data
 		crd = subset(cpueData,LFA==33,c("YEAR","CPUE"))	
 		mu = median(crd$CPUE[crd$YEAR<2017])
@@ -88,7 +96,7 @@
 
 		save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
 		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
-		RR75 = max(oo$ERf75[oo$Yr<2017])
+		RR75 = max(oo$ERf75[oo$Yr<2017])#0.8146457
 
 	# plot
 	x11(width=8,height=5)
@@ -117,7 +125,7 @@
 		shorts =  FSRSModelShortsRecruit$pData
 		shorts$Area = 33
  	
- 	save(list=c("shorts","legals","recruit"),file=file.path(project.datadirectory("bio.lobster"),"outputs","fsrsModelIndicatorsSep2018.rdata"))
+ 	save(list=c("shorts","legals","recruit"),file=file.path(project.datadirectory("bio.lobster"),"outputs","fsrsModelIndicators33.rdata"))
 
 
 	# plot
@@ -161,10 +169,13 @@ x11(width=8,height=7)
 
 x = read.csv(file.path(figdir,"CatchRateRefs33.csv"))
 y = read.csv(file.path(figdir,"ExploitationRefs33.csv"))
-		RR75 = max(y$ERf75[y$Yr<2017])
+		RR75 = 0.8146457
+		usr = 0.2840067
+		lrp = 0.1420034
+
 
 hcrPlot(B=x$running.median[x$YEAR>2005],mF=y$running.median,USR=usr,LRP=lrp,RR=RR75,yrs=2006:2018,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T) 
-hcrPlot(B=x$CPUE[x$YEAR>2005],mF=y$ERfm,USR=usr,LRP=lrp,RR=RR75,yrs=2006:2018,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T) 
+#hcrPlot(B=x$CPUE[x$YEAR>2005],mF=y$ERfm,USR=usr,LRP=lrp,RR=RR75,yrs=2006:2018,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T) 
 savePlot(file.path(figdir,'PhasePlot.png'),type='png')
 
 
@@ -182,6 +193,7 @@ catchgrids.lst=list()
 		catchgrids.lst[[i]] = lobGridPlot(subset(logs,LFA%in%p$lfas&SYEAR==yrs[i],c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,lvls=catchLevels)
 		pdf(file.path(figdir,paste0("FisheryFootprint",yrs[i],".pdf")),5,5)
 		LobsterMap('33',poly.lst=catchgrids.lst[[i]])
+		text(x=c(-65.5,-65.5,-64.5),y=c(43.1,42.7,42.7),labels=c(34,40,41),col=rgb(0,0,0,0.8),cex=1.5)
 	  	title(yrs[i],line=-3,cex.main=2,adj=0.3)
 	    SpatialHub::contLegend('bottomright',lvls=catchgrids.lst[[i]]$lvls/1000,Cont.data=catchgrids.lst[[i]],title="Catch (tons)",inset=0.02,cex=0.8,bg='white')
 	    dev.off()
