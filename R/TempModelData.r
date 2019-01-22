@@ -1,5 +1,5 @@
 #' @export
-TempModelData = function(){
+TempModelData = function(save=F){
 
 	p = bio.lobster::load.environment()
 
@@ -69,7 +69,7 @@ TempModelData = function(){
 
  	TempData = subset(TempData,DATE<Sys.time())
 	
-	write.csv(TempData,file.path( project.datadirectory("bio.lobster"),"Temperature Data","TempData.csv"),row.names=F)
+	if(save)write.csv(TempData,file.path( project.datadirectory("bio.lobster"),"Temperature Data","TempData.csv"),row.names=F)
 
 
 

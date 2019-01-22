@@ -46,7 +46,7 @@
         lobster.db(DS = 'landings.by.port.redo')
         }
       
-  if(DS %in% c('port','port.redo')){
+if(DS %in% c('port','port.redo')){
         if(DS == 'port') {
                   load(file=file.path(fnODBC,'ports.rdata'))
                 return(ports)
@@ -56,7 +56,7 @@
                   save(ports,file=file.path(fnODBC,'ports.rdata'))          
         }
 
-  if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
+if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
         if(DS == 'atSea.logbook.link') {
                   load(file=file.path(fnODBC,'atSea.logbook.link.rdata'))
                 return(links)
@@ -163,7 +163,7 @@ if(DS %in% c('community.to.grid.contemporary.redo','community.to.grid.contempora
 }
 
 
- if(DS %in% c('annual.landings','annual.landings.redo')) {
+if(DS %in% c('annual.landings','annual.landings.redo')) {
           if(DS == 'annual.landings') {
                 load(file=file.path(fnODBC,'annual.landings.rdata'))
                 return(annual.landings)
@@ -269,6 +269,7 @@ if (DS %in% c("logs.redo", "logs") ) {
           }
 
 if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
+                            
                             if(DS == 'process.logs') {
                                   load(file=file.path(fnProducts,'logsInSeason.rdata'))
                                   return(logsInSeason)
@@ -364,10 +365,13 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       logsInSeason$BUMPUP = NA
                       for(i in 1:length(lfa)){
                         tmplogs = subset(logsInSeason,LFA==lfa[i])
-                        yrs = sort(unique(tmplogs$SYEAR))
-                        yrs = yrs[yrs<=p$current.assessment.year]
+                        tmpland = subset(TotalLandings,LFA==lfa[i])
+                        yrs1 = sort(unique(tmplogs$SYEAR))
+                        yrs2 = sort(unique(tmpland$SYEAR))
+                        yrs = yrs1[yrs1%in%yrs2]
+
                         for(y in 1:length(yrs)){
-                          logsInSeason$BUMPUP[logsInSeason$SYEAR==yrs[y]&logsInSeason$LFA==lfa[i]] = TotalLandings$C[TotalLandings$SYEAR==yrs[y]&TotalLandings$LFA==lfa[i]]*1000/sum(tmplogs$WEIGHT_KG[tmplogs$SYEAR==yrs[y]],na.rm=T)
+                          logsInSeason$bumpup[logsInSeason$SYEAR==yrs[y]&logsInSeason$LFA==lfa[i]] = TotalLandings$C[TotalLandings$SYEAR==yrs[y]&TotalLandings$LFA==lfa[i]]*1000/sum(tmplogs$WEIGHT_KG[tmplogs$SYEAR==yrs[y]],na.rm=T)
                         }
                       }
                     }
@@ -583,6 +587,28 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             
             # atSea
             atSea = sqlQuery(con, "select * from lobster.LOBSTER_ATSEA_VW")
+            atSea2 = sqlQuery(con, "select * from cooka.lobster_bycatch_assoc")
+
+            atSea2$PORT = NA
+            atSea2$PORTNAME = NA
+            atSea2$SAMCODE = NA
+            atSea2$DESCRIPTION = NA
+            atSea2$GRIDNO = NA
+            atSea2$SPECIES = NA
+            atSea2$CULL = NA
+
+            names2=c("TRIP", "BOARD_DATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECSCD_ID", "SPECIES", "SEXCD_ID","VNOTCH", "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH")
+
+            atSea2 = subset(atSea2,select=names2)
+            atSea2$BOARD_DATE = as.Date( atSea2$BOARD_DATE,"%d-%b-%y")
+            atSea2$COMAREA_ID = substr(atSea2$COMAREA_ID,2,nchar(atSea2$COMAREA_ID))
+            atSea2$LATDDMM = convert.dd.dddd(atSea2$LATDDMM)
+            atSea2$LONGDDMM = convert.dd.dddd(atSea2$LONGDDMM) * -1
+
+            names(atSea2) = names(atSea)
+
+            atSea = rbind(atSea,atSea2)
+
             save( atSea, file=file.path( fnODBC, "atSea.rdata"), compress=T)
             gc()  # garbage collection
             odbcClose(con)
