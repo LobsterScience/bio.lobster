@@ -600,7 +600,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
             atSea2$BOARD_DATE = substr(atSea2$BOARD_DATE,1,10)
             atSea2$datechar = nchar(atSea2$BOARD_DATE)
-            atSea2$BOARD_DATE[atSea2$datechar<10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar<1=],"%d-%b-%y")
+            atSea2$BOARD_DATE[atSea2$datechar<10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar<1],"%d-%b-%y")
             atSea2$BOARD_DATE[atSea2$datechar==10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar==10])
 
 
