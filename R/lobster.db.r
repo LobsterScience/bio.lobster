@@ -597,11 +597,14 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             atSea2$SPECIES = NA
             atSea2$CULL = NA
             atSea2$CALWT = NA
+            atSea2$STARTDATE = as.Date(NA)
 
             atSea2$BOARD_DATE = substr(atSea2$BOARD_DATE,1,10)
             atSea2$datechar = nchar(atSea2$BOARD_DATE)
-            atSea2$BOARD_DATE[atSea2$datechar<10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar<10],"%d-%b-%y")
-            atSea2$BOARD_DATE[atSea2$datechar==10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar==10])
+
+
+            atSea2$STARTDATE[atSea2$datechar<10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar<10],"%d-%b-%y")
+            atSea2$STARTDATE[atSea2$datechar==10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar==10])
 
 
             names2=c("TRIP", "BOARD_DATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECSCD_ID", "SPECIES", "SEXCD_ID","VNOTCH", "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH","CALWT")
