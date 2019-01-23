@@ -596,8 +596,9 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             atSea2$GRIDNO = NA
             atSea2$SPECIES = NA
             atSea2$CULL = NA
+            atSea2$CALWT = NA
 
-            names2=c("TRIP", "BOARD_DATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECSCD_ID", "SPECIES", "SEXCD_ID","VNOTCH", "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH")
+            names2=c("TRIP", "BOARD_DATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECSCD_ID", "SPECIES", "SEXCD_ID","VNOTCH", "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH","CALWT")
 
             atSea2 = subset(atSea2,select=names2)
             atSea2$BOARD_DATE = as.Date( atSea2$BOARD_DATE,"%d-%b-%y")
