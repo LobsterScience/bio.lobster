@@ -56,7 +56,7 @@ atSeaWeightings <- function(atSea,comGridHist,comGridCont,year=2016,lfa='31B',ml
 
 	if(females.only) aS = subset(aS,SEX %in% c(2,3))
 
-	aS$ids = paste(aS$TRIPNO, aS$LFA, aS$GRID_NUM,aS$WOS, aS$SYEAR,aS$PORT,sep="-")
+	aS$ids = paste(aS$TRIPNO, aS$LFA, aS$GRID_NUM,aS$WOS, aS$SYEAR,aS$PORT,sep=",")
 	IDs = unique(aS$ids)
 	aS = subset(aS,CARLENGTH %in% 30:250)
 	breaks = seq(30,250,1)
@@ -70,7 +70,7 @@ atSeaWeightings <- function(atSea,comGridHist,comGridCont,year=2016,lfa='31B',ml
 			CLF = as.data.frame(do.call(rbind,CLF))
 			names(CLF) <- c('ids',breaks[-1])
 			CLF = toNums(CLF,2:ncol(CLF))
-			CLF = cbind(do.call(rbind,strsplit(CLF$ids,"-")),CLF)
+			CLF = cbind(do.call(rbind,strsplit(CLF$ids,",")),CLF)
 			names(CLF)[1:6] = c('TRIPNO','LFA','GRID_NUM','WOS','SYEAR','PORT')
 			aCC = CLF = merge(CLF,trSum)
 
