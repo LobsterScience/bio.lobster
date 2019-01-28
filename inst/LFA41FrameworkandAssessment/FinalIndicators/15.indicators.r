@@ -85,8 +85,12 @@ for(j in 1:length(a)) {
 		
 		write.csv(dat,file.path(project.datadirectory('bio.lobster'),'analysis','ReducedSummaryIndicatorsrestrat.csv'))
 
+options(stringsAsFactors=F)
 	rn = read.csv(file.path(project.datadirectory('bio.lobster'),'data','RENAME_INDICATORS_RESTRAT.csv'),header=F)
 	dat = read.csv(file.path(project.datadirectory('bio.lobster'),'analysis','ReducedSummaryIndicatorsrestrat.csv'))
+ dat = unique(dat[,2:43])
+
+
 
 	dat = dat[,which(names(dat) %in% rn[,1])]
 	dd = rename.df(dat,rn[,1],rn[,2])
@@ -98,8 +102,10 @@ for(j in 1:length(a)) {
 	rownames(dd) = 1969:2015
 	dd$YR = NULL
 	dd$DFO_PREDATOR_BIOMASS <- NULL
+
 jk = c("DFO_ABUNDANCE" , "NEFSC_FALL_REP_POT",     "NEFSC_SPRING_REP_POT",  "NEFSC_FALL","NEFSC_SPRING", "GEORGES_ABUNDANCE","GEORGES_REP_POT" ,"DFO_PREDATOR_ABUNDANCE", "SDM_HABITAT",
 "DFO_REP_POT")       
+
 
 			dd[,jk] <- log(dd[,jk]+1)
 

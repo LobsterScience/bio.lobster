@@ -9,7 +9,7 @@
 
     figdir = file.path(project.datadirectory("bio.lobster"),"figures","LFA3438Framework2018")
 
-    p$lfas = c("34", "35", "36", "38") # specify lfas for data summary
+    p$lfas = c('33',"34", "35", "36", "38") # specify lfas for data summary
   
 
 ### LobsterSurvey
@@ -193,7 +193,7 @@ logsInSeason=lobster.db("process.logs")
 	catchLevels = c(0,100000,200000,300000,400000,500000,600000,700000,800000)
 	yrs = 2011:2017
 	for(i in 1:length(yrs)){
-		catchgrids = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR==yrs[i],c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,lvls=catchLevels)
+		catchgrids = lobGridPlot(subset(logsInSeason,LFA%in%p$lfas&SYEAR==2016,c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,lvls=catchLevels)
 		pdf(file.path(figdir,paste0("FisheryFootprint",yrs[i],".pdf")))
 		LobsterMap('34-38',poly.lst=catchgrids)
 	  	title(yrs[i],line=-3,cex.main=2,adj=0.3)
