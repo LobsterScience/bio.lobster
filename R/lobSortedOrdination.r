@@ -64,7 +64,7 @@ if(is.null(outfilenames)) {
     } else { 
       varnames = qq$vars 
     }
-          
+    qa = q     
     qq$vars = qq$V1 = qq$V2 = NULL
     qq = as.data.frame( t( qq ) )
     colnames( qq ) = varnames
@@ -130,7 +130,7 @@ if(is.null(outfilenames)) {
     box()
     dev.off()
     out = list( id=yvals, vars=vars, correlation.matrix=corel, 
-                eigenvectors=evec, eigenvalues=eval, projections.id=x, projections.vars=y, var.table=var.table)
+               eigenvectors=evec, eigenvalues=eval, projections.id=x, projections.vars=y,pcaa=q)
     print( str( out)) 
 
     return(out)
