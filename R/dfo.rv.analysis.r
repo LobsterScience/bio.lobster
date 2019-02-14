@@ -160,7 +160,6 @@ pi='base'
                 } else {
                               iz = which(set$strat %in% c(strat))
                 }
-   
                 se = set[intersect(iy,iz),]
                 se$EID = 1:nrow(se)
                 ca = cas[iv,]
