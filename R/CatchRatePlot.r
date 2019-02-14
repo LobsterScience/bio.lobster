@@ -6,7 +6,7 @@ CatchRatePlot <- function(data,usr=NULL,lrp=NULL,lfa=NULL,fd=file.path(project.f
 					
 					ylim = c(0,max(c(data[,2],lrp,usr)))
 
-					plot(data[,1],data[,2],xlab='Year',ylab='CPUE',type='o',lwd=2,pch=16,main=title,ylim=ylim,...)
+					plot(data[,1],data[,2],xlab='Year',ylab='CPUE (kg/TH)',type='o',lwd=2,pch=16,main=title,ylim=ylim,...)
 					data$running.median = rmed(data[,1],data[,2])$x
 					lines(data[,1],data$running.median,col='blue',lty=2,lwd=3)
 		

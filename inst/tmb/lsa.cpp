@@ -52,7 +52,7 @@ Type objective_function<Type>::operator() ()
       //  logN(y,l)=log(exp(logN(y,l))+exp(logN(y,l-1)-F(y,l-1)-M(y,l-1)));
       //}
     }
-    logN(y) = logN(y) * GroMat
+    predN = logN(y) * GroMat
   } 
 
   // Match to observations

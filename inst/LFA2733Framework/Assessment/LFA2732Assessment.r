@@ -28,7 +28,22 @@
 		CPUE.data<-CPUEModelData(p,redo=T)
 	 
 
+	 pdf(file.path(figdir,"MapLFA2732.pdf"),4.5,5)
 	 LobsterMap('27-32')
+	 dev.off()
+
+	 for(i in 1:length(p$lfas)){
+
+		 pdf(file.path(figdir,paste0("MapLFA",p$lfas[i],".pdf")),4.5,5)
+		 LobsterMap(p$lfas[i])
+		 dev.off()
+	     pdf2png(file.path(figdir,paste0("MapLFA",p$lfas[i],".pdf")))
+
+
+	 }
+
+
+	 
 
 # CPUE ###############
 		
