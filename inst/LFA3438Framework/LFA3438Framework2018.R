@@ -719,4 +719,28 @@ logsInSeason=lobster.db("process.logs")
 
 
 
+
+
+
+	# map
+		pdf(file.path( figdir,"ScallopSurveyBubblesBoF2017.pdf"),11,8)
+	LobsterMap("BoF",mapRes="UR",title="BoF Scallop Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
+	points(y~x,zeros,pch=4)
+	surveyBubbles(data,scaler=0.08,pie=T)
+	dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ######################## sim Molt

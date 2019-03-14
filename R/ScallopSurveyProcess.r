@@ -36,7 +36,7 @@ ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex
 	} 
 
 	tmp<-with(ScalSurvLob.dat,tapply(NLobs,TOW_SEQ,sum))
-	d1<-subset(ScalSurvLob.dat,!duplicated(TOW_SEQ),c('TOW_SEQ','YEAR','TOW_DATE','MGT_AREA_ID','AREA_SWEPT','lon','lat'))
+	d1<-subset(ScalSurvLob.dat,!duplicated(TOW_SEQ),c('TOW_SEQ','YEAR','TOW_DATE','MGT_AREA_ID','AREA_SWEPT','DEPTH','BOTTOM_TEMP','lon','lat'))
 	d2<-data.frame(TOW_SEQ=as.numeric(names(tmp)),NLobs=as.vector(tmp))
 	ScalSurvLob<-merge(d1,d2,all.x=T)
 

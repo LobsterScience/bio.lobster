@@ -2,6 +2,7 @@
 
 require(bio.survey)
 require(bio.lobster)
+require(bio.groundfish)
 p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
@@ -76,6 +77,7 @@ load_all('~/git/bio.survey/')
 
 
           #DFO RV Setup #we only have size data for lobster post 1998 
+              p$reweight.strata = F #this subsets 
               p$series =c('summer')# p$series =c('georges');p$series =c('fall')
               p$define.by.polygons = F
               p$lobster.subunits=F
@@ -96,6 +98,11 @@ load_all('~/git/bio.survey/')
               p = make.list(list(yrs=p$years.to.estimate),Y=p)
               aout= bio.lobster::dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
         DFOsummer = do.call(rbind,lapply(aout,"[[",2))
+
+
+
+
+
 
 
 
