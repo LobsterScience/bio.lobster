@@ -206,8 +206,11 @@
 	for(i in 1:length(p$lfas)){
 
 		d1 = data.frame(YEAR = land$YR, LANDINGS = land[,paste0("LFA",p$lfas[i])])
+		d2 = subset(cpueData,LFA==p$lfas[i])
 
-		fishData = merge(subset(cpueData,LFA==p$lfas[i]),d1) 
+		d2  = merge(data.frame(LFA=d2$LFA[1],YEAR=min(d2$YEAR):max(d2$YEAR)),d2,all.x=T)
+
+		fishData = merge(d2,d1) 
 		fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
 
 		# plot

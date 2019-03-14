@@ -502,31 +502,31 @@ p$lfas = c("34")#,"35", "36", "38") # specify lfas
 
 
 	LStabRP = data.frame(rbind(
-		round(100*(simSumLegalSize[[1]][9,]/simSumLegalSize[[1]][6,]-1)),
-		round(100*(simSumLegalSize[[1]][8,]/simSumLegalSize[[1]][6,]-1)),
-		round(100*(simSumLegalSize[[1]][7,]/simSumLegalSize[[1]][6,]-1))
+		round(100*(simSumLegalSize[[1]][6,]/simSumLegalSize[[1]][1,]-1)),
+		round(100*(simSumLegalSize[[1]][5,]/simSumLegalSize[[1]][1,]-1)),
+		round(100*(simSumLegalSize[[1]][4,]/simSumLegalSize[[1]][1,]-1))
 		))
 	names(LStabRP) = LFAs
-	rownames(LStabRP) = c("LS90", "LS87.5", "LS85")
-	write.csv(LStabRP,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabRP.csv"),row.names=T)
+	rownames(LStabRP) = c("LS82.5", "LS80", "LS78.5")
+	write.csv(LStabRP,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabRP70.csv"),row.names=T)
 
 	LStabNo = data.frame(rbind(
-		round(100*(simSumLegalSize[[2]][9,]/simSumLegalSize[[2]][6,]-1)),
-		round(100*(simSumLegalSize[[2]][8,]/simSumLegalSize[[2]][6,]-1)),
-		round(100*(simSumLegalSize[[2]][7,]/simSumLegalSize[[2]][6,]-1))
+		round(100*(simSumLegalSize[[2]][6,]/simSumLegalSize[[2]][1,]-1)),
+		round(100*(simSumLegalSize[[2]][5,]/simSumLegalSize[[2]][1,]-1)),
+		round(100*(simSumLegalSize[[2]][4,]/simSumLegalSize[[2]][1,]-1))
 		))
 	names(LStabNo) = LFAs
-	rownames(LStabNo) = c("LS90", "LS87.5", "LS85")
-	write.csv(LStabNo,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabNo.csv"),row.names=T)
+	rownames(LStabNo) = c("LS82.5", "LS80", "LS78.5")
+	write.csv(LStabNo,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabNo70.csv"),row.names=T)
 
 	LStabKg = data.frame(rbind(
-		round(100*(simSumLegalSize[[3]][9,]/simSumLegalSize[[3]][6,]-1)),
-		round(100*(simSumLegalSize[[3]][8,]/simSumLegalSize[[3]][6,]-1)),
-		round(100*(simSumLegalSize[[3]][7,]/simSumLegalSize[[3]][6,]-1))
+		round(100*(simSumLegalSize[[3]][6,]/simSumLegalSize[[3]][1,]-1)),
+		round(100*(simSumLegalSize[[3]][5,]/simSumLegalSize[[3]][1,]-1)),
+		round(100*(simSumLegalSize[[3]][4,]/simSumLegalSize[[3]][1,]-1))
 		))
 	names(LStabKg) = LFAs
-	rownames(LStabKg) = c("LS90", "LS87.5", "LS85")
-	write.csv(LStabKg,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabKg.csv"),row.names=T)
+	rownames(LStabKg) = c("LS82.5", "LS80", "LS78.5")
+	write.csv(LStabKg,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabKg70.csv"),row.names=T)
 
 	OStabRP = data.frame(rbind(
 		round(100*(simSumSeason[[1]][6,]/simSumSeason[[1]][1,]-1)),
