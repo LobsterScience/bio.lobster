@@ -4,6 +4,7 @@ require(bio.utilities)
 require(PBSmapping)
 require(gulf)
 n = 500
+setwd('/home/adam/git/LobsterSpatialModel/SWNSBoF')
 
 #Make outer polygon
 LFAs = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
@@ -137,9 +138,11 @@ for(ii in 1:nrow(gx)){
 
 ## write or save the gridinfo and adjacency dataframes
 if(save) {
-  write.table(   cbind(gridinfo,area=d^2)  ,"snow crab spatial model\\sGSL_SC_grids.dat",,sep="\t",row.names=FALSE)
-  write.table(adj,"snow crab spatial model\\adjacency matrix.dat",,sep="\t",row.names=FALSE,col.names=FALSE)
+  write.table(   cbind(gridinfo,area=d^2)  ,"lobster_spatial_model\\34_38grids.dat",,sep="\t",row.names=FALSE)
+  write.table(adj,"lobster_spatial_model\\adjacency matrix.dat",,sep="\t",row.names=FALSE,col.names=FALSE)
 }
+
+
 
 ## Now need to assign each survey set to a grid; show example with Quebec RV survey
 c.set=read.csv( file.path("create inputs","Te_Set.csv"),sep=';',header=T,as.is=T,na.strings=c("NA","NaN"," ",". ") )
