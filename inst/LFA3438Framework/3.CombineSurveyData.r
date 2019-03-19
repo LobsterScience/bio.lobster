@@ -9,7 +9,7 @@
 ######## Plot Data
 
 # R1 = sub-legal sized lobsters expected to recruit to fishery after on more molt
-AllSurveyDataR1 = SurveyTowData(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,redo=F)
+AllSurveyDataR1 = SurveyTowData(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,redo=T,lab="R1")
 #AllSurveyDataR1 =assignArea(AllSurveyDataR1,coords=c("X","Y"))
 
 	surveyplotdata = AllSurveyDataR1
@@ -20,6 +20,7 @@ AllSurveyDataR1 = SurveyTowData(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970
 	surveyplotdata$fill.cols[surveyplotdata$survey=="Scallop"] = rgb(0,0,1,0.7)
 	surveyplotdata$fill.cols[surveyplotdata$survey=="DFOsummer"] = rgb(0,1,0,0.7)
 	surveyplotdata$fill.cols[surveyplotdata$survey=="NEFSCfall"] = rgb(0,1,0,0.7)
+	surveyplotdata$fill.cols[surveyplotdata$survey=="NEFSCspring"] = rgb(0,1,0.1,0.7)
 
 
 	for(i in 1970:2018){
@@ -39,7 +40,7 @@ AllSurveyDataR1 = SurveyTowData(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970
 
 
 # R0 = legal sized lobsters that have recruited to fishery after their last molt
-AllSurveyDataR0 = SurveyTowData(Size.range=c(82.5,95),Sex = c(1,2,3), Years=1970:2018,redo=F)
+AllSurveyDataR0 = SurveyTowData(Size.range=c(82.5,95),Sex = c(1,2,3), Years=1970:2018,redo=T,lab="R0")
 AllSurveyDataR0 =assignArea(AllSurveyDataR0,coords=c("X","Y"))
 
 	surveyplotdata = AllSurveyDataR0

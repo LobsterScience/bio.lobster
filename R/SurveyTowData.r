@@ -1,5 +1,5 @@
 
-SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,redo=T){
+SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,lab=NULL,redo=T){
 
 
   if (redo){
@@ -40,10 +40,15 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,re
                 aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
                 FallNefsc = do.call(rbind,lapply(aout,"[[",2))
         
-        tow.area = 0.023144074
+        nefsc.tow.area = 0.023144074
 
-        FallNefsc$LobDen = FallNefsc$TOTNO / tow.area
-        SpringNefsc$LobDen = SpringNefsc$TOTNO / tow.area
+        FallNefsc$LobDen = FallNefsc$TOTNO / nefsc.tow.area
+        FallNefsc$AreaSwept = nefsc.tow.area * FallNefsc$DISTCORRECTION
+        FallNefsc$LobCatch = round(FallNefsc$TOTNO * FallNefsc$DISTCORRECTION)
+        
+        SpringNefsc$LobDen = SpringNefsc$TOTNO / nefsc.tow.area
+        SpringNefsc$AreaSwept = nefsc.tow.area * SpringNefsc$DISTCORRECTION
+        SpringNefsc$LobCatch = round(SpringNefsc$TOTNO * SpringNefsc$DISTCORRECTION)
 
           #DFO RV Setup #we only have size data for lobster post 1998 
               p$reweight.strata = F #this subsets 
@@ -68,9 +73,12 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,re
               aout= bio.lobster::dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
         DFOsummer = do.call(rbind,lapply(aout,"[[",2))
 
-        tow.area = 0.040502129
+        dfo.tow.area = 0.040502129
         
-        DFOsummer$LobDen = DFOsummer$totno / tow.area
+        DFOsummer$LobDen = DFOsummer$totno / dfo.tow.area
+        DFOsummer$AreaSwept = dfo.tow.area * (DFOsummer$dist/1.75)
+        DFOsummer$LobCatch = round(DFOsummer$totno * (DFOsummer$dist/1.75))
+
         DFOsummer$YEAR = year(DFOsummer$sdate)
 
       scalSurv<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5)
@@ -81,30 +89,33 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,re
 
 
 
-      col.names = c("year","setno","date","X","Y","Z","LobDen")
+      col.names = c("year","setno","date","X","Y","Z","LobDen","AreaSwept","LobCatch")
 
 
-      LobSurvBalloon = subset(LobSurvBalloon,!is.na(LobDen),c("YEAR","SET_NO","SET_DATE","SET_LONG","SET_LAT","SET_DEPTH","LobDen"))
+      LobSurvBalloon = subset(LobSurvBalloon,!is.na(LobDen),c("YEAR","SET_NO","SET_DATE","SET_LONG","SET_LAT","SET_DEPTH","LobDen","AREA_SWEPT"))
+      LobSurvBalloon$LobCatch = round(LobSurvBalloon$LobDen *  LobSurvBalloon$AREA_SWEPT)
       names(LobSurvBalloon) = col.names
       LobSurvBalloon$survey = "LobsterBalloon"
 
-      LobSurvNest = subset(LobSurvNest,!is.na(LobDen),c("YEAR","SET_NO","SET_DATE","SET_LONG","SET_LAT","SET_DEPTH","LobDen"))
+      LobSurvNest = subset(LobSurvNest,!is.na(LobDen),c("YEAR","SET_NO","SET_DATE","SET_LONG","SET_LAT","SET_DEPTH","LobDen","AREA_SWEPT"))
+      LobSurvNest$LobCatch = round(LobSurvNest$LobDen *  LobSurvNest$AREA_SWEPT)
       names(LobSurvNest) = col.names
       LobSurvNest$survey = "LobsterNest"
      
-      scalSurv = subset(scalSurv,!is.na(LobDen),c("YEAR","TOW_SEQ","TOW_DATE","lon","lat","DEPTH","LobDen"))
+      scalSurv = subset(scalSurv,!is.na(LobDen),c("YEAR","TOW_SEQ","TOW_DATE","lon","lat","DEPTH","LobDen","AREA_SWEPT"))
+      scalSurv$LobCatch = round(scalSurv$LobDen *  scalSurv$AREA_SWEPT)
       names(scalSurv) = col.names
       scalSurv$survey = "Scallop"
       
-      DFOsummer = subset(DFOsummer,!is.na(LobDen),c("YEAR","setno","sdate","X","Y","z","LobDen"))
+      DFOsummer = subset(DFOsummer,!is.na(LobDen),c("YEAR","setno","sdate","X","Y","z","LobDen","AreaSwept","LobCatch"))
       names(DFOsummer) = col.names
       DFOsummer$survey = "DFOsummer"
 
-      FallNefsc = subset(FallNefsc,!is.na(LobDen),c("GMT_YEAR","SETNO","BEGIN_GMT_TOWDATE","X","Y","z","LobDen"))
+      FallNefsc = subset(FallNefsc,!is.na(LobDen),c("GMT_YEAR","SETNO","BEGIN_GMT_TOWDATE","X","Y","z","LobDen","AreaSwept","LobCatch"))
       names(FallNefsc) = col.names
       FallNefsc$survey = "NEFSCfall"
 
-      SpringNefsc = subset(SpringNefsc,!is.na(LobDen),c("GMT_YEAR","SETNO","BEGIN_GMT_TOWDATE","X","Y","z","LobDen"))
+      SpringNefsc = subset(SpringNefsc,!is.na(LobDen),c("GMT_YEAR","SETNO","BEGIN_GMT_TOWDATE","X","Y","z","LobDen","AreaSwept","LobCatch"))
       names(SpringNefsc) = col.names
       SpringNefsc$survey = "NEFSCspring"
 
@@ -114,9 +125,9 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,re
       AllSurveys =assignArea(AllSurveys,coords=c("X","Y"))
 
       AllSurveys = AllSurveys[order(AllSurveys$date),]
-    write.csv(AllSurveys,file.path(project.datadirectory("bio.lobster"),"data","products","LFA3438Framework2019","AllSurvey.csv"),row.names=F)
+    write.csv(AllSurveys,file.path(project.datadirectory("bio.lobster"),"data","products","LFA3438Framework2019",paste0("AllSurvey",lab,".csv")),row.names=F)
   } else {
-    AllSurveys = read.csv(file.path(project.datadirectory("bio.lobster"),"data","products","LFA3438Framework2019","AllSurvey.csv"))
+    AllSurveys = read.csv(file.path(project.datadirectory("bio.lobster"),"data","products","LFA3438Framework2019",paste0("AllSurvey",lab,".csv")))
 
   }
 
