@@ -6,7 +6,7 @@ require(fields)
 
 la()
 
-	SoMplot(cols=tim.colors(5),ltys=2:6,graphic='png')
+	som=SoMplot(cols=tim.colors(5),ltys=2:6,graphic='png')
 
 
 	TempModelling = TempModel(areas = 'subarea')

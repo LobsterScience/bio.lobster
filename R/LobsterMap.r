@@ -92,6 +92,10 @@ if(save) {
 	}
 	if(!is.null(poly.lst)){
 		addPolys(poly.lst[[1]],polyProps=poly.lst[[2]])
+		if('density'%in%names(poly.lst[[2]])){
+			x=subset(poly.lst[[2]],!is.na(density))
+			addPolys(subset(poly.lst[[1]],SID==x$SID),density=x$density,angle=x$angle,col=x$linecol,border=x$border)
+		}
 	}
 	
 	
@@ -144,14 +148,14 @@ if(save) {
 			  addPolys(b,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
 			 # addLabels(a,cex=0.6)
 			}
-  if(addGeorgesStrata) {
+    if(addGeorgesStrata) {
 			  require('bio.polygons')
 			  b = file.path(project.datadirectory('bio.polygons'),'data','Science','PED','GeorgesBankStrata.rdata')
 			  load(b)
 				  addPolys(out,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
 				
 				}
-  if(addAmericanStrata) {
+    if(addAmericanStrata) {
 			  require('bio.polygons')
 			   b = importShapefile(find.bio.gis('bts',return.one.match=F))
 			   attr(b,'projection') <- "LL"

@@ -30,6 +30,7 @@
 
   LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
   LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
+  LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAgridPolys.csv"))
 
   # Multibeam
   gerbk50 <-read.csv(file.path( project.datadirectory("bio.bathymetry"),"data","GermanBathy","gerbk_50.txt"))

@@ -61,6 +61,9 @@
 			usr = mu[i] * 0.8
 			lrp = mu[i] * 0.4
 
+			crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
+
+			
 			# plot
 			x11(width=8,height=5)
 
@@ -215,7 +218,7 @@
 
 		# plot
 		x11(width=8,height=5)
-		FisheryPlot(fishData[,c("YEAR","LANDINGS","EFFORT2")],lfa = p$lfas[i],fd=figdir)
+		FisheryPlot(fishData[,c("YEAR","LANDINGS","EFFORT2")],lfa = p$lfas[i],fd=figdir,preliminary=nrow(fishData))
 	}
 
 
@@ -263,12 +266,22 @@ catchgrids.lst=list()
 	catchLevels = c(0,100000,200000,300000,400000,500000,600000,700000)
 	yrs = 2011:2018
 	for(i in 1:length(yrs)){
+
 		catchgrids.lst[[i]] = lobGridPlot(subset(logs,LFA%in%p$lfas&SYEAR==yrs[i],c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,lvls=catchLevels)
+		
+		# add hatching for grid 348
+		catchgrids.lst[[i]]$pdata$border = NA
+		catchgrids.lst[[i]]$pdata$density = NA
+		catchgrids.lst[[i]]$pdata$density[catchgrids.lst[[i]]$pdata$SID==361] = 20
+		catchgrids.lst[[i]]$pdata$angle = 10
+		catchgrids.lst[[i]]$pdata$linecol = 'darkgrey'
+
 		pdf(file.path(figdir,paste0("FisheryFootprint",yrs[i],".pdf")),4.5,5)
 		LobsterMap('27-32',poly.lst=catchgrids.lst[[i]])
 	  	title(yrs[i],line=-3,cex.main=2,adj=0.9)
 	    SpatialHub::contLegend('topleft',lvls=catchgrids.lst[[i]]$lvls/1000,Cont.data=catchgrids.lst[[i]],title="Catch (tons)",inset=0.02,cex=0.8,bg='white')
 	    dev.off()
 	    pdf2png(file.path(figdir,paste0("FisheryFootprint",yrs[i])))
+
 	}
 
