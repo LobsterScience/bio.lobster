@@ -1,9 +1,8 @@
 #' @export
-
-SoMplot = function(Areas=c("27","29","30","32","33"),cl=50:130,ltys=1:length(Areas),cols=1:length(Areas), graphic="R",version=1,alpha=0.5,pm=0.5,...){
+SoMplot = function(Areas=c("27","29","30","32","33"),cl=50:130,ltys=1:length(Areas),cols=1:length(Areas),LS=NULL, legend=T,graphic="R",fp=file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018'),...){
 
 	if(graphic=="R")x11()
-	if(graphic=="png")png(file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018',paste0('SoM',version,'.png')),width=8,height=8,units='in',res=200)
+	if(graphic=="png")png(file.path(fp,'SoM.png'),width=8,height=8,units='in',res=200)
 
 	par(...)
 	som=list()
@@ -19,6 +18,8 @@ SoMplot = function(Areas=c("27","29","30","32","33"),cl=50:130,ltys=1:length(Are
 		}
 
 		legend('bottomright',Areas,lty=ltys,col=cols,title="LFA")
+
+		lines(cl,som,lty=ltys[i],col=cols[i])
 
 	}
 	if(version==2){
@@ -36,6 +37,8 @@ SoMplot = function(Areas=c("27","29","30","32","33"),cl=50:130,ltys=1:length(Are
 	}
 
 
+	if(!is.null(LS))abline(v=LS,col='red')
+	if(legend)legend('bottomright',Areas,lty=ltys,col=cols,title="LFA")
 
 	if(graphic!="R")dev.off()
 

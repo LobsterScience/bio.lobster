@@ -715,7 +715,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
         port = addSYEAR(port)
         season.dates = lobster.db('season.dates')
          m=0
-         port = subset(port,LFA %in% c('27','28','29','30','31A','31B','32','33'))
+         #port = subset(port,LFA %in% c('27','28','29','30','31A','31B','32','33'))
          lfa = as.character(na.omit(unique(port$LFA) ))
         port$WOS = NA
                             for(i in 1:length(lfa)) {

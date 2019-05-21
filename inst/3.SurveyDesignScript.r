@@ -510,3 +510,21 @@ tertiary$priority='tertiary'
 
  file.key<-read.csv(file.path( project.datadirectory("bio.bathymetry"),"data","GermanBathy","fileKey.csv"))
  Relief.plots(subset(tows2017,PID==2),graphic="pdf",file=file.path(project.datadirectory('bio.lobster'),'figures','SurveyDesign','SurveyMB','2017','Tow'),digits=4,gerfiles=1:77,key=file.key)
+
+
+
+
+
+
+
+####################################################################
+######### BAY OF FUNDY EXPANSION ###################################
+
+
+ LFA34Stns = read.csv(file.path(project.datadirectory('bio.lobster'),"data","products","surveyStations.csv"))
+
+LobsterMap('BoF')
+  lobster.db("survey")
+ with(surveyCatch,points(SET_LONG,SET_LAT))
+
+

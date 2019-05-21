@@ -13,7 +13,7 @@ BarPlotCLF2<-function(CLF,yrs=2005:2016,CLFyrs=yrs,bins=seq(0,220,5),filen='CLF'
     for(i in 1:length(CLF)){
     #browser()
     
-    if(missing(xl))xlm<-c(1,length(bins))
+    if(missing(xl))xlm<-c(0,length(bins))
     else if(!missing(xl))xlm<-xl
     
         yl2<-ifelse(missing(ymax),max(colSums(CLF[[i]]))*1.2,ymax[i])

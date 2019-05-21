@@ -78,6 +78,8 @@
 			x = ccir_stan_run(dat = ds,save=F)
 			out.binomial[[i]] <- ccir_stan_summarize(x)
 		}
+		out.binomial[[1]]$LFA = "33W"
+		out.binomial[[2]]$LFA = "33E"
 		ouBin = ccir_collapse_summary(out.binomial)
 		attr(ouBin,'model') <- 'binomial' 
 		#ouBin$Yr = ouBin$Yr +1
