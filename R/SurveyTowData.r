@@ -83,9 +83,8 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,la
 
       scalSurv<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5)
 
-
-      LobSurvNest<-LobsterSurveyProcess(lfa="34",yrs=Years,mths=c("Aug","Jul","Jun"),bin.size=2.5,gear.type='NEST',size.range=Size.range)
-      LobSurvBalloon<-LobsterSurveyProcess(lfa="34",yrs=Years,mths=c("Aug","Jul","Jun"),bin.size=2.5,gear.type='280 BALLOON',size.range=Size.range)
+      LobSurvNest<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,gear.type='NEST',size.range=Size.range)
+      LobSurvBalloon<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,gear.type='280 BALLOON',size.range=Size.range)
 
 
 

@@ -2,7 +2,15 @@
 getFccir=function(p){
 	
 	load(file.path(project.datadirectory("bio.lobster"),"data","exploitationccir.rdata"))
-	ccir = o
+	load(file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
+	r33=ouBin[,c("LFA","Yr","ERfm")]
+	load(file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels34.rdata'))
+	r34=ouBin[,c("LFA","Yr","ERfm")]
+	load(file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
+	r2732=ouBin[,c("LFA","Yr","ERfm")]
+
+	
+	ccir = rbind(r2732,r33,r34)
 	
 	ccir$LFA[ccir$LFA == "LFA 27 South"] = "27S"
 	ccir$LFA[ccir$LFA == "LFA 27 North"] = "27N"

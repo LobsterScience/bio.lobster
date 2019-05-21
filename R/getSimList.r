@@ -14,7 +14,7 @@ getSimList = function(p,sex=1, LS=82.5, Fadj = 1, Sadj = 1, Sclose='end', window
 		p$StartPop = 1000
 		p$startDate = as.Date("1999-12-01")
 	
-		p$nt = 80					# number of timesteps
+		p$nt = 60					# number of timesteps
 		p$lens = seq(50,200,5)		# carapace length bins (mm)
 		p$timestep = 91  			# in days
 	

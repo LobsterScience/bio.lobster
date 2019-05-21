@@ -1,5 +1,5 @@
 #' LobsterSurveyProcess
-#' @param size.range defines the minimum and maximum value and is a filter (default is 0, 220mm CW)
+#' @param size.range defines the minimum and maximum value and is a filter (default is 0, 200mm CW)
 #' @param lfa defines the specific LFA for the ILTS
 #' @param yrs is the survey years to estimate
 #' @param mnts months of the survey, defaults to the full year
@@ -53,7 +53,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	surveyLobsters = subset(surveyLobsters,GEAR !='3/4 OTTER TRAWL') # Remove 2015 survey portion on Fundy Spray
 	#surveyLobsters$GEAR[surveyLobsters$YEAR==2017] = "NEST" # Incorrectly entered as BALLOON in 2017 # fixed in lobster.db
 
-	
+	#browser()
 	# add column for tow length
 	lat1 = surveyLobsters$SET_LAT
 	lat2 = surveyLobsters$HAUL_LAT
@@ -79,7 +79,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	for(i in 1:nrow(x)){
 	    g = subset(surveyLobsters,YEAR==x[i,1] & GEAR == x[i,2])
 	    mL = mean(g$LENGTH,na.rm=T)
-	    #g$LENGTH[is.na(g$LENGTH)]=mL
+	    g$LENGTH[is.na(g$LENGTH)]=mL
 	    g$GEAR_WIDTH = NA
 	    if(x[i,2]=='280 BALLOON') g$GEAR_WIDTH = 20
 	    if(x[i,2]=='NEST') g$GEAR_WIDTH = 13
@@ -102,6 +102,14 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	surveyLobsters$AREA_SWEPT=surveyLobsters$DIST_KM*(surveyLobsters$WING_SPREAD/1000)
 	surveyLobsters$SUBSAMPLE = surveyLobsters$NUM_MEASURED/surveyLobsters$NUM_CAUGHT
 	#surveyLobsters$SUBSAMPLE[is.na(surveyLobsters$SUBSAMPLE)] = 1
+
+	#temperature
+	ILTSTemp$SET_ID = paste0(ILTSTemp$TRIP_ID,ILTSTemp$SET_NO)
+
+	x = aggregate(TEMPC ~ SET_ID, data = ILTSTemp, median,na.rm=T)
+	surveyLobsters = merge(surveyLobsters,x,all=T)
+
+
 
 	if(species == 2550){
 		LongForm = aggregate(FISH_NO~floor(FISH_LENGTH)+SEX+SET_ID,data=surveyMeasurements,FUN=length)
@@ -135,23 +143,43 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 
 	}
 	names(CLF)[3] = "CL"
+	#browser()
+	sids=unique(CLF$SET_ID)
 	CLF = subset(CLF,BIN%in%bins)
-	CLF = merge(CLF,data.frame(SET_ID=CLF$SET_ID[1],BIN=bins[-1]),all=T)
+	CLF = merge(CLF,data.frame(SET_ID=rep(sids,length(bins)-1),BIN=sort(rep(bins[-1],length(sids)))),all=T)
 	CLF = reshape(CLF[order(CLF$BIN),],idvar='SET_ID',timevar='BIN',direction='wide',sep='')
 	CLF[is.na(CLF)] = 0
-	surveyLobsters=merge(surveyLobsters,CLF,all=T)
+	#browser()
+	surveyLobsters=merge(surveyLobsters,CLF,all.x=T)
+	
+	# subset by time and area
+	surveyLobsters=subset(surveyLobsters,LFA==lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
+	
+	# Calculate Densities
+	surveyLobsters[surveyLobsters$NUM_CAUGHT==0,which(names(surveyLobsters)%in%names(CLF)[-1])] = 0
 	surveyLobsters[surveyLobsters$NUM_CAUGHT==0,which(names(surveyLobsters)%in%names(CLF)[-1])] = 0
 	#browser()
 	surveyLobsters$LobDenCorrected=rowSums(surveyLobsters[,which(names(surveyLobsters)%in%names(CLF)[-1])])
 	surveyLobsters$LobDenNotCorrected=surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT
 	surveyLobsters$LobDen=surveyLobsters$LobDenCorrected
-	surveyLobsters$LobDen[is.na(surveyLobsters$LobDenCorrected)]=surveyLobsters$LobDenNotCorrected[is.na(surveyLobsters$LobDenCorrected)]
+	surveyLobsters$pLC=surveyLobsters$LobDenCorrected/surveyLobsters$LobDenNotCorrected
+
+	x=aggregate(pLC~YEAR,surveyLobsters,median,na.rm=T)
+	names(x)[2]='mpLC'
+	#browser()
+	ompLC = median(surveyLobsters$pLC,na.rm=T)
+	surveyLobsters = merge(surveyLobsters,x,all=T)
+	surveyLobsters$mpLC[is.na(surveyLobsters$mpLC)] = ompLC
+
+	surveyLobsters$LobDen[is.na(surveyLobsters$LobDenCorrected)] = surveyLobsters$LobDenNotCorrected[is.na(surveyLobsters$LobDenCorrected)]*surveyLobsters$mpLC[is.na(surveyLobsters$LobDenCorrected)]
 	surveyLobsters$NUM_STANDARDIZED=surveyLobsters$NUM_CAUGHT/surveyLobsters$DIST_KM
 	if(comparative){
 		comparativeStations = sort(subset(surveyLobsters,YEAR==2016&GEAR=="280 BALLOON")$STATION)
 		surveyLobsters =surveyLobsters[which(!(surveyLobsters$YEAR==2016&!surveyLobsters$STATION%in%comparativeStations)),]
 	}
 	if(!is.null(Net)) surveyLobsters =surveyLobsters[which(!(surveyLobsters$YEAR==2016&surveyLobsters$GEAR!=Net)),]
+
+	#browser()
 
 	## berried females
 	#with(subset(surveyMeasurements,SEX==3),tapply(SEX,SET_ID,length))->bfs
@@ -171,7 +199,6 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	#surveyLobsters$N_LARGE_FEMALES=surveyLobsters$NUM_STANDARDIZED*(surveyLobsters$LargeFemales/surveyLobsters$all)
 
 	write.csv(surveyLobsters,file.path(project.datadirectory('bio.lobster'),"data","products","surveyLobsters.csv"),row.names=F) # Save data as csv
-	surveyLobsters=subset(surveyLobsters,LFA==lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
 	
 	if(lfa=='34'){
 

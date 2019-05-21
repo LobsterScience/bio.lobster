@@ -2,7 +2,7 @@
 PortSamplesProcess<-function(lfa='34',min.size=80){
 		
 	# get port sampling data
-	lobster.db('port')
+	lobster.db('port.sampling')
 	port1<-subset(port,LFA%in%lfa&L_SIZE>min.size)
 	port1$SYEAR<-as.numeric(substr(port1$SEASON,6,9))
 	port1$SAMPLE_ID<-as.numeric(paste(port1$SAMPLE_SEQ,port1$SAMPLE_NO,sep='.'))
