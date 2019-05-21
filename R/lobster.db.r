@@ -712,10 +712,21 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
         
         # port
         port = sqlQuery(con, "select a.SAMPLE_SEQ,a.SAMPLE_NO,a.SDATE,a.SEASON,a.NTRAPS,a.LATITUDE,a.LONGITUDE,a.GRADE, b.L_SIZE,b.N_MALES,b.N_FEM,b.NBF, d.LFA,c.PORT,c.COUNTY,c.STAT,c.PORT_CODE,c.LATITUDE port_lat,c.LONGITUDE port_lon from lobster.CRLENGCODE a, lobster.CRLENGFREQ b, lobster.CRLOCATIONS c, frailc.lfa_port d where a.sample_seq = b.sample_seq and a.port = c.port and c.PORT_CODE = d.port(+) and a.type = 'P' ")
+        save( port, file=file.path( fnODBC, "port.rdata"), compress=T)
+        gc()  # garbage collection
+        odbcClose(con)
+      }
+      load(file.path( fnODBC, "port.rdata"), .GlobalEnv)
+     }
+ 
+
+    if (DS %in% c("process.port.sampling.redo", "process.port.sampling") ) {
+        
+        load(file.path( fnODBC, "port.rdata"), .GlobalEnv)
         port = addSYEAR(port)
         season.dates = lobster.db('season.dates')
          m=0
-         #port = subset(port,LFA %in% c('27','28','29','30','31A','31B','32','33'))
+        # port = subset(port,LFA %in% c('27','28','29','30','31A','31B','32','33'))
          lfa = as.character(na.omit(unique(port$LFA) ))
         port$WOS = NA
                             for(i in 1:length(lfa)) {
@@ -753,12 +764,10 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                           }
                           if(any(!is.finite(port$WOS))) {kl = which(!is.finite(port$WOS)); port$WOS[kl] = NA}
         save( port, file=file.path( fnODBC, "port.rdata"), compress=T)
-        gc()  # garbage collection
-        odbcClose(con)
-      }
-      load(file.path( fnODBC, "port.rdata"), .GlobalEnv)
+     load(file.path( fnODBC, "port.rdata"), .GlobalEnv)
      }
-  
+        
+
 ### voluntary logs 
     if (DS %in% c("vlog.redo", "vlog") ) {
 
