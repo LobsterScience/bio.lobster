@@ -1,0 +1,910 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{pdfcomment}
+\usepackage{amsmath}
+\usepackage{lscape}
+\usepackage{hyperref}
+%\usepackage[top=2.4cm, bottom=2.4cm, left=3cm, right=3cm]{geometry}
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{datetime}
+%\pagestyle{fancy} 
+\pagenumbering{gobble}
+
+
+%\lhead{\bf Maritimes Region}
+%\rhead{\bf LFA27-33 - 2018}
+%\lfoot{\today}
+%\cfoot{\thepage}
+%\renewcommand{\headrulewidth}{0.4pt}
+%\renewcommand{\footrulewidth}{0.4pt}
+\newcommand{\D}{.}
+\newcommand{\tl}{\textless}
+\newcommand{\e}{\string~/bio.data/bio.lobster/figures/} %change this to set figure directory
+\newcommand{\ebh}{\string~/bio.data/bio.lobster/figures/LFA3438Framework2019/} %change this to set figure directory
+\newcommand{\cp}{\caption}
+
+\begin{document}
+
+\begin{landscape}
+% maps section
+\begin{figure}
+\centering
+    \pdftooltip{\includegraphics[width=1\textwidth]{\ebh LFAMapATL.jpg}}{Figure 1}
+    \caption{Map of the Lobster Fishing Areas in Atlantic Canada using the boundaries identified in the Atlantic fishery regulations.}
+
+\end{figure}
+\end{landscape}
+
+%   \begin{figure}
+%    \centering
+%        %\pdftooltip{\includegraphics[width=1\textwidth]{\ebh CLFSeaSampling27.pdf}}{Figure x}
+%        \pdftooltip{\includegraphics[width=1\textwidth]{\ebh Landings.pdf}}{Figure 2}
+%        \caption{Time series of Lobster landings by LFA.}
+%
+%    \end{figure}
+
+%fishery footprint
+
+  \begin{figure}
+        \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2011.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2012.pdf}}}{Figure 3}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2014.pdf}}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2015.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FisheryFootprint2016.pdf}}\\
+                %}        
+        
+         \caption{Map of the fishery footprint expressed as the amount of landings in each grid of LFAs 27 - 33 from 2011-2016.}
+        \end{figure}
+
+
+% Fishery Footprint
+%        \begin{figure}
+%        \centering
+%    \pdftooltip{
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2011.pdf}}
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2012.pdf}}}{Figure 4}\\
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2013.pdf}}
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2014.pdf}}\\
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2015.pdf}}
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootpot2016.pdf}}\\
+%                %}        
+%        
+%         \caption{Map of the fishery footprint expressed as the amount of effort in each grid of LFAs 27 - 33 from 2011-2016.}
+%        \end{figure}
+
+
+% Fishery Footprint
+        \begin{figure}
+        \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2011.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2012.pdf}}}{Figure 5}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2013.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2014.pdf}}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2015.pdf}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootcpue2016.pdf}}\\
+                %}        
+        
+         \caption{Map of the fishery footprint expressed as the amount of CPUE in each grid of LFAs 27 - 33 from 2011-2016.}
+        \end{figure}
+
+%                \begin{figure}
+%        \centering
+%    \pdftooltip{
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2011.pdf}}
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2012.pdf}}}{Figure 6}\\
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2013.pdf}}
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2014.pdf}}\\
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2015.pdf}}
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootDaysFished2016.pdf}}\\
+%                %}        
+%        
+%         \caption{Map of the fishery footprint expressed as the amount of days fished in each grid of LFAs 27 - 33 from 2011-2016.}
+%        \end{figure}
+
+
+% Fishery Footprint
+%        \begin{figure}
+%        \centering
+%    \pdftooltip{
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2011.pdf}}
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2012.pdf}}}{Figure 7}\\
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2013.pdf}}
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2014.pdf}}\\
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2015.pdf}}
+%                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\ebh FishFootLicenceFished2016.pdf}}\\
+%                %}        
+%        
+%         \caption{Map of the fishery footprint expressed as the amount of licences in each grid of LFAs 27 - 33 from 2011-2016.}
+%        \end{figure}
+
+
+
+
+%at sea sampled data
+
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e atSeaSamples27-33.png}}}{Figure 8}\\
+%                     \caption{Centroid of the at sea sampling trips across LFA 27-33 bewteen 1977 and current.}
+%        \end{figure}
+
+% Carapace Length Frequencies Sea samples
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling34a.pdf}}{Figure 9}
+        \caption{Carapace Length Frequencies from at sea sampling in LFA 34 between 2005 and 2011. Dark grey: males, light grey: females, red line: minimum legal size.}
+
+    \end{figure}
+
+   \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling34b.pdf}}{Figure 10}
+        \caption{Carapace Length Frequencies from at sea sampling in LFA 34 between 2012 and 2018. Dark grey: males, light grey: females, red line: minimum legal size.}
+
+    \end{figure}
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling35a.pdf}}{Figure 11}
+        \caption{Carapace Length Frequencies from at sea sampling in LFA 35 between 2005 and 2011. Dark grey: males, light grey: females, red line: minimum legal size.}
+
+    \end{figure}
+
+   \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling35b.pdf}}{Figure 12}
+        \caption{Carapace Length Frequencies from at sea sampling in LFA 35 between 2012 and 2018. Dark grey: males, light grey: females, red line: minimum legal size.}
+
+    \end{figure}
+
+   \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling36a.pdf}}{Figure 13}
+        \caption{Carapace Length Frequencies from at sea sampling in LFA 36 between 2005 and 2011. Dark grey: males, light grey: females, red line: minimum legal size.}
+
+    \end{figure}
+
+   \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFSeaSampling38a.pdf}}{Figure 14}
+        \caption{Carapace Length Frequencies from at sea sampling in LFA 38 between 2005 and 2011. Dark grey: males, light grey: females, red line: minimum legal size.}
+
+    \end{figure}
+
+ 
+%\begin{figure}
+%\centering
+%         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.96\textwidth]{\e FSRSsamplesall.png}}}{Figure 15}\\
+%                     \caption{Location of the FSRS recruitment trap samples collected between 2004 and 2017.}
+%        
+%\end{figure}
+
+% FSRS length frequecies
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFfsrs34.pdf}}{Figure 16}
+        \caption{Carapace Length Frequencies from at FSRS recruitment traps in LFA 34. Dark grey: males, light grey: females, red line: minimum legal size.}
+
+    \end{figure}
+
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CLFfsrs35.pdf}}{Figure 17}
+        \caption{Carapace Length Frequencies from at FSRS recruitment traps in LFA 35. Dark grey: males, light grey: females, red line: minimum legal size.}
+
+    \end{figure}
+
+
+
+%Stock status indicators
+
+
+%Bottom Temperature
+%\begin{landscape}
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/FSRSTemp27.png}}
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/FSRSTemp29.png}}}{Figure 71}\\
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/FSRSTemp30.png}}
+%                    
+%                    \caption{Time series of bottom temperatures across LFAs. Data represents the mean and standard deviation of the fishing season from the FSRS %recruitment traps.}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/FSRSTemp31A.png}}
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/FSRSTemp31B.png}}}{Figure 72}\\
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/FSRSTemp32.png}}
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e AtSeaIndictors/FSRSTemp33.png}}
+%                    
+%                    \caption{Time series of bottom temperatures across LFAs. Data represents the mean and standard deviation of the fishing season from the FSRS %recruitment traps.}
+%        \end{figure}
+%
+%\end{landscape}
+%
+%Fishing Effort
+%
+%\begin{landscape}
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA27.png}}
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA28.png}}}{Figure 73}\\
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA29.png}}
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA30.png}}
+%                    
+%                    \caption{Time series of fishing effort in thousands of trap hauls across LFAs.}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA31A.png}}
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA31B.png}}}{Figure 74}\\
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA32.png}}
+%                     \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\ebh FisheryEffortLFA33.png}}
+%                    
+%                    \caption{Time series of fishing effort in thousands of trap hauls across LFAs.}
+%        \end{figure}
+%
+%\end{landscape}
+
+
+%CA figures
+
+%ccir figures
+%example of modellig figures
+%\begin{figure}
+%\centering
+%    \pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.56\textwidth]{\e ccir/predicted\D LFA\D 27\D Year\D 2007\D 1\D Grid\D 351-355\D %Season\D 4-7\D Sex\D 1\D 5\D binomial.png}}
+%		\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.56\textwidth]{\e ccir/predicted\D LFA\D 33\D Year\D 2009\D 1\D Grid\D 313-484\D Season\D %1-12\D Sex\D 1\D 5\D binomial.png}}}{Figure 85}
+%              \caption{Example change in ratio of exploitable to total sample against cumulative scaled landings. Solid blue line represents CCIR median predictions %whereas dashed blue lines represent 95\% credible intervals. Left panel represents the results from LFA 27 south in 2007. Right panel represents results %from LFA 33 east in 2009.}
+%\end{figure}
+%
+%
+%\begin{figure}
+%\centering
+%    \pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.56\textwidth]{\e ccir/exploitation\D LFA\D 27\D Year\D 2007\D 1\D Grid\D 351-355\D %Season\D 4-7\D Sex\D 1\D 5\D binomial.png}}
+%		\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.56\textwidth]{\e ccir/exploitation\D LFA\D 33\D Year\D 2009\D 1\D Grid\D 313-484\D Season\D %1-12\D Sex\D 1\D 5\D binomial.png}}}{Figure 86}
+%             \caption{Within season CCIR estimated exploitation indices. Solid blue line represents CCIR median predicted exploitation whereas dashed blue lines %represent 95\% credible intervals. Left panel represents the results from LFA 27 south in 2007. Right panel represents results from LFA 33 east in 2009.}
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%    \pdftooltip{\subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.56\textwidth]{\e ccir/exploitation\D LFA\D 33\D Year\D 2009\D 1\D Grid\D 313-484\D %Season\D 1-12\D Sex\D 1\D 5\D binomial.png}}
+%        \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.56\textwidth]{\e ccir/exploitation\D LFA\D 33\D Year\D 2009\D 1\D Grid\D 313-484\D Season\D %1-12\D Sex\D 1\D 5\D binomial\D fishery\D land.png}}}{Figure 87}
+%             \caption{Comparison of within season CCIR estimated exploitation indices estimated using either the cumulative monitoring effort (left) or cumulative %landings (right). Solid blue line represents CCIR median predicted exploitation whereas dashed blue lines represent 95\% credible intervals. Both panels %represent results from LFA 33 east in 2009.}
+%\end{figure}
+%
+%
+%
+%
+%%comparing between monitoring cumulative catch and fishery cumulative catch for the specific 
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D Compared\D 27\D 351\D 352\D 353\D 354%\D 355.png}}
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D Compared\D 27\D 356\D 357\D 358\D 359\D %360\D 361.png}}}{Figure 88}\\
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D Compared\D 29\D 341\D 342\D 343\D 344.png}%}
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D Compared\D 30\D 345\D 346\D 347.png}}
+%                 \caption{Comparison of predictor variables (cumulative monitoring - black or cumulative landings - red) on CCIR estimated end of season exploitation (%points) with 95\% credible intervals (vertical lines) by year within LFA 27 south and north, LFA 29 and LFA 30.}
+%        \end{figure}
+%
+% \begin{figure}
+%        \centering
+%        \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D Compared\D 31a\D 337\D 338\D 339\D %340.png}}
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D Compared\D 31b\D 331\D 332\D 333\D 334\D %335\D 336.png}}}{Figure 89}\\
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D Compared\D 32\D 323\D 324\D 325\D 326\D %327\D 328\D 329\D 330.png}}
+%               \caption{Comparison of predictor variables (cumulative monitoring - black or cumulative landings - red) on CCIR estimated end of season exploitation (%points) with 95\% credible intervals (vertical lines) by year within LFA 31A, LFA 31B and LFA 32.}
+%    \end{figure}
+%
+%
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D Compared\D 33\D 301\D 302\D 303\D 304\D %305\D 306\D 307\D 308\D 309\D 310\D 311\D 312\D 469\D 470\D 471\D 472\D 473\D 474\D 475\D 476\D 477\D 478\D 479\D 480\D 485\D 486\D 487\D 488\D 489\D %490\D 491\D 492.png}}
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D Compared\D 33\D 313\D 314\D 315\D 316\D %317\D 318\D 319\D 320\D 321\D 322\D 481\D 482\D 483\D 484.png}}}{Figure 90}\\
+%               \caption{Comparison of predictor variables (cumulative monitoring - black or cumulative landings - red) on CCIR estimated end of season exploitation (%points) with 95\% credible intervals (vertical lines) by year within LFA 33 east and west.}
+%        \end{figure}
+%
+%
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 27\D 351\D 352\D 353\D 354\D 355.png}%}
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 27\D 356\D 357\D 358\D 359\D 360\D 361.png%}}}{Figure 91}\\
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 27\D combined.png}}\\
+%                 \caption{CCIR estimated end of season exploitation (points) with 95\% credible intervals (vertical lines) by year within LFA 27 south, north or %combined. The combined LFA 27 north and south represents the landings weighted annual exploitation. Within plots blue lines represent 3-year running %median of exploitation estimates.}
+%        \end{figure}
+%
+% \begin{figure}
+%        \centering
+%        \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 29\D 341\D 342\D 343\D 344.png}}
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 30\D 345\D 346\D 347.png}}}{Figure 92}\\
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 31a\D 337\D 338\D 339\D 340.png}}
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 31b\D 331\D 332\D 333\D 334\D 335\D %336.png}}\\
+%        
+%                 \caption{CCIR estimated end of season exploitation (points) with 95\% credible intervals (vertical lines) by year within LFAs. Within plots blue %lines represent 3-year running median of exploitation estimates.}
+%    \end{figure}
+%
+%
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 32\D 323\D 324\D 325\D 326\D 327\D %328\D 329\D 330.png}}
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 33\D 301\D 302\D 303\D 304\D 305\D 306\D %307\D 308\D 309\D 310\D 311\D 312\D 469\D 470\D 471\D 472\D 473\D 474\D 475\D 476\D 477\D 478\D 479\D 480\D 485\D 486\D 487\D 488\D 489\D 490\D 491\D %492.png}}}{Figure 93}\\
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 33\D 313\D 314\D 315\D 316\D 317\D 318\D %319\D 320\D 321\D 322\D 481\D 482\D 483\D 484.png}}
+%                \subfloat{\includegraphics[clip,trim={0 1.1cm 0.3cm 1.1cm},width=0.48\textwidth]{\e ccir/TS\D exploitation\D 33\D combined.png}}
+%                
+%                 \caption{CCIR estimated end of season exploitation (points) with 95\% credible intervals (vertical lines) by year within LFA 32, LFA 33 east, LFA 33 %west and LFA 33 combined. The combined LFA 33 represents the landings weighted annual exploitation from the east and west combined. Within plots blue %lines represent 3-year running median of exploitation estimates.}
+%        \end{figure}
+%
+%%Landings, Biomass and Abundance
+%
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/LandingsAbundance27.png}}}{Figure 94}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/LandingsAbundance28.png}}
+%                    
+%                    \caption{Time series of total landings in tons (black lines) and total landings in numbers estimated using length frequencies from At-Sea (blue) %or Port samples (red).}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/LandingsAbundance29.png}}}{Figure 95}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/LandingsAbundance30.png}}
+%                   \caption{Time series of total landings in tons (black lines) and total landings in numbers estimated using length frequencies from At-Sea (blue) or %Port samples (red).}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/LandingsAbundance31A.png}}}{Figure 96}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/LandingsAbundance31B.png}}
+%                     
+%                    \caption{Time series of total landings in tons (black lines) and total landings in numbers estimated using length frequencies from At-Sea (blue) %or Port samples (red).}
+%                    
+%        \end{figure}
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/LandingsAbundance32.png}}}{Figure 97}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/LandingsAbundance33.png}}
+%                     
+%                    \caption{Time series of total landings in tons (black lines) and total landings in numbers estimated using length frequencies from At-Sea (blue) %or Port samples (red), or FSRS commercial samples (green).}
+%                    
+%        \end{figure}
+%
+%
+%
+%
+%
+%% Estimating recruitment biomass 
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/NewRecruitBiomass27.png}}}{Figure 98}\\
+%                    \caption{Time series of estimated recruitment biomass in tons with associated 95\%error bounds.}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/NewRecruitBiomass29.png}}}{Figure 99}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/NewRecruitBiomass30.png}}
+%                     \caption{Time series of estimated recruitment biomass in tons with associated 95\%error bounds. Upper bounds in LFA 30 in 2009 were not shown %(4195 t). The full range of error was not shown as lower credible intervals on exploitation rates were not well defined.}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/NewRecruitBiomass31A.png}}}{Figure 100}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/NewRecruitBiomass31B.png}}
+%                     
+%                    \caption{Time series of estimated recruitment biomass in tons with associated 95\%error bounds. Upper bounds in LFA 31A for 2013 and 2015 were \%textgreater 2990t. Upper bounds for LFA 31B in 2010 and 2013 were \textgreater 30000t. The full range of error was not shown as lower credible %intervals on exploitation rates were not well defined.}
+%                    
+%        \end{figure}
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/NewRecruitBiomass32.png}}}{Figure 101}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e AtSeaIndictors/NewRecruitBiomass33.png}}
+%                     
+%                    \caption{Time series of estimated recruitment biomass in tons with associated 95\%error bounds}
+%                    
+%        \end{figure}
+%
+
+
+
+% CPUE model
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CPUEmodel1.png}}{Figure 102}
+        \caption{Predictions of Catch per unit effort (kg/trap haul) from the model for each day (red line), overlaid on the raw data for LFAs 34-38. }
+
+    \end{figure}
+
+%    \begin{figure}
+%    \centering
+%        \pdftooltip{
+%        \includegraphics[width=1\textwidth]{\ebh CPUEmodelAnnualIndex.pdf}}{Figure 104}
+%        \caption{The predicted mean and standard deviation for seasonal and LFA Catch per unit effort (CPUE) indices from the CPUE model (red dots, dashed line). %Unmodelled mean CPUE or %each season and LFA (blue dots).}
+%
+%    \end{figure}
+%
+
+% CPUE
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh CPUE.pdf}}{Figure 105}
+        \caption{Daily (grey line) and Annual (red dot) mean Catch per unit effort (kg/Trap Haul) for each LFA.}
+
+    \end{figure}
+
+
+
+% FSRS model
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh FSRSmodelBayesShorts.png}}{Figure 106}
+        \caption{Annual index of sublegal sized (\textless 82.5 mm) lobsters from the FSRS model with 95\% credible intervals for each LFA.}
+
+    \end{figure}
+
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh FSRSmodelBayesLegals.png}}{Figure 107}
+        \caption{Annual index of legal sized (\textgreater 82.5 mm) lobsters from the FSRS model with 95\% credible intervals for each LFA.}
+
+    \end{figure}
+
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh FSRSmodelBayesRecruits.png}}{Figure 108}
+        \caption{Annual index of recruit sized (75-82.5 mm) lobsters from the FSRS model with 95\% credible intervals for each LFA.}
+
+    \end{figure}
+
+
+
+
+%Mulitvariate Indicators
+
+%LFA 27
+
+%\begin{figure}
+%\centering
+%   \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA27\D PC1.png}}}{Figure 110}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA27\D PC2.png}}
+%                     \caption{The first two principle components of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 27. Solid line represents a %loess smooth.}
+%\end{figure}
+%\clearpage
+%
+%\begin{figure}
+%
+%   \pdftooltip{\subfloat{\includegraphics[width=1.1\textwidth]{\e indicators\D OrdinationLFA27\D anomalies.png}}}{Figure 111}\\
+%                     \caption{Time series of anomalies of the first principle component of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 27. %The values in brackets beside indicator names represent component scores for PC1 and PC2 respectively.}
+%\end{figure}
+%
+%%LFA 29
+%
+%\begin{figure}
+%\centering
+%   \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA29\D PC1.png}}}{Figure 112}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA29\D PC2.png}}
+%                     \caption{The first two principle components of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 29. Solid line represents a %loess smooth.}
+%\end{figure}
+%\clearpage
+%
+%\begin{figure}
+%
+%   \pdftooltip{\subfloat{\includegraphics[width=1.1\textwidth]{\e indicators\D OrdinationLFA29\D anomalies.png}}}{Figure 113}\\
+%                     \caption{Time series of anomalies of the first principle component of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 29. %The values in brackets beside indicator names represent component scores for PC1 and PC2 respectively.}
+%\end{figure}
+%
+%
+%%LFA 30
+%
+%\begin{figure}
+%\centering
+%   \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA30\D PC1.png}}}{Figure 114}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA30\D PC2.png}}
+%                     \caption{The first two principle components of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 30. Solid line represents a %loess smooth.}
+%\end{figure}
+%\clearpage
+%
+%\begin{figure}
+%
+%   \pdftooltip{\subfloat{\includegraphics[width=1.1\textwidth]{\e indicators\D OrdinationLFA30\D anomalies.png}}}{Figure 115}\\
+%                     \caption{Time series of anomalies of the first principle component of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 30. %The values in brackets beside indicator names represent component scores for PC1 and PC2 respectively.}
+%
+%\end{figure}
+%
+%%LFA 31A
+%
+%\begin{figure}
+%\centering
+%   \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA31A\D PC1.png}}}{Figure 116}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA31A\D PC2.png}}
+%                     \caption{The first two principle components of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 31A. Solid line represents a %loess smooth.}
+%\end{figure}
+%\clearpage
+%
+%\begin{figure}
+%
+%   \pdftooltip{\subfloat{\includegraphics[width=1.1\textwidth]{\e indicators\D OrdinationLFA31A\D anomalies.png}}}{Figure 117}\\
+%                     \caption{Time series of anomalies of the first principle component of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 31A. %The values in brackets beside indicator names represent component scores for PC1 and PC2 respectively.}
+%\end{figure}
+%
+%
+%%LFA 31B
+%
+%\begin{figure}
+%\centering
+%   \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA31B\D PC1.png}}}{Figure 118}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA31B\D PC2.png}}
+%                     \caption{The first two principle components of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 31B. Solid line represents a %loess smooth.}
+%\end{figure}
+%\clearpage
+%
+%\begin{figure}
+%
+%   \pdftooltip{\subfloat{\includegraphics[width=1.1\textwidth]{\e indicators\D OrdinationLFA31B\D anomalies.png}}}{Figure 119}\\
+%                     \caption{Time series of anomalies of the first principle component of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 31B. %The values in brackets beside indicator names represent component scores for PC1 and PC2 respectively. }
+%\end{figure}
+%
+%%LFA 29
+%
+%\begin{figure}
+%\centering
+%   \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA32\D PC1.png}}}{Figure 120}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA32\D PC2.png}}
+%                     \caption{The first two principle components of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 32. Solid line represents a %loess smooth.}
+%\end{figure}
+%\clearpage
+%
+%\begin{figure}
+%
+%   \pdftooltip{\subfloat{\includegraphics[width=1.1\textwidth]{\e indicators\D OrdinationLFA32\D anomalies.png}}}{Figure 121}\\
+%                     \caption{Time series of anomalies of the first principle component of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 32. %The values in brackets beside indicator names represent component scores for PC1 and PC2 respectively.}
+%\end{figure}
+%
+%%LFA 33
+%
+%\begin{figure}
+%\centering
+%   \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA33\D PC1.png}}}{Figure 122}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e indicators\D OrdinationLFA33\D PC2.png}}
+%                     \caption{The first two principle components of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 33. Solid line represents a %loess smooth.}
+%\end{figure}
+%\clearpage
+%
+%\begin{figure}
+%
+%   \pdftooltip{\subfloat{\includegraphics[width=1.1\textwidth]{\e indicators\D OrdinationLFA33\D anomalies.png}}}{Figure 123}\\
+%                     \caption{Time series of anomalies of the first principle component of a multivariate ordination of indicators representing the lobster stock and fishery in LFA 33. %The values in brackets beside indicator names represent component scores for PC1 and PC2 respectively.}
+%\end{figure}
+%
+%
+%\begin{figure}
+%
+%   \pdftooltip{\subfloat{\includegraphics[width=1.2\textwidth]{\e HCRExample.png}}}{Figure 124}\\
+%                     \caption{Example precautionary approach phase plot delimiting the healthy zone (green) above upper stock reference (USR) the cautious zone (yellow), between the USR %and the limit reference point (LRP) and critical zone (red), below the LRP. The removal reference (RR) is shown as a solid black line in all three zones, however in %practice the RR should be reduced in the cautious zone (black dashed) to allow stock rebuilding and set to 0 in the critical zone.}
+%\end{figure}
+%
+%
+%% current landings reference points 
+%
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/LandingsRefs27.png}}}{Figure 125}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/LandingsRefs28-29.png}}
+%                    \caption{Time series of landings (black), three year running median of landings (blue) with currently approved upper stock (dashed green line) and limit reference (%dotted red line) points by LFA.}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/LandingsRefs30.png}}}{Figure 126}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/LandingsRefs31.png}}
+%                    \caption{Time series of landings (black), three year running median of landings (blue) with currently approved upper stock (dashed green line) and limit reference (%dotted red line) points by LFA.}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/LandingsRefs32.png}}}{Figure 127}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/LandingsRefs33.png}}
+%                    \caption{Time series of landings (black), three year running median of landings (blue) with currently approved upper stock (dashed green line) and limit reference (%dotted red line) points by LFA.}
+%        \end{figure}
+%
+%
+%% same but using catch rates
+%
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/CatchRateRefs27.png}}}{Figure 128}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/CatchRateRefs28.png}}
+%                    \caption{Time series of commercial catch rates (black), three year running median (blue) with proposed upper stock (dashed green line) and limit reference (dotted red %line) points by LFA.}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/CatchRateRefs29.png}}}{Figure 129}\\
+%                    \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/CatchRateRefs30.png}}
+%                    
+%                    \caption{Time series of commercial catch rates (black), three year running median (blue) with proposed upper stock (dashed green line) and limit reference (dotted red %line) points by LFA.}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/CatchRateRefs31A.png}}}{Figure 130}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/CatchRateRefs31B.png}}
+%                    \caption{Time series of commercial catch rates (black), three year running median (blue) with proposed upper stock (dashed green line) and limit reference (dotted red %line) points by LFA.}
+%        \end{figure}
+%
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/CatchRateRefs32.png}}}{Figure 131}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/CatchRateRefs33.png}}
+%                    \caption{Time series of commercial catch rates (black), three year running median (blue) with proposed upper stock (dashed green line) and limit reference (dotted red %line) points by LFA.}
+%        \end{figure}
+%
+%
+%
+%% same but using expl
+%
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/ExploitationRefs27.png}}}{Figure 132}\\
+%                    \caption{Time series of CCIR exploitation indices (black), three year running median (blue) with removal references (RRc = dashed green line; $RR_{75}$ = dotted red %line)}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/ExploitationRefs29.png}}}{Figure 133}\\
+%                    \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/ExploitationRefs30.png}}
+%                    
+%                \caption{Time series of CCIR exploitation indices (black), three year running median (blue) with removal references (RRc = dashed green line; $RR_{75}$ = dotted red line)}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/ExploitationRefs31A.png}}}{Figure 134}\\
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/ExploitationRefs31B.png}}
+%                    \caption{Time series of CCIR exploitation indices (black), three year running median (blue) with removal references (RRc = dashed green line; $RR_{75}$ = dotted red %line)}
+%        \end{figure}
+%
+
+% Exploitation
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh ExploitationRefs34.png}}{Figure 105}
+        \caption{Time series of CCIR exploitation indices (black), three year running median (blue) with removal references (RRc = dashed green line; $RR_{75}$ = dotted red line)}
+
+    \end{figure}
+
+
+
+
+
+%phase plots ccir expl and landings
+%\begin{landscape}
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR27.png}}}{Figure 136}
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR29.png}}
+%                    \caption{Phase plot using the three year running median of CPUE and three year running median of CCIR exploitation index compared against the proposed upper stock and %limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the %maximum exploitation index respectively.}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR30.png}}}{Figure 137}
+%                     \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR31A.png}}
+%               \caption{Phase plot using the three year running median of CPUE and three year running median of CCIR exploitation index compared against the proposed upper stock and limit %reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the maximum %exploitation index respectively.}
+%        \end{figure}
+%
+%\begin{figure}
+%        \centering
+%         \pdftooltip{      \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR31B.png}}}{Figure 138}
+%            \subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR32.png}}
+%                    \caption{Phase plot using the three year running median of CPUE and three year running median of CCIR exploitation index compared against the proposed upper stock and %limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the %maximum exploitation index respectively.}
+%        \end{figure}
+%
+%\end{landscape}
+%\begin{figure}
+%        \centering
+%         \pdftooltip{\subfloat{\includegraphics[width=0.68\textwidth]{\e ReferencePoints/PhasePlotsCPUECCIR33.png}}}{Figure 139}
+%                    \caption{Phase plot using the three year running median of CPUE and three year running median of CCIR exploitation index compared against the proposed upper stock and %limit reference points based on commercial catch rates. The removal reference proposed represented the 75th quantile break of the posterior distribution for the %maximum exploitation index respectively.}
+%        \end{figure}
+%
+
+
+% Molt model
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh TempDataMap.png}}{Figure 140}
+        \caption{Locations of all temperature data used in the temperature model.}
+
+    \end{figure}
+
+%       \begin{figure}
+%       \centering
+%   \pdftooltip{
+%               \subfloat{\includegraphics[clip,trim={0 0.2cm 0 0.2cm },width=1\textwidth]{\ebh TempModel34.png}}}{Figure 141}\\
+%               \subfloat{\includegraphics[clip,trim={0 0.2cm 0 0.2cm },width=1\textwidth]{\ebh TempModel33W.png}}\\
+%               %}        
+%       
+%        \caption{Time series of temperature data overlaid with predictions from the temperature model showing seasonal trends in LFA 34 (top, red) and LFA 33W (bottom, blue) at various depths.}
+%       \end{figure}
+
+
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh TempModelAnnual.png}}{Figure 142}
+        \caption{Predictions from the temperature model for June 1st at 25 m to show the annual trends in each LFA. Light blue band represents the standard error of the prediction.}
+
+    \end{figure}
+  
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh TaggingMap.pdf}}{Figure 143}
+        \caption{Locations of tagging mark-recapture data used for estimating moult probability and increment. Releases (red dots) are conected to their recaptures (blue dots) with a purple line.}
+
+    \end{figure}
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh MoltProbModel.png}}{Figure 144}
+        \caption{Predicted molt probabilities by number of degree days above 0$^{\circ}$C since last molt for various initial carapace lengths from the molt probability model.}
+
+    \end{figure}
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh MoltIncrModel.png}}{Figure 145}
+        \caption{Molt increment as the size difference versus initial carapace length for males (blue) and females (red) from tagging data. Lines represent the fits and 95\% credible interval of the molt increment model for each sex.}
+
+    \end{figure}    
+
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\ebh SoM.png}}{Figure 146}
+        \caption{Size at maturity ogive for LFA 34.}
+
+    \end{figure}    
+
+
+% Simulation    
+    
+    %## base
+    \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34malesBase.png}}}{Figure 147}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34removalsBase.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34femalesBase.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34moltsBase.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34berriedBase.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34eggsBase.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population under the current management regime for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+ 
+    %## MLS 90
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34malesLS90.png}}}{Figure 156}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34removalsLS90.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34femalesLS90.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34moltsLS90.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34berriedLS90.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34eggsLS90.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population where MLS was increased to 90mm for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+ 
+
+
+    %## shorter season
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34malesSS5.png}}}{Figure 165}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34removalsSS5.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34femalesSS5.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34moltsSS5.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34berriedSS5.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34eggsSS5.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population where the season was shortened by 50 percent for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    
+  
+%----------
+
+
+    %## windows 
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34malesSmallWin.png}}}{Figure 174}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34removalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34femalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34moltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34berriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34eggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population where a small window (115-125 mm) was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+ %-----------
+
+    %## max size
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34malesMax125.png}}}{Figure 183}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34removalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34femalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34moltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34berriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34eggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population where a maximum size of 125 mm was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+%     \begin{figure}
+%    \centering
+%        \pdftooltip{
+%        \includegraphics[width=1\textwidth]{\ebh simSumLegalSize.png}}{Figure 192}
+%        \caption{Summary of simulation model results for changes in Minimum Legal Size for each LFA.}
+%
+%    \end{figure}
+%
+%    \begin{figure}
+%    \centering
+%        \pdftooltip{
+%        \includegraphics[width=1\textwidth]{\ebh simSumSeason.png}}{Figure 193}
+%        \caption{Summary of simulation model results for season reduction in each LFA.}   
+%
+%    \end{figure}    
+%\fi  
+\end{document}
+
