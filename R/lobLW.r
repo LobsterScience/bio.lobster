@@ -1,5 +1,10 @@
 #' @export
-lobLW <- function(CL,fsrs=F) {
+lobLW <- function(CL,fsrs=F,sex=2) {
+
+
+	a=c(0.000608,0.001413,0.00482)
+	b=c(3.0583,2.8746,2.638)
+
 				if(fsrs){
 							CL[CL==1] <- 5
 							CL[CL==2] <- 16
@@ -19,5 +24,8 @@ lobLW <- function(CL,fsrs=F) {
 							CL[CL==15] <- 140
 
 						}
-	0.001413*CL^2.87465
+
+	wv = a[sex]*CL^b[sex]
+
+	return(wv)
 }

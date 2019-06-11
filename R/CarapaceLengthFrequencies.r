@@ -1,6 +1,6 @@
 
 #' @export
-CarapaceLengthFrequencies=function(DS="atSea", LFAs=c("27", "28", "29", "30", "31A", "31B", "32", "33", "34"),  bins=seq(0,200,5), Yrs=2005:2016, by=NULL, sex=1:3, fn='',gear.type=NULL,Net=NULL,comparative=F,species=2550,index.stations=F,ss=T,vers=1, rootdir=file.path(project.datadirectory('bio.lobster'),'figures'),... ) {
+CarapaceLengthFrequencies=function(DS="atSea", LFAs=c("27", "28", "29", "30", "31A", "31B", "32", "33", "34"),  bins=seq(0,200,5), Yrs=2005:2016, by=NULL, sex=1:3, fn='',gear.type=NULL,Net=NULL,comparative=F,species=2550,index.stations=F,ss=T,vers=1, min.size=0,rootdir=file.path(project.datadirectory('bio.lobster'),'figures'),est.den=F,... ) {
 
     ### Carapace Length Frequencies (CLF)
 
@@ -107,7 +107,7 @@ CarapaceLengthFrequencies=function(DS="atSea", LFAs=c("27", "28", "29", "30", "3
             atSeaData$Q=quarter(atSeaData$STARTDATE)
 
             # Construct CLF
-            atSeaCLF=CLF(subset(atSeaData,SYEAR%in%Yrs&SEX%in%sex,c("SYEAR","CARLENGTH",by)),yrs=Yrs,bins=bins,vers=vers)
+            atSeaCLF=CLF(subset(atSeaData,SYEAR%in%Yrs&SEX%in%sex&CARLENGTH>min.size,c("SYEAR","CARLENGTH",by)),yrs=Yrs,bins=bins,vers=vers,est.den=est.den)
 
            
             if(!is.null(ss)){
@@ -132,8 +132,19 @@ CarapaceLengthFrequencies=function(DS="atSea", LFAs=c("27", "28", "29", "30", "3
 
             PS=PortSamplesProcess(lfa=LFAs)
 
-            seX=c("M","F","B")[sex]
-            portCLF=CLF(subset(PS$portlengths,SEX%in%seX,c("SYEAR","LENGTH",by)),yrs=Yrs,bins=bins)
+            PS$portlengths$SEX[PS$portlengths$SEX=="M"]=1
+            PS$portlengths$SEX[PS$portlengths$SEX=="F"]=2
+            PS$portlengths$SEX[PS$portlengths$SEX=="B"]=3
+
+            if(!is.null(ss)){
+                 
+               ss = unlist(lapply(with(subset(PS$portlengths,SYEAR%in%Yrs&SEX%in%sex),tapply(paste(SYEAR,SAMPLE_ID),SYEAR,unique)),length))
+               ss = data.frame(Year=names(ss),N=ss)
+               ss = merge(data.frame(Year=Yrs),ss,all=T)
+               ss = ss$N
+            }
+
+            portCLF=CLF(subset(PS$portlengths,SEX%in%sex,c("SYEAR","LENGTH",by)),yrs=Yrs,bins=bins,vers=vers,est.den=est.den)
             if(vers==1)BarPlotCLF(portCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFSeaSampling",fn)),LS=mls, sample.size=ss,...)
             if(vers==2)BarPlotCLF2(portCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFSeaSampling",fn)),LS= as.vector(mls), sample.size=ss,...)
             #BarPlotCLF(portCLF,yrs=Yrs,bins=bins,col='grey',filen=file.path(rootdir,paste0("CLFPortSampling",fn)),LS=mls,...)

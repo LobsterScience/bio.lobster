@@ -17,7 +17,7 @@
 ### LobsterSurvey
 
 
-	surveyLobsters34<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=2.5, gear.type='NEST',size.range=c(80,85))
+	surveyLobsters34index<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=2.5, gear.type='NEST',size.range=c(80,85))
 	surveyLobsters34<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=2.5, gear.type='280 BALLOON',size.range=c(80,85))
 	
 	surveyLobsters34<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=5, gear.type='NEST')
@@ -232,20 +232,15 @@ points(lat~lon,subset(scalSurv,YEAR==2018),pch=21,cex=0.8,bg='red')
 
 	
 	# at Sea Sampling
-	CarapaceLengthFrequencies(LFAs= '34', DS='atSea', by='SEX', fn='34a',graphic="pdf",Yrs = c(2005:2011),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '34', DS='atSea', by='SEX', fn='34b',graphic="pdf",Yrs = c(2012:2018),vers=2,rootdir=figdir)
+	CarapaceLengthFrequencies(LFAs= '34', DS='atSea', by='SEX', fn='34a',graphic="R",Yrs = c(2000:2004),vers=2,rootdir=figdir)
+	CarapaceLengthFrequencies(LFAs= '34', DS='atSea', by='SEX', fn='34b',graphic="R",Yrs = c(2012:2018),vers=2,rootdir=figdir)
 	CarapaceLengthFrequencies(LFAs= '35', DS='atSea', by='SEX', fn='35a',graphic="pdf",Yrs = c(2005:2011),vers=2,rootdir=figdir)
 	CarapaceLengthFrequencies(LFAs= '35', DS='atSea', by='SEX', fn='35b',graphic="pdf",Yrs = c(2012:2018),vers=2,rootdir=figdir)
 	CarapaceLengthFrequencies(LFAs= '36', DS='atSea', by='SEX', fn='36a',graphic="pdf",Yrs = c(2005:2011),vers=2,rootdir=figdir)
 	CarapaceLengthFrequencies(LFAs= '38', DS='atSea', by='SEX', fn='38a',graphic="pdf",Yrs = c(2005:2011),vers=2,rootdir=figdir) 
 	
 	# Port Sampling
-	CarapaceLengthFrequencies(LFAs= '34', DS='port', by='SEX', fn='34a',graphic="R",Yrs = c(2005:2011),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '34', DS='port', by='SEX', fn='34b',graphic="R",Yrs = c(2012:2018),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '35', DS='port', by='SEX', fn='35a',graphic="pdf",Yrs = c(2005:2011),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '35', DS='port', by='SEX', fn='35b',graphic="pdf",Yrs = c(2012:2018),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '36', DS='port', by='SEX', fn='36a',graphic="pdf",Yrs = c(2005:2011),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '38', DS='port', by='SEX', fn='38a',graphic="pdf",Yrs = c(2005:2011),vers=2,rootdir=figdir) 
+	CarapaceLengthFrequencies(LFAs= '34', DS='port', by='SEX', fn='34a',graphic="R",Yrs = c(2007:2017),vers=2,rootdir=figdir)
 	
 	
 	# FSRS recruitment traps

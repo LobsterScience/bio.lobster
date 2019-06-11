@@ -763,8 +763,8 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                                 }
                           }
                           if(any(!is.finite(port$WOS))) {kl = which(!is.finite(port$WOS)); port$WOS[kl] = NA}
-        save( port, file=file.path( fnODBC, "port.rdata"), compress=T)
-     load(file.path( fnODBC, "port.rdata"), .GlobalEnv)
+        save( port, file=file.path( fnODBC, "process.port.rdata"), compress=T)
+     load(file.path( fnODBC, "process.port.rdata"), .GlobalEnv)
      }
         
 

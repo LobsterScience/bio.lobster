@@ -1,5 +1,5 @@
 
-SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,lab=NULL,redo=T){
+SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,lab=NULL,redo=T,by.sex=F){
 
 
   if (redo){
@@ -61,7 +61,7 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,la
               p$length.based = T
           #Important lines
               p$size.class= floor(Size.range)
-              p$by.sex =  F
+              p$by.sex =  by.sex
               p$sex = Sex
           ###########  
               p$bootstrapped.ci=F
@@ -81,10 +81,16 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,la
 
         DFOsummer$YEAR = year(DFOsummer$sdate)
 
-      scalSurv<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5)
+      if(by.sex==T){
+        scalSurv0<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5,sex=0)
+        scalSurv<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5,sex=Sex)
+        if(Sex%in%1:2)scalSurv$LobDen = scalSurv$LobDen + scalSurv0$LobDen/2
+      } else{
+        scalSurv<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5)
+      }
 
-      LobSurvNest<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,gear.type='NEST',size.range=Size.range)
-      LobSurvBalloon<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,gear.type='280 BALLOON',size.range=Size.range)
+      LobSurvNest<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,gear.type='NEST',size.range=Size.range,sex=Sex)
+      LobSurvBalloon<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,gear.type='280 BALLOON',size.range=Size.range,sex=Sex)
 
 
 
