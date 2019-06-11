@@ -4,7 +4,7 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,la
 
   if (redo){
   	require(bio.groundfish)
-
+    p=list()
 	
      #American Trawl Survey Data
 
