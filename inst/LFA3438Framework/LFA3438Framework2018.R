@@ -17,7 +17,7 @@
 ### LobsterSurvey
 
 
-	surveyLobsters34index<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=2.5, gear.type='NEST',size.range=c(80,85))
+	surveyLobsters34index<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=2.5, net='NEST',size.range=c(80,85))
 	surveyLobsters34<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=2.5, gear.type='280 BALLOON',size.range=c(80,85))
 	
 	surveyLobsters34<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=5, gear.type='NEST')

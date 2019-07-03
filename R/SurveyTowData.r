@@ -1,5 +1,5 @@
 
-SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,lab=NULL,redo=T,by.sex=F){
+SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,lab=NULL,redo=T,by.sex=F, Lobster.survey.correction=F){
 
 
   if (redo){
@@ -82,15 +82,16 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,la
         DFOsummer$YEAR = year(DFOsummer$sdate)
 
       if(by.sex==T){
-        scalSurv0<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5,sex=0)
-        scalSurv<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5,sex=Sex)
+        scalSurv0<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5,sex=0,convert2nest=Lobster.survey.correction)
+        scalSurv<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5,sex=Sex,convert2nest=Lobster.survey.correction)
         if(Sex%in%1:2)scalSurv$LobDen = scalSurv$LobDen + scalSurv0$LobDen/2
       } else{
-        scalSurv<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5)
+        scalSurv<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5,convert2nest=Lobster.survey.correction)
       }
 
       LobSurvNest<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,gear.type='NEST',size.range=Size.range,sex=Sex)
       LobSurvBalloon<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,gear.type='280 BALLOON',size.range=Size.range,sex=Sex)
+      LobSurvCombined<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,Net='NEST',size.range=Size.range,sex=Sex)
 
 
 
@@ -106,6 +107,12 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,la
       LobSurvNest$LobCatch = round(LobSurvNest$LobDen *  LobSurvNest$AREA_SWEPT)
       names(LobSurvNest) = col.names
       LobSurvNest$survey = "LobsterNest"
+      
+      LobSurvCombined = subset(LobSurvCombined,!is.na(LobDen),c("YEAR","SET_NO","SET_DATE","SET_LONG","SET_LAT","SET_DEPTH","LobDen","AREA_SWEPT"))
+      LobSurvCombined$LobCatch = round(LobSurvCombined$LobDen *  LobSurvCombined$AREA_SWEPT)
+      names(LobSurvCombined) = col.names
+      LobSurvCombined$survey = "Lobster"
+
      
       scalSurv = subset(scalSurv,!is.na(LobDen),c("YEAR","TOW_SEQ","TOW_DATE","lon","lat","DEPTH","LobDen","AREA_SWEPT"))
       scalSurv$LobCatch = round(scalSurv$LobDen *  scalSurv$AREA_SWEPT)
@@ -125,11 +132,12 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,la
       SpringNefsc$survey = "NEFSCspring"
 
 
-
-      AllSurveys = rbind(LobSurvBalloon,LobSurvNest,scalSurv,DFOsummer,FallNefsc,SpringNefsc)
+      if(Lobster.survey.correction) AllSurveys = rbind(LobSurvCombined,scalSurv,DFOsummer,FallNefsc,SpringNefsc)
+      else AllSurveys = rbind(LobSurvBalloon,LobSurvNest,scalSurv,DFOsummer,FallNefsc,SpringNefsc)
       AllSurveys =assignArea(AllSurveys,coords=c("X","Y"))
 
       AllSurveys = AllSurveys[order(AllSurveys$date),]
+
     write.csv(AllSurveys,file.path(project.datadirectory("bio.lobster"),"data","products","LFA3438Framework2019",paste0("AllSurvey",lab,".csv")),row.names=F)
   } else {
     AllSurveys = read.csv(file.path(project.datadirectory("bio.lobster"),"data","products","LFA3438Framework2019",paste0("AllSurvey",lab,".csv")))

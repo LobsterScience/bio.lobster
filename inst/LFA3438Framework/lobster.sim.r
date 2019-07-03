@@ -6,7 +6,7 @@ require(fields)
 
 la()
 
-	SoMplot(Areas='34',graphic='png',fp=file.path(project.datadirectory('bio.lobster'),'figures','LFA2733Framework2018'),LS=82.5,legend=F)
+	SoMplot(Areas='34',graphic='png',fp=file.path(project.datadirectory('bio.lobster'),'figures','LFA3438Framework2019'),LS=82.5,legend=F)
 
 
 	TempModelling = TempModel(areas = 'subarea')
@@ -18,7 +18,7 @@ la()
 	#moltModelPlot(p$moltModel,graphic='png')
 
 
-p$lfas = c("34") # specify lfa
+p$lfas = c("33W","34") # specify lfa
 
 ####### Base
 
