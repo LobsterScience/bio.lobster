@@ -15,7 +15,10 @@ load_all('~/git/bio.survey/')
         # run in windows environment
         #Data dumps
         
-        lobster.db( DS = "logs41.redo",  p=p)   # Offshore logs monitoring documents
+logsInSeason=lobster.db("process.logs.redo")
+ lobster.db("season.dates.redo")
+
+        lobster.db( DS = "logs.redo",  p=p)   # Offshore logs monitoring documents
         lobster.db( DS = "atSea.redo",   p=p)        # at Sea sampling from materialized view
         lobster.db( DS = "cris.redo",    p=p)     # CRIS database
         lobster.db( DS = 'annual.landings.redo', p=p) #static annual landings tabke needs to be updated by CDenton

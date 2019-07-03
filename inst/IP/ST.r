@@ -110,6 +110,7 @@ ad = na.zero(ad)
 ad = subset(ad,SOAK_DAYS>0)
 ad$TOT = rowSums(ad[,8:53])
 ad$Cod = with(ad,EST_DISCARD_WT.10/NUM_HOOK_HAUL)*100
+ad$Cusk = with(ad,EST_DISCARD_WT.15/NUM_HOOK_HAUL)*100
 ad$WpTH = ad$TOT/ad$NUM_HOOK_HAUL*100
 ad$F1 = ifelse(ad$SOAK_DAYS<7,1,ifelse(ad$SOAK_DAYS>=7 & ad$SOAK_DAYS<14,2,3))
 ad$F2 = ifelse(ad$SOAK_DAYS<8,1,ifelse(ad$SOAK_DAYS>=8 & ad$SOAK_DAYS<15,2,3))
@@ -117,6 +118,7 @@ ad$F3 = ifelse(ad$SOAK_DAYS<9,1,ifelse(ad$SOAK_DAYS>=10 & ad$SOAK_DAYS<16,2,3))
 
 aa = aggregate(Cod~F2, data=ad,FUN=function(x) c(mean(x),sd(x)))
 
+aa2 = aggregate(Cusk~F2, data=ad,FUN=function(x) c(mean(x),sd(x)))
 
 
 
