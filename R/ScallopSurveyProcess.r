@@ -31,7 +31,7 @@ ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex
 	if(convert2nest == T){
 		x = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data',"survey","RhoLobScal.rds"))
 		NetConv = with(x,data.frame(MEAS_VAL=length,LobSurvCF=rho))
-		ScalSurvLob.dat = merge(ScalSurvLob.dat,NetConv,all=T)
+		ScalSurvLob.dat = merge(ScalSurvLob.dat,NetConv,all.x=T)
 		ScalSurvLob.dat$NLobs = ScalSurvLob.dat$NLobs * ScalSurvLob.dat$LobSurvCF
 	} 
 
@@ -56,7 +56,7 @@ ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex
 	ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])]<-sweep(ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])],1,FUN="/", ScalSurvLob$AREA_SWEPT)
 
     # add LFA column
-    events <- with(ScalSurvLob,data.frame(EID=TOW_SEQ,X=lon,Y=lat))
+    events <- na.omit(with(ScalSurvLob,data.frame(EID=TOW_SEQ,X=lon,Y=lat)))
     LFAPolys<-read.csv(file.path( project.datadirectory('bio.lobster'), "data","maps","LFAPolys.csv"))
     key <- findPolys(events,LFAPolys)
     ScalSurvLob <- merge(ScalSurvLob,with(key,data.frame(TOW_SEQ=EID,LFA=PID)),all=T)
