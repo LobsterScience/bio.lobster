@@ -1,5 +1,5 @@
 
-SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,lab=NULL,redo=T,by.sex=F, Lobster.survey.correction=F){
+SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,lab=NULL,redo=T,by.sex=F, Lobster.survey.correction=F,lfas=c("34","35","36","37","38")){
 
 
   if (redo){
@@ -89,9 +89,9 @@ SurveyTowData<-function(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,la
         scalSurv<-ScallopSurveyProcess(size.range=Size.range,bin.size=2.5,convert2nest=Lobster.survey.correction)
       }
 
-      LobSurvNest<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,gear.type='NEST',size.range=Size.range,sex=Sex)
-      LobSurvBalloon<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,gear.type='280 BALLOON',size.range=Size.range,sex=Sex)
-      LobSurvCombined<-LobsterSurveyProcess(lfa="34",yrs=Years,bin.size=2.5,Net='NEST',size.range=Size.range,sex=Sex)
+      LobSurvNest<-LobsterSurveyProcess(lfa=lfas,yrs=Years,bin.size=2.5,gear.type='NEST',size.range=Size.range,sex=Sex)
+      LobSurvBalloon<-LobsterSurveyProcess(lfa=lfas,yrs=Years,bin.size=2.5,gear.type='280 BALLOON',size.range=Size.range,sex=Sex)
+      LobSurvCombined<-LobsterSurveyProcess(lfa=lfas,yrs=Years,bin.size=2.5,Net='NEST',size.range=Size.range,sex=Sex)
 
 
 

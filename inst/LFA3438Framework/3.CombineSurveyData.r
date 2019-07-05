@@ -56,7 +56,7 @@ AllSurveyDataR1 = SurveyTowData(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970
 
 
 # R0 = legal sized lobsters that have recruited to fishery after their last molt
-AllSurveyDataR0 = SurveyTowData(Size.range=c(82.5,95),Sex = c(1,2,3), Years=1970:2018,redo=F,lab="R0")
+AllSurveyDataR0 = SurveyTowData(Size.range=c(82.5,95),Sex = c(1,2,3), Years=1970:2018,redo=T,lab="R0")
 
 	surveyplotdata = AllSurveyDataR0
 

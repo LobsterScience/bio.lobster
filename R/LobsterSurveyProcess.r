@@ -10,7 +10,7 @@
 #' @export
 
 
-LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,sex=c(1:3,NA),bin.size=5,LFS=160,Net=NULL,comparative=F){
+LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,sex=c(1:3,NA),bin.size=5,LFS=160,Net=NULL,comparative=F,biomass=F){
   
 	lobster.db("survey")
 	RLibrary("CircStats","PBSmapping","SpatialHub","spatstat")
@@ -33,6 +33,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	# number of lobsters with detailed data
 	
 	if(species == 2550){
+
 		NLM = with(surveyMeasurements,tapply(SET_ID,SET_ID,length))
 		MEAN_LENGTH = with(surveyMeasurements,tapply(FISH_LENGTH,SET_ID,mean,na.rm=T))
 
@@ -114,6 +115,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	if(species == 2550){
 		LongForm = aggregate(FISH_NO~floor(FISH_LENGTH)+SEX+SET_ID,data=surveyMeasurements,FUN=length)
 		names(LongForm) = c("FISH_LENGTH","SEX","SET_ID","NUM_AT_LENGTH")
+		LongForm$BM_AT_LENGTH = LongForm$NUM_AT_LENGTH * lobLW(LongForm$FISH_LENGTH, sex= LongForm$SEX)/1000
 		x = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data',"survey","summarybootRhoNestBall.rds"))
 		NetConv = with(x,data.frame(FISH_LENGTH=Length,NestCF=Median))
 		LongForm = merge(LongForm,NetConv,all=T)
@@ -128,6 +130,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	LongForm$NestCF[LongForm$GEAR=="NEST"] = 1
 	LongForm$BalloonCF[LongForm$GEAR=="280 BALLOON"] = 1
 	LongForm$DENSITY = LongForm$NUM_AT_LENGTH/LongForm$AREA_SWEPT/LongForm$SUBSAMPLE
+	if(biomass)LongForm$DENSITY = LongForm$BM_AT_LENGTH/LongForm$AREA_SWEPT/LongForm$SUBSAMPLE
 	LongForm$NEST_DENSITY = LongForm$DENSITY * LongForm$NestCF
 	LongForm$BALLOON_DENSITY = LongForm$DENSITY * LongForm$BalloonCF
 
@@ -153,7 +156,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	surveyLobsters=merge(surveyLobsters,CLF,all.x=T)
 	
 	# subset by time and area
-	surveyLobsters=subset(surveyLobsters,LFA==lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
+	surveyLobsters=subset(surveyLobsters,LFA%in%lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
 	
 	# Calculate Densities
 	surveyLobsters[surveyLobsters$NUM_CAUGHT==0,which(names(surveyLobsters)%in%names(CLF)[-1])] = 0

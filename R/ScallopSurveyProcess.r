@@ -1,5 +1,5 @@
 #' @export
-ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex=0:3,convert2nest=F){
+ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex=0:3,convert2nest=F,biomass=F){
 	
 	require(lubridate)
 
@@ -27,6 +27,8 @@ ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex
 	ScalSurvLob.dat$NLobs[ScalSurvLob.dat$MEAS_VAL>size.range[1]&ScalSurvLob.dat$MEAS_VAL<size.range[2]]<-1
 	ScalSurvLob.dat$lon<-convert.dd.dddd(ScalSurvLob.dat$START_LONG)
 	ScalSurvLob.dat$lat<-convert.dd.dddd(ScalSurvLob.dat$START_LAT)
+
+	if(biomass)ScalSurvLob.dat$NLobs = ScalSurvLob.dat$NLobs * lobLW(ScalSurvLob.dat$MEAS_VAL, sex= ScalSurvLob.dat$SEX_ID)/1000
 
 	if(convert2nest == T){
 		x = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data',"survey","RhoLobScal.rds"))

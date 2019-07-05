@@ -1,5 +1,42 @@
 
 
+
+
+
+
+
+
+	yrs=2005:2018
+	bins = seq(20,195,5)
+	clf=matrix(NA,length(yrs),length(bins))
+
+	for (l in 1:length(bins)){
+
+		surveyLobsters<-LobsterSurveyProcess(lfa="34", yrs=yrs, mths=c("Aug","Jul","Jun"),bin.size=5, Net='NEST',size.range=c(bins[l],bins[l]+5))
+
+
+		clf[,l]=SpatialGamLobsterSurvey(surveyLobsters,Years = yrs,lab=paste0("Bins",bins[l]))
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### below is mostly messing around on stuff
 #############################################################################3
 ############ Do Spatial Model
 
@@ -409,6 +446,92 @@ x11()
 ####################################### All Sizes
 
 
+####################################### R1 Lobster Survey
+
+
+	# Spatial temporal parameters
+	Years = 2005:2018
+	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+	LFAs = lonlat2planar(LFAs,"utm20", input_names=c("X", "Y"))
+	LFAs = LFAs[,-which(names(LFAs)%in%c('X','Y'))]
+	LFAs = rename.df(LFAs,c('plon','plat'),c('X','Y'))
+
+
+	
+	require(mgcv)
+
+	# Survey Data
+	surveyLobsters34index<-LobsterSurveyProcess(lfa="34", yrs=Years, mths=c("Aug","Jul","Jun"), bin.size=2.5, Net='NEST',size.range=c(70,82.5))
+	surveyLobsters34index = lonlat2planar(surveyLobsters34index,"utm20", input_names=c("SET_LONG", "SET_LAT"))
+	surveyLobsters34index$dyear = decimal_date(as.Date(surveyLobsters34index$SET_DATE))
+	R0s<-LobsterSurveyProcess(lfa="34", yrs=Years, mths=c("Aug","Jul","Jun"), bin.size=2.5, Net='NEST',size.range=c(82.5,95))
+	R0s$LobDenR0 = R0s$LobDen
+	surveyLobsters34index = merge(surveyLobsters34index,R0s[,c("SET_ID","LobDenR0")])
+	surveyLobsters34index$PA = as.numeric((surveyLobsters34index$LobDen+surveyLobsters34index$LobDenR0)>0)
+ 	surveyLobsters34index$LogDen = log(surveyLobsters34index$LobDen)
+ 	surveyLobsters34index$LogDenR0 = log(surveyLobsters34index$LobDenR0)
+   
+
+    # Presence-Absence model
+    #paMf = formula( PA ~ s(dyear) + s(SET_DEPTH) + s(plon, plat)  )
+    paMf = formula( PA ~ as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat, k=100) )
+    #paMd = subset(surveyLobsters34index,YEAR>=min(Years),c('PA','plon','plat','dyear','SET_DEPTH'))
+    paMd = subset(surveyLobsters34index,YEAR>=min(Years),c('PA','plon','plat','dyear','YEAR','SET_DEPTH'))
+	paMo = gam( paMf, data=paMd, family=binomial())
+	summary(paMo)
+	
+    # Abundance model
+    #abMf = formula( LogDen ~ s(dyear) + s(SET_DEPTH) + s(plon, plat)  )
+    abMf = list(formula( LogDen ~  as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat, k=100) ),formula( LogDenR0 ~  as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat, k=100) ))
+   # abMd = subset(surveyLobsters34index,YEAR>=min(Years)&LobDen>0,c('LogDen','plon','plat','dyear','SET_DEPTH'))
+    abMd = subset(surveyLobsters34index,YEAR>=min(Years)&LobDen>0&LobDenR0>0,c('LogDen','LogDenR0','plon','plat','dyear','YEAR','SET_DEPTH'))
+	abMo = gam( abMf, data=abMd, family=mvn(d=2))
+	summary(abMo)
+	
+	# Prediction Surface
+	load("/home/hubleyb/bio/EA/data/predspace.rdata") # predSpace
+	Ps = data.frame(EID=1:nrow(predSpace),predSpace[,c('plon','plat','z')])
+	Ps = rename.df(Ps,c('plon','plat','z'),c('X','Y','SET_DEPTH'))
+	key=findPolys(Ps,subset(LFAs,PID==34))
+	Ps = subset(Ps,EID%in%key$EID)
+	Ps = rename.df(Ps,c('X','Y'),c('plon','plat'))
+
+	# annual predictions
+	R1index=c()
+	R1surface=list()
+
+	for(i in 1:length(Years)){
+	require(mgcv)
+			
+		#Ps$dyear =Years[i]+.5
+		Ps$YEAR =Years[i]
+
+		plo = predict(paMo,Ps,type='response') 
+		xyz = data.frame(Ps[,c('plon','plat')],z=plo)
+		corners = data.frame(lon=c(-67.8,-65),lat=c(42.5,45))
+		planarMap( xyz, fn=paste("gamPAR1",Years[i],sep='.'), annot=Years[i],loc=figdir, corners=corners,save=T)
+		#planarMap( xyz, fn=paste("lobster.gambi.pred",Years[i],sep='.'), annot=Years[i],loc="output",corners=corners)
+		#planarMap( xyz, corners=corners)
+
+
+		ldp = predict(abMo,Ps,type='response') 
+		#xyz = data.frame(Ps[,c('plon','plat')],z=ldp)
+		xyz = data.frame(Ps[,c('plon','plat')],z=exp(ldp)*plo)
+		corners = data.frame(lon=c(-67.8,-65),lat=c(42.5,45))
+		planarMap( xyz, fn=paste("gamSurveyR1",Years[i],sep='.'), annot=Years[i],loc=figdir, corners=corners, datascale=seq(9.9,21000,l=50),save=T,log.variable=T)
+		R1surface[[i]]=xyz
+
+		R1index[i]= sum(xyz$z)
+	}
+	save(R1surface,file.path(project.datadirectory("bio.lobster"),"output","R1surface34.rdata"))
+
+
+	plot(Years,R1index/10^6,type='b',ylab="Lobsters (millions)",ylim=c(0,140))
+
+	lines(Years,with(subset(surveyLobsters34index,YEAR>1995),tapply(LobDen,YEAR,mean))*20131/10^6,lty=2,col='red')
+	lines(Years,R1index2/10^6,lty=2,col='red')
+
+########
 
 	surveyLobsters34index<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=5, Net='NEST',size.range=c(0,200))
 	surveyLobsters34index = lonlat2planar(surveyLobsters34index,"utm20", input_names=c("SET_LONG", "SET_LAT"))
