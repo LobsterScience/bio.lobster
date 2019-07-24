@@ -61,6 +61,7 @@ stratifiedAnalysesLengthFreqs = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1
           }
 
         aa = do.call(rbind,out)
+      
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
         save(aa,file=file.path(fp,paste(lfa,'LengthFrequenciesNEFSCspringrestratified.rdata',sep="")))
 
@@ -75,7 +76,8 @@ stratifiedAnalysesLengthFreqs = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1
           }
 
         aa = do.call(rbind,out)
-        aa$FLEN = rep(a,each=length(p$years.to.estimate))
+        browser()
+        aa$FLEN = rep(a,each=(length(p$years.to.estimate)-1))
         save(aa,file=file.path(fp,paste(lfa,'LengthFrequenciesNEFSCfallrestratified.rdata',sep="")))
     }
 }
@@ -85,6 +87,6 @@ stratifiedAnalysesLengthFreqs(survey='NEFSC',lfa='LFA34')
 stratifiedAnalysesLengthFreqs(survey='DFO',lfa='LFA34')
 stratifiedAnalysesLengthFreqs(survey='DFO',lfa='LFA35')
 stratifiedAnalysesLengthFreqs(survey='DFO',lfa='LFA36')
-stratifiedAnalysesLengthFreqs(survey='NEFSC',lfa='LFA38')
+stratifiedAnalysesLengthFreqs(survey='NEFSC',lfa='LFA38')####issues
 stratifiedAnalysesLengthFreqs(survey='DFO',lfa='LFA38')
 stratifiedAnalysesLengthFreqs(survey='DFO',lfa='LFA35-38')

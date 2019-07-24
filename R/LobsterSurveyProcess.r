@@ -69,7 +69,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	# Add columns  NUM_STANDARDIZED and MONTH
 	surveyLobsters$LENGTH[surveyLobsters$LENGTH<0.67|surveyLobsters$LENGTH>3.5]=NA #123 NA records created JAN_2017
 
-	
+	browser()
 	surveyLobsters$NUM_CAUGHT[is.na(surveyLobsters$NUM_CAUGHT)]=0 #2053 NA records of NUM_CAUGHT replaced with 0 JAN_2017
 	surveyLobsters$MONTH = as.character(month(surveyLobsters$HAUL_DATE,T))
 	
