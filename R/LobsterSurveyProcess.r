@@ -68,8 +68,6 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 
 	# Add columns  NUM_STANDARDIZED and MONTH
 	surveyLobsters$LENGTH[surveyLobsters$LENGTH<0.67|surveyLobsters$LENGTH>3.5]=NA #123 NA records created JAN_2017
-
-	browser()
 	surveyLobsters$NUM_CAUGHT[is.na(surveyLobsters$NUM_CAUGHT)]=0 #2053 NA records of NUM_CAUGHT replaced with 0 JAN_2017
 	surveyLobsters$MONTH = as.character(month(surveyLobsters$HAUL_DATE,T))
 	
@@ -152,7 +150,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	CLF = merge(CLF,data.frame(SET_ID=rep(sids,length(bins)-1),BIN=sort(rep(bins[-1],length(sids)))),all=T)
 	CLF = reshape(CLF[order(CLF$BIN),],idvar='SET_ID',timevar='BIN',direction='wide',sep='')
 	CLF[is.na(CLF)] = 0
-	#browser()
+	
 	surveyLobsters=merge(surveyLobsters,CLF,all.x=T)
 	
 	# subset by time and area

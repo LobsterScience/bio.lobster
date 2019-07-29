@@ -237,7 +237,11 @@ points(spde$xy,cex=3)
 	summary(abMo)
 	
 	# Prediction Surface
-	load("/home/hubleyb/bio/EA/data/predspace.rdata") # predSpace
+	
+	#load("/home/hubleyb/bio/EA/data/predspace.rdata") # predSpace
+	
+	load(file.path(project.datadirectory('bio.lobster'),'data','predspace.rdata'))
+
 	Ps = data.frame(EID=1:nrow(predSpace),predSpace[,c('plon','plat','z')])
 	Ps = rename.df(Ps,c('plon','plat','z'),c('X','Y','SET_DEPTH'))
 	key=findPolys(Ps,subset(LFAs,PID==34))
@@ -257,7 +261,7 @@ points(spde$xy,cex=3)
 		plo = predict(paMo,Ps,type='response') 
 		xyz = data.frame(Ps[,c('plon','plat')],z=plo)
 		corners = data.frame(lon=c(-67.8,-65),lat=c(42.5,45))
-		planarMap( xyz, fn=paste("gamPAR1",Years[i],sep='.'), annot=Years[i],loc=figdir, corners=corners,save=T)
+	#	planarMap( xyz, fn=paste("gamPAR1",Years[i],sep='.'), annot=Years[i],loc=figdir, corners=corners,save=T)
 		#planarMap( xyz, fn=paste("lobster.gambi.pred",Years[i],sep='.'), annot=Years[i],loc="output",corners=corners)
 		#planarMap( xyz, corners=corners)
 
@@ -266,12 +270,12 @@ points(spde$xy,cex=3)
 		#xyz = data.frame(Ps[,c('plon','plat')],z=ldp)
 		xyz = data.frame(Ps[,c('plon','plat')],z=exp(ldp)*plo)
 		corners = data.frame(lon=c(-67.8,-65),lat=c(42.5,45))
-		planarMap( xyz, fn=paste("gamSurveyR1",Years[i],sep='.'), annot=Years[i],loc=figdir, corners=corners, datascale=seq(9.9,21000,l=50),save=T,log.variable=T)
+#		planarMap( xyz, fn=paste("gamSurveyR1",Years[i],sep='.'), annot=Years[i],loc=figdir, corners=corners, datascale=seq(9.9,21000,l=50),save=T,log.variable=T)
 		R1surface[[i]]=xyz
 
 		R1index[i]= sum(xyz$z)
 	}
-	save(R1surface,file.path(project.datadirectory("bio.lobster"),"output","R1surface34.rdata"))
+	#save(R1surface,file.path(project.datadirectory("bio.lobster"),"output","R1surface34.rdata"))
 
 
 	plot(Years,R1index/10^6,type='b',ylab="Lobsters (millions)",ylim=c(0,140))
