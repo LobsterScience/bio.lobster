@@ -29,7 +29,7 @@
 	#compound poisson regression with area swept as an offset
 
 #model
-	f1 = formula(Lobs~as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat,bs='ts' ,k=100)+offset(AREA_SWEPT)) 
+	f1 = formula(LobDen~as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat,bs='ts' ,k=100)) 
 	aa = gam(f1,data=sL, family = Tweedie(p=1.25,link=power(.1))) ##
 
 
@@ -67,7 +67,7 @@ calc_RMSE <- function(pred, obs){
 	
 
 #Overall model
-	oo = sL$Lobs
+	oo = sL$LobDen
 	pp = predict(aa,type='response')
 
 	#normalized RMSE
@@ -77,7 +77,7 @@ calc_RMSE <- function(pred, obs){
 	abline(a=0,b=1)
 
 #Predictions from full model
-	load(file.path(project.datadirectory('bio.lobster'),'data','predspace.rdata'))
+	load(file.path(project.datadirectory('bio.lobster'),'data','predspace.rdata')) #sq km
 	Ps = data.frame(EID=1:nrow(predSpace),predSpace[,c('plon','plat','z')])
 	Ps = rename.df(Ps,c('plon','plat','z'),c('X','Y','SET_DEPTH'))
 	key=findPolys(Ps,subset(LFAs,PID==34))
@@ -139,7 +139,7 @@ plot(apply(b$t/10000,2,mean))
 
 #using the posterior distribution model coefs
 
-	f1 = formula(Lobs~as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat,bs='ts' ,k=100)+offset(AREA_SWEPT)) 
+	f1 = formula(LobDen~as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat,bs='ts' ,k=100)) 
 	aa = gam(f1,data=sL, family = Tweedie(p=1.25,link=power(.1))) ##
 
 set.seed(1000)
