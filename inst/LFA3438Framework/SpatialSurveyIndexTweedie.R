@@ -29,8 +29,8 @@
 	#compound poisson regression with area swept as an offset
 
 #model
-	f1 = formula(Lobs~as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat,bs='ts' ,k=100)+offset(AREA_SWEPT))
-	aa = gam(f1,data=sL, family = Tweedie(p=1.25,link=power(.1)))
+	f1 = formula(Lobs~as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat,bs='ts' ,k=100)+offset(AREA_SWEPT)) 
+	aa = gam(f1,data=sL, family = Tweedie(p=1.25,link=power(.1))) ##
 
 
 #root mean square error
@@ -136,4 +136,44 @@ b <- boot(data=sL, statistic = tweedie_boot, R = 5)
 plot(apply(b$t/10000,2,mean))
 
 
+
+#using the posterior distribution model coefs
+
+	f1 = formula(Lobs~as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat,bs='ts' ,k=100)+offset(AREA_SWEPT)) 
+	aa = gam(f1,data=sL, family = Tweedie(p=1.25,link=power(.1))) ##
+
+set.seed(1000)
+n_sims =1000	
+
+
+Pss = list()
+
+for(i in 1:length(Years)){
+	Pst = Ps
+	Pst$YEAR = Years[i]
+	Pst$AREA_SWEPT = mean(subset(sL,YEAR==Years[i],AREA_SWEPT)[,1])
+	Pss[[i]] = Pst
+} 
+
+Ps = do.call(rbind,Pss)
+
+a_lp_matrix = predict(object = aa, Ps,
+               type = "lpmatrix")
+
+a_coef_mean = coef(aa)
+a_vcov = vcov(aa)
+a_par_coef_posterior = rmvn(n = n_sims, 
+                                  mu = a_coef_mean,
+                                  V = a_vcov)
+ilink = family(aa)$linkinv
+
+preds = ilink(a_lp_matrix %*% t(a_par_coef_posterior))
+ apreds = as.data.frame(preds)
+
+
+apreds$YEAR = Ps$YEAR 
+asa = as.data.frame(aggregate(.~YEAR,data=apreds,FUN=sum))
+plot(asa$YEAR,apply(asa[,2:1001],1,quantile,0.5)/1000,)
+lines(asa$YEAR,apply(asa[,2:1001],1,quantile,0.025)/1000)
+lines(asa$YEAR,apply(asa[,2:1001],1,quantile,0.975)/1000)
 
