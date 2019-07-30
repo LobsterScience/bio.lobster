@@ -226,7 +226,7 @@
 
 	# total females
 
-	scalSurv<-ScallopSurveyProcess(size.range=c(0,200),bin.size=5,sex=2)
+	scalSurv<-ScallopSurveyProcess(size.range=c(0,200),bin.size=5,sex=2:3)
 
 	totF.ab.s34=with(subset(scalSurv,month(TOW_DATE)<8&LFA==34&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
 	totF.ab.f34=with(subset(scalSurv,month(TOW_DATE)>7&LFA==34&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
@@ -237,7 +237,7 @@
 
 	# com females
 
-	scalSurv<-ScallopSurveyProcess(size.range=c(82.5,200),bin.size=2.5,sex=2)
+	scalSurv<-ScallopSurveyProcess(size.range=c(82.5,200),bin.size=2.5,sex=2:3)
 
 	comF.ab.s34=with(subset(scalSurv,month(TOW_DATE)<8&LFA==34&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
 	comF.ab.f34=with(subset(scalSurv,month(TOW_DATE)>7&LFA==34&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
@@ -245,10 +245,19 @@
 	comF.ab.36=with(subset(scalSurv,LFA%in%c(36,37)&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
 	comF.ab.38=with(subset(scalSurv,LFA==38&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
 
+	# big females
+
+	scalSurv<-ScallopSurveyProcess(size.range=c(120,200),bin.size=2.5,sex=2:3)
+
+	bigF.ab.s34=with(subset(scalSurv,month(TOW_DATE)<8&LFA==34&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+	bigF.ab.f34=with(subset(scalSurv,month(TOW_DATE)>7&LFA==34&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+	bigF.ab.35=with(subset(scalSurv,LFA==35&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+	bigF.ab.36=with(subset(scalSurv,LFA%in%c(36,37)&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+	bigF.ab.38=with(subset(scalSurv,LFA==38&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
 
 	# sub females
 
-	scalSurv<-ScallopSurveyProcess(size.range=c(0,82.5),bin.size=2.5,sex=2)
+	scalSurv<-ScallopSurveyProcess(size.range=c(0,82.5),bin.size=2.5,sex=2:3)
 
 	subF.ab.s34=with(subset(scalSurv,month(TOW_DATE)<8&LFA==34&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
 	subF.ab.f34=with(subset(scalSurv,month(TOW_DATE)>7&LFA==34&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
@@ -396,12 +405,23 @@
 
 
 
+	# total berried
 
-	ScallopSurveyIndicatorsS34 = data.frame(cbind(R1.ab.s34,R0.ab.s34,com.ab.s34,sub.ab.s34,tot.ab.s34,R1.bm.s34,R0.bm.s34,com.bm.s34,sub.bm.s34,tot.bm.s34,comM.ab.s34,subM.ab.s34,totM.ab.s34,comF.ab.s34,subF.ab.s34,totF.ab.s34,totalB.ab.s34,BigF.ab.s34))
-	ScallopSurveyIndicatorsF34 = data.frame(cbind(R1.ab.f34,R0.ab.f34,com.ab.f34,sub.ab.f34,tot.ab.f34,R1.bm.f34,R0.bm.f34,com.bm.f34,sub.bm.f34,tot.bm.f34,comM.ab.f34,subM.ab.f34,totM.ab.f34,comF.ab.f34,subF.ab.f34,totF.ab.f34,totalB.ab.f34,BigF.ab.f34))
-	ScallopSurveyIndicators35 = data.frame(cbind(R1.ab.35,R0.ab.35,com.ab.35,sub.ab.35,tot.ab.35,R1.bm.35,R0.bm.35,com.bm.35,sub.bm.35,tot.bm.35,comM.ab.35,subM.ab.35,totM.ab.35,comF.ab.35,subF.ab.35,totF.ab.35,totalB.ab.35,BigF.ab.35))
-	ScallopSurveyIndicators36 = data.frame(cbind(R1.ab.36,R0.ab.36,com.ab.36,sub.ab.36,tot.ab.36,R1.bm.36,R0.bm.36,com.bm.36,sub.bm.36,tot.bm.36,comM.ab.36,subM.ab.36,totM.ab.36,comF.ab.36,subF.ab.36,totF.ab.36,totalB.ab.36,BigF.ab.36))
-	ScallopSurveyIndicators38 = data.frame(cbind(R1.ab.38,R0.ab.38,com.ab.38,sub.ab.38,tot.ab.38,R1.bm.38,R0.bm.38,com.bm.38,sub.bm.38,tot.bm.38,comM.ab.38,subM.ab.38,totM.ab.38,comF.ab.38,subF.ab.38,totF.ab.38,totalB.ab.38,BigF.ab.38))
+	scalSurv<-ScallopSurveyProcess(size.range=c(0,200),bin.size=5,sex=3)
+
+	totB.ab.s34=with(subset(scalSurv,month(TOW_DATE)<8&LFA==34&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+	totB.ab.f34=with(subset(scalSurv,month(TOW_DATE)>7&LFA==34&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+	totB.ab.35=with(subset(scalSurv,LFA==35&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+	totB.ab.36=with(subset(scalSurv,LFA%in%c(36,37)&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+	totB.ab.38=with(subset(scalSurv,LFA==38&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+
+
+
+	ScallopSurveyIndicatorsS34 = data.frame(cbind(R1.ab.s34,R0.ab.s34,com.ab.s34,sub.ab.s34,tot.ab.s34,R1.bm.s34,R0.bm.s34,com.bm.s34,sub.bm.s34,tot.bm.s34,comM.ab.s34,subM.ab.s34,totM.ab.s34,comF.ab.s34,subF.ab.s34,totF.ab.s34,totB.ab.s34,bigF.ab.s34))
+	ScallopSurveyIndicatorsF34 = data.frame(cbind(R1.ab.f34,R0.ab.f34,com.ab.f34,sub.ab.f34,tot.ab.f34,R1.bm.f34,R0.bm.f34,com.bm.f34,sub.bm.f34,tot.bm.f34,comM.ab.f34,subM.ab.f34,totM.ab.f34,comF.ab.f34,subF.ab.f34,totF.ab.f34,totB.ab.f34,bigF.ab.f34))
+	ScallopSurveyIndicators35 = data.frame(cbind(R1.ab.35,R0.ab.35,com.ab.35,sub.ab.35,tot.ab.35,R1.bm.35,R0.bm.35,com.bm.35,sub.bm.35,tot.bm.35,comM.ab.35,subM.ab.35,totM.ab.35,comF.ab.35,subF.ab.35,totF.ab.35,totB.ab.35,bigF.ab.35))
+	ScallopSurveyIndicators36 = data.frame(cbind(R1.ab.36,R0.ab.36,com.ab.36,sub.ab.36,tot.ab.36,R1.bm.36,R0.bm.36,com.bm.36,sub.bm.36,tot.bm.36,comM.ab.36,subM.ab.36,totM.ab.36,comF.ab.36,subF.ab.36,totF.ab.36,totB.ab.36,bigF.ab.36))
+	ScallopSurveyIndicators38 = data.frame(cbind(R1.ab.38,R0.ab.38,com.ab.38,sub.ab.38,tot.ab.38,R1.bm.38,R0.bm.38,com.bm.38,sub.bm.38,tot.bm.38,comM.ab.38,subM.ab.38,totM.ab.38,comF.ab.38,subF.ab.38,totF.ab.38,totB.ab.38,bigF.ab.38))
 
 
 	save(list=c("ScallopSurveyIndicatorsS34","ScallopSurveyIndicatorsF34","ScallopSurveyIndicators35","ScallopSurveyIndicators36","ScallopSurveyIndicators38"),file=file.path(project.datadirectory("bio.lobster"),"outputs","ScallopSurveyIndicators.rdata"))

@@ -1,5 +1,5 @@
 #' @export
-CPUEmodel=function(mf,CPUE, combined=F,lfa){
+CPUEmodel=function(mf,CPUE, combined=F,lfa,t=8,d=25){
 
   require(lme4)
 	
@@ -24,7 +24,7 @@ CPUEmodel=function(mf,CPUE, combined=F,lfa){
     if(combined==F){
      G = glm(mf , offset= logTRAPS, family=gaussian(link='identity'),data = CPUE)
       
-      pData=with(G$data,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= 5,DOS=1,logTRAPS=log(1)))
+      pData=with(G$data,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= t,DOS=d,logTRAPS=log(1)))
       PG = predict(G, newdata = pData, type = 'response',se.fit=T)
     
         pData$YEAR = as.numeric(as.character(pData$fYEAR))
