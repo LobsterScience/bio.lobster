@@ -368,21 +368,78 @@ x11()
 
 
 	# Survey Data
-	AllSurveyDataR1 = SurveyTowData(Size.range=c(70,82.5),Sex = c(1,2,3), Years=1970:2018,redo=T,lab="R1", Lobster.survey.correction=T)
-	AllSurveyDataR1$survey[AllSurveyDataR1$survey=="Scallop"&month(AllSurveyDataR1$date)<9] <- "ScallopSummer"
-	AllSurveyDataR1$survey[AllSurveyDataR1$survey=="Scallop"&month(AllSurveyDataR1$date)>8] <- "ScallopFall"
-
-	AllSurveyDataR1$survey[AllSurveyDataR1$survey=="Lobster"&month(AllSurveyDataR1$date)<9] <- "LobsterSummer"
-	AllSurveyDataR1$survey[AllSurveyDataR1$survey=="Lobster"&month(AllSurveyDataR1$date)>8] <- "LobsterFall"
 
 
-	surveyLobsters34index<-subset(AllSurveyDataR1,LFA==34&year%in%Years&survey%in%c("Lobster","Scallop"))
-	surveyLobsters34index = lonlat2planar(surveyLobsters34index,"utm20", input_names=c("X", "Y"))
+	surveyLobsters<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=5, Net='NEST',size.range=c(0,200))
 
-	surveyLobsters34index$yday = yday(as.Date(surveyLobsters34index$date))
-	surveyLobsters34index$dyear = decimal_date(as.Date(surveyLobsters34index$date))
-	surveyLobsters34index$PA = as.numeric(surveyLobsters34index$LobDen>0)
-	surveyLobsters34index$LogDen = log(surveyLobsters34index$LobDen)
+	surveyLobsters<-subset(surveyLobsters,!is.na(CL82))
+
+	surveyLobsters=reshape(surveyLobsters, idvar = "SET_ID", varying = list(which(substr(colnames(surveyLobsters),1,2)=='CL')), v.names = "LobDen2", direction = "long",timevar='CL')
+
+	surveyLobsters<-subset(surveyLobsters,LFA==34&year%in%Years)
+
+	# Survey Data
+	surveyLobsters = lonlat2planar(surveyLobsters,"utm20", input_names=c("SET_LONG", "SET_LAT"))
+	surveyLobsters$dyear = decimal_date(as.Date(surveyLobsters$SET_DATE))
+	surveyLobsters$PA = as.numeric(surveyLobsters$LobDen2>0)
+	surveyLobsters$LogDen = log(surveyLobsters$LobDen)
+
+
+    # Presence-Absence model
+    paMf = formula( PA ~ as.factor(YEAR) + s(SET_DEPTH)  + s(plon, plat,k=100) + s(CL,by=YEAR) +s(CL)  )
+    paMd = subset(surveyLobsters,YEAR>=min(Years),c('PA','plon','plat','dyear','YEAR','SET_DEPTH','CL'))
+	paMo = gam( paMf, data=paMd, family=binomial())
+	print(summary(paMo))
+	plot(paMo)
+	
+    # Abundance model
+    abMf = formula( LogDen ~ as.factor(YEAR) + s(SET_DEPTH) + s(plon, plat,k=100)  )
+    abMd = subset(surveyLobsters,YEAR>=min(Years)&LobDen>0,c('LogDen','plon','plat','dyear','YEAR','SET_DEPTH'))
+	abMo = gam( abMf, data=abMd, family=gaussian(link='log'))
+	print(summary(abMo))
+	
+	# Prediction Surface
+	load(file.path(project.codedirectory("EA"),"data","predspace.rdata")) # predSpace
+	Ps = data.frame(EID=1:nrow(predSpace),predSpace[,c('plon','plat','z')])
+	Ps = rename.df(Ps,c('plon','plat','z'),c('X','Y','SET_DEPTH'))
+	key=findPolys(Ps,subset(LFAs,PID==34))
+	Ps = subset(Ps,EID%in%key$EID)
+	Ps = rename.df(Ps,c('X','Y'),c('plon','plat'))
+
+
+	# annual predictions
+	index=c()
+	surface=list()
+
+	for(i in 1:length(Years)){
+	require(mgcv)
+			
+		Ps$YEAR =Years[i]
+
+		plo = predict(paMo,Ps,type='response') 
+		xyz = data.frame(Ps[,c('plon','plat')],z=plo)
+		corners = data.frame(lon=c(-67.8,-65),lat=c(42.5,45))
+		if("PA"%in%surface.plots)planarMap( xyz, fn=paste0("gamSurveyPA",lab,Years[i]), annot=Years[i],loc=fd, corners=corners, save=T)
+
+
+		ldp = predict(abMo,Ps,type='response') 
+		xyz = data.frame(Ps[,c('plon','plat')],z=exp(ldp)*plo)
+		corners = data.frame(lon=c(-67.8,-65),lat=c(42.5,45))
+		if("AB"%in%surface.plots)planarMap( xyz, fn=paste0("gamSurveyAB",lab,Years[i]), annot=Years[i],loc=fd, corners=corners, datascale=seq(legend.scale[1],legend.scale[2],l=50),save=T,log.variable=T)
+
+		surface[[i]]= xyz
+		index[i]= sum(xyz$z)
+
+	}
+	save(surface,file=file.path(project.datadirectory("bio.lobster"),"outputs",paste0(lab,"surface.rdata")))
+	save(index,file=file.path(project.datadirectory("bio.lobster"),"outputs",paste0(lab,"index.rdata")))
+
+	x11()
+	plot(Years,index/10^6,type='b',ylab=ylab,ylim=c(0,max(index)/10^6),main=lab)
+
+	return(index)
+}
+
 
 
     # Presence-Absence model
@@ -446,7 +503,6 @@ x11()
 ####################################### All Sizes
 
 
-####################################### R1 Lobster Survey
 
 
 	# Spatial temporal parameters

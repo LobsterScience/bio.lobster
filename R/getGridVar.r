@@ -54,8 +54,8 @@ getGridVar = function(variable="DEPTH",source = c("atSea","FSRS"),grids){
  
 		 	# identify locations of data relative to baseline for envionmental data
 			 locsmap = match( 
-			  lbm::array_map( "xy->1", grids.dat[,c("plon","plat")], gridparams=p$gridparams ), 
-			  lbm::array_map( "xy->1", Complete[,c("plon","plat")], gridparams=p$gridparams ) )
+			  array_map( "xy->1", grids.dat[,c("plon","plat")], gridparams=p$gridparams ), 
+			  array_map( "xy->1", Complete[,c("plon","plat")], gridparams=p$gridparams ) )
 
 		 	grids.dat$DEPTH = Complete$z[locsmap]
 

@@ -29,29 +29,31 @@ CPUEModelPlot = function(CPUEModelResult, TempModelling, lfa, combined=F,graphic
     if(combined==T)Mdata = subset(Alldata,fAREA==lfa[i])
 
     Mdata$CPUE = Mdata$WEIGHT_KG/Mdata$NUM_OF_TRAPS
+    wt=aggregate(WEIGHT_KG~y,Mdata,FUN=sum)
+
     MD = subset(Mdata,!duplicated(y))
     MD = MD[order(MD$y),]
     D = median(Mdata$DEPTH)
     Temp = predict(TempModelling$Model, newdata = data.frame(y=MD$y, cos.y=cos(2*pi*MD$y), sin.y=sin(2*pi*MD$y), DEPTH=D, area=lfa[i]), type='response')
-#browser()
     pData=data.frame(DOS=MD$DOS,TEMP= Temp,logTRAPS=log(1), fYEAR=MD$fYEAR, fAREA=MD$fAREA)
-    PM = predict(M, newdata = pData, type = 'response')
+    PM = predict(M, newdata = pData, type = 'response',se.fit=T)
 
- 
+
       pData$YEAR = as.numeric(as.character(pData$fYEAR))
-      pData$mu = exp(PM)
-      #pData$ub = exp(PM$fit + 1.96 * PM$se.fit)
-      #pData$lb = exp(PM$fit - 1.96 * PM$se.fit)
+      pData$mu = exp(PM$fit)
+      pData$ub = exp(PM$fit + 1.96 * PM$se.fit)
+      pData$lb = exp(PM$fit - 1.96 * PM$se.fit)
       pData$y = MD$y
       pData$LFA = lfa[i]
 
-      pData = merge(pData,data.frame(y=seq(min(pData$YEAR)+0.6,max(pData$YEAR)+0.6,1)),all=T)
+      pData = merge(pData,wt,all=T)
+      pData = merge(pData,data.frame(y=seq(min(pData$YEAR)+0.6,max(pData$YEAR)+0.6,0.1)),all=T)
 
 
     plot(CPUE~y,Mdata,pch=16,cex=0.2,col=rgb(0,0,0,0.1),...)
     lines(mu~y,pData,lwd=2,col='red')
-      #lines(ub~y,pData,lty=2,col='red')
-      #lines(lb~y,pData,lty=2,col='red')
+      lines(ub~y,pData,lty=2,col='red')
+      lines(lb~y,pData,lty=2,col='red')
     mtext(paste("LFA",lfa[i]),adj=0.95,line=-4,cex=1.5)
 
     pData.list[[i]] = pData
