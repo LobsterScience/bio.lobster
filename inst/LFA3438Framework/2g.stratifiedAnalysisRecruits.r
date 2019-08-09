@@ -103,7 +103,7 @@ rm(aout)
                    ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
                    p$ylim=c(0,4)
                 aout$subset = 'NEFSCFallrecruits'
-        write.csv(aout,file=file.path(fp,'indicators',paste(LFA,'NEFSC.fall.restratified.recruits.csv',sep="")))
+        write.csv(aout,file=file.path(fp,'indicators',paste(lfa,'NEFSC.fall.restratified.recruits.csv',sep="")))
     rm(aout)
 }
 if(survey=='DFO'){
