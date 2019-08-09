@@ -1,5 +1,5 @@
 #' @export
-CPUEModelPlot = function(CPUEModelResult, TempModelling, lfa, combined=F,graphic='R', wd=8, ht=11, path=file.path(project.figuredirectory("bio.lobster"),"figures"),lab='', ...){
+CPUEModelPlot = function(CPUEModelResult, TempModelling, lfa, combined=F,graphic='R', wd=8, ht=11, path=file.path(project.figuredirectory("bio.lobster"),"figures"),lab='',index.pts=T, ...){
 	
   if(combined==T){
     M = CPUEModelResult$model
@@ -47,14 +47,18 @@ CPUEModelPlot = function(CPUEModelResult, TempModelling, lfa, combined=F,graphic
       pData$LFA = lfa[i]
 
       pData = merge(pData,wt,all=T)
-      pData = merge(pData,data.frame(y=seq(min(pData$YEAR)+0.6,max(pData$YEAR)+0.6,0.1)),all=T)
+      pData = merge(pData,data.frame(y=seq(min(pData$YEAR)-0.6,max(pData$YEAR)+0.6,0.1)),all=T)
 
 
     plot(CPUE~y,Mdata,pch=16,cex=0.2,col=rgb(0,0,0,0.1),...)
     lines(mu~y,pData,lwd=2,col='red')
       lines(ub~y,pData,lty=2,col='red')
       lines(lb~y,pData,lty=2,col='red')
-    mtext(paste("LFA",lfa[i]),adj=0.95,line=-4,cex=1.5)
+      if(index.pts){
+        x=1-mean(with(subset(MD,DOS==1),y-year(DATE_FISHED)))
+        with(CPUEModelResult[[ lfa[i] ]]$pData,points(YEAR-x,mu,pch=16,col='blue'))
+      }
+    mtext(paste("LFA",lfa[i]),adj=0.05,line=-5,cex=1.3)
 
     pData.list[[i]] = pData
 

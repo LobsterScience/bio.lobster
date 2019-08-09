@@ -38,6 +38,7 @@ options(stringsAsFactors=F)
 	if(area=='27-33')	{ ylim=c(42.5,48); 		xlim=c(-66.6,-57.8)	}
 	if(area=='27-32')	{ ylim=c(43.5,48); 		xlim=c(-63.6,-57.8)	}
 	if(area=='34-38')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-63.5)	}
+	if(area=='35-36')	{ ylim=c(44.5,46);	 	xlim=c(-67.2,-63.2)	}
 	if(area=='west')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-64)	}
 	if(area=='27')		{ ylim=c(44.9,47.9); 	xlim=c(-61,-57.8)	}
 	if(area=='28')		{ ylim=c(45.3,46);	 	xlim=c(-61.6,-60.3)	}
@@ -183,7 +184,7 @@ if(save) {
 			if(!is.na(lfa)){
 				grids<-subset(LFAgrid,PID==lfa)
 				#browser()
-				addPolys(grids,border=rgb(0,0,0,0.2),col=NULL)
+				if(addGrids=='lfaonly')addPolys(grids,border=rgb(0,0,0,0.2),col=NULL)
 				if(labels=='grid'){
 					grids$label<-grids$SID
 	        		grids.dat<-merge(calcCentroid(grids),grids[c("PID","SID","label")])
@@ -217,7 +218,7 @@ if(save) {
 		}
 
 	}
-	if(addGrids){
+	if(addGrids==T){
 			LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 		addPolys(LFAgrid,border=rgb(0,0,0,0.2),col=NULL)
 			

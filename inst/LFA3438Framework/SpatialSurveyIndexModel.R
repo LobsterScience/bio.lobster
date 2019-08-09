@@ -357,6 +357,91 @@ x11()
 
 
 
+	surveyLobsters<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=2.5, Net='NEST',size.range=c(0,200))
+
+	total.ab = SpatialGamLobsterSurvey(surveyLobsters,Years = 1996:2018,lab="tot")
+
+
+
+AllSurveyDataTot = SurveyTowData(Size.range=c(0,200),Sex = c(1,2,3), Years=1970:2018,redo=T,lab="Total")
+	AllSurveyDataTot = subset(AllSurveyDataTot,LFA%in%35:36)
+	AllSurveyDataTot = lonlat2planar(AllSurveyDataTot,"utm20", input_names=c("X", "Y"))
+	AllSurveyDataTot$PA = as.numeric(AllSurveyDataTot$LobDen>0)
+	AllSurveyDataTot$LogDen = log(AllSurveyDataTot$LobDen)
+
+	Years = 1996:2018
+
+
+	# Spatial temporal parameters
+	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+	LFAs = lonlat2planar(LFAs,"utm20", input_names=c("X", "Y"))
+	LFAs = LFAs[,-which(names(LFAs)%in%c('X','Y'))]
+	LFAs = rename.df(LFAs,c('plon','plat'),c('X','Y'))
+
+    # Presence-Absence model
+    #paMf = formula( PA ~ s(dyear) + s(SET_DEPTH) + s(plon, plat)  )
+    paMf = formula( PA ~ s(Z)  + s(plon, plat,k=100)  )
+    paMd = subset(AllSurveyDataTot,year>=min(Years),c('PA','plon','plat','Z'))
+	paMo = gam( paMf, data=paMd, family=binomial())
+	summary(paMo)
+	
+    # Abundance model
+    #abMf = formula( LogDen ~ s(dyear) + s(Z) + s(plon, plat)  )
+    abMf = formula( LogDen ~ s(Z) + s(plon, plat,k=100)  )
+    abMd = subset(AllSurveyDataTot,year>=min(Years)&LobDen>0,c('LogDen','plon','plat','Z'))
+	abMo = gam( abMf, data=abMd, family=gaussian(link='log'))
+	summary(abMo)
+	
+	# Prediction Surface
+	load("/home/hubleyb/bio/EA/data/predspace.rdata") # predSpace
+	Ps = data.frame(EID=1:nrow(predSpace),predSpace[,c('plon','plat','z')])
+	Ps = rename.df(Ps,c('plon','plat','z'),c('X','Y','Z'))
+	key=findPolys(Ps,subset(LFAs,PID%in%35:36))
+	Ps = subset(Ps,EID%in%key$EID)
+	Ps = rename.df(Ps,c('X','Y'),c('plon','plat'))
+
+	#Ps = Ps[,-which(names(Ps)=='SET_DEPTH')]
+
+	# annual predictions
+ FundyStns = na.omit(read.csv(file.path(project.datadirectory('bio.lobster'),"data","survey","FundyStations.csv")))
+	FundyStns = lonlat2planar(FundyStns,"utm20", input_names=c("X", "Y"))
+
+		plo = predict(paMo,Ps,type='response') 
+		xyz = data.frame(Ps[,c('plon','plat')],z=plo)
+		corners = data.frame(lat=c(44.5,46),lon=c(-67.2,-63.2))
+		#planarMap( xyz, fn=paste("lobster.gambi.pred",Years[i],sep='.'), annot=Years[i],loc="output",corners=corners)
+		#planarMap( xyz, corners=corners)
+
+
+		ldp = predict(abMo,Ps,type='response') 
+		#xyz = data.frame(Ps[,c('plon','plat')],z=ldp)
+		xyz = data.frame(Ps[,c('plon','plat')],z=exp(ldp)*plo)
+		corners = data.frame(lat=c(44.5,46),lon=c(-67.2,-63.2))
+		planarMap( xyz, fn="BoF", loc=figdir, corners=corners, datascale=seq(9.9,6000,l=50),save=T,log.variable=T,pts=FundyStns)
+
+
+ FundyStns = na.omit(read.csv(file.path(project.datadirectory('bio.lobster'),"data","survey","FundyStations.csv")))
+
+
+		xyz = data.frame(AllSurveyDataTot[,c('X','Y')],Z=AllSurveyDataTot$LobDen)
+		xyz2=smoothing(xyz)
+		xyz2 = lonlat2planar(xyz2,"utm20", input_names=c("X", "Y"))
+		xyz2 = na.omit(data.frame(xyz2[,c('plon','plat')],z=xyz2$Z))
+
+
+		corners = data.frame(lat=c(44.5,46),lon=c(-67.2,-63.2))
+		planarMap( na.omit(xyz2), fn="BoF2", loc=figdir, corners=corners, datascale=seq(9.9,6000,l=50),save=T,log.variable=T,interpolation=T,pts=FundyStns)
+
+
+
+		xyz = data.frame(AllSurveyDataTot[,c('plon','plat')],z=AllSurveyDataTot$LobDen)
+		xyz$plon=round(xyz$plon)
+		xyz$plat=round(xyz$plat)
+		xyx=aggregate(z~plon+plat,xyz,FUN=mean)
+
+
+		corners = data.frame(lat=c(44.5,46),lon=c(-67.2,-63.2))
+		planarMap( xyz, fn="BoF2", loc=figdir, corners=corners, datascale=seq(9.9,6000,l=50),save=T,log.variable=T,interpolation=T,pts=FundyStns)
 
 
 ####################################### Other Surveys 
@@ -671,8 +756,8 @@ x11()
 	require(bio.bathymetry)
 	baseLineDepth = bathymetry.db(p=p, DS="complete")
     locsmap = match( 
-        lbm::array_map( "xy->1", AllSurveyDataR1[,c("plon","plat")], gridparams=p$gridparams ), 
-        lbm::array_map( "xy->1", baseLineDepth, gridparams=p$gridparams ) )
+        array_map( "xy->1", AllSurveyDataR1[,c("plon","plat")], gridparams=p$gridparams ), 
+        array_map( "xy->1", baseLineDepth, gridparams=p$gridparams ) )
 
 
 

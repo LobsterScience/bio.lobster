@@ -17,7 +17,8 @@ CPUEModelData = function(p,redo=T,TempModelling){
 
 	    tmp = rbind(tmp2,tmp1)
 
-	    tmp = subset(tmp,subarea %in% p$subareas)
+	    if('subareas'%in%names(p))   tmp = subset(tmp,subarea %in% p$subareas)
+	    else  tmp = subset(tmp,LFA %in% p$lfas)
 
 	    tmp$LFA = tmp$subarea
 	    tmp$LFA[tmp$subarea%in%c("27N","27S")] = "27"
