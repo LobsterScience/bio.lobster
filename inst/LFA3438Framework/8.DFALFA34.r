@@ -75,20 +75,21 @@ cntl.list = list(minit=200, maxit=5000, allow.degen=FALSE)
 
 # set up forms of R matrices
 levels.R = c("diagonal and equal","diagonal and unequal","equalvarcov","unconstrained")
-
+levels.Q = c("diagonal and equal","diagonal and unequal","equalvarcov","unconstrained")
 model.data = data.frame()
 	for(R in levels.R) {
+		for(Q in levels.Q){
 		for(m in 1:(N.ts-1)) {
 				dfa.model = list(A="zero", R=R, m=m)
 				ff = MARSS(cRR, model=dfa.model, control=cntl.list,
 						form="dfa", z.score=TRUE)
 		
 				model.data = rbind(model.data,
-							data.frame(R=R,m=m,logLik=ff$logLik,K=ff$num.params,AICc=ff$AICc,stringsAsFactors=FALSE))
-				assign(paste("ff", m, R, sep="."), ff)
+							data.frame(R=R,Q=Q,m=m,logLik=ff$logLik,K=ff$num.params,AICc=ff$AICc,stringsAsFactors=FALSE))
+				assign(paste("ff", m, R, Q, sep="."), ff)
 		} # end m loop
-	} # end R loop
-
+	} # end Q loop
+} # end R loop
 #best model is diag and unequal with two or three trends
 write.csv(model.data,'~/tmp/model.data.csv')
 
