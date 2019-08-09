@@ -386,7 +386,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                         yrs = yrs1[yrs1%in%yrs2]
 
                         for(y in 1:length(yrs)){
-                          logsInSeason$bumpup[logsInSeason$SYEAR==yrs[y]&logsInSeason$LFA==lfa[i]] = TotalLandings$C[TotalLandings$SYEAR==yrs[y]&TotalLandings$LFA==lfa[i]]*1000/sum(tmplogs$WEIGHT_KG[tmplogs$SYEAR==yrs[y]],na.rm=T)
+                          logsInSeason$BUMPUP[logsInSeason$SYEAR==yrs[y]&logsInSeason$LFA==lfa[i]] = TotalLandings$C[TotalLandings$SYEAR==yrs[y]&TotalLandings$LFA==lfa[i]]*1000/sum(tmplogs$WEIGHT_KG[tmplogs$SYEAR==yrs[y]],na.rm=T)
                         }
                       }
                     }
@@ -461,8 +461,9 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
          
           vlog = merge(vlog,vlogs34,all=T)
 
+
           vlog = addSYEAR(vlog,date.field="FDATE")
-          vlog$SYEAR = as.numeric(substr(vlog$SEASON,6,9))
+          #vlog$SYEAR = as.numeric(substr(vlog$SEASON,6,9))
           vlog$W_KG = vlog$W_TOT*0.4536
           vlog$CPUE = vlog$W_KG/vlog$N_TRP
 

@@ -21,6 +21,15 @@
 ### LobsterSurvey
 
 
+	pdf(file.path( figdir,"ITQsurveyMap.pdf"),8,10)
+	ITQareas=read.csv(file.path(project.datadirectory("bio.lobster"),"data","ITQareas.csv"))
+ 	LobsterMap(xlim=range(ITQareas$X),ylim=range(ITQareas$Y),addGrids=F)
+	addPolys(ITQareas,border='blue')
+	lobster.db('survey')
+	with(subset(surveyCatch,!duplicated(paste(TRIP_ID,SET_NO))&year(SET_DATE)==2000),points(SET_LONG,SET_LAT,pch=21,bg='red'))
+	dev.off()
+
+
 	surveyLobsters34index<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=2.5, net='NEST',size.range=c(80,85))
 	surveyLobsters34<-LobsterSurveyProcess(lfa="34", yrs=1996:2018, mths=c("Aug","Jul","Jun"), bin.size=2.5, gear.type='280 BALLOON',size.range=c(80,85))
 	
@@ -338,6 +347,8 @@ logsInSeason=lobster.db("process.logs")
     logsInSeason<-lobster.db('process.logs.redo')
     logsInSeason<-lobster.db('process.logs')
 
+    write.csv(logsInSeason,file.path(project.datadirectory("bio.lobster"),'data',"Logs.csv"),row.names=F)
+
     cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2002:2018,graphic='R',export=T)
     cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2018,graphic='pdf',path=figdir)
     cpueSubArea.dat = CPUEplot(logsInSeason,subarea= p$subareas,yrs=2006:2018,graphic='R')
@@ -354,7 +365,9 @@ logsInSeason=lobster.db("process.logs")
 
 	TempModelling = TempModel( annual.by.area=F)
 	#CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
-	CPUE.data<-CPUEModelData(p,redo=F)
+	CPUE.data<- CPUEModelData(p,redo=F)
+	CPUE.data=subset(CPUE.data,!(LFA==35&SYEAR<2006)) #exclude partial year of data in 35
+	CPUE.data=subset(CPUE.data,!(LFA==36&SYEAR<2005)) #exclude partial year of data in 36
 
 		pL=0
 		t=c()
@@ -374,7 +387,8 @@ logsInSeason=lobster.db("process.logs")
 			}
 		}
 
-	d=1;	t=8
+	t=with(subset(CPUE.data,DOS==1),tapply(TEMP,LFA,mean))
+	d=1
 
 	
 
@@ -388,11 +402,11 @@ logsInSeason=lobster.db("process.logs")
 	AICs4 = c()
 	for(i in 1:length( p$lfas)){
 
-		mdata = subset(CPUE.data,LFA==p$lfas[i])
-		CPUEModelResults1[[i]] = CPUEmodel(mf1,mdata,t=t,d=d)
-		CPUEModelResults2[[i]] = CPUEmodel(mf2,mdata,t=t,d=d)
-		CPUEModelResults3[[i]] = CPUEmodel(mf3,mdata,t=t,d=d)
-		CPUEModelResults4[[i]] = CPUEmodel(mf4,mdata,t=t,d=d)
+		mdata = subset(CPUE.data,LFA==p$lfas[i]&SYEAR%in%p$yrs)
+		CPUEModelResults1[[i]] = CPUEmodel(mf1,mdata,t=t[i],d=d)
+		CPUEModelResults2[[i]] = CPUEmodel(mf2,mdata,t=t[i],d=d)
+		CPUEModelResults3[[i]] = CPUEmodel(mf3,mdata,t=t[i],d=d)
+		CPUEModelResults4[[i]] = CPUEmodel(mf4,mdata,t=t[i],d=d)
 		AICs1[i] = CPUEModelResults1[[i]]$model$aic
 		AICs2[i] = CPUEModelResults2[[i]]$model$aic
 		AICs3[i] = CPUEModelResults3[[i]]$model$aic
@@ -414,11 +428,14 @@ logsInSeason=lobster.db("process.logs")
 
 	#CPUECombinedModelResults = CPUEmodel(mf5,CPUE.data,combined=T)	
 
-	cpue1=CPUEModelPlot(CPUEModelResults1[1],TempModelling,lfa = c("34"),xlim=c(1989,2018.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1)
+	cpue1= CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = p$lfas,xlim=c(1989,2018.4),ylim=c(0,10.5),graphic='png',path=figdir,lab=1,wd=11,ht=8)
+    #pdf2png(file.path(figdir,"CPUEmodel1"))
+    cpueLFA.dat = CPUEplot(CPUE.data,lfa= p$lfas,yrs=1989:2018,graphic='png',export=T,path=figdir)
 
 	cpue.annual=list()
 	for(i in 1:length(p$lfas)){
 		MU=c()
+		MU.sd=c()
 		for(j in 1:length(p$yrs)){
 			MU[j]=with(subset(cpue1,LFA==p$lfas[i]&YEAR==p$yrs[j]),weighted.mean(mu,WEIGHT_KG))
 			MU.sd[j]=with(subset(cpue1,LFA==p$lfas[i]&YEAR==p$yrs[j]),sqrt(sum(WEIGHT_KG/sum(WEIGHT_KG) * (mu - MU[j])^2)))
@@ -436,25 +453,25 @@ logsInSeason=lobster.db("process.logs")
 	 	
 
 	}
-	cpueModel = subset(do.call("rbind",cpue.annual),Year<2019&Year>2001)
+	cpueModel = subset(do.call("rbind",cpue.annual),Year<2019)
 
 
-	x11()
-	pdf(file.path( figdir,"CPUEmodelAnnualIndex.pdf"),8, 10)
+	#x11()
+	#pdf(file.path( figdir,"CPUEmodelAnnualIndex.pdf"),8, 10)
 	par(mfrow=c(length(p$lfas),1),mar=c(0,0,0,0),omi=c(0.5,1,0.5,0.5),las=1)
 
 	for(i in 1:length(p$lfas)){
 
 
-		plot(CPUE~Year,subset(cpueModel,Area==p$lfas[i]),type='b',pch=21,bg='red',ylim=c(0,max(cpueModel$CPUE.ub,na.rm=T)),xlim=c(min(cpueModel$Year),max(cpueModel$Year)),xaxt='n')
-		points(CPUE~YEAR,subset(cpueLFA.dat$annual.dat,LFA==p$lfas[i]&YEAR<2019&YEAR>2004),pch=16,col='blue',cex=0.9)
-		lines(CPUE.ub~Year,subset(cpueModel,Area==p$lfas[i]),lty=2)
-		lines(CPUE.lb~Year,subset(cpueModel,Area==p$lfas[i]),lty=2)
+		plot(mu~YEAR,CPUEModelResults1[[i]]$pData,type='b',pch=21,bg='red',ylim=c(0,7),xlim=c(1989,2018),xaxt='n')
+		points(CPUE~YEAR,subset(cpueLFA.dat$annual.dat,LFA==p$lfas[i]&YEAR<2019),pch=16,col='blue',cex=0.9)
+		#lines(ub~YEAR,CPUEModelResults1[[i]]$pData,lty=2)
+		#lines(lb~YEAR,CPUEModelResults1[[i]]$pData,lty=2)
 		axis(1,lab=F)
 		axis(4)
 		if(i==length(p$lfas))axis(1)
 		
-		text(min(cpueModel$Year,na.rm=T),max(cpueModel$CPUE,na.rm=T)*1.2,paste(p$lfas[i]),cex=2,pos=4)
+		text(1989,6,paste(p$lfas[i]),cex=2,pos=4)
 	}
 	mtext("CPUE (kg/TH)", 2, 3, outer = T, cex = 1,las=0)	
 	dev.off()
