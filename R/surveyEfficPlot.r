@@ -30,8 +30,8 @@
 surveyEfficPlot <- function(x,fp = project.figuredirectory('bio.lobster'),fname) {
 			if(!grepl('.pdf',fname)) stop('Need to include .pdf in fname')
 		    pdf(file.path(fp,fname))
-		      with(x[[1]],plot(yr-0.1,strat.effic.wt,type='h',col='black',xlab='Year', lwd=2,ylab='Efficiency (%)',ylim=c(-100,100)))
-		      with(x[[1]],lines(yr+0.1,alloc.effic.wt,type='h',col='grey40',lwd=2,ylab='Efficiency (%)',ylim=c(-100,100)))
+		      with(x[[1]],plot(yr-0.1,strat.effic.wt,type='h',col='black',xlab='Year', lwd=3,ylab='Efficiency (%)',ylim=c(-100,100)))
+		      with(x[[1]],lines(yr+0.1,alloc.effic.wt,type='h',col='red',lwd=3,ylab='Efficiency (%)',ylim=c(-100,100)))
 		      legend('topright',lty=c(1,1),lwd=2,col=c('black','grey40'),c('Strata Efficiency','Allocation Efficiency'),bty='n',cex=0.9)
 		      dev.off()
 }

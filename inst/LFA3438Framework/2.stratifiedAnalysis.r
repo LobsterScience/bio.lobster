@@ -11,13 +11,13 @@ fp1 = file.path(project.datadirectory('bio.lobster'),"analysis","LFA34-38")
 fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019")
 
 load_all('~/git/bio.survey/')
-
+p1 = p
 
 
 stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1){
       if(survey == 'NEFSC'){
                 p$reweight.strata = T
-                p$years.to.estimate = c(1969:2018)
+                p$years.to.estimate = c(1969:2017)
                 p$length.based = T
                 p$size.class= c(50,300)
                 p$by.sex = F
@@ -157,8 +157,7 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1){
                        p$ylim = NULL
                 aout$subset = 'NEFSC.Fall.Restratified'
                 write.csv(aout,file=file.path(fp,'indicators',paste(lfa,'NEFSC.Fall.Restratified.csv',sep="")))
-     
-        }
+                }
 
 if(survey == 'DFO'){
                 p$series =c('summer')

@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2018.9.24)  30 APR 2019 15:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2018.10.4)  7 AUG 2019 11:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **MainDocLFA3438figures.tex
 (./MainDocLFA3438figures.tex
 LaTeX2e <2017/01/01> patch level 3
-Babel <3.9r> and hyphenation patterns for 3 language(s) loaded.
+Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo
@@ -120,8 +120,8 @@ File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 \pc@box@height=\skip56
 \pc@box@depth=\skip57
 
-(/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty
-Package: etoolbox 2017/01/02 v2.4 e-TeX tools for LaTeX (JAW)
+(/home/adam/texmf/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2018/02/11 v2.5e e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count101
 )
 (/usr/share/texlive/texmf-dist/tex/latex/datetime2/datetime2.sty
@@ -323,24 +323,24 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 Package zref Info: New property list: pdfcomment on input line 2724.
 Package zref Info: New property: PCPDFOBJID on input line 2725.
 )
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
-Package: amsmath 2016/11/05 v2.16a AMS math features
+(/home/adam/texmf/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2017/09/02 v2.17a AMS math features
 \@mathmargin=\skip62
 
 For additional information on amsmath, use the `?' option.
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+(/home/adam/texmf/tex/latex/amsmath/amstext.sty
 Package: amstext 2000/06/29 v2.01 AMS text
 
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
+(/home/adam/texmf/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks17
 \ex@=\dimen120
 ))
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
+(/home/adam/texmf/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen121
 )
-(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
+(/home/adam/texmf/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2016/03/08 v2.02 operator names
 )
 \inf@bad=\count119
@@ -464,22 +464,22 @@ LaTeX Info: Redefining \today on input line 736.
 (./MainDocLFA3438figures.aux)
 \openout1 = `MainDocLFA3438figures.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -518,7 +518,7 @@ Package caption Info: End \AtBeginDocument code.
 Package marginnote Info: \pdfoutput not 0 or unimportant and
 (marginnote)             \pdflastxpos or \lastxpos available.
 (marginnote)             Extended position detection mode activated.
-Package soulpos Info: Loading soulutf8 on input line 28.
+Package soulpos Info: Loading soulutf8 on input line 29.
 
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/soulutf8.sty
 Package: soulutf8 2016/05/16 v1.1 Permit use of UTF-8 characters in soul (HO)
@@ -536,7 +536,7 @@ Package: soul 2003/11/17 v2.4 letterspacing/underlining (mf)
 \SOUL@ulht=\dimen141
 ))
 \AtBeginShipoutBox=\box31
-Package hyperref Info: Link coloring OFF on input line 28.
+Package hyperref Info: Link coloring OFF on input line 29.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -546,9 +546,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count165
 )
-LaTeX Info: Redefining \ref on input line 28.
-LaTeX Info: Redefining \pageref on input line 28.
-LaTeX Info: Redefining \nameref on input line 28.
+LaTeX Info: Redefining \ref on input line 29.
+LaTeX Info: Redefining \pageref on input line 29.
+LaTeX Info: Redefining \nameref on input line 29.
 
 (./MainDocLFA3438figures.out) (./MainDocLFA3438figures.out)
 \@outlinefile=\write4
@@ -592,1573 +592,912 @@ LaTeX Info: Redefining \nameref on input line 28.
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/se-pdfdoc.def
 File: se-pdfdoc.def 2016/05/16 v1.11 stringenc: PDFDocEncoding
 )
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg, id=4, 1054.
-6602pt x 690.4194pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg Graphic
- file (type jpg)
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg
+, id=4, 1054.6602pt x 690.4194pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMapAT
+L.jpg Graphic file (type jpg)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LF
-AMapATL.jpg used on input line 34.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL
+.jpg>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMapATL.jpg used on input line 35.
 (pdftex.def)             Requested size: 469.75502pt x 307.51485pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg Graphic
- file (type jpg)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMapAT
+L.jpg Graphic file (type jpg)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LF
-AMapATL.jpg used on input line 34.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL
+.jpg>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMapATL.jpg used on input line 35.
 (pdftex.def)             Requested size: 469.75502pt x 307.51485pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg Graphic
- file (type jpg)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMapAT
+L.jpg Graphic file (type jpg)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LF
-AMapATL.jpg used on input line 34.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL
+.jpg>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMapATL.jpg used on input line 35.
 (pdftex.def)             Requested size: 469.75502pt x 307.51485pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg Graphic
- file (type jpg)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMapAT
+L.jpg Graphic file (type jpg)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/LF
-AMapATL.jpg used on input line 34.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMapATL
+.jpg>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMapATL.jpg used on input line 35.
 (pdftex.def)             Requested size: 469.75502pt x 307.51485pt.
+ [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} </SpinDr/backup/bio_data
+/bio.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg>]
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPUE201
+4.pdf, id=12, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2014.pdf Graphic file (type pdf)
 
-[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} </home/hubleyb/bio.data/b
-io.lobster/figures/LFA3438Framework2019/LFAMapATL.jpg>]
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2011.pdf, 
-id=12, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2011.
-pdf Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2011.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2011.pdf used on input line 54.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2014.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2014.pdf used on input line 47.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
 
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2012.pdf, 
-id=14, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2012.
-pdf Graphic file (type pdf)
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPUE201
+5.pdf, id=14, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2015.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2012.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2012.pdf used on input line 54.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2015.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2015.pdf used on input line 47.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2011.
-pdf Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2014.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2011.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2011.pdf used on input line 54.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2014.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2014.pdf used on input line 47.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2012.
-pdf Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2015.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2012.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2012.pdf used on input line 54.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2015.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2015.pdf used on input line 47.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2011.
-pdf Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2014.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2011.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2011.pdf used on input line 54.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2014.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2014.pdf used on input line 47.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2012.
-pdf Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2015.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2012.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2012.pdf used on input line 54.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2015.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2015.pdf used on input line 47.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2011.
-pdf Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2014.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2011.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2011.pdf used on input line 54.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2014.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2014.pdf used on input line 47.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2012.
-pdf Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2015.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2012.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2012.pdf used on input line 54.
-(pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2013.pdf, 
-id=23, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2013.
-pdf Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2013.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2013.pdf used on input line 55.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2015.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2015.pdf used on input line 47.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
 
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2014.pdf, 
-id=25, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2014.
-pdf Graphic file (type pdf)
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPUE201
+6.pdf, id=23, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2016.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2014.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2014.pdf used on input line 56.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2016.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2016.pdf used on input line 48.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
 
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2015.pdf, 
-id=27, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2015.
-pdf Graphic file (type pdf)
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPUE201
+7.pdf, id=25, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2017.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2015.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2015.pdf used on input line 57.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2017.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2017.pdf used on input line 49.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
 
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2016.pdf, 
-id=29, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2016.
-pdf Graphic file (type pdf)
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPUE201
+8.pdf, id=27, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCP
+UE2018.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2016.p
-df>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-sheryFootprint2016.pdf used on input line 58.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPU
+E2018.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFCPUE2018.pdf used on input line 50.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
 
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2011.pdf, id=3
-1, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2011.pdf 
-Graphic file (type pdf)
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPotsHau
+l2014.pdf, id=29, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2014.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2011.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2011.pdf used on input line 86.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2014.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2014.pdf used on input line 61.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
 
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2012.pdf, id=3
-3, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2012.pdf 
-Graphic file (type pdf)
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPotsHau
+l2015.pdf, id=31, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2015.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2012.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2012.pdf used on input line 86.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2015.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2015.pdf used on input line 61.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2011.pdf 
-Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2014.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2011.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2011.pdf used on input line 86.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2014.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2014.pdf used on input line 61.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2012.pdf 
-Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2015.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2012.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2012.pdf used on input line 86.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2015.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2015.pdf used on input line 61.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2011.pdf 
-Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2014.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2011.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2011.pdf used on input line 86.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2014.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2014.pdf used on input line 61.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2012.pdf 
-Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2015.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2012.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2012.pdf used on input line 86.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2015.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2015.pdf used on input line 61.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2011.pdf 
-Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2014.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2011.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2011.pdf used on input line 86.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2014.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2014.pdf used on input line 61.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2012.pdf 
-Graphic file (type pdf)
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2015.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2012.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2012.pdf used on input line 86.
-(pdftex.def)             Requested size: 234.8775pt x 182.475pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2013.pdf, id=4
-2, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2013.pdf 
-Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2013.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2013.pdf used on input line 87.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2015.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2015.pdf used on input line 61.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
 
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2014.pdf, id=4
-4, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2014.pdf 
-Graphic file (type pdf)
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPotsHau
+l2016.pdf, id=40, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2016.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2014.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2014.pdf used on input line 88.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2016.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2016.pdf used on input line 62.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
 
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2015.pdf, id=4
-6, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2015.pdf 
-Graphic file (type pdf)
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPotsHau
+l2017.pdf, id=42, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2017.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2015.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2015.pdf used on input line 89.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2017.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2017.pdf used on input line 63.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
 
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2016.pdf, id=4
-8, 505.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2016.pdf 
-Graphic file (type pdf)
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPotsHau
+l2018.pdf, id=44, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPo
+tsHaul2018.pdf Graphic file (type pdf)
 
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2016.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Fi
-shFootcpue2016.pdf used on input line 90.
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPot
+sHaul2018.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/FFPotsHaul2018.pdf used on input line 64.
 (pdftex.def)             Requested size: 234.8775pt x 182.475pt.
 
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34a.pdf, id=
-50, 722.7pt x 867.24pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling34a.pdf used on input line 141.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling34a.pdf used on input line 141.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling34a.pdf used on input line 141.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling34a.pdf used on input line 141.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34b.pdf, id=
-52, 722.7pt x 867.24pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34b.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34b.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling34b.pdf used on input line 149.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34b.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34b.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling34b.pdf used on input line 149.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34b.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34b.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling34b.pdf used on input line 149.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34b.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling34b.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling34b.pdf used on input line 149.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35a.pdf, id=
-54, 722.7pt x 867.24pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling35a.pdf used on input line 157.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling35a.pdf used on input line 157.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling35a.pdf used on input line 157.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling35a.pdf used on input line 157.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35b.pdf, id=
-56, 722.7pt x 867.24pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35b.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35b.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling35b.pdf used on input line 165.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35b.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35b.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling35b.pdf used on input line 165.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35b.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35b.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling35b.pdf used on input line 165.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35b.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling35b.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling35b.pdf used on input line 165.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling36a.pdf, id=
-58, 722.7pt x 867.24pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling36a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling36a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling36a.pdf used on input line 173.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling36a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling36a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling36a.pdf used on input line 173.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling36a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling36a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling36a.pdf used on input line 173.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling36a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling36a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling36a.pdf used on input line 173.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling38a.pdf, id=
-60, 722.7pt x 867.24pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling38a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling38a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling38a.pdf used on input line 181.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling38a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling38a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling38a.pdf used on input line 181.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling38a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling38a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling38a.pdf used on input line 181.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling38a.pdf
- Graphic file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFSeaSampling38a.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-FSeaSampling38a.pdf used on input line 181.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs34.pdf, id=62, 722.
-7pt x 867.24pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs34.pdf Graphic
- file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs34.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-Ffsrs34.pdf used on input line 198.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs34.pdf Graphic
- file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs34.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-Ffsrs34.pdf used on input line 198.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs34.pdf Graphic
- file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs34.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-Ffsrs34.pdf used on input line 198.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs34.pdf Graphic
- file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs34.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-Ffsrs34.pdf used on input line 198.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs35.pdf, id=64, 722.
-7pt x 867.24pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs35.pdf Graphic
- file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs35.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-Ffsrs35.pdf used on input line 207.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs35.pdf Graphic
- file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs35.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-Ffsrs35.pdf used on input line 207.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs35.pdf Graphic
- file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs35.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-Ffsrs35.pdf used on input line 207.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs35.pdf Graphic
- file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CLFfsrs35.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CL
-Ffsrs35.pdf used on input line 207.
-(pdftex.def)             Requested size: 469.75502pt x 563.71257pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUEmodel1.png, id=66, 578
-.16pt x 794.97pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUEmodel1.png Graphi
-c file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUEmodel1.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CP
-UEmodel1.png used on input line 434.
-(pdftex.def)             Requested size: 469.75502pt x 645.91154pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUEmodel1.png Graphi
-c file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUEmodel1.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CP
-UEmodel1.png used on input line 434.
-(pdftex.def)             Requested size: 469.75502pt x 645.91154pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUEmodel1.png Graphi
-c file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUEmodel1.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CP
-UEmodel1.png used on input line 434.
-(pdftex.def)             Requested size: 469.75502pt x 645.91154pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUEmodel1.png Graphi
-c file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUEmodel1.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CP
-UEmodel1.png used on input line 434.
-(pdftex.def)             Requested size: 469.75502pt x 645.91154pt.
-
-
-LaTeX Warning: Float too large for page by 33.68153pt on input line 437.
-
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUE.pdf, id=68, 578.16pt 
-x 794.97pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUE.pdf Graphic file
- (type pdf)
- <use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUE.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CP
-UE.pdf used on input line 452.
-(pdftex.def)             Requested size: 469.75502pt x 645.91154pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUE.pdf Graphic file
- (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUE.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CP
-UE.pdf used on input line 452.
-(pdftex.def)             Requested size: 469.75502pt x 645.91154pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUE.pdf Graphic file
- (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUE.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CP
-UE.pdf used on input line 452.
-(pdftex.def)             Requested size: 469.75502pt x 645.91154pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUE.pdf Graphic file
- (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CPUE.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/CP
-UE.pdf used on input line 452.
-(pdftex.def)             Requested size: 469.75502pt x 645.91154pt.
-
-
-LaTeX Warning: Float too large for page by 33.68153pt on input line 455.
-
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesShorts.png, 
-id=70, 578.16pt x 722.7pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesShorts.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesShorts.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesShorts.png used on input line 464.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesShorts.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesShorts.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesShorts.png used on input line 464.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesShorts.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesShorts.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesShorts.png used on input line 464.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesShorts.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesShorts.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesShorts.png used on input line 464.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 465.
-
- (/usr/share/texlive/texmf-dist/tex/latex/base/omlcmr.fd
-File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 465.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesLegals.png, 
-id=72, 578.16pt x 722.7pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesLegals.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesLegals.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesLegals.png used on input line 473.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesLegals.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesLegals.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesLegals.png used on input line 473.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesLegals.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesLegals.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesLegals.png used on input line 473.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesLegals.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesLegals.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesLegals.png used on input line 473.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesRecruits.png
-, id=74, 578.16pt x 722.7pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesRecruit
-s.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesRecruits
-.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesRecruits.png used on input line 482.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesRecruit
-s.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesRecruits
-.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesRecruits.png used on input line 482.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesRecruit
-s.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesRecruits
-.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesRecruits.png used on input line 482.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesRecruit
-s.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FSRSmodelBayesRecruits
-.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/FS
-RSmodelBayesRecruits.png used on input line 482.
-(pdftex.def)             Requested size: 469.75502pt x 587.1923pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/ExploitationRefs34.png, id
-=76, 769.87625pt x 482.80376pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/ExploitationRefs34.pn
-g Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/ExploitationRefs34.png
->
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Ex
-ploitationRefs34.png used on input line 704.
-(pdftex.def)             Requested size: 469.75502pt x 294.59827pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/ExploitationRefs34.pn
-g Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/ExploitationRefs34.png
->
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Ex
-ploitationRefs34.png used on input line 704.
-(pdftex.def)             Requested size: 469.75502pt x 294.59827pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/ExploitationRefs34.pn
-g Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/ExploitationRefs34.png
->
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Ex
-ploitationRefs34.png used on input line 704.
-(pdftex.def)             Requested size: 469.75502pt x 294.59827pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/ExploitationRefs34.pn
-g Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/ExploitationRefs34.png
->
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Ex
-ploitationRefs34.png used on input line 704.
-(pdftex.def)             Requested size: 469.75502pt x 294.59827pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempDataMap.png, id=78, 48
-1.8pt x 481.8pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempDataMap.png Graph
-ic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempDataMap.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Te
-mpDataMap.png used on input line 750.
-(pdftex.def)             Requested size: 469.75502pt x 469.77148pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempDataMap.png Graph
-ic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempDataMap.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Te
-mpDataMap.png used on input line 750.
-(pdftex.def)             Requested size: 469.75502pt x 469.77148pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempDataMap.png Graph
-ic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempDataMap.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Te
-mpDataMap.png used on input line 750.
-(pdftex.def)             Requested size: 469.75502pt x 469.77148pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempDataMap.png Graph
-ic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempDataMap.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Te
-mpDataMap.png used on input line 750.
-(pdftex.def)             Requested size: 469.75502pt x 469.77148pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempModelAnnual.png, id=80
-, 505.89pt x 722.7pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempModelAnnual.png G
-raphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempModelAnnual.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Te
-mpModelAnnual.png used on input line 770.
-(pdftex.def)             Requested size: 469.75502pt x 671.08952pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempModelAnnual.png G
-raphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempModelAnnual.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Te
-mpModelAnnual.png used on input line 770.
-(pdftex.def)             Requested size: 469.75502pt x 671.08952pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempModelAnnual.png G
-raphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempModelAnnual.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Te
-mpModelAnnual.png used on input line 770.
-(pdftex.def)             Requested size: 469.75502pt x 671.08952pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempModelAnnual.png G
-raphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TempModelAnnual.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Te
-mpModelAnnual.png used on input line 770.
-(pdftex.def)             Requested size: 469.75502pt x 671.08952pt.
-
-
-LaTeX Warning: Float too large for page by 58.85951pt on input line 773.
-
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/TaggingMap.pdf, id=82, 505
-.89pt x 505.89pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TaggingMap.pdf Graphi
-c file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TaggingMap.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Ta
-ggingMap.pdf used on input line 778.
-(pdftex.def)             Requested size: 469.75502pt x 469.76265pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TaggingMap.pdf Graphi
-c file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TaggingMap.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Ta
-ggingMap.pdf used on input line 778.
-(pdftex.def)             Requested size: 469.75502pt x 469.76265pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TaggingMap.pdf Graphi
-c file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TaggingMap.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Ta
-ggingMap.pdf used on input line 778.
-(pdftex.def)             Requested size: 469.75502pt x 469.76265pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TaggingMap.pdf Graphi
-c file (type pdf)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/TaggingMap.pdf>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Ta
-ggingMap.pdf used on input line 778.
-(pdftex.def)             Requested size: 469.75502pt x 469.76265pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltProbModel.png, id=84, 
-578.16pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltProbModel.png Gra
-phic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltProbModel.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Mo
-ltProbModel.png used on input line 786.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltProbModel.png Gra
-phic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltProbModel.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Mo
-ltProbModel.png used on input line 786.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltProbModel.png Gra
-phic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltProbModel.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Mo
-ltProbModel.png used on input line 786.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltProbModel.png Gra
-phic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltProbModel.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Mo
-ltProbModel.png used on input line 786.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltIncrModel.png, id=86, 
-578.16pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltIncrModel.png Gra
-phic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltIncrModel.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Mo
-ltIncrModel.png used on input line 794.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltIncrModel.png Gra
-phic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltIncrModel.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Mo
-ltIncrModel.png used on input line 794.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltIncrModel.png Gra
-phic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltIncrModel.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Mo
-ltIncrModel.png used on input line 794.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltIncrModel.png Gra
-phic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/MoltIncrModel.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/Mo
-ltIncrModel.png used on input line 794.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/SoM.png, id=88, 578.16pt x
- 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/SoM.png Graphic file 
-(type png)
- <use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/SoM.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/So
-M.png used on input line 803.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/SoM.png Graphic file 
-(type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/SoM.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/So
-M.png used on input line 803.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/SoM.png Graphic file 
-(type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/SoM.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/So
-M.png used on input line 803.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/SoM.png Graphic file 
-(type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/SoM.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/So
-M.png used on input line 803.
-(pdftex.def)             Requested size: 469.75502pt x 469.75385pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesBase.png, id=
-90, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesBase.png
- Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesBase.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesBase.png used on input line 815.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesBase.png
- Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesBase.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesBase.png used on input line 815.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesBase.png
- Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesBase.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesBase.png used on input line 815.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesBase.png
- Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesBase.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesBase.png used on input line 815.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsBase.png, 
-id=96, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsBase.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsBase.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34removalsBase.png used on input line 816.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesBase.png, i
-d=98, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesBase.p
-ng Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesBase.pn
-g>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34femalesBase.png used on input line 817.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsBase.png, id=
-100, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsBase.png
- Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsBase.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34moltsBase.png used on input line 818.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedBase.png, i
-d=102, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedBase.p
-ng Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedBase.pn
-g>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34berriedBase.png used on input line 819.
-(pdftex.def)             Requested size: 230.18253pt x 152.2566pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsBase.png, id=1
-04, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsBase.png 
-Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsBase.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34eggsBase.png used on input line 820.
-(pdftex.def)             Requested size: 230.18253pt x 152.2566pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesLS90.png, id=
-106, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesLS90.png
- Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesLS90.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesLS90.png used on input line 830.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesLS90.png
- Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesLS90.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesLS90.png used on input line 830.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesLS90.png
- Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesLS90.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesLS90.png used on input line 830.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesLS90.png
- Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesLS90.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesLS90.png used on input line 830.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsLS90.png, 
-id=112, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsLS90.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsLS90.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34removalsLS90.png used on input line 831.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesLS90.png, i
-d=114, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesLS90.p
-ng Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesLS90.pn
-g>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34femalesLS90.png used on input line 832.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsLS90.png, id=
-116, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsLS90.png
- Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsLS90.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34moltsLS90.png used on input line 833.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedLS90.png, i
-d=118, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedLS90.p
-ng Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedLS90.pn
-g>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34berriedLS90.png used on input line 834.
-(pdftex.def)             Requested size: 230.18253pt x 152.2566pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsLS90.png, id=1
-20, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsLS90.png 
-Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsLS90.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34eggsLS90.png used on input line 835.
-(pdftex.def)             Requested size: 230.18253pt x 152.2566pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSS5.png, id=1
-22, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSS5.png 
-Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSS5.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesSS5.png used on input line 847.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSS5.png 
-Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSS5.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesSS5.png used on input line 847.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSS5.png 
-Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSS5.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesSS5.png used on input line 847.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSS5.png 
-Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSS5.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesSS5.png used on input line 847.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsSS5.png, i
-d=128, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsSS5.p
-ng Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsSS5.pn
-g>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34removalsSS5.png used on input line 848.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesSS5.png, id
-=130, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesSS5.pn
-g Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesSS5.png
->
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34femalesSS5.png used on input line 849.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsSS5.png, id=1
-32, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsSS5.png 
-Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsSS5.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34moltsSS5.png used on input line 850.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedSS5.png, id
-=134, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedSS5.pn
-g Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedSS5.png
->
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34berriedSS5.png used on input line 851.
-(pdftex.def)             Requested size: 230.18253pt x 152.2566pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsSS5.png, id=13
-6, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsSS5.png G
-raphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsSS5.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34eggsSS5.png used on input line 852.
-(pdftex.def)             Requested size: 230.18253pt x 152.2566pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSmallWin.png,
- id=138, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSmallWin
-.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSmallWin.
-png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesSmallWin.png used on input line 866.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSmallWin
-.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSmallWin.
-png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesSmallWin.png used on input line 866.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSmallWin
-.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSmallWin.
-png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesSmallWin.png used on input line 866.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSmallWin
-.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesSmallWin.
-png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesSmallWin.png used on input line 866.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsSmallWin.p
-ng, id=144, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsSmall
-Win.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsSmallW
-in.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34removalsSmallWin.png used on input line 867.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesSmallWin.pn
-g, id=146, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesSmallW
-in.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesSmallWi
-n.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34femalesSmallWin.png used on input line 868.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsSmallWin.png,
- id=148, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsSmallWin
-.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsSmallWin.
-png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34moltsSmallWin.png used on input line 869.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedSmallWin.pn
-g, id=150, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedSmallW
-in.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedSmallWi
-n.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34berriedSmallWin.png used on input line 870.
-(pdftex.def)             Requested size: 230.18253pt x 152.2566pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsSmallWin.png, 
-id=152, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsSmallWin.
-png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsSmallWin.p
-ng>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34eggsSmallWin.png used on input line 871.
-(pdftex.def)             Requested size: 230.18253pt x 152.2566pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesMax125.png, i
-d=154, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesMax125.p
-ng Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesMax125.pn
-g>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesMax125.png used on input line 882.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesMax125.p
-ng Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesMax125.pn
-g>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesMax125.png used on input line 882.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesMax125.p
-ng Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesMax125.pn
-g>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesMax125.png used on input line 882.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesMax125.p
-ng Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34malesMax125.pn
-g>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34malesMax125.png used on input line 882.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsMax125.png
-, id=160, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsMax12
-5.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34removalsMax125
-.png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34removalsMax125.png used on input line 883.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesMax125.png,
- id=162, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesMax125
-.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesMax125.
-png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34femalesMax125.png used on input line 884.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsMax125.png, i
-d=164, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsMax125.p
-ng Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34moltsMax125.pn
-g>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34moltsMax125.png used on input line 885.
-(pdftex.def)             Requested size: 230.18253pt x 143.71246pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedMax125.png,
- id=166, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedMax125
-.png Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34berriedMax125.
-png>
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34berriedMax125.png used on input line 886.
-(pdftex.def)             Requested size: 230.18253pt x 152.2566pt.
-
-<~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsMax125.png, id
-=168, 794.97pt x 578.16pt>
-File: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsMax125.pn
-g Graphic file (type png)
-
-<use ~/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsMax125.png
->
-Package pdftex.def Info: ~/bio.data/bio.lobster/figures/LFA3438Framework2019/si
-m/LC34eggsMax125.png used on input line 887.
-(pdftex.def)             Requested size: 230.18253pt x 152.2566pt.
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landings3
+4.pdf, id=46, 578.16pt x 722.7pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Land
+ings34.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landi
+ngs34.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/Landings34.pdf used on input line 90.
+(pdftex.def)             Requested size: 234.8775pt x 293.59615pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landings3
+5.pdf, id=47, 578.16pt x 722.7pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Land
+ings35.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landi
+ngs35.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/Landings35.pdf used on input line 90.
+(pdftex.def)             Requested size: 234.8775pt x 293.59615pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Land
+ings34.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landi
+ngs34.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/Landings34.pdf used on input line 90.
+(pdftex.def)             Requested size: 234.8775pt x 293.59615pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Land
+ings35.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landi
+ngs35.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/Landings35.pdf used on input line 90.
+(pdftex.def)             Requested size: 234.8775pt x 293.59615pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Land
+ings34.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landi
+ngs34.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/Landings34.pdf used on input line 90.
+(pdftex.def)             Requested size: 234.8775pt x 293.59615pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Land
+ings35.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landi
+ngs35.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/Landings35.pdf used on input line 90.
+(pdftex.def)             Requested size: 234.8775pt x 293.59615pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Land
+ings34.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landi
+ngs34.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/Landings34.pdf used on input line 90.
+(pdftex.def)             Requested size: 234.8775pt x 293.59615pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Land
+ings35.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landi
+ngs35.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/Landings35.pdf used on input line 90.
+(pdftex.def)             Requested size: 234.8775pt x 293.59615pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landings3
+6.pdf, id=49, 578.16pt x 722.7pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Land
+ings36.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landi
+ngs36.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/Landings36.pdf used on input line 91.
+(pdftex.def)             Requested size: 234.8775pt x 293.59615pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landings3
+8.pdf, id=50, 578.16pt x 722.7pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Land
+ings38.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/Landi
+ngs38.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/Vic/Landings38.pdf used on input line 92.
+(pdftex.def)             Requested size: 234.8775pt x 293.59615pt.
+
+
+LaTeX Warning: Float too large for page by 9.56229pt on input line 95.
+
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34-38DF
+OSummerSurvey.png, id=51, 673.51625pt x 675.52374pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34
+-38DFOSummerSurvey.png Graphic file (type png)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34-
+38DFOSummerSurvey.png>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMap34-38DFOSummerSurvey.png used on input line 102.
+(pdftex.def)             Requested size: 469.75502pt x 471.16263pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34
+-38DFOSummerSurvey.png Graphic file (type png)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34-
+38DFOSummerSurvey.png>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMap34-38DFOSummerSurvey.png used on input line 102.
+(pdftex.def)             Requested size: 469.75502pt x 471.16263pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34
+-38DFOSummerSurvey.png Graphic file (type png)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34-
+38DFOSummerSurvey.png>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMap34-38DFOSummerSurvey.png used on input line 102.
+(pdftex.def)             Requested size: 469.75502pt x 471.16263pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34
+-38DFOSummerSurvey.png Graphic file (type png)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34-
+38DFOSummerSurvey.png>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMap34-38DFOSummerSurvey.png used on input line 102.
+(pdftex.def)             Requested size: 469.75502pt x 471.16263pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+DFOSummer.1970.1980.pdf, id=53, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1970.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1970.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1970.1980.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+DFOSummer.1981.1990.pdf, id=55, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1981.1990.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+DFOSummer.1991.1998.pdf, id=57, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1991.1998.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1970.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1970.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1970.1980.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1981.1990.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1991.1998.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1970.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1970.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1970.1980.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1981.1990.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1991.1998.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1970.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1970.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1970.1980.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1981.1990.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1991.1998.pdf used on input line 113.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+Overfull \hbox (51.66614pt too wide) in paragraph at lines 113--113
+ [][][][][][] 
+ []
+
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+DFOSummer.1999.2009.pdf, id=69, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.1999.2009.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.1999.2009.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1999.2009.pdf used on input line 114.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+DFOSummer.2010.2018.pdf, id=71, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesDFOSummer.2010.2018.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesDFOSummer.2010.2018.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.2010.2018.pdf used on input line 115.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
 pdfTeX warning (ext4): destination with the same identifier (name{page.}) has b
 een already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.892     \clearpage
-                     [2 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fram
-ework2019/FisheryFootprint2011.pdf> </home/hubleyb/bio.data/bio.lobster/figures
-/LFA3438Framework2019/FisheryFootprint2012.pdf> </home/hubleyb/bio.data/bio.lob
-ster/figures/LFA3438Framework2019/FisheryFootprint2013.pdf> </home/hubleyb/bio.
-data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2014.pdf> </home/
-hubleyb/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFootprint2015.
-pdf> </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Framework2019/FisheryFo
-otprint2016.pdf>]pdfTeX warning (ext4): destination with the same identifier (n
-ame{page.}) has been already used, duplicate ignored
+l.119         \clearpage
+                         [2 </SpinDr/backup/bio_data/bio.lobster/figures/LFA343
+8Framework2019/Vic/FFCPUE2014.pdf> </SpinDr/backup/bio_data/bio.lobster/figures
+/LFA3438Framework2019/Vic/FFCPUE2015.pdf> </SpinDr/backup/bio_data/bio.lobster/
+figures/LFA3438Framework2019/Vic/FFCPUE2016.pdf> </SpinDr/backup/bio_data/bio.l
+obster/figures/LFA3438Framework2019/Vic/FFCPUE2017.pdf> </SpinDr/backup/bio_dat
+a/bio.lobster/figures/LFA3438Framework2019/Vic/FFCPUE2018.pdf>]pdfTeX warning (
+ext4): destination with the same identifier (name{page.}) has been already used
+, duplicate ignored
 <to be read again> 
                    \relax 
-l.892     \clearpage
-                     [3 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fram
-ework2019/FishFootcpue2011.pdf> </home/hubleyb/bio.data/bio.lobster/figures/LFA
-3438Framework2019/FishFootcpue2012.pdf> </home/hubleyb/bio.data/bio.lobster/fig
-ures/LFA3438Framework2019/FishFootcpue2013.pdf> </home/hubleyb/bio.data/bio.lob
-ster/figures/LFA3438Framework2019/FishFootcpue2014.pdf> </home/hubleyb/bio.data
-/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2015.pdf> </home/hubleyb/
-bio.data/bio.lobster/figures/LFA3438Framework2019/FishFootcpue2016.pdf>]pdfTeX 
-warning (ext4): destination with the same identifier (name{page.}) has been alr
-eady used, duplicate ignored
+l.119         \clearpage
+                         [3 </SpinDr/backup/bio_data/bio.lobster/figures/LFA343
+8Framework2019/Vic/FFPotsHaul2014.pdf> </SpinDr/backup/bio_data/bio.lobster/fig
+ures/LFA3438Framework2019/Vic/FFPotsHaul2015.pdf> </SpinDr/backup/bio_data/bio.
+lobster/figures/LFA3438Framework2019/Vic/FFPotsHaul2016.pdf> </SpinDr/backup/bi
+o_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPotsHaul2017.pdf> </SpinD
+r/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/Vic/FFPotsHaul2018.p
+df>]pdfTeX warning (ext4): destination with the same identifier (name{page.}) h
+as been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.892     \clearpage
-                     [4 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fram
-ework2019/CLFSeaSampling34a.pdf>]pdfTeX warning (ext4): destination with the sa
-me identifier (name{page.}) has been already used, duplicate ignored
+l.119         \clearpage
+                         [4 </SpinDr/backup/bio_data/bio.lobster/figures/LFA343
+8Framework2019/Vic/Landings34.pdf> </SpinDr/backup/bio_data/bio.lobster/figures
+/LFA3438Framework2019/Vic/Landings35.pdf> </SpinDr/backup/bio_data/bio.lobster/
+figures/LFA3438Framework2019/Vic/Landings36.pdf> </SpinDr/backup/bio_data/bio.l
+obster/figures/LFA3438Framework2019/Vic/Landings38.pdf>]pdfTeX warning (ext4): 
+destination with the same identifier (name{page.}) has been already used, dupli
+cate ignored
 <to be read again> 
                    \relax 
-l.892     \clearpage
-                     [5 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fram
-ework2019/CLFSeaSampling34b.pdf>]pdfTeX warning (ext4): destination with the sa
-me identifier (name{page.}) has been already used, duplicate ignored
+l.119         \clearpage
+                         [5 </SpinDr/backup/bio_data/bio.lobster/figures/LFA343
+8Framework2019/LFAMap34-38DFOSummerSurvey.png>]pdfTeX warning (ext4): destinati
+on with the same identifier (name{page.}) has been already used, duplicate igno
+red
 <to be read again> 
                    \relax 
-l.892     \clearpage
-                     [6 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fram
-ework2019/CLFSeaSampling35a.pdf>]pdfTeX warning (ext4): destination with the sa
-me identifier (name{page.}) has been already used, duplicate ignored
+l.119         \clearpage
+                         [6 </SpinDr/backup/bio_data/bio.lobster/figures/LFA343
+8Framework2019/surveyBubblesDFOSummer.1970.1980.pdf> </SpinDr/backup/bio_data/b
+io.lobster/figures/LFA3438Framework2019/surveyBubblesDFOSummer.1981.1990.pdf> <
+/SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubblesD
+FOSummer.1991.1998.pdf> </SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesDFOSummer.1999.2009.pdf> </SpinDr/backup/bio_data/bio.l
+obster/figures/LFA3438Framework2019/surveyBubblesDFOSummer.2010.2018.pdf>]
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34-38Am
+ericanSurvey.png, id=314, 673.51625pt x 675.52374pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34
+-38AmericanSurvey.png Graphic file (type png)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34-
+38AmericanSurvey.png>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMap34-38AmericanSurvey.png used on input line 124.
+(pdftex.def)             Requested size: 469.75502pt x 471.16263pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34
+-38AmericanSurvey.png Graphic file (type png)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34-
+38AmericanSurvey.png>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMap34-38AmericanSurvey.png used on input line 124.
+(pdftex.def)             Requested size: 469.75502pt x 471.16263pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34
+-38AmericanSurvey.png Graphic file (type png)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34-
+38AmericanSurvey.png>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMap34-38AmericanSurvey.png used on input line 124.
+(pdftex.def)             Requested size: 469.75502pt x 471.16263pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34
+-38AmericanSurvey.png Graphic file (type png)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/LFAMap34-
+38AmericanSurvey.png>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/LFAMap34-38AmericanSurvey.png used on input line 124.
+(pdftex.def)             Requested size: 469.75502pt x 471.16263pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+NEFSCSpring.1969.1980.pdf, id=316, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1969.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1969.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1969.1980.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+NEFSCSpring.1981.1990.pdf, id=318, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1981.1990.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+NEFSCSpring.1991.1998.pdf, id=320, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1991.1998.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1969.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1969.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1969.1980.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1981.1990.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1991.1998.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1969.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1969.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1969.1980.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1981.1990.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1991.1998.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1969.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1969.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1969.1980.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1981.1990.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1991.1998.pdf used on input line 135.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+Overfull \hbox (51.66614pt too wide) in paragraph at lines 135--135
+ [][][][][][] 
+ []
+
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+NEFSCSpring.1999.2009.pdf, id=332, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.1999.2009.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.1999.2009.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.1999.2009.pdf used on input line 136.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+NEFSCSpring.2010.2018.pdf, id=334, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCSpring.2010.2018.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCSpring.2010.2018.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCSpring.2010.2018.pdf used on input line 137.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+pdfTeX warning (ext4): destination with the same identifier (name{page.}) has b
+een already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.892     \clearpage
-                     [7 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fram
-ework2019/CLFSeaSampling35b.pdf>]pdfTeX warning (ext4): destination with the sa
-me identifier (name{page.}) has been already used, duplicate ignored
+l.141         \clearpage
+                         [7 </SpinDr/backup/bio_data/bio.lobster/figures/LFA343
+8Framework2019/LFAMap34-38AmericanSurvey.png>]pdfTeX warning (ext4): destinatio
+n with the same identifier (name{page.}) has been already used, duplicate ignor
+ed
 <to be read again> 
                    \relax 
-l.892     \clearpage
-                     [8 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fram
-ework2019/CLFSeaSampling36a.pdf>]pdfTeX warning (ext4): destination with the sa
-me identifier (name{page.}) has been already used, duplicate ignored
+l.141         \clearpage
+                         [8 </SpinDr/backup/bio_data/bio.lobster/figures/LFA343
+8Framework2019/surveyBubblesNEFSCSpring.1969.1980.pdf> </SpinDr/backup/bio_data
+/bio.lobster/figures/LFA3438Framework2019/surveyBubblesNEFSCSpring.1981.1990.pd
+f> </SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubb
+lesNEFSCSpring.1991.1998.pdf> </SpinDr/backup/bio_data/bio.lobster/figures/LFA3
+438Framework2019/surveyBubblesNEFSCSpring.1999.2009.pdf> </SpinDr/backup/bio_da
+ta/bio.lobster/figures/LFA3438Framework2019/surveyBubblesNEFSCSpring.2010.2018.
+pdf>]
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+NEFSCFall.1969.1980.pdf, id=410, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1969.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1969.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1969.1980.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+NEFSCFall.1981.1990.pdf, id=412, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1981.1990.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+NEFSCFall.1991.1998.pdf, id=414, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1991.1998.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1969.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1969.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1969.1980.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1981.1990.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1991.1998.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1969.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1969.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1969.1980.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1981.1990.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1991.1998.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1969.1980.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1969.1980.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1969.1980.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1981.1990.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1981.1990.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1981.1990.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1991.1998.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1991.1998.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1991.1998.pdf used on input line 150.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+Overfull \hbox (51.66614pt too wide) in paragraph at lines 150--150
+ [][][][][][] 
+ []
+
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+NEFSCFall.1999.2009.pdf, id=426, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.1999.2009.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.1999.2009.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1999.2009.pdf used on input line 151.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+
+</SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubbles
+NEFSCFall.2010.2018.pdf, id=428, 505.89pt x 505.89pt>
+File: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBu
+bblesNEFSCFall.2010.2018.pdf Graphic file (type pdf)
+
+<use /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBub
+blesNEFSCFall.2010.2018.pdf>
+Package pdftex.def Info: /SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.2010.2018.pdf used on input line 152.
+(pdftex.def)             Requested size: 173.80705pt x 135.0256pt.
+pdfTeX warning (ext4): destination with the same identifier (name{page.}) has b
+een already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.892     \clearpage
-                     [9 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fram
-ework2019/CLFSeaSampling38a.pdf>]pdfTeX warning (ext4): destination with the sa
-me identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [10 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/CLFfsrs34.pdf>]pdfTeX warning (ext4): destination with the same iden
-tifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [11 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/CLFfsrs35.pdf>]pdfTeX warning (ext4): destination with the same iden
-tifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [12 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/CPUEmodel1.png (PNG copy)>]pdfTeX warning (ext4): destination with t
-he same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [13 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/CPUE.pdf>]pdfTeX warning (ext4): destination with the same identifie
-r (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [14 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/FSRSmodelBayesShorts.png>]pdfTeX warning (ext4): destination with th
-e same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [15 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/FSRSmodelBayesLegals.png>]pdfTeX warning (ext4): destination with th
-e same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [16 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/FSRSmodelBayesRecruits.png>]pdfTeX warning (ext4): destination with 
-the same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [17 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/ExploitationRefs34.png>]pdfTeX warning (ext4): destination with the 
-same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [18 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/TempDataMap.png (PNG copy)>]pdfTeX warning (ext4): destination with 
-the same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [19 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/TempModelAnnual.png (PNG copy)>]pdfTeX warning (ext4): destination w
-ith the same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [20 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/TaggingMap.pdf>]pdfTeX warning (ext4): destination with the same ide
-ntifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [21 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/MoltProbModel.png (PNG copy)>]pdfTeX warning (ext4): destination wit
-h the same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [22 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/MoltIncrModel.png (PNG copy)>]pdfTeX warning (ext4): destination wit
-h the same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [23 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/SoM.png (PNG copy)>]pdfTeX warning (ext4): destination with the same
- identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [24 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/sim/LC34malesBase.png (PNG copy)> </home/hubleyb/bio.data/bio.lobste
-r/figures/LFA3438Framework2019/sim/LC34removalsBase.png (PNG copy)> </home/hubl
-eyb/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesBase.png (
-PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Framework2019/sim
-/LC34moltsBase.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA3
-438Framework2019/sim/LC34berriedBase.png (PNG copy)> </home/hubleyb/bio.data/bi
-o.lobster/figures/LFA3438Framework2019/sim/LC34eggsBase.png (PNG copy)>]pdfTeX 
-warning (ext4): destination with the same identifier (name{page.}) has been alr
-eady used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [25 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/sim/LC34malesLS90.png (PNG copy)> </home/hubleyb/bio.data/bio.lobste
-r/figures/LFA3438Framework2019/sim/LC34removalsLS90.png (PNG copy)> </home/hubl
-eyb/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesLS90.png (
-PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Framework2019/sim
-/LC34moltsLS90.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA3
-438Framework2019/sim/LC34berriedLS90.png (PNG copy)> </home/hubleyb/bio.data/bi
-o.lobster/figures/LFA3438Framework2019/sim/LC34eggsLS90.png (PNG copy)>]pdfTeX 
-warning (ext4): destination with the same identifier (name{page.}) has been alr
-eady used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [26 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/sim/LC34malesSS5.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster
-/figures/LFA3438Framework2019/sim/LC34removalsSS5.png (PNG copy)> </home/hubley
-b/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesSS5.png (PNG
- copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC
-34moltsSS5.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA3438F
-ramework2019/sim/LC34berriedSS5.png (PNG copy)> </home/hubleyb/bio.data/bio.lob
-ster/figures/LFA3438Framework2019/sim/LC34eggsSS5.png (PNG copy)>]pdfTeX warnin
-g (ext4): destination with the same identifier (name{page.}) has been already u
-sed, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [27 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/sim/LC34malesSmallWin.png (PNG copy)> </home/hubleyb/bio.data/bio.lo
-bster/figures/LFA3438Framework2019/sim/LC34removalsSmallWin.png (PNG copy)> </h
-ome/hubleyb/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesSm
-allWin.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Frame
-work2019/sim/LC34moltsSmallWin.png (PNG copy)> </home/hubleyb/bio.data/bio.lobs
-ter/figures/LFA3438Framework2019/sim/LC34berriedSmallWin.png (PNG copy)> </home
-/hubleyb/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsSmallWin
-.png (PNG copy)>]pdfTeX warning (ext4): destination with the same identifier (n
-ame{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.892     \clearpage
-                     [28 </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Fra
-mework2019/sim/LC34malesMax125.png (PNG copy)> </home/hubleyb/bio.data/bio.lobs
-ter/figures/LFA3438Framework2019/sim/LC34removalsMax125.png (PNG copy)> </home/
-hubleyb/bio.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34femalesMax125
-.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figures/LFA3438Framework20
-19/sim/LC34moltsMax125.png (PNG copy)> </home/hubleyb/bio.data/bio.lobster/figu
-res/LFA3438Framework2019/sim/LC34berriedMax125.png (PNG copy)> </home/hubleyb/b
-io.data/bio.lobster/figures/LFA3438Framework2019/sim/LC34eggsMax125.png (PNG co
-py)>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 909.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 909.
- (./MainDocLFA3438figures.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 909.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 909.
+l.156         \clearpage
+                         [9 </SpinDr/backup/bio_data/bio.lobster/figures/LFA343
+8Framework2019/surveyBubblesNEFSCFall.1969.1980.pdf> </SpinDr/backup/bio_data/b
+io.lobster/figures/LFA3438Framework2019/surveyBubblesNEFSCFall.1981.1990.pdf> <
+/SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/surveyBubblesN
+EFSCFall.1991.1998.pdf> </SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Fra
+mework2019/surveyBubblesNEFSCFall.1999.2009.pdf> </SpinDr/backup/bio_data/bio.l
+obster/figures/LFA3438Framework2019/surveyBubblesNEFSCFall.2010.2018.pdf>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 158.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 158.
+
+(./MainDocLFA3438figures.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 158.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 158.
 Package rerunfilecheck Info: File `MainDocLFA3438figures.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 16650 strings out of 494945
- 291020 string characters out of 6181032
- 369211 words of memory out of 5000000
- 19646 multiletter control sequences out of 15000+600000
- 7366 words of font info for 27 fonts, out of 8000000 for 9000
- 14 hyphenation exceptions out of 8191
- 44i,8n,77p,1025b,524s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on MainDocLFA3438figures.pdf (28 pages, 13130810 bytes).
+ 16432 strings out of 493013
+ 282491 string characters out of 6135682
+ 355297 words of memory out of 5000000
+ 19751 multiletter control sequences out of 15000+600000
+ 4253 words of font info for 16 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 44i,8n,77p,1025b,522s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+Output written on MainDocLFA3438figures.pdf (9 pages, 10192006 bytes).
 PDF statistics:
- 600 PDF objects out of 1000 (max. 8388607)
- 404 compressed objects within 5 object streams
- 71 named destinations out of 1000 (max. 500000)
- 730 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 517 PDF objects out of 1000 (max. 8388607)
+ 376 compressed objects within 4 object streams
+ 39 named destinations out of 1000 (max. 500000)
+ 545 words of extra memory for PDF output out of 10000 (max. 10000000)
 

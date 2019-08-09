@@ -87,8 +87,16 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         cas =  nefsc.db(DS='uscat.clean')
         stra = nefsc.db(DS='usstrata.area')
         de =   nefsc.db(DS='usdet.clean')
+        set$EID = 1:nrow(set)
+            a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
+                          l = attributes(a)$PolyData[,c('PID','STRATA')]
+                          a = merge(a,l,by='PID',all.x=T)
 
-
+            sett = findPolys(set,a)
+            sett = merge(sett,l,by='PID')
+            set = merge(set,sett,by='EID')
+            set$STRATUM = set$STRATA
+            set$STRATA = set$PID = set$SID = set$Bdry = set$EID = NULL
         # all catches have been converted to bigelow equivalents and therefore do not need any further towed distance calculations, the DISTCORRECTION is a standardized distance against the mean of the towed distance for that gear and is therefore the correction for towed distance to be used
         #US nautical mile is 6080.2ft bigelow is 42.6'
         #tow dist is 1nm for bigelow
@@ -131,10 +139,10 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                         ppp = as.numeric(strsplit(p$area,"LFA")[[c(1,2)]])
                   if(p$area =='LFA35-38') ppp = c(35,36,38)
                         lll = subset(LFAs,PID %in% ppp)
-                        l = subset(LFAs,SID==1)
+                        l = subset(lll,SID==1)
                         attr(l,'projection') <- "LL"
                       }
-                    
+              
                             set$EID = 1:nrow(set)
                             a = findPolys(set,l)
                             iz = which(set$EID %in% a$EID)
@@ -148,6 +156,9 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                     }
                 iy = intersect(intersect(ix,iy),iz)
                 se = set[iy,]
+                if(nrow(se)<1) {out[mp,1] <- yr 
+                              next()
+                            }
                 se$EID = 1:nrow(se)
                 ca = cas #cas[iv,] see above
                 se$z = se$AVGDEPTH
@@ -157,9 +168,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
                 se$slat = se$Y
         if(nrow(se)>1){
                 p$lb = p$length.based
-
                 if(p$by.sex & !p$length.based) {p$size.class=c(0,1000); p$length.based=T}
-
                 if(!p$lb) { vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO')#,'SIZE_CLASS')
                             ca = ca[,vars.2.keep]
                         }
