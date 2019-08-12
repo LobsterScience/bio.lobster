@@ -8,7 +8,8 @@ require(MARSS)
 cR = read.csv('~/tmp/recruitAbund.csv')
 names(cR) = c('YR','NSpr','NFal','ILTS','DFO','FSRS','SPA3','SFA29','Landings')
 cR = subset(cR,YR>1995)
-xx = sample(2:9,8)
+cR$Landings <- NULL
+xx = sample(2:8,7)
 cR = t(log(cR[,xx]+0.01))
 
 cRR = zscore(as.matrix(cR))
@@ -25,62 +26,63 @@ nT = ncol(cRR)
 
 #seven time series three trends
 #z12, z13 and z23 need to be set to 0 for identifiability
+example=F
+if(example){
+							Z.vals = list(
+							"z11", 0 , 0 ,
+							"z21","z22", 0 ,
+							"z31","z32","z33",
+							"z41","z42","z43",#"z44",
+							"z51","z52","z53",#"z54","z55",
+							"z61","z62","z63",#"z64","z65","z66",
+							"z71","z72","z73",#"z74","z75","z76","z77")
+							"z81","z82","z83")
 
-Z.vals = list(
-"z11", 0 , 0 ,
-"z21","z22", 0 ,
-"z31","z32","z33",
-"z41","z42","z43",#"z44",
-"z51","z52","z53",#"z54","z55",
-"z61","z62","z63",#"z64","z65","z66",
-"z71","z72","z73",#"z74","z75","z76","z77")
-"z81","z82","z83")
+							Z = matrix(Z.vals, nrow=N.ts, ncol=3, byrow=TRUE)
 
-Z = matrix(Z.vals, nrow=N.ts, ncol=3, byrow=TRUE)
+							#
+							Q = B = diag(1,3)
 
-#
-Q = B = diag(1,3)
+							#indep var no covar
+							R.vals = list(
+							"r11",0,0,0,0,0,0,0,
+							0,"r22",0,0,0,0,0,0,
+							0,0,"r33",0,0,0,0,0,
+							0,0,0,"r44",0,0,0,0,
+							0,0,0,0,"r55",0,0,0,
+							0,0,0,0,0,"r66",0,0,
+							0,0,0,0,0,0,"r77",0,
+							0,0,0,0,0,0,0,"r88"
+							)
 
-#indep var no covar
-R.vals = list(
-"r11",0,0,0,0,0,0,0,
-0,"r22",0,0,0,0,0,0,
-0,0,"r33",0,0,0,0,0,
-0,0,0,"r44",0,0,0,0,
-0,0,0,0,"r55",0,0,0,
-0,0,0,0,0,"r66",0,0,
-0,0,0,0,0,0,"r77",0,
-0,0,0,0,0,0,0,"r88"
-)
+							R = matrix(R.vals, nrow=N.ts, ncol=N.ts, byrow=TRUE)
+							x0 = U = A = "zero"
+							V0 = diag(5,3)
 
-R = matrix(R.vals, nrow=N.ts, ncol=N.ts, byrow=TRUE)
-x0 = U = A = "zero"
-V0 = diag(5,3)
+							dfa.model = list(Z=Z, A="zero", R=R, B=B, U=U, Q=Q, x0=x0, V0=V0)
+							cntl.list = list(maxit=5000)
+							fit1 = MARSS(cRR, model=dfa.model, control=cntl.list)
 
-dfa.model = list(Z=Z, A="zero", R=R, B=B, U=U, Q=Q, x0=x0, V0=V0)
-cntl.list = list(maxit=5000)
-fit1 = MARSS(cRR, model=dfa.model, control=cntl.list)
-
-par(mfcol=c(3,3), mar=c(3,4,1.5,0.5), oma=c(0.4,1,1,1))
-for(i in 1:length(spp)){
-        plot(cRR[i,],xlab="",ylab="abundance index",bty="L", xaxt="n", ylim=c(-4,3), pch=16, col="blue")
-        par.mat=coef(fit1,type="matrix")
-        lines(as.vector(par.mat$Z[i,,drop=FALSE]%*%fit1$states+par.mat$A[i,]), lwd=2)
-        title(spp[i])
-        }
-
+							par(mfcol=c(3,3), mar=c(3,4,1.5,0.5), oma=c(0.4,1,1,1))
+							for(i in 1:length(spp)){
+							        plot(cRR[i,],xlab="",ylab="abundance index",bty="L", xaxt="n", ylim=c(-4,3), pch=16, col="blue")
+							        par.mat=coef(fit1,type="matrix")
+							        lines(as.vector(par.mat$Z[i,,drop=FALSE]%*%fit1$states+par.mat$A[i,]), lwd=2)
+							        title(spp[i])
+							        }
+}
 ##many model comparisons
 
 cntl.list = list(minit=200, maxit=5000, allow.degen=FALSE)
 
 # set up forms of R matrices
 levels.R = c("diagonal and equal","diagonal and unequal","equalvarcov","unconstrained")
-levels.Q = c("diagonal and equal","diagonal and unequal","equalvarcov","unconstrained")
+levels.Q = c("diagonal and equal","diagonal and unequal")
 model.data = data.frame()
 	for(R in levels.R) {
 		for(Q in levels.Q){
 		for(m in 1:(N.ts-1)) {
-				dfa.model = list(A="zero", R=R, m=m)
+				dfa.model = list(A="zero", R=R,Q=Q, m=m)
 				ff = MARSS(cRR, model=dfa.model, control=cntl.list,
 						form="dfa", z.score=TRUE)
 		
@@ -90,12 +92,12 @@ model.data = data.frame()
 		} # end m loop
 	} # end Q loop
 } # end R loop
-#best model is diag and unequal with two or three trends
+#best model is diag and unequal R and Q with three trends
 write.csv(model.data,'~/tmp/model.data.csv')
 
 
 big.maxit.cntl.list = list(minit=200, maxit=30000, allow.degen=FALSE)
-model.list = list(m=3, R="diagonal and unequal")
+model.list = list(m=2, R="diagonal and unequal",Q = "diagonal and unequal")
 the.fit = MARSS(cRR, model=model.list, form="dfa", control=big.maxit.cntl.list)
 
 # get the inverse of the rotation matrix
@@ -112,7 +114,7 @@ Z.rot = Z.est %*% H.inv
 # rotate trends
 trends.rot = solve(H.inv) %*% the.fit$states
 tt = 1996:2017
-mm=3
+mm=2
 
 
 #plot states and loadings
@@ -131,7 +133,7 @@ for(i in 1:mm) {
     ## plot trend line
     lines(tt,trends.rot[i,], lwd=2)
     ## add panel labels
-    mtext(paste("State",i), side=3, line=0.5)
+    mtext(paste("Trend",i), side=3, line=0.5)
     axis(1,tt)
 }
 ## plot the loadings
@@ -145,10 +147,11 @@ for(i in 1:mm) {
       if(Z.rot[j,i] < -minZ) {text(j, 0.03, ylbl[j], srt=90, adj=0, cex=1.2, col=clr[j])}
       abline(h=0, lwd=1.5, col="gray")
       } 
-  mtext(paste("Factor loadings on state",i),side=3,line=0.5)
+  mtext(paste("Factor loadings on trend",i),side=3,line=0.5)
 }
 
-
+fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019")
+savePlot(file.path(fpf1,'LFA34RecruitDFAStates.png'))
 
 #model fits
 getDFAfits <- function(MLEobj, alpha=0.05, covariates=NULL) {
@@ -176,6 +179,7 @@ getDFAfits <- function(MLEobj, alpha=0.05, covariates=NULL) {
     VV <- cbind(VV,diag(RZVZ + SS%*%t(ZZ) + ZZ%*%t(SS)))
   }
   SE <- sqrt(VV)
+ 
   ## upper & lower (1-alpha)% CI
   fits$up <- qnorm(1-alpha/2)*SE + fits$ex
   fits$lo <- qnorm(alpha/2)*SE + fits$ex
@@ -206,23 +210,34 @@ require(broom)
 require(ggplot2)
 theme_set(theme_bw())
 d <- augment(the.fit, interval="confidence")
-d$t = rep(1996:2017,times=8)
-ggplot(data = d) +
+d$t = rep(1996:2017,times=7)
+d1 = subset(d,.rownames %in% c ("SFA29","NFal","NSpr","SPA3"))
+p1 = ggplot(data = d1) +
 geom_line(aes(t, .fitted)) +
 geom_point(aes(t, y)) +
 geom_ribbon(aes(x=t, ymin=.conf.low, ymax=.conf.up), linetype=2, alpha=0.2) +
 facet_grid(~.rownames) +
-xlab("Year") + ylab("Z-Score(log(Abundance))")
+xlab("Year") + ylab("Standardized Abundance")
 
-
+d2 = subset(d,.rownames %in% c ("ILTS","DFO","FSRS","Landings"))
+p2 = ggplot(data = d2) +
+geom_line(aes(t, .fitted)) +
+geom_point(aes(t, y)) +
+geom_ribbon(aes(x=t, ymin=.conf.low, ymax=.conf.up), linetype=2, alpha=0.2) +
+facet_grid(~.rownames) +
+xlab("Year") + ylab("Standardized Abundance")
+require(ggpubr)
+ggarrange(p1,p2,ncol=1,nrow=2)
+savePlot(file.path(fpf1,'FitsDFALFA34.png'))
 ##
 ##
 ##
 cR = read.csv('~/tmp/recruitAbund.csv')
-cR = subset(cR,select=c(YR, ILTs, landings))
+cR = subset(cR,select=c(YR, landings))
 
 cR = subset(cR,YR>1995)
-cR = t(zscore(t(cR[,2:3])))
+cR = (zscore(t(cR[,2])))
 
-aa = cbind(apply(embed(cR[,1],2),1,diff),apply(embed(cR[,2],2),1,diff))
+cor.test(cR[1,],trends.rot[1,])##-0.004
+cor.test(cR[1,],trends.rot[2,])##0.886 p <<0.001
 
