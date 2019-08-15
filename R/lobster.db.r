@@ -72,7 +72,7 @@ if(DS %in% c('historic.cpue.redo', 'historic.cpue')){
                 return(hcpue)
           }
                    con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  hcpue = sqlQuery(con,"select a.port, sdate, to_char(sdate,'yyyy') year, lfa, portname, lbsptrap from histcatch a, port b where 
+                  hcpue = sqlQuery(con,"select a.port, sdate, to_char(sdate,'yyyy') year, lfa, portname, lbsptrap from lobster.histcatch a, lobster.port b where 
 a.port = b.port;")
                   save(hcpue,file=file.path(fnODBC,'historic.cpue.rdata'))       
           }
