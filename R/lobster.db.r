@@ -79,7 +79,7 @@ a.port = b.port;")
 
 
 if(DS %in% c('historic.landings.redo', 'historic.landings')){
-      if(DS == 'historic.cpue') {
+      if(DS == 'historic.landings') {
                   load(file=file.path(fnODBC,'historic.landings.rdata'))
                 return(hland)
           }
