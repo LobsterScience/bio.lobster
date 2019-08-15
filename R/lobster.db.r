@@ -84,7 +84,7 @@ if(DS %in% c('historic.landings.redo', 'historic.landings')){
                 return(hland)
           }
                    con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  hcpue = sqlQuery(con,"select * from lobster.historical_county_land ;")
+                  hland = sqlQuery(con,"select * from lobster.historical_county_land ;")
                   save(hland,file=file.path(fnODBC,'historic.landings.rdata'))       
           }
 
