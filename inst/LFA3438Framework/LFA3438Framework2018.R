@@ -699,7 +699,7 @@ logsInSeason=lobster.db("process.logs")
 ########### CCIR
 
 		load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
-<<<<<<< HEAD
+
 
 		lobster.db('ccir.redo') 
 		ccir_data = subset(ccir_data,YEAR<2019)
@@ -737,7 +737,7 @@ logsInSeason=lobster.db("process.logs")
 
 		load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
-=======
+
 
 		lobster.db('ccir.redo') 
 		ccir_data = subset(ccir_data,YEAR<2019)
@@ -782,8 +782,7 @@ logsInSeason=lobster.db("process.logs")
 
 		load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = groups3435[1], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
->>>>>>> master
-		
+
 		out.binomial = list()
 		attr(out.binomial,'model') <- 'binomial'
 		for(i in 1:length(dat)) {
@@ -794,7 +793,6 @@ logsInSeason=lobster.db("process.logs")
 		}
 		ouBin = ccir_collapse_summary(out.binomial)
 		attr(ouBin,'model') <- 'binomial' 
-<<<<<<< HEAD
 		#ouBin$Yr = ouBin$Yr +1
 		save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
 		#load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
@@ -831,14 +829,13 @@ logsInSeason=lobster.db("process.logs")
 		save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
 		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
 		RR75  = aggregate(ERf75~LFA,data=oo[oo$Yr<2017,],FUN=max)
-=======
+
 		ouBin = subset(ouBin,Yr<2018&LFA==34,-2)
 		save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels34.rdata'))
 		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels34.rdata'))
 
 		oo <- ccir_timeseries_exploitation_plots(ouBin,Main="34")
 		
->>>>>>> master
 
 		save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR34.rdata'))
 		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))

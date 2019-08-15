@@ -125,7 +125,7 @@ if(survey=='DFO'){
       p$define.by.polygons = T
       p$lobster.subunits=F
       p$area = lfa
-      p$years.to.estimate = c(2005)
+      p$years.to.estimate = c(1970:2018)
       p$length.based = F
       p$by.sex = F
       p$bootstrapped.ci=T

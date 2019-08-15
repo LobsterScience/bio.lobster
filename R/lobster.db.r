@@ -77,6 +77,19 @@ a.port = b.port;")
                   save(hcpue,file=file.path(fnODBC,'historic.cpue.rdata'))       
           }
 
+
+if(DS %in% c('historic.landings.redo', 'historic.landings')){
+      if(DS == 'historic.cpue') {
+                  load(file=file.path(fnODBC,'historic.landings.rdata'))
+                return(hland)
+          }
+                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  hcpue = sqlQuery(con,"select * from lobster.historical_county_land ;")
+                  save(hland,file=file.path(fnODBC,'historic.landings.rdata'))       
+          }
+
+
+
 if(DS %in% c('landings.by.port.redo','landings.by.port')) {
 
   if(DS == 'landings.by.port.redo') {
