@@ -7,7 +7,7 @@ require(bio.lobster)
 require(bio.groundfish)
 p = bio.lobster::load.environment()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"analysis","LFA34-38")
+fp = file.path(project.datadirectory('bio.lobster'),"figures","LFA3438Framework2019")
 dir.create(fp,showWarnings=F)
 la()
 load_all('~/git/bio.survey/')
@@ -20,7 +20,7 @@ load_all('~/git/bio.survey/')
 	attr(LFA34,'projection') <- 'LL'
 
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:2015)
+      p$years.to.estimate = c(1969:2018)
       p$length.based = T
       p$size.class = c(50,300)
       p$by.sex = F
@@ -39,7 +39,7 @@ load_all('~/git/bio.survey/')
 
 	aa = do.call(rbind,lapply(aout,function(X) X[[2]])) #return just the strata data
 	aa$yr = aa$GMT_YEAR
-	YG = 5 # year grouping
+	YG = 10 # year grouping
 	y = unique(aa$yr)
 	yL = y[length(y)] #last year
 	yLL = length(y)-1
@@ -49,6 +49,14 @@ load_all('~/git/bio.survey/')
 	
 	yLw = c(rep(1,yLm),rep(1:yLr,each = YG),yLr+1)
 	grps = data.frame(yr = y,ry = yLw)
+	defined.groups=T
+if(defined groups ){
+	grps = data.frame(yr = y)
+	grps$ry = ifelse(grps$yr %in% 1969:1980,1,
+				ifelse(grps$yr %in% 1981:1990,2,
+				ifelse(grps$yr %in% 1991:1998,3,
+				ifelse(grps$yr %in% 1999:2009,4,5))))
+	}
 	aa = merge(aa,grps,by='yr',all.x=T)
 	
 	h = split(aa,f=aa$ry)
@@ -88,6 +96,14 @@ load_all('~/git/bio.survey/')
 	
 	yLw = c(rep(1,yLm),rep(1:yLr,each = YG),yLr+1)
 	grps = data.frame(yr = y,ry = yLw)
+	if(defined groups ){
+	grps = data.frame(yr = y)
+	grps$ry = ifelse(grps$yr %in% 1969:1980,1,
+				ifelse(grps$yr %in% 1981:1990,2,
+				ifelse(grps$yr %in% 1991:1998,3,
+				ifelse(grps$yr %in% 1999:2009,4,5))))
+	}
+
 	aa = merge(aa,grps,by='yr',all.x=T)
 	
 	h = split(aa,f=aa$ry)
@@ -111,7 +127,7 @@ load_all('~/git/bio.survey/')
       p$define.by.polygons = F
       p$lobster.subunits=F
       p$area = 'all'
-      p$years.to.estimate = c(1970:2015)
+      p$years.to.estimate = c(1970:2018)
       p$length.based = F
       p$by.sex = F
       p$bootstrapped.ci=F
@@ -142,6 +158,14 @@ load_all('~/git/bio.survey/')
 	
 	yLw = c(rep(1,yLm),rep(1:yLr,each = YG),yLr+1)
 	grps = data.frame(yr = y,ry = yLw)
+if(defined groups ){
+	grps = data.frame(yr = y)
+	grps$ry = ifelse(grps$yr %in% 1969:1980,1,
+				ifelse(grps$yr %in% 1981:1990,2,
+				ifelse(grps$yr %in% 1991:1998,3,
+				ifelse(grps$yr %in% 1999:2009,4,5))))
+	}
+
 	aa = merge(aa,grps,by='yr',all.x=T)
 	
 	h = split(aa,f=aa$ry)

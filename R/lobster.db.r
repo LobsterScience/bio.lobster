@@ -66,6 +66,17 @@ if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
                   save(links,file=file.path(fnODBC,'atSea.logbook.link.rdata'))          
         }
 
+if(DS %in% c('historic.cpue.redo', 'historic.cpue')){
+      if(DS == 'historic.cpue') {
+                  load(file=file.path(fnODBC,'historic.cpue.rdata'))
+                return(hcpue)
+          }
+                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  hcpue = sqlQuery(con,'select a.port, sdate, to_char(sdate,'yyyy') year, lfa, portname, lbsptrap from histcatch a, port b where 
+a.port = b.port;')
+                  save(hcpue,file=file.path(fnODBC,'historic.cpue.rdata'))       
+          }
+
 if(DS %in% c('landings.by.port.redo','landings.by.port')) {
 
   if(DS == 'landings.by.port.redo') {

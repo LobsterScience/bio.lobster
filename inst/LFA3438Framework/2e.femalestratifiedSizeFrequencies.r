@@ -1,3 +1,5 @@
+#run Aug 12 2019
+
 #size frequencies females
 require(bio.survey)
 require(bio.lobster)

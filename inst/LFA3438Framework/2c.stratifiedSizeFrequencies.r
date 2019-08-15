@@ -1,3 +1,5 @@
+#run Aug12
+
 require(bio.lobster)
         p = bio.lobster::load.environment()
         p$libs = NULL

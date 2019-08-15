@@ -1,5 +1,5 @@
 
-
+#run aug12
 require(bio.survey)
 require(bio.lobster)
 require(bio.groundfish)
@@ -17,7 +17,7 @@ p1 = p
 stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1){
       if(survey == 'NEFSC'){
                 p$reweight.strata = T
-                p$years.to.estimate = c(1969:2017)
+                p$years.to.estimate = c(1969:2018)
                 p$length.based = T
                 p$size.class= c(50,300)
                 p$by.sex = F
@@ -234,11 +234,9 @@ if(survey == 'DFO'){
 
                aout$subset = 'DFO.restratified.All'
                write.csv(aout,file=file.path(fp,'indicators',paste(lfa,'DFO.restratified.All.csv',sep="")))
-          
+        }
 
-}
-
-}
+    }
 
 stratifiedAnalyses(survey='NEFSC',lfa='LFA34')
 stratifiedAnalyses(survey='DFO',lfa='LFA34')
