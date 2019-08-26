@@ -171,3 +171,5 @@ stratifiedAnalysesRecruits(survey='DFO',lfa='LFA36')
 stratifiedAnalysesRecruits(survey='NEFSC',lfa='LFA38')
 stratifiedAnalysesRecruits(survey='DFO',lfa='LFA38')
 stratifiedAnalysesRecruits(survey='DFO',lfa='LFA35-38')
+
+

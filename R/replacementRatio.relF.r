@@ -55,7 +55,6 @@ replacementRatio.relF <- function(landings,survey.biomass,fn=project.figuredirec
 			g = predict(a)
 			r = residuals(a)
 			if(robust.reg) r = a$wresid
-
 			for(i in 1:nreps) {
 					gp = g + sample(r,length(g))
 					if(robust.reg) gl = coef(rlm(gp~log(relF[])))
@@ -68,6 +67,4 @@ replacementRatio.relF <- function(landings,survey.biomass,fn=project.figuredirec
 
 		}
 		return(a)
-
-			
 }

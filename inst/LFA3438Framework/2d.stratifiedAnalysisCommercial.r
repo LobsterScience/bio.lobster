@@ -5,7 +5,7 @@ p = bio.lobster::load.environment()
 p$libs = NULL
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis","LFA34-38")
 fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019")
-
+p1 = p
 la()
 load_all('~/git/bio.survey/')
 load_all('~/git/bio.groundfish/')
@@ -40,7 +40,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
         p$measure = 'stratified.mean' #'stratified.total'
         p$figure.title = ""
         p$reference.measure = 'median' # mean, geomean
-        p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiedweightscommercial.png'))
+        p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiedweightscommercial.png',sep=""))
         p$y.maximum = NULL # NULL # if ymax is too high for one year
         p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
         p$legend = FALSE
@@ -49,28 +49,31 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
         p$running.mean = F #can only have rmedian or rmean
         p$error.polygon=F
         p$error.bars=T
-        p$ylim2 = c(0,500)
+        
         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
         names(xx) =c('x','y')
-        p$ylim=c(0,50)
+        p$ylim=NULL
 
          ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
           p$ylim=c(0,20)
           p$metric = 'numbers' #weights
-        p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiednumberscommercial.png'))
+        p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiednumberscommercial.png',sep=""))
       ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
     aout$subset = 'NEFSCSpringcommercial'
     write.csv(aout,file=file.path(fp,'indicators','NEFSC.spring.restratified.commercial.csv'))
         p$metric = 'weights' #weights
         p$measure = 'stratified.total' #'stratified.total'
-        p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiedtotalweightscommercial.png'))
+        p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiedtotalweightscommercial.png',sep=""))
         p$y.maximum = NULL # NULL # if ymax is too high for one year
-        p$ylim2 = c(0,500)
+        p$ylim2 = NULL
         xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
         names(xx) =c('x','y')
         p$ylim=NULL
         ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
+              aout$subset = 'NEFSCSpringcommercial'
+      write.csv(aout,file=file.path(fp,'indicators',paste(lfa,'NEFSC.spring.restratified.commercial.csv',sep="")))
+
         rm(aout)
 
 
@@ -83,7 +86,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
       p$measure = 'stratified.mean' #'stratified.total'
       p$figure.title = ""
       p$reference.measure = 'median' # mean, geomean
-      p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCFallrestratifiedweightscommercial.png'))
+      p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCFallrestratifiedweightscommercial.png',sep=""))
 
       p$y.maximum = NULL # NULL # if ymax is too high for one year
       p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
@@ -94,17 +97,17 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
       p$running.mean = F #can only have rmedian or rmean
        p$error.polygon=F
       p$error.bars=T
-      p$ylim=c(0,30)
+      p$ylim=NULL
 
-       p$ylim2 = c(0,500)
+       p$ylim2 = NULL
       xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
       names(xx) =c('x','y')
        
        ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
        
-       p$ylim=c(0,15)
+       p$ylim=NULL
        p$metric = 'numbers' #weights
-       p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCFallrestratifiednumberscommercial.png'))
+       p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCFallrestratifiednumberscommercial.png',sep=""))
        ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
        
 
@@ -117,7 +120,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
       p$measure = 'stratified.total' #'stratified.total'
       p$figure.title = ""
       p$reference.measure = 'median' # mean, geomean
-      p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCFallrestratifiedtotalweightscommercial.png'))
+      p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCFallrestratifiedtotalweightscommercial.png',sep=""))
 
       p$y.maximum = NULL # NULL # if ymax is too high for one year
       p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
@@ -130,7 +133,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
       p$error.bars=T
 
       p$ylim=NULL
-       p$ylim2 = c(0,500)
+       p$ylim2 = NULL
       xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
       names(xx) =c('x','y')
        
@@ -138,13 +141,13 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
        ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
        
       aout$subset = 'NEFSCFallcommercial'
-      write.csv(aout,file=file.path(fp,'indicators','NEFSC.fall.restratified.commercial.csv'))
+      write.csv(aout,file=file.path(fp,'indicators',paste(lfa,'NEFSC.fall.restratified.commercial.csv',sep="")))
       rm(aout)
     }
 
   if(survey=='DFO'){
     p$series =c('summer')# p$series =c('georges');p$series =c('fall')
-    p$years.to.estimate = c(1970:2018)
+    p$years.to.estimate = 1970:2018
     p$length.based = T
     p$by.sex = T
     p$size.class = c(83,300)
@@ -170,7 +173,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
     p$measure = 'stratified.mean' #'stratified.total'
     p$figure.title = ""
     p$reference.measure = 'median' # mean, geomean
-    p$file.name =  file.path('LFA3438Framework2019',paste(lfa,'DFOrestratifiedweightscommercial.png'))
+    p$file.name =  file.path('LFA3438Framework2019',paste(lfa,'DFOrestratifiedweightscommercial.png',sep=""))
 
     p$y.maximum = NULL # NULL # if ymax is too high for one year
     p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
@@ -183,16 +186,16 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
     p$error.bars=T
 
 
-     p$ylim2 = c(0,500)
+     p$ylim2 = NULL
     xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
     names(xx) =c('x','y')
-     p$ylim =c(0,30)
+     p$ylim = NULL
 
      ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
-    p$ylim =c(0,25)
+    p$ylim = NULL
     p$metric = 'numbers' #weights
-    p$file.name =  file.path('LFA3438Framework2019',paste(lfa,'DFOrestratifiednumberscommercial.png'))
+    p$file.name =  file.path('LFA3438Framework2019',paste(lfa,'DFOrestratifiednumberscommercial.png',sep=""))
     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
 
 
@@ -204,7 +207,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
     p$measure = 'stratified.total' #'stratified.total'
     p$figure.title = ""
     p$reference.measure = 'median' # mean, geomean
-    p$file.name =  file.path('LFA3438Framework2019',paste(lfa,'DFOrestratifiedtotalweightscommercial.png'))
+    p$file.name =  file.path('LFA3438Framework2019',paste(lfa,'DFOrestratifiedtotalweightscommercial.png',sep=""))
 
     p$y.maximum = NULL # NULL # if ymax is too high for one year
     p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
@@ -217,7 +220,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
     p$error.bars=T
 
 
-     p$ylim2 = c(0,500)
+     p$ylim2 = NULL
     xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
     names(xx) =c('x','y')
      p$ylim=NULL
@@ -225,7 +228,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
 
      aout$subset = 'DFOcommercial'
-    write.csv(aout,file=file.path(fp,'indicators','DFO.restratified.commercial.csv'))
+    write.csv(aout,file=file.path(fp,'indicators',paste(lfa,'DFO.restratified.commercial.csv',sep="")))
  
     rm(aout)
 

@@ -47,6 +47,7 @@ if(survey=='DFO'){
           }
 
         aa = do.call(rbind,out)
+        browser()
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
         save(aa,file=file.path(fp, paste(lfa,'maturefemaleLengthFrequenciespolygonSummerRV.rdata',sep="")))
       }
@@ -76,11 +77,11 @@ if(survey=='NEFSC'){
         out = list()
         for(i in 1:length(a)) {
           p$size.class=c(a[i],a[i])
-          out[[i]] = nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
+          kl = nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
+          kl$size = a[i]
+          out[[i]] = kl
           }
-
         aa = do.call(rbind,out)
-        aa$FLEN = rep(a,each=length(p$years.to.estimate))
         save(aa,file=file.path(fp, paste(lfa,'maturefemaleLengthFrequenciespolygonNEFSCspring.rdata',sep="")))
   
 
@@ -91,11 +92,12 @@ if(survey=='NEFSC'){
         out = list()
         for(i in 1:length(a)) {
           p$size.class=c(a[i],a[i])
-          out[[i]] = nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
+          kl = nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
+          kl$size = a[i]
+          out[[i]] = kl
           }
 
         aa = do.call(rbind,out)
-        aa$FLEN = rep(a,each=length(p$years.to.estimate))
       save(aa,file=file.path(fp, paste(lfa,'maturefemaleLengthFrequenciespolygonNEFSCfall.rdata',sep="")))
     }
   }
