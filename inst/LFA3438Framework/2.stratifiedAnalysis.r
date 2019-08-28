@@ -164,7 +164,7 @@ if(survey == 'DFO'){
                 p$define.by.polygons = T
                 p$lobster.subunits=F
                 p$area = lfa
-                p$years.to.estimate = 2018
+                p$years.to.estimate = 1970:2018
                 p$length.based = F
                 p$by.sex = F
                 p$bootstrapped.ci=T
@@ -203,6 +203,7 @@ if(survey == 'DFO'){
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
                        p$ylim=NULL
+                      if(lfa == 'LFA35-38') p$ylim=c(0,150)
                        p$box=T
                        p$file.name = file.path('LFA3438Framework2019',paste(lfa,'DFOrestratifiednumbersNOY.png', sep=""))
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)

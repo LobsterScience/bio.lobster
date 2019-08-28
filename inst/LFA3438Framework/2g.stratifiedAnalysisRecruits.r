@@ -153,6 +153,7 @@ if(survey=='DFO'){
                        
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)
                       p$ylim=NULL
+                      if(lfa == 'LFA35-38') p$ylim = c(0,80)
                       p$file.name =  file.path('LFA3438Framework2019',paste(lfa,'NOYDFOrestratifiednumbersrecruits.png',sep=""))
 
                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=T)

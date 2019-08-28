@@ -33,7 +33,7 @@ for(i in LFA){
 		aa = rbind(rbind(aa,bb),dd)
 		aa = aa[order(aa$YR),]
 		file.name = paste('Landings',i,'.png',sep="")
-		 png(file=file.path(fpf1,file.name),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+		 png(file=file.path(fpf1,'LandingsL3538.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 		plot(aa$YR,aa[,i],type='h',lwd=4,col='black',xlab='Year',ylab='Landings (t)')
 		lines(aa$YR,runmed(aa[,i],3),col='salmon',lwd=3)
 		dev.off()
@@ -160,53 +160,97 @@ savePlot('~/tmp/Exploitation34.png')
 
 
 
+###lfa 35-38
+dadir = file.path(project.datadirectory('bio.lobster'),'analysis','LFA34-38','indicators')
+df =  read.csv(file.path(dadir,'LFA35-38DFO.restratified.All.csv'))
+df2 = read.csv(file.path(dadir,'LFA35-38DFO.restratified.commercial.csv'))
+df = subset(df,yr<1999)
+df2 = subset(df2,yr>1998)
+df = as.data.frame(rbind(df,df2))
+df = df[,c('yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')] #proportion of total weight that is commercial
+df$w.Yst[which(df$yr<1999)] <- df$w.Yst[which(df$yr<1999)]*0.746
+df$w.ci.Yst.l[which(df$yr<1999)] <- df$w.ci.Yst.l[which(df$yr<1999)]*0.746
+df$w.ci.Yst.u[which(df$yr<1999)] <- df$w.ci.Yst.u[which(df$yr<1999)]*0.746
 
 
 
+ 	 png(file=file.path(fpf1,'LFA35-38CommBDFOextended.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+ 	 with(df,plot(yr,w.Yst,pch=1,xlab='Year',ylab='Commerical Biomass (t)',ylim=c(0,9500)))
+	 with(df,arrows(yr,y0=w.ci.Yst.u,y1=w.ci.Yst.l, length=0))
+	 with(subset(df,yr>1998),points(yr,w.Yst,pch=16))
+	 xx = rmed(df$yr,df$w.Yst)
+	 xx = as.data.frame(do.call(cbind,xx))
+	 with(subset(xx,yr<1999),lines(yr,x,col='salmon',lwd=1))
+	 with(subset(xx,yr>1998),lines(yr,x,col='salmon',lwd=3))
+	 dev.off()
+	 
+a$L3538 = rowSums(a[,12:14])
+b$L3538 = rowSums(b[,4:6])
+c358 = as.data.frame(rbind(a[,c('YR','L3538')],b[,c('YR','L3538')]))
+names(c358)[1] = 'yr'
+df  =merge(df,c358)
+df$rL = df$L3538/(df$w.ci.Yst.l+df$L3538)
+df$rU =df$L3538/ (df$w.ci.Yst.u+df$L3538)
+df$rM = df$L3538/(df$w.Yst+df$L3538)
 
 
+ 	 png(file=file.path(fpf1,'LFA3538RelFDFO.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+		plot(df$yr,df$rM,type='p',pch=16,col='black',xlab='Year',ylab='Relative F')
+		arrows(df$yr,y0 = df$rL,y1 = df$rU,length=0)
+		with(rmed(df$yr,df$rM),lines(yr,x,col='salmon',lwd=3))
+dev.off()
 
-
-
-
-
-
-
-#cycles
-require(forecast)
-	i = "LFA34"
-	 aa = a[,c('YR',i)]
-	bb = subset(aa,YR>1980)	
-	x = bb[,i]
- 	n <- length(x)
-    x <- as.ts(x)
-    x <- residuals(tslm(x ~ trend)) #removing time series trend
-    n.freq <- 500
-    spec <- spec.ar(c(na.contiguous(x)), plot = T, n.freq = n.freq) # spectral analysis of cycle
-    period <- floor(1/spec$freq[which.max(spec$spec)] + 0.5) #determiing the most likely period
-
-    plot( 1/spec$freq,spec$spec,type= 'l',xlim=c(0,20),xlab='Frequency', ylab='Spectral Density')
-    abline(h=max(spec$spec),v=1/spec$freq[which.max(spec$spec)],col='red',lwd=2)
-    savePlot(file.path(fpf1,'CyclesInLandingsLFA34.png'))
- 
- #rate of increase
-           	ag <- coef(lm(log(LFA34)~YR,data=bb))
-		 round((1-exp(ag[2]*nrow(bb))),digits=1)
+####aim for dfo
 	
+	replacementRatio.relF(df$L3538,df$w.Yst+df$L3538, savePlot=F, years.lagged.replacement=8)
 
-   x = trends.rot[1,]
-   n <- length(x)
-    x <- as.ts(x)
-    x <- residuals(tslm(x ~ trend)) #removing time series trend
-    n.freq <- 500
-    spec <- spec.ar(c(na.contiguous(x)), plot = T, n.freq = n.freq) # spectral analysis of cycle
-    period <- floor(1/spec$freq[which.max(spec$spec)] + 0.5) #determiing the most likely period
 
-		a= read.table('~/tmp/sunsptdata.dat',header=T)
-		b = subset(a,Year>1980 & Year<2019)
 
-   y = b$TSI
-   n <- length(y)
-    y <- as.ts(y)
-    y <- residuals(tslm(y ~ trend)) #removing time series trend
-  
+
+
+
+
+
+
+playing=F
+if(playing){
+
+				#cycles
+				require(forecast)
+					i = "LFA34"
+					 aa = a[,c('YR',i)]
+					bb = subset(aa,YR>1980)	
+					x = bb[,i]
+				 	n <- length(x)
+				    x <- as.ts(x)
+				    x <- residuals(tslm(x ~ trend)) #removing time series trend
+				    n.freq <- 500
+				    spec <- spec.ar(c(na.contiguous(x)), plot = T, n.freq = n.freq) # spectral analysis of cycle
+				    period <- floor(1/spec$freq[which.max(spec$spec)] + 0.5) #determiing the most likely period
+
+				    plot( 1/spec$freq,spec$spec,type= 'l',xlim=c(0,20),xlab='Frequency', ylab='Spectral Density')
+				    abline(h=max(spec$spec),v=1/spec$freq[which.max(spec$spec)],col='red',lwd=2)
+				    savePlot(file.path(fpf1,'CyclesInLandingsLFA34.png'))
+				 
+				 #rate of increase
+				           	ag <- coef(lm(log(LFA34)~YR,data=bb))
+						 round((1-exp(ag[2]*nrow(bb))),digits=1)
+					
+
+				   x = trends.rot[1,]
+				   n <- length(x)
+				    x <- as.ts(x)
+				    x <- residuals(tslm(x ~ trend)) #removing time series trend
+				    n.freq <- 500
+				    spec <- spec.ar(c(na.contiguous(x)), plot = T, n.freq = n.freq) # spectral analysis of cycle
+				    period <- floor(1/spec$freq[which.max(spec$spec)] + 0.5) #determiing the most likely period
+
+						a= read.table('~/tmp/sunsptdata.dat',header=T)
+						b = subset(a,Year>1980 & Year<2019)
+
+				   y = b$TSI
+				   n <- length(y)
+				    y <- as.ts(y)
+				    y <- residuals(tslm(y ~ trend)) #removing time series trend
+				  
+}
