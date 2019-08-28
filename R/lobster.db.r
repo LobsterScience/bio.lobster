@@ -453,6 +453,8 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
         vlog = sqlQuery(con, "select a.FDATE,a.N_TRP,a.W_TOT,a.FCODE,a.N_L,a.W_AVG,a.PORT,a.CPTH,a.NBF,a.SEASON,a.W_C,a.CPTH_C, b.LFA,b.COUNTY,b.STAT,b.PORT_CODE,b.LATITUDE,b.LONGITUDE,b.COMMENTS from lobster.CRLOGDATA a, lobster.CRLOCATIONS b where a.port = b.port")
         vlog34 = sqlQuery(con, "select * from lobster.logdata_other;")
         save( vlog, file=file.path( fnODBC, "vlog.rdata"), compress=T)
+        save( vlog34, file=file.path( fnODBC, "vlog34.rdata"), compress=T)
+      
         gc()  # garbage collection
         odbcClose(con)
       }
