@@ -287,8 +287,8 @@ if (DS %in% c("logs.redo", "logs") ) {
               odbcClose(con)
               
               # old logs LFA 34
-              oldlogs34 = sqlQuery(con, "select * from frailc.lobster_log_data")
-              save( oldlogs34, file=file.path( fnODBC, "slip.rdata"), compress=T)
+              oldlogs34 = sqlQuery(con, "select * from lobster.lobster_log_data")
+              save( oldlogs34, file=file.path( fnODBC, "oldlogs34.rdata"), compress=T)
               gc()  # garbage collection
               odbcClose(con)
             }
