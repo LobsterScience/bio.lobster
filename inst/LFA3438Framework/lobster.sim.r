@@ -18,7 +18,14 @@ la()
 	#moltModelPlot(p$moltModel,graphic='png')
 
 
-p$lfas = c("33W","34") # specify lfa
+p$lfas = c("34") # specify lfa
+
+
+ p$season = c("1999-11-28","2000-05-31") 
+ e= 0.6789005
+ t = as.numeric(as.Date(p$season[2])-as.Date(p$season[1]))/365
+ p$F = -log(1-e)/t
+
 
 ####### Base
 

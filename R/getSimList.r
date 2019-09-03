@@ -42,7 +42,7 @@ getSimList = function(p,sex=1, LS=82.5, Fadj = 1, Sadj = 1, Sclose='end', window
 	
 		#mortality
 		p$M = 0.1
-		p$F = getFccir(p)
+		if(is.null(p$F))p$F = getFccir(p)
 
 		#window
 		p$window = window

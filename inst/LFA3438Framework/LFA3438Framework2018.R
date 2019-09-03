@@ -7,7 +7,7 @@
 
 
     p$syr = 1989
-    p$yrs = p$syr:(p$current.assessment.year-1)
+    p$yrs = p$syr:assessment.year
 
     figdir = file.path(project.datadirectory("bio.lobster"),"figures","LFA3438Framework2019")
 
@@ -21,12 +21,18 @@
 ### LobsterSurvey
 
 
-	pdf(file.path( figdir,"ITQsurveyMap.pdf"),8,10)
+	pdf(file.path( figdir,"figures","Brad","ITQsurveyMap.pdf"),8,10)
 	ITQareas=read.csv(file.path(project.datadirectory("bio.lobster"),"data","ITQareas.csv"))
  	LobsterMap(xlim=range(ITQareas$X),ylim=range(ITQareas$Y),addGrids=F)
 	addPolys(ITQareas,border='blue')
 	lobster.db('survey')
 	with(subset(surveyCatch,!duplicated(paste(TRIP_ID,SET_NO))&year(SET_DATE)==2000),points(SET_LONG,SET_LAT,pch=21,bg='red'))
+	dev.off()
+
+	pdf(file.path( figdir,"figures","Brad","ILTSsurveyMap.pdf"),8,10)
+ 	LobsterMap('34',addGrids='lfaonly')
+	lobster.db('survey')
+	with(subset(surveyCatch,!duplicated(paste(TRIP_ID,STATION))&year(SET_DATE)==2018),points(SET_LONG,SET_LAT,pch=21,bg='red'))
 	dev.off()
 
 
@@ -149,6 +155,16 @@
 
 ### ScallopSurvey
 
+	
+	# map
+	pdf(file.path( figdir,"ScallopSurveyBubblesLFA342018.pdf"),8,11)
+	LobsterMap('west',title="Scallop Survey")
+
+		addLines(SFA)
+		addPolys(SPA,col=NULL)
+	surveyBubbles(data,scaler=0.08,pie=T)
+	dev.off()
+
 
 	CarapaceLengthFrequencies(LFAs='34',DS='ScallopSurvey', Yrs=2006:2018,graphic="pdf", rootdir= figdir, fn="LFA34" )
 	CarapaceLengthFrequencies(LFAs='35',DS='ScallopSurvey', Yrs=2006:2018,graphic="pdf", rootdir= figdir, fn="LFA35" )
@@ -175,6 +191,15 @@
 	data = subset(data,den>0)
 	
 	# map
+	pdf(file.path( figdir,"ScallopSurveyBubblesLFA342018.pdf"),8,11)
+	LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.25,-65.2),mapRes="UR",title="LFA 34 Scallop Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
+
+		addLines(SFA)
+		addPolys(SPA,col=NULL)
+	surveyBubbles(data,scaler=0.08,pie=T)
+	dev.off()
+
+	# map
 		pdf(file.path( figdir,"ScallopSurveyBubblesLFA342018.pdf"),8,11)
 	LobsterMap(ylim=c(42.8,44.6), xlim=c(-67.25,-65.2),mapRes="UR",title="LFA 34 Scallop Survey",isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy')
 	points(y~x,zeros,pch=4)
@@ -195,6 +220,11 @@
 	surveyBubbles(data,scaler=0.08,pie=T)
 	dev.off()
 
+
+
+
+		addLines(SFA)
+		addPolys(SPA,col=NULL)
 
 	data = subset(scalSurv,YEAR==2018&LFA==35,c("lon","lat","LobDen"))
 	datam = subset(scalSurvm,YEAR==2018&LFA==35,c("lon","lat","LobDen"))
@@ -241,14 +271,74 @@
 
 	scalSurv<-ScallopSurveyProcess()
 
+	time.blocks=list(1970:1980,1981:1990,1991:1998,1999:2009,2010:2018)
+	ns=nswl=tl=nspy=matrix(NA,length(time.blocks),length(p$lfas),dimnames=list(NULL,p$lfas))
+	for(i in 1:length(p$lfas)){
+		for(j in 1:length(time.blocks)){
+			d=subset(scalSurv,YEAR%in%time.blocks[[j]]&LFA==p$lfas[i])
+			ns[j,i]= nrow(d)
+			nswl[j,i]= nrow(subset(d,NLobs>0))
+			tl[j,i]= sum(d$NLobs)
+			nspy[j,i]= median(with(d,tapply(TOW_SEQ,YEAR,length)))
+		}
+	}
+
+
+
+
+
+
 LobsterMap(ylim=c(43,46),xlim=c(-67.8,-64),isobath=seq(50,500,50),bathcol=rgb(0,0,1,0.2),bathy.source='bathy',title="Scallop Survey Locations 2018")
 points(lat~lon,subset(scalSurv,YEAR==2018),pch=21,cex=0.8,bg='red')
 
+LobsterMap('west',addGrids=F)
 
+#	with(subset(scalSurv,MGT_AREA_ID==6),chull(lon,lat))
+#	spa6=subset(scalSurv,MGT_AREA_ID%in%c('6A','6B','6C'))
+#	x=spa6[with(spa6,chull(lon,lat)),c('lon','lat')]
+#	names(x)=c("X","Y")
+#	x$PID=1
+#	x$POS=1:nrow(x)
+#
+#	spa6=joinPolys(subset(SPA,PID==6),x,operation="INT")
+#
+#	spa3 = subset(SPA,PID==3)
+#
+#	sfa29 = joinPolys(subset(SPA,PID==5),junk,operation="UNION")
+#	
+#	spa1 = joinPolys( joinPolys(subset(SPA,PID==1),subset(SPA,PID==2),operation="UNION"),subset(SPA,PID==4),operation="UNION")
+#	spa1 = subset(spa1,SID==1)
+#
+#	spa1=rbind(data.frame(PID=4,SID=1,POS=1:3,X=rev(c(-66.27433, -66.05855, -65.92687)),Y=rev(c(44.74750, 44.87917, 45.18083))),spa1[1:4148,])
+#	spa1$POS=1:nrow(spa1)
+
+
+
+pdf(file.path( figdir,"figures","Brad","ScallopSurveyMap1.pdf"),8,11)
+LobsterMap('west',addGrids=F)
+addPolys(spa6,col=rgb(1,0,0,0.5))
+addPolys(spa3,col=rgb(0,1,0,0.5))
+addPolys(sfa29,col=rgb(0,0,1,0.5))
+addPolys(spa1,col=rgb(1,1,0,0.5))
+legend('bottomright',c("June","July","Aug","Sept"),fill=c(rgb(0,1,0,0.5),rgb(1,1,0,0.5),rgb(1,0,0,0.5),rgb(0,0,1,0.5)),bg='white',cex=1.5)
+dev.off()
+
+pdf(file.path( figdir,"figures","Brad","ScallopSurveyMap2.pdf"),8,11)
+LobsterMap('west',addGrids=F)
+points(lat~lon,subset(scalSurv,YEAR%in%2009:2018&MGT_AREA_ID%in%c('6A','6B','6C')),pch=16,cex=0.5,col='red')
+addPolys(spa6,border=rgb(1,0,0,1))
+points(lat~lon,subset(scalSurv,YEAR%in%2009:2018&MGT_AREA_ID%in%c('3','7')),pch=16,cex=0.5,col='green')
+addPolys(spa3,border=rgb(0,1,0,1))
+points(lat~lon,subset(scalSurv,YEAR%in%2009:2018&MGT_AREA_ID%in%c('29')),pch=16,cex=0.5,col='blue')
+addPolys(sfa29,border=rgb(0,0,1,1))
+points(lat~lon,subset(scalSurv,YEAR%in%2009:2018&MGT_AREA_ID%in%c('1','4')),pch=16,cex=0.5,col='yellow')
+addPolys(spa1,border=rgb(1,1,0,1))
+dev.off()
+   
 
 
     ## Carapace Length Frequency Plots
-	
+
 
 	
 	# at Sea Sampling
@@ -391,6 +481,7 @@ logsInSeason=lobster.db("process.logs")
 	d=1
 
 	
+	pData=list()
 
 	CPUEModelResults1 = list()
 	CPUEModelResults2 = list()
@@ -422,13 +513,45 @@ logsInSeason=lobster.db("process.logs")
 	AICs = data.frame(rbind(AICs1,AICs2,AICs3,AICs4))
 	names(AICs) = p$lfas
 	AICs
-	sweep(AICs,2,FUN='-',apply(AICs,2,min))
+	AICtable=sweep(AICs,2,FUN='-',apply(AICs,2,min))
+
+	pData=list()
+	for(i in 1:length( p$lfas)){
+		pData[[i]]=CPUEModelResults1[[i]]$pData
+		pData[[i]]$LFA=p$lfas[i]
+	}
+
+	CPUEindex=do.call("rbind",pData)
+
+
+	write.csv(AICtable,file.path( figdir,"figures","Brad","CPUEmodelAIC.csv"),row.names=F)
+	write.csv(CPUEindex,file.path( figdir,"figures","Brad","CPUEmodelindex.csv"),row.names=F)
 
 
 
 	#CPUECombinedModelResults = CPUEmodel(mf5,CPUE.data,combined=T)	
 
-	cpue1= CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = p$lfas,xlim=c(1989,2018.4),ylim=c(0,10.5),graphic='png',path=figdir,lab=1,wd=11,ht=8)
+	cpue1= CPUEModelPlot(CPUEModelResults1,TempModelling,lfa = p$lfas,xlim=c(1989,2018.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1,wd=11,ht=8)
+
+
+	ty=sapply(1:length(p$lfas),function(x){with(subset(CPUE.data,DOS==1&LFA==p$lfas[x]),tapply(TEMP,SYEAR,mean))})
+	fs=lobster.db('season.dates')
+	d=merge(data.frame(LFA=rep(p$lfas,lapply(ty,length)),SYEAR=names(unlist(ty)),TEMP2=unlist(ty)),fs[,c('LFA','SYEAR','START_DATE')])
+	names(d)[2]="YEAR"
+
+
+	CPUEindex = merge(d,CPUEindex)
+
+	m2=subset(cpue1,DOS==1,c("LFA","YEAR","mu"))
+	names(m2)[3]="mu2"
+	
+	CPUEindex = merge(CPUEindex,m2)
+
+	write.csv(subset(CPUEindex,LFA==34&YEAR%in%2005:2018,c("LFA","YEAR","START_DATE","TEMP2","TEMP","mu","mu2")),file.path( figdir,"figures","Brad","CPUEmodelindex34.csv"),row.names=F)
+	write.csv(subset(CPUEindex,LFA==35&YEAR%in%2005:2018,c("LFA","YEAR","START_DATE","TEMP2","TEMP","mu","mu2")),file.path( figdir,"figures","Brad","CPUEmodelindex35.csv"),row.names=F)
+	write.csv(subset(CPUEindex,LFA==36&YEAR%in%2005:2018,c("LFA","YEAR","START_DATE","TEMP2","TEMP","mu","mu2")),file.path( figdir,"figures","Brad","CPUEmodelindex36.csv"),row.names=F)
+	write.csv(subset(CPUEindex,LFA==38&YEAR%in%2005:2018,c("LFA","YEAR","START_DATE","TEMP2","TEMP","mu","mu2")),file.path( figdir,"figures","Brad","CPUEmodelindex38.csv"),row.names=F)
+
     #pdf2png(file.path(figdir,"CPUEmodel1"))
     cpueLFA.dat = CPUEplot(CPUE.data,lfa= p$lfas,yrs=1989:2018,graphic='png',export=T,path=figdir)
 
@@ -443,7 +566,7 @@ logsInSeason=lobster.db("process.logs")
 
 	 	#MU=with(subset(cpue1,LFA==p$lfas[i]),tapply(mu,YEAR,weighted.mean,WEIGHT_KG))
 	 	#MU.sd=with(subset(cpue1,LFA==p$lfas[i]),tapply(mu,YEAR,sd))
-		#xm <- weighted.mean(x, wt)
+		#xm <- weighted.mean(x, wt)y6723
 	 	#v <- sum(wt * (x - xm)^2)
 	 	cpue.annual[[i]] = data.frame(Area=p$lfas[i],Year=p$yrs,CPUE=MU,CPUE.ub=MU+MU.sd,CPUE.lb=MU-MU.sd)
 
