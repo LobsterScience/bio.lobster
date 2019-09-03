@@ -117,9 +117,6 @@ AllSurveyDataR0 = SurveyTowData(Size.range=c(82.5,95),Sex = c(1,2,3), Years=1970
 
 
 
-
-
-
 ### Lobster Survey data: Looking at the proportion of tows where lobster were measured
 
 > sapply(1996:2016,function(i){nrow(subset(surveyLobsters34,YEAR==i&!is.na(NUM_MEASURED)&NUM_CAUGHT>0))/nrow(subset(surveyLobsters34,YEAR==i&NUM_CAUGHT>0))})->x
