@@ -18,7 +18,14 @@ la()
 	#moltModelPlot(p$moltModel,graphic='png')
 
 
-p$lfas = c("33W","34") # specify lfa
+p$lfas = c("34") # specify lfa
+
+
+ p$season = c("1999-11-28","2000-05-31") 
+ e= 0.6789005
+ t = as.numeric(as.Date(p$season[2])-as.Date(p$season[1]))/365
+ p$F = -log(1-e)/t
+
 
 ####### Base
 
@@ -172,7 +179,7 @@ p$lfas = c("33W","34") # specify lfa
 ############# Plots
 
 	load(file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim34ResultsBase.rdata"))
-	simBubPlot(rlist,graphic='png',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA3438Framework2019","sim"),fn='Base',cex.lab=2,cex.axis=1.5)
+	simBubPlot(rlist,graphic='R',path=file.path(project.datadirectory("bio.lobster"),"figures","LFA3438Framework2019","sim"),fn='Base',cex.lab=2,cex.axis=1.5)
 
 
 	for(i in 1:length(ShorterSeason)){
