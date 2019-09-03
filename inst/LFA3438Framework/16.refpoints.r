@@ -11,6 +11,7 @@ la()
 
 ##landings
 
+####LFA 34
 
 require(bio.lobster)
 require(PBSmapping)
@@ -410,3 +411,77 @@ df$wMM = rmed(df$yr, df$w.Yst)[[2]]
     
 hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,yrs=c(rep('',length(df$yr)-3),2016:2018),ylim=c(0.5,1.1))
 savePlot(file.path(fpf1,'HCRILTS.png'))
+
+
+
+####LFA 35
+
+cp = read.csv(file.path(project.datadirectory('bio.lobster'),'analysis','LFA34-38','indicators','CPUEmodelindex.csv'))
+c5 = subset(cp, LFA==35)
+
+require(bcp)
+
+   b = bcp((c5$mu),w0 = 0.2, p0 = 0.05)
+      plot(b,xaxlab=c5$YEAR,xlab='Year')
+      savePlot(file.path(fpf1,'BCPCPUE35.png'))
+
+png(file=file.path(fpf1,'LFA35CPUERefs.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+with(c5, plot(YEAR, mu, xlab='Year',ylab='Modelled CPUE', pch=16 ,type='p', ylim=c(0,5) ))
+with(c5, arrows(YEAR, y0=ub,y1=lb, length=0))
+K = median(subset(c5,YEAR>2010)$mu)
+USR = K*.4
+LRP = K*.2
+abline(h=USR, col='green',lwd=2)
+abline(h=LRP, col='blue',lwd=2)
+xx = rmed(c5$YEAR, c5$mu)
+lines(xx$yr,xx$x, lwd=2,col='salmon')
+dev.off()
+
+
+
+####LFA 36
+
+c6 = subset(cp, LFA==36)
+
+require(bcp)
+
+   b = bcp((c6$mu),w0 = 0.2, p0 = 0.05)
+      plot(b,xaxlab=c6$YEAR,xlab='Year')
+      savePlot(file.path(fpf1,'BCPCPUE36.png'))
+
+png(file=file.path(fpf1,'LFA36CPUERefs.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+with(c6, plot(YEAR, mu, xlab='Year',ylab='Modelled CPUE', pch=16 ,type='p', ylim=c(0,5) ))
+with(c6, arrows(YEAR, y0=ub,y1=lb, length=0))
+K = median(subset(c6,YEAR>2012)$mu)
+USR = K*.4
+LRP = K*.2
+abline(h=USR, col='green',lwd=2)
+abline(h=LRP, col='blue',lwd=2)
+xx = rmed(c6$YEAR, c6$mu)
+lines(xx$yr,xx$x, lwd=2,col='salmon')
+dev.off()
+
+
+
+
+####LFA 38
+
+c8 = subset(cp, LFA==38)
+
+require(bcp)
+
+   b = bcp((c8$mu),w0 = 0.2, p0 = 0.05)
+      plot(b,xaxlab=c6$YEAR,xlab='Year')
+      savePlot(file.path(fpf1,'BCPCPUE38.png'))
+
+png(file=file.path(fpf1,'LFA38CPUERefs.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+with(c8, plot(YEAR, mu, xlab='Year',ylab='Modelled CPUE', pch=16 ,type='p', ylim=c(0,6) ))
+with(c8, arrows(YEAR, y0=ub,y1=lb, length=0))
+K = median(subset(c8,YEAR>2013)$mu)
+USR = K*.4
+LRP = K*.2
+abline(h=USR, col='green',lwd=2)
+abline(h=LRP, col='blue',lwd=2)
+xx = rmed(c8$YEAR, c8$mu)
+lines(xx$yr,xx$x, lwd=2,col='salmon')
+dev.off()

@@ -349,7 +349,7 @@ logsInSeason=lobster.db("process.logs")
 
     write.csv(logsInSeason,file.path(project.datadirectory("bio.lobster"),'data',"Logs.csv"),row.names=F)
 
-    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2002:2018,graphic='R',export=T)
+    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2002:2018,graphic='R',export=F)
     cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2018,graphic='pdf',path=figdir)
     cpueSubArea.dat = CPUEplot(logsInSeason,subarea= p$subareas,yrs=2006:2018,graphic='R')
 

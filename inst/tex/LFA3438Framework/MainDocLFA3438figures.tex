@@ -37,24 +37,6 @@
 
 \end{figure}
 \end{landscape}
-\begin{figure}
-\centering
-    \pdftooltip{\includegraphics[width=.8\textwidth]{\e nscounty.jpg}}{Figure 1}
-    \caption{Map of the counties in Nova Scotia used for splitting the historic landings information for LFA 34 (Yarmouth and Digby county).}
-
-\end{figure}
-
-\begin{figure}
-        \centering
-    \pdftooltip{
-                \subfloat{\includegraphics[width=0.5\textwidth]{\e LandingsLFA34.png}}
-                \subfloat{\includegraphics[width=0.5\textwidth]{\e LandingsLFA35.png}}}{Figure 4}\\
-                \subfloat{\includegraphics[width=0.5\textwidth]{\e LandingsLFA36.png}}
-                \subfloat{\includegraphics[width=0.5\textwidth]{\e LandingsLFA38.png}}\\
-                
-         \caption{Landings trends by LFA for each of LFA 34-38. Red lines represent the three year running medians within each plot. Clockwise from top left, LFA 34, LFA 35, LFA 38, LFA 36. In LFA 34 landings prior to 1947 were split into LFAs by county as indicated in Figure 2. }
-        \end{figure}
-
 %maps of surveys
 
     \begin{figure}
@@ -144,6 +126,12 @@
     \end{figure}
 
 
+\begin{figure}
+\centering
+    \pdftooltip{\includegraphics[width=.8\textwidth]{\e nscounty.jpg}}{Figure 1}
+    \caption{Map of the counties in Nova Scotia used for splitting the historic landings information for LFA 34 (Yarmouth and Digby county).}
+
+\end{figure}
 
 %fishery footprint
 
@@ -189,18 +177,18 @@
         \end{figure}
 
 
+
 \begin{figure}
         \centering
     \pdftooltip{
-                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e FisheryFootprintLandings2014.pdf}}
-                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e FisheryFootprintLandings2015.pdf}}}{Figure 3}\\
-                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e FisheryFootprintLandings2016.pdf}}
-                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e FisheryFootprintLandings2017.pdf}}\\
-                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e FisheryFootprintLandings2018.pdf}}
-                %}        
-        
-         \caption{Map of the fishery footprint expressed as the weight of landings in each grid of LFAs 34 - 38 from 2014-2018.}
+                \subfloat{\includegraphics[width=0.5\textwidth]{\e LandingsLFA34.png}}
+                \subfloat{\includegraphics[width=0.5\textwidth]{\e LandingsLFA35.png}}}{Figure 4}\\
+                \subfloat{\includegraphics[width=0.5\textwidth]{\e LandingsLFA36.png}}
+                \subfloat{\includegraphics[width=0.5\textwidth]{\e LandingsLFA38.png}}\\
+                
+         \caption{Landings trends by LFA for each of LFA 34-38. Red lines represent the three year running medians within each plot. Clockwise from top left, LFA 34, LFA 35, LFA 38, LFA 36. In LFA 34 landings prior to 1947 were split into LFAs by county as indicated in Figure 2. }
         \end{figure}
+
 
 %%gam model parameter smooths
  \begin{figure}
@@ -211,6 +199,48 @@
         \caption{Plots of the smooth depth and spatial terms of the total abundance generalizied addtive model for the ILTS trawl survey.}
 
     \end{figure}
+
+%cpue
+
+% CPUE model'
+
+  \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e CPUERawHistoric.pdf}}{Figure 105}
+        \caption{Daily (grey line) and Annual (red dot) mean Catch per unit effort (kg/Trap Haul) for each LFA.}
+
+    \end{figure}
+
+
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e Brad/CPUEmodel1.png}}{Figure 102}
+        \caption{Predictions of Catch per unit effort (kg/trap haul) from the model for each day (red line), overlaid on the raw data for LFAs 34-38. }
+
+    \end{figure}
+
+    \begin{figure}
+    \centering
+            \pdftooltip{
+             \includegraphics[width=1\textwidth]{\e CPUEAnnualModel1.pdf}}{Figure 104}
+            \caption{The model predicted mean and standard deviation (covered by points) for LFA Catch per unit effort (CPUE) indices. }
+
+  \end{figure}
+
+
+
+
+
+%Hcr exmaple
+\begin{figure}
+
+   \pdftooltip{\subfloat{\includegraphics[width=1.2\textwidth]{\e HCRExample.png}}}{Figure 5}\\
+                     \caption{Example precautionary approach phase plot delimiting the healthy zone (green) above upper stock reference (USR) the cautious zone (yellow), between the USR and the limit reference point (LRP) and critical zone (red), below the LRP. The removal reference (RR) is shown as a solid black line in the healthy zone and progressively decreasing through the cautious zone, the shape and rate of decrease was shown as an example.}
+\end{figure}
+
 
 %total abundance
 
@@ -369,37 +399,6 @@
     \end{figure}
 
 \fi
-
-
-% CPUE model'
-
-  \begin{figure}
-    \centering
-        \pdftooltip{
-        \includegraphics[width=1\textwidth]{\e Brad/CPUE.pdf}}{Figure 105}
-        \caption{Daily (grey line) and Annual (red dot) mean Catch per unit effort (kg/Trap Haul) for each LFA.}
-
-    \end{figure}
-
-
-
-    \begin{figure}
-    \centering
-        \pdftooltip{
-        \includegraphics[width=1\textwidth]{\e Brad/CPUEmodel1.png}}{Figure 102}
-        \caption{Predictions of Catch per unit effort (kg/trap haul) from the model for each day (red line), overlaid on the raw data for LFAs 34-38. }
-
-    \end{figure}
-
-    \begin{figure}
-    \centering
-            \pdftooltip{
-             \includegraphics[width=1\textwidth]{\e Brad/CPUEmodelAnnualIndex.pdf}}{Figure 104}
-            \caption{The predicted mean and standard deviation for seasonal and LFA Catch per unit effort (CPUE) indices from the CPUE model (red dots, dashed line). Unmodelled mean CPUE for each season and LFA (blue dots).}
-
-  \end{figure}
-
-
 
 
 
@@ -693,7 +692,34 @@
     \end{figure}
 
 
+\begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e FSRSRecruitsLFA35.png}}{Figure 10}
+        \caption{Time series of modelled recruit lobster abundance from FSRS recruitment traps in LFA 35.}
 
+    \end{figure}
+
+
+\begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e GiniLandings35.png}}{Figure 10}
+       \caption{Plot of level of patchiness of landings of lobsters within LFA 35. Patchiness was estimated by the Gini index.}
+
+    \end{figure}
+
+\begin{landscape}
+\begin{figure}
+        \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0 1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e BCPCPUE35.png}}}{Figure 3}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e LFA35CPUERefs.png}}\\
+
+\caption{Plot of the Bayesian change point analyses on the commercial CPUE for LFA 35 (left). Modelled CPUE index from commercial data in LFA 35. Green line represents the proposed USR and blue line represents the proposed LRP (Right). The red line represents the three year running median.  }
+        \end{figure}
+
+\end{landscape}
 %%%LFA 36
 
 \begin{figure}
@@ -705,6 +731,26 @@
     \end{figure}
 
 
+\begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e GiniLandings36.png}}{Figure 10}
+       \caption{Plot of level of patchiness of landings of lobsters within LFA 36. Patchiness was estimated by the Gini index.}
+
+    \end{figure}
+
+   
+\begin{landscape}
+\begin{figure}
+        \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0 1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e BCPCPUE36.png}}}{Figure 3}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e LFA36CPUERefs.png}}\\
+
+\caption{Plot of the Bayesian change point analyses on the commercial CPUE for LFA 36 (left). Modelled CPUE index from commercial data in LFA 36. Green line represents the proposed USR and blue line represents the proposed LRP (Right). The red line represents the three year running median.  }
+        \end{figure}
+
+\end{landscape}
 %%%LFA 38
 
 \begin{figure}
@@ -714,6 +760,37 @@
         \caption{Time series of recruit lobster abundance from scallop surveys in LFA 38. Red line represents three year running median.}
 
     \end{figure}
+
+\begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e GiniLandings38.png}}{Figure 10}
+       \caption{Plot of level of patchiness of landings of lobsters within LFA 38. Patchiness was estimated by the Gini index.}
+
+    \end{figure}
+
+
+\begin{landscape}
+\begin{figure}
+    \centering
+        \pdftooltip{  
+                \subfloat{\includegraphics[clip,trim={0 0 0.3cm 2.1cm},width=0.6\textwidth]{\e FlaggCoveSexProportion.pdf}}}{Figure 3}
+                \subfloat{\includegraphics[clip,trim={0 0 0.3cm 2.1cm},width=0.6\textwidth]{\e FlaggCoveLobsterPerArea.pdf}}
+
+       \caption{Stacked barplot of the proportion of sexs in along the transect (left) and the mean densities (right) of male(1), female (2) and berried (3) $lobsters/m^2$ per year from the Flagg Cove dive transect survey.}
+
+    \end{figure}
+
+
+\begin{figure}
+        \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0 1cm 0.3cm 2.1cm},width=0.6\textwidth]{\e BCPCPUE38.png}}}{Figure 3}
+                \subfloat{\includegraphics[clip,trim={0 1cm 0.3cm 2.1cm},width=0.6\textwidth]{\e LFA38CPUERefs.png}}\\
+
+\caption{Plot of the Bayesian change point analyses on the commercial CPUE for LFA 38 (left). Modelled CPUE index from commercial data in LFA 38. Green line represents the proposed USR and blue line represents the proposed LRP (Right). The red line represents the three year running median.  }
+        \end{figure}
+\end{landscape}
 
 
 \end{document}

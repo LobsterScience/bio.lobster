@@ -33,10 +33,10 @@ for(i in LFA){
 		aa = rbind(rbind(aa,bb),dd)
 		aa = aa[order(aa$YR),]
 		file.name = paste('Landings',i,'.png',sep="")
-		 png(file=file.path(fpf1,'LandingsL3538.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+		# png(file=file.path(fpf1,'LandingsL3538.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 		plot(aa$YR,aa[,i],type='h',lwd=4,col='black',xlab='Year',ylab='Landings (t)')
 		lines(aa$YR,runmed(aa[,i],3),col='salmon',lwd=3)
-		dev.off()
+		#dev.off()
 		}
 
 #relative F LFA 34
@@ -213,11 +213,53 @@ dev.off()
 
 
 playing=F
-if(playing){
+if(playingIn34){
 
 				#cycles
 				require(forecast)
 					i = "LFA34"
+					 aa = a[,c('YR',i)]
+					bb = subset(aa,YR>1980)	
+					x = bb[,i]
+				 	n <- length(x)
+				    x <- as.ts(x)
+				    x <- residuals(tslm(x ~ trend)) #removing time series trend
+				    n.freq <- 500
+				    spec <- spec.ar(c(na.contiguous(x)), plot = T, n.freq = n.freq) # spectral analysis of cycle
+				    period <- floor(1/spec$freq[which.max(spec$spec)] + 0.5) #determiing the most likely period
+
+				    plot( 1/spec$freq,spec$spec,type= 'l',xlim=c(0,20),xlab='Frequency', ylab='Spectral Density')
+				    abline(h=max(spec$spec),v=1/spec$freq[which.max(spec$spec)],col='red',lwd=2)
+				    savePlot(file.path(fpf1,'CyclesInLandingsLFA34.png'))
+				 
+				 #rate of increase
+				           	ag <- coef(lm(log(LFA34)~YR,data=bb))
+						 round((1-exp(ag[2]*nrow(bb))),digits=1)
+					
+
+				   x = trends.rot[1,]
+				   n <- length(x)
+				    x <- as.ts(x)
+				    x <- residuals(tslm(x ~ trend)) #removing time series trend
+				    n.freq <- 500
+				    spec <- spec.ar(c(na.contiguous(x)), plot = T, n.freq = n.freq) # spectral analysis of cycle
+				    period <- floor(1/spec$freq[which.max(spec$spec)] + 0.5) #determiing the most likely period
+
+						a= read.table('~/tmp/sunsptdata.dat',header=T)
+						b = subset(a,Year>1980 & Year<2019)
+
+				   y = b$TSI
+				   n <- length(y)
+				    y <- as.ts(y)
+				    y <- residuals(tslm(y ~ trend)) #removing time series trend
+				  
+}
+
+if(playingIn35){
+nothin
+				#cycles
+				require(forecast)
+					i = "LFA35"
 					 aa = a[,c('YR',i)]
 					bb = subset(aa,YR>1980)	
 					x = bb[,i]

@@ -74,6 +74,14 @@ if(DS %in% c('historic.cpue.redo', 'historic.cpue')){
                    con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                   hcpue = sqlQuery(con,"select a.port, sdate, to_char(sdate,'yyyy') year, lfa, portname, lbsptrap from lobster.histcatch a, lobster.port b where 
 a.port = b.port;")
+                  hcpue$SYEAR = year(hcpue$SDATE)
+                  hcpue$MONTH = month(hcpue$SDATE)
+                  ii = which(hcpue$MONTH>8)
+                  hcpue$SYEAR[ii] = hcpue$SYEAR[ii]+1 
+                  dos1 = aggregate(SDATE~SYEAR+LFA,data=hcpue,FUN=min)
+                  names(dos1)[3] = 'D1'
+                  hcpue = merge(hcpue,dos1,all.x=T)
+                  hcpue$DOS = as.numeric((hcpue$SDATE-hcpue$D1)/(60*60*24))
                   save(hcpue,file=file.path(fnODBC,'historic.cpue.rdata'))       
           }
 
@@ -284,7 +292,6 @@ if (DS %in% c("logs.redo", "logs") ) {
               slips = sqlQuery(con, "select * from marfissci.lobster_sd_slip")
               save( slips, file=file.path( fnODBC, "slip.rdata"), compress=T)
               gc()  # garbage collection
-              odbcClose(con)
               
               # old logs LFA 34
               oldlogs34 = sqlQuery(con, "select * from lobster.lobster_log_data")
