@@ -23,7 +23,7 @@
 \newcommand{\tl}{\textless}
 %\newcommand{\e}{/SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/} %change this to set figure directory
 %\newcommand{\e}{\string~/bio.data/bio.lobster/figures/} %change this to set figure directory
-\newcommand{\e}{\string~/bio.data/bio.lobster/figures/LFA3438Framework2019/} %change this to set figure directory
+\newcommand{\e}{\string~/bio.data/bio.lobster/figures/LFA3438Framework2019/figures/} %change this to set figure directory
 \newcommand{\cp}{\caption}
 
 \begin{document}
@@ -793,6 +793,223 @@
 \end{landscape}
 
 
+
+% Molt model
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e Brad/TempDataMap.png}}{Figure 140}
+        \caption{Locations of all temperature data used in the temperature model.}
+
+    \end{figure}
+
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e Brad/TempModelAnnual.png}}{Figure 142}
+        \caption{Predictions from the temperature model for June 1st at 25 m to show the annual trends in each LFA. Light blue band represents the standard error of the prediction.}
+
+    \end{figure}
+  
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e Brad/TaggingMap.pdf}}{Figure 143}
+        \caption{Locations of tagging mark-recapture data used for estimating moult probability and increment. Releases (red dots) are conected to their recaptures (blue dots) with a purple line.}
+
+    \end{figure}
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e Brad/MoltProbModel.png}}{Figure 144}
+        \caption{Predicted molt probabilities by number of degree days above 0$^{\circ}$C since last molt for various initial carapace lengths from the molt probability model.}
+
+    \end{figure}
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e Brad/MoltIncrModel.png}}{Figure 145}
+        \caption{Molt increment as the size difference versus initial carapace length for males (blue) and females (red) from tagging data. Lines represent the fits and 95\% credible interval of the molt increment model for each sex.}
+
+    \end{figure}    
+
+
+    \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e Brad/SoM.png}}{Figure 146}
+        \caption{Size at maturity ogive for LFA 34.}
+
+    \end{figure}    
+
+
+% Simulation    
+    
+    %## base
+    \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34malesBase.png}}}{Figure 147}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34removalsBase.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34femalesBase.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34moltsBase.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34berriedBase.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34eggsBase.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population assuming CCIR exploitation estimates under the current management regime for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+ 
+    %## base
+    \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34malesBase.png}}}{Figure 147}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34removalsBase.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34femalesBase.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34moltsBase.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34berriedBase.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34eggsBase.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population assuming RelF exploitation estimates  under the current management regime for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+ 
+    %## MLS 90
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34malesLS90.png}}}{Figure 156}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34removalsLS90.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34femalesLS90.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34moltsLS90.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34berriedLS90.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34eggsLS90.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population assuming CCIR exploitation estimates where MLS was increased to 90mm for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+ 
+
+    %## MLS 90
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34malesLS90.png}}}{Figure 156}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34removalsLS90.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34femalesLS90.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34moltsLS90.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34berriedLS90.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34eggsLS90.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population assuming RelF exploitation estimates where MLS was increased to 90mm for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+ 
+
+
+    %## shorter season
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34malesSS5.png}}}{Figure 165}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34removalsSS5.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34femalesSS5.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34moltsSS5.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34berriedSS5.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34eggsSS5.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population assuming CCIR exploitation estimates where the season was shortened by 50 percent for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    
+    %## shorter season
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34malesSS5.png}}}{Figure 165}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34removalsSS5.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34femalesSS5.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34moltsSS5.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34berriedSS5.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34eggsSS5.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population assuming RelF exploitation estimates where the season was shortened by 50 percent for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    
+  
+%----------
+
+
+    %## windows 
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34malesSmallWin.png}}}{Figure 174}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34removalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34femalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34moltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34berriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34eggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population assuming CCIR exploitation estimates where a small window (115-125 mm) was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+ %-----------
+
+
+    %## windows 
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34malesSmallWin.png}}}{Figure 174}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34removalsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34femalesSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34moltsSmallWin.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34berriedSmallWin.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34eggsSmallWin.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population assuming RelF exploitation estimates where a small window (115-125 mm) was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+ %-----------
+
+    %## max size
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34malesMax125.png}}}{Figure 183}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34removalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34femalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34moltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34berriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/LC34eggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population assuming CCIR exploitation estimates where a maximum size of 125 mm was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+
+    %## max size
+     \begin{figure}
+    \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34malesMax125.png}}}{Figure 183}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34removalsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34femalesMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34moltsMax125.png}}\\
+                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34berriedMax125.png}}\
+                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\e Brad/sim/lowF/LC34eggsMax125.png}}\\
+                %}        
+        
+         \caption{Bubble plots showing the simulated population assuming RelF exploitation estimates where a maximum size of 125 mm was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+    \end{figure}
+    \clearpage    
+
 \end{document}
 %\begin{figure}
 %        \centering
@@ -871,145 +1088,6 @@
 
 
 
-
-
-% Molt model
-
-    \begin{figure}
-    \centering
-        \pdftooltip{
-        \includegraphics[width=1\textwidth]{\ebh TempDataMap.png}}{Figure 140}
-        \caption{Locations of all temperature data used in the temperature model.}
-
-    \end{figure}
-
-
-    \begin{figure}
-    \centering
-        \pdftooltip{
-        \includegraphics[width=1\textwidth]{\ebh TempModelAnnual.png}}{Figure 142}
-        \caption{Predictions from the temperature model for June 1st at 25 m to show the annual trends in each LFA. Light blue band represents the standard error of the prediction.}
-
-    \end{figure}
-  
-    \begin{figure}
-    \centering
-        \pdftooltip{
-        \includegraphics[width=1\textwidth]{\ebh TaggingMap.pdf}}{Figure 143}
-        \caption{Locations of tagging mark-recapture data used for estimating moult probability and increment. Releases (red dots) are conected to their recaptures (blue dots) with a purple line.}
-
-    \end{figure}
-
-    \begin{figure}
-    \centering
-        \pdftooltip{
-        \includegraphics[width=1\textwidth]{\ebh MoltProbModel.png}}{Figure 144}
-        \caption{Predicted molt probabilities by number of degree days above 0$^{\circ}$C since last molt for various initial carapace lengths from the molt probability model.}
-
-    \end{figure}
-
-    \begin{figure}
-    \centering
-        \pdftooltip{
-        \includegraphics[width=1\textwidth]{\ebh MoltIncrModel.png}}{Figure 145}
-        \caption{Molt increment as the size difference versus initial carapace length for males (blue) and females (red) from tagging data. Lines represent the fits and 95\% credible interval of the molt increment model for each sex.}
-
-    \end{figure}    
-
-
-    \begin{figure}
-    \centering
-        \pdftooltip{
-        \includegraphics[width=1\textwidth]{\ebh SoM.png}}{Figure 146}
-        \caption{Size at maturity ogive for LFA 34.}
-
-    \end{figure}    
-
-
-% Simulation    
-    
-    %## base
-    \begin{figure}
-    \centering
-    \pdftooltip{
-                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34malesBase.png}}}{Figure 147}\
-                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34removalsBase.png}}\\
-                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34femalesBase.png}}\
-                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34moltsBase.png}}\\
-                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34berriedBase.png}}\
-                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34eggsBase.png}}\\
-                %}        
-        
-         \caption{Bubble plots showing the simulated population under the current management regime for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
-    \end{figure}
- 
-    %## MLS 90
-     \begin{figure}
-    \centering
-    \pdftooltip{
-                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34malesLS90.png}}}{Figure 156}\
-                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34removalsLS90.png}}\\
-                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34femalesLS90.png}}\
-                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34moltsLS90.png}}\\
-                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34berriedLS90.png}}\
-                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34eggsLS90.png}}\\
-                %}        
-        
-         \caption{Bubble plots showing the simulated population where MLS was increased to 90mm for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
-    \end{figure}
- 
-
-
-    %## shorter season
-     \begin{figure}
-    \centering
-    \pdftooltip{
-                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34malesSS5.png}}}{Figure 165}\
-                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34removalsSS5.png}}\\
-                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34femalesSS5.png}}\
-                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34moltsSS5.png}}\\
-                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34berriedSS5.png}}\
-                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34eggsSS5.png}}\\
-                %}        
-        
-         \caption{Bubble plots showing the simulated population where the season was shortened by 50 percent for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
-    \end{figure}
-    
-  
-%----------
-
-
-    %## windows 
-     \begin{figure}
-    \centering
-    \pdftooltip{
-                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34malesSmallWin.png}}}{Figure 174}\
-                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34removalsSmallWin.png}}\\
-                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34femalesSmallWin.png}}\
-                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34moltsSmallWin.png}}\\
-                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34berriedSmallWin.png}}\
-                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34eggsSmallWin.png}}\\
-                %}        
-        
-         \caption{Bubble plots showing the simulated population where a small window (115-125 mm) was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
-    \end{figure}
- %-----------
-
-    %## max size
-     \begin{figure}
-    \centering
-    \pdftooltip{
-                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34malesMax125.png}}}{Figure 183}\
-                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34removalsMax125.png}}\\
-                \subfloat{\includegraphics[clip,trim={0cm 1.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34femalesMax125.png}}\
-                \subfloat{\includegraphics[clip,trim={1cm 1.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34moltsMax125.png}}\\
-                \subfloat{\includegraphics[clip,trim={0cm 0.5cm 1cm 2cm },width=0.49\textwidth]{\ebh sim/LC34berriedMax125.png}}\
-                \subfloat{\includegraphics[clip,trim={1cm 0.5cm 0cm 2cm },width=0.49\textwidth]{\ebh sim/LC34eggsMax125.png}}\\
-                %}        
-        
-         \caption{Bubble plots showing the simulated population where a maximum size of 125 mm was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
-    \end{figure}
-    \clearpage    
 %     \begin{figure}
 %    \centering
 %        \pdftooltip{

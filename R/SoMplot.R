@@ -19,7 +19,7 @@ SoMplot = function(Areas=c("27","29","30","32","33"),cl=50:130,ltys=1:length(Are
 
 		legend('bottomright',Areas,lty=ltys,col=cols,title="LFA")
 
-		lines(cl,som,lty=ltys[i],col=cols[i])
+		#lines(cl,som,lty=ltys[i],col=cols[i])
 
 	}
 	if(version==2){
@@ -42,15 +42,15 @@ SoMplot = function(Areas=c("27","29","30","32","33"),cl=50:130,ltys=1:length(Are
 
 	if(graphic!="R")dev.off()
 
-	somdif = lapply(som,'-',pm)
-	mins = lapply(lapply(somdif,abs),min)
-	sa50m=c()
-	for(i in 1:length(som)){
-		sa50m[i] = cl[which(abs(somdif[[i]])==mins[[i]])]
-	}
-	names(sa50m) = Areas
-
-	return(sa50m)
+	#somdif = lapply(som,'-',pm)
+	#mins = lapply(lapply(somdif,abs),min)
+	#sa50m=c()
+	#for(i in 1:length(som)){
+	#	sa50m[i] = cl[which(abs(somdif[[i]])==mins[[i]])]
+	#}
+	#names(sa50m) = Areas
+#
+	#return(sa50m)
 
 }
 
