@@ -12,6 +12,8 @@ la()
 	TempModelling = TempModel(areas = 'subarea')
 	#TempModelPlot(TempModelling,xlim=c(1980,2017),depths=c(5,25,50),Area=c("27N","27S", "29", "30","31A","31B", "32", "33E", "33W"),graphic='R')
 	p$TempModel = TempModelling$Model
+	TempModelling = TempModel(areas = 'subarea',annual.by.area=T)
+	tempModel=TempModelPlot(TempModelling,xlim=c(1980,2018),depths=c(5,25,50),Area=p$subareas,graphic='png',type=1:3)
 
 	MoltModelling = moltModel(p,redo.dd=F)
 	p$moltModel = MoltModelling

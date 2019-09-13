@@ -166,7 +166,7 @@
 	dev.off()
 
 
-	CarapaceLengthFrequencies(LFAs='34',DS='ScallopSurvey', Yrs=2006:2018,graphic="pdf", rootdir= figdir, fn="LFA34" )
+	CarapaceLengthFrequencies(LFAs='34',DS='ScallopSurvey', Yrs=2006:2018,graphic="pdf", rootdir= figdir, fn="" )
 	CarapaceLengthFrequencies(LFAs='35',DS='ScallopSurvey', Yrs=2006:2018,graphic="pdf", rootdir= figdir, fn="LFA35" )
 	CarapaceLengthFrequencies(LFAs='36',DS='ScallopSurvey', Yrs=2006:2018,graphic="pdf", rootdir= figdir, fn="LFA36"  )
 	CarapaceLengthFrequencies(LFAs='38',DS='ScallopSurvey', Yrs=2006:2018,graphic="pdf", rootdir= figdir, fn="LFA38"  )
@@ -342,8 +342,8 @@ dev.off()
 
 	
 	# at Sea Sampling
-	CarapaceLengthFrequencies(LFAs= '34', DS='atSea', by='SEX', fn='34a',graphic="R",Yrs = c(2000:2004),vers=2,rootdir=figdir)
-	CarapaceLengthFrequencies(LFAs= '34', DS='atSea', by='SEX', fn='34b',graphic="R",Yrs = c(2012:2018),vers=2,rootdir=figdir)
+	CarapaceLengthFrequencies(LFAs= '34', DS='atSea', by='SEX', fn='34a',graphic="pdf",Yrs = c(2005:2011),vers=2,rootdir=figdir)
+	CarapaceLengthFrequencies(LFAs= '34', DS='atSea', by='SEX', fn='34b',graphic="pdf",Yrs = c(2012:2018),vers=2,rootdir=figdir)
 	CarapaceLengthFrequencies(LFAs= '35', DS='atSea', by='SEX', fn='35a',graphic="pdf",Yrs = c(2005:2011),vers=2,rootdir=figdir)
 	CarapaceLengthFrequencies(LFAs= '35', DS='atSea', by='SEX', fn='35b',graphic="pdf",Yrs = c(2012:2018),vers=2,rootdir=figdir)
 	CarapaceLengthFrequencies(LFAs= '36', DS='atSea', by='SEX', fn='36a',graphic="pdf",Yrs = c(2005:2011),vers=2,rootdir=figdir)
