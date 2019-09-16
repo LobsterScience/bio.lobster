@@ -192,36 +192,23 @@ dev.off()
 
 
 
+#####cpue v modelled resutls
 
 
+cp = read.csv(file.path(project.datadirectory('bio.lobster'),'analysis','LFA34-38','indicators','CPUEmodelindex.csv'))
+ll = unique(cp$LFA)
+
+fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019")
 
 
-
-
-
-   ###playing{
-      
-
-         a = lobster.db('annual.landings')
-         a = subset(aa,YR %in% 1945:1959,select=c(YR,LFA34))
-
-         b = subset(aa34,SYEAR %in% 1947:1959)
-
-         plot(b$CPUE,a$LFA34)
-         gg = merge(aa[,c('YR','LFA34')],aa34[,c('SYEAR','CPUE')],by.x='YR',by.y='SYEAR')
-
-with(subset(gg,YR>1970),plot(CPUE,(LFA34-mean(LFA34))/sd(LFA34),pch=16,ylim=c(-2,2.2),xlim=c(0,2),type='b'))
-with(subset(gg,YR<1970),points(CPUE,(LFA34-mean(LFA34))/sd(LFA34),pch=16,col='red',type='b'))
-
-
-gge = subset(gg,YR<1970)
-gge$zL = (gge$LFA34-mean(gge$LFA34))/sd(gge$LFA34)
-
-
-ggl = subset(gg,YR>1970)
-ggl$zL = (ggl$LFA34-mean(ggl$LFA34))/sd(ggl$LFA34)
-
-lm(zL~CPUE+0,data=ggl)
-
-with(gge,plot(CPUE,zL,pch=16,xlim=c(0.3,1.5)))
-with(ggl,points(CPUE,zL,pch=16,xlim=c(0,2),col='red'))
+ pdf(file.path( fpf1,paste0("CPUEAnnualModel1.pdf")),8,11)
+    par(mfrow=c(length(ll),1),mar=c(0,0,0,0),omi=c(0.5,1,0.5,0.5),las=1)
+xlims=c(min(cp$YEAR), max(cp$YEAR))
+ylims=c(1.8,max(cp$ub)*1.1)
+for(i in ll){
+    c5 = subset(cp,LFA==i)
+with(c5, plot(YEAR, mu, xlab='Year',ylab='Modelled CPUE' ,type='b' , xlim=xlims,ylim=ylims,pch=21,bg='red'))      
+with(c5, arrows(YEAR,y0=lb,y1=ub,length=0))
+text(min(cp$YEAR,na.rm=T),max(cp$ub,na.rm=T)*.8,paste("LFA",i),cex=2,pos=4)
+} 
+dev.off()

@@ -107,7 +107,7 @@ calc_RMSE <- function(pred, obs){
 		corners = data.frame(lon=c(-67.8,-65),lat=c(42.5,45))
 
 		R1area[[i]] = c(Years[i],length(which(xyz$z<5)))
-		planarMap( xyz, fn=paste("gamtwPAR1",Years[i],sep='.'), datascale=seq(0.1,400,l=30), annot=Years[i],loc=figdir, corners=corners,log.variable=T)
+		planarMap( xyz, fn=paste("gamtwPAR1",Years[i],sep='.'), datascale=seq(0.1,10000,l=30), annot=Years[i],loc=fpf1, corners=corners,log.variable=T)
 		#planarMap( xyz, fn=paste("lobster.gambi.pred",Years[i],sep='.'), annot=Years[i],loc="output",corners=corners)
 		#planarMap( xyz, corners=corners)
 		R1surface[[i]]=xyz
