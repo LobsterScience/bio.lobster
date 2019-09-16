@@ -21,9 +21,9 @@
 %\renewcommand{\footrulewidth}{0.4pt}
 \newcommand{\D}{.}
 \newcommand{\tl}{\textless}
-%\newcommand{\e}{/SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/} %change this to set figure directory
+\newcommand{\e}{/SpinDr/backup/bio_data/bio.lobster/figures/LFA3438Framework2019/} %change this to set figure directory
 %\newcommand{\e}{\string~/bio.data/bio.lobster/figures/} %change this to set figure directory
-\newcommand{\e}{\string~/bio.data/bio.lobster/figures/LFA3438Framework2019/figures/} %change this to set figure directory
+%\newcommand{\e}{\string~/bio.data/bio.lobster/figures/LFA3438Framework2019/figures/} %change this to set figure directory
 \newcommand{\cp}{\caption}
 
 \begin{document}
@@ -105,7 +105,7 @@
         \pdftooltip{
            \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e Brad/ITQsurveyMap.pdf}}
         \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e Brad/ILTSsurveyMap.pdf}}}{Figure XX}\\
-        \caption{Maps of the fixed gear survey stations from the ITQ survey (above) and the ILTS survey (below).}
+        \caption{Maps of the fixed gear survey stations from the ITQ survey (left) and the ILTS survey (right).}
     \end{figure}
 
 %Scallop maps 
@@ -186,20 +186,23 @@
                 \subfloat{\includegraphics[width=0.5\textwidth]{\e LandingsLFA36.png}}
                 \subfloat{\includegraphics[width=0.5\textwidth]{\e LandingsLFA38.png}}\\
                 
-         \caption{Landings trends by LFA for each of LFA 34-38. Red lines represent the three year running medians within each plot. Clockwise from top left, LFA 34, LFA 35, LFA 38, LFA 36. In LFA 34 landings prior to 1947 were split into LFAs by county as indicated in Figure 2. }
+         \caption{Landings trends by LFA for each of LFA 34-38. Red lines represent the three year running medians within each plot. Clockwise from top left, LFA 34, LFA 35, LFA 38, LFA 36. In LFA 34 landings prior to 1947 were split into LFAs by county as indicated in Figure 10. }
         \end{figure}
 
 
 %%gam model parameter smooths
+\begin{landscape}
  \begin{figure}
     \centering
         \pdftooltip{
-              \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.6\textwidth]{\e ILTSDepthSmooth.png}}}{Figure XX}\\
-              \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.6\textwidth]{\e ILTSSpaceSmooth.png}}
-        \caption{Plots of the smooth depth and spatial terms of the total abundance generalizied addtive model for the ILTS trawl survey.}
+              \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.6\textwidth]{\e ILTSDepthSmooth.png}}}{Figure XX}
+              \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.6\textwidth]{\e ILTSSpaceSmooth.png}}\\
+              \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.6\textwidth]{\e gamtwPAR12018.png}}
+                
+        \caption{Plots of the smooth depth and spatial terms of the total abundance generalizied addtive model for the ILTS trawl survey (top). Predicted surface of lobster abundance within LFA 34 from the selected gam model for 2018.}
 
     \end{figure}
-
+\end{landscape}
 %cpue
 
 % CPUE model'
@@ -226,7 +229,7 @@
     \centering
             \pdftooltip{
              \includegraphics[width=1\textwidth]{\e CPUEAnnualModel1.pdf}}{Figure 104}
-            \caption{The model predicted mean and standard deviation (covered by points) for LFA Catch per unit effort (CPUE) indices. }
+            \caption{The model predicted mean and standard deviation (covered by points) Catch per unit effort (CPUE) indices for each LFA. }
 
   \end{figure}
 
@@ -1153,6 +1156,28 @@
     \end{figure}
 
 
+%berried females
+
+\begin{figure}
+        \centering
+    \pdftooltip{
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e LFA34NEFSCFallrestratifiednumbersBerried.png}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e LFA34NEFSCSpringrestratifiedBerried.png}}}{Figure 3}\\
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e LFA34DFOrestratifiednumbersBerried.png}}
+                \subfloat{\includegraphics[clip,trim={0 2.1cm 0.3cm 2.1cm},width=0.5\textwidth]{\e ILTSberried.png}}
+                
+                %}        
+        
+         \caption{Time series trends in berried abundance for lobsters within LFA 34 captured in trawl surveys. Clockwise from top left, NFall, NSpr, ILTS and DFO.
+         Orange lines represent three year running medians. }
+        \end{figure}
+   \begin{figure}
+    \centering
+        \pdftooltip{
+        \includegraphics[width=1\textwidth]{\e LFA35-38DFOrestratifiednumbersBerried.png}}{Figure A6}
+        \caption{Berried Female abundance LFA 35-38 from DFO summer RV surveys.}
+
+    \end{figure}
 
 \end{document}
 
