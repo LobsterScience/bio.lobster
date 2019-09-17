@@ -4,12 +4,9 @@ require(bio.survey)
 require(bio.lobster)
 require(bio.groundfish)
 p = bio.lobster::load.environment()
-p=list()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
-la()
 p$yrs = 1947:p$current.assessment.year
-load_all('~/git/bio.survey/')
 
 
 
@@ -31,9 +28,7 @@ load_all('~/git/bio.survey/')
         groundfish.db( DS="gsinf.odbc.redo", datayrs=datayrs )
   
 
-	        lobster.db( DS = 'annual.landings', p=p) #static annual landings tabke needs to be updated by CDenton
-        lobster.db( DS = 'seasonal.landings', p=p) #static seasonal landings table needs to be updated by CDenton
-     inf = nefsc.db( DS = 'usinf.clean.redo',fn.root = NULL,p=p)
-      ca = nefsc.db( DS = 'uscat.clean.redo',fn.root = NULL,p=p)
-      de = nefsc.db( DS = 'usdet.clean.redo',fn.root = NULL,p=p)
-         nefsc.db(DS = 'usstrata.area.redo')        
+	      inf = nefsc.db( DS = 'usinf.clean.redo',fn.root = NULL,p=p)
+        ca = nefsc.db( DS = 'uscat.clean.redo',fn.root = NULL,p=p)
+        de = nefsc.db( DS = 'usdet.clean.redo',fn.root = NULL,p=p)
+        nefsc.db(DS = 'usstrata.area.redo')        

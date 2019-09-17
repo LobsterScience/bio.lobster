@@ -1,23 +1,22 @@
 
-#run aug12
 require(bio.survey)
 require(bio.lobster)
 require(bio.groundfish)
-la()
 
 p = bio.lobster::load.environment()
 p$libs = NULL
+ff = "LFA35-38Assessment"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis","LFA34-38")
-fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019")
+fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+dir.create(fpf1,showWarnings=F)
 
-load_all('~/git/bio.survey/')
 p1 = p
+p1$yrs = 1969:2019
 
-
-stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1){
+stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
       if(survey == 'NEFSC'){
                 p$reweight.strata = T
-                p$years.to.estimate = c(1969:2018)
+                p$years.to.estimate = p$yrs
                 p$length.based = T
                 p$size.class= c(50,300)
                 p$by.sex = F
@@ -51,12 +50,8 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1){
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiednumbers.png',sep=""))
-
-                              p$ylim=c(0,20)
                               p$y.maximum = NULL # NULL # if ymax is too high for one year
                               p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-
                                 p$legend = FALSE
                                 p$running.median = T
                                 p$running.length = 3
@@ -64,40 +59,25 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1){
                                p$error.polygon=F
                               p$error.bars=T
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                       p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiednumbersNOY.png',sep=""))
+                       p$file.name = file.path(f,paste(lfa,'NEFSCSpringrestratifiednumbersNOY.png',sep=""))
                        p$ylim=NULL
                        p$box=T
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                         
-                       p$box=NULL
-                       p$ylim=c(0,50)
+                
                        p$metric = 'weights'
-                       p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiedweights.png',sep=""))
+                       p$file.name = file.path(f,paste(lfa,'NEFSCSpringrestratifiedweights.png',sep=""))
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$box=T
-                       p$ylim=NULL
-                       p$metric = 'weights'
-                       p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiedweightsNOY.png',sep=""))
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                       p$box=NULL
-                       p$ylim=NULL
-                       p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiedDWAO.png',sep=""))
+                       
+                       p$file.name = file.path(f,paste(lfa,'NEFSCSpringrestratifiedDWAO.png',sep=""))
                        p$metric = 'dwao'
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        
-                       p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCSpringrestratifiedgini.png',sep=""))
+                       p$file.name = file.path(f,paste(lfa,'NEFSCSpringrestratifiedgini.png',sep=""))
                        p$metric = 'gini'
                        p$ylim =c(0,1)
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
                        p$ylim = NULL
-
-                 aout$subset = 'NEFSC.Spring.Restratified'
-                write.csv(aout,file=file.path(fp,'indicators',paste(lfa,'NEFSC.Spring.Restratified.csv',sep="")))
-          
-#Fall Survey
+ 
                 p$season =c('fall')
                 p$define.by.polygons = T
                 p$lobster.subunits=F
@@ -115,7 +95,7 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1){
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCFallrestratifiednumbers.png',sep=""))
+                              p$file.name = file.path(f,paste(lfa,'NEFSCFallrestratifiednumbers.png',sep=""))
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -127,16 +107,8 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1){
                                p$error.polygon=F
                               p$error.bars=T
 
-                              p$ylim=c(0,15)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-
-                      p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCFallrestratifiednumbersNOY.png',sep=""))
+                      p$file.name = file.path(f,paste(lfa,'NEFSCFallrestratifiednumbersNOY.png',sep=""))
                         p$ylim=NULL
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
-                                              
-                       p$ylim=c(0,30)
-                       p$metric = 'weights'
-                       p$file.name = file.path('LFA3438Framework2019',paste(lfa,'NEFSCFallrestratifiedweights.png',sep=""))
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
 
                        p$box=T
