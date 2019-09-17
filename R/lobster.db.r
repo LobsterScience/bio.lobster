@@ -1143,7 +1143,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
 
      if (DS=="scallop.redo") {
         require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        con = odbcConnect(oracle.server , uid=oracle.scallop.user, pwd=oracle.scallop.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # scallop
         scallop.catch = sqlQuery(con, "select * from SCALLSUR.SCBYCATCHES")

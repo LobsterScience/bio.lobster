@@ -1,15 +1,17 @@
 # Lobster Fishery Footprint
 require(bio.survey)
 require(bio.lobster)
+require(bio.utilities)
+
 p = bio.lobster::load.environment()
 p$libs = NULL
-
-require(bio.utilities)
-la()
+ff = "LFA35-38Assessment"
+fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
+fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 
 a = lobster.db('process.logs') 
 
-#grid areas by LFA
+#areas within grids  by LFA
 		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
 		LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 		attr(LFAgrid,'projection') <- "LL"
@@ -32,11 +34,11 @@ a = lobster.db('process.logs')
 		ar = subset(ar, !LFA %in% c(36,38))
 		ar = as.data.frame(rbind(rbind(ar,ar6),ar8))
 
-
+#landings by areas to estimate gini
 aA = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~GRID_NUM+LFA+SYEAR,data=a,FUN=sum)
 aA = merge(aA, ar, by=c('LFA','GRID_NUM'),all.x=T)
 aA$CPUE = aA$WEIGHT_KG / aA$NUM_OF_TRAPS
-lfa = c(34,35,36,38)
+lfa = c(35,36,38)
 out = list()
 m= 0 
 for(i in 1:length(lfa)){
@@ -57,22 +59,17 @@ for(i in 1:length(lfa)){
 
 out = out[order(out$LFA, out$YEAR),]
 
-png(file=file.path(project.figuredirectory('bio.lobster'),'LFA3438Framework2019','GiniLandings34.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
-with(subset(out,LFA==34),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
-with(subset(out,LFA==34),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
-dev.off()
-
-png(file=file.path(project.figuredirectory('bio.lobster'),'LFA3438Framework2019','GiniLandings35.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+png(file=file.path(fpf1,'GiniLandings35.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 with(subset(out,LFA==35),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
 with(subset(out,LFA==35),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
 dev.off()
 
-png(file=file.path(project.figuredirectory('bio.lobster'),'LFA3438Framework2019','GiniLandings36.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+png(file=file.path(fpf1,'GiniLandings36.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 with(subset(out,LFA==36),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
 with(subset(out,LFA==36),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
 dev.off()
 
-png(file=file.path(project.figuredirectory('bio.lobster'),'LFA3438Framework2019','GiniLandings38.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+png(file=file.path(fpf1,'GiniLandings38.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 with(subset(out,LFA==38),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
 with(subset(out,LFA==38),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
 dev.off()
