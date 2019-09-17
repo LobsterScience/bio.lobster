@@ -21,6 +21,8 @@ p$yrs = 1947:p$current.assessment.year
         lobster.db( DS = 'seasonal.landings.redo', p=p) #static seasonal landings table needs to be updated by CDenton
         nefsc.db( DS = 'odbc.dump.redo',fn.root = file.path(project.datadirectory('bio.lobster'),'data'),p=p)
  
+      lobster.db('historic.cpue.redo')
+      lobster.db('vlog.redo')
 
         datayrs=1970:2019
         groundfish.db( DS="gscat.odbc.redo", datayrs=datayrs )

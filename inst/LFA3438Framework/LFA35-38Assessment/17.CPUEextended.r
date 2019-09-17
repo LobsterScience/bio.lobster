@@ -1,19 +1,20 @@
-require(bio.lobster)
-require(bio.utilities)
-  
+    require(bio.lobster)
+    require(bio.utilities)
 	p = bio.lobster::load.environment()
-	la()
+
 		
-	assessment.year = 2018 ########### check the year ############### !!!!!!!!!!!
+	assessment.year = 2018 
 
 
     p$syr = 1989
     p$yrs = p$syr:(p$current.assessment.year-1)
 
-    figdir = file.path(project.datadirectory("bio.lobster"),"figures","LFA3438Framework2019")
-
-    p$lfas = c("34", "35", "36", "38") # specify lfas for data summary
-    p$subareas = c("34", "35", "36", "38") # specify lfas for data summary
+        ff = "LFA35-38Assessment"
+        fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
+        fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+   
+    p$lfas = c( "35", "36", "38") # specify lfas for data summary
+    p$subareas = c( "35", "36", "38") # specify lfas for data summary
 
     lS<-lobster.db('process.logs')
     lS = subset(lS,SYEAR<2019)
@@ -145,7 +146,6 @@ require(bio.utilities)
     xlims=c(min(b34$SDATE),max(b34$SDATE))
     lfa = c(34,35,36,38)
  
-fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019")
 
 
  pdf(file.path( fpf1,paste0("CPUERawHistoric.pdf")),8,11)

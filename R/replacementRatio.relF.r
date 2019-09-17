@@ -62,7 +62,7 @@ replacementRatio.relF <- function(landings,survey.biomass,fn=project.figuredirec
 					out = c(out, as.numeric(exp(-1*gl[1] / gl[2])[1]))
 			}
 			if(trim) for(i in 1:5) {out = quantileBreak2NA(out,c(0.05,0.95))}
-			print(aa)
+			print(paste('R^2=',aa))
 			return(out)
 
 		}
