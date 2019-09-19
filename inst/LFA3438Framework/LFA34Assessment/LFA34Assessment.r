@@ -53,6 +53,7 @@
 		mdata = subset(CPUE.data,SYEAR%in%p$yrs)
 		CPUEModelResults = CPUEmodel(mf1,mdata,t=t,d=1)
 		crd = CPUEModelResults$pData[,c("YEAR","mu")]
+		cpue1= CPUEModelPlot(CPUEModelResults,TempModelling,lfa = p$lfas,xlim=c(1989,2018.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1,wd=11,ht=8)
 
 	# plot
 	x11(width=8,height=5)
