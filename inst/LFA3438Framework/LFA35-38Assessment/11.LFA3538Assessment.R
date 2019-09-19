@@ -3,11 +3,12 @@
 	p = bio.lobster::load.environment()
 	la()
 		
-	assessment.year = 2018 ########### check the year ############### !!!!!!!!!!!
+	assessment.year = 2019 ########### check the year ############### !!!!!!!!!!!
 
 
     p$syr = 1989
     p$yrs = p$syr:assessment.year
+ff = "LFA35-38Assessment"
 
     figdir = file.path(project.figuredirectory('bio.lobster'),ff)
 
@@ -95,9 +96,9 @@ logsInSeason=lobster.db("process.logs")
 
     write.csv(logsInSeason,file.path(project.datadirectory("bio.lobster"),'data',"Logs.csv"),row.names=F)
 
-    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2002:2018,graphic='R',export=F)
-    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2018,graphic='pdf',path=figdir)
-    cpueSubArea.dat = CPUEplot(logsInSeason,subarea= p$subareas,yrs=2006:2018,graphic='R')
+    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2002:2019,graphic='R',export=F)
+    cpueLFA.dat = CPUEplot(logsInSeason,lfa= p$lfas,yrs=2006:2019,graphic='pdf',path=figdir)
+    cpueSubArea.dat = CPUEplot(logsInSeason,subarea= p$subareas,yrs=2006:2019,graphic='R')
 
 
 
@@ -115,6 +116,7 @@ logsInSeason=lobster.db("process.logs")
 	CPUE.data=subset(CPUE.data,!(LFA==35&SYEAR<2006)) #exclude partial year of data in 35
 	CPUE.data=subset(CPUE.data,!(LFA==36&SYEAR<2005)) #exclude partial year of data in 36
 
+#Modelled Temperature at first day of season
 		pL=0
 		t=c()
 		d=c()
@@ -124,19 +126,30 @@ logsInSeason=lobster.db("process.logs")
 				Cdat=subset(CPUE.data,LFA==p$lfas[i]&SYEAR==p$yrs[j])
 				Cdat=Cdat[order(Cdat$DATE_FISHED),]
 				Cdat$pLanded = cumsum(Cdat$WEIGHT_KG)/sum(Cdat$WEIGHT_KG)
+				if(nrow(Cdat)>1){
 				x=abs(Cdat$pLanded-pL)
 				d[k]=Cdat$DOS[which(x==min(x))]
 				t[k]=Cdat$TEMP[which(x==min(x))]
 				names(d)[k]=paste(p$lfas[i],p$yrs[j],sep='.')
-				names(t)[k]=paste(p$lfas[i],p$yrs[j],sep='.')
+		    	names(t)[k]=paste(p$lfas[i],p$yrs[j],sep='.')
 				k=k+1
+				}
 			}
 		}
 
+##t and d Overwrite with summary
 	t=with(subset(CPUE.data,DOS==1),tapply(TEMP,LFA,mean))
 	d=1
 
-	
+aicc = function(aa = model.output) {
+	k = 	attr(logLik(aa),'df')
+	logLiks = logLik(aa)[1]
+	n = nobs(aa)
+	aaa = 2*nParams-2*logLiks
+	aaa + (2*k^2+2*k) / (n-k-1)
+	}
+
+
 	pData=list()
 
 	CPUEModelResults1 = list()
@@ -154,10 +167,10 @@ logsInSeason=lobster.db("process.logs")
 		CPUEModelResults2[[i]] = CPUEmodel(mf2,mdata,t=t[i],d=d)
 		CPUEModelResults3[[i]] = CPUEmodel(mf3,mdata,t=t[i],d=d)
 		CPUEModelResults4[[i]] = CPUEmodel(mf4,mdata,t=t[i],d=d)
-		AICs1[i] = CPUEModelResults1[[i]]$model$aic
-		AICs2[i] = CPUEModelResults2[[i]]$model$aic
-		AICs3[i] = CPUEModelResults3[[i]]$model$aic
-		AICs4[i] = CPUEModelResults4[[i]]$model$aic
+		AICs1[i] = aicc(CPUEModelResults1[[i]]$model)
+		AICs2[i] = aicc(CPUEModelResults2[[i]]$model)
+		AICs3[i] = aicc(CPUEModelResults3[[i]]$model)
+		AICs4[i] = aicc(CPUEModelResults4[[i]]$model)
 
 
 	}
@@ -180,8 +193,8 @@ logsInSeason=lobster.db("process.logs")
 	CPUEindex=do.call("rbind",pData)
 
 
-	write.csv(AICtable,file.path( figdir,"figures","Brad","CPUEmodelAIC.csv"),row.names=F)
-	write.csv(CPUEindex,file.path( figdir,"figures","Brad","CPUEmodelindex.csv"),row.names=F)
+	write.csv(AICtable,file.path( figdir,"CPUEmodelAIC.csv"),row.names=F)
+	write.csv(CPUEindex,file.path( figdir,"CPUEmodelindex.csv"),row.names=F)
 
 
 
