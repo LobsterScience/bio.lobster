@@ -68,7 +68,7 @@ for(i in 1:length(mm)){
 	xV = mean(xVTweedie(model=mm[[i]]))
 	nParams = 	attr(logLik(aa),'df')
 	logLiks = logLik(aa)[1]
-	aaa = 2*nParams+2*logLiks
+	aaa = 2*nParams-2*logLiks
 	AICc = aicc(aaa,logLiks,nrow(sL),nParams)
 	model.data = rbind(model.data,
 	data.frame(Model=i,nP = nParams, ll = logLiks, cv = xV,Aicc = AICc, stringsAsFactors=F
