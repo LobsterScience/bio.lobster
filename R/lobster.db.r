@@ -1206,7 +1206,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       load(file.path( fnODBC, "surveyMeasurements.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "fishMeasurements.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "ILTSTemp.rdata"), .GlobalEnv)
-      #load(file.path( fnODBC, "ILTSSensor.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "ILTSSensor.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyStationID.rdata"), .GlobalEnv)
       
     }
