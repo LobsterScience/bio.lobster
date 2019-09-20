@@ -31,21 +31,19 @@ l[which.min(abs(mm-.5))]
 
 
 #correct CI's
-ilink <- family(g)$linkinv 
-ndata <- as.data.frame(do.call(cbind,predict(g, list(CARLENGTH=l), se.fit = TRUE,type='link')[1:2]))
-ndata <- within(ndata, {	CL = l
-						fit_resp = ilink(fit)
-						upr = ilink(fit + (2*se.fit))
-						 lwr = ilink(fit - (2 *se.fit))
-						 })
+ndata <- list(CARLENGTH=l)
+ndata = glmCIs(g,ndata)
 
 plot(b$CARLENGTH, b$Mat, pch = 16, xlab = "Carapace Length", ylab = "Maturity")
-lines(ndata$CL, ndata$fit_resp)
-lines(ndata$CL, ndata$upr, lty=2)
-lines(ndata$CL, ndata$lwr,lty=2)
+lines(ndata$CARLENGTH, ndata$fit_resp)
+lines(ndata$CARLENGTH, ndata$upr, lty=2)
+lines(ndata$CARLENGTH, ndata$lwr,lty=2)
 
 with(ndata,{
-	print( CL[which.min(abs(fit-.5))])
-	 print(CL[which.min(abs(upr-.5))])
-	 print(CL[which.min(abs(lwr-.5))])
+	print( CARLENGTH[which.min(abs(fit-.5))])
+	 print(CARLENGTH[which.min(abs(upr-.5))])
+	 print(CARLENGTH[which.min(abs(lwr-.5))])
 })	
+
+
+#Bay Of Fundy

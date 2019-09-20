@@ -38,7 +38,7 @@
 
 
 # CPUE ###############
-		
+		load_all('~/git/bio.utilities')
 		logs=lobster.db("process.logs")
 		TempModelling = TempModel( annual.by.area=F)
 		CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
@@ -68,10 +68,33 @@
 
 
 	# plot
+	cpue1= CPUEModelPlot(CPUEModelResults,TempModelling,lfa = p$lfas,xlim=c(1989,2019.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1,wd=11,ht=8)
+
 	x11(width=8,height=5)
-	CatchRatePlot(data = subset(CPUEindex,LFA==35,c("YEAR","mu")), lfa = 35, fd=figdir)
-	CatchRatePlot(data = subset(CPUEindex,LFA==36,c("YEAR","mu")), lfa = 36, fd=figdir)
-	CatchRatePlot(data = subset(CPUEindex,LFA==38,c("YEAR","mu")), lfa = 38, fd=figdir)
+	#35
+	l35 = subset(CPUEindex,LFA==35,c("YEAR","mu"))
+	k = median(l35$mu[which(l35$YEAR %in% 2011:2018)])
+	usr = .4*k
+	lrp = .2*k
+	CatchRatePlot(data = l35, usr=usr, lrp=lrp, lfa = 35, fd=figdir)
+	
+
+
+	#36
+	l36 = subset(CPUEindex,LFA==36,c("YEAR","mu"))
+	k = median(l36$mu[which(l36$YEAR %in% 2011:2018)])
+	usr = .4*k
+	lrp = .2*k
+	CatchRatePlot(data = l36, usr=usr, lrp=lrp, lfa = 36, fd=figdir)
+
+
+
+	#38
+	l38 = subset(CPUEindex,LFA==38,c("YEAR","mu"))
+	k = median(l38$mu[which(l38$YEAR %in% 2011:2018)])
+	usr = .4*k
+	lrp = .2*k
+	CatchRatePlot(data = l38, usr=usr, lrp=lrp, lfa = 38, fd=figdir)
 
 
 

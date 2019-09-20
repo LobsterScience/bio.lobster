@@ -52,7 +52,7 @@ stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff
                                p$error.polygon=F
                               p$error.bars=T
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=F)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
      }
 
 stratifiedAnalysesBerried(survey='DFO',lfa='LFA35-38')

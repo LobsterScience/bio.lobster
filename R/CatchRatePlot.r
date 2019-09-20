@@ -16,7 +16,7 @@ CatchRatePlot <- function(data,usr=NULL,lrp=NULL,lfa=NULL,fd=file.path(project.f
 
 		title(title,line=title.line)
 		if(rm){
-			running.median = with(rmed(data[,1],data[,2]),data.frame(YEAR=yr,running.median=x))
+	    		running.median = with(rmed(data[,1],data[,2]),data.frame(YEAR=yr,running.median=x))
 			data=merge(data,running.median,all=T)
 			lines(data[,1],data$running.median,col='blue',lty=2,lwd=3)
 		}

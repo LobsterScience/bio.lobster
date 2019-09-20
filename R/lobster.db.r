@@ -44,8 +44,10 @@
         lobster.db(DS = "lfa41.vms.redo")
         lobster.db(DS= "logs41.habitat.redo")
         lobster.db(DS = 'landings.by.port.redo')
+        
         }
       
+
 if(DS %in% c('port','port.redo')){
         if(DS == 'port') {
                   load(file=file.path(fnODBC,'ports.rdata'))
@@ -234,7 +236,6 @@ if(DS %in% c('historical.landings','historical.landings.redo')) {
                   #historical.landings = sqlQuery(con,'select * from LOBSTER.SLIP_LAND_HISTORICAL')
                   save(historical.landings,file=file.path(fnODBC,'historical.landings.rdata'))
             }
-
 
 if(DS %in% c('season.dates','season.dates.redo')) {
           if(DS == 'season.dates') {
@@ -707,12 +708,12 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             
             # atSea
             atSea = sqlQuery(con, "select * from lobster.LOBSTER_ATSEA_VW")
-            atSea2 = sqlQuery(con, "select * from cooka.lobster_bycatch_assoc")
+            atSea2 = sqlQuery(con, "select * from cooka.lobster_bycatch_assoc_unedited")
 
             atSea2$PORT = NA
             atSea2$PORTNAME = NA
             atSea2$SAMCODE = NA
-            atSea2$DESCRIPTION = NA
+            atSea2$DESCRIPTION = atSea2$OWNER_GROUP
             atSea2$GRIDNO = NA
             atSea2$SPECIES = NA
             atSea2$CULL = NA

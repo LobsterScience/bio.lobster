@@ -48,12 +48,11 @@ stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=f
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-
                       if(lfa == 'LFA35-38') p$ylim = c(0,80)
                       p$file.name =  file.path(f,paste(lfa,'NOYDFOrestratifiednumbersrecruits.png',sep=""))
-
-                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, x2 = xx, sampleSizes=F)
+                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
             }
+
 stratifiedAnalysesRecruits(survey='DFO',lfa='LFA35-38')
 
 
