@@ -68,6 +68,7 @@
 
 
 	# plot
+<<<<<<< HEAD
 	cpue1= CPUEModelPlot(CPUEModelResults,TempModelling,lfa = p$lfas,xlim=c(1989,2019.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1,wd=11,ht=8)
 
 	x11(width=8,height=5)
@@ -95,6 +96,20 @@
 	usr = .4*k
 	lrp = .2*k
 	CatchRatePlot(data = l38, usr=usr, lrp=lrp, lfa = 38, fd=figdir)
+=======
+	for(i in 1:length( p$lfas)){
+		
+		x11(width=8,height=5)
+
+
+		K = median(subset(CPUEindex,LFA== p$lfas[i]&YEAR>2010)$mu)
+		USR = K*.4
+		LRP = K*.2
+		CatchRatePlot(data = subset(CPUEindex,LFA== p$lfas[i],c("YEAR","mu")),usr = USR,lrp=LRP, lfa = p$lfas[i], fd=figdir)
+		print(paste("USR =",round(USR,2)))
+		print(paste("LRP =",round(LRP,2)))
+	}
+>>>>>>> develop
 
 
 
