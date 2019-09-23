@@ -68,10 +68,18 @@
 
 
 	# plot
-	x11(width=8,height=5)
-	CatchRatePlot(data = subset(CPUEindex,LFA==35,c("YEAR","mu")), lfa = 35, fd=figdir)
-	CatchRatePlot(data = subset(CPUEindex,LFA==36,c("YEAR","mu")), lfa = 36, fd=figdir)
-	CatchRatePlot(data = subset(CPUEindex,LFA==38,c("YEAR","mu")), lfa = 38, fd=figdir)
+	for(i in 1:length( p$lfas)){
+		
+		x11(width=8,height=5)
+
+
+		K = median(subset(CPUEindex,LFA== p$lfas[i]&YEAR>2010)$mu)
+		USR = K*.4
+		LRP = K*.2
+		CatchRatePlot(data = subset(CPUEindex,LFA== p$lfas[i],c("YEAR","mu")),usr = USR,lrp=LRP, lfa = p$lfas[i], fd=figdir)
+		print(paste("USR =",round(USR,2)))
+		print(paste("LRP =",round(LRP,2)))
+	}
 
 
 
