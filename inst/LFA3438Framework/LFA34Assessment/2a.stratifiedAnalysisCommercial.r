@@ -11,7 +11,7 @@ p1 = p
 p1$yrs = 1969:2019
 
 #NEFSC Setup
-stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
+stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=ht,wd=wd){
   if(survey=='NEFSC'){
         p$years.to.estimate = p$yrs
         p$length.based = T
@@ -51,7 +51,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
         p$measure = 'stratified.total' #'stratified.total'
         p$file.name = file.path(f,paste(lfa,'NEFSCSpringrestratifiedtotalweightscommercial.png',sep=""))
         p$y.maximum = NULL # NULL # if ymax is too high for one year
-        ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+        ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
               
 
       p$season =c('fall')# p$series =c('spring');p$series =c('fall')
@@ -69,7 +69,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
        p$error.polygon=F
       p$error.bars=T
 
-       ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+       ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
        
      }
 
@@ -112,12 +112,12 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
     p$running.mean = F #can only have rmedian or rmean
      p$error.polygon=F
     p$error.bars=T
-     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
 
     }     
   }
 
 
 
-stratifiedAnalysesCommercial(survey='NEFSC',lfa='LFA34')
-stratifiedAnalysesCommercial(survey='DFO',lfa='LFA34')
+stratifiedAnalysesCommercial(survey='NEFSC',lfa='LFA34',ht=8,wd=10)
+stratifiedAnalysesCommercial(survey='DFO',lfa='LFA34',ht=8,wd=10)

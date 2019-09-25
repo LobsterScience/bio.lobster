@@ -174,6 +174,7 @@ pi='base'
                     }} else {
                               iz = which(set$strat %in% c(strat))
                     }
+#browser()
                 se = set[intersect(iy,iz),]
                 se$EID = 1:nrow(se)
                 ca = cas[iv,]
@@ -181,12 +182,12 @@ pi='base'
                 vars.2.keep = c('mission','X','Y','setno','sdate','dist','strat','z','bottom_temperature','bottom_salinity','type')
                 se = se[,vars.2.keep]
         p$lb = p$length.based
-
         if(p$by.sex & !p$length.based) {p$size.class=c(0,1000); p$length.based=T}
 
         if(!p$lb) { vars.2.keep =c('mission','setno','totwgt','totno','size_class','spec')
                     ca = ca[,vars.2.keep]
                 }
+#browser()
 
         if(p$length.based){
                   dp = de[which(de$spec %in% 2550),]

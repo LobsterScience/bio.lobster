@@ -11,7 +11,7 @@ p1 = p
 p1$yrs = 1969:2019
 
 
-stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
+stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=ht,wd=wd){
 
 #NEFSC Setup
 if(survey=='NEFSC'){
@@ -56,7 +56,7 @@ if(survey=='NEFSC'){
                                p$error.polygon=F
                               p$error.bars=T
                        
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
               
 
 #Fall 
@@ -75,7 +75,7 @@ if(survey=='NEFSC'){
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-                           ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)                 
+                           ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)                 
           }
 if(survey=='DFO'){
       p$series =c('summer')# p$series =c('georges');p$series =c('fall')
@@ -116,11 +116,11 @@ if(survey=='DFO'){
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
                       p$ylim=NULL
                      
   }
 }
 
-stratifiedAnalysesRecruits(survey='NEFSC',lfa='LFA34')
-stratifiedAnalysesRecruits(survey='DFO',lfa='LFA34')
+stratifiedAnalysesRecruits(survey='NEFSC',lfa='LFA34',ht=8,wd=10)
+stratifiedAnalysesRecruits(survey='DFO',lfa='LFA34',ht=8,wd=10)

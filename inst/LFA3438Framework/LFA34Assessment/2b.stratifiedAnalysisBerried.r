@@ -13,7 +13,7 @@ p1$yrs = 1969:2019
 
 
 
-stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
+stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=ht,wd=wd){
       if(survey == 'NEFSC'){
                   
                   p$years.to.estimate = p$yrs
@@ -53,7 +53,7 @@ stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
     
 #Fall restratified to lfa41
       p$season =c('fall')
@@ -81,7 +81,7 @@ stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff
                                p$error.polygon=F
                               p$error.bars=T
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
      }
 
      if(survey=='DFO'){
@@ -126,9 +126,9 @@ stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
       }
     }
 
-stratifiedAnalysesBerried(survey='NEFSC',lfa='LFA34')
-stratifiedAnalysesBerried(survey='DFO',lfa='LFA34')
+stratifiedAnalysesBerried(survey='NEFSC',lfa='LFA34',ht=8,wd=10)
+stratifiedAnalysesBerried(survey='DFO',lfa='LFA34',ht=8,wd=10)

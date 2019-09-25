@@ -15,7 +15,8 @@ p1 = p
 p1$yrs = 1969:2019
 
 
-stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
+
+stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=ht,wd=wd){
       if(survey == 'NEFSC'){
                 p$reweight.strata = T
                 p$years.to.estimate = p$yrs
@@ -53,26 +54,37 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
                                p$file.name = file.path(f,paste(lfa,'NEFSCSpringrestratifiednumbersNOY.png',sep=""))
+
+                                p$legend = FALSE
+                                p$running.median = T
+                                p$running.length = 3
+                                p$running.mean = F #can only have rmedian or rmean
+                               p$error.polygon=F
+                              p$error.bars=T
+
                        p$ylim=NULL
                        p$box=T
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                                                      p$error.polygon=F
+                              p$error.bars=T
+
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
                          
                        p$box=T
                        p$ylim=NULL
                        p$metric = 'weights'
                        p$file.name = file.path(f,paste(lfa,'NEFSCSpringrestratifiedweightsNOY.png',sep=""))
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
 
                        p$box=NULL
                        p$ylim=NULL
                        p$file.name = file.path(f,paste(lfa,'NEFSCSpringrestratifiedDWAO.png',sep=""))
                        p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
                        
                        p$file.name = file.path(f,paste(lfa,'NEFSCSpringrestratifiedgini.png',sep=""))
                        p$metric = 'gini'
                        p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
                        p$ylim = NULL
 
 #Fall Survey
@@ -105,23 +117,23 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
 
                       p$file.name = file.path(f,paste(lfa,'NEFSCFallrestratifiednumbersNOY.png',sep=""))
                         p$ylim=NULL
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
                                    
                        p$box=T
                        p$ylim=NULL
                        p$metric = 'weights'
                        p$file.name = file.path(f,paste(lfa,'NEFSCFallrestratifiedweightsNOY.png',sep=""))
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
 
                        p$box=NULL
                        p$file.name = file.path(f,paste(lfa,'NEFSCFallrestratifiedDWAO.png',sep=""))
                        p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
                        
                        p$file.name = file.path(f,paste(lfa,'NEFSCFallrestratifiedgini.png',sep=""))
                        p$metric = 'gini'
                        p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
                        p$ylim = NULL
                 }
 
@@ -166,41 +178,41 @@ if(survey == 'DFO'){
                               p$error.bars=T
 
                               p$ylim=c(0,30)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
 
                        p$ylim=NULL
                       if(lfa == 'LFA35-38') p$ylim=c(0,150)
                        p$box=T
                        p$file.name = file.path(f,paste(lfa,'DFOrestratifiednumbersNOY.png', sep=""))
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
 
                        p$box=NULL
                        p$ylim=c(0,32)
                        p$metric = 'weights'
                        p$file.name = file.path(f,paste(lfa,'DFOrestratifiedweights.png',sep=""))
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
 
                        p$box=T
                         p$ylim=NULL
                        p$metric = 'weights'
                        p$file.name = file.path(f,paste(lfa,'DFOrestratifiedweightsNOY.png',sep=""))
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
 
                        p$box=NULL
                        p$ylim=NULL
                        p$file.name = file.path(f,paste(lfa,'DFOrestratifiedDWAO.png',sep=""))
                        p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
                        
                        p$file.name = file.path(f,paste(lfa,'DFOrestratifiedgini.png',sep=""))
                        p$metric = 'gini'
                        p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
                        p$ylim = NULL
                         }
 
     }
 
-stratifiedAnalyses(survey='NEFSC',lfa='LFA34')
-stratifiedAnalyses(survey='DFO',lfa='LFA34')
+stratifiedAnalyses(survey='NEFSC',lfa='LFA34',ht=8,wd=10)
+stratifiedAnalyses(survey='DFO',lfa='LFA34',ht=8,wd=10)
 
