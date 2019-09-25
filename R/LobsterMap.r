@@ -56,7 +56,8 @@ options(stringsAsFactors=F)
 	if(area=='40')		{ ylim=c(42.25,43);		xlim=c(-66.5,-65.25)}
 	if(area=='41')		{ ylim=c(41.1,44); 		xlim=c(-68,-63.5)	}
 	if(area=='SWN')		{ ylim=c(42.5,45); 		xlim=c(-67.8,-62.2)	}
-	if(area=='BoF')		{ ylim=c(43.75,46); 		xlim=c(-67.8,-63.2)	}
+	if(area=='BoF')		{ ylim=c(43.75,46); 	xlim=c(-67.8,-63.2)	}
+	if(area=='33-35')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-63.2)	}
 		
 
 	coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline",mapRes,".csv")))
