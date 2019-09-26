@@ -21,7 +21,7 @@
     if (DS %in% c("complete.redo") ) {
 
         # ODBC data dump of lobster data
-        lobster.db(DS == 'port.redo')
+        lobster.db(DS = 'port.redo')
         lobster.db( DS="logs.redo")
         lobster.db( DS="logs41.redo")
         lobster.db( DS="logs41jonah.redo")

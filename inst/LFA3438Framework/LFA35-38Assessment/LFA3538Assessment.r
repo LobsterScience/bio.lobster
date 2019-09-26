@@ -102,7 +102,7 @@
 		x11(width=8,height=5)
 
 
-		K = median(subset(CPUEindex,LFA== p$lfas[i]&YEAR>2010)$mu)
+		K = median(subset(CPUEindex,LFA== p$lfas[i]&YEAR%in% 2011:2018)$mu)
 		USR = K*.4
 		LRP = K*.2
 		CatchRatePlot(data = subset(CPUEindex,LFA== p$lfas[i],c("YEAR","mu")),usr = USR,lrp=LRP, lfa = p$lfas[i], fd=figdir)

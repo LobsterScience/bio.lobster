@@ -36,7 +36,7 @@
 		
 		logs=lobster.db("process.logs")
 		CPUE.data<-CPUEModelData(p,redo=T)
-		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2018,graphic='R')$annual.data
+		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2019,graphic='R')$annual.data
 		crd = subset(cpueData,LFA==33,c("YEAR","CPUE"))	
 		mu = median(crd$CPUE[crd$YEAR<2017])
 		usr = mu * 0.8
@@ -178,7 +178,7 @@ y = read.csv(file.path(figdir,"ExploitationRefs33.csv"))
 
 hcrPlot(B=x$running.median[x$YEAR>2005],mF=y$running.median,USR=usr,LRP=lrp,RR=RR75,yrs=2006:2018,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T) 
 #hcrPlot(B=x$CPUE[x$YEAR>2005],mF=y$ERfm,USR=usr,LRP=lrp,RR=RR75,yrs=2006:2018,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T) 
-savePlot(file.path(figdir,'PhasePlot.png'),type='png')
+savePlot(file.path(figdir,'PhasePlot33.png'),type='png')
 
 
 # Fishery footprint

@@ -58,6 +58,7 @@
 	# plot
 	x11(width=8,height=5)
 	CatchRatePlot(data = crd, lfa = 34, fd=figdir)
+	cpueData=read.csv(file.path(figdir,"CatchRateRefs34.csv"))
 
 
 
@@ -132,8 +133,8 @@
 	# plot
 
 		x11(width=8,height=5)
-		ExploitationRatePlots(data = oo[,c("Yr","ERfm","ERfl","ERfu")],lfa = 34,fd=figdir,runM=F)
-		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
+		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels34.rdata'))
+		ExploitationRatePlots(data = ouBin[,c("Yr","ERfm","ERfl","ERfu")],lfa = 34,fd=figdir,runM=T)
 
 		with(subset(ouBin,LFA=='33W'),lines(Yr,ERfm,lty=2,col='blue'))
 
@@ -179,7 +180,7 @@
 		land$YEAR = as.numeric(substr(land$SYEAR,6,9))
 		land$LANDINGS = land$LFA34
 		fishData = merge(cpueData,land[,c("YEAR","LANDINGS")]) 
-		fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+		fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$mu
 
 
 

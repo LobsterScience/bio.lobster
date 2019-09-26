@@ -6,7 +6,7 @@ CatchRatePlot <- function(data,usr=NULL,lrp=NULL,lfa=NULL,fd=file.path(project.f
 			
 		if(missing(ylim))ylim = c(0,max(c(data[,2],lrp,usr),na.rm=T))
 
-		plot(data[,1],data[,2],xlab='Year',ylab='CPUE (kg/TH)',type='o',lwd=2,pch=16,ylim=ylim,...)
+		plot(data[,1],data[,2],xlab='Year',ylab='CPUE (kg/TH)',lwd=2,pch=16,ylim=ylim,...)
 		if(regions){
 			polygon(y=c(usr,max(ylim)*1.3,max(ylim)*1.3, usr),x=c(1,1,3000,3000),col='lightgreen',border=NA)
 	        polygon(y=c(lrp,usr,usr, lrp),x=c(1,1,3000,3000),col='lightgoldenrod',border=NA)
