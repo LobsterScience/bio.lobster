@@ -2,7 +2,7 @@
 require(bio.survey)
 require(bio.lobster)
 require(bio.utilities)
-
+la()
 p = bio.lobster::load.environment()
 p$libs = NULL
 ff = "LFA35-38Assessment"
@@ -58,18 +58,18 @@ for(i in 1:length(lfa)){
 	names(out) = c('LFA','YEAR','CPUE','LANDINGS','EFFORT')
 
 out = out[order(out$LFA, out$YEAR),]
-
-png(file=file.path(fpf1,'GiniLandings35.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+write.csv(subset(out,LFA %in% 35:38), file=file.path(fpf1,'GiniLandings35-38.csv'))
+png(file=file.path(fpf1,'GiniLandings35.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
 with(subset(out,LFA==35),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
 with(subset(out,LFA==35),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
 dev.off()
 
-png(file=file.path(fpf1,'GiniLandings36.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+png(file=file.path(fpf1,'GiniLandings36.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
 with(subset(out,LFA==36),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
 with(subset(out,LFA==36),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
 dev.off()
 
-png(file=file.path(fpf1,'GiniLandings38.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+png(file=file.path(fpf1,'GiniLandings38.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
 with(subset(out,LFA==38),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
 with(subset(out,LFA==38),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
 dev.off()

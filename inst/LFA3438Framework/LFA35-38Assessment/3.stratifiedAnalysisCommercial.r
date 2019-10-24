@@ -12,7 +12,7 @@ dir.create(fp1,showWarnings=F)
 p1 = p
 p1$yrs = 1970:2019
 
-stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
+stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
     p$series =c('summer')# p$series =c('georges');p$series =c('fall')
     p$years.to.estimate = p$yrs
     p$length.based = T
@@ -32,6 +32,7 @@ stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,
     p$reweight.strata = T #this subsets 
 
     aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+    write.csv(aout,file=file.path(fpf, paste(lfa,'DFOCommB.csv')))
 
       p$add.reference.lines = F
     p$time.series.start.year = p$years.to.estimate[1]
@@ -56,7 +57,7 @@ stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,
     xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
     names(xx) =c('x','y')
      p$ylim=NULL
-     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
      return(aout)
   }
 

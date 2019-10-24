@@ -36,7 +36,7 @@
 		
 		logs=lobster.db("process.logs")
 		CPUE.data<-CPUEModelData(p,redo=T)
-		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2018,graphic='R')$annual.data
+		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2019,graphic='R')$annual.data
 		crd = subset(cpueData,LFA==33,c("YEAR","CPUE"))	
 		mu = median(crd$CPUE[crd$YEAR<2017])
 		usr = mu * 0.8

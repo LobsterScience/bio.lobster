@@ -4,7 +4,7 @@
 \alias{LobsterMarport}
 \title{LobsterMarport}
 \usage{
-LobsterMarport(file)
+LobsterMarport(file, station = NULL)
 }
 \arguments{
 \item{file}{is the marport file obtained during the 2015 ILTS survey which contains the net sensor information as well as the gps data feeds}

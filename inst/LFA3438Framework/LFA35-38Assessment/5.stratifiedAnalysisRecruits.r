@@ -12,7 +12,7 @@ dir.create(fp1,showWarnings=F)
 p1 = p
 p1$yrs = 1970:2019
 
-stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
+stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
       p$series =c('summer')# p$series =c('georges');p$series =c('fall')
       p$area = lfa
       p$years.to.estimate = p$yrs
@@ -32,6 +32,8 @@ stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=f
       p$reweight.strata = T #this subsets 
   
     aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+     write.csv(aout,file=file.path(fpf, paste(lfa,'DFOrecruits.csv')))
+
                         p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
@@ -50,7 +52,7 @@ stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=f
                               p$error.bars=T
                       if(lfa == 'LFA35-38') p$ylim = c(0,80)
                       p$file.name =  file.path(f,paste(lfa,'NOYDFOrestratifiednumbersrecruits.png',sep=""))
-                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
             }
 
 stratifiedAnalysesRecruits(survey='DFO',lfa='LFA35-38')

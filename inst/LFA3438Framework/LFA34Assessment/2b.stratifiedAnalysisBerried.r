@@ -34,6 +34,8 @@ stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff
                 p = make.list(list(yrs=p$years.to.estimate),Y=p)
                   
                 aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+                 write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCSpringberried.csv',sep="-")))
+
                               #Figure
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
@@ -59,6 +61,7 @@ stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff
       p$season =c('fall')
        
    aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+  write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCfallberried.csv',sep="-")))
 
 
                               #Figure
@@ -105,7 +108,8 @@ stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff
   
 
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-      
+      write.csv(aout,file=file.path(fpf,paste(lfa,'DFOberried.csv',sep="-")))
+
 
          #Figure
                               p$add.reference.lines = F

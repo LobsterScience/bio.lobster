@@ -13,10 +13,10 @@ p1 = p
 ff = "LFA35-38Assessment"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
-p1$yrs = 1970:2010
+p1$yrs = 1970:2019
 
 
-stratifiedAnalysesTemperature = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
+stratifiedAnalysesTemperature = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
       p$series =c('summer')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = T
       p$lobster.subunits=F
@@ -34,7 +34,7 @@ stratifiedAnalysesTemperature = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1
       p$temperature=T
       p$reweight.strata = F #this subsets 
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
-      
+      write.csv(aout,file=file.path(fpf1,'LFA35-38bottomtemp.png'))
                                    p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
@@ -55,7 +55,7 @@ stratifiedAnalysesTemperature = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1
                               p$error.bars=T
 
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
        }
 
 

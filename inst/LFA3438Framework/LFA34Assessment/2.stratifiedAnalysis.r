@@ -45,6 +45,8 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=ht,
                               p$reference.measure = 'median' # mean, geomean
           
        aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+        write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCSpringtotalabund.csv',sep="-")))
+
                               #Figure
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
@@ -95,6 +97,7 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=ht,
                 p$reweight.strata = T #this subsets 
       
                aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCfalltotalabund.csv',sep="-")))
 
 
                               #Figure
@@ -156,7 +159,8 @@ if(survey == 'DFO'){
             
 
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-      
+      write.csv(aout,file=file.path(fpf,paste(lfa,'DFOtotalabund.csv',sep="-")))
+
 
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]

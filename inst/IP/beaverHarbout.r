@@ -1,6 +1,7 @@
 #beaver harbour
 
 require(bio.lobster)
+require(lubridate)
 wd = file.path(project.datadirectory('bio.lobster'),'data','beaverharbour')
 
 setwd(wd)

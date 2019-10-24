@@ -8,11 +8,16 @@
 #' @export
 
 
-glmCIs <- function(model.output,newdata){
+glmCIs <- function(model.output,newdata=NULL){
 	
 	ilink <- family(model.output)$linkinv 
+		if(is.null(newdata)){
+			 ndata <- as.data.frame(do.call(cbind,predict(model.output, se.fit = TRUE,type='link')[1:2]))
+				}
+		if(!is.null(newdata)){
 		ndata <- as.data.frame(do.call(cbind,predict(model.output, newdata, se.fit = TRUE,type='link')[1:2]))
 		ndata <- as.data.frame(cbind(newdata,ndata))
+		}
 		ndata <- within(ndata, {
 							fit_resp = ilink(fit)
 							upr = ilink(fit + (2*se.fit))

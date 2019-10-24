@@ -34,6 +34,7 @@ if(survey=='NEFSC'){
       p$reweight.strata = T #this subsets 
       
    aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+  write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCSpringrecruits.csv',sep="-")))
 
 
                               #Figure
@@ -63,6 +64,7 @@ if(survey=='NEFSC'){
       p$season =c('fall')# p$series =c('spring');p$series =c('fall')
       
    aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCfallrecruits.csv',sep="-")))
 
             p$file.name =  file.path(f,paste(lfa,'NEFSCFallrestratifiednumbersrecruits.png',sep=""))
 
@@ -97,7 +99,8 @@ if(survey=='DFO'){
       p$reweight.strata = T #this subsets 
   
     aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-      
+      write.csv(aout,file=file.path(fpf,paste(lfa,'DFOrecruits.csv',sep="-")))
+
 
          #Figure
                               p$add.reference.lines = F

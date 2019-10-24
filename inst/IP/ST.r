@@ -60,8 +60,23 @@ ad$F2 = ifelse(ad$SOAK_DAYS<8,1,ifelse(ad$SOAK_DAYS>=8 & ad$SOAK_DAYS<15,2,3))
 ad$F3 = ifelse(ad$SOAK_DAYS<9,1,ifelse(ad$SOAK_DAYS>=10 & ad$SOAK_DAYS<16,2,3))
 
 aa = aggregate(Cod~F2, data=ad,FUN=function(x) c(mean(x),sd(x)))
+####cod specific analyses
 
-aggregate(EST_DISCARD_WT.10/NUM_HOOK_HAUL~SOAK_DAYS,data=ad,FUN=mean)
+ccd = aggregate(EST_DISCARD_WT.10/NUM_HOOK_HAUL~SOAK_DAYS,data=ad,FUN=mean)
+names(ccd)[2] = 'CodCatchRate'
+aaa = plot(CodCatchRate~(SOAK_DAYS),data=subset(ccd,SOAK_DAYS<25),type='l')
+
+				    x <- as.ts(ccd$CodCatchRate[1:17])
+				  #  x <- residuals(tslm(x ~ trend)) #removing time series trend
+				    n.freq <- 500
+				    spec <- spectrum(c(na.contiguous(x)),  plot = T) # spectral analysis of cycle
+				    period <- floor(1/spec$freq[which.max(spec$spec)] + 0.5) #determiing the most likely period
+
+				    plot( 1/spec$freq,spec$spec,type= 'l',xlim=c(0,20),xlab='Frequency', ylab='Spectral Density')
+				    abline(h=max(spec$spec),v=1/spec$freq[which.max(spec$spec)],col='red',lwd=2)
+				    Period = round(1/spec$freq[which.max(spec$spec)])
+			
+
 
 
  ad$TOT = rowSums(ad[,8:53])

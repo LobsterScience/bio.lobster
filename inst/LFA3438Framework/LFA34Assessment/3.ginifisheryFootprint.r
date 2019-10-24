@@ -56,8 +56,8 @@ for(i in 1:length(lfa)){
 	names(out) = c('LFA','YEAR','CPUE','LANDINGS','EFFORT')
 
 out = out[order(out$LFA, out$YEAR),]
-
-png(file=file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'GiniLandings34.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+write.csv(subset(out,LFA==34),file=file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'GiniLandings34.csv'))
+png(file=file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'GiniLandings34.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
 with(subset(out,LFA==34),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
 with(subset(out,LFA==34),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
 dev.off()
