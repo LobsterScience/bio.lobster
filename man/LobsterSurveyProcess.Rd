@@ -4,13 +4,13 @@
 \alias{LobsterSurveyProcess}
 \title{LobsterSurveyProcess}
 \usage{
-LobsterSurveyProcess(species = 2550, size.range = c(0, 200), lfa = "34",
-  yrs, mths = c("May", "Jun", "Jul", "Aug", "Sep", "Oct"), gear.type = NULL,
-  sex = c(1:3, NA), bin.size = 5, LFS = 160, Net = NULL,
-  comparative = F)
+LobsterSurveyProcess(species = 2550, size.range = c(0, 200),
+  lfa = "34", yrs, mths = c("May", "Jun", "Jul", "Aug", "Sep", "Oct"),
+  gear.type = NULL, sex = c(1:3, NA), bin.size = 5, LFS = 160,
+  Net = NULL, comparative = F, biomass = F)
 }
 \arguments{
-\item{size.range}{defines the minimum and maximum value and is a filter (default is 0, 220mm CW)}
+\item{size.range}{defines the minimum and maximum value and is a filter (default is 0, 200mm CW)}
 
 \item{lfa}{defines the specific LFA for the ILTS}
 

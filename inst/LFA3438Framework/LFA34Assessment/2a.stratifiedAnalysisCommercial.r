@@ -30,7 +30,7 @@ stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,
 p = make.list(list(yrs=p$years.to.estimate),Y=p)
     
      aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
-
+     write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCSpringCommercialB.csv',sep="-")))
 
     #Figure
         p$add.reference.lines = F
@@ -58,6 +58,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
          p$metric = 'weights' #weights
       p$measure = 'stratified.total' #'stratified.total'
       p$file.name = file.path(f,paste(lfa,'NEFSCFallrestratifiedtotalweightscommercial.png',sep=""))
+     aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
 
       p$y.maximum = NULL # NULL # if ymax is too high for one year
       p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
@@ -70,6 +71,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
       p$error.bars=T
 
        ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
+     write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCFallCommercialB.csv',sep="-")))
        
      }
 
@@ -93,7 +95,8 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
     p$reweight.strata = T #this subsets 
 
     aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-
+  write.csv(aout,file=file.path(fpf,paste(lfa,'DFOCommercialB.csv',sep="-")))
+   
     p$add.reference.lines = F
     p$time.series.start.year = p$years.to.estimate[1]
     p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
@@ -113,7 +116,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
      p$error.polygon=F
     p$error.bars=T
      ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
-
+print(aout[1,])
     }     
   }
 

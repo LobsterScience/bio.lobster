@@ -13,7 +13,7 @@ p1 = p
 p1$yrs = 1969:2019
 
 
-stratifiedAnalysesTemperature = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
+stratifiedAnalysesTemperature = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=8,wd=10){
 
 if(survey=='NEFSC'){
 
@@ -39,6 +39,8 @@ if(survey=='NEFSC'){
                       p = make.list(list(yrs=p$years.to.estimate),Y=p)
                     
                         aout= nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)      
+                       write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCSpringtemperature.csv',sep="-")))
+
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
@@ -58,12 +60,14 @@ if(survey=='NEFSC'){
                                p$error.polygon=F
                               p$error.bars=T
 
-                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p, ht=ht, wd=wd)
  #### fall
          p$season =c('fall')# p$series =c('spring');p$series =c('fall')
 	                        aout= nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
+                      write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCfalltemperature.csv',sep="-")))
+
                             p$file.name = file.path(f,paste(lfa,'NEFSCFallTemperature.png',sep=""))
-                            ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                            ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
        }
 if(survey=='DFO'){
  ###dfo
@@ -86,6 +90,8 @@ if(survey=='DFO'){
       require(bio.groundfish)
       la()
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
+      write.csv(aout,file=file.path(fpf,paste(lfa,'DFOtemperature.csv',sep="-")))
+
                                    p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
@@ -106,7 +112,7 @@ if(survey=='DFO'){
                               p$error.bars=T
 
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=ht,wd=wd)
        }
      }
 

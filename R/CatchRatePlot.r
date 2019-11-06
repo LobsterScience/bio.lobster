@@ -5,20 +5,19 @@ CatchRatePlot <- function(data,usr=NULL,lrp=NULL,lfa=NULL,fd=file.path(project.f
 	dir.create( fd, recursive = TRUE, showWarnings = FALSE )
 			
 		if(missing(ylim))ylim = c(0,max(c(data[,2],lrp,usr),na.rm=T))
-
-		plot(data[,1],data[,2],xlab='Year',ylab='CPUE (kg/TH)',lwd=2,pch=16,ylim=ylim,...)
+		plot(data[,1],data[,2],xlab='Year',ylab='CPUE (kg/TH)',type='p',pch=16,ylim=ylim,...)
 		if(regions){
 			polygon(y=c(usr,max(ylim)*1.3,max(ylim)*1.3, usr),x=c(1,1,3000,3000),col='lightgreen',border=NA)
 	        polygon(y=c(lrp,usr,usr, lrp),x=c(1,1,3000,3000),col='lightgoldenrod',border=NA)
 	        polygon(y=c(-1,lrp,lrp, -1),x=c(1,1,3000,3000),col='darksalmon',border=NA)
 	    }
-		lines(data[,1],data[,2],type='o',lwd=2,pch=16,ylim=ylim,...)
+		#lines(data[,1],data[,2],type='o',lwd=2,pch=16,ylim=ylim,...)
 
 		title(title,line=title.line)
 		if(rm){
 	    		running.median = with(rmed(data[,1],data[,2]),data.frame(YEAR=yr,running.median=x))
 			data=merge(data,running.median,all=T)
-			lines(data[,1],data$running.median,col='blue',lty=2,lwd=3)
+			lines(data[,1],data$running.median,col='salmon',lty=1,lwd=3)
 		}
 
 		if(!regions){

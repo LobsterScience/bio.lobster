@@ -1,7 +1,7 @@
 require(bio.survey)
 require(bio.groundfish)
 require(bio.lobster)
-
+la()
 ff = "LFA35-38Assessment"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
@@ -29,7 +29,7 @@ fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
         p$runs = p$runs[order(p$runs$v),]
 
 aout= groundfish.analysis(DS='stratified.estimates.redo',out.dir = 'bio.lobster',p=p)
-
+write.csv(aout,file=file.path(fpf1,'LobPredators35-38.csv')
                         p$ylim = NULL
               				  p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
@@ -50,7 +50,7 @@ aout= groundfish.analysis(DS='stratified.estimates.redo',out.dir = 'bio.lobster'
                                p$error.polygon=F
                               p$error.bars=T
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=10,ht=8)
               
 
 
@@ -74,4 +74,4 @@ aout= groundfish.analysis(DS='stratified.estimates.redo',out.dir = 'bio.lobster'
                               p$error.bars=T
                               p$ylim=NULL
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=10,ht=8)

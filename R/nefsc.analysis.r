@@ -98,7 +98,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             set$STRATUM = set$STRATA
             set$STRATA = set$PID = set$SID = set$Bdry = set$EID = NULL
         # all catches have been converted to bigelow equivalents and therefore do not need any further towed distance calculations, the DISTCORRECTION is a standardized distance against the mean of the towed distance for that gear and is therefore the correction for towed distance to be used
-        #US nautical mile is 6080.2ft bigelow is 42.6'
+a        #US nautical mile is 6080.2ft bigelow is 42.6'
         #tow dist is 1nm for bigelow
      stra$NH = stra$area
      strata.files = list()

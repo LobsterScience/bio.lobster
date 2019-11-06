@@ -41,35 +41,35 @@
 		load_all('~/git/bio.utilities')
 		logs=lobster.db("process.logs")
 		TempModelling = TempModel( annual.by.area=F)
-		CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
+			CPUE.data<-CPUEModelData(p,redo=F,TempModelling)
 
-		## Commercial CPUE MOdels
-		mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)
+			## Commercial CPUE MOdels
+			mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)
 
-		CPUE.data<- CPUEModelData(p,redo=F)
-		t=with(subset(CPUE.data,DOS==1),tapply(TEMP,LFA,mean))
-	
-		pData=list()
+			CPUE.data<- CPUEModelData(p,redo=F)
+			t=with(subset(CPUE.data,DOS==1),tapply(TEMP,LFA,mean))
+		
+			pData=list()
 
-		CPUEModelResults = list()
+			CPUEModelResults = list()
 
-		for(i in 1:length( p$lfas)){
+			for(i in 1:length( p$lfas)){
 
-			mdata = subset(CPUE.data,LFA==p$lfas[i]&SYEAR%in%p$yrs)
+				mdata = subset(CPUE.data,LFA==p$lfas[i]&SYEAR%in%p$yrs)
 
-			CPUEModelResults[[i]] = CPUEmodel(mf1,mdata,t=t[i],d=1)
-			pData[[i]]=CPUEModelResults[[i]]$pData
-			pData[[i]]$LFA=p$lfas[i]
-		}
+				CPUEModelResults[[i]] = CPUEmodel(mf1,mdata,t=t[i],d=1)
+				pData[[i]]=CPUEModelResults[[i]]$pData
+				pData[[i]]$LFA=p$lfas[i]
+			}
 
-		names(CPUEModelResults) = p$lfas
+			names(CPUEModelResults) = p$lfas
 
-		CPUEindex=do.call("rbind",pData)
+			CPUEindex=do.call("rbind",pData)
 
 
 	# plot
-<<<<<<< HEAD
-	cpue1= CPUEModelPlot(CPUEModelResults,TempModelling,lfa = p$lfas,xlim=c(1989,2019.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1,wd=11,ht=8)
+
+	cpue1= CPUEModelPlot(CPUEModelResults,TempModelling,lfa = p$lfas,xlim=c(2004,2019.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1,wd=11,ht=8)
 
 	x11(width=8,height=5)
 	#35
@@ -77,8 +77,9 @@
 	k = median(l35$mu[which(l35$YEAR %in% 2011:2018)])
 	usr = .4*k
 	lrp = .2*k
+	cpue1= CPUEModelPlot(CPUEModelResults,TempModelling,lfa = '35',xlim=c(1989,2019.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1,wd=11,ht=8)
 	CatchRatePlot(data = l35, usr=usr, lrp=lrp, lfa = 35, fd=figdir)
-	
+	#Trap limit = 300
 
 
 	#36
@@ -86,9 +87,13 @@
 	k = median(l36$mu[which(l36$YEAR %in% 2011:2018)])
 	usr = .4*k
 	lrp = .2*k
+	cpue1= CPUEModelPlot(CPUEModelResults,TempModelling,lfa = '36',xlim=c(2004,2019.4),ylim=c(0,10.5),graphic='R',path=figdir,lab=1,wd=11,ht=8)
+	savePlot('~/tmp/LFA36cpueraw.png')
 	CatchRatePlot(data = l36, usr=usr, lrp=lrp, lfa = 36, fd=figdir)
-
-
+	savePlot('~/tmp/LFA36cpue.png')
+	#trap limit = 300
+	USRlbs = usr*300*2.2
+	LRPlbs = lrp*300*2.2
 
 	#38
 	l38 = subset(CPUEindex,LFA==38,c("YEAR","mu"))
@@ -96,7 +101,10 @@
 	usr = .4*k
 	lrp = .2*k
 	CatchRatePlot(data = l38, usr=usr, lrp=lrp, lfa = 38, fd=figdir)
-=======
+	#trap limit = 375
+	USRlbs = usr*375*2.2
+	LRPlbs = lrp*375*2.2
+
 	for(i in 1:length( p$lfas)){
 		
 		x11(width=8,height=5)
@@ -109,7 +117,6 @@
 		print(paste("USR =",round(USR,2)))
 		print(paste("LRP =",round(LRP,2)))
 	}
->>>>>>> develop
 
 
 

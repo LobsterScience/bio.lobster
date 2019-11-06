@@ -9,7 +9,7 @@ ff = "LFA35-38Assessment"
 
 b$YR = substr(b$SYEAR,6,9)
 a = subset(a,YR<1976)
-b = subset(b,YR>1975 & YR<2019)
+b = subset(b,YR>1975 & YR<=2019)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 
@@ -29,8 +29,8 @@ for(i in LFA){
 
 ###lfa 35-38
 
-df2 = read.csv(file.path(fp1,'LFA3538CommercialB.csv'))
-df =  read.csv(file.path(fp1,'LFA3538TotalB.csv'))
+df2 = read.csv(file.path(fpf1,'LFA35-38 DFOCommB.csv'))
+df =  read.csv(file.path(fpf1,'LFA35-38 DFOtotalabund.csv'))
 df = subset(df,yr<1999)
 df2 = subset(df2,yr>1998)
 df = as.data.frame(rbind(df,df2))
@@ -41,7 +41,7 @@ df$w.ci.Yst.u[which(df$yr<1999)] <- df$w.ci.Yst.u[which(df$yr<1999)]*0.746
 
 
 
- 	 png(file=file.path(fpf1,'LFA35-38CommBDFOextended.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+ 	 png(file=file.path(fpf1,'LFA35-38CommBDFOextended.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
  	 with(df,plot(yr,w.Yst,pch=1,xlab='Year',ylab='Commerical Biomass (t)',ylim=c(0,9500)))
 	 with(df,arrows(yr,y0=w.ci.Yst.u,y1=w.ci.Yst.l, length=0))
 	 with(subset(df,yr>1998),points(yr,w.Yst,pch=16))
@@ -61,7 +61,7 @@ df$rU =df$L3538/ (df$w.ci.Yst.u+df$L3538)
 df$rM = df$L3538/(df$w.Yst+df$L3538)
 
 
- 	 png(file=file.path(fpf1,'LFA3538RelFDFO.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+ 	 png(file=file.path(fpf1,'LFA3538RelFDFO.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
 		plot(df$yr,df$rM,type='p',pch=16,col='black',xlab='Year',ylab='Relative F')
 		arrows(df$yr,y0 = df$rL,y1 = df$rU,length=0)
 		with(rmed(df$yr,df$rM),lines(yr,x,col='salmon',lwd=3))

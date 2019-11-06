@@ -2,6 +2,8 @@
 
 require(bio.lobster)
 require(PBSmapping)
+la()
+
 
 a = lobster.db('annual.landings')
 b = lobster.db('seasonal.landings')
@@ -21,9 +23,9 @@ names(d) = c('YR','LFA','LAND')
 b$YR = substr(b$SYEAR,6,9)
 a = subset(a,YR<1976)
 b = subset(b,YR>1975 & YR<2019)
-fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019")
+fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment")
 
-LFA = c('LFA34','LFA35','LFA36','LFA38')
+LFA = c('LFA34')
 for(i in LFA){
 		aa = a[,c('YR',i)]
 		bb = b[,c('YR',i)]
@@ -56,8 +58,6 @@ df$w.Yst[which(df$yr<1999)] <- df$w.Yst[which(df$yr<1999)]*0.71
 df$w.ci.Yst.l[which(df$yr<1999)] <- df$w.ci.Yst.l[which(df$yr<1999)]*0.71
 df$w.ci.Yst.u[which(df$yr<1999)] <- df$w.ci.Yst.u[which(df$yr<1999)]*0.71
 
-
-
  	 png(file=file.path(fpf1,'LFA34CommBDFOextended.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
  	 with(df,plot(yr,w.Yst,pch=1,xlab='Year',ylab='Commerical Biomass (t)',ylim=c(0,8500)))
 	 with(df,arrows(yr,y0=w.ci.Yst.u,y1=w.ci.Yst.l, length=0))
@@ -76,17 +76,19 @@ df$rM = df$LFA34/(df$w.Yst+df$LFA34)
  df[which(!is.finite(df[,7])),7] <- NA
  df[which(!is.finite(df[,8])),8] <- NA
  df[which(!is.finite(df[,9])),9] <- NA
+rl = median(subset(df,yr %in% 1970:1998,select=rM)[,1])
 
 
  	 png(file=file.path(fpf1,'LFA34RelFDFO.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 		plot(df$yr,df$rM,type='p',pch=16,col='black',xlab='Year',ylab='Relative F')
 		arrows(df$yr,y0 = df$rL,y1 = df$rU,length=0)
 		with(rmed(df$yr,df$rM),lines(yr,x,col='salmon',lwd=3))
-dev.off()
+		abline(h=rl,lwd=2,col='blue')
+	 dev.off()
 
 ####aim for dfo
 	
-	replacementRatio.relF(df$LFA34,df$w.Yst+df$LFA34, savePlot=F, years.lagged.replacement=8)
+	#replacementRatio.relF(df$LFA34,df$w.Yst+df$LFA34, savePlot=F, years.lagged.replacement=8)
 
 ###
 
@@ -100,12 +102,14 @@ df$rM = df$LFA34/df$w.Yst
  df[which(!is.finite(df[,7])),7] <- NA
  df[which(!is.finite(df[,8])),8] <- NA
  df[which(!is.finite(df[,9])),9] <- NA
+rl = median(subset(df,yr %in% 1970:1998,select=rM)[,1],na.rm=T)
 
  	 png(file=file.path(fpf1,'NEFSCFallRelFDFO.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 		plot(df$yr,df$rM,type='p',pch=16,col='black',xlab='Year',ylab='Relative F')
 		arrows(df$yr,y0 = df$rL,y1 = df$rU,length=0)
 		with(rmed(df$yr,df$rM),lines(yr,x,col='salmon',lwd=3))
-dev.off()
+				abline(h=rl,lwd=2,col='blue')
+	dev.off()
 
 
 df = read.csv(file.path(dadir,'LFA34NEFSC.spring.restratified.commercial.csv'))
@@ -118,12 +122,14 @@ df$rM = df$LFA34/(df$w.Yst+df$LFA34)
  df[which(!is.finite(df[,7])),7] <- NA
  df[which(!is.finite(df[,8])),8] <- NA
  df[which(!is.finite(df[,9])),9] <- NA
+rl = median(subset(df,yr %in% 1970:1998,select=rM)[,1])
 
  	 png(file=file.path(fpf1,'NEFSCSpringRelFDFO.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 		plot(df$yr,df$rM,type='p',pch=16,col='black',xlab='Year',ylab='Relative F')
 		arrows(df$yr,y0 = df$rL,y1 = df$rU,length=0)
 		with(rmed(df$yr,df$rM),lines(yr,x,col='salmon',lwd=3))
-dev.off()
+		abline(h=rl,lwd=2,col='blue')
+	dev.off()
 
 
 
@@ -139,15 +145,17 @@ df$rM = df$LFA34/(df$w.Yst+df$LFA34)
  df[which(!is.finite(df[,7])),7] <- NA
  df[which(!is.finite(df[,8])),8] <- NA
  df[which(!is.finite(df[,9])),9] <- NA
+rl = median(subset(df,yr %in% 1970:1998,select=rM)[,1])
 
- 	 png(file=file.path(fpf1,'ILTSRelF.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+ 	png(file=file.path(fpf1,'ILTSRelF.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
 		plot(df$yr,df$rM,type='p',pch=16,col='black',xlab='Year',ylab='Relative F')
 		arrows(df$yr,y0 = df$rL,y1 = df$rU,length=0)
 		with(rmed(df$yr,df$rM),lines(yr,x,col='salmon',lwd=3))
-dev.off()
+		abline(h=rl,lwd=2,col='blue')
+	dev.off()
 
 
-replacementRatio.relF(df$LFA34,df$LFA34+df$w.Yst, years.lagged.replacement=7)
+#replacementRatio.relF(df$LFA34,df$LFA34+df$w.Yst, years.lagged.replacement=7)
 
 
 ccirs = read.csv(file.path(dadir,'ExploitationRefs34.csv'))

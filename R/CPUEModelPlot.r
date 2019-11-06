@@ -1,5 +1,5 @@
 #' @export
-CPUEModelPlot = function(CPUEModelResult, TempModelling, lfa, combined=F,graphic='R', wd=8, ht=11, path=file.path(project.figuredirectory("bio.lobster"),"figures"),lab='',index.pts=T, ...){
+CPUEModelPlot = function(CPUEModelResult, TempModelling, mdata = NULL, lfa, combined=F,graphic='R', wd=8, ht=11, path=file.path(project.figuredirectory("bio.lobster"),"figures"),lab='',index.pts=T, ...){
 	
   if(combined==T){
     M = CPUEModelResult$model
@@ -27,7 +27,11 @@ CPUEModelPlot = function(CPUEModelResult, TempModelling, lfa, combined=F,graphic
       Mdata = M$data
     }
     if(combined==T)Mdata = subset(Alldata,fAREA==lfa[i])
-
+    if(!is.null(mdata)) {
+      Mdata = mdata
+      Mdata$fYEAR = Mdata$SYEAR
+      Mdata$fAREA = Mdata$LFA
+    }
     Mdata$CPUE = Mdata$WEIGHT_KG/Mdata$NUM_OF_TRAPS
     wt=aggregate(WEIGHT_KG~y,Mdata,FUN=sum)
 
@@ -35,7 +39,7 @@ CPUEModelPlot = function(CPUEModelResult, TempModelling, lfa, combined=F,graphic
     MD = MD[order(MD$y),]
     D = median(Mdata$DEPTH)
     Temp = predict(TempModelling$Model, newdata = data.frame(y=MD$y, cos.y=cos(2*pi*MD$y), sin.y=sin(2*pi*MD$y), DEPTH=D, area=lfa[i]), type='response')
-    pData=data.frame(DOS=MD$DOS,TEMP= Temp,logTRAPS=log(1), fYEAR=MD$fYEAR, fAREA=MD$fAREA)
+    pData=data.frame(DOS=MD$DOS,TEMP= Temp,logTRAPS=log(1), fYEAR=as.factor(MD$SYEAR), fAREA=as.factor(MD$fAREA))
     PM = predict(M, newdata = pData, type = 'response',se.fit=T)
 
 

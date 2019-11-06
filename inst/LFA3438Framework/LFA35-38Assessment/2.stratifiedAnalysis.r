@@ -13,7 +13,7 @@ dir.create(fp1,showWarnings=F)
 p1 = p
 p1$yrs = 1969:2019
 
-stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
+stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
                 p$series =c('summer')
                 p$define.by.polygons = T
                 p$lobster.subunits=F
@@ -32,7 +32,8 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
             
 
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-      
+      write.csv(aout,file=file.path(fpf, paste(lfa,'DFOtotalabund.csv')))
+
 
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
@@ -57,28 +58,27 @@ stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
                       if(lfa == 'LFA35-38') p$ylim=c(0,150)
                        p$box=T
                        p$file.name = file.path(f,paste(lfa,'DFOrestratifiednumbersNOY.png', sep=""))
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
 
                        p$box=T
                         p$ylim=NULL
                        p$metric = 'weights'
                        p$file.name = file.path(f,paste(lfa,'DFOrestratifiedweightsNOY.png',sep=""))
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
 
                        p$box=NULL
                        p$ylim=NULL
                        p$file.name = file.path(f,paste(lfa,'DFOrestratifiedDWAO.png',sep=""))
                        p$metric = 'dwao'
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
                        
                        p$file.name = file.path(f,paste(lfa,'DFOrestratifiedgini.png',sep=""))
                        p$metric = 'gini'
                        p$ylim =c(0,1)
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
                        p$ylim = NULL
                        return(aout)
         }
 
     
 a = stratifiedAnalyses(survey='DFO',lfa='LFA35-38')
-write.csv(a,file.path(fp1,'LFA3538TotalB.csv'))

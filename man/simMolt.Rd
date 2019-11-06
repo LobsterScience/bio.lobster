@@ -4,7 +4,7 @@
 \alias{simMolt}
 \title{simMolt}
 \usage{
-simMolt(p, gdd = T, continuous.recruitment = T)
+simMolt(p, gdd = T, continuous.recruitment = F)
 }
 \arguments{
 \item{\code{p}}{:parameter list containing (at a minimum) region, doy (day of year), temp (temperature at doy)}

@@ -4,10 +4,12 @@
 \alias{giniFootprint}
 \title{giniFootprint}
 \usage{
-giniFootprint(x, plot = F)
+giniFootprint(x, y = NULL, plot = F)
 }
 \arguments{
-\item{\code{x}}{: footprint Metric}
+\item{\code{x}}{: footprint metric per grid}
+
+\item{\code{y}}{: area of grid}
 
 \item{\code{plot}}{: makes the Lorenz plot if set to \code{true}}
 }
@@ -15,10 +17,11 @@ giniFootprint(x, plot = F)
 estimate of gini
 }
 \description{
-gini index of patchniness from a fisheryFootprint, this assumes fishery footprint boxes are all the same size
+gini index of patchniness from a fisheryFootprint, this assumes fishery footprint boxes can change
 }
 \examples{
 x=c(0,	0,	0,	0,	0,	0.25,	1.81,	2.52,	2.6,	3.68,	7.58,	10.07,	13.33,	13.33,	24.99)
+y=c(1,1,1,1,2,2,2,3,3,1,1,2,3,4,5)
 giniFootprint(x,plot=T)
 }
 \author{

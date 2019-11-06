@@ -117,8 +117,13 @@ Years = 1996:2019
 
 		asa = as.data.frame(aggregate(.~YEAR,data=apreds,FUN=sum))
 		ag = apply(asa[,2:1001],1,quantile,0.5)/1000
+		
+		aout = as.data.frame(cbind(asa$YEAR,apply(asa[,2:1001],1,quantile,0.5)/1000, apply(asa[,2:1001],1,quantile,0.025)/1000,apply(asa[,2:1001],1,quantile,0.975)/1000))
+		names(aout) = c('Year','B','lB','uB')
+		R0 = aout
+		write.csv(aout,file=file.path(fpf1,'ILTSCommB.csv'))
 
-			png(file=file.path(fpf1,'ILTSCommB.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+			png(file=file.path(fpf1,'ILTSCommB.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
 			plot(asa$YEAR,apply(asa[,2:1001],1,quantile,0.5)/1000,xlab='Year',ylab='Commercial Biomass',pch=16,ylim=c(0,32000))
 			arrows(asa$YEAR, y0 = apply(asa[,2:1001],1,quantile,0.025)/1000, y1 =apply(asa[,2:1001],1,quantile,0.975)/1000,length=0 )
 			lines(asa$YEAR,runmed(ag,k=3),col='salmon',lwd=2)
@@ -132,7 +137,7 @@ Years = 1996:2019
 area =  nrow(xyz)
 R1area1$Prop = (area - R1area1$Area)/area
 R1area1 = R1area1[order(R1area1$Year),]
-png(file=file.path(fpf1,'ILTSPropArea5perkm.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+png(file=file.path(fpf1,'ILTSPropArea5perkm.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
  plot(R1area1$Year,R1area1$Prop,pch=16,xlab='Year',ylab='Proportion of Total Area')
  lines(R1area1$Year,runmed(R1area1$Prop,k=3),col='salmon',lwd=2)
 dev.off()
@@ -243,8 +248,13 @@ Years = 1996:2019
 
 		asa = as.data.frame(aggregate(.~YEAR,data=apreds,FUN=sum))
 		ag = apply(asa[,2:1001],1,quantile,0.5)/1000
+		aout = as.data.frame(cbind(asa$YEAR,apply(asa[,2:1001],1,quantile,0.5)/1000, apply(asa[,2:1001],1,quantile,0.025)/1000,apply(asa[,2:1001],1,quantile,0.975)/1000))
+		
+		names(aout) = c('Year','B','lB','uB')
+		rec = aout
+		write.csv(aout,file=file.path(fpf1,'ILTSRecruitN.csv'))
 
-			png(file=file.path(fpf1,'ILTSRecruitN.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+			png(file=file.path(fpf1,'ILTSRecruitN.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
 			plot(asa$YEAR,apply(asa[,2:1001],1,quantile,0.5)/1000,xlab='Year',ylab='Recruit abundance',pch=16,ylim=c(0,55000))
 			arrows(asa$YEAR, y0 = apply(asa[,2:1001],1,quantile,0.025)/1000, y1 =apply(asa[,2:1001],1,quantile,0.975)/1000,length=0 )
 			lines(asa$YEAR,runmed(ag,k=3),col='salmon',lwd=2)

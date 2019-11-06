@@ -41,7 +41,7 @@ p$runs = p$runs[order(p$runs$v),]
 
 
 aout= groundfish.analysis(DS='stratified.estimates.redo',out.dir = 'bio.lobster',p=p)
-write.csv(aout,file=file.path(fp1,'indicators','predatorIndex34.csv'))
+write.csv(aout,file=file.path(fpf1,'predatorIndex34.csv'))
                         p$ylim = NULL
               				  p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
@@ -50,7 +50,7 @@ write.csv(aout,file=file.path(fp1,'indicators','predatorIndex34.csv'))
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name =  file.path('LFA3438Framework2019','LobPredatorsabundance34.png')
+                              p$file.name =  file.path(ff,'LobPredatorsabundance34.png')
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
@@ -75,7 +75,7 @@ la()
                               p$measure = 'stratified.mean' #'stratified.total'
                               p$figure.title = ""
                               p$reference.measure = 'median' # mean, geomean
-                              p$file.name =  file.path(f,'LobPredatorsbiomass34.png')
+                              p$file.name =  file.path(ff,'LobPredatorsbiomass34.png')
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
                         p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure

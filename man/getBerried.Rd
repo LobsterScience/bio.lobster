@@ -14,6 +14,9 @@ getBerried(p)
 \value{
 The probability of bearing eggs at length
 }
+\description{
+getBerried
+}
 \author{
 Brad Hubley, \email{Brad.Hubley@dfo-mpo.gc.ca}
 }

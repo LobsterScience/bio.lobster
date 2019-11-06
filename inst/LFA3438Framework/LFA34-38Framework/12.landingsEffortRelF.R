@@ -2,7 +2,7 @@
 
 require(bio.lobster)
 require(PBSmapping)
-
+la()
 a = lobster.db('annual.landings')
 b = lobster.db('seasonal.landings')
 d = lobster.db('historic.landings')
@@ -20,7 +20,7 @@ names(d) = c('YR','LFA','LAND')
 
 b$YR = substr(b$SYEAR,6,9)
 a = subset(a,YR<1976)
-b = subset(b,YR>1975 & YR<2019)
+b = subset(b,YR>1975 & YR<=2019)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019")
 
 LFA = c('LFA34','LFA35','LFA36','LFA38')
@@ -218,7 +218,7 @@ if(playingIn34){
 				#cycles
 				require(forecast)
 					i = "LFA34"
-					 aa = a[,c('YR',i)]
+					 aa = b[,c('YR',i)]
 					bb = subset(aa,YR>1980)	
 					x = bb[,i]
 				 	n <- length(x)

@@ -1,7 +1,7 @@
 require(bio.survey)
 require(bio.lobster)
 require(bio.groundfish)
-
+la()
 p = bio.lobster::load.environment()
 p$libs = NULL
 ff = "LFA35-38Assessment"
@@ -15,7 +15,7 @@ p1$yrs = 1970:2019
 
 
 
-stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff){
+stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
       p$series =c('summer')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = T
       p$lobster.subunits=F
@@ -35,6 +35,8 @@ stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff
   
 
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+      write.csv(aout,file=file.path(fpf, paste(lfa,'DFOBerried.csv')))
+
                               p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
@@ -52,7 +54,7 @@ stratifiedAnalysesBerried = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff
                                p$error.polygon=F
                               p$error.bars=T
 
-                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
      }
 
 stratifiedAnalysesBerried(survey='DFO',lfa='LFA35-38')
