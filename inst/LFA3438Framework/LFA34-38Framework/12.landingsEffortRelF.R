@@ -252,7 +252,10 @@ if(playingIn34){
 				   n <- length(y)
 				    y <- as.ts(y)
 				    y <- residuals(tslm(y ~ trend)) #removing time series trend
-				  
+				  plot(y)
+				 par(new=T)
+				plot(x,col='red')
+
 }
 
 if(playingIn35){

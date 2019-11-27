@@ -1,0 +1,69 @@
+\newcommand{\cp}{\Figure}
+  
+  
+  
+   
+    
+         \Figure{Plot of the mean bottom temperatures from long running surveys within LFA 34. Clockwise from top left, NFall, NSpr and DFO.
+        \Figure{Time series states in LFA 34 bottom temperatures estimated from Dynamic Factor analyses of three survey trends.}
+        \Figure{Time series trend fits with confidence intervals from Dynamic Factor analyses of the bottom temperature time series.}
+         \Figure{Plot of the stratified abundance and biomass estimates from the DFO bottom trawl survey. Red line represents three year running medians.}
+         \Figure{Plot of the Bayesian change point analyses on the DFO commercial biomass survey index (upper left). Plot of the commercial biomass index in thousands of tons with reference points from the DFO survey : Green line represents $USI_h$, purple line was the $USI_f$, blue line was the $LRI_l$ and orange was the $LRI_{recover}$(upper right). Time series of relative fishing mortality (RelF) with long term median RelF (purple) and median of low productivity Relf (blue; bottom).  In each plot red line represents three year running medians.}
+         \Figure{Plot of the Bayesian change point analyses on the NEFSC spring commercial biomass survey index (upper left). Plot of the commercial biomass index in thousands of tons with reference points from the NEFSC spring survey : Green line represents $USI_h$, purple line was the $USI_f$, blue line was the $LRI_l$ and orange was the $LRI_{recover}$(upper right). Time series of relative fishing mortality (RelF) with long term median RelF (purple) and median of low productivity Relf (blue; bottom).  In each plot red line represents three year running medians.}
+\Figure{Plot of the Bayesian change point analyses on the NEFSC Fall commercial biomass survey index (left). Plot of the commercial biomass index in thousands of tons with reference points from the NEFSC Fall survey : Green line represents $USI_h$, purple line was the $USI_f$, blue line was the $LRI_l$ and orange was the $LRI_{recover}$. Time series of relative fishing mortality (RelF) with long term median RelF (purple) and median of low productivity Relf (blue; bottom).  In each plot red line represents three year running medians.}
+\Figure{Plot of the Bayesian change point analyses on the ILTS commercial biomass survey index (left). Plot of the commercial biomass index in thousands of tons with reference points from the ILTS survey: green line represents $USI_h$, purple line was the $USI_f$, blue line was the $LRI_l$ and orange was the $LRI_{recover}$. There was complete overlap between $LRI_l$ and $LRI_recover$.Time series of relative fishing mortality (RelF) with long term median RelF (purple) and median of low productivity Relf (blue; bottom).  In each plot red line represents three year running medians. }
+\Figure{Phase plots of running medians of commercial biomass and relative fishing mortality from each of (clockwise from top left) NEFSC spring, NEFSC fall, ILTS and DFO surveys using proposed reference point indicators ($USI_h$, $LRI_{recover}$). Green shaded areas represent healthy stock status zones, whereas yellow and red represnt cautious and critical respectively. Removal references (RR) are only shown in the healthy stock status zone, but would apply in the cautious and critical zones, however the rate of decay through these zones will be discussed at future advisory meetings.}
+        \Figure{Time series of DFO survey trends for LFA 35-38 total abundance.}
+        \Figure{Time series of DFO survey trends for LFA 35-38 recruit abundance.}
+        \Figure{Time series of DFO survey trends for LFA 35-38 commercial biomass. Values prior to 1999 were derived using the mean proportion of commercial to total biomass between 1999 and 2018 (0.746).}
+        \Figure{Landings of lobster in the combined LFA 35 to LFA 38. Red line represents the three year running median.}
+        \Figure{Time series of DFO survey trends for LFA 35-38 commercial biomass. Values prior to 1999 were derived using the mean proportion of commercial to total biomass between 1999 and 2018 (0.746).}
+        \Figure{Time series of DFO survey trends for LFA 35-38 area occupied.}
+        \Figure{Time series of DFO survey trends for LFA 35-38 Gini index of patchiness.}
+        \Figure{Time series of DFO survey bottom temperature trends for LFA 35-38.}
+         \Figure{Plot of the stratified abundance and biomass estimates for lobster predators from the DFO bottom trawl survey in LFA 35 - 38. Red line represents three year running medians.}
+        \Figure{Time series of recruit lobster abundance from scallop surveys in LFA 35. Red line represents three year running median.}
+        \Figure{Time series of modelled recruit lobster abundance from FSRS recruitment traps in LFA 35.}
+       \Figure{Plot of level of patchiness of landings of lobsters within LFA 35. Patchiness was estimated by the Gini index.}
+\Figure{Plot of the Bayesian change point analyses on the commercial CPUE for LFA 35 (left). Modelled CPUE index from commercial data in LFA 35. Green line represents the proposed USR and blue line represents the proposed LRP (Right). The red line represents the three year running median.  }
+        \Figure{Time series of recruit lobster abundance from scallop surveys in LFA 36. Red line represents three year running median.}
+       \Figure{Plot of level of patchiness of landings of lobsters within LFA 36. Patchiness was estimated by the Gini index.}
+\Figure{Plot of the Bayesian change point analyses on the commercial CPUE for LFA 36 (left). Modelled CPUE index from commercial data in LFA 36. Green line represents the proposed USR and blue line represents the proposed LRP (Right). The red line represents the three year running median.  }
+        \Figure{Time series of recruit lobster abundance from scallop surveys in LFA 38. Red line represents three year running median.}
+       \Figure{Plot of level of patchiness of landings of lobsters within LFA 38. Patchiness was estimated by the Gini index.}
+       \Figure{Stacked barplot of the proportion of sexs in along the transect (left) and the mean densities (right) of male(1), female (2) and berried (3) $lobsters/m^2$ per year from the Flagg Cove dive transect survey.}
+\Figure{Plot of the Bayesian change point analyses on the commercial CPUE for LFA 38 (left). Modelled CPUE index from commercial data in LFA 38. Green line represents the proposed USR and blue line represents the proposed LRP (Right). The red line represents the three year running median.  }
+        \Figure{Locations of all temperature data used in the temperature model.}
+        \Figure{Predictions from the temperature model for June 1st at 25 m to show the annual trends in each LFA. Light blue band represents the standard error of the prediction.}
+        \Figure{Locations of tagging mark-recapture data used for estimating moult probability and increment. Releases (red dots) are conected to their recaptures (blue dots) with a purple line.}
+        \Figure{Predicted molt probabilities by number of degree days above 0$^{\circ}$C since last molt for various initial carapace lengths from the molt probability model.}
+        \Figure{Molt increment as the size difference versus initial carapace length for males (blue) and females (red) from tagging data. Lines represent the fits and 95\% credible interval of the molt increment model for each sex.}
+        \Figure{Size at maturity ogive for LFA 34.}
+         \Figure{Bubble plots showing the simulated population assuming CCIR exploitation estimates under the current management regime for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+         \Figure{Bubble plots showing the simulated population assuming RelF exploitation estimates  under the current management regime for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+         \Figure{Bubble plots showing the simulated population assuming CCIR exploitation estimates where MLS was increased to 90mm for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+         \Figure{Bubble plots showing the simulated population assuming RelF exploitation estimates where MLS was increased to 90mm for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+         \Figure{Bubble plots showing the simulated population assuming CCIR exploitation estimates where the season was shortened by 50 percent for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+         \Figure{Bubble plots showing the simulated population assuming RelF exploitation estimates where the season was shortened by 50 percent for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+         \Figure{Bubble plots showing the simulated population assuming CCIR exploitation estimates where a small window (115-125 mm) was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+         \Figure{Bubble plots showing the simulated population assuming RelF exploitation estimates where a small window (115-125 mm) was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+         \Figure{Bubble plots showing the simulated population assuming CCIR exploitation estimates where a maximum size of 125 mm was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+         \Figure{Bubble plots showing the simulated population assuming RelF exploitation estimates where a maximum size of 125 mm was implemented for LFA 34. The diameter of the bubbles are proportional to the log number of lobsters in a given size bin and time step.}
+        \Figure{Carapace Length Frequencies from ILTS survey in LFA 34 from 2005-2016 when the balloon trawl was used. Dark grey: males, light grey: females, red line: minimum legal size.}
+        \Figure{Carapace Length Frequencies from ILTS survey in LFA 34 from 2016-2018 when the nest trawl was used. Dark grey: males, light grey: females, red line: minimum legal size.}
+       \Figure{Carapace Length Frequencies from scallop survey in LFA 34 conducted in June 2006-2018. Red line: minimum legal size.}
+       \Figure{Carapace Length Frequencies from scallop survey in LFA 34 conducted in Sept 2006-2018. Red line: minimum legal size.}
+        \Figure{Carapace Length Frequencies from scallop survey in LFA 35 conducted in July 2006-2018. Red line: minimum legal size.}
+        \Figure{Carapace Length Frequencies from scallop survey in LFA 36 conducted in July 2006-2018. Red line: minimum legal size.}
+        \Figure{Carapace Length Frequencies from scallop survey in LFA 38 conducted in Aug 2006-2018. Red line: minimum legal size.}
+        \Figure{Carapace Length Frequencies from FSRS recruitment traps in LFA 34. Dark grey: males, light grey: females, red line: minimum legal size.}
+        \Figure{Carapace Length Frequencies from FSRS recruitment traps in LFA 35. Dark grey: males, light grey: females, red line: minimum legal size.}
+        \Figure{Carapace Length Frequencies from at sea sampling in LFA 34 between 2012 and 2018. Dark grey: males, light grey: females, red line: minimum legal size, N: number of samples.}
+        \Figure{Carapace Length Frequencies from at sea sampling in LFA 34 between 2012 and 2018. Dark grey: males, light grey: females, red line: minimum legal size, N: number of samples.}
+        \Figure{Carapace Length Frequencies from at sea sampling in LFA 35 between 2005 and 2011. Dark grey: males, light grey: females, red line: minimum legal size, N: number of samples.}
+        \Figure{Carapace Length Frequencies from at sea sampling in LFA 35 between 2012 and 2018. Dark grey: males, light grey: females, red line: minimum legal size, N: number of samples.}
+        \Figure{Carapace Length Frequencies from at sea sampling in LFA 36 between 2005 and 2011. Dark grey: males, light grey: females, red line: minimum legal size, N: number of samples.}
+        \Figure{Carapace Length Frequencies from at sea sampling in LFA 38 between 2005 and 2011. Dark grey: males, light grey: females, red line: minimum legal size, N: number of samples.}
+         \Figure{Time series trends in berried abundance for lobsters within LFA 34 captured in trawl surveys. Clockwise from top left, NFall, NSpr, ILTS and DFO.
+        \Figure{Berried Female abundance LFA 35-38 from DFO summer RV surveys.}
+
