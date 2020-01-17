@@ -17,7 +17,8 @@ CPUEModelData = function(p,redo=T,TempModelling){
 
 	    tmp = rbind(tmp2,tmp1)
 
-	    tmp = subset(tmp,subarea %in% p$subareas)
+	    if('subareas'%in%names(p))   tmp = subset(tmp,subarea %in% p$subareas)
+	    else  tmp = subset(tmp,LFA %in% p$lfas)
 
 	    tmp$LFA = tmp$subarea
 	    tmp$LFA[tmp$subarea%in%c("27N","27S")] = "27"
@@ -51,6 +52,10 @@ CPUEModelData = function(p,redo=T,TempModelling){
 
 
 	    newdata = with(cpue.data,data.frame(y=y, cos.y=cos(2*pi*y), sin.y=sin(2*pi*y), DEPTH=DEPTH, area=subarea))
+
+		newdata$area[newdata$area=="31A"] = 311
+		newdata$area[newdata$area=="31B"] = 312
+
 		cpue.data$TEMP = predict(TempModelling$Model, newdata, type='response')
 
 

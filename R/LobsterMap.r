@@ -24,7 +24,9 @@
 #' LobsterMap('all',poly.lst=catchgrids[1:2],title="2007 Lobster Catch")
 #' ContLegend("bottomright",lvls=catchgrids$lvls/1000,Cont.data=catchgrids,title="Catch (t)",inset=0.02,cex=0.8,bg='white')
 #' @export
-LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, fname = 'LobsterMap',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,...){
+LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, fname = 'LobsterMap',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',
+	isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,
+	addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,...){
 
 options(stringsAsFactors=F)		
 	require(PBSmapping)|| stop("Install PBSmapping Package")
@@ -36,13 +38,16 @@ options(stringsAsFactors=F)
 	if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
 	if(area=='27-38')	{ ylim=c(42.5,48); 		xlim=c(-67.4,-57.8)	}
 	if(area=='27-33')	{ ylim=c(42.5,48); 		xlim=c(-66.6,-57.8)	}
+	if(area=='27-32')	{ ylim=c(43.5,48); 		xlim=c(-63.6,-57.8)	}
+	if(area=='34-38')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-63.5)	}
+	if(area=='35-36')	{ ylim=c(44.5,46);	 	xlim=c(-67.2,-63.2)	}
 	if(area=='west')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-64)	}
 	if(area=='27')		{ ylim=c(44.9,47.9); 	xlim=c(-61,-57.8)	}
 	if(area=='28')		{ ylim=c(45.3,46);	 	xlim=c(-61.6,-60.3)	}
 	if(area=='29')		{ ylim=c(45.3,46); 		xlim=c(-61.6,-60.3)	}
 	if(area=='30')		{ ylim=c(44.6,45.9); 	xlim=c(-60.8,-59.6)	}
-	if(area=='31a')		{ ylim=c(44.4,45.7); 	xlim=c(-61.8,-60)	}
-	if(area=='31b')		{ ylim=c(44.1,45.3); 	xlim=c(-62.2,-60.5)	}
+	if(area=='31A')		{ ylim=c(44.4,45.7); 	xlim=c(-61.8,-60)	}
+	if(area=='31B')		{ ylim=c(44.1,45.3); 	xlim=c(-62.2,-60.5)	}
 	if(area=='32')		{ ylim=c(43.8,45);	 	xlim=c(-63.5,-61.5)	}
 	if(area=='33')		{ ylim=c(42.5,44.8); 	xlim=c(-65.8,-62.2)	}
 	if(area=='34')		{ ylim=c(42.5,45);	 	xlim=c(-67.8,-65)	}
@@ -53,7 +58,8 @@ options(stringsAsFactors=F)
 	if(area=='40')		{ ylim=c(42.25,43);		xlim=c(-66.5,-65.25)}
 	if(area=='41')		{ ylim=c(41.1,44); 		xlim=c(-68,-63.5)	}
 	if(area=='SWN')		{ ylim=c(42.5,45); 		xlim=c(-67.8,-62.2)	}
-	if(area=='BoF')		{ ylim=c(43.75,46); 		xlim=c(-67.8,-63.2)	}
+	if(area=='BoF')		{ ylim=c(43.75,46); 	xlim=c(-67.8,-63.2)	}
+	if(area=='33-35')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-63.2)	}
 		
 
 	coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline",mapRes,".csv")))
@@ -90,6 +96,10 @@ if(save) {
 	}
 	if(!is.null(poly.lst)){
 		addPolys(poly.lst[[1]],polyProps=poly.lst[[2]])
+		if('density'%in%names(poly.lst[[2]])){
+			x=subset(poly.lst[[2]],!is.na(density))
+			addPolys(subset(poly.lst[[1]],SID==x$SID),density=x$density,angle=x$angle,col=x$linecol,border=x$border)
+		}
 	}
 	
 	
@@ -139,17 +149,17 @@ if(save) {
 				}
 			  b = within(b,{POS <- ave(PID,list(PID),FUN=seq_along)})
 			  attr(b,'projection') <- "LL"
-			  addPolys(b,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
+			  addPolys(b,lty=1,border='blue',col=adjustcolor('white',alpha.f=1))
 			 # addLabels(a,cex=0.6)
 			}
-  if(addGeorgesStrata) {
+    if(addGeorgesStrata) {
 			  require('bio.polygons')
 			  b = file.path(project.datadirectory('bio.polygons'),'data','Science','PED','GeorgesBankStrata.rdata')
 			  load(b)
 				  addPolys(out,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
 				
 				}
-  if(addAmericanStrata) {
+    if(addAmericanStrata) {
 			  require('bio.polygons')
 			   b = importShapefile(find.bio.gis('bts',return.one.match=F))
 			   attr(b,'projection') <- "LL"
@@ -177,7 +187,7 @@ if(save) {
 			if(!is.na(lfa)){
 				grids<-subset(LFAgrid,PID==lfa)
 				#browser()
-				addPolys(grids,border=rgb(0,0,0,0.2),col=NULL)
+				if(addGrids=='lfaonly')addPolys(grids,border=rgb(0,0,0,0.2),col=NULL)
 				if(labels=='grid'){
 					grids$label<-grids$SID
 	        		grids.dat<-merge(calcCentroid(grids),grids[c("PID","SID","label")])
@@ -211,7 +221,7 @@ if(save) {
 		}
 
 	}
-	if(addGrids){
+	if(addGrids==T){
 			LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 		addPolys(LFAgrid,border=rgb(0,0,0,0.2),col=NULL)
 			

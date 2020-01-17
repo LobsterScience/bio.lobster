@@ -10,7 +10,7 @@ assignArea = function(data, coords = c("lon","lat")){
                 }else{
                         a1 = findPolys(data,LFAs,maxRows = 3e6,includeBdry=1)[,-4]
                 }
-        data = merge(data,a1,by='EID')
+        data = merge(data,a1,by='EID',all.x=T)
         data = rename.df(data,n0=c('PID','SID'),n1=c('LFA','LFA_GRID'))
 
         return(data)

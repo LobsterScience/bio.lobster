@@ -18,17 +18,21 @@ dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', 
 
     dir.create( path=loc, recursive=T, showWarnings=F )
           props = 1
-         if(p$series=='summer')  {mns = c('June','July','August')     ; strat = c(440:495)}
-         if(p$series=='georges') {mns = c('February','March','April'); strat = c('5Z1','5Z2','5Z3','5Z4','5Z5','5Z6','5Z7','5Z8','5Z9')}
+         if(p$series=='summer')  {mns = c('June','July','August')     ;     strat = c(440:495)}
+         if(p$series=='georges') {mns = c('February','March','April');      strat = c('5Z1','5Z2','5Z3','5Z4','5Z5','5Z6','5Z7','5Z8','5Z9')}
          
-         if(p$area=='Georges.Canada' & p$series == 'georges') {strat = c('5Z1','5Z2')  }
-         if(p$area=='Georges.US' & p$series =='georges')     {strat = c('5Z3','5Z4','5Z5','5Z6','5Z7','5Z8')}
-        
-         if(p$area== 'LFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485,480); props = 1}
+         if(p$area=='Georges.Canada' & p$series == 'georges')              {strat = c('5Z1','5Z2')  }
+         if(p$area=='Georges.US' & p$series =='georges')                   {strat = c('5Z3','5Z4','5Z5','5Z6','5Z7','5Z8')}
+         if(p$area== 'LFA41' & p$series =='summer')                        {strat = c(472,473,477,478,481,482,483,484,485,480); props = 1}
          if(p$area== 'LFA41' & p$series =='summer' & p$define.by.polygons) {strat = c(472,473,477,478,481,482,483,484,485); props = c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409)}
-         if(p$area== 'adjacentLFA41' & p$series =='summer') {strat = c(472,473,477,478,481,482,483,484,485,480); props = 1-c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409,0)}
-         if(p$area== 'LFA40' & p$series =='summer') {strat = c(476,477,480,481,482); props = c(0.02,0.0204,1,0.0904,0.2865)}
-         
+         if(p$area== 'adjacentLFA41' & p$series =='summer')                {strat = c(472,473,477,478,481,482,483,484,485,480); props = 1-c(0.2196,0.4415,0.7593,0.7151,0.1379,0.6991,0.8869,0.50897,0.070409,0)}
+         if(p$area== 'LFA40' & p$series =='summer')                        {strat = c(476,477,480,481,482); props = c(0.02,0.0204,1,0.0904,0.2865)}
+         if(p$area == 'LFA34' & p$series == 'summer')                      {strat = c(476,481,484,485,490,491,492,495); props = c(0.0268,0.3412,0.2972,0.9251,0.880,0.8443,0.09096,0.01133)}
+         if(p$area == 'LFA35' & p$series =='summer')                       {strat = c(490,491,494,495); props = c(0.1190,0.0274,0.07246,0.9330)}
+         if(p$area == 'LFA36' & p$series =='summer')                       {strat = c(491,492,493,494,495); props = c(0.0222,0.151,0.7457,0.9311,0.05379)}
+         if(p$area == 'LFA38' & p$series =='summer')                       {strat = c(484,491,492,493); props = c(0.0315,0.104,0.6304,0.2167)}
+         if(p$area == 'LFA35-38' & p$series =='summer')                    {strat = c(484,490,491,492,493,494,495); props = c(0.0315,0.119,0.154,0.781,0.9624,1.00,0.9899)}
+        
          if(p$lobster.subunits==T &p$area=='Georges.Basin' & p$series=='summer') {strat = c(482,483); props = c(0.1462, 0.2696)}      
          if(p$lobster.subunits==T &p$area=='Crowell.Basin' & p$series=='summer') {strat = c(482,483,484,485); props = c(0.1963,0.1913,0.3935,0.0483)}   
          if(p$lobster.subunits==T &p$area=='SE.Browns' & p$series=='summer')    {strat = c(472,473,475,477,478,481,482); props = c(0.2196,0.4415,0.00202,0.7592,0.7151,0.0868,0.0871)}  
@@ -157,24 +161,33 @@ pi='base'
                      a = findPolys(set,l)
                        iz = which(set$EID %in% a$EID)
                     }
-                } else {
+          if(p$area %in% c('LFA34','LFA35','LFA36','LFA38','LFA35-38')) {
+                        LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+                        ppp = as.numeric(strsplit(p$area,"LFA")[[c(1,2)]])
+                  if(p$area =='LFA35-38') ppp = c(35,36,38)
+                        lll = subset(LFAs,PID %in% ppp)
+                        l = subset(LFAs,SID==1)
+                        attr(l,'projection') <- "LL"
+                        set$EID = 1:nrow(set)
+                        a = findPolys(set,l)
+                       iz = which(set$EID %in% a$EID)
+                    }} else {
                               iz = which(set$strat %in% c(strat))
-                }
-   
+                    }
+#browser()
                 se = set[intersect(iy,iz),]
                 se$EID = 1:nrow(se)
                 ca = cas[iv,]
                 se$z = (se$dmin+se$dmax) / 2 * 1.8288 #from fm to m
                 vars.2.keep = c('mission','X','Y','setno','sdate','dist','strat','z','bottom_temperature','bottom_salinity','type')
                 se = se[,vars.2.keep]
-
         p$lb = p$length.based
-
         if(p$by.sex & !p$length.based) {p$size.class=c(0,1000); p$length.based=T}
 
         if(!p$lb) { vars.2.keep =c('mission','setno','totwgt','totno','size_class','spec')
                     ca = ca[,vars.2.keep]
                 }
+#browser()
 
         if(p$length.based){
                   dp = de[which(de$spec %in% 2550),]
@@ -239,7 +252,7 @@ pi='base'
                           st = merge(st,spr)
                           if(p$reweight.strata) st$NH = st$NH * st$Pr #weights the strata based on area in selected region
                           
-                          if(exists('temperature',p)) {sc = sc[!is.na(sc$bottom_temperature),] ; sc$totno = sc$bottom_temperature; sc$totwgt = sc$bottom_temperature }
+                          if(exists('temperature',p)) {sc = sc[!is.na(sc$bottom_temperature),] ; sc$totno = sc$bottom_temperature; sc$totwgt = sc$bottom_temperature; sc$type <- 1 }
                           if(nrow(sc)>0){
                           st = Prepare.strata.file(st)
                           sc1= sc

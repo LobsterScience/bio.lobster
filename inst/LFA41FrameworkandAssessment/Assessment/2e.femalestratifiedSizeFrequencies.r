@@ -6,7 +6,11 @@ p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis",'lfa41Assessment')
 la()
+<<<<<<< HEAD
 load_all('~/GitHub/bio.survey/')
+=======
+#load_all('~/git/bio.survey/')
+>>>>>>> 8166747bcdc1efa15ee4ccbc0b303a07181b8751
 
 
 #by length for histograms
@@ -41,7 +45,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata  '))
+        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
 
 
 #NEFSC spring
@@ -77,7 +81,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata  '))
+        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'))
 
 
 
@@ -100,7 +104,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata  '))
+        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'))
 
     
 
@@ -139,4 +143,4 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
-        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41dfogeorges.rdata  '))
+        save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))

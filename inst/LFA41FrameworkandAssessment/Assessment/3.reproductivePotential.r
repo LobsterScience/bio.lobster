@@ -4,10 +4,10 @@ require(bio.lobster)
 la()
 
 
-       ff = c(file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata  '),
-              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata  '),
-              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata  '),
-              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata  '))
+       ff = c(file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
        
 
        for(i in 1:length(ff)) {
@@ -41,7 +41,7 @@ la()
                                 p$measure = 'stratified.mean' #'stratified.total'
                                 p$figure.title = ""
                                 p$reference.measure = 'median' # mean, geomean
-                                p$file.name = paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][7],"\\.")[[1]][1],'png',sep=".")
+                                p$file.name = paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][grep("Length",strsplit(a[i],"/")[[1]])],"\\.")[[1]][1],'png',sep=".")
       		                  print(p$file.name)
 
                           p$y.maximum = NULL # NULL # if ymax is too high for one year
@@ -60,7 +60,8 @@ la()
                        figure.stratified.analysis(x=out,out.dir = 'bio.lobster', x2 = af, p=p,sampleSizes=T)
          names(af) = c('yr','ObsLobs')
          out = merge(out,af)
-         fnn = file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','indicators',paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][7],"\\.")[[1]][1],'csv',sep="."))
+
+         fnn = file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','indicators',paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][grep("Length",strsplit(a[i],"/")[[1]])],"\\.")[[1]][1],'csv',sep="."))
           write.csv(out, file=fnn)
           out$ObsLobs = NULL
 

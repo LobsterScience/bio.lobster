@@ -4,7 +4,7 @@
 \alias{la}
 \title{la}
 \usage{
-la(base.loc = git.repo)
+la(package = "bio.lobster", base.loc = git.repo)
 }
 \arguments{
 \item{\code{base.loc}}{:the base directory of bio.lobster}

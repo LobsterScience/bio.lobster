@@ -1,5 +1,5 @@
 #' @export
-ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex=0:3,convert2nest=F){
+ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex=0:3,convert2nest=F,biomass=F){
 	
 	require(lubridate)
 
@@ -28,15 +28,17 @@ ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex
 	ScalSurvLob.dat$lon<-convert.dd.dddd(ScalSurvLob.dat$START_LONG)
 	ScalSurvLob.dat$lat<-convert.dd.dddd(ScalSurvLob.dat$START_LAT)
 
+	if(biomass)ScalSurvLob.dat$NLobs = ScalSurvLob.dat$NLobs * lobLW(ScalSurvLob.dat$MEAS_VAL, sex= ScalSurvLob.dat$SEX_ID)/1000
+
 	if(convert2nest == T){
 		x = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data',"survey","RhoLobScal.rds"))
 		NetConv = with(x,data.frame(MEAS_VAL=length,LobSurvCF=rho))
-		ScalSurvLob.dat = merge(ScalSurvLob.dat,NetConv,all=T)
+		ScalSurvLob.dat = merge(ScalSurvLob.dat,NetConv,all.x=T)
 		ScalSurvLob.dat$NLobs = ScalSurvLob.dat$NLobs * ScalSurvLob.dat$LobSurvCF
 	} 
 
 	tmp<-with(ScalSurvLob.dat,tapply(NLobs,TOW_SEQ,sum))
-	d1<-subset(ScalSurvLob.dat,!duplicated(TOW_SEQ),c('TOW_SEQ','YEAR','TOW_DATE','MGT_AREA_ID','AREA_SWEPT','lon','lat'))
+	d1<-subset(ScalSurvLob.dat,!duplicated(TOW_SEQ),c('TOW_SEQ','YEAR','TOW_DATE','MGT_AREA_ID','AREA_SWEPT','DEPTH','BOTTOM_TEMP','lon','lat'))
 	d2<-data.frame(TOW_SEQ=as.numeric(names(tmp)),NLobs=as.vector(tmp))
 	ScalSurvLob<-merge(d1,d2,all.x=T)
 
@@ -56,7 +58,7 @@ ScallopSurveyProcess<-function(	size.range=c(0,200),SPA,Yrs,bin.size=5,log=F,sex
 	ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])]<-sweep(ScalSurvLob[,which(names(ScalSurvLob)%in%names(CLF)[-1])],1,FUN="/", ScalSurvLob$AREA_SWEPT)
 
     # add LFA column
-    events <- with(ScalSurvLob,data.frame(EID=TOW_SEQ,X=lon,Y=lat))
+    events <- na.omit(with(ScalSurvLob,data.frame(EID=TOW_SEQ,X=lon,Y=lat)))
     LFAPolys<-read.csv(file.path( project.datadirectory('bio.lobster'), "data","maps","LFAPolys.csv"))
     key <- findPolys(events,LFAPolys)
     ScalSurvLob <- merge(ScalSurvLob,with(key,data.frame(TOW_SEQ=EID,LFA=PID)),all=T)

@@ -42,7 +42,7 @@ TempModelPlot = function(TempModel,graphic='R',depths=c(5,25,50,100),wd=12,ht=5,
 	if(3%in%type){
 		# Annual trend
 		if(graphic=='png')png(file.path(project.datadirectory('bio.lobster'),'figures','TempModelAnnual.png'),width=7,height=10,units='in',res=200)
-		if(graphic=='R')x11( width=7, height=10)
+		if(graphic=='R')x11( width=7, height=8)
 
 		if(missing(yrs))yrs=floor(min(TempModel$Data$y)):floor(max(TempModel$Data$y))
 		y =	decimal_date(as.Date(paste(yrs,idate,sep='-')))

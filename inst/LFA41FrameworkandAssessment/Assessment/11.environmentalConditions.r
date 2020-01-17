@@ -25,14 +25,15 @@ require(bio.survey)
 
 require(bio.lobster)
 p = bio.lobster::load.environment()
+assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
-load_all('~/git/bio.survey/')
+#load_all('~/git/bio.survey/')
 
 
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:2016)
+      p$years.to.estimate = c(1969:assessment.year)
       p$length.based = F
       p$by.sex = F
       p$sex = c(1,2) # male female berried c(1,2,3)
@@ -77,6 +78,8 @@ write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','l
                        ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p)
  #### fall
          p$season =c('fall')# p$series =c('spring');p$series =c('fall')
+      p$years.to.estimate = c(1969:(assessment.year-1))
+       p = make.list(list(yrs=p$years.to.estimate),Y=p)
                         
 	                        aout= nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
                           write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','indicators','lfa41NEFSCFallTemps.csv'))
@@ -90,7 +93,7 @@ write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','l
       p$define.by.polygons = F
       p$lobster.subunits=F
       p$area = 'LFA41'
-      p$years.to.estimate = c(1970:2016)
+      p$years.to.estimate = c(1970:assessment.year)
       p$length.based = F
       p$by.sex = F
       p$bootstrapped.ci=T
@@ -140,7 +143,7 @@ write.csv(aout,file=file.path(project.datadirectory('bio.lobster'),'analysis','l
          p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(1987:2016)
+      p$years.to.estimate = c(1987:assessment.year)
       p$length.based = F
       p$by.sex = F
       p$bootstrapped.ci=T

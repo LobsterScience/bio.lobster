@@ -5,16 +5,17 @@
 \title{LobsterMap}
 \usage{
 LobsterMap(area = "custom", ylim = c(40, 52), xlim = c(-74, -47),
-  save = F, fname = "LobsterMap", mapRes = "HR", land.col = "wheat",
-  title = "", nafo = NULL, boundaries = "LFAs", bathy.source = "topex",
-  isobaths = seq(100, 1000, 100), bathcol = rgb(0, 0, 1, 0.1),
-  topolines = NULL, topocol = rgb(0.8, 0.5, 0, 0.2), points.lst = NULL,
-  pt.cex = 1, lines.lst = NULL, poly.lst = NULL, contours = NULL,
-  image.lst = NULL, color.fun = tim.colors, zlim, grid = NULL,
-  stippling = F, lol = F, labels = "lfa", labcex = 1.5, LT = T,
-  plot.rivers = T, addSummerStrata = F, addsubareas = F,
-  subsetSummerStrata = NULL, addGeorgesStrata = F, addAmericanStrata = F,
-  addGrids = T, land.only = F, ...)
+  save = F, fname = "LobsterMap", mapRes = "HR",
+  land.col = "wheat", title = "", nafo = NULL, boundaries = "LFAs",
+  bathy.source = "topex", isobaths = seq(100, 1000, 100),
+  bathcol = rgb(0, 0, 1, 0.1), topolines = NULL, topocol = rgb(0.8,
+  0.5, 0, 0.2), points.lst = NULL, pt.cex = 1, lines.lst = NULL,
+  poly.lst = NULL, contours = NULL, image.lst = NULL,
+  color.fun = tim.colors, zlim, grid = NULL, stippling = F,
+  lol = F, labels = "lfa", labcex = 1.5, LT = T, plot.rivers = T,
+  addSummerStrata = F, addsubareas = F, subsetSummerStrata = NULL,
+  addGeorgesStrata = F, addAmericanStrata = F, addGrids = T,
+  land.only = F, ...)
 }
 \arguments{
 \item{area}{= 'custom' where xlim & ylim are specified or select from area list below}

@@ -37,6 +37,8 @@ plotSurveyIndex<-function(trend.dat,yrs,graphic='pdf',index.variable="LobDen",mo
 		#text(max(yrs)+.5,median(LPT[1:14]*0.8)*.85,"Upper Stock Reference",col=rgb(0,0,1,0.5),pos=2,cex=0.8)
 	print(median(LPT[1:14]*0.8))
 	}
+
+	return(list(Mean = LPT, yrs = yrs, moving.median = runmed(LPT,3), moving.mean = rmLPT ))
 	if(add.legend){with(legend.specs)
 
 	}

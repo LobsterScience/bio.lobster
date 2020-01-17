@@ -1,11 +1,11 @@
 #' @export
-getTransMatrix = function(rlist,lfa="33W",f=4,s=1){
+getTransMatrix = function(rlist,lfa="33W",f=4,s=1,Plot=T){
 	
 	plst = rlist$plist[[lfa]]
 	males = rlist$mlist[[lfa]]
 	females = rlist$flist[[lfa]]
 	transMats = list(males=list(),females=list())
-	dims = dim(rlist$mlist$"33W"$totalPop)
+	dims = dim(rlist$mlist[[lfa]]$totalPop)
 	w = array(dim=dims)
 
 	#males
@@ -60,28 +60,24 @@ getTransMatrix = function(rlist,lfa="33W",f=4,s=1){
 		diag(transMats$females[[i]]) = diag(transMats$females[[i]]) + (1- moltProbs[[i]])
 	}
 
-	x11()
-	par(mfrow=c(2,1))
+	if(Plot){
+		x11()
+		par(mfrow=c(2,1))
 
-	plot(1:30,rep(0:1,15),type='n',ylab="Molt Prob",xlab='CL',main='Males',xaxt='n',las=1)
-	axis(1,at=1:30,lab=1:30*5+50)
-	mps = lapply(transMats[[1]],diag)
-	do.call("rbind",mps)
-	lines(1-mps[[1]],lty=1)
-	lines(1-mps[[2]],lty=2)
-	lines(1-mps[[3]],lty=3)
-	lines(1-mps[[4]],lty=4)
-	lines(4-colSums(do.call("rbind",mps)),lwd=2)
-	legend('topright',legend=1:4,lty=1:4)
+		plot(1:30,rep(0:1,15),type='n',ylab="Molt Prob",xlab='CL',main='Males',xaxt='n',las=1)
+		axis(1,at=1:30,lab=1:30*5+50)
+		mps = lapply(transMats[[1]],diag)
+		do.call("rbind",mps)
+		for(i in 1:f)lines(1-mps[[i]],lty=i)
+		lines(1-diag(Reduce('%*%',transMats[[1]])),lwd=2)
+		legend('topright',legend=1:f,lty=1:f)
 
-	plot(1:30,rep(0:1,15),type='n',ylab="Molt Prob",xlab='CL',main='Females',xaxt='n',las=1)
-	axis(1,at=1:30,lab=1:30*5+50)
-	fps = lapply(transMats[[2]],diag)
-	lines(1-fps[[1]],lty=1)
-	lines(1-fps[[2]],lty=2)
-	lines(1-fps[[3]],lty=3)
-	lines(1-fps[[4]],lty=4)
-	lines(4-colSums(do.call("rbind",fps)),lwd=2)
+		plot(1:30,rep(0:1,15),type='n',ylab="Molt Prob",xlab='CL',main='Females',xaxt='n',las=1)
+		axis(1,at=1:30,lab=1:30*5+50)
+		fps = lapply(transMats[[2]],diag)
+		for(i in 1:f)lines(1-fps[[i]],lty=i)
+		lines(1-diag(Reduce('%*%',transMats[[2]])),lwd=2)
+	}
 	
 	return(transMats)
 

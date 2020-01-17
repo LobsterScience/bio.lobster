@@ -1,5 +1,5 @@
 #' @export
-figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x2=NULL,save=T,...) {
+figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x2=NULL,save=T,wd=15,ht=12,...) {
 	fn=file.path(project.datadirectory(out.dir),'figures')
 	dir.create(fn,showWarnings=F)
 	if(is.character(x)) {
@@ -10,7 +10,7 @@ figure.stratified.analysis <- function(x,p,out.dir='bio.lobster',sampleSizes=F,x
 	#default is to use the object directly
 
 	with(p,{
-		if(save) png(file=file.path(fn,file.name),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+		if(save) png(file=file.path(fn,file.name),units='in',width=wd,height=ht,pointsize=18, res=300,type='cairo')
 		m='Yst' ; mm = 'n'; lev='Stratified Total'; mt= 'Number'; div = 1000
 		if(grepl('mean',measure)) {m = 'yst'; lev = 'Stratified Mean'; div =1}
 		if(grepl('weight',metric)) {mm = 'w'; mt = 'Weight'}

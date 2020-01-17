@@ -1,0 +1,1134 @@
+\documentclass{beamer}
+ 
+\mode<presentation> {
+
+%\usetheme{Hannover}
+\usetheme{Boadilla}
+
+%\usetheme{AnnArbor}
+
+\usecolortheme{whale}
+%\usecolortheme{seagull}
+
+%\usefonttheme{structuresmallcapsserif}
+
+}
+
+\usepackage[utf8]{inputenc}
+ \usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{array}
+%\usepackage{animate}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{adjustbox}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+
+\newcommand{\ebh}{\string~/bio.data/bio.lobster/figures/LFA3438Framework2019/} %change this to set figure directory
+\newcommand{\ebhx}{\string~/bio.data/bio.lobster/figures/LFA3438Framework2019/figures/Brad/} %change this to set figure directory
+\newcommand{\D}{.}
+
+ 
+%Information to be included in the title page:
+\title[HCR Guidance]{Biological Guidance on Harvest Control Rules}
+\author[Hubley and Cook]{Brad Hubley, Adam Cook}
+\institute[DFO]{Science Branch, Fisheries and Oceans Canada}
+\date{Sept. 10-11, 2019}
+
+ 
+ 
+\begin{document}
+ 
+\frame{\titlepage}
+ 
+
+\begin{frame}
+\frametitle{Harvest Control Rules}
+
+\begin{itemize}
+\item Management action when the stock status enters the cautious zone 
+\item Facilitate stock recovery back to healthy zone 
+\item Various input control mechanism
+\begin{itemize}
+\item Trap limit reduction
+\item Season length reduction
+\item Increase in MLS
+\item Window size prohibition
+\end{itemize}
+\item Science provides advice that places these measures in a biological context 
+\item Simulated lobster population
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulated Lobster Population}
+    \begin{itemize}
+    \item Starting population of 1000 males and 1000 females at 50mm carapace length 
+    \item Growth 
+    \begin{itemize}
+        \item Moulting
+        \item Temperature dependant
+    \end{itemize}
+    \item Reproduction
+    \begin{itemize}
+        \item Size-at-maturity
+        \item Fecundity
+    \end{itemize}
+    \item Exploitaion
+    \begin{itemize}
+        \item Base level determined from CCIR analysis
+        \item Modified for specific HCRs
+    \end{itemize}
+    \item Metrics for camparing results
+    \begin{itemize}
+        \item Landings, numbers and weight
+        \item Reproductive potential (numbers of eggs produced)
+    \end{itemize}
+    %\item the end
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Temperature}
+Temperature Model
+\begin{itemize}
+\item FSRS temperature data characteristic of lobster habitat but only during season
+\item Need year round temperatures to calculate degree days for growth
+\item Generalized Additive Model (GAM)
+\item Continous time variable \textit{y}
+\item Seasonal variability with Harmonics of the y variable, set up for an annual cycle (cos.y = cos(2$\pi$y), sin.y = sin(2$\pi$y))
+\item Depth has a dampening effect on seasonal variability
+\item Area as a factor
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Temperature}
+Locations of Temperature Data
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh TempDataMap.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Temperature}
+Seasonal Temperature Pattern
+\begin{figure}
+        \begin{center}
+            %\includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{\clam clam.jpg}
+            \includegraphics[clip,trim={0 0.2cm 0 0.2cm },width=1\textwidth]{\ebh TempModel34.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Temperature}
+Annual Temperature Trend
+\begin{figure}
+        \begin{center}
+            \includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx TempModelAnnual.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Tagging}
+Tagging Data
+\begin{itemize}
+\item Mark–recapture tagging data where the sizes of individual lobsters are recorded at both release and recapture
+\item Used to estimate Moult probability and moult increment
+\item Assume variability in growth between areas is a function of different temperatures
+\item Use temperature model to calculate degree days between release and recapture
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Tagging}
+Locations of Tagging Data
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh TaggingMap.pdf}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Moulting}
+Moult Probability 
+\begin{itemize}
+\item A function of carapace length and degree days since last moult
+\item A binomial generalized linear model of the occurrence of moulting was fit to the tagging data
+\item Lobsters that had increased in carapace size by $>$4\% were assumed to have moulted
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Moulting}
+Moult Probability 
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh MoltProbModel.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Moulting}
+Moult Increment 
+\begin{itemize}
+\item Estimated from the size difference in moulted lobsters from the tagging data
+\item Lobsters that had increased in carapace size by $>$4\% were assumed to have moulted
+\item Only included lobsters with a moult probability $<$0.9 to ensure lobsters only moulted once 
+\item Males have larger moult increments than females
+\item Rstanarm R package used to produce posterior predictions at given initial carapace length
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Moulting}
+Moult Increment 
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh MoltIncrModel.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Moulting}
+Moult process model 
+
+\begin{equation*}
+    N_{t+1, l, i, j+1} = N_{t, l, i, j} * (1 - pM)
+\end{equation*}
+
+
+\begin{equation*}
+    N_{t+1, l+iM, i+1, j=1} = N_{t, l, i, j} * pM
+\end{equation*}
+
+
+
+\textit{N} = number of lobsters\\
+\textit{t} = timestep (quarters)\\
+\textit{i} = number of moults\\
+\textit{j} = timesteps since last moult\\
+\textit{pM} = moult probability\\
+\textit{iM} = moult increment
+
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Reproduction}
+\begin{itemize}
+\item Males and females are run seperately
+\item Berried females are a seperate population within the females run
+\item Size of maturity curves determine the proportion of females at a given size that are berried
+%\item Females are assumed to have mated when they moult and gestation and brooding are assumed to take approximately 320 and 360 days respectively
+\item Fecundity relationship quantifies egg production
+\begin{equation*}
+Fecundity = 0.00256 * CL^3.409
+\end{equation*}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Reproduction}
+Size of Maturity
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh SoM.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Reproduction}
+Fecundity
+
+\begin{equation*}
+Fecundity = 0.00256 * CL^3.409
+\end{equation*}
+
+\begin{itemize}
+\item Same relationship for all areas from Campbell and Robinson (1983)
+\item quantifies egg production from berried females
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Mortality}
+Exploitation
+\begin{itemize}
+\item Two methods produced exploitation estimates for LFA 34 
+\item Average exploitation estimate from the CCIR analysis was 0.82 
+\item Average exploitation estimate from the RelF analysis was 0.68 
+\item Converted to an annual rate 
+\begin{equation*}
+F = \frac{-log(1-E)}{t}
+\end{equation*}
+\item Fishing mortality is applied to the simulated population in each length bin and time step
+\begin{equation*}
+N_{t+1, l} =  N_{t, l} * e^{-Fl * s}
+\end{equation*}
+\item \textit{s} is the amount (in years) of open season in a given time step (e.g. if the season were only open for one week in the first quarter \textit{s} would be %0.019 (7/365) for that quarter)
+\item Natural mortality assumed to be 0.15
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Mortality}
+\begin{itemize}
+\item HCR Scenarios
+\begin{itemize}
+\item Change in MLS
+\item Adjust season length
+\item Window size
+\item Max size
+\end{itemize}
+
+\end{itemize}
+\end{frame}
+
+
+
+
+%%%%%%%%%%%% LFA 34 MLS males %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34malesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34malesLS85.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 87.5, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34malesLS87\D 5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 90, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34malesLS90.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+%%%%%%%%%%%% LFA 34 MLS females %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34femalesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34femalesLS85.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 87.5, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34femalesLS87\D 5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 90, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34femalesLS90.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+%%%%%%%%%%%% LFA 34 MLS berried %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34berriedBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34berriedLS85.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 87.5, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34berriedLS87\D 5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 90, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34berriedLS90.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+%%%%%%%%%%%% LFA 34 MLS males %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34malesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34malesLS85.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 87.5, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34malesLS87\D 5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 90, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34malesLS90.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+%%%%%%%%%%%% LFA 34 MLS females %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34femalesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34femalesLS85.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 87.5, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34femalesLS87\D 5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 90, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34femalesLS90.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+%%%%%%%%%%%% LFA 34 MLS berried %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34berriedBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34berriedLS85.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 87.5, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34berriedLS87\D 5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 90, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34berriedLS90.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+
+
+%%%%%%%%%%%% LFA 34 Season males %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34malesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34malesSS5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34malesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34malesSS5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+
+
+%%%%%%%%%%%% LFA 34 Season females %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34femalesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34femalesSS5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34femalesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34femalesSS5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+
+
+%%%%%%%%%%%% LFA 34 Season berried %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34berriedBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34berriedSS5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 82.5, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34berriedBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - MLS 85, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34berriedSS5.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+%%%%%%%%%%%% LFA 34 Window males %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - No Window, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34malesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 115-125, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34malesSmallWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 105-125, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34malesBigWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - No Window, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34malesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 115-125, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34malesSmallWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 105-125, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34malesBigWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+
+%%%%%%%%%%%% LFA 34 Window females %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - No Window, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34femalesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 115-125, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34femalesSmallWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 105-125, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34femalesBigWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - No Window, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34femalesBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 115-125, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34femalesSmallWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 105-125, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34femalesBigWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+%%%%%%%%%%%% LFA 34 Window berried %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - No Window, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34berriedBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 115-125, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34berriedSmallWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 105-125, Exploitation 0.82
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebhx sim/LC34berriedBigWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - No Window, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34berriedBase.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 115-125, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34berriedSmallWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Simulation Results}
+LFA 34 - Window 105-125, Exploitation 0.68
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 2cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\ebh sim/LC34berriedBigWin.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+
+
+\begin{frame}
+\frametitle{Simulation Results - MLS change }
+Percent change under high exploitation (0.82)
+\centering
+\resizebox{0.5\textwidth}{!}{\begin{tabular}{|l|l|l|l|}
+\hline
+MLS  & Eggs & Numbers & Weight \\\hline
+\hline
+90   & 115 & -9  & 20  \\
+87.5 & 58  & -5  & 12  \\
+85   & 33  & -5  & 8   \\
+\hline
+ 
+\end{tabular}}\\
+
+\vspace{5mm}
+
+Percent change under lower exploitation (0.68)
+\centering
+\resizebox{0.5\textwidth}{!}{\begin{tabular}{|l|l|l|l|}
+\hline
+MLS  & Eggs & Numbers & Weight \\\hline
+\hline
+90   & 62 & -6  & 17  \\
+87.5 & 35 & -3  & 10  \\
+85   & 19 & -2  & 6   \\
+\hline
+ 
+\end{tabular}}\\
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results - Shorter season }
+Percent change under high exploitation (0.82)
+\centering
+\resizebox{0.5\textwidth}{!}{\begin{tabular}{|l|l|l|l|}
+\hline
+Season length  & Eggs & Numbers & Weight \\\hline
+\hline
+50\% & 47 & -1 & 2  \\
+60\% & 22 & 0  & 1  \\
+70\% & 10 & 0  & 0  \\
+80\% & 4  & 0  & 0  \\
+90\% & 1  & 0  & 0  \\
+\hline
+ 
+\end{tabular}}\\
+
+\vspace{5mm}
+
+Percent change under lower exploitation (0.68)
+\centering
+\resizebox{0.5\textwidth}{!}{\begin{tabular}{|l|l|l|l|}
+\hline
+Season length  & Eggs & Numbers & Weight \\\hline
+\hline
+50\% & 374 & -10 & 25  \\
+60\% & 233 & -7  & 18  \\
+70\% & 139 & -4  & 12  \\
+80\% & 74  & -2  & 7   \\
+90\% & 30  & -1  & 3   \\
+\hline
+ 
+\end{tabular}}\\
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results - Window Size }
+Percent change under high exploitation (0.82)
+\centering
+\resizebox{0.5\textwidth}{!}{\begin{tabular}{|l|l|l|l|}
+\hline
+Window  & Eggs & Numbers & Weight \\\hline
+\hline
+105-125        & 461 & -2 & 8  \\
+115-125        & 88  & 0  & 2  \\
+105-125 (F)    & 461 & -1 & 1  \\
+115-125 (F)    & 88  & 0  & 0  \\
+\hline
+ 
+\end{tabular}}\\
+
+\vspace{5mm}
+
+Percent change under lower exploitation (0.68)
+\centering
+\resizebox{0.5\textwidth}{!}{\begin{tabular}{|l|l|l|l|}
+\hline
+Window  & Eggs & Numbers & Weight \\\hline
+\hline
+105-125        & 246 & -4  & 12  \\
+115-125        & 67  & -1  & 4  \\
+105-125 (F)    & 246 & -3  & 2  \\
+115-125 (F)    & 67  & -1  & 0  \\
+\hline
+ 
+\end{tabular}}\\
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simulation Results - Max Size }
+Percent change under high exploitation (0.82)
+\centering
+\resizebox{0.5\textwidth}{!}{\begin{tabular}{|l|l|l|l|}
+\hline
+Max Size  & Eggs & Numbers & Weight \\\hline
+\hline
+135       & 37  & -1 & -2  \\
+130       & 79  & -1 & -3  \\
+125       & 160 & -2 & -5  \\
+135 (F)   & 37  & 0  & 0   \\
+130 (F)   & 79  & 0  & -1  \\
+125 (F)   & 160 & 0  & -1  \\
+\hline
+ 
+\end{tabular}}\\
+
+\vspace{5mm}
+
+Percent change under lower exploitation (0.68)
+\centering
+\resizebox{0.5\textwidth}{!}{\begin{tabular}{|l|l|l|l|}
+\hline
+Max Size  & Eggs & Numbers & Weight \\\hline
+\hline
+135       & 51  & -3  & -9  \\
+130       & 90  & -4  & -12 \\
+125       & 152 & -5  & -15 \\
+135 (F)   & 51  & -1  & -1  \\
+130 (F)   & 90  & -1  & -2  \\
+125 (F)   & 152 & -2  & -4  \\
+\hline
+ 
+\end{tabular}}\\
+
+\end{frame}
+
+
+
+\end{document}
+
+

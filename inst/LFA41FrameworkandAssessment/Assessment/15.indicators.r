@@ -2,26 +2,29 @@
 require(bio.utilities)
 options(stringsAsFactors=F)
 #base
+p = bio.lobster::load.environment()
+assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
 
 	fd = file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','indicators')
 
-	dat = data.frame(yr = 1969:2016)
+	dat = data.frame(yr = 1969:assessment.year)
+	ny = nrow(dat)
 
 
 			a =	c("DFO.restratified.All.csv",                                         			
-				 "DFO.restratified.Mature.SexRatio.csv  ",                           
+				 "DFO.restratified.Mature.SexRatio.csv",                           
 				 "Fec.maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.csv",  
 				 "Fec.maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.csv",
 				 "medianL.LengthFrequenciesLFA41NEFSCfallrestratified.csv",          
 				 "medianL.LengthFrequenciesLFA41NEFSCspringrestratified.csv",        
 				 "NEFSC.Fall.Restratified.All.csv",                                      
-				 "NEFSC.fall.restratified.Mature.SexRatio.csv  ",                    
+				 "NEFSC.fall.restratified.Mature.SexRatio.csv",                    
 				 "NEFSC.Spring.Restratified.All.csv",                                    
-				 "NEFSC.spring.restratified.Mature.SexRatio.csv  ",                  
+				 "NEFSC.spring.restratified.Mature.SexRatio.csv",                  
 				 "amo.csv",                                                          
 				"commercialCatchrates.csv",                                         
 				"DFO.Georges.All.csv",                                              
-				"DFO.Georges.Mature.SexRatio.csv  ",                                
+				"DFO.Georges.Mature.SexRatio.csv",                                
 				"Fec.maturefemaleLengthFrequenciesLFA41dfogeorges.csv",             
 				"Georges.Bank_no.season.obslength.csv",                                
 				"Georges.Basin_no.season.obslength.csv",                               
@@ -34,7 +37,6 @@ options(stringsAsFactors=F)
 				"predatorIndex.csv",                                                
 				"SE.Browns_no.season.obslength.csv",                                   
 				"SW.Browns_no.season.obslength.csv",                                   
-				'sdmhabitat.csv',
 				"Fec.maturefemaleLengthFrequenciesLFA41polygonSummerRV.csv"
 				)        
 
@@ -82,6 +84,8 @@ for(j in 1:length(a)) {
 			lu = grep('ObsLobs',names(k))
 			k[,lu] <- NULL
 			dat = merge(dat,k,by='yr',all.x=T)
+
+			if(nrow(dat)>ny)browser()
 	}
 		
 			
@@ -94,11 +98,11 @@ for(j in 1:length(a)) {
 	dd = rename.df(dat,rn[,1],rn[,2])
 
 	t0 = 1970
-	t1 = 2016
-	rownames(dd) = 1969:2016
+	t1 = assessment.year
+	rownames(dd) = 1969:assessment.year
 	dd$YR = NULL
 	dd$DFO_PREDATOR_BIOMASS <- NULL
-jk = c("DFO_ABUNDANCE" , "NEFSC_FALL_REP_POT",     "NEFSC_SPRING_REP_POT",  "NEFSC_FALL","NEFSC_SPRING", "GEORGES_ABUNDANCE","GEORGES_REP_POT" ,"DFO_PREDATOR_ABUNDANCE", "SDM_HABITAT",
+jk = c("DFO_ABUNDANCE" , "NEFSC_FALL_REP_POT",     "NEFSC_SPRING_REP_POT",  "NEFSC_FALL","NEFSC_SPRING", "GEORGES_ABUNDANCE","GEORGES_REP_POT" ,"DFO_PREDATOR_ABUNDANCE", 
 "DFO_REP_POT")       
 
 			dd[,jk] <- log(dd[,jk]+1)
@@ -107,7 +111,7 @@ jk = c("DFO_ABUNDANCE" , "NEFSC_FALL_REP_POT",     "NEFSC_SPRING_REP_POT",  "NEF
 	dir.create(fname)
                 
 
-    colorfun = colorRampPalette ( RColorBrewer::brewer.pal(9,"BrBG"))
+    colorfun = colorRampPalette ( RColorBrewer::brewer.pal(9,"PRGn"))
  
 	Y = pcaAnalyseData(dd, t0, t1,fname=fname,OFN='ReducedIndicatorsAssessment1', colscheme=colorfun,groupings=list(c(-0.5,19),c(19,40.5)))
 

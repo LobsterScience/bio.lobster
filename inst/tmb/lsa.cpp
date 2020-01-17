@@ -1,6 +1,34 @@
 #include <TMB.hpp>
 
 template<class Type>
+bool isNA(Type x){
+  return R_IsNA(asDouble(x));
+}
+
+bool isNAINT(int x){
+  return NA_INTEGER==x;
+}
+
+template <class Type>
+Type itrans(Type x){ // scaled ilogit
+  return Type(2)/(Type(1) + exp(-Type(2) * x)) - Type(1);
+}
+
+template<class Type>
+vector<Type> ssbFUN(matrix<Type> logN, matrix<Type> logFF, matrix<Type> M, matrix<Type> SW, matrix<Type> MO, matrix<Type> PF, matrix<Type> PM){
+  int nrow = logN.rows();
+  int ncol = logN.cols();
+  vector<Type> ret(nrow);
+  ret.setZero();
+  for(int y=0; y<nrow; ++y){
+    for(int a=0; a<ncol; ++a){
+      ret(y) += SW(y,a)*MO(y,a)*exp(logN(y,a))*exp(-PF(y,a)*exp(logFF(y,a))-PM(y,a)*M(y,a));
+    }
+  }
+  return ret;
+}
+
+template<class Type>
 Type objective_function<Type>::operator() ()
 {
   DATA_IVECTOR(year)
@@ -52,7 +80,7 @@ Type objective_function<Type>::operator() ()
       //  logN(y,l)=log(exp(logN(y,l))+exp(logN(y,l-1)-F(y,l-1)-M(y,l-1)));
       //}
     }
-    logN(y) = logN(y) * GroMat
+    predN = logN(y) * GroMat
   } 
 
   // Match to observations

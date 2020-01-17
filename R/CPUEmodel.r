@@ -1,5 +1,5 @@
 #' @export
-CPUEmodel=function(mf,CPUE, combined=F,lfa){
+CPUEmodel=function(mf,CPUE, combined=F,lfa,t=8,d=25){
 
   require(lme4)
 	
@@ -24,13 +24,13 @@ CPUEmodel=function(mf,CPUE, combined=F,lfa){
     if(combined==F){
      G = glm(mf , offset= logTRAPS, family=gaussian(link='identity'),data = CPUE)
       
-      pData=with(G$data,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= 5,DOS=1,logTRAPS=log(1)))
-      PG = predict(G, newdata = pData, type = 'response',se.fit=T)
+      pData=with(G$data,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= t,DOS=d,logTRAPS=log(1)))
+      PG = glmCIs(G,pData)
     
         pData$YEAR = as.numeric(as.character(pData$fYEAR))
-        pData$mu = exp(PG$fit)
-        pData$ub = exp(PG$fit + 1.96 * PG$se.fit)
-        pData$lb = exp(PG$fit - 1.96 * PG$se.fit)
+        pData$mu = exp(PG$fit_resp)
+        pData$ub = exp(PG$upr)
+        pData$lb = exp(PG$lwr)
         output = list(model=G,pData=pData,mData=CPUE)
         save( output, file=file.path( fn.root, paste0(lfa,"glm.rdata")), compress=T)
      
@@ -42,10 +42,12 @@ CPUEmodel=function(mf,CPUE, combined=F,lfa){
 
       pData=subset(CPUE,!duplicated(paste(fYEAR,fAREA)),c("fYEAR","fAREA"))
       pData=data.frame(pData,TEMP= mean(CPUE$TEMP),DOS= mean(CPUE$DOS),logTRAPS=log(1))
-      PG = predict(G, newdata = pData, type = 'response')
+      PG = glmCIs(G,pData)
     
         pData$YEAR = as.numeric(as.character(pData$fYEAR))
-        pData$mu = exp(PG)
+        pData$mu = exp(PG$fit_resp)
+        pData$ub = exp(PG$upr)
+        pData$lb = exp(PG$lwr)
         output = list(model=G,pData=pData,mData=CPUE)
         save( output, file=file.path( fn.root, "combinedglm.rdata"), compress=T)
     

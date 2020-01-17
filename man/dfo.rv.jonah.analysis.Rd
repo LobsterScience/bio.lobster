@@ -4,8 +4,8 @@
 \alias{dfo.rv.jonah.analysis}
 \title{dfo.rv.jonah.analysis}
 \usage{
-dfo.rv.jonah.analysis(DS = "stratified.estimates", out.dir = "bio.lobster",
-  p = p, ip = NULL, save = T)
+dfo.rv.jonah.analysis(DS = "stratified.estimates",
+  out.dir = "bio.lobster", p = p, ip = NULL, save = T)
 }
 \arguments{
 \item{\code{DS}}{:the selection of analysis, options include \code{stratified.estimates}}

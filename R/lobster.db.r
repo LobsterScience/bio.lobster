@@ -21,7 +21,7 @@
     if (DS %in% c("complete.redo") ) {
 
         # ODBC data dump of lobster data
-        lobster.db(DS == 'port.redo')
+        lobster.db(DS = 'port.redo')
         lobster.db( DS="logs.redo")
         lobster.db( DS="logs41.redo")
         lobster.db( DS="logs41jonah.redo")
@@ -44,9 +44,11 @@
         lobster.db(DS = "lfa41.vms.redo")
         lobster.db(DS= "logs41.habitat.redo")
         lobster.db(DS = 'landings.by.port.redo')
+        
         }
       
-  if(DS %in% c('port','port.redo')){
+
+if(DS %in% c('port','port.redo')){
         if(DS == 'port') {
                   load(file=file.path(fnODBC,'ports.rdata'))
                 return(ports)
@@ -56,7 +58,7 @@
                   save(ports,file=file.path(fnODBC,'ports.rdata'))          
         }
 
-  if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
+if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
         if(DS == 'atSea.logbook.link') {
                   load(file=file.path(fnODBC,'atSea.logbook.link.rdata'))
                 return(links)
@@ -65,6 +67,38 @@
                   links = sqlQuery(con,'select * from LOBSTER.ATSEA_LOG_LINK;')
                   save(links,file=file.path(fnODBC,'atSea.logbook.link.rdata'))          
         }
+
+if(DS %in% c('historic.cpue.redo', 'historic.cpue')){
+      if(DS == 'historic.cpue') {
+                  load(file=file.path(fnODBC,'historic.cpue.rdata'))
+                return(hcpue)
+          }
+                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  hcpue = sqlQuery(con,"select a.port, sdate, to_char(sdate,'yyyy') year, lfa, portname, lbsptrap from lobster.histcatch a, lobster.port b where 
+a.port = b.port;")
+                  hcpue$SYEAR = year(hcpue$SDATE)
+                  hcpue$MONTH = month(hcpue$SDATE)
+                  ii = which(hcpue$MONTH>8)
+                  hcpue$SYEAR[ii] = hcpue$SYEAR[ii]+1 
+                  dos1 = aggregate(SDATE~SYEAR+LFA,data=hcpue,FUN=min)
+                  names(dos1)[3] = 'D1'
+                  hcpue = merge(hcpue,dos1,all.x=T)
+                  hcpue$DOS = as.numeric((hcpue$SDATE-hcpue$D1)/(60*60*24))
+                  save(hcpue,file=file.path(fnODBC,'historic.cpue.rdata'))       
+          }
+
+
+if(DS %in% c('historic.landings.redo', 'historic.landings')){
+      if(DS == 'historic.landings') {
+                  load(file=file.path(fnODBC,'historic.landings.rdata'))
+                return(hland)
+          }
+                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  hland = sqlQuery(con,"select * from lobster.historical_county_land ;")
+                  save(hland,file=file.path(fnODBC,'historic.landings.rdata'))       
+          }
+
+
 
 if(DS %in% c('landings.by.port.redo','landings.by.port')) {
 
@@ -163,7 +197,7 @@ if(DS %in% c('community.to.grid.contemporary.redo','community.to.grid.contempora
 }
 
 
- if(DS %in% c('annual.landings','annual.landings.redo')) {
+if(DS %in% c('annual.landings','annual.landings.redo')) {
           if(DS == 'annual.landings') {
                 load(file=file.path(fnODBC,'annual.landings.rdata'))
                 return(annual.landings)
@@ -202,7 +236,6 @@ if(DS %in% c('historical.landings','historical.landings.redo')) {
                   #historical.landings = sqlQuery(con,'select * from LOBSTER.SLIP_LAND_HISTORICAL')
                   save(historical.landings,file=file.path(fnODBC,'historical.landings.rdata'))
             }
-
 
 if(DS %in% c('season.dates','season.dates.redo')) {
           if(DS == 'season.dates') {
@@ -260,15 +293,22 @@ if (DS %in% c("logs.redo", "logs") ) {
               slips = sqlQuery(con, "select * from marfissci.lobster_sd_slip")
               save( slips, file=file.path( fnODBC, "slip.rdata"), compress=T)
               gc()  # garbage collection
+              
+              # old logs LFA 34
+              oldlogs34 = sqlQuery(con, "select * from lobster.lobster_log_data")
+              save( oldlogs34, file=file.path( fnODBC, "oldlogs34.rdata"), compress=T)
+              gc()  # garbage collection
               odbcClose(con)
             }
             load (file.path( fnODBC, "slip.rdata"), .GlobalEnv)
             load (file.path( fnODBC, "logs.rdata"), .GlobalEnv)
+            load (file.path( fnODBC, "oldlogs34.rdata"), .GlobalEnv)
             print("Two files loaded called 'slips' and 'logs'" )
             
           }
 
 if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
+                            
                             if(DS == 'process.logs') {
                                   load(file=file.path(fnProducts,'logsInSeason.rdata'))
                                   return(logsInSeason)
@@ -298,6 +338,14 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     # imported logs from marfis
                           lobster.db('logs')
+
+                          oldlogs34$LFA34_WEIGHT1_KGS=oldlogs34$LFA34_WEIGHT1_KGS/0.4536
+                          oldlogs34$LFA34_WEIGHT2_KGS=oldlogs34$LFA34_WEIGHT2_KGS/0.4536
+                          oldlogs34=subset(oldlogs34,select=c("VR_NUMBER","LICENCE_NO","LOBSTER_AREA","TRIP_ID","DATE_FISHED","GRID_NUMBER_A","LFA34_WEIGHT1_KGS","TRAP_HAULS_GRID_A","GRID_NUMBER_B","LFA34_WEIGHT2_KGS","TRAP_HAULS_GRID_B","V_NOTCHED","PORT_LANDED"))
+                          names(oldlogs34)=c("VR_NUMBER","LICENCE_ID","LFA","SD_LOG_ID","DATE_FISHED","GRID_NUM","WEIGHT_LBS","NUM_OF_TRAPS","GRID_NUM_B","WEIGHT_LBS_B","NUM_OF_TRAPS_B","V_NOTCHED","PORT_LANDED")
+                          logs=merge(logs,oldlogs34,all=T)
+
+
                           logs$TOTAL_NUM_TRAPS = rowSums(logs[c('NUM_OF_TRAPS','NUM_OF_TRAPS_B','NUM_OF_TRAPS_C')],na.rm=T)
                           logs$TOTAL_WEIGHT_LBS = rowSums(logs[c('WEIGHT_LBS','WEIGHT_LBS_B','WEIGHT_LBS_C')],na.rm=T)
                           logs$TOTAL_WEIGHT_KG = logs$TOTAL_WEIGHT_LBS*0.4536
@@ -365,8 +413,16 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       logsInSeason$BUMPUP = NA
                       for(i in 1:length(lfa)){
                         tmplogs = subset(logsInSeason,LFA==lfa[i])
+<<<<<<< HEAD
                         #yrs = sort(unique(tmplogs$SYEAR))
                         yrs = 2002:2018
+=======
+                        tmpland = subset(TotalLandings,LFA==lfa[i])
+                        yrs1 = sort(unique(tmplogs$SYEAR))
+                        yrs2 = sort(unique(tmpland$SYEAR))
+                        yrs = yrs1[yrs1%in%yrs2]
+
+>>>>>>> 8166747bcdc1efa15ee4ccbc0b303a07181b8751
                         for(y in 1:length(yrs)){
                           logsInSeason$BUMPUP[logsInSeason$SYEAR==yrs[y]&logsInSeason$LFA==lfa[i]] = TotalLandings$C[TotalLandings$SYEAR==yrs[y]&TotalLandings$LFA==lfa[i]]*1000/sum(tmplogs$WEIGHT_KG[tmplogs$SYEAR==yrs[y]],na.rm=T)
                         }
@@ -399,6 +455,80 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
           # Save logsInSeason as working data
               save(logsInSeason,file=file.path( fnProducts,"logsInSeason.rdata"),row.names=F)
    }
+
+### voluntary logs 
+    if (DS %in% c("vlog.redo", "vlog") ) {
+
+     if (DS=="vlog.redo") {
+        require(RODBC)
+        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        
+        # vlog
+        vlog = sqlQuery(con, "select a.FDATE,a.N_TRP,a.W_TOT,a.FCODE,a.N_L,a.W_AVG,a.PORT,a.CPTH,a.NBF,a.SEASON,a.W_C,a.CPTH_C, b.LFA,b.COUNTY,b.STAT,b.PORT_CODE,b.LATITUDE,b.LONGITUDE,b.COMMENTS from lobster.CRLOGDATA a, lobster.CRLOCATIONS b where a.port = b.port")
+        vlogs34 = sqlQuery(con, "select * from lobster.logdata_other;")
+        save( vlog, file=file.path( fnODBC, "vlog.rdata"), compress=T)
+        save( vlogs34, file=file.path( fnODBC, "vlogs34.rdata"), compress=T)
+      
+        gc()  # garbage collection
+        odbcClose(con)
+      }
+      load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "vlogs34.rdata"), .GlobalEnv)
+     }
+
+
+    if (DS %in% c("process.vlog.redo", "process.vlog") ) {
+
+     if (DS=="process.vlog.redo") {
+          load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)
+          load(file.path( fnODBC, "vlogs34.rdata"), .GlobalEnv)
+
+         vlogs34$PORT[vlogs34$PORT=="ABBOTS HBR."]<-"ABBOTT S HARBOUR"          
+         vlogs34$PORT[vlogs34$PORT=="BARRINGTON BAY"]<-"BARRINGTON"          
+         vlogs34$PORT[vlogs34$PORT=="DENNIS PT."]<-"LOWER WEST PUBNICO"          
+         vlogs34$PORT[vlogs34$PORT=="PT. MAITLAND"]<-"PORT MAITLAND"          
+         vlogs34$PORT[vlogs34$PORT=="PINKNEY'S PT."]<-"PINKNEY S POINT"          
+         vlogs34$PORT[vlogs34$PORT=="WOODS HBR."]<-"WOODS HARBOUR"          
+
+          Ports = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","Ports.csv"))
+          Prts34 = subset(Ports,LFA==34,c("Port_Code","Port_Name","County","Statistical_District","LFA" ,"centlat" ,"centlon"))
+          names(Prts34)=c("PORT_CODE","PORT","COUNTY","STAT","LFA" ,"Y" ,"X")
+          vlogs34 = merge(vlogs34,Prts34,all.x=T)
+          
+          vlog$X = convert.dd.dddd(vlog$LONGITUDE)*-1
+          vlog$Y = convert.dd.dddd(vlog$LATITUDE)
+
+
+         
+          vlog = merge(vlog,vlogs34,all=T)
+
+
+          vlog = addSYEAR(vlog,date.field="FDATE")
+          #vlog$SYEAR = as.numeric(substr(vlog$SEASON,6,9))
+          vlog$W_KG = vlog$W_TOT*0.4536
+          vlog$CPUE = vlog$W_KG/vlog$N_TRP
+
+
+          ports31A = subset(Ports,LFA=='31A')$Port_Code
+          ports31B = c(subset(Ports,LFA=='31B')$Port_Code,11799)
+          stat33E = c(18,22,23,25,26)
+          stat33W = c(27,28,30,31)
+          stat27N = c(1,4)
+          stat27S = c(6,7)
+          vlog$LFA[vlog$STAT%in%stat27N] = "27N"
+          vlog$LFA[vlog$STAT%in%stat27S] = "27S"
+          vlog$LFA[vlog$STAT%in%stat33E] = "33E"
+          vlog$LFA[vlog$STAT%in%stat33W] = "33W"
+          vlog$LFA[vlog$PORT_CODE%in%ports31A] = "31A"
+          vlog$LFA[vlog$PORT_CODE%in%ports31B] = "31B"
+          save( vlog, file=file.path( fnODBC, "processed.vlog.rdata"), compress=T)
+          return(vlog)
+        }
+        load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)      
+    }
+
+
+
 
 ### Offshore Commercial Logs
     if (DS %in% c("logs41.redo", "logs41") ) {
@@ -584,6 +714,37 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             
             # atSea
             atSea = sqlQuery(con, "select * from lobster.LOBSTER_ATSEA_VW")
+            atSea2 = sqlQuery(con, "select * from cooka.lobster_bycatch_assoc_unedited")
+
+            atSea2$PORT = NA
+            atSea2$PORTNAME = NA
+            atSea2$SAMCODE = NA
+            atSea2$DESCRIPTION = atSea2$OWNER_GROUP
+            atSea2$GRIDNO = NA
+            atSea2$SPECIES = NA
+            atSea2$CULL = NA
+            atSea2$CALWT = NA
+            atSea2$STARTDATE = as.Date(NA)
+
+            atSea2$BOARD_DATE = substr(atSea2$BOARD_DATE,1,10)
+            atSea2$datechar = nchar(atSea2$BOARD_DATE)
+
+
+            atSea2$STARTDATE[atSea2$datechar<10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar<10],"%d-%b-%y")
+            atSea2$STARTDATE[atSea2$datechar==10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar==10])
+
+
+            names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECSCD_ID", "SPECIES", "SEXCD_ID","VNOTCH", "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH","CALWT")
+
+            atSea2 = subset(atSea2,select=names2)
+            atSea2$COMAREA_ID = substr(atSea2$COMAREA_ID,2,nchar(atSea2$COMAREA_ID))
+            atSea2$LATDDMM = convert.dd.dddd(atSea2$LATDDMM)
+            atSea2$LONGDDMM = convert.dd.dddd(atSea2$LONGDDMM) * -1
+
+            names(atSea2) = names(atSea)
+
+            atSea = rbind(atSea,atSea2)
+
             save( atSea, file=file.path( fnODBC, "atSea.rdata"), compress=T)
             gc()  # garbage collection
             odbcClose(con)
@@ -643,14 +804,15 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
               aS$CARLENGTH[i] <- NA
               aS$PID = aS$SID = aS$Bdry = NULL
          
+                    season.dates = backFillSeasonDates(lobster.db('season.dates'),eyr=year(Sys.time()))
 
-                      season.dates = lobster.db('season.dates')
+                     # season.dates = lobster.db('season.dates')
                        aS$WOS = NA
                         lfa = unique(aS$LFA) 
                             for(i in 1:length(lfa)) {
                                   h  = season.dates[season.dates$LFA==lfa[i],]  
                                   k = na.omit(unique(aS$SYEAR[aS$LFA==lfa[i]]))
-                                  h = na.omit(h)
+                                  #h = na.omit(h)
                                   k = intersect(k,h$SYEAR)
                                for(j in k){
                                    aS$WOS[aS$LFA==lfa[i] & aS$SYEAR==j] = floor(as.numeric(aS$SDATE[aS$LFA==lfa[i] & aS$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
@@ -677,10 +839,21 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
         
         # port
         port = sqlQuery(con, "select a.SAMPLE_SEQ,a.SAMPLE_NO,a.SDATE,a.SEASON,a.NTRAPS,a.LATITUDE,a.LONGITUDE,a.GRADE, b.L_SIZE,b.N_MALES,b.N_FEM,b.NBF, d.LFA,c.PORT,c.COUNTY,c.STAT,c.PORT_CODE,c.LATITUDE port_lat,c.LONGITUDE port_lon from lobster.CRLENGCODE a, lobster.CRLENGFREQ b, lobster.CRLOCATIONS c, frailc.lfa_port d where a.sample_seq = b.sample_seq and a.port = c.port and c.PORT_CODE = d.port(+) and a.type = 'P' ")
+        save( port, file=file.path( fnODBC, "port.rdata"), compress=T)
+        gc()  # garbage collection
+        odbcClose(con)
+      }
+      load(file.path( fnODBC, "port.rdata"), .GlobalEnv)
+     }
+ 
+
+    if (DS %in% c("process.port.sampling.redo", "process.port.sampling") ) {
+        
+        load(file.path( fnODBC, "port.rdata"), .GlobalEnv)
         port = addSYEAR(port)
         season.dates = lobster.db('season.dates')
          m=0
-         port = subset(port,LFA %in% c('27','28','29','30','31A','31B','32','33'))
+        # port = subset(port,LFA %in% c('27','28','29','30','31A','31B','32','33'))
          lfa = as.character(na.omit(unique(port$LFA) ))
         port$WOS = NA
                             for(i in 1:length(lfa)) {
@@ -717,63 +890,10 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                                 }
                           }
                           if(any(!is.finite(port$WOS))) {kl = which(!is.finite(port$WOS)); port$WOS[kl] = NA}
-        save( port, file=file.path( fnODBC, "port.rdata"), compress=T)
-        gc()  # garbage collection
-        odbcClose(con)
-      }
-      load(file.path( fnODBC, "port.rdata"), .GlobalEnv)
+        save( port, file=file.path( fnODBC, "process.port.rdata"), compress=T)
+     load(file.path( fnODBC, "process.port.rdata"), .GlobalEnv)
      }
-  
-### voluntary logs 
-    if (DS %in% c("vlog.redo", "vlog") ) {
-
-     if (DS=="vlog.redo") {
-        require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
-        # vlog
-        vlog = sqlQuery(con, "select a.FDATE,a.N_TRP,a.W_TOT,a.FCODE,a.N_L,a.W_AVG,a.PORT,a.CPTH,a.NBF,a.SEASON,a.W_C,a.CPTH_C, b.LFA,b.COUNTY,b.STAT,b.PORT_CODE,b.LATITUDE,b.LONGITUDE,b.COMMENTS from lobster.CRLOGDATA a, lobster.CRLOCATIONS b where a.port = b.port")
-        save( vlog, file=file.path( fnODBC, "vlog.rdata"), compress=T)
-        gc()  # garbage collection
-        odbcClose(con)
-      }
-      load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)
-     }
-
-
-    if (DS %in% c("process.vlog.redo", "process.vlog") ) {
-
-     if (DS=="process.vlog.redo") {
-          load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)  
-          vlog = addSYEAR(vlog,date.field="FDATE")
-          vlog$SYEAR = as.numeric(substr(vlog$SEASON,6,9))
-          vlog$W_KG = vlog$W_TOT*0.4536
-          vlog$CPUE = vlog$W_KG/vlog$N_TRP
-
-          vlog$X = convert.dd.dddd(vlog$LONGITUDE)*-1
-          vlog$Y = convert.dd.dddd(vlog$LATITUDE)
-
-          Ports = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","Ports.csv"))
-          ports31A = subset(Ports,LFA=='31A')$Port_Code
-          ports31B = c(subset(Ports,LFA=='31B')$Port_Code,11799)
-          stat33E = c(18,22,23,25,26)
-          stat33W = c(27,28,30,31)
-          stat27N = c(1,4)
-          stat27S = c(6,7)
-          vlog$LFA[vlog$STAT%in%stat27N] = "27N"
-          vlog$LFA[vlog$STAT%in%stat27S] = "27S"
-          vlog$LFA[vlog$STAT%in%stat33E] = "33E"
-          vlog$LFA[vlog$STAT%in%stat33W] = "33W"
-          vlog$LFA[vlog$PORT_CODE%in%ports31A] = "31A"
-          vlog$LFA[vlog$PORT_CODE%in%ports31B] = "31B"
-          save( vlog, file=file.path( fnODBC, "processed.vlog.rdata"), compress=T)
-          return(vlog)
-        }
-        load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)      
-    }
-
-
-
 
 
 ### CRIS database
@@ -1030,7 +1150,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
 
      if (DS=="scallop.redo") {
         require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        con = odbcConnect(oracle.server , uid=oracle.scallop.user, pwd=oracle.scallop.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # scallop
         scallop.catch = sqlQuery(con, "select * from SCALLSUR.SCBYCATCHES")
@@ -1054,7 +1174,9 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         ILTS2016TowDepth = sqlQuery(con, "select * from FRAILC.MARPORT_DEPTH")
         ILTS2016TowSpread = sqlQuery(con, "select * from FRAILC.MARPORT_SPREAD")
         ILTS2016Tracks = sqlQuery(con, "select * from FRAILC.MARPORT_TRACKS")
-        ILTSTemp = sqlQuery(con, "select * from FRAILC.MINILOG_TEMP")
+        #ILTSTemp = sqlQuery(con, "select * from FRAILC.MINILOG_TEMP")
+        ILTSTemp = sqlQuery(con, "select * from lobster.ILTS_TEMPERATURE")
+        ILTSSensor = sqlQuery(con, "select * from lobster.ILTS_SENSORS")
         ILTS2016Tracks = ILTS2016Tracks[order(ILTS2016Tracks$TTIME),]
         #NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
         #netMensuration = merge( NM1,ILTS2016Tracks)#merge net mensuration into one file
@@ -1072,19 +1194,16 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         surveyMeasurements$SET_LON = surveyMeasurements$SET_LON*-1
         surveyMeasurements$HAUL_LON = surveyMeasurements$HAUL_LON*-1
         
-        if(unique(subset(surveyCatch,YEAR==2017,select=GEAR))[,1]=='280 BALLOON') {
-        	j = which(surveyCatch$YEAR==2017)
-        	surveyCatch$GEAR[j] = 'NEST'
-        	j = which(surveyMeasurements$YEAR==2017)
-        	surveyMeasurements$GEAR[j] = 'NEST'
-        }
-#browser()
+ 
+
+ #browser()
         surveyStationID = sqlQuery(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
         save(list=c("ILTS2016TowDepth","ILTS2016TowSpread","ILTS2016Tracks") , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)
         save(surveyMeasurements, file=file.path(fnODBC, "surveyMeasurements.rdata"), compress=T)
         save(fishMeasurements, file=file.path(fnODBC, "fishMeasurements.rdata"), compress=T)
         save(ILTSTemp, file=file.path(fnODBC, "ILTSTemp.rdata"), compress=T)
+        save(ILTSSensor, file=file.path(fnODBC, "ILTSSensor.rdata"), compress=T)
         save(surveyStationID, file=file.path(fnODBC, "surveyStationID.rdata"), compress=T)
         
         gc()  # garbage collection
@@ -1094,6 +1213,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       load(file.path( fnODBC, "surveyMeasurements.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "fishMeasurements.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "ILTSTemp.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "ILTSSensor.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyStationID.rdata"), .GlobalEnv)
       
     }

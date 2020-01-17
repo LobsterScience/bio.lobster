@@ -40,7 +40,7 @@ if(landings.numbers){
 				op = weightedCLF(x=da,returnLF=T,at.sea.samples=T)
 				os = op
 				os$vec<-NULL
-			outS[[i]] <- op
+			outS[[i]] <- os
 		# brad ran to here to get data for a plot
 		#outS[[i]] <- op$vec
 		#} 
@@ -107,16 +107,16 @@ if(landings.numbers){
 			}
 			out = as.data.frame(do.call(rbind,out))
 			out = toNums(out,2:ncol(out))
-			save(out,file = file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNumbersLandedLFA27-33.rdata'))
+#			save(out,file = file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNumbersLandedLFA27-33.rdata'))
 			load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNumbersLandedLFA27-33.rdata'))
 
 			outN = as.data.frame(do.call(rbind,outN))
-			save(outN,file = file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNatSizeLFA27-33.rdata'))
+#			save(outN,file = file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNatSizeLFA27-33.rdata'))
 			load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsNatSizeLFA27-33.rdata'))
 
 			outS = as.data.frame(do.call(rbind,outS))
 			outS = toNums(outS,2:ncol(outS))
-		   save(outS,file = file.path(project.datadirectory('bio.lobster'),'outputs','SummaryatSeaIndicatorsDataLFA27-33.rdata'))
+#		   save(outS,file = file.path(project.datadirectory('bio.lobster'),'outputs','SummaryatSeaIndicatorsDataLFA27-33.rdata'))
 		   load(file = file.path(project.datadirectory('bio.lobster'),'outputs','SummaryatSeaIndicatorsDataLFA27-33.rdata'))
 		
 	#####three year windowed expls using the data loaded above
@@ -172,7 +172,7 @@ m=0
 		
 			runLCA = as.data.frame(do.call(rbind,runLCA))
 			runLCA = toNums(runLCA,c('Year.min','Year.max','F','expl'))
-		save(runLCA,file = file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
+#		save(runLCA,file = file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsExploitationAggregatedLFA27-33.rdata'))
 		load(file.path(project.datadirectory('bio.lobster'),'outputs','atSeaIndicatorsExploitationAggregatedLFA27-33.rdata')	)	
 }
 

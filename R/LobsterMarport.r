@@ -3,10 +3,10 @@
 #' @author Adam Cook
 #' @return returns a list containing two elements: 1) the trawl sensor information 2) the gps track of the file
 #' @export
-LobsterMarport <- function(file) {
+LobsterMarport <- function(file,station=NULL) {
 	#reading in and manipulating the marport data from lobster survey
 	con = file(description=file, open="r")
-	
+	options(stringsAsFactors=F)	
 	OSinfo = Sys.info()
 	OS = OSinfo["sysname"]
 
@@ -40,7 +40,6 @@ for(j in 1:n) {
   				jj=jj+1  
 				
 			}	
-		
 		ose = NULL
 		ogp = NULL
 		if(!is.null(out.sensors)) {
@@ -52,7 +51,8 @@ for(j in 1:n) {
 		names(ose) = c('Time','Measure','X1','X2')
 		ose$X1 = as.numeric(ose$X1)
 		ose$X2 = as.numeric(ose$X2)
-		ose$Station = strsplit(strsplit(file,"/")[[1]],"\\.")[[9]][1]
+		if(is.null(station)) ose$Station = strsplit(strsplit(file,"/")[[1]],"\\.")[[9]][1]
+		if(!is.null(station)) ose$Station = station
 		}
 
 		if(!is.null(out.gps)) {
@@ -64,7 +64,9 @@ for(j in 1:n) {
 		names(ogp) = c('Time','Y','X')
 		ogp$X = convert.dd.dddd(as.numeric(ogp$X))*-1
 		ogp$Y = convert.dd.dddd(as.numeric(ogp$Y))
-		ogp$Station = strsplit(strsplit(file,"/")[[1]],"\\.")[[9]][1]		
+		if(is.null(station)) ogp$Station = strsplit(strsplit(file,"/")[[1]],"\\.")[[9]][1]		
+		if(!is.null(station)) ogp$Station = station
+		
 		}
 		return(list(ose,ogp))
 		}

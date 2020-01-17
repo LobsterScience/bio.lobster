@@ -1,5 +1,5 @@
 
-#string aggregate catches 
+#string aggregate catches estimated not measured
 select tripno, startdate, lfa, -99 port, 
 'unknown' portname, 'unknown' captain, licence_id, 'ISDB'samcode, 
 'ISDB' description,  -99 traptype, stringno, 

@@ -6,7 +6,7 @@ require(fields)
 
 la()
 
-	SoMplot(cols=tim.colors(5),ltys=2:6,graphic='png')
+	som=SoMplot(cols=tim.colors(5),ltys=2:6,graphic='png')
 
 
 	TempModelling = TempModel(areas = 'subarea')
@@ -260,6 +260,128 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 	}
 
 
+p$lfas = c("34")#,"35", "36", "38") # specify lfas
+
+####### Base
+
+	plist = getSimList(p,sex=1)
+	names(plist) = p$lfas
+
+	mlist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+	names(mlist) = p$lfas
+
+
+	plist = getSimList(p,sex=2)
+	names(plist) = p$lfas
+
+	flist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+	names(flist) = p$lfas
+
+	rlist = list(plist=plist,mlist=mlist,flist=flist)
+	save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim","sim3ResultsBase.rdata"))
+
+
+		simBubPlot(rlist,graphic='R',cex.lab=2,cex.axis=1.5)
+		round(rlist$mlist$'27N'$moltProb[,,1,1],2)
+
+
+##### Legal Size
+
+	LegalSize = c(70,72.5,75,77.5,80,85,87.5,90)
+	names(LegalSize) = paste0("LS",LegalSize)
+
+	for(i in 1:length(LegalSize)){
+		
+		plist = getSimList(p,sex=1,LS=LegalSize[i])
+		names(plist) = p$lfas
+
+		mlist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(mlist) = p$lfas
+
+		plist = getSimList(p,sex=2,LS=LegalSize[i])
+		names(plist) = p$lfas
+
+		flist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(flist) = p$lfas
+
+		rlist = list(plist=plist,mlist=mlist,flist=flist)
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim1Results",names(LegalSize)[i],".rdata")))
+	}
+
+
+############ Season reduction
+
+	ShorterSeason = c(0.9,0.8,0.7,0.6,0.5)
+	names(ShorterSeason) = paste0("SS",9:5)
+	
+	for(i in 1:length(ShorterSeason)){
+
+		plist = getSimList(p,sex=1,Sadj=ShorterSeason[i], Sclose='start')
+		names(plist) = p$lfas
+
+		mlist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(mlist) = p$lfas
+
+		plist = getSimList(p,sex=2,Sadj=ShorterSeason[i])
+		names(plist) = p$lfas
+
+		flist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(flist) = p$lfas
+
+		rlist = list(plist=plist,mlist=mlist,flist=flist)
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim1Results",names(ShorterSeason)[i],".rdata")))
+
+	}
+
+
+##### Window size 
+
+	WindowSize = list(c(115,125),c(105,125))
+	names(WindowSize) = c("SmallWin","BigWin")
+
+	for(i in 1:length(WindowSize)){
+		
+		plist = getSimList(p,sex=1,window=WindowSize[[i]])
+		names(plist) = p$lfas
+
+		mlist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(mlist) = p$lfas
+
+		plist = getSimList(p,sex=2,window=WindowSize[[i]])
+		names(plist) = p$lfas
+
+		flist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(flist) = p$lfas
+
+		rlist = list(plist=plist,mlist=mlist,flist=flist)
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim1Results",names(WindowSize)[i],".rdata")))
+	}
+
+##### Max size 
+
+	MaxSize = list(c(135,210),c(130,210),c(125,210))
+	names(MaxSize) = paste0("Max",lapply(MaxSize,min))
+
+	for(i in 1:length(MaxSize)){
+		
+		plist = getSimList(p,sex=1,window=MaxSize[[i]])
+		names(plist) = p$lfas
+
+		mlist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(mlist) = p$lfas
+
+		plist = getSimList(p,sex=2,window=MaxSize[[i]])
+		names(plist) = p$lfas
+
+		flist = mclapply(X = plist, FUN = simMolt, mc.cores=length(p$lfas))
+		names(flist) = p$lfas
+
+		rlist = list(plist=plist,mlist=mlist,flist=flist)
+		save("rlist",file=file.path(project.datadirectory("bio.lobster"),"outputs","sim",paste0("sim1Results",names(MaxSize)[i],".rdata")))
+	}
+
+
+
 
 ###### combine all areas to one rdata object
 
@@ -380,31 +502,31 @@ p$lfas = c("31A","31B", "32", "33E", "33W") # specify lfas in 2 batches
 
 
 	LStabRP = data.frame(rbind(
-		round(100*(simSumLegalSize[[1]][9,]/simSumLegalSize[[1]][6,]-1)),
-		round(100*(simSumLegalSize[[1]][8,]/simSumLegalSize[[1]][6,]-1)),
-		round(100*(simSumLegalSize[[1]][7,]/simSumLegalSize[[1]][6,]-1))
+		round(100*(simSumLegalSize[[1]][6,]/simSumLegalSize[[1]][1,]-1)),
+		round(100*(simSumLegalSize[[1]][5,]/simSumLegalSize[[1]][1,]-1)),
+		round(100*(simSumLegalSize[[1]][4,]/simSumLegalSize[[1]][1,]-1))
 		))
 	names(LStabRP) = LFAs
-	rownames(LStabRP) = c("LS90", "LS87.5", "LS85")
-	write.csv(LStabRP,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabRP.csv"),row.names=T)
+	rownames(LStabRP) = c("LS82.5", "LS80", "LS78.5")
+	write.csv(LStabRP,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabRP70.csv"),row.names=T)
 
 	LStabNo = data.frame(rbind(
-		round(100*(simSumLegalSize[[2]][9,]/simSumLegalSize[[2]][6,]-1)),
-		round(100*(simSumLegalSize[[2]][8,]/simSumLegalSize[[2]][6,]-1)),
-		round(100*(simSumLegalSize[[2]][7,]/simSumLegalSize[[2]][6,]-1))
+		round(100*(simSumLegalSize[[2]][6,]/simSumLegalSize[[2]][1,]-1)),
+		round(100*(simSumLegalSize[[2]][5,]/simSumLegalSize[[2]][1,]-1)),
+		round(100*(simSumLegalSize[[2]][4,]/simSumLegalSize[[2]][1,]-1))
 		))
 	names(LStabNo) = LFAs
-	rownames(LStabNo) = c("LS90", "LS87.5", "LS85")
-	write.csv(LStabNo,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabNo.csv"),row.names=T)
+	rownames(LStabNo) = c("LS82.5", "LS80", "LS78.5")
+	write.csv(LStabNo,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabNo70.csv"),row.names=T)
 
 	LStabKg = data.frame(rbind(
-		round(100*(simSumLegalSize[[3]][9,]/simSumLegalSize[[3]][6,]-1)),
-		round(100*(simSumLegalSize[[3]][8,]/simSumLegalSize[[3]][6,]-1)),
-		round(100*(simSumLegalSize[[3]][7,]/simSumLegalSize[[3]][6,]-1))
+		round(100*(simSumLegalSize[[3]][6,]/simSumLegalSize[[3]][1,]-1)),
+		round(100*(simSumLegalSize[[3]][5,]/simSumLegalSize[[3]][1,]-1)),
+		round(100*(simSumLegalSize[[3]][4,]/simSumLegalSize[[3]][1,]-1))
 		))
 	names(LStabKg) = LFAs
-	rownames(LStabKg) = c("LS90", "LS87.5", "LS85")
-	write.csv(LStabKg,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabKg.csv"),row.names=T)
+	rownames(LStabKg) = c("LS82.5", "LS80", "LS78.5")
+	write.csv(LStabKg,file.path(project.datadirectory("bio.lobster"),"outputs","sim","LStabKg70.csv"),row.names=T)
 
 	OStabRP = data.frame(rbind(
 		round(100*(simSumSeason[[1]][6,]/simSumSeason[[1]][1,]-1)),

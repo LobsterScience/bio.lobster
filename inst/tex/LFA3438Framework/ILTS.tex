@@ -1,0 +1,234 @@
+\documentclass{beamer}
+ 
+\mode<presentation> {
+
+%\usetheme{Hannover}
+\usetheme{Boadilla}
+
+%\usetheme{AnnArbor}
+
+\usecolortheme{whale}
+%\usecolortheme{seagull}
+
+%\usefonttheme{structuresmallcapsserif}
+
+}
+
+\usepackage[utf8]{inputenc}
+ \usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{array}
+%\usepackage{animate}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{adjustbox}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+
+\newcommand{\eb}{\string~/bio.data/bio.lobster/figures/ILTS/} %change this to set figure directory
+\newcommand{\ebh}{\string~/bio.data/bio.lobster/figures/LFA3438Framework2019/} %change this to set figure directory
+\newcommand{\ebhx}{\string~/bio.data/bio.lobster/figures/LFA3438Framework2019/figures/Brad/} %change this to set figure directory
+\newcommand{\D}{.}
+
+ 
+%Information to be included in the title page:
+\title[ILTS Gear correction]{Inshore Lobster Trawl Survey: Gear Correction Factors}
+\author[Hubley, Cook, Denton, Cassita-daRos]{Brad Hubley, Adam Cook, Cheryl Denton, and Manon Cassita-daRos}
+\institute[DFO]{Science Branch, Fisheries and Oceans Canada}
+\date{Framework Sept. 2019}
+
+ 
+ 
+\begin{document}
+ 
+\frame{\titlepage}
+ 
+
+\begin{frame}
+\frametitle{ITQ - ILTS}
+History of the ITQ Survey
+\begin{itemize}
+    \item Groundfish ITQ survey mid-1990's
+    \item Fixed station survey on set chosen within each 'grid' - Captain's choice
+\end{itemize}
+ 
+\begin{figure}
+        \begin{center}
+            \includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{\eb ITQSurveyBoxesFinal.jpg}
+   \vspace{1cm}
+    \end{center}
+   
+ \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{ITQ - ILTS}
+History of the ITQ Survey
+\begin{itemize}
+    \item Lobster catch increassed in the 2000's and began to be measured in 2005
+    \item Became the Inshore Lobster Trawl Survey (ILTS) in 2013
+\end{itemize}
+ 
+\begin{figure}
+        \begin{center}
+            \includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{\eb ITQ.jpg}
+   \vspace{1cm}
+    \end{center}
+   
+ \end{figure}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{ILTS Survey}
+History of the ILTS Survey
+ 
+\begin{figure}
+        \begin{center}
+            2013
+            \includegraphics[width=0.4\textwidth,height=0.38\textheight,keepaspectratio]{\eb ILTS2013.jpg}
+            \includegraphics[width=0.4\textwidth,height=0.38\textheight,keepaspectratio]{\eb ILTS2014.jpg}
+            2014\\
+            2015
+            \includegraphics[width=0.4\textwidth,height=0.38\textheight,keepaspectratio]{\eb ILTS2015.jpg}
+            \includegraphics[width=0.4\textwidth,height=0.38\textheight,keepaspectratio]{\eb ILTS2016.jpg}
+            2016
+    \end{center}
+   
+ \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{ILTS Survey}
+Design and Swept area calculations
+\begin{itemize}
+\item Fixed Station Design 
+\item A trawl mensuration system was used with Marport Sensors to record information on the wing spread, headline height and depth of the trawl
+\item The start and end time for each tow is determined from a visual inspection of the depth data from the net sensors
+\item A smoother is applied to GPS data recorded between the start and end times to calculate tow length 
+\item Area is calculated using tow length and average wing spread
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{ILTS Survey}
+Depth profiles from Marport Sensors 
+\begin{figure}
+        \begin{center}
+            \includegraphics[width=0.4\textwidth,height=0.4\textheight,keepaspectratio]{\eb Comparative2016/Depth92.png}
+            \includegraphics[width=0.4\textwidth,height=0.4\textheight,keepaspectratio]{\eb Comparative2016/Depth114.png}\\
+            \includegraphics[width=0.4\textwidth,height=0.4\textheight,keepaspectratio]{\eb Comparative2016/Depth48.png}
+            \includegraphics[width=0.4\textwidth,height=0.4\textheight,keepaspectratio]{\eb Comparative2016/Depth81.png}
+    \end{center}
+   
+ \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{ILTS Survey}
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 0cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\eb Comparative2016/ILTS2016Tracks-2.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{ILTS Comparative}
+\begin{minipage}[c]{0.45\textwidth}
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 0cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\eb comparativeStations.png}
+        \end{center}
+    \end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.45\textwidth}
+\begin{itemize}
+    \item In 2016 Northeast Fisheries Science Center  Ecosystem Survey Trawl (NEST) was adopted
+    \item 30 of 63 comparative stations  
+\end{itemize}
+\end{minipage}
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{ILTS Comparative}
+%Length Frequency
+\begin{figure}
+        \begin{center}
+            NEST trawl
+            \includegraphics[clip,trim={0 0 1 0cm},width=\textwidth,height=0.4\textheight,keepaspectratio]{\ebh CLFLobSurvLFA34NEST2016.png}\\
+            Balloon trawl
+            \includegraphics[clip,trim={0 0 1 0cm},width=\textwidth,height=0.4\textheight,keepaspectratio]{\ebh CLFLobSurvLFA34BALLOON2016.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{ILTS Correction Factor}
+Length based calibration coefficients
+\begin{itemize}
+\item Estimated using zero-inflated beta binomial (ZIBB) generalized additive models (GAMS) 
+\item Allows the probabilities of the binomial model follow a beta distribution while accounting for the excess zeros
+\item Data was filtered to size classes between 45 and 145mm 
+%\item The conversion coefficient (ρ) is defined as μ / (1- μ + ν) where μ and ν are predicted for each size class between 45 and 145mm
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{ILTS Correction Factor}
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 0cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\eb ZIBBresults.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{ILTS Correction Factor}
+\begin{figure}
+        \begin{center}
+            \includegraphics[clip,trim={0 0 0 0cm},width=\textwidth,height=0.8\textheight,keepaspectratio]{\eb ZIBBresultsCV.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{ILTS Correction Factor}
+Results
+\begin{itemize}
+\item Overall the NEST trawl captured more lobsters when the area swept was accounted for
+\item Between lobsters of size 70mm to 120mm the conversion coefficient is about 3 and CVs are the lowest (0.13)
+\item Over 120mm is similar (0.26) but higher CVs (0.5) 
+\item Between 45mm to 70mm cofficients are higher (up to 8.3) and also more uncertain (CV up to 0.4)
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\end{document}
+
+

@@ -9,6 +9,7 @@ pMat = function(p,cl,lfa=NULL){
 		if(p$Area == "31A")                                       lfa = "LFA29" # 31A
 		if(p$Area == "31B" || p$Area == "32")                     lfa = "LFA32" # 31B & 32
 		if(p$Area == "33E" || p$Area == "33W" || p$Area == "33")  lfa = "LFA33" # 33
+		if(p$Area == "34")                                        lfa = "LFA34" # 33
 	}
 
 	pl = data.frame(LFA=c("LFA27-30","LFA29","LFA28,30","LFA31A","LFA32x","LFA32","LFA33x","LFA33","LFA34"),
