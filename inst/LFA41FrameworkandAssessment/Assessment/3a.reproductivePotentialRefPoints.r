@@ -2,14 +2,13 @@
 #combining mature females abundance at length and fecundity at length
 require(bio.lobster)
 la()
-figfp = file.path(project.figuredirectory('bio.lobster'))
-
+figfp = file.path(project.datadirectory('bio.lobster'),'figures', 'Assessment','LFA41')
 
        ff = c(
-       		  file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata  '),
-              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata  '),
-              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata  '),
-              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata  '))
+       		  file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
 
        Update.plot=T
        if(Update.plot==T) par(mfrow=c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
@@ -56,12 +55,12 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                                
                            figure.stratified.analysis(x=out,out.dir = 'bio.lobster', save=F, p=p,sampleSizes=F)
        
-		             ub = median(subset(out,yr %in% 2001:2016,select=Fecm)[,1]) * 0.4
+		             ub = median(subset(out,yr %in% 2001:2015,select=Fecm)[,1]) * 0.4
                  llb = out$Fecm[which(out$Fecm>0)]
                  llb = median(sort(llb)[1:5])
    
-                 abline(h=llb,col='orange',lwd=2)
-                 abline(h=ub,col='green',lwd=2)
+                 abline(h=llb,col='dodgerblue4',lwd=2)
+                 abline(h=ub,col='lightcyan4',lwd=2, lty = 4 )
                 
                 if(Update.plot==F) savePlot(file.path(figfp,'RefsRepPotNEFSCSpring.png'))
      
@@ -107,12 +106,13 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                                
                            figure.stratified.analysis(x=out,out.dir = 'bio.lobster', save=F, p=p,sampleSizes=F)
        
-                 ub = median(subset(out,yr %in% 2000:2016,select=Fecm)[,1]) * 0.4
+                 ub = median(subset(out,yr %in% 2000:2015,select=Fecm)[,1]) * 0.4
                  llb = out$Fecm[which(out$Fecm>0)]
                  llb = median(sort(llb)[1:5])
-   
-                 abline(h=llb,col='orange',lwd=2)
-                 abline(h=ub,col='green',lwd=2)
+  
+                 
+                 abline(h=llb,col='dodgerblue4',lwd=2)
+                 abline(h=ub,col='lightcyan4',lwd=2,lty = 4)
                 
                 if(Update.plot==F) savePlot(file.path(figfp,'RefsRepPotNEFSCAutumn.png'))
      
@@ -147,7 +147,7 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
 
                             p$y.maximum = NULL # NULL # if ymax is too high for one year
                             p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-                                p$ylim = c(0,75)
+                                p$ylim =NULL
                                     p$legend = FALSE
                                     p$running.median = T
                                     p$running.length = 3
@@ -155,15 +155,15 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                                    p$error.polygon=F
                                   p$error.bars=T
                            figure.stratified.analysis(x=out,out.dir = 'bio.lobster', save=F, p=p,sampleSizes=F)
-                          ub = median(subset(out,yr %in% 2000:2016,select=Fecm)[,1]) * 0.4
-                         abline(h=ub,col='green',lwd=2)
+                          ub = median(subset(out,yr %in% 2000:2015,select=Fecm)[,1]) * 0.4
+                         abline(h=ub,col='lightcyan4',lwd=2,lty = 4)
               
   #                          nub = median(subset(out,yr %in% 1999:2016,select=Fecm)[,1])
    #                       llb = out$Fecm[which(out$Fecm>0)]
     #                      llb = median(sort(llb)[1:5])
    
-     #            abline(h=llb,col='orange',lwd=2)
-      #           abline(h=nub,col='purple',lwd=2)
+                       #  abline(h=llb,col='dodgerblue3',lwd=2)
+                       #  abline(h=ub,col='aquamarine3',lwd=2)
            
 
                         if(Update.plot==F)   savePlot(file.path(figfp,'RefsRepPotDFO.png'))
@@ -198,7 +198,7 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
 
                             p$y.maximum = NULL # NULL # if ymax is too high for one year
                             p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-                                p$ylim = c(0,30)
+                                p$ylim = NULL
                                     p$legend = FALSE
                                     p$running.median = T
                                     p$running.length = 3
@@ -207,13 +207,12 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
                                   p$error.bars=T
                                
                            figure.stratified.analysis(x=out,out.dir = 'bio.lobster', save=F, p=p,sampleSizes=F)
-                           nub = median(subset(out,yr %in% 1999:2016,select=Fecm)[,1])
+                           nub = median(subset(out,yr %in% 1999:2015,select=Fecm)[,1])
                          # llb = out$Fecm[which(out$Fecm>0)]
                          # llb = median(sort(llb)[1:5])
    
-  #                       abline(h=llb,col='orange',lwd=2)
-   #                      abline(h=nub,col='purple',lwd=2)
-           
+                           # abline(h=llb,col='dodgerblue3',lwd=2)
+                          # abline(h=ub,col='aquamarine3',lwd=2)
 
 
 
@@ -223,7 +222,7 @@ figfp = file.path(project.figuredirectory('bio.lobster'))
 
                             mtext("Year",1,1,outer=T)
                             mtext("Reproductive Potential",2,1,outer=T,las=0)
-                          savePlot(file.path(figfp,'RefsRepPot.png'))
+                          savePlot(file.path(figfp,'RefsRepPot.png'), type = "png")
 
                           } 
 

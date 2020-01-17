@@ -15,10 +15,14 @@ source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41Frameworkand
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','2g.stratifiedAnalysisRecruits.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','3.reproductivePotential.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','5a.figureLengthFreqs.r'))
+source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','25.Landings.r'))
+
 
 
 
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','15.indicators.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','3a.reproductivePotentialRefPoints.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','16.refpoints.r'))
+
+
 

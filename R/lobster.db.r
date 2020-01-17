@@ -351,7 +351,8 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     
 
                     # add BUMPUP column: total landings/sum of logs for each year  & LFA
-                    bumpup=T
+                
+                     bumpup=T
                     if(bumpup){
                       seasonLandings = lobster.db('seasonal.landings')
                       annualLandings = lobster.db('annual.landings')
@@ -364,7 +365,8 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       logsInSeason$BUMPUP = NA
                       for(i in 1:length(lfa)){
                         tmplogs = subset(logsInSeason,LFA==lfa[i])
-                        yrs = sort(unique(tmplogs$SYEAR))
+                        #yrs = sort(unique(tmplogs$SYEAR))
+                        yrs = 2002:2018
                         for(y in 1:length(yrs)){
                           logsInSeason$BUMPUP[logsInSeason$SYEAR==yrs[y]&logsInSeason$LFA==lfa[i]] = TotalLandings$C[TotalLandings$SYEAR==yrs[y]&TotalLandings$LFA==lfa[i]]*1000/sum(tmplogs$WEIGHT_KG[tmplogs$SYEAR==yrs[y]],na.rm=T)
                         }
