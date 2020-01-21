@@ -205,8 +205,8 @@ if(DS %in% c('annual.landings','annual.landings.redo')) {
         
                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                   annual.landings = sqlQuery(con,'select * from LOBSTER.SLIP_LAND_ANNUAL')
-                  print('Last two years of landings data may be incomplete, make sure to check with Cheryl.Denton@dfo-mpo.gc.ca on last update')
-                  print('LFA27 for >2015 does not have Gulf landings yet.....')
+                  print('make sure to check with Cheryl.Denton@dfo-mpo.gc.ca on last update')
+                
                   save(annual.landings,file=file.path(fnODBC,'annual.landings.rdata'))
             }
 
@@ -295,14 +295,14 @@ if (DS %in% c("logs.redo", "logs") ) {
               gc()  # garbage collection
               
               # old logs LFA 34
-              oldlogs34 = sqlQuery(con, "select * from lobster.lobster_log_data")
-              save( oldlogs34, file=file.path( fnODBC, "oldlogs34.rdata"), compress=T)
+              #oldlogs34 = sqlQuery(con, "select * from lobster.lobster_log_data")
+             # save( oldlogs34, file=file.path( fnODBC, "oldlogs34.rdata"), compress=T)
               gc()  # garbage collection
               odbcClose(con)
             }
             load (file.path( fnODBC, "slip.rdata"), .GlobalEnv)
             load (file.path( fnODBC, "logs.rdata"), .GlobalEnv)
-            load (file.path( fnODBC, "oldlogs34.rdata"), .GlobalEnv)
+            #load (file.path( fnODBC, "oldlogs34.rdata"), .GlobalEnv)
             print("Two files loaded called 'slips' and 'logs'" )
             
           }
@@ -324,7 +324,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     Fish.Date = lobster.db('season.dates')
                     Fish.Date = backFillSeasonDates(Fish.Date,eyr=year(Sys.time()))
                     lfa  =  sort(unique(Fish.Date$LFA))
-                    
+                   
                 
                           print('Note the ODBC season Dates Were Updated AMC Sept2018')
                           
@@ -338,12 +338,12 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     # imported logs from marfis
                           lobster.db('logs')
-
-                          oldlogs34$LFA34_WEIGHT1_KGS=oldlogs34$LFA34_WEIGHT1_KGS/0.4536
-                          oldlogs34$LFA34_WEIGHT2_KGS=oldlogs34$LFA34_WEIGHT2_KGS/0.4536
-                          oldlogs34=subset(oldlogs34,select=c("VR_NUMBER","LICENCE_NO","LOBSTER_AREA","TRIP_ID","DATE_FISHED","GRID_NUMBER_A","LFA34_WEIGHT1_KGS","TRAP_HAULS_GRID_A","GRID_NUMBER_B","LFA34_WEIGHT2_KGS","TRAP_HAULS_GRID_B","V_NOTCHED","PORT_LANDED"))
-                          names(oldlogs34)=c("VR_NUMBER","LICENCE_ID","LFA","SD_LOG_ID","DATE_FISHED","GRID_NUM","WEIGHT_LBS","NUM_OF_TRAPS","GRID_NUM_B","WEIGHT_LBS_B","NUM_OF_TRAPS_B","V_NOTCHED","PORT_LANDED")
-                          logs=merge(logs,oldlogs34,all=T)
+print('Turned off Oldlogs34 figure out later - Jan 2020')
+                         # oldlogs34$LFA34_WEIGHT1_KGS=oldlogs34$LFA34_WEIGHT1_KGS/0.4536
+                         # oldlogs34$LFA34_WEIGHT2_KGS=oldlogs34$LFA34_WEIGHT2_KGS/0.4536
+                         # oldlogs34=subset(oldlogs34,select=c("VR_NUMBER","LICENCE_NO","LOBSTER_AREA","TRIP_ID","DATE_FISHED","GRID_NUMBER_A","LFA34_WEIGHT1_KGS","TRAP_HAULS_GRID_A","GRID_NUMBER_B","LFA34_WEIGHT2_KGS","TRAP_HAULS_GRID_B","V_NOTCHED","PORT_LANDED"))
+                       #   names(oldlogs34)=c("VR_NUMBER","LICENCE_ID","LFA","SD_LOG_ID","DATE_FISHED","GRID_NUM","WEIGHT_LBS","NUM_OF_TRAPS","GRID_NUM_B","WEIGHT_LBS_B","NUM_OF_TRAPS_B","V_NOTCHED","PORT_LANDED")
+                         # logs=merge(logs,oldlogs34,all=T)
 
 
                           logs$TOTAL_NUM_TRAPS = rowSums(logs[c('NUM_OF_TRAPS','NUM_OF_TRAPS_B','NUM_OF_TRAPS_C')],na.rm=T)
@@ -365,7 +365,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                    
                     # add week of season (WOS) variable
                         logs$WOS = NA
-                          
+                          browser()
                             for(i in 1:length(lfa)) {
                                   h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
                                for(j in unique(logs$SYEAR[logs$LFA==lfa[i]])){
@@ -413,16 +413,16 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       logsInSeason$BUMPUP = NA
                       for(i in 1:length(lfa)){
                         tmplogs = subset(logsInSeason,LFA==lfa[i])
-<<<<<<< HEAD
+
                         #yrs = sort(unique(tmplogs$SYEAR))
                         yrs = 2002:2018
-=======
+
                         tmpland = subset(TotalLandings,LFA==lfa[i])
                         yrs1 = sort(unique(tmplogs$SYEAR))
                         yrs2 = sort(unique(tmpland$SYEAR))
                         yrs = yrs1[yrs1%in%yrs2]
 
->>>>>>> 8166747bcdc1efa15ee4ccbc0b303a07181b8751
+
                         for(y in 1:length(yrs)){
                           logsInSeason$BUMPUP[logsInSeason$SYEAR==yrs[y]&logsInSeason$LFA==lfa[i]] = TotalLandings$C[TotalLandings$SYEAR==yrs[y]&TotalLandings$LFA==lfa[i]]*1000/sum(tmplogs$WEIGHT_KG[tmplogs$SYEAR==yrs[y]],na.rm=T)
                         }
