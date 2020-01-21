@@ -6,7 +6,11 @@ p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis",'lfa41Assessment')
 la()
+<<<<<<< HEAD
+load_all('~/GitHub/bio.survey/')
+=======
 #load_all('~/git/bio.survey/')
+>>>>>>> 8166747bcdc1efa15ee4ccbc0b303a07181b8751
 
 
 #by length for histograms

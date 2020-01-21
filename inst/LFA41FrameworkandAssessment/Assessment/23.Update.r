@@ -17,12 +17,17 @@ source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41Frameworkand
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','2g.stratifiedAnalysisRecruits.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','3.reproductivePotential.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','5a.figureLengthFreqs.r'))
+<<<<<<< HEAD
+source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','25.Landings.r'))
+
+=======
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','7.fisheryFootprint.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','7a.commercialCatchRates.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','10.PredatorIndex.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','11.environmentalConditions.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','13.observerLengthFreqs.r'))  
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','13.observerLengthFreqsNoSeason.r'))  
+>>>>>>> 8166747bcdc1efa15ee4ccbc0b303a07181b8751
 
 # run this for update plots:
 Update.plots=T
@@ -30,4 +35,6 @@ Update.plots=T
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','15.indicators.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','3a.reproductivePotentialRefPoints.r'))
 source( file.path(project.codedirectory('bio.lobster'),'inst','LFA41FrameworkandAssessment','Assessment','16.refpoints.r'))
+
+
 
