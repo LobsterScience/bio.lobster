@@ -39,20 +39,17 @@ getGridVar = function(variable="DEPTH",source = c("atSea","FSRS"),grids){
 
 	if(any(is.na(gridvar))){
 
-		library(bio.spacetime)
-		library(bio.bathymetry)
-
-		LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
+			LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 	    grids.dat<-calcCentroid(LFAgrid)
-		grids.dat = data.frame(GRID=grids.dat$SID,X=grids.dat$X,Y=grids.dat$Y)
+		  grids.dat = data.frame(GRID=grids.dat$SID,X=grids.dat$X,Y=grids.dat$Y)
 
 	    if(variable=="DEPTH"){
 
 			p = spatial_parameters( type = "canada.east" ) 
 			grids.dat = lonlat2planar(grids.dat, input_names=c("X", "Y"),proj.type = p$internal.projection)
-			Complete = bathymetry.db(p=p, DS="complete")
- 
-		 	# identify locations of data relative to baseline for envionmental data
+			load(file.path(project.datadirectory("bio.lobster"),"bathymetry","bathymetry.complete.canada.east.rdata"))
+			Complete = Z
+			# identify locations of data relative to baseline for envionmental data
 			 locsmap = match( 
 			  array_map( "xy->1", grids.dat[,c("plon","plat")], gridparams=p$gridparams ), 
 			  array_map( "xy->1", Complete[,c("plon","plat")], gridparams=p$gridparams ) )

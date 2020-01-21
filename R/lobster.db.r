@@ -353,7 +353,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     # select for records within season
                           logs$DATE_FISHED = as.Date(logs$DATE_FISHED,"%Y-%m-%d")
                           #logs$SYEAR = year(logs$DATE_FISHED)
-           
+          
                         for(i in 1:length(lfa)) {
                                 h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
                             for(j in 1:nrow(h)) {
@@ -369,7 +369,9 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                             for(i in 1:length(lfa)) {
                                   h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
                                for(j in unique(logs$SYEAR[logs$LFA==lfa[i]])){
-                                   logs$WOS[logs$LFA==lfa[i]&logs$SYEAR==j] = floor(as.numeric(logs$DATE_FISHED[logs$LFA==lfa[i]&logs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                   print(c(lfa[i],j))
+                                
+                                     logs$WOS[logs$LFA==lfa[i]&logs$SYEAR==j] = floor(as.numeric(logs$DATE_FISHED[logs$LFA==lfa[i]&logs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
                               }
 
