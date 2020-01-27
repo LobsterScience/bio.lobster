@@ -29,7 +29,7 @@ RR75 = list()
         off41$yr  = year(off41$DATE_FISHED) #1981 to 1994
         logs41$OFFAREA = NULL 
 
-        #oct16-oct15 fishing year until 2005 switch to Jan 1 to Dec 31
+        #oct16-oct15 fishing year until 2005 switch to Jan 1 to Dec 31MOnt
 
         a41 = rbind(off41,ziff41,logs41)
         a41$fishingYear = sapply(a41$DATE_FISHED,offFishingYear)

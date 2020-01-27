@@ -7,16 +7,20 @@ require(bio.lobster)
 require(bio.utilities)
 la()
 
+
+figfp = file.path(project.figuredirectory('bio.lobster'),'Assessment', 'LFA41')
+
 assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
+fp = file.path(project.datadirectory('bio.lobster'),'analysis')
 
       Update.plot=T
-       if(Update.plot==T) par(mfrow=c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
- fp = file.path(project.datadirectory('bio.lobster'),'analysis')
-
+       if(Update.plot==T) {
+         png(file.path(figfp,"RefsPrimary.png"), width = 1000, height = 1000 )
+         par(mfrow=c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
+       }
 #
 #
 #
-#figfp = file.path(project.figuredirectory('bio.lobster'))
 #outref = list()
 #RR95=list()    
 #RR75 = list()
@@ -125,10 +129,10 @@ assessment.year = p$current.assessment.year ########### check the year #########
               ub = median(subset(ao,yr %in% 2000:2015,select=w.Yst)[,1])/1000 * 0.4
               llb = ao$w.Yst[which(ao$w.Yst>0)]
               llb = median(sort(llb)[1:5])/1000
-
+              
       
-              abline(h=llb,col='orange',lwd=2)
-              abline(h=ub,col='green',lwd=2)
+              abline(h=llb,col='dodgerblue4',lwd=2)
+              abline(h=ub,col='lightcyan4',lwd=2, lty=4)
          
 #if(Update.plot==F) {
 #
@@ -224,7 +228,7 @@ rm(out)
                                                   p$running.mean = F #can only have rmedian or rmean
                                                  p$error.polygon=F
                                                 p$error.bars=T
-                                                             p$ylim = c(0,1.2)
+                                                             p$ylim = c(0,3.5)
                                                              p$return.running=T
    figure.stratified.analysis(x=ao,out.dir = 'bio.lobster', p=p,save=F)
 
@@ -233,9 +237,9 @@ rm(out)
                   llb = ao$w.Yst[which(ao$w.Yst>0)]
                   llb = median(sort(llb)[1:5])/1000
 
-              abline(h=llb,col='orange',lwd=2)
+              abline(h=llb,col='dodgerblue4',lwd=2)
        
-                  abline(h=ub,col='green',lwd=2)
+                  abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 #if(Update.plot==F) {
 #
@@ -337,15 +341,15 @@ rm(out)
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-                                           p$ylim = c(0,38)
+                                           p$ylim = c(0,45)
                                            p$return.running=T
        bref=   figure.stratified.analysis(x=ao,out.dir = 'bio.lobster', p=p,save=F)
 
 ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1])/1000 * 0.4
             llb = ao$w.Yst[which(ao$w.Yst>0)]
               llb = median(sort(llb)[1:5])/1000
-            abline(h=llb,col='orange',lwd=2)
-            abline(h=ub,col='green',lwd=2)
+            abline(h=llb,col='dodgerblue4',lwd=2)
+            abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 #if(Update.plot==F) {
 #
@@ -451,15 +455,15 @@ ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1])/1000 * 0.4
                                 p$running.mean = F #can only have rmedian or rmean
                                p$error.polygon=F
                               p$error.bars=T
-                                           p$ylim = c(0,20)
+                                           p$ylim = c(0,30)
                                            p$return.running=T
                bref=   figure.stratified.analysis(x=ao,out.dir = 'bio.lobster', p=p,save=F)
 
 ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1])/1000 * 0.4
              llb = ao$w.Yst[which(ao$w.Yst>0)]
               llb = median(sort(llb)[1:5])/1000
-              abline(h=llb,col='orange',lwd=2)
-              abline(h=ub,col='green',lwd=2)
+              abline(h=llb,col='dodgerblue4',lwd=2)
+              abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 #if(Update.plot==F) {
 #
@@ -525,10 +529,10 @@ ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1])/1000 * 0.4
 
                       if(Update.plot==T)  {
 
-                            mtext("Year",1,1,outer=T)
-                            mtext("Stratified Total Weight (t)",2,1,outer=T,las=0)
-                          savePlot(file.path(figfp,'RefsPrimary.png'))
+                            mtext("Year",1,1,outer=T, cex= 2)
+                            mtext("Stratified Total Weight (t)",2,1,outer=T,las=0, cex = 2)
+                          #savePlot(file.path(figfp,'RefsPrimary.png'))
 
                           } 
-
+dev.off()
    
