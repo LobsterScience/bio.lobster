@@ -5,11 +5,11 @@ require(bio.survey)
 require(bio.lobster)
 p = bio.lobster::load.environment()
 p$libs = NULL
-
 require(bio.utilities)
 la()
 
 a = lobster.db('process.logs') 
+
 
 #grid areas by LFA
 		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
@@ -17,64 +17,89 @@ a = lobster.db('process.logs')
 		attr(LFAgrid,'projection') <- "LL"
 		ar = calcArea(LFAgrid)
 		names(ar)[1:2] <- c('LFA','GRID_NUM')
-		ar7 = subset(ar,LFA==37)
-		ar6 = subset(ar,LFA==36)
-		ar8 = subset(ar,LFA==38)
+		ar = subset(ar,LFA==34)
+		cC = calcCentroid(subset(LFAgrid,PID==34))
+		aC = merge(ar,cC,by.x='GRID_NUM',by.y='SID')
+		
+#Weekly
+aA = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~GRID_NUM+WOS+LFA+SYEAR,data=subset(a,LFA==34),FUN=sum)
+aA = merge(aA, aC, by=c('LFA','GRID_NUM'),all.x=T)
 
-		ar6b = ar7
-		ar6b$LFA=36
-		ar6 = as.data.frame(rbind(ar6,ar6b))
-		ar6 = aggregate(area~LFA+GRID_NUM,data=ar6,FUN=sum)
-
-		ar8b = ar7
-		ar8b$LFA=38
-		ar8 = as.data.frame(rbind(ar8,ar8b))
-		ar8 = aggregate(area~LFA+GRID_NUM,data=ar8,FUN=sum)
-
-		ar = subset(ar, !LFA %in% c(36,38))
-		ar = as.data.frame(rbind(rbind(ar,ar6),ar8))
-
-
-aA = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~GRID_NUM+LFA+SYEAR,data=a,FUN=sum)
-aA = merge(aA, ar, by=c('LFA','GRID_NUM'),all.x=T)
 aA$CPUE = aA$WEIGHT_KG / aA$NUM_OF_TRAPS
-lfa = c(34,35,36,38)
+aA$wTCPUE = aA$CPUE/aA$area
+
+
+aA = aA[order(aA$SYEAR, aA$WOS),]
+aA = subset(aA,SYEAR>2004)
+aA$id = paste(aA$SYEAR,aA$WOS,sep='-')
 out = list()
-m= 0 
-for(i in 1:length(lfa)){
-		aB = subset(aA,LFA==lfa[i])
-		y = unique(aB$SYEAR)
+ui = unique(aA$id)
+m=0
+for(j in ui){
+		m = m+1
+		k = subset(aA,id==j)
+		x = sum(k$X*k$wTCPUE / sum(k$wTCPUE)		)
+		y = sum(k$Y*k$wTCPUE / sum(k$wTCPUE)		)
+		out[[m]] =c(j,x,y)
 
-		for(j in 1:length(y)){
-			print(paste(lfa[i],y[j]))
-			aC = subset(aB,SYEAR==y[j])
-			if(nrow(aC)>=5){
-			m=m+1
-			out[[m]] = c(lfa[i],y[j],giniFootprint(aC$CPUE,aC$area),giniFootprint(aC$WEIGHT_KG,aC$area),giniFootprint(aC$NUM_OF_TRAPS,aC$area))
-		}
-	}
 }
-	out = as.data.frame(do.call(rbind,out))
-	names(out) = c('LFA','YEAR','CPUE','LANDINGS','EFFORT')
 
-out = out[order(out$LFA, out$YEAR),]
+g = as.data.frame(do.call(rbind,out))
 
-png(file=file.path(project.figuredirectory('bio.lobster'),'LFA3438Framework2019','GiniLandings34.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
-with(subset(out,LFA==34),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
-with(subset(out,LFA==34),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
+g = cbind(g, do.call(rbind,(strsplit(g[,1],"-"))))
+names(g) = c('ID','X','Y','SYEAR','WOS')
+g = toNums(g,c('X','Y','SYEAR','WOS'))
+g$PID=g$SYEAR
+g$POS = g$WOS
+pdf('~/tmp/cg.pdf')
+for(i in 2005:2019){
+LobsterMap(34)
+addLines(subset(g,SYEAR==i),col='red')
+}
 dev.off()
 
-png(file=file.path(project.figuredirectory('bio.lobster'),'LFA3438Framework2019','GiniLandings35.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
-with(subset(out,LFA==35),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
-with(subset(out,LFA==35),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
-dev.off()
 
-png(file=file.path(project.figuredirectory('bio.lobster'),'LFA3438Framework2019','GiniLandings36.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
-with(subset(out,LFA==36),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
-with(subset(out,LFA==36),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
-dev.off()
+#changes in the start of the season
+g$PID=1
+g$POS = g$SYEAR
+LobsterMap(34)
+addLines(subset(g,WOS==1),col='red')
 
-png(file=file.path(project.figuredirectory('bio.lobster'),'LFA3438Framework2019','GiniLandings38.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
-with(subset(out,LFA==38),plot(YEAR,LANDINGS, pch=16,xlab='Year',ylab='Gini Index'))
-with(subset(out,LFA==38),lines(YEAR,runmed(LANDINGS,k=3), lwd=3,col='salmon'))
-dev.off()
+
+
+#annual
+aA = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~GRID_NUM+WOS+LFA+SYEAR,data=subset(a,LFA==34),FUN=sum)
+aA = merge(aA, aC, by=c('LFA','GRID_NUM'),all.x=T)
+
+aA$CPUE = aA$WEIGHT_KG / aA$NUM_OF_TRAPS
+aA$wTCPUE = aA$CPUE/aA$area
+
+
+aA = aA[order(aA$SYEAR, aA$WOS),]
+aA = subset(aA,SYEAR>2004)
+aA$id = aA$SYEAR
+out = list()
+ui = unique(aA$id)
+m=0
+for(j in ui){
+		m = m+1
+		k = subset(aA,id==j)
+		x = sum(k$X*k$wTCPUE / sum(k$wTCPUE)		)
+		y = sum(k$Y*k$wTCPUE / sum(k$wTCPUE)		)
+		out[[m]] =c(j,x,y)
+
+}
+
+g = as.data.frame(do.call(rbind,out))
+
+names(g) = c('SYEAR','X','Y')
+g = toNums(g,c('X','Y','SYEAR'))
+g$PID=1
+g$POS = g$SYEAR
+LobsterMap(34)
+addLines(g,col='red')
+
+#st marys bay 69,81, 92
+a = lobster.db('process.logs') 
+aA = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~LFA+SYEAR,data=subset(a,GRID_NUM %in% c(92) & SYEAR >2004 & WOS %in% 1:3),FUN=sum)
+with(aA,plot(SYEAR,WEIGHT_KG/NUM_OF_TRAPS,type='l'))

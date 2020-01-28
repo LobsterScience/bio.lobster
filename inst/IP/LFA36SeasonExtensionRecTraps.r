@@ -26,6 +26,11 @@ i = which(xy$Date=='18-06-01')
 xy$Date[i] = xy$Date[i]+365
 
 Fu = merge(tr,merge(xy,ca,by=c('Record.Number')),by=c('Record.Number')) #lobster 0 is an empty trap
+
+
+Fu$LID = paste(Fu$Lobster.Number,Fu$Trap.Number,Fu$Record.Number,sep="-")
+Fu$TID = paste(Fu$Trap.Number,Fu$Record.Number,sep="-")
+
 sz = read.csv('sizes.csv')
 
 Fu$R1 = ifelse(Fu$Size %in% c(15,16) | c(Fu$Size == 17 & Fu$Short ==T),1,0)

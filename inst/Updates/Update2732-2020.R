@@ -57,7 +57,7 @@
 		
 		logs=lobster.db("process.logs")
 		CPUE.data<-CPUEModelData(p,redo=F)
-		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1982:2018,graphic='R')$annual.data
+		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1982:2019,graphic='R')$annual.data
 
 
 		# Other LFAs
