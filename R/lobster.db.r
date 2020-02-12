@@ -365,7 +365,6 @@ print('Turned off Oldlogs34 figure out later - Jan 2020')
                    
                     # add week of season (WOS) variable
                         logs$WOS = NA
-                          browser()
                             for(i in 1:length(lfa)) {
                                   h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
                                for(j in unique(logs$SYEAR[logs$LFA==lfa[i]])){

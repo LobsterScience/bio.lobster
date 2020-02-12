@@ -6,19 +6,21 @@ CPUEModelData = function(p,redo=T,TempModelling){
 		logs = lobster.db("process.logs")
 		vlog = lobster.db("process.vlog.redo")
 
-		tmp1 = subset(logs,select=c("DATE_FISHED","SYEAR","WEIGHT_KG","NUM_OF_TRAPS","subarea","GRID_NUM"))
+		tmp1 = subset(logs,select=c("DATE_FISHED","SYEAR","WEIGHT_KG","LFA","NUM_OF_TRAPS","subarea","GRID_NUM"))
 		tmp1$type = 'mandatory'
 		tmp2 = subset(vlog,select=c("FDATE","SYEAR","W_KG","N_TRP","LFA","X","Y"))
 		names(tmp2) = c("DATE_FISHED","SYEAR","WEIGHT_KG","NUM_OF_TRAPS","subarea","X","Y")
+		tmp2$LFA = tmp2$subareas
 		tmp2 = assignArea(tmp2,coords=c("X","Y"))
-		tmp2 = subset(tmp2,select=c("DATE_FISHED","SYEAR","WEIGHT_KG","NUM_OF_TRAPS","subarea","LFA_GRID"))
+		tmp2 = subset(tmp2,select=c("DATE_FISHED","SYEAR","WEIGHT_KG","LFA","NUM_OF_TRAPS","subarea","LFA_GRID"))
 		tmp2$type = 'voluntary'
 	    names(tmp2) = names(tmp1)
 
 	    tmp = rbind(tmp2,tmp1)
 
-	    if('subareas'%in%names(p))   tmp = subset(tmp,subarea %in% p$subareas)
-	    else  tmp = subset(tmp,LFA %in% p$lfas)
+	    if('subareas'%in%names(p)){
+	       tmp = subset(tmp,subarea %in% p$subareas)
+	    } else { tmp = subset(tmp,LFA %in% p$lfas)}
 
 	    tmp$LFA = tmp$subarea
 	    tmp$LFA[tmp$subarea%in%c("27N","27S")] = "27"
@@ -52,8 +54,8 @@ CPUEModelData = function(p,redo=T,TempModelling){
 
 
 	    newdata = with(cpue.data,data.frame(y=y, cos.y=cos(2*pi*y), sin.y=sin(2*pi*y), DEPTH=DEPTH, area=subarea))
-#		newdata$area[newdata$area=="31A"] = 311
-#		newdata$area[newdata$area=="31B"] = 312
+		newdata$area[newdata$area=="31A"] = 311
+		newdata$area[newdata$area=="31B"] = 312
 
 		cpue.data$TEMP = predict(TempModelling$Model, newdata, type='response')
 
