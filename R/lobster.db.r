@@ -716,17 +716,18 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             
             # atSea
             atSea = sqlQuery(con, "select * from lobster.LOBSTER_ATSEA_VW")
-            atSea2 = sqlQuery(con, "select * from cooka.lobster_bycatch_assoc_unedited")
-
+           atSea2 = sqlQuery(con, "select * from cooka.lobster_bycatch_assoc")
+ 
             atSea2$PORT = NA
             atSea2$PORTNAME = NA
             atSea2$SAMCODE = NA
             atSea2$DESCRIPTION = atSea2$OWNER_GROUP
             atSea2$GRIDNO = NA
-            atSea2$SPECIES = NA
+            atSea2$SPECIESCODE = atSea2$SPECCD_ID
             atSea2$CULL = NA
             atSea2$CALWT = NA
             atSea2$STARTDATE = as.Date(NA)
+            atSea2$SPECIES = NA
 
             atSea2$BOARD_DATE = substr(atSea2$BOARD_DATE,1,10)
             atSea2$datechar = nchar(atSea2$BOARD_DATE)
@@ -736,7 +737,8 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             atSea2$STARTDATE[atSea2$datechar==10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar==10])
 
 
-            names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECSCD_ID", "SPECIES", "SEXCD_ID","VNOTCH", "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH","CALWT")
+            names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", 
+                     "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH", "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH","CALWT")
 
             atSea2 = subset(atSea2,select=names2)
             atSea2$COMAREA_ID = substr(atSea2$COMAREA_ID,2,nchar(atSea2$COMAREA_ID))
