@@ -806,9 +806,10 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
               aS$PID = aS$SID = aS$Bdry = NULL
          
                     season.dates = backFillSeasonDates(lobster.db('season.dates'),eyr=year(Sys.time()))
-
+                    aS = subset(aS, !is.na(SDATE))
                      # season.dates = lobster.db('season.dates')
                        aS$WOS = NA
+                       m=0
                         lfa = unique(aS$LFA) 
                             for(i in 1:length(lfa)) {
                                   h  = season.dates[season.dates$LFA==lfa[i],]  
@@ -816,6 +817,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                                   #h = na.omit(h)
                                   k = intersect(k,h$SYEAR)
                                for(j in k){
+                                   m=m+1
                                    aS$WOS[aS$LFA==lfa[i] & aS$SYEAR==j] = floor(as.numeric(aS$SDATE[aS$LFA==lfa[i] & aS$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
                           }
