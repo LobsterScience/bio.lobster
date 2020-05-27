@@ -1,0 +1,346 @@
+# Analysis and Response
+
+## Indicators of Stock Status
+
+The status of the lobster stock in LFAs 27-32 are assessed using primary, secondary and contextual indicators. This update will include the primary indicators which are used to define stock status in relation to reference points defined in Cook et al. (2018), and secondary indicators which display time series trends but do not have reference points. The data sources available for establishing indicators for LFAs 27-32 are primarily fishery dependent. Commercial logbooks report information on date, location (grid), effort, and estimated catch. 
+
+## Primary Indicators
+
+In LFAs 27-32, there are two primary indicators, one to define stock status and one to describe the level of fishing pressure, both indicators are compared to reference points. The primary indicator for describing stock status is the commercial Catch Per Unit Effort (CPUE). Fishing pressure is described using an exploitation index estimated from the Continuous Change in Ratio (CCIR) method is used as an indicator of fishing pressure.
+
+### Catch Per Unit Effort
+In LFAs 27-32, the time series of commercial catch rates are comprised of two data sources: (1) voluntary logbooks, which began in the 1980s and continued until 2013, and (2) mandatory log books, which have been in place since the mid-2000s and provide a more complete data set to evaluate changes in catch rates (Tremblay et al. 2012). In years where both voluntary and mandatory logbooks were available, the magnitude and trends over time were similar (Tremblay et al. 2013), both datasets were used as a continuous time series. The combined catch rate data series from 1990-2016 was used to define the Upper Stock Reference (USR) and Limit Reference Point (LRP). This period represents both low and high productivity time periods and covers approximately 2 generations. The median of this time series was used as a proxy of biomass at maximum sustainable yield (BMSY). Following the recommendations of DFO (2009), the USR and LRP were set to 80% and 40% of the BMSY proxy. The 3-year running median is used to compare the commercial catch rates to the USR and LRP. This value will dampen the impact of any inter-annual variability, which may occur due to factors outside of changes in abundance.
+
+```{r logsmodel, include =FALSE}
+logs=lobster.db("process.logs")
+		CPUE.data<-CPUEModelData(p,redo=F)
+		cpueData = CPUEplot(CPUE.data,lfa= p$lfas,yrs=1982:2020,graphic='R', plot=F)$annual.data
+```
+
+
+```{r CPUE1, include=TRUE, echo=FALSE, warning=FALSE, message=FALSE, comment = FALSE, error = FALSE, fig.cap="Time series of commercial catch rates (black points), along with the 3-year running median (blue Line). The horizontal lines represent the upper stock (dashed green line) and limit reference point (dotted red line).Top row: left- LFA 27, right – LFA 28. Bottom row: left –LFA 29, right – LFA 30. Note: Different scales used on y-axis."}
+
+
+xlim=c(1985,2020)
+		par(mfrow=c(2,2))		
+		
+####27####		
+			crd = subset(cpueData,LFA==27,c("YEAR","CPUE"))	
+			usr = mu[i] * 0.8
+			lrp = mu[i] * 0.4
+
+		crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
+		
+		
+	 par(mar=c(1.5,5.5,2.0,3.0))		
+		plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/TH)',type='p',pch=16, xlim=xlim)
+	   		running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
+			crd=merge(crd,running.median,all=T)
+			lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
+	 abline(h=usr,col='green',lwd=2,lty=2)
+ abline(h=lrp,col='red',lwd=2,lty=3)
+
+		
+#### 28 ####
+ 			crd = subset(cpueData,LFA==28,c("YEAR","CPUE"))	
+			usr = mu[i] * 0.8
+			lrp = mu[i] * 0.4
+
+		crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
+
+		par(mar=c(1.5,2.0,2.0,5.5))	
+		plot(crd[,1],crd[,2],xlab=' ',ylab=' ',type='p',pch=16, xlim=xlim)
+	   		running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
+			crd=merge(crd,running.median,all=T)
+			lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
+	 abline(h=usr,col='green',lwd=2,lty=2)
+ abline(h=lrp,col='red',lwd=2,lty=3)		
+	
+ 
+ #### 29 ####
+ 			crd = subset(cpueData,LFA==29,c("YEAR","CPUE"))	
+			usr = mu[i] * 0.8
+			lrp = mu[i] * 0.4
+
+		crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
+
+		  par(mar=c(4.0,5.5,1.5,3.0))	
+		plot(crd[,1],crd[,2],xlab='Year',ylab='CPUE (kg/TH)',type='p',pch=16, xlim=xlim)
+	   		running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
+			crd=merge(crd,running.median,all=T)
+			lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
+	 abline(h=usr,col='green',lwd=2,lty=2)
+ abline(h=lrp,col='red',lwd=2,lty=3)		
+	
+ 
+ #### 30 ####
+ 			crd = subset(cpueData,LFA==30,c("YEAR","CPUE"))	
+			usr = mu[i] * 0.8
+			lrp = mu[i] * 0.4
+
+		crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
+
+		 par(mar=c(4.0,2.0,1.5,5.5))
+		plot(crd[,1],crd[,2],xlab='Year',ylab=' ',type='p',pch=16, xlim=xlim, ylim =c(0,3.0))
+	   		running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
+			crd=merge(crd,running.median,all=T)
+			lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
+	 abline(h=usr,col='green',lwd=2,lty=2)
+ abline(h=lrp,col='red',lwd=2,lty=3)		
+	
+```
+
+
+
+```{r CPUE2,include=TRUE, echo=FALSE, warning=FALSE, message=FALSE, comment = FALSE, error = FALSE, fig.cap="Time series of commercial catch rates (black points), along with the 3-year running median (blue Line). The horizontal lines represent the upper stock (dashed green line) and limit reference point (dotted red line).Top row: left- LFA 31A, right – LFA 31B. Bottom row: left –LFA 32. Note: Different scales used on y-axis."}
+xlim=c(1985,2020)
+par(mfrow=c(2,2)) 
+  
+ #### 31A ####
+ 			crd = subset(cpueData,LFA=="31A",c("YEAR","CPUE"))	
+			usr = mu[i] * 0.8
+			lrp = mu[i] * 0.4
+
+		crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
+
+		 par(mar=c(1.5,5.5,2.0,3.0))	
+		plot(crd[,1],crd[,2],xlab='Year',ylab='CPUE (kg/TH)',type='p',pch=16,xlim=xlim)
+	   		running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
+			crd=merge(crd,running.median,all=T)
+			lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
+	 abline(h=usr,col='green',lwd=2,lty=2)
+ abline(h=lrp,col='red',lwd=2,lty=3)		
+
+ 
+  #### 31B ####
+ 			crd = subset(cpueData,LFA=="31B",c("YEAR","CPUE"))	
+			usr = mu[i] * 0.8
+			lrp = mu[i] * 0.4
+
+		crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
+
+		 	par(mar=c(1.5,2.0,2.0,5.5))		
+		plot(crd[,1],crd[,2],xlab='Year',ylab=' ',type='p',pch=16, xlim=xlim)
+	   		running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
+			crd=merge(crd,running.median,all=T)
+			lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
+	 abline(h=usr,col='green',lwd=2,lty=2)
+ abline(h=lrp,col='red',lwd=2,lty=3)			
+ 
+ 
+  
+  #### 32 ####
+ 			crd = subset(cpueData,LFA==32,c("YEAR","CPUE"))	
+			usr = mu[i] * 0.8
+			lrp = mu[i] * 0.4
+
+		crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
+
+		par(mar=c(4.0,5.5,1.5,3.0))	
+		plot(crd[,1],crd[,2],xlab='Year',ylab='CPUE (kg/TH)',type='p',pch=16, xlim=xlim)
+	   		running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
+			crd=merge(crd,running.median,all=T)
+			lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
+	 abline(h=usr,col='green',lwd=2,lty=2)
+ abline(h=lrp,col='red',lwd=2,lty=3)			
+ 
+```
+
+
+
+CPUE trends for LFA 27 indicate a constant increase in biomass since a low in 1997, with dramatic increases in the last 3 years. In LFA 28 CPUE continues to rise after a dip in 2016. CPUE for LFA 29 has been rising since 2016 after a dip between 2011 and 2016. The trend in CPUE for LFA 30 continues to increase since 2016. In LFA 31A the trend in CPUE has increased since 2016 and is currently at the highest it has ever been for the area. CPUE increases began in 2004 in LFA 31B and continues to rise in 2019. LFA 32 has experienced a steady increase in CPUE since an extreme low in 1995. For all LFAs from 27-32 CPUE is well above the USR and LRP, and CPUEs are among the highest levels in the time series.
+
+
+
+## Continuous Change In Ratio (CCIR)
+
+The CCIR method is used as an indicator of fishing pressure. It is based on recruitment trap data and reflects trends in exploitation in the inshore portion of the LFAs, where the majority of the fishery occurs. It provides indices of exploitation by modelling the change in proportion of two monitored components of the population, consisting of a reference (non-exploited) component and an exploited component. The premise of this method is the proportion of reference individuals within the population will increase with the cumulative removals from the exploitable component (Claytor and Allard 2002). This approach does not rely directly on fishery dependent landings data and, thus, the CPUE indicator and CCIR are based on independent time series.
+CCIR will not be included in this update as 2019 data was not yet available. The most recent calculation of CCIR indicators can be found in the Assessment of Lobster in LFA 27-32 (DFO 2020).
+
+
+
+## Secondary Indicators
+
+Secondary indicators represent time series trends that are tracked individually, without defined reference points. The secondary indicators for LFAs 27-32 are landings and total effort, as well as the recruitment trap sub-legal and legal catch rate series.
+
+
+### Landings and Effort
+Levels of commercial landings are related to population biomass as fishery controls are input (effort controls) rather than output-based (total allowable catch). There are many factors that can affect this relationship, including changes in levels of fishing effort, catchability (including the effects of environment, gear efficiency), lobster size distribution and the spatial overlap between distribution of lobster and effort.
+Fishing effort can be used as a proxy for fishing pressure. It is an indicator of fisheries performance as changes in landings can be due to changes in commercial sized biomass or fishing effort or both. Fishing effort, recorded as the number of Trap Hauls (THs), in the lobster fishery is controlled by fishing season length, trap limits, and limited number of fishing licenses. Consequently, there is a maximum fishing effort that can be deployed; however, this maximum is never met as factors such as weather conditions, seasonally variable catch rates, and fishing partnerships limit the total number of THs. Total fishing effort is calculated from mandatory logbooks, but prior to their widespread adoption effort was calculated from CPUE and total catch.
+
+
+
+```{r landingseffort1, include=TRUE, echo=FALSE, warning=FALSE, message=FALSE, comment = FALSE, error = FALSE, fig.cap="Time series of landings in tonnes (grey bars), and effort (solid black line with points). Data for 2019 is incomplete (blue bar, triangle). Note: Different scales used on both x and y-axis. Top row: left- LFA 27, right – LFA 28. Bottom row: left –LFA 29, right – LFA 30. Note: Different scales used on y-axis."}
+
+	land = lobster.db('annual.landings')
+	logs=lobster.db("process.logs")
+		CPUE.data<-CPUEModelData(p,redo=F)
+	land =land[order(land$YR),]
+
+
+#Landings limits
+		xlim<-c(1982,2019)
+
+par(mfrow=c(2,2))
+
+####LFA 27####
+        d1 = data.frame(YEAR = land$YR, LANDINGS = land[,"LFA27"])
+        d2 = subset(cpueData,LFA==27)
+        d2 = merge(data.frame(LFA=d2$LFA[1],YEAR=min(d2$YEAR):max(d2$YEAR)),d2,all.x=T)
+        data=fishData = merge(d2,d1) 
+        data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+        
+       
+        par(mar=c(1.5,5.5,2.0,3.0))	
+        plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
+        lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',density = 30,pch=21,col='steelblue4',lwd=4, lend=3)
+        par(new=T)
+        
+        	plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
+        	points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,size = 2,bg='black')
+        	axis(4)
+        	
+        	
+####LFA 28####
+        d1 = data.frame(YEAR = land$YR, LANDINGS = land[,"LFA28"])
+        d2 = subset(cpueData,LFA==28)
+        d2 = merge(data.frame(LFA=d2$LFA[1],YEAR=min(d2$YEAR):max(d2$YEAR)),d2,all.x=T)
+        data=fishData = merge(d2,d1) 
+        data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+        
+        par(mar=c(1.5,3.0,2.0,5.5))	
+        plot(data$YEAR,data$LANDINGS,ylab=' ',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
+        	lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',density = 30,pch=21,col='steelblue4',lwd=4,lend=3)
+        	par(new=T)
+        	
+        		plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
+        		points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,size = 2,bg='black')
+        		axis(4)
+        		mtext("Effort ('000s Trap Hauls)",cex = 0.75, side=4, line = 3, outer = F, las = 0)
+        		
+        		
+######LFA 29#####
+        d1 = data.frame(YEAR = land$YR, LANDINGS = land[,"LFA29"])
+        d2 = subset(cpueData,LFA==29)
+        d2 = merge(data.frame(LFA=d2$LFA[1],YEAR=min(d2$YEAR):max(d2$YEAR)),d2,all.x=T)
+        data=fishData = merge(d2,d1) 
+        data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+        
+        par(mar=c(4.0,5.5,1.0,3.0))	
+        plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab="Year", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
+        	lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',density = 30,pch=21,col='steelblue4',lwd=4,lend=3)
+        	par(new=T)
+        	
+        	plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
+        	points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,size = 2,bg='black')
+        	axis(4)
+        	
+        		
+####LFA 30####
+        d1 = data.frame(YEAR = land$YR, LANDINGS = land[,"LFA30"])
+        d2 = subset(cpueData,LFA==30)
+        d2 = merge(data.frame(LFA=d2$LFA[1],YEAR=min(d2$YEAR):max(d2$YEAR)),d2,all.x=T)
+        data=fishData = merge(d2,d1) 
+        data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+        
+           par(mar=c(4.0,3.0,1.0,5.5))	
+        plot(data$YEAR,data$LANDINGS,ylab=' ',type='h',xlim=xlim, xlab="Year", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
+        lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',density = 30,pch=21,col='steelblue4',lwd=4,lend=3)
+        par(new=T)
+        
+        	plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
+        	points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,size = 2,bg='black')
+        	axis(4)
+        	mtext("Effort ('000s Trap Hauls)",cex = 0.75, side=4, line = 3, outer = F, las = 0)		
+    	      	
+```
+
+
+```{r landingseffort2, include=TRUE, echo=FALSE, warning=FALSE, message=FALSE, comment = FALSE, error = FALSE,fig.cap="Time series of landings in tonnes (grey bars), and effort (solid black line with points). Data for 2019 is incomplete (blue bar, triangle). Note: Different scales used on both x and y-axis. Top row: left- LFA 31A, right – LFA 31B. Bottom row: left –LFA 32. Note: Different scales used on y-axis."}
+  
+par(mfrow=c(2,2))
+
+####LFA 31A####
+        d1 = data.frame(YEAR = land$YR, LANDINGS = land[,"LFA31A"])
+        d2 = subset(cpueData,LFA== "31A")
+        d2 = merge(data.frame(LFA=d2$LFA[1],YEAR=min(d2$YEAR):max(d2$YEAR)),d2,all.x=T)
+        data=fishData = merge(d2,d1) 
+        data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+        
+       
+        par(mar=c(1.5,5.5,2.0,3.0))	
+        plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
+        lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',density = 30,pch=21,col='steelblue4',lwd=4,lend=3)
+        par(new=T)
+        
+        	plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
+        	points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,size = 2,bg='black')
+        	axis(4)
+        	
+        	
+####LFA 31B####
+        d1 = data.frame(YEAR = land$YR, LANDINGS = land[,"LFA31B"])
+        d2 = subset(cpueData,LFA=="31B")
+        d2 = merge(data.frame(LFA=d2$LFA[1],YEAR=min(d2$YEAR):max(d2$YEAR)),d2,all.x=T)
+        data=fishData = merge(d2,d1) 
+        data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+        
+        par(mar=c(1.5,3.0,2.0,5.5))	
+        plot(data$YEAR,data$LANDINGS,ylab=' ',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
+        	lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',density = 30,pch=21,col='steelblue4',lwd=4,lend=3)
+        	par(new=T)
+        	
+        		plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
+        		points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,size = 2,bg='black')
+        		axis(4)
+        		mtext("Effort ('000s Trap Hauls)",cex = 0.75, side=4, line = 3, outer = F, las = 0)
+        		
+        		
+######LFA 32#####
+        d1 = data.frame(YEAR = land$YR, LANDINGS = land[,"LFA32"])
+        d2 = subset(cpueData,LFA==32)
+        d2 = merge(data.frame(LFA=d2$LFA[1],YEAR=min(d2$YEAR):max(d2$YEAR)),d2,all.x=T)
+        data=fishData = merge(d2,d1) 
+        data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+        
+        par(mar=c(4.0,5.5,1.0,3.0))	
+        plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab="Year", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
+        	lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',density = 30,pch=21,col='steelblue4',lwd=4,lend=3)
+        	par(new=T)
+        	
+        	plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
+        	points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,size = 2,bg='black')
+        	axis(4)      	
+        	mtext("Effort ('000s Trap Hauls)", cex = 0.75, side=4, line = 3, outer = F, las = 0)
+   
+```
+
+The 2019 landings for LFAs 27-32 are preliminary as there remains outstanding logbooks, and 2019 landings in LFA 27 do not include information from the Gulf. Landings in LFA 27 are on track with recent years, with 2018 being an all-time high for the area. In LFA 28, even with incomplete data the landings for 2019 already exceed recent years. Landings in LFA 29 and 30 remain comparable to previous years with 2018 being an all-time high for both areas (Figure 4). Landings in LFA 31A and 31B show all-time high in time series and LFA 32 are comparable to most recent years (Figure 5).
+
+### Recruitment Trap Catch Rates 
+
+The recruitment trap survey provides the best available information on the abundance of sub-legal size lobsters. It is also the only abundance data for LFAs 27-32 that is collected in a standardized manner. In this update, recruitment trap catch rates will not be included because 2019 data was not yet available at the time of update. The most recent calculation of recruitment trap catch rates can be found in the Assessment of Lobster in LFA 27-32 (DFO 2020).
+  
+### Bycatch
+
+Bycatch estimates are calculated using effort from logbook data for all LFAs except LFA 27. To estimate bycatch in LFA 27, effort was estimated from the combined Gulf Logbooks and Maritimes logbooks using the median CPUE and landings from the Gulf logs and logbook effort from the Maritimes Region. 2019 Gulf Landings in LFA 27 are calculated by adding estimated slip landings based on previous years to the logbook landings. 2019 Bycatch estimates for LFAs 27-32 are preliminary due to log records being incomplete with no bycatch estimate for LFA 29, 30 and 32 due to low sampling numbers or no data available.
+
+```{r, fig.cap="Bycatch Estimates for LFA 27"}
+knitr::include_graphics("LFA27Bycatch.png")
+```
+
+
+
+```{r, fig.cap="Bycatch Estimates for LFA 31A. 1 Not Specified (contains Longhorn and Shorthorn Sculpin)"}
+knitr::include_graphics("LFA31ABycatch.png")
+```
+
+
+
+```{r, fig.cap="Bycatch Estimates for LFA 31B. 1 Not Specified (contains Longhorn and Shorthorn Sculpin)"}
+knitr::include_graphics("LFA31BBycatch.png")
+```
+  
+  
+  
+  
