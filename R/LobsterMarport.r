@@ -64,7 +64,7 @@ for(j in 1:n) {
 		names(ogp) = c('Time','Y','X')
 		ogp$X = convert.dd.dddd(as.numeric(ogp$X))*-1
 		ogp$Y = convert.dd.dddd(as.numeric(ogp$Y))
-		if(is.null(station)) ogp$Station = strsplit(strsplit(file,"/")[[1]],"\\.")[[9]][1]		
+		if(is.null(station)) ogp$Station = strsplit(strsplit(file,"/")[[1]],"\\.")[[10]][1]		
 		if(!is.null(station)) ogp$Station = station
 		
 		}

@@ -17,13 +17,14 @@ simMolt = function(p,gdd=T,continuous.recruitment=F){
 	totalMolts = totalPop
 	moltProbs = totalPop
 	totalEggs = array(0,dim=c(p$nt,length(p$lens)))
-	
 	totalPop[1,1,1,1] = p$StartPop # start with
 	if(continuous.recruitment)totalPop[,1,1,1] = p$StartPop # start with
 
-	if(length(p$F) == 1) p$Fl = getFvec(p$F,p$LS,p$lens,p$window)
-		else p$Fl = p$F
-
+	if(length(p$F) == 1) {
+		p$Fl = getFvec(p$F,p$LS,p$lens,p$window)
+		} else {
+			p$Fl = p$F
+		}
 	p$Ml = rep(p$M,length(p$lens))
 
 	ty = p$timestep/365
