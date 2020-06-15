@@ -5,6 +5,7 @@ require(bio.utilities)
  setwd('/SpinDr/backup/bio_data/bio.lobster/LFA41SoakTimeData/')
 options(stringsAsFactors=F)
 #logs = read.csv('CW\ LOG_DATA\ 2016.11.15.csv')
+
 #logs$Y = round((((logs$ENT_LATITUDE /100/100-trunc(logs$ENT_LATITUDE/100/100))*100)/60)+trunc(logs$ENT_LATITUDE/100/100),4)
 #logs$X = round((((logs$ENT_LONGITUDE/100/100-trunc(logs$ENT_LONGITUDE/100/100))*100)/60)+trunc(logs$ENT_LONGITUDE/100/100),4)*-1 
 #obs  = read.csv('CW\ OBSERVER_DATA\ 2016.11.15.csv')
@@ -19,6 +20,7 @@ options(stringsAsFactors=F)
 ##match log strings to obs strings
 	out = list()
 #for(i in 1:nrow(mats)){
+
 #	
 #		j = mats[i,'TRIP_ID']
 #		k = mats[i,'MON_DOC_ID']
@@ -267,7 +269,7 @@ ads$NUM_HOOK_HAULR = ads$NUM_HOOK_HAUL/100
 
 	f1 = formula(EST_DISCARD_WT.10~ s(SOAK_DAYS) + s(TotnCod) + offset(NUM_HOOK_HAULR)) 
 	aa = gam(f1,data=ads, family = Tweedie(p=1.5,link=power(.1)),method='REML') ##
-	newd = data.frame(SOAK_DAYS=c(3:20),TotnCod=rep(1,18),NUM_HOOK_HAULR=rep(1,18))
+	newd = data.frame(SOAK_DAYS=c(3:20),TotnCod=rep(300,18),NUM_HOOK_HAULR=rep(1,18))
 
 
 set.seed(1000)
@@ -308,7 +310,7 @@ calc_RMSE <- function(pred, obs){
 
 #cross validation
 
-	xVTweedie <- function(data=sL, model=f1, prop.training=.85,nruns=100) {
+	xVTweedie <- function(data=ads, model=f1, prop.training=.85,nruns=100,response='EST_DISCARD_WT.10') {
 
 		nsamp = round(nrow(data)*prop.training)
 		vec = 1:nrow(data)
@@ -318,15 +320,22 @@ calc_RMSE <- function(pred, obs){
 					a = sample(vec,nsamp)
 					training = data[a,]
 					test = data[which(!vec %in% a),]
-					mod1 = gam(model,data=training,family = Tweedie(p=1.25,link=power(.1)))
+					mod1 = try(gam(model,data=training,family = Tweedie(p=1.25,link=power(.1))))
+					if(grepl('Error',mod1[1])) next()
 					test$pred = predict(mod1,newdata = test,type='response')
-					RMSE[i] =  calc_RMSE(test$pred,test$Lobs)
+					RMSE[i] =  calc_RMSE(test$pred,test[,response])
 					test.data[[i]] = test
 		}
 		return(RMSE)
 	}
+	f1 = formula(EST_DISCARD_WT.10~ s(SOAK_DAYS) + s(TotnCod) + offset(NUM_HOOK_HAULR)) 
+	f2 = formula(EST_DISCARD_WT.10~ s(SOAK_DAYS) + offset(NUM_HOOK_HAULR)) 
+	f3 = formula(EST_DISCARD_WT.10~ offset(NUM_HOOK_HAULR)) 
+	
+	xVresults = xVTweedie(model=f1)
+	xVresults2 = xVTweedie(model=f2)
+xVresults2 = xVTweedie(model=f2)
 
-	xVresults = xVTweedie()
 	mean
 
 

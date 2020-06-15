@@ -1,5 +1,6 @@
 #lfa41 soak times
-loadfunctions(c('lobster','utility'))
+require('bio.lobster')
+require('bio.utilities')
 lobster.db('logs41')
 
 logs41$FV_FISHED_DATETIME = as.Date(logs41$FV_FISHED_DATETIME)
@@ -8,7 +9,7 @@ yr = unique(year(logs41$FV_FISHED_DATETIME))
 
 logs41$YR = year(logs41$FV_FISHED_DATETIME)
 
-l15 = subset(logs41,YR==2015)
+l15 = subset(logs41,YR==2019)
 l = makePBS(l15,polygon=F)
 l = na.omit(l)
 

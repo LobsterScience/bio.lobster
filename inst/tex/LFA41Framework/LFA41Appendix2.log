@@ -1,0 +1,2637 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2017.5.15)  12 JUL 2017 22:57
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**LFA41Appendix2.tex
+(./LFA41Appendix2.tex
+LaTeX2e <2017/01/01> patch level 3
+Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
+(/usr/share/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2016/10/09 v1.0u Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(/usr/share/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 99.
+
+(/usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2017/01/12 v0.06k Graphics/color for pdfTeX
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+)
+(/usr/share/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+(/usr/share/texmf-dist/tex/latex/subfig/subfig.sty
+Package: subfig 2005/06/28 ver: 1.3 subfig package
+
+(/usr/share/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
+
+(/usr/share/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2016/05/22 v1.7-166 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 67.
+\captionmargin=\dimen105
+\captionmargin@=\dimen106
+\captionwidth=\dimen107
+\caption@tempdima=\dimen108
+\caption@indent=\dimen109
+\caption@parindent=\dimen110
+\caption@hangindent=\dimen111
+)
+\c@ContinuedFloat=\count88
+)
+\c@KVtest=\count89
+\sf@farskip=\skip43
+\sf@captopadj=\dimen112
+\sf@capskip=\skip44
+\sf@nearskip=\skip45
+\c@subfigure=\count90
+\c@subfigure@save=\count91
+\c@lofdepth=\count92
+\c@subtable=\count93
+\c@subtable@save=\count94
+\c@lotdepth=\count95
+\sf@top=\skip46
+\sf@bottom=\skip47
+)
+(/usr/share/texmf-dist/tex/latex/pdfcomment/pdfcomment.sty
+Package: pdfcomment 2016/06/13 pdfcomment.sty v2.4 - Josef Kleber (C) 2008-2012
+, 2015-2016
+
+(/usr/share/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
+
+(/usr/share/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks15
+\XKV@tempa@toks=\toks16
+)
+\XKV@depth=\count96
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
+\c@pc@count@i=\count97
+\c@pc@count@ii=\count98
+\c@pc@count@iii=\count99
+\c@pc@count@iv=\count100
+\pc@mathannot@box=\box26
+\pc@nullbox=\box27
+\pc@dima=\skip48
+\pc@dimb=\skip49
+\pc@Sposx=\skip50
+\pc@Sposy=\skip51
+\pc@Eposx=\skip52
+\pc@Eposy=\skip53
+\pc@column=\skip54
+\pc@box@width=\skip55
+\pc@box@height=\skip56
+\pc@box@depth=\skip57
+
+(/usr/share/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2017/01/02 v2.4 e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count101
+)
+(/usr/share/texmf-dist/tex/latex/datetime2/datetime2.sty
+Package: datetime2 2016/07/12 v1.5.2 (NLCT) date and time formats
+
+(/usr/share/texmf-dist/tex/latex/tracklang/tracklang.sty
+Package: tracklang 2017/03/25 v1.3.4 (NLCT) Track Languages
+
+(/usr/share/texmf-dist/tex/generic/tracklang/tracklang.tex)))
+(/usr/share/texmf-dist/tex/latex/oberdiek/zref-savepos.sty
+Package: zref-savepos 2016/05/21 v2.26 Module savepos for zref (HO)
+
+(/usr/share/texmf-dist/tex/latex/oberdiek/zref-base.sty
+Package: zref-base 2016/05/21 v2.26 Module base for zref (HO)
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+))
+(/usr/share/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+)
+(/usr/share/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/usr/share/texmf-dist/tex/latex/oberdiek/auxhook.sty
+Package: auxhook 2016/05/16 v1.4 Hooks for auxiliary files (HO)
+)
+Package zref Info: New property list: main on input line 759.
+Package zref Info: New property: default on input line 760.
+Package zref Info: New property: page on input line 761.
+)
+Package zref Info: New property list: savepos on input line 80.
+Package zref Info: New property: posx on input line 81.
+Package zref Info: New property: posy on input line 82.
+)
+\c@zref@unique=\count102
+
+(/usr/share/texmf-dist/tex/latex/oberdiek/refcount.sty
+Package: refcount 2016/05/16 v3.5 Data extraction from label references (HO)
+)
+(/usr/share/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/share/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2014/10/28 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count103
+\calc@Bcount=\count104
+\calc@Adimen=\dimen113
+\calc@Bdimen=\dimen114
+\calc@Askip=\skip58
+\calc@Bskip=\skip59
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count105
+\calc@Cskip=\skip60
+)
+(/usr/share/texmf-dist/tex/latex/marginnote/marginnote.sty
+Package: marginnote 2016/10/21 v1.2a non floating margin notes for LaTeX
+\c@mn@abspage=\count106
+)
+(/usr/share/texmf-dist/tex/latex/bezos/soulpos.sty
+Package: soulpos 2012/02/25 v1.0 Fancy underlining
+\ulp@subcnt=\count107
+\ulp@cnt=\count108
+\ulp@out=\write3
+\ulp@in=\read1
+\ulwidth=\dimen115
+)
+(/usr/share/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2017/03/14 v6.85a Hypertext links for LaTeX
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+Package: hobsub-hyperref 2016/05/16 v1.14 Bundle oberdiek, subset hyperref (HO)
+
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty
+Package: hobsub-generic 2016/05/16 v1.14 Bundle oberdiek, subset generic (HO)
+Package: hobsub 2016/05/16 v1.14 Construct package bundles (HO)
+Package hobsub Info: Skipping package `infwarerr' (already loaded).
+Package hobsub Info: Skipping package `ltxcmds' (already loaded).
+Package hobsub Info: Skipping package `ifluatex' (already loaded).
+Package: ifvtex 2016/05/16 v1.6 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+Package: intcalc 2016/05/16 v1.2 Expandable calculations with integers (HO)
+Package hobsub Info: Skipping package `ifpdf' (already loaded).
+Package hobsub Info: Skipping package `etexcmds' (already loaded).
+Package hobsub Info: Skipping package `kvsetkeys' (already loaded).
+Package hobsub Info: Skipping package `kvdefinekeys' (already loaded).
+Package hobsub Info: Skipping package `pdftexcmds' (already loaded).
+Package: pdfescape 2016/05/16 v1.14 Implements pdfTeX's escape features (HO)
+Package: bigintcalc 2016/05/16 v1.4 Expandable calculations on big integers (HO
+)
+Package: bitset 2016/05/16 v1.2 Handle bit-vector datatype (HO)
+Package: uniquecounter 2016/05/16 v1.3 Provide unlimited unique counter (HO)
+)
+Package hobsub Info: Skipping package `hobsub' (already loaded).
+Package: letltxmacro 2016/05/16 v1.5 Let assignment for LaTeX macros (HO)
+Package: hopatch 2016/05/16 v1.3 Wrapper for package hooks (HO)
+Package: xcolor-patch 2016/05/16 xcolor patch
+Package: atveryend 2016/05/16 v1.9 Hooks at the very end of document (HO)
+Package: atbegshi 2016/06/09 v1.18 At begin shipout hook (HO)
+Package hobsub Info: Skipping package `refcount' (already loaded).
+Package: hycolor 2016/05/16 v1.8 Color options for hyperref/bookmark (HO)
+)
+(/usr/share/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+(/usr/share/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+)
+\@linkdim=\dimen116
+\Hy@linkcounter=\count109
+\Hy@pagecounter=\count110
+
+(/usr/share/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2017/03/14 v6.85a Hyperref: PDFDocEncoding definition (HO)
+)
+\Hy@SavedSpaceFactor=\count111
+
+(/usr/share/texmf-dist/tex/latex/latexconfig/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+Package hyperref Info: Option `unicode' set `true' on input line 4374.
+
+(/usr/share/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2017/03/14 v6.85a Hyperref: PDF Unicode definition (HO)
+)
+(/usr/share/texmf-dist/tex/generic/oberdiek/stringenc.sty
+Package: stringenc 2016/05/16 v1.11 Convert strings between diff. encodings (HO
+)
+)
+Package hyperref Info: Hyper figures OFF on input line 4498.
+Package hyperref Info: Link nesting OFF on input line 4503.
+Package hyperref Info: Hyper index ON on input line 4506.
+Package hyperref Info: Plain pages OFF on input line 4513.
+Package hyperref Info: Backreferencing OFF on input line 4518.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4751.
+\c@Hy@tempcnt=\count112
+
+(/usr/share/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip10
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 5104.
+\XeTeXLinkMargin=\dimen117
+\Fld@menulength=\count113
+\Field@Width=\dimen118
+\Fld@charsize=\dimen119
+Package hyperref Info: Hyper figures OFF on input line 6358.
+Package hyperref Info: Link nesting OFF on input line 6363.
+Package hyperref Info: Hyper index ON on input line 6366.
+Package hyperref Info: backreferencing OFF on input line 6373.
+Package hyperref Info: Link coloring OFF on input line 6378.
+Package hyperref Info: Link coloring with OCG OFF on input line 6383.
+Package hyperref Info: PDF/A mode OFF on input line 6388.
+LaTeX Info: Redefining \ref on input line 6428.
+LaTeX Info: Redefining \pageref on input line 6432.
+\Hy@abspage=\count114
+\c@Item=\count115
+\c@Hfootnote=\count116
+)
+
+Package hyperref Message: Driver: hpdftex.
+
+(/usr/share/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2017/03/14 v6.85a Hyperref driver for pdfTeX
+\Fld@listcount=\count117
+\c@bookmark@seq@number=\count118
+
+(/usr/share/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
+Package: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+82.
+)
+\Hy@SectionHShift=\skip61
+)
+Package zref Info: New property list: pdfcomment on input line 2724.
+Package zref Info: New property: PCPDFOBJID on input line 2725.
+)
+(/usr/share/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2016/11/05 v2.16a AMS math features
+\@mathmargin=\skip62
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01 AMS text
+
+(/usr/share/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks17
+\ex@=\dimen120
+))
+(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen121
+)
+(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count119
+LaTeX Info: Redefining \frac on input line 213.
+\uproot@=\count120
+\leftroot@=\count121
+LaTeX Info: Redefining \overline on input line 375.
+\classnum@=\count122
+\DOTSCASE@=\count123
+LaTeX Info: Redefining \ldots on input line 472.
+LaTeX Info: Redefining \dots on input line 475.
+LaTeX Info: Redefining \cdots on input line 596.
+\Mathstrutbox@=\box28
+\strutbox@=\box29
+\big@size=\dimen122
+LaTeX Font Info:    Redeclaring font encoding OML on input line 712.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 713.
+\macc@depth=\count124
+\c@MaxMatrixCols=\count125
+\dotsspace@=\muskip11
+\c@parentequation=\count126
+\dspbrk@lvl=\count127
+\tag@help=\toks18
+\row@=\count128
+\column@=\count129
+\maxfields@=\count130
+\andhelp@=\toks19
+\eqnshift@=\dimen123
+\alignsep@=\dimen124
+\tagshift@=\dimen125
+\tagwidth@=\dimen126
+\totwidth@=\dimen127
+\lineht@=\dimen128
+\@envbody=\toks20
+\multlinegap=\skip63
+\multlinetaggap=\skip64
+\mathdisplay@stack=\toks21
+LaTeX Info: Redefining \[ on input line 2817.
+LaTeX Info: Redefining \] on input line 2818.
+)
+(/usr/share/texmf-dist/tex/latex/graphics/lscape.sty
+Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
+)
+(/usr/share/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2010/09/12 v5.6 Page Geometry
+\Gm@cnth=\count131
+\Gm@cntv=\count132
+\c@Gm@tempcnt=\count133
+\Gm@bindingoffset=\dimen129
+\Gm@wd@mp=\dimen130
+\Gm@odd@mp=\dimen131
+\Gm@even@mp=\dimen132
+\Gm@layoutwidth=\dimen133
+\Gm@layoutheight=\dimen134
+\Gm@layouthoffset=\dimen135
+\Gm@layoutvoffset=\dimen136
+\Gm@dimlist=\toks22
+)
+(/usr/share/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+Package: fancyhdr 2016/09/06 3.8 Extensive control of page headers and footers
+\fancy@headwidth=\skip65
+\f@ncyO@elh=\skip66
+\f@ncyO@erh=\skip67
+\f@ncyO@olh=\skip68
+\f@ncyO@orh=\skip69
+\f@ncyO@elf=\skip70
+\f@ncyO@erf=\skip71
+\f@ncyO@olf=\skip72
+\f@ncyO@orf=\skip73
+) (./LFA41Appendix2.aux)
+\openout1 = `LFA41Appendix2.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+
+(/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count134
+\scratchdimen=\dimen137
+\scratchbox=\box30
+\nofMPsegments=\count135
+\nofMParguments=\count136
+\everyMPshowfont=\toks23
+\MPscratchCnt=\count137
+\MPscratchDim=\dimen138
+\MPnumerator=\count138
+\makeMPintoPDFobject=\count139
+\everyMPtoPDFconversion=\toks24
+) (/usr/share/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+
+(/usr/share/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+)
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+38.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 456.
+
+(/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: subfig package v1.3 is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: End \AtBeginDocument code.
+Package marginnote Info: \pdfoutput not 0 or unimportant and
+(marginnote)             \pdflastxpos or \lastxpos available.
+(marginnote)             Extended position detection mode activated.
+Package soulpos Info: Loading soulutf8 on input line 25.
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/soulutf8.sty
+Package: soulutf8 2016/05/16 v1.1 Permit use of UTF-8 characters in soul (HO)
+
+(/usr/share/texmf-dist/tex/latex/soul/soul.sty
+Package: soul 2003/11/17 v2.4 letterspacing/underlining (mf)
+\SOUL@word=\toks25
+\SOUL@lasttoken=\toks26
+\SOUL@cmds=\toks27
+\SOUL@buffer=\toks28
+\SOUL@token=\toks29
+\SOUL@spaceskip=\skip74
+\SOUL@ttwidth=\dimen139
+\SOUL@uldp=\dimen140
+\SOUL@ulht=\dimen141
+))
+\AtBeginShipoutBox=\box31
+Package hyperref Info: Link coloring OFF on input line 25.
+
+(/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
+)
+\c@section@level=\count140
+)
+LaTeX Info: Redefining \ref on input line 25.
+LaTeX Info: Redefining \pageref on input line 25.
+LaTeX Info: Redefining \nameref on input line 25.
+
+(./LFA41Appendix2.out) (./LFA41Appendix2.out)
+\@outlinefile=\write4
+\openout4 = `LFA41Appendix2.out'.
+
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(85.35826pt, 443.57848pt, 85.35826pt)
+* v-part:(T,H,B)=(68.28644pt, 658.39711pt, 68.28644pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=443.57848pt
+* \textheight=658.39711pt
+* \oddsidemargin=13.08827pt
+* \evensidemargin=13.08827pt
+* \topmargin=-40.98355pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=11.0pt
+* \footskip=30.0pt
+* \marginparwidth=59.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/se-pdfdoc.def
+File: se-pdfdoc.def 2016/05/16 v1.11 stringenc: PDFDocEncoding
+)
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.1999.2
+004.pdf, id=4, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.1
+999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.19
+99.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41baseSummerRV.1999.2004.pdf used on input line 33.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.1
+999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.19
+99.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41baseSummerRV.1999.2004.pdf used on input line 33.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.1
+999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.19
+99.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41baseSummerRV.1999.2004.pdf used on input line 33.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.1
+999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.19
+99.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41baseSummerRV.1999.2004.pdf used on input line 33.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.2005.2
+009.pdf, id=10, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.2
+005.2009.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.20
+05.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41baseSummerRV.2005.2009.pdf used on input line 34.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.2010.2
+014.pdf, id=12, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.2
+010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.20
+10.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41baseSummerRV.2010.2014.pdf used on input line 35.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.2015.2
+015.pdf, id=14, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.2
+015.2015.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.20
+15.2015.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41baseSummerRV.2015.2015.pdf used on input line 36.
+(pdftex.def)             Requested size: 177.42868pt x 143.49835pt.
+
+
+LaTeX Warning: Float too large for page by 18.6339pt on input line 38.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} </backup/bio_data/bio.lob
+ster/figures/LengthFrequenciesLFA41baseSummerRV.1999.2004.pdf> </backup/bio_dat
+a/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.2005.2009.pdf> </backu
+p/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.2010.2014.pdf
+> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41baseSummerRV.2015
+.2015.pdf>]
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV.199
+9.2004.pdf, id=51, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerR
+V.1999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV
+.1999.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41polygonSummerRV.1999.2004.pdf used on input line 44.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerR
+V.1999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV
+.1999.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41polygonSummerRV.1999.2004.pdf used on input line 44.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerR
+V.1999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV
+.1999.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41polygonSummerRV.1999.2004.pdf used on input line 44.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerR
+V.1999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV
+.1999.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41polygonSummerRV.1999.2004.pdf used on input line 44.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV.200
+5.2009.pdf, id=57, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerR
+V.2005.2009.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV
+.2005.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41polygonSummerRV.2005.2009.pdf used on input line 45.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV.201
+0.2014.pdf, id=59, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerR
+V.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV
+.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41polygonSummerRV.2010.2014.pdf used on input line 46.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV.201
+5.2015.pdf, id=61, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerR
+V.2015.2015.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV
+.2015.2015.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41polygonSummerRV.2015.2015.pdf used on input line 47.
+(pdftex.def)             Requested size: 177.42868pt x 143.49835pt.
+
+
+LaTeX Warning: Float too large for page by 18.6339pt on input line 49.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[2 </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41polygonSummerRV.
+1999.2004.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41poly
+gonSummerRV.2005.2009.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenc
+iesLFA41polygonSummerRV.2010.2014.pdf> </backup/bio_data/bio.lobster/figures/Le
+ngthFrequenciesLFA41polygonSummerRV.2015.2015.pdf>]
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygonSumm
+erRV.1999.2004.pdf, id=96, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygo
+nSummerRV.1999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygon
+SummerRV.1999.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41adjacentpolygonSummerRV.1999.2004.pdf used on input line 56.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygo
+nSummerRV.1999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygon
+SummerRV.1999.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41adjacentpolygonSummerRV.1999.2004.pdf used on input line 56.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygo
+nSummerRV.1999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygon
+SummerRV.1999.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41adjacentpolygonSummerRV.1999.2004.pdf used on input line 56.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygo
+nSummerRV.1999.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygon
+SummerRV.1999.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41adjacentpolygonSummerRV.1999.2004.pdf used on input line 56.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygonSumm
+erRV.2005.2009.pdf, id=102, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygo
+nSummerRV.2005.2009.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygon
+SummerRV.2005.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41adjacentpolygonSummerRV.2005.2009.pdf used on input line 57.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygonSumm
+erRV.2010.2014.pdf, id=104, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygo
+nSummerRV.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygon
+SummerRV.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41adjacentpolygonSummerRV.2010.2014.pdf used on input line 58.
+(pdftex.def)             Requested size: 177.42868pt x 137.51088pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygonSumm
+erRV.2015.2015.pdf, id=106, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygo
+nSummerRV.2015.2015.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygon
+SummerRV.2015.2015.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41adjacentpolygonSummerRV.2015.2015.pdf used on input line 59.
+(pdftex.def)             Requested size: 177.42868pt x 143.49835pt.
+
+
+LaTeX Warning: Float too large for page by 18.6339pt on input line 61.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[3 </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygonS
+ummerRV.1999.2004.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesL
+FA41adjacentpolygonSummerRV.2005.2009.pdf> </backup/bio_data/bio.lobster/figure
+s/LengthFrequenciesLFA41adjacentpolygonSummerRV.2010.2014.pdf> </backup/bio_dat
+a/bio.lobster/figures/LengthFrequenciesLFA41adjacentpolygonSummerRV.2015.2015.p
+df>]
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.196
+9.1974.pdf, id=141, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1969.1974.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.199
+0.1994.pdf, id=143, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1990.1994.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.201
+0.2014.pdf, id=145, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.2010.2014.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1969.1974.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1990.1994.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.2010.2014.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1969.1974.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1990.1994.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.2010.2014.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1969.1974.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1990.1994.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.2010.2014.pdf used on input line 68.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 68--69
+[]| [][][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 68--69
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.197
+5.1979.pdf, id=157, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1975.1979.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1975.1979.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1975.1979.pdf used on input line 70.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.199
+5.1999.pdf, id=159, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1995.1999.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1995.1999.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1995.1999.pdf used on input line 71.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.201
+5.2015.pdf, id=161, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.2015.2015.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.2015.2015.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.2015.2015.pdf used on input line 72.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 70--73
+[][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--73
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.198
+0.1984.pdf, id=163, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1980.1984.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1980.1984.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1980.1984.pdf used on input line 74.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.200
+0.2004.pdf, id=165, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.2000.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.2000.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.2000.2004.pdf used on input line 75.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.198
+5.1989.pdf, id=167, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.1985.1989.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.1985.1989.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.1985.1989.pdf used on input line 76.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.200
+5.2009.pdf, id=169, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbas
+e.2005.2009.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase
+.2005.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringbase.2005.2009.pdf used on input line 77.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+
+LaTeX Warning: Float too large for page by 6.38559pt on input line 80.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[4 </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.
+1969.1974.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFS
+Cspringbase.1990.1994.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenc
+iesLFA41NEFSCspringbase.2010.2014.pdf> </backup/bio_data/bio.lobster/figures/Le
+ngthFrequenciesLFA41NEFSCspringbase.1975.1979.pdf> </backup/bio_data/bio.lobste
+r/figures/LengthFrequenciesLFA41NEFSCspringbase.1995.1999.pdf> </backup/bio_dat
+a/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.2015.2015.pdf> </ba
+ckup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringbase.1980.19
+84.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspring
+base.2000.2004.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA4
+1NEFSCspringbase.1985.1989.pdf> </backup/bio_data/bio.lobster/figures/LengthFre
+quenciesLFA41NEFSCspringbase.2005.2009.pdf>]
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestrati
+fied.1969.1974.pdf, id=247, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1969.1974.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestrati
+fied.1990.1994.pdf, id=249, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1990.1994.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestrati
+fied.2010.2014.pdf, id=251, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.2010.2014.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1969.1974.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1990.1994.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.2010.2014.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1969.1974.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1990.1994.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.2010.2014.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1969.1974.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1990.1994.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.2010.2014.pdf used on input line 86.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 86--87
+[]| [][][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--87
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestrati
+fied.1975.1979.pdf, id=263, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1975.1979.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1975.1979.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1975.1979.pdf used on input line 88.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestrati
+fied.1995.1999.pdf, id=265, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1995.1999.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1995.1999.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1995.1999.pdf used on input line 89.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestrati
+fied.2015.2015.pdf, id=267, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.2015.2015.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.2015.2015.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.2015.2015.pdf used on input line 90.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 88--91
+[][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--91
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestrati
+fied.1980.1984.pdf, id=269, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1980.1984.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1980.1984.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1980.1984.pdf used on input line 92.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestrati
+fied.2000.2004.pdf, id=271, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.2000.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.2000.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.2000.2004.pdf used on input line 93.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestrati
+fied.1985.1989.pdf, id=273, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1985.1989.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1985.1989.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.1985.1989.pdf used on input line 94.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestrati
+fied.2005.2009.pdf, id=275, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.2005.2009.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.2005.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.2005.2009.pdf used on input line 95.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+
+LaTeX Warning: Float too large for page by 6.38559pt on input line 98.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[5 </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestr
+atified.1969.1974.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesL
+FA41NEFSCspringrestratified.1990.1994.pdf> </backup/bio_data/bio.lobster/figure
+s/LengthFrequenciesLFA41NEFSCspringrestratified.2010.2014.pdf> </backup/bio_dat
+a/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestratified.1975.1979.p
+df> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrest
+ratified.1995.1999.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringrestratified.2015.2015.pdf> </backup/bio_data/bio.lobster/figur
+es/LengthFrequenciesLFA41NEFSCspringrestratified.1980.1984.pdf> </backup/bio_da
+ta/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringrestratified.2000.2004.
+pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringres
+tratified.1985.1989.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequencie
+sLFA41NEFSCspringrestratified.2005.2009.pdf>]
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestr
+atified.1969.1974.pdf, id=353, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1969.1974.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestr
+atified.1990.1994.pdf, id=355, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1990.1994.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestr
+atified.2010.2014.pdf, id=357, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.2010.2014.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1969.1974.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1990.1994.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.2010.2014.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1969.1974.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1990.1994.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.2010.2014.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1969.1974.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1990.1994.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.2010.2014.pdf used on input line 105.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 105--106
+[]| [][][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 105--106
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestr
+atified.1975.1979.pdf, id=369, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1975.1979.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1975.1979.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1975.1979.pdf used on input line 107.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestr
+atified.1995.1999.pdf, id=371, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1995.1999.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1995.1999.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1995.1999.pdf used on input line 108.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestr
+atified.2015.2015.pdf, id=373, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.2015.2015.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.2015.2015.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.2015.2015.pdf used on input line 109.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 107--110
+[][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 107--110
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestr
+atified.1980.1984.pdf, id=375, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1980.1984.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1980.1984.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1980.1984.pdf used on input line 111.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestr
+atified.2000.2004.pdf, id=377, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.2000.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.2000.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.2000.2004.pdf used on input line 112.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestr
+atified.1985.1989.pdf, id=379, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.1985.1989.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.1985.1989.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.1985.1989.pdf used on input line 113.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestr
+atified.2005.2009.pdf, id=381, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadj
+restratified.2005.2009.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjr
+estratified.2005.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCspringadjrestratified.2005.2009.pdf used on input line 114.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+
+LaTeX Warning: Float too large for page by 6.38559pt on input line 117.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[6 </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjre
+stratified.1969.1974.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenci
+esLFA41NEFSCspringadjrestratified.1990.1994.pdf> </backup/bio_data/bio.lobster/
+figures/LengthFrequenciesLFA41NEFSCspringadjrestratified.2010.2014.pdf> </backu
+p/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestratified
+.1975.1979.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEF
+SCspringadjrestratified.1995.1999.pdf> </backup/bio_data/bio.lobster/figures/Le
+ngthFrequenciesLFA41NEFSCspringadjrestratified.2015.2015.pdf> </backup/bio_data
+/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringadjrestratified.1980.1984
+.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCspringad
+jrestratified.2000.2004.pdf> </backup/bio_data/bio.lobster/figures/LengthFreque
+nciesLFA41NEFSCspringadjrestratified.1985.1989.pdf> </backup/bio_data/bio.lobst
+er/figures/LengthFrequenciesLFA41NEFSCspringadjrestratified.2005.2009.pdf>]
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1969.
+1974.pdf, id=458, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1969.1974.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1990.
+1994.pdf, id=460, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1990.1994.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2010.
+2014.pdf, id=462, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2
+010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.2010.2014.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1969.1974.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1990.1994.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2
+010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.2010.2014.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1969.1974.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1990.1994.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2
+010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.2010.2014.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1969.1974.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1990.1994.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2
+010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.2010.2014.pdf used on input line 125.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 125--126
+[]| [][][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 125--126
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1975.
+1979.pdf, id=474, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1975.1979.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+975.1979.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1975.1979.pdf used on input line 127.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1995.
+1999.pdf, id=476, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1995.1999.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+995.1999.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1995.1999.pdf used on input line 128.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2015.
+2015.pdf, id=478, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+2015.2015.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2
+015.2015.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.2015.2015.pdf used on input line 129.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 127--130
+[][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 127--130
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1980.
+1984.pdf, id=480, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1980.1984.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+980.1984.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1980.1984.pdf used on input line 131.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2000.
+2004.pdf, id=482, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+2000.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2
+000.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.2000.2004.pdf used on input line 132.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1985.
+1989.pdf, id=484, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+1985.1989.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+985.1989.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.1985.1989.pdf used on input line 133.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2005.
+2009.pdf, id=486, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.
+2005.2009.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2
+005.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallbase.2005.2009.pdf used on input line 134.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+
+LaTeX Warning: Float too large for page by 6.38559pt on input line 137.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[7 </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.19
+69.1974.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCf
+allbase.1990.1994.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesL
+FA41NEFSCfallbase.2010.2014.pdf> </backup/bio_data/bio.lobster/figures/LengthFr
+equenciesLFA41NEFSCfallbase.1975.1979.pdf> </backup/bio_data/bio.lobster/figure
+s/LengthFrequenciesLFA41NEFSCfallbase.1995.1999.pdf> </backup/bio_data/bio.lobs
+ter/figures/LengthFrequenciesLFA41NEFSCfallbase.2015.2015.pdf> </backup/bio_dat
+a/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1980.1984.pdf> </back
+up/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.2000.2004.p
+df> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallbase.1
+985.1989.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSC
+fallbase.2005.2009.pdf>]
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratifi
+ed.1969.1974.pdf, id=565, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1969.1974.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratifi
+ed.1990.1994.pdf, id=567, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1990.1994.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratifi
+ed.2010.2014.pdf, id=569, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.2010.2014.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1969.1974.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1990.1994.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.2010.2014.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1969.1974.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1990.1994.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.2010.2014.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1969.1974.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1990.1994.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.2010.2014.pdf used on input line 143.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 143--144
+[]| [][][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--144
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratifi
+ed.1975.1979.pdf, id=581, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1975.1979.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1975.1979.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1975.1979.pdf used on input line 145.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratifi
+ed.1995.1999.pdf, id=583, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1995.1999.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1995.1999.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1995.1999.pdf used on input line 146.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratifi
+ed.2015.2015.pdf, id=585, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.2015.2015.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.2015.2015.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.2015.2015.pdf used on input line 147.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 145--148
+[][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--148
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratifi
+ed.1980.1984.pdf, id=587, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1980.1984.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1980.1984.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1980.1984.pdf used on input line 149.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratifi
+ed.2000.2004.pdf, id=589, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.2000.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.2000.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.2000.2004.pdf used on input line 150.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratifi
+ed.1985.1989.pdf, id=591, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.1985.1989.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.1985.1989.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.1985.1989.pdf used on input line 151.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratifi
+ed.2005.2009.pdf, id=593, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestr
+atified.2005.2009.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestra
+tified.2005.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfallrestratified.2005.2009.pdf used on input line 152.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+
+LaTeX Warning: Float too large for page by 6.38559pt on input line 155.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[8 </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestrat
+ified.1969.1974.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA
+41NEFSCfallrestratified.1990.1994.pdf> </backup/bio_data/bio.lobster/figures/Le
+ngthFrequenciesLFA41NEFSCfallrestratified.2010.2014.pdf> </backup/bio_data/bio.
+lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratified.1975.1979.pdf> </ba
+ckup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratified.1
+995.1999.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSC
+fallrestratified.2015.2015.pdf> </backup/bio_data/bio.lobster/figures/LengthFre
+quenciesLFA41NEFSCfallrestratified.1980.1984.pdf> </backup/bio_data/bio.lobster
+/figures/LengthFrequenciesLFA41NEFSCfallrestratified.2000.2004.pdf> </backup/bi
+o_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallrestratified.1985.198
+9.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallres
+tratified.2005.2009.pdf>]
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestrat
+ified.1969.1974.pdf, id=671, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1969.1974.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestrat
+ified.1990.1994.pdf, id=673, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1990.1994.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestrat
+ified.2010.2014.pdf, id=675, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.2010.2014.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1969.1974.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1990.1994.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.2010.2014.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1969.1974.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1990.1994.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.2010.2014.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1969.1974.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1969.1974.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1969.1974.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1990.1994.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1990.1994.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1990.1994.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.2010.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.2010.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.2010.2014.pdf used on input line 162.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 162--163
+[]| [][][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestrat
+ified.1975.1979.pdf, id=687, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1975.1979.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1975.1979.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1975.1979.pdf used on input line 164.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestrat
+ified.1995.1999.pdf, id=689, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1995.1999.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1995.1999.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1995.1999.pdf used on input line 165.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestrat
+ified.2015.2015.pdf, id=691, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.2015.2015.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.2015.2015.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.2015.2015.pdf used on input line 166.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+Overfull \hbox (48.7871pt too wide) in paragraph at lines 164--167
+[][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 164--167
+
+ []
+
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestrat
+ified.1980.1984.pdf, id=693, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1980.1984.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1980.1984.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1980.1984.pdf used on input line 168.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestrat
+ified.2000.2004.pdf, id=695, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.2000.2004.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.2000.2004.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.2000.2004.pdf used on input line 169.
+(pdftex.def)             Requested size: 164.12186pt x 127.50256pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestrat
+ified.1985.1989.pdf, id=697, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.1985.1989.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.1985.1989.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1985.1989.pdf used on input line 170.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestrat
+ified.2005.2009.pdf, id=699, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjre
+stratified.2005.2009.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjres
+tratified.2005.2009.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.2005.2009.pdf used on input line 171.
+(pdftex.def)             Requested size: 164.12186pt x 134.07498pt.
+
+
+LaTeX Warning: Float too large for page by 6.38559pt on input line 174.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[9 </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrest
+ratified.1969.1974.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41NEFSCfalladjrestratified.1990.1994.pdf> </backup/bio_data/bio.lobster/figu
+res/LengthFrequenciesLFA41NEFSCfalladjrestratified.2010.2014.pdf> </backup/bio_
+data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestratified.1975.19
+79.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfallad
+jrestratified.1995.1999.pdf> </backup/bio_data/bio.lobster/figures/LengthFreque
+nciesLFA41NEFSCfalladjrestratified.2015.2015.pdf> </backup/bio_data/bio.lobster
+/figures/LengthFrequenciesLFA41NEFSCfalladjrestratified.1980.1984.pdf> </backup
+/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCfalladjrestratified.20
+00.2004.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41NEFSCf
+alladjrestratified.1985.1989.pdf> </backup/bio_data/bio.lobster/figures/LengthF
+requenciesLFA41NEFSCfalladjrestratified.2005.2009.pdf>]
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.2007.201
+4.pdf, id=776, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.200
+7.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.2007
+.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41dfogeorges.2007.2014.pdf used on input line 180.
+(pdftex.def)             Requested size: 266.14978pt x 208.29431pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.200
+7.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.2007
+.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41dfogeorges.2007.2014.pdf used on input line 180.
+(pdftex.def)             Requested size: 266.14978pt x 208.29431pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.200
+7.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.2007
+.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41dfogeorges.2007.2014.pdf used on input line 180.
+(pdftex.def)             Requested size: 266.14978pt x 208.29431pt.
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.200
+7.2014.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.2007
+.2014.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41dfogeorges.2007.2014.pdf used on input line 180.
+(pdftex.def)             Requested size: 266.14978pt x 208.29431pt.
+
+</backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.2015.201
+5.pdf, id=782, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.201
+5.2015.pdf Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.2015
+.2015.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/LengthFrequencies
+LFA41dfogeorges.2015.2015.pdf used on input line 181.
+(pdftex.def)             Requested size: 266.14978pt x 217.43013pt.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[10 </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorges.2007
+.2014.pdf> </backup/bio_data/bio.lobster/figures/LengthFrequenciesLFA41dfogeorg
+es.2015.2015.pdf>]
+</backup/bio_data/bio.lobster/figures/SW.Browns.1977.1987.noseason.pdf, id=803,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.1977.1987.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.1977.1987.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.1977.19
+87.noseason.pdf used on input line 195.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/SW.Browns.1988.1998.noseason.pdf, id=804,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.1988.1998.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.1988.1998.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.1988.19
+98.noseason.pdf used on input line 195.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.1977.1987.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.1977.1987.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.1977.19
+87.noseason.pdf used on input line 195.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.1988.1998.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.1988.1998.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.1988.19
+98.noseason.pdf used on input line 195.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.1977.1987.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.1977.1987.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.1977.19
+87.noseason.pdf used on input line 195.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.1988.1998.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.1988.1998.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.1988.19
+98.noseason.pdf used on input line 195.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.1977.1987.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.1977.1987.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.1977.19
+87.noseason.pdf used on input line 195.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.1988.1998.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.1988.1998.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.1988.19
+98.noseason.pdf used on input line 195.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/SW.Browns.1999.2003.noseason.pdf, id=806,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.1999.2003.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.1999.2003.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.1999.20
+03.noseason.pdf used on input line 196.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/SW.Browns.2004.2008.noseason.pdf, id=807,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.2004.2008.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.2004.2008.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.2004.20
+08.noseason.pdf used on input line 197.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/SW.Browns.2009.2013.noseason.pdf, id=808,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.2009.2013.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.2009.2013.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.2009.20
+13.noseason.pdf used on input line 198.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/SW.Browns.2014.2014.noseason.pdf, id=809,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SW.Browns.2014.2014.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SW.Browns.2014.2014.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SW.Browns.2014.20
+14.noseason.pdf used on input line 199.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/SE.Browns.1979.1991.noseason.pdf, id=810,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.1979.1991.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.1979.1991.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.1979.19
+91.noseason.pdf used on input line 209.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/SE.Browns.1995.2001.noseason.pdf, id=811,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.1995.2001.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.1995.2001.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.1995.20
+01.noseason.pdf used on input line 209.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.1979.1991.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.1979.1991.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.1979.19
+91.noseason.pdf used on input line 209.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.1995.2001.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.1995.2001.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.1995.20
+01.noseason.pdf used on input line 209.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.1979.1991.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.1979.1991.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.1979.19
+91.noseason.pdf used on input line 209.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.1995.2001.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.1995.2001.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.1995.20
+01.noseason.pdf used on input line 209.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.1979.1991.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.1979.1991.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.1979.19
+91.noseason.pdf used on input line 209.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.1995.2001.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.1995.2001.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.1995.20
+01.noseason.pdf used on input line 209.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/SE.Browns.2002.2007.noseason.pdf, id=813,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.2002.2007.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.2002.2007.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.2002.20
+07.noseason.pdf used on input line 210.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/SE.Browns.2008.2014.noseason.pdf, id=814,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.2008.2014.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.2008.2014.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.2008.20
+14.noseason.pdf used on input line 211.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/SE.Browns.2015.2015.noseason.pdf, id=815,
+ 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/SE.Browns.2015.2015.noseason.pdf Gra
+phic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/SE.Browns.2015.2015.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/SE.Browns.2015.20
+15.noseason.pdf used on input line 212.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/Georges.Basin.1977.2003.noseason.pdf, id=
+816, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/Georges.Basin.1977.2003.noseason.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Basin.1977.2003.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Basin.197
+7.2003.noseason.pdf used on input line 222.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/Georges.Basin.2005.2009.noseason.pdf, id=
+817, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/Georges.Basin.2005.2009.noseason.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Basin.2005.2009.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Basin.200
+5.2009.noseason.pdf used on input line 222.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Basin.1977.2003.noseason.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Basin.1977.2003.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Basin.197
+7.2003.noseason.pdf used on input line 222.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Basin.2005.2009.noseason.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Basin.2005.2009.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Basin.200
+5.2009.noseason.pdf used on input line 222.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Basin.1977.2003.noseason.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Basin.1977.2003.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Basin.197
+7.2003.noseason.pdf used on input line 222.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Basin.2005.2009.noseason.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Basin.2005.2009.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Basin.200
+5.2009.noseason.pdf used on input line 222.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Basin.1977.2003.noseason.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Basin.1977.2003.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Basin.197
+7.2003.noseason.pdf used on input line 222.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Basin.2005.2009.noseason.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Basin.2005.2009.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Basin.200
+5.2009.noseason.pdf used on input line 222.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/Georges.Basin.2010.2014.noseason.pdf, id=
+819, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/Georges.Basin.2010.2014.noseason.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Basin.2010.2014.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Basin.201
+0.2014.noseason.pdf used on input line 223.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/Georges.Basin.2015.2015.noseason.pdf, id=
+820, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/Georges.Basin.2015.2015.noseason.pdf
+ Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Basin.2015.2015.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Basin.201
+5.2015.noseason.pdf used on input line 224.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/Georges.Bank.1977.1981.noseason.pdf, id=8
+21, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.1977.1981.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.1977.1981.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.1977
+.1981.noseason.pdf used on input line 234.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/Georges.Bank.1987.1994.noseason.pdf, id=8
+22, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.1987.1994.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.1987.1994.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.1987
+.1994.noseason.pdf used on input line 234.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.1977.1981.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.1977.1981.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.1977
+.1981.noseason.pdf used on input line 234.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.1987.1994.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.1987.1994.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.1987
+.1994.noseason.pdf used on input line 234.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.1977.1981.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.1977.1981.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.1977
+.1981.noseason.pdf used on input line 234.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.1987.1994.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.1987.1994.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.1987
+.1994.noseason.pdf used on input line 234.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.1977.1981.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.1977.1981.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.1977
+.1981.noseason.pdf used on input line 234.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.1987.1994.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.1987.1994.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.1987
+.1994.noseason.pdf used on input line 234.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/Georges.Bank.1998.2002.noseason.pdf, id=8
+24, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.1998.2002.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.1998.2002.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.1998
+.2002.noseason.pdf used on input line 235.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/Georges.Bank.2003.2009.noseason.pdf, id=8
+25, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.2003.2009.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.2003.2009.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.2003
+.2009.noseason.pdf used on input line 236.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/Georges.Bank.2010.2014.noseason.pdf, id=8
+26, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.2010.2014.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.2010.2014.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.2010
+.2014.noseason.pdf used on input line 237.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+
+</backup/bio_data/bio.lobster/figures/Georges.Bank.2015.2015.noseason.pdf, id=8
+27, 505.89pt x 505.89pt>
+File: /backup/bio_data/bio.lobster/figures/Georges.Bank.2015.2015.noseason.pdf 
+Graphic file (type pdf)
+
+<use /backup/bio_data/bio.lobster/figures/Georges.Bank.2015.2015.noseason.pdf>
+Package pdftex.def Info: /backup/bio_data/bio.lobster/figures/Georges.Bank.2015
+.2015.noseason.pdf used on input line 238.
+(pdftex.def)             Requested size: 199.60895pt x 199.61208pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 242.
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[11 </backup/bio_data/bio.lobster/figures/SW.Browns.1977.1987.noseason.pdf> </b
+ackup/bio_data/bio.lobster/figures/SW.Browns.1988.1998.noseason.pdf> </backup/b
+io_data/bio.lobster/figures/SW.Browns.1999.2003.noseason.pdf> </backup/bio_data
+/bio.lobster/figures/SW.Browns.2004.2008.noseason.pdf> </backup/bio_data/bio.lo
+bster/figures/SW.Browns.2009.2013.noseason.pdf> </backup/bio_data/bio.lobster/f
+igures/SW.Browns.2014.2014.noseason.pdf>]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[12 </backup/bio_data/bio.lobster/figures/SE.Browns.1979.1991.noseason.pdf> </b
+ackup/bio_data/bio.lobster/figures/SE.Browns.1995.2001.noseason.pdf> </backup/b
+io_data/bio.lobster/figures/SE.Browns.2002.2007.noseason.pdf> </backup/bio_data
+/bio.lobster/figures/SE.Browns.2008.2014.noseason.pdf> </backup/bio_data/bio.lo
+bster/figures/SE.Browns.2015.2015.noseason.pdf>]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[13 </backup/bio_data/bio.lobster/figures/Georges.Basin.1977.2003.noseason.pdf>
+ </backup/bio_data/bio.lobster/figures/Georges.Basin.2005.2009.noseason.pdf> </
+backup/bio_data/bio.lobster/figures/Georges.Basin.2010.2014.noseason.pdf> </bac
+kup/bio_data/bio.lobster/figures/Georges.Basin.2015.2015.noseason.pdf>]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[14 </backup/bio_data/bio.lobster/figures/Georges.Bank.1977.1981.noseason.pdf> 
+</backup/bio_data/bio.lobster/figures/Georges.Bank.1987.1994.noseason.pdf> </ba
+ckup/bio_data/bio.lobster/figures/Georges.Bank.1998.2002.noseason.pdf> </backup
+/bio_data/bio.lobster/figures/Georges.Bank.2003.2009.noseason.pdf> </backup/bio
+_data/bio.lobster/figures/Georges.Bank.2010.2014.noseason.pdf> </backup/bio_dat
+a/bio.lobster/figures/Georges.Bank.2015.2015.noseason.pdf>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 242.
+
+(./LFA41Appendix2.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 242.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 242.
+Package rerunfilecheck Info: File `LFA41Appendix2.out' has not changed.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+ ) 
+Here is how much of TeX's memory you used:
+ 16203 strings out of 493013
+ 299406 string characters out of 6139317
+ 333404 words of memory out of 5000000
+ 19418 multiletter control sequences out of 15000+600000
+ 4561 words of font info for 17 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 44i,10n,77p,818b,520s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+Output written on LFA41Appendix2.pdf (14 pages, 461267 bytes).
+PDF statistics:
+ 987 PDF objects out of 1000 (max. 8388607)
+ 632 compressed objects within 7 object streams
+ 102 named destinations out of 1000 (max. 500000)
+ 1316 words of extra memory for PDF output out of 10000 (max. 10000000)
+
