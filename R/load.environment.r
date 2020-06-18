@@ -9,7 +9,7 @@ load.environment <- function(){
 #load_all('~/git/bio.spacetime')
       p$lfas=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34", "35", "36", "37", "38")
       p$spatial.domain = "canada.east"  # for temperature/habitat lookups
-      p = bio.lobster::spatial_parameters(p=p)
+      p = spatial_parameters(p=p)
     
 	  p$nw=10       #for temperature merge
 return(p)
