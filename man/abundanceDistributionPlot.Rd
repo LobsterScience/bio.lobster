@@ -4,8 +4,12 @@
 \alias{abundanceDistributionPlot}
 \title{abundanceDistributionPlot}
 \usage{
-abundanceDistributionPlot(x, m = NULL,
-  fp = project.figuredirectory("bio.lobster"), fname)
+abundanceDistributionPlot(
+  x,
+  m = NULL,
+  fp = project.figuredirectory("bio.lobster"),
+  fname
+)
 }
 \arguments{
 \item{\code{x}}{:the output file from nefsc.analysis or dfo.rv.analysis}

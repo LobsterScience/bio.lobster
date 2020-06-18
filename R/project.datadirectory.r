@@ -1,4 +1,4 @@
-
+#' @export
 
 project.datadirectory = function(..., alternate.directory=NULL) {
   

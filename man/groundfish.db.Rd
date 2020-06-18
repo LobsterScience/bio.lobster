@@ -4,8 +4,7 @@
 \alias{groundfish.db}
 \title{groundfish.db.r}
 \usage{
-groundfish.db(DS = "gscat.odbc.redo", p = NULL, taxa = "all",
-  datayrs = NULL)
+groundfish.db(DS = "gscat.odbc.redo", p = NULL, taxa = "all", datayrs = NULL)
 }
 \arguments{
 \item{\code{DS}}{:the selection of analysis, options include \code{stratified.estimates}}

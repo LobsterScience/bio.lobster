@@ -17,4 +17,3 @@ convert.dd.dddd
 \author{
 Brad Hubley
 }
-

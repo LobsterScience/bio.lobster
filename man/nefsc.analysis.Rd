@@ -4,8 +4,13 @@
 \alias{nefsc.analysis}
 \title{nefsc.analysis}
 \usage{
-nefsc.analysis(DS = "stratified.estimates", out.dir = "bio.lobster",
-  p = p, ip = NULL, save = T)
+nefsc.analysis(
+  DS = "stratified.estimates",
+  out.dir = "bio.lobster",
+  p = p,
+  ip = NULL,
+  save = T
+)
 }
 \arguments{
 \item{\code{DS}}{:the selection of analysis, options include \code{stratified.estimates}}

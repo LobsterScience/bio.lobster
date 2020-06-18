@@ -4,8 +4,13 @@
 \alias{dfo.rv.analysis}
 \title{dfo.rv.analysis}
 \usage{
-dfo.rv.analysis(DS = "stratified.estimates", out.dir = "bio.lobster",
-  p = p, ip = NULL, save = T)
+dfo.rv.analysis(
+  DS = "stratified.estimates",
+  out.dir = "bio.lobster",
+  p = p,
+  ip = NULL,
+  save = T
+)
 }
 \arguments{
 \item{\code{DS}}{:the selection of analysis, options include \code{stratified.estimates}}

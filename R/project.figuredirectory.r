@@ -1,4 +1,4 @@
-
+#' @export
 
 project.figuredirectory = function(..., alternate.directory=NULL) {
   
