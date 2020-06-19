@@ -12,16 +12,24 @@ anc = bnamR(redo=F)
 #shrinking LFA27-32 to 100m iso
 require(PBSmapping)
 load(file='/SpinDr/backup/bio_data/bio.lobster/data/maps/LFA27-33100mIsobath.rdata') #Isob100 the 100 m isobath for 27-33
+load(file='/SpinDr/backup/bio_data/bio.lobster/data/maps/iso100.rdata') #Isob100 the 100 m isobath for 27-33
+Isob100=g #full area
 	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
 		LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
+		sLFAs = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","sGSLLFAPolys.csv"))
+		sLFAs$X.1 = NULL
+
+		L = LFAs = rbind(LFAs,sLFAs)
 		out=list()
 		j=0
-		io = c(27,29,30,311,312,32,33,34,35,36,38)
+		io = c(23,24,25,261,262,27,29,30,311,312,32,33,34,35,36,38)
 for(i in io){
 			j = j+1
 			ij = subset(LFAs,PID==i)
-			if(i<33 | i >300){
+			if(i %in% c(24,261,262,27,29,30,311,312,32)){
 			a = joinPolys(ij,Isob100,operation='INT')
+			if(i != 27) a = subset(a,SID==1)
+			if(i == 27) a = subset(a,SID==5)
 			} else {
 			a = ij	
 			}
@@ -31,6 +39,7 @@ for(i in io){
 
 	LFAs = do.call(rbind,out)
 LFAs$PID = LFAs$PID+LFAs$LFA
+
 Lu = as.data.frame(unique(cbind(LFAs$PID, LFAs$LFA)))
 names(Lu) = c('PID','LFA')
 hg = findPolys(anc$locsP,LFAs)
@@ -52,6 +61,7 @@ for(i in io){
 		k = anc$bTs[which(anc$bTs[,1] %in% h$EID),]
 		outBnam[[m]]=k[,2:ncol(k)]
 		g = subset(ahra,LFA == i)
+		if(nrow(g)<1) next()
  		g$id = paste(g$mon,g$yr,sep='--')
  		sd = aggregate(TEMPERATURE~id,data=g,FUN=length)
  		sds = subset(sd,TEMPERATURE>30)
@@ -87,6 +97,50 @@ dev.off()
  a = as.data.frame(cbind(io,do.call(rbind,lapply(outBnam,mean))))
  names(a) = c('LFA','bt')
 
+#seasonal cycles within each outBnam
+l = length(outBnam)
+ts = anc$timeS
+out = list()
+
+for(i in 1:l){
+	o = outBnam[[i]]
+	s = seq(1,337,by=12)
+	m=0
+	t=c()
+		for(j in 1:12){	
+			t=c(t,mean(o[,s]))
+			s=s+1
+		}
+	out[[i]]=t
+}
+os  = as.data.frame(do.call(rbind,out))
+matplot(x=1:12,t(os),type='l')
+rownames(os)=io		
+names(os) = month(1:12,label=T)
+write.csv(os,file='~/tmp/BnamClimatology.csv')
+
+###time series trends within lFA
+
+l = length(outBnam)
+ts = anc$timeS
+out = list()
+
+for(i in 1:l){
+	o = outBnam[[i]]
+	ioi = apply(o,2,mean)
+	op = decompose(ts(ioi,frequency=12),'additive')
+	out[[i]] = op$trend
+	}
+
+out = do.call(rbind,out)
+rownames(os)=io		
+write.csv(os,file='~/tmp/Bnamtrends.csv')
+
+
+
+
+###
+
 	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
 	LobsterMap('all')
 at = seq(1,8,length=50)
@@ -101,35 +155,3 @@ a$PID = a$LFA
 addPolys(LFAs,polyProps=a)
 contLegend("topright",lvls=at,Cont.data=cont.lst$Cont.data,title="#/square km",inset=0.02,cex=0.8,bg='white')
 	
-
-#trying sf
-library(sf) 	
-library(magrittr)
-projcrs <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
-
-			df <- st_as_sf(x = anc$locsP,                         
-			           coords = c("X", "Y"),
-			           crs = projcrs)
-
-			bts = anc$bTs
-
-			p0 = st_polygon(list(as.matrix(l348[,c('X','Y')])))
-			p1 = st_sfc(p0)
-			st_crs(p1) <- projcrs
-
-			ints = st_intersects(p0,df)
-
-			df[which(df$EID %in% ints[[1]]),]
-
-			plot(df[which(df$EID %in% ints[[1]]),'Depth'])
-
-			a = bts[which(bts[,1] %in% ints[[1]]),]
-			#plot the results
-				matplot(x=anc$timeS,t(a[,2:ncol(a)]),type='l')
-
-			#some highly variable 
-				vA = a[unique(which(a[,2:ncol(a)]>15,arr.ind=T)[,1]),1]
-			g = df %>% subset(.,EID %in% vA)
-
-
-plot(df[which(df$EID %in% ints[[1]]),'Depth'], add=T,pch=16,col='red')

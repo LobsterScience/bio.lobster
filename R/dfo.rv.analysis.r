@@ -132,6 +132,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             iy = which(year(set$sdate) %in% yr)
             iv = which(cas$spec==2550)
 pi='base'
+
         if(p$define.by.polygons) {
                if(p$area=='LFA41') {
                 l = l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))

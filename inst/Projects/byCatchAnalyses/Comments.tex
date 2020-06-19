@@ -1,0 +1,113 @@
+
+%%% Preamble
+\documentclass[paper=a4, fontsize=11pt]{scrartcl}	% Article class of KOMA-script with 11pt font and a4 format
+\usepackage[T1]{fontenc}
+\usepackage{fourier}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[english]{babel}															% English language/hyphenation
+\usepackage[protrusion=true,expansion=true]{microtype}				% Better typography
+\usepackage{amsmath,amsfonts,amsthm}										% Math packages
+\usepackage[pdftex]{graphicx}														% Enable pdflatex
+\usepackage{url}
+
+
+%%% Custom section*ing (sectsty package)
+\usepackage{sectsty}												% Custom section*ing (see below)
+\allsectionsfont{\centering \normalfont\scshape}	% Change font of al section* commands
+
+
+%%% Custom headers/footers (fancyhdr package)
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+\fancyhead{}														% No page header
+\fancyfoot[L]{\small {ByCatch Analyses}}		% You may remove/edit this line 
+\fancyfoot[C]{}													% Empty
+\fancyfoot[R]{\thepage}									% Pagenumbering
+\renewcommand{\headrulewidth}{0pt}			% Remove header underlines
+\renewcommand{\footrulewidth}{0pt}				% Remove footer underlines
+\setlength{\headheight}{13.6pt}
+
+
+%%% Equation and float numbering
+\numberwithin{equation}{section}		% Equationnumbering: section*.eq#
+\numberwithin{figure}{section}			% Figurenumbering: section*.fig#
+\numberwithin{table}{section}				% Tablenumbering: section*.tab#
+
+
+%%% Maketitle metadata
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} 	% Horizontal rule
+
+\title{
+		%\vspace{-1in} 	
+		\usefont{OT1}{bch}{b}{n}
+		\normalfont \normalsize \textsc{Outline of Bycatch Analysis} \\ [25pt]
+		\horrule{0.5pt} \\[0.4cm]
+		\huge Review: \emph{Lobster Fishery Bycatch} \\
+		\horrule{2pt} \\[0.5cm]
+}
+\author{
+		\normalfont 								\normalsize
+        Adam Cook\\[-3pt]		\normalsize
+        \today
+}
+\date{}
+
+
+%%% Begin document
+\begin{document}
+\maketitle
+\section*{Goals and Considerations}
+
+Need to develop methodologies to incorporate the various data streams from the lobster fishery to estimate bycatch. There have been a number of one-off projects or changing protocols that make the data integration into a large data set difficult. There are a number of issues / sub issues that need to be identified and defined when completing these analyses.
+
+\section*{Outputs}
+\begin{enumerate}
+	\item Total bycatch by species and area.
+	\item Bycatch surfaces for each species (and perhaps time).
+	\item Proportion of bycatch species at size (impacts of lobster fishery on size categories)--might need to be identified by area and season.
+
+\end{enumerate}
+\section{Factors to Consider}
+\begin{enumerate}
+	\item Soak time
+		\begin{itemize}
+			\item The length of time a trap is set (or soaking) will influence the catches in the trap. Soak times are typically related to maximizing catch. Lobsters fisheries have, by regulation, a 72 hour maximum soak time. Occaisionally, soak times can be longer. One important question is, what impact does the longer soak time have on bycatch. 
+		\end{itemize}
+		\item Time period (annual or seasonal)
+		\begin{itemize}
+			\item The time period over which the data are collected will influence the bycatch. That is, in years (or time blocks) where species X is in high abundance and is available to lobster traps there is a higher likelihood of higher bycatch estimates for that species.
+			\item Seasonal variations in species availability and distribution relative to fishing effort will influence bycatch rates.
+		\end{itemize}
+			\item Data collection protocols
+			The base sampling unit is the trap, and there are multiple factors that will affect catches at the trap level (i.e. what is in the trap (saturation), where the trap is on the sting (first and last typically don't catch as well), are all traps made of same material/dimensions?)
+		\begin{itemize}
+			\item How was the data collected? Was it aggregate across a string (i.e. can't get to trap level info)? Do we know the proportion of empty traps (will affect the distribution of data)? 
+		\end{itemize}
+		\item More....
+				
+	\end{enumerate}
+
+\section{Data Sources}
+	SAMCODE
+		\begin{itemize}
+			\item{ISDB} – data does not include empty traps 
+			\item{01IInshore}
+			\item{05ITagging}
+			\item{06IMidshore Sampling }
+			\item{07IOffshore Sampling }	
+			\item{09IIndustry Sample }
+			\item{12IBlack Point Ocean Disposal exp }
+			\item{14IData not collected by trap }
+			\item{15IPetitcodiac Sampling }
+			\item{17IMaturity Sampling }
+			\item{18IDFO-FSRS }
+			\item{19ILFA 27 Management Board }
+			\item{20IESFPA }
+			\item{21IGCIFA }
+			\item{22IOut of Season }
+			\item{23IEA-MINAS }
+			\item{ISDBISDB }
+			\item{BYCATCH _PROGRAM }
+		\end{itemize}
+
+\end{document}

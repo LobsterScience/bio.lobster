@@ -19,18 +19,18 @@ CPUEmodel=function(mf,CPUE, combined=F,lfa,t=8,d=25){
     # create log traps
     CPUE$logTRAPS=log(CPUE$NUM_OF_TRAPS)
     CPUE$logWEIGHT=log(CPUE$WEIGHT_KG)
-  
-
+ 
     if(combined==F){
      G = glm(mf , offset= logTRAPS, family=gaussian(link='identity'),data = CPUE)
       
       pData=with(G$data,data.frame(fYEAR=sort(unique(fYEAR)),TEMP= t,DOS=d,logTRAPS=log(1)))
       PG = glmCIs(G,pData)
-    
         pData$YEAR = as.numeric(as.character(pData$fYEAR))
-        pData$mu = exp(PG$fit_resp)
-        pData$ub = exp(PG$upr)
-        pData$lb = exp(PG$lwr)
+        #bias correction
+        log.lin.sig <- summary(G)$dispersion/2
+        pData$mu = exp(PG$fit_resp+log.lin.sig)
+        pData$ub = exp(PG$upr+log.lin.sig)
+        pData$lb = exp(PG$lwr+log.lin.sig)
         output = list(model=G,pData=pData,mData=CPUE)
         save( output, file=file.path( fn.root, paste0(lfa,"glm.rdata")), compress=T)
      

@@ -4,18 +4,46 @@
 \alias{LobsterMap}
 \title{LobsterMap}
 \usage{
-LobsterMap(area = "custom", ylim = c(40, 52), xlim = c(-74, -47),
-  save = F, fname = "LobsterMap", mapRes = "HR",
-  land.col = "wheat", title = "", nafo = NULL, boundaries = "LFAs",
-  bathy.source = "topex", isobaths = seq(100, 1000, 100),
-  bathcol = rgb(0, 0, 1, 0.1), topolines = NULL, topocol = rgb(0.8,
-  0.5, 0, 0.2), points.lst = NULL, pt.cex = 1, lines.lst = NULL,
-  poly.lst = NULL, contours = NULL, image.lst = NULL,
-  color.fun = tim.colors, zlim, grid = NULL, stippling = F,
-  lol = F, labels = "lfa", labcex = 1.5, LT = T, plot.rivers = T,
-  addSummerStrata = F, addsubareas = F, subsetSummerStrata = NULL,
-  addGeorgesStrata = F, addAmericanStrata = F, addGrids = T,
-  land.only = F, ...)
+LobsterMap(
+  area = "custom",
+  ylim = c(40, 52),
+  xlim = c(-74, -47),
+  save = F,
+  fname = "LobsterMap",
+  mapRes = "HR",
+  land.col = "wheat",
+  title = "",
+  nafo = NULL,
+  boundaries = "LFAs",
+  bathy.source = "topex",
+  isobaths = seq(100, 1000, 100),
+  bathcol = rgb(0, 0, 1, 0.1),
+  topolines = NULL,
+  topocol = rgb(0.8, 0.5, 0, 0.2),
+  points.lst = NULL,
+  pt.cex = 1,
+  lines.lst = NULL,
+  poly.lst = NULL,
+  contours = NULL,
+  image.lst = NULL,
+  color.fun = tim.colors,
+  zlim,
+  grid = NULL,
+  stippling = F,
+  lol = F,
+  labels = "lfa",
+  labcex = 1.5,
+  LT = T,
+  plot.rivers = T,
+  addSummerStrata = F,
+  addsubareas = F,
+  subsetSummerStrata = NULL,
+  addGeorgesStrata = F,
+  addAmericanStrata = F,
+  addGrids = T,
+  land.only = F,
+  ...
+)
 }
 \arguments{
 \item{area}{= 'custom' where xlim & ylim are specified or select from area list below}
@@ -26,7 +54,7 @@ LobsterMap(area = "custom", ylim = c(40, 52), xlim = c(-74, -47),
 
 \item{boundaries}{= for ploting specific management boundaries}
 
-\item{bathcol}{= isobath line color, default is transparent blue}
+\item{bathcol}{= topolines line color, default is transparent brown}
 
 \item{topolines}{= plots topographic lines for specified elevations from topex data}
 
@@ -51,8 +79,6 @@ LobsterMap(area = "custom", ylim = c(40, 52), xlim = c(-74, -47),
 \item{lol}{= adds water colored border to coastline (purely for visual effect)}
 
 \item{isobath}{= plots bathymetry lines for specified depths from topex data}
-
-\item{bathcol}{= topolines line color, default is transparent brown}
 }
 \description{
 LobsterMap

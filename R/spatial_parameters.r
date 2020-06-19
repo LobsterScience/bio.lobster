@@ -1,3 +1,4 @@
+#' @export
 
 spatial_parameters = function( p=NULL, type=NULL ) {
 
