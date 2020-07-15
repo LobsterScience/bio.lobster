@@ -1,17 +1,19 @@
-
 require(bio.survey)
 require(bio.lobster)
-require(bio.groundfish)
-
+require(lubridate)
+require(devtools)
+require(bio.utilities)
+require(PBSmapping)
+la()
 p = bio.lobster::load.environment()
 p$libs = NULL
 ff = "LFA35-38Assessment"
-fp1 = file.path(project.datadirectory('bio.lobster'),"analysis","LFA35-38Assessment")
+fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 dir.create(fpf1,showWarnings=F)
 dir.create(fp1,showWarnings=F)
 p1 = p
-p1$yrs = 1969:2019
+p1$yrs = 1970:2019
 
 stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
                 p$series =c('summer')

@@ -29,7 +29,7 @@ fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
         p$runs = p$runs[order(p$runs$v),]
 
 aout= groundfish.analysis(DS='stratified.estimates.redo',out.dir = 'bio.lobster',p=p)
-write.csv(aout,file=file.path(fpf1,'LobPredators35-38.csv')
+write.csv(aout,file=file.path(fpf1,'LobPredators35-38.csv'))
                         p$ylim = NULL
               				  p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
