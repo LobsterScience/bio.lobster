@@ -5,7 +5,11 @@
 #	 _____ `,-----%%%%% \3
 #	 `>___;- |}}}	 
 #           
- 
+ require(bio.lobster)
+ require(devtools)
+ require(lubridate)
+ require(bio.utilities)
+ require(SpatialHub)
 	p = bio.lobster::load.environment()
 	la()
 
@@ -164,6 +168,8 @@
 		recruit =  FSRSModelResultsRecruit$pData
 		recruit$Area = 34
 fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment")
+		write.csv(recruit, file=file.path(fpf1,'FSRSRecruit.csv'))
+
 
  	 png(file=file.path(fpf1,'FSRSLFA34Recruitment.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
  	 with(recruit,plot(YEAR,median,pch=16,xlab='Year',ylab='Recruit abundance',ylim=c(0,5)))
@@ -200,8 +206,174 @@ fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment")
 
 	# plot
 	x11(width=8,height=5)
-	FisheryPlot(fishData[,c("YEAR","LANDINGS","EFFORT2")],lfa = 34,fd=figdir)
+	FisheryPlot(fishData[,c("YEAR","LANDINGS","EFFORT2")],lfa = 34,fd=figdir, preliminary=nrow(fishData), units='kt')
 
 
 
 # Contextual Indicators #############
+
+
+##Recruits
+ff = "LFA34Assessment"
+fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
+fpf = fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+
+Sp = read.csv(file=file.path(fpf,paste('LFA34-NEFSCSpringrecruits.csv',sep="-")))
+DF = read.csv(file=file.path(fpf,paste('LFA34-DFOrecruits.csv',sep="-")))
+Fa = read.csv(file=file.path(fpf,paste('LFA34-NEFSCfallrecruits.csv',sep="-")))
+FS = read.csv(file=file.path(fpf1,'FSRSRecruit.csv'))
+
+fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019")
+
+load(file=file.path(project.datadirectory('bio.lobster'),'data','LFA3438Framework','ScallopSurveyIndicators.rdata'))
+
+SFA29 = ScallopSurveyIndicatorsF34
+yrs29=as.numeric(row.names(SFA29))
+
+
+
+IL = read.csv(file=file.path(fpf1,'ILTSRecruitN.csv'))
+png(file=file.path(fpf,'recruitabund.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
+par(mfrow=c(3,2), mar=c(4,4,2,1))
+
+with(Sp,plot(yr,n.yst,pch=16,xlab='Year',ylab = 'NEFSC Spring Recruit Abundance',ylim=c(0,15)))
+with(Sp, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(Sp,lines(yr,runmed(n.yst,3),lwd=2, col='salmon'))
+
+
+with(Fa,plot(yr,n.yst,pch=16,xlab='Year',ylab = 'NEFSC Fall Recruit Abundance',ylim=c(0,35)))
+with(Fa, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(Fa,lines(yr,runmed(n.yst,3),lwd=2, col='salmon'))
+
+
+with(DF,plot(yr,n.yst,pch=16,xlab='Year',ylab = 'DFO RV Recruit Abundance',ylim=c(0,15)))
+with(DF, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(DF,lines(yr,runmed(n.yst,3),lwd=2, col='salmon'))
+
+
+with(SFA29,plot(yrs29,R1.ab.f34,pch=16,xlab='Year',ylab = 'Scallop Survey Recruit Abundance'))
+with(SFA29,lines(yrs29,runmed(R1.ab.f34,3),lwd=2, col='salmon'))
+
+with(IL,plot(Year,B,pch=16,xlab='Year',ylab = 'ILTS Recruit Abundance'))
+with(IL, arrows(Year, y0=lB, y1=uB, length=0))
+with(IL,lines(Year,runmed(B,3),lwd=2, col='salmon'))
+
+
+with(FS,plot(YEAR,mu,pch=16,xlab='Year',ylab = 'FSRS Recruit Abundance',ylim=c(1,5.75)))
+with(FS, arrows(YEAR, y0=lb, y1=ub, length=0))
+with(FS,lines(YEAR,runmed(mu,3),lwd=2, col='salmon'))
+dev.off()
+
+#Contextual 1
+ff = "LFA34Assessment"
+fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
+fpf = fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+
+Sp = read.csv(file=file.path(fpf,paste('LFA34-NEFSCSpringtotalabund.csv',sep="-")))
+DF = read.csv(file=file.path(fpf,paste('LFA34-DFOtotalabund.csv',sep="-")))
+Fa = read.csv(file=file.path(fpf,paste('LFA34-NEFSCfalltotalabund.csv',sep="-")))
+
+
+png(file=file.path(fpf,'Contextual1.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
+par(mfrow=c(2,3), mar=c(4,4,2,1))
+
+with(Sp,plot(yr,n.yst,pch=16,xlab='Year',ylab = 'NEFSC Spring Total Abundance'))
+with(Sp, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(Sp,lines(yr,runmed(n.yst,3),lwd=2, col='salmon'))
+
+
+with(Fa,plot(yr,n.yst,pch=16,xlab='Year',ylab = 'NEFSC Fall Total Abundance'))
+with(Fa, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(Fa,lines(yr,runmed(n.yst,3),lwd=2, col='salmon'))
+
+
+with(DF,plot(yr,n.yst,pch=16,xlab='Year',ylab = 'DFO RV Total Abundance'))
+with(DF, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(DF,lines(yr,runmed(n.yst,3),lwd=2, col='salmon'))
+
+Sp = read.csv(file=file.path(fpf,paste('LFA34-NEFSCSpringtemperature.csv',sep="-")))
+DF = read.csv(file=file.path(fpf,paste('LFA34-DFOtemperature.csv',sep="-")))
+Fa = read.csv(file=file.path(fpf,paste('LFA34-NEFSCfalltemperature.csv',sep="-")))
+
+
+with(Sp,plot(yr,n.yst,pch=16,xlab='Year',ylab = 'NEFSC Spring Temperature'))
+with(Sp, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(Sp,lines(yr,runmed(n.yst,3),lwd=2, col='salmon'))
+
+
+with(Fa,plot(yr,n.yst,pch=16,xlab='Year',ylab = 'NEFSC Fall Temperature'))
+with(Fa, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(Fa,lines(yr,runmed(n.yst,3),lwd=2, col='salmon'))
+
+
+with(DF,plot(yr,n.yst,pch=16,xlab='Year',ylab = 'DFO RV Temperature'))
+with(DF, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(DF,lines(yr,runmed(n.yst,3),lwd=2, col='salmon'))
+dev.off()
+
+
+#Contextual 2
+ff = "LFA34Assessment"
+fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
+fpf = fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+
+Sp = read.csv(file=file.path(fpf,paste('LFA34-NEFSCSpringtotalabund.csv',sep="-")))
+DF = read.csv(file=file.path(fpf,paste('LFA34-DFOtotalabund.csv',sep="-")))
+Fa = read.csv(file=file.path(fpf,paste('LFA34-NEFSCfalltotalabund.csv',sep="-")))
+
+
+png(file=file.path(fpf,'Contextual2.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
+par(mfrow=c(2,3), mar=c(4,4,2,1))
+
+with(Sp,plot(yr,dwao,pch=16,xlab='Year',ylab = 'NEFSC Spring Area Occupied'))
+#with(Sp, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(Sp,lines(yr,runmed(dwao,3),lwd=2, col='salmon'))
+
+
+with(Fa,plot(yr,dwao,pch=16,xlab='Year',ylab = 'NEFSC Fall Area Occupied'))
+#with(Fa, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(Fa,lines(yr,runmed(dwao,3),lwd=2, col='salmon'))
+
+
+with(DF,plot(yr,dwao,pch=16,xlab='Year',ylab = 'DFO RV Area Occupied'))
+#with(DF, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(DF,lines(yr,runmed(dwao,3),lwd=2, col='salmon'))
+
+with(Sp,plot(yr,gini,pch=16,xlab='Year',ylab = 'NEFSC Spring Gini Index'))
+#with(Sp, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(Sp,lines(yr,runmed(gini,3),lwd=2, col='salmon'))
+
+
+with(Fa,plot(yr,gini,pch=16,xlab='Year',ylab = 'NEFSC Fall Gini Index'))
+#with(Fa, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(Fa,lines(yr,runmed(gini,3),lwd=2, col='salmon'))
+
+
+with(DF,plot(yr,gini,pch=16,xlab='Year',ylab = 'DFO RV Gini Index'))
+#with(DF, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(DF,lines(yr,runmed(gini,3),lwd=2, col='salmon'))
+
+dev.off()
+
+#Contextual 3
+
+png(file=file.path(fpf,'Contextual3.png'),units='in',width=10,height=4,pointsize=18, res=300,type='cairo')
+par(mfrow=c(1,3), mar=c(4,4,2,1))
+
+
+gL = read.csv(file=file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'GiniLandings34.csv'))
+DF = read.csv(file=file.path(fpf1,'predatorIndex34.csv'))
+
+with(gL, plot(YEAR, LANDINGS, pch=16, xlab='Year',ylab='Gini Landings'))
+with(gL,lines(YEAR,runmed(LANDINGS,3),lwd=2, col='salmon'))
+
+with(DF,plot(yr,n.yst,pch=16,xlab='Year',ylab = 'DFO RV Predator Abundance',ylim=c(0,300)))
+with(DF, arrows(yr, y0=n.ci.yst.l, y1=n.ci.yst.u, length=0))
+with(DF,lines(yr,runmed(n.yst,3),lwd=2, col='salmon'))
+
+
+with(DF,plot(yr,w.yst,pch=16,xlab='Year',ylab = 'DFO RV Predator Biomass',ylim=c(0,210)))
+with(DF, arrows(yr, y0=w.ci.yst.l, y1=w.ci.yst.u, length=0))
+with(DF,lines(yr,runmed(w.yst,3),lwd=2, col='salmon'))
+
+dev.off()

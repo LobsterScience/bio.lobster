@@ -2,17 +2,21 @@
 
 options(stringsAsFactors=F)
 
-
 require(bio.survey)
 require(bio.lobster)
-require(bio.groundfish)
-
+require(lubridate)
+require(devtools)
+require(bio.utilities)
+require(PBSmapping)
+la()
 p = bio.lobster::load.environment()
 p$libs = NULL
-p1 = p
 ff = "LFA35-38Assessment"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+dir.create(fpf1,showWarnings=F)
+dir.create(fp1,showWarnings=F)
+p1 = p
 p1$yrs = 1970:2019
 
 
@@ -34,7 +38,7 @@ stratifiedAnalysesTemperature = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1
       p$temperature=T
       p$reweight.strata = F #this subsets 
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=F)
-      write.csv(aout,file=file.path(fpf1,'LFA35-38bottomtemp.png'))
+      write.csv(aout,file=file.path(fpf,'LFA35-38bottomtemp.csv'))
                                    p$add.reference.lines = F
                               p$time.series.start.year = p$years.to.estimate[1]
                               p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
