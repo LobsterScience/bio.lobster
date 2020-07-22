@@ -7,10 +7,11 @@
 #' lobster.db('fsrs') #loads the object fsrs
 #' @export
 
-  lobster.db = function( DS="complete.redo",p=p) {
+lobster.db = function( DS="complete.redo",p=p) {
     options(stringsAsFactors=F)
 
   require(lubridate)
+  require(RODBC)
     fn.root =  file.path( project.datadirectory('bio.lobster'), "data") 
     fnODBC  =  file.path(fn.root, "ODBCDump")
     fnProducts = file.path(fn.root,'products')
@@ -44,6 +45,8 @@
         lobster.db(DS = "lfa41.vms.redo")
         lobster.db(DS= "logs41.habitat.redo")
         lobster.db(DS = 'landings.by.port.redo')
+        lobster.db(DS = 'temperature.data.redo')
+        
         
         }
       
@@ -68,6 +71,21 @@ if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
                   save(links,file=file.path(fnODBC,'atSea.logbook.link.rdata'))          
         }
 
+    if(DS %in% c('temperature.data.redo', 'temperature.data')){
+      if(DS == 'temperature.data') {
+        load(file=file.path(fnODBC,'temperature.rdata'))
+        return(TempData)
+      }
+      con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+      TempData = sqlQuery(con,"select * from SNOWCRAB.SC_TEMP_MERGE   ;")
+      save(TempData,file=file.path(fnODBC,'temperature.rdata'))       
+    }
+    
+    if(DS %in% c('bathymetry')){
+        load(file=file.path(project.datadirectory('bio.lobster'),'bathymetry','bathymetry.complete.canada.east.rdata'))
+        return(Z)
+      }
+        
 if(DS %in% c('historic.cpue.redo', 'historic.cpue')){
       if(DS == 'historic.cpue') {
                   load(file=file.path(fnODBC,'historic.cpue.rdata'))
