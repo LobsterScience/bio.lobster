@@ -7,6 +7,7 @@ p$libs = NULL
 require(PBSmapping)
 require(bio.lobster)
 require(bio.utilities)
+require(bio.survey)
 la()
 ff = "LFA34Assessment"
 dadir = file.path(project.figuredirectory('bio.lobster'),ff)
@@ -126,7 +127,7 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'LFA
 
 #HCR plots
     
-hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c('USI','LRI','RI'),yrs=c(rep('',length(df$yr)-3),2017:2019),ylim=c(0,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
+hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c(),yrs=c(rep('',length(df$yr)-3),2017:2019),ylim=c(0,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
 box()
 savePlot(file.path(fpf1,'HCRNSpr.png'))
 
@@ -198,7 +199,7 @@ savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'LFA
 
 
 #HCR plots
-    hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c('USI','LRI','RI'),yrs=c(rep('',length(df$yr)-3),2017:2019),ylim=c(0,33),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
+    hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c(),yrs=c(rep('',length(df$yr)-3),2017:2019),ylim=c(0,33),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
 box()
 
 savePlot(file.path(fpf1,'HCRFal.png'))
@@ -260,7 +261,7 @@ df$wMM = rmed(df$yr, df$w.Yst)[[2]]
 savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'LFA34-DFORelativeF.png'))
    
 #HCR plots
-       hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c('USI','LRI','RI'),yrs=c(rep('',length(df$yr)-3),2017:2019),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
+       hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c(),yrs=c(rep('',length(df$yr)-3),2017:2019),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
 box()
  
 savePlot(file.path(fpf1,'HCRDFo.png'))
@@ -316,7 +317,7 @@ df$rMM = rmed(df$yr, df$rM)[[2]]
 df$wMM = rmed(df$yr, df$w.Yst)[[2]]
 
 #HCR plots
-         hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c('USI','LRI','RI'),yrs=c(rep('',length(df$yr)-3),2017:2019),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
+         hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c(),yrs=c(rep('',length(df$yr)-3),2017:2019),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
 box()
  
 savePlot(file.path(fpf1,'HCRILTS.png'))
