@@ -11,8 +11,7 @@
 
 	assessment.year = 2019 ########### check the year ############### !!!!!!!!!!!
 
-
-    p$syr = 1989
+	  p$syr = 1989
     p$yrs = p$syr:assessment.year
 
 
@@ -23,8 +22,9 @@
 	    p$lfas = c("35","36","38") # specify lfa
     	p$subareas = c("35","36","38") # specify subareas for data summary
 	    
-	    # update data through ROracle
-	    lobster.db('fsrs.redo')
+	    # update data through RODBC
+    	lobster.db('temperature.data.redo')
+      lobster.db('fsrs.redo')
 	    lobster.db('logs.redo')
 	    logs=lobster.db('process.logs.redo')
 		#CPUE.data<-CPUEModelData(p,redo=T)
@@ -40,8 +40,8 @@
 # CPUE ###############
 		load_all('~/git/bio.utilities')
 		logs=lobster.db("process.logs")
-		TempModelling = TempModel( annual.by.area=F)
-			CPUE.data<-CPUEModelData(p,redo=F,TempModelling)
+		TempModelling = TempModel( annual.by.area=F, redo.data=F)
+			CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
 
 			## Commercial CPUE MOdels
 			mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)

@@ -129,7 +129,7 @@
 		attr(ouBin,'model') <- 'binomial' 
 		#ouBin$Yr = ouBin$Yr +1
 		save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
-		#load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
+		#load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels.rdata'))
 
 		u = subset(ouBin, LFA == 27)
 		g = unique(u$Grid)
