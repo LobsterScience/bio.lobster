@@ -54,8 +54,8 @@ CPUEModelData = function(p,redo=T,TempModelling){
 
 
 	    newdata = with(cpue.data,data.frame(y=y, cos.y=cos(2*pi*y), sin.y=sin(2*pi*y), DEPTH=DEPTH, area=subarea))
-		newdata$area[newdata$area=="31A"] = 311
-		newdata$area[newdata$area=="31B"] = 312
+#		newdata$area[newdata$area=="31A"] = 311
+#		newdata$area[newdata$area=="31B"] = 312
 
 		cpue.data$TEMP = predict(TempModelling$Model, newdata, type='response')
 
