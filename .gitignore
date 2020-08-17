@@ -1,4 +1,8 @@
 LFA41figures.pdf
 .Rproj.user
 *.pdf
+*.xls
+*.csv
+*.Rdata
+*.RData
 
