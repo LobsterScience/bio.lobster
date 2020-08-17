@@ -60,8 +60,8 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
       ) )
 
       names(gscat) =  tolower( names(gscat) )
-      dontwant = c("length_type", "length_units", "weight_type",  "weight_units")
-      gscat = gscat[,which(!names(gscat)%in%dontwant)]
+     # dontwant = c("length_type", "length_units", "weight_type",  "weight_units")
+     # gscat = gscat[,which(!names(gscat)%in%dontwant)]
       print(fny)
       save(gscat, file=fny, compress=T)
 			gc()  # garbage collection

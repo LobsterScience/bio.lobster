@@ -9,8 +9,10 @@ fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 dir.create(fpf1,showWarnings=F)
 dir.create(fp1,showWarnings=F)
+
+p$yrs = 1970:2019
 p1 = p
-p1$yrs = 1970:2019
+
 
 stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
     p$series =c('summer')# p$series =c('georges');p$series =c('fall')
@@ -65,3 +67,4 @@ stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,
 
 aout = stratifiedAnalysesCommercial(survey='DFO',lfa='LFA35-38')
 write.csv(aout,file.path(fp1,'LFA3538CommercialB.csv'))
+

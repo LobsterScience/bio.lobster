@@ -1,0 +1,15 @@
+# Contributors
+
+
+```{r, echo=FALSE, include=FALSE}
+contributors <- tibble::tribble(
+  ~Name,          ~Affiliation,
+  "Victoria Howse",   "DFO Science, Maritimes Region",
+  "Cheryl Denton",   "DFO Science, Maritimes Region",
+  "Adam Cook",   "DFO Science, Maritimes Region",
+)
+```
+
+```{r, results='asis'}
+csasdown::csas_table(contributors)
+```
