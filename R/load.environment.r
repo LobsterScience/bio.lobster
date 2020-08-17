@@ -6,7 +6,7 @@ load.environment <- function(){
 
     p$libs = RLibrary( c('RODBC', 'rgdal',"devtools","roxygen2","geosphere", "chron","fields",  "parallel","sp",
                          "spatstat","PBSmapping","RColorBrewer" ,'lattice','MASS','doBy','bio.lobster','bio.utilities',
-                         'bio.lobster','bio.survey',"lubridate","SpatialHub"))
+                         'bio.survey',"lubridate","SpatialHub"))
 
           p$current.assessment.year=year(Sys.time())
       p$lfas=c("27", "28", "29", "30", "31.1", "31.2", "32", "33", "34", "35", "36", "37", "38")
