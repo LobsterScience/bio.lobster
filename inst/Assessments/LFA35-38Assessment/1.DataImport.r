@@ -1,8 +1,8 @@
 # data building
-
+require(lubridate)
 require(bio.survey)
 require(bio.lobster)
-require(bio.groundfish)
+la()
 p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")

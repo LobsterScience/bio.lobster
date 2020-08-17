@@ -33,8 +33,7 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 
 
 	if (DS %in% c( "gscat.odbc", "gscat.odbc.redo" ) ) {
-
-    fn.root =  file.path( project.datadirectory("bio.lobster"), "data","rvsurvey" ,"gscat" )
+	  fn.root =  file.path( project.datadirectory("bio.lobster"), "data","rvsurvey" ,"trawl", "gscat" )
 		dir.create( fn.root, recursive = TRUE, showWarnings = FALSE  )
 
 		out = NULL
