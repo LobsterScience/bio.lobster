@@ -5,4 +5,6 @@ LFA41figures.pdf
 *.csv
 *.Rdata
 *.RData
+*.doc
+*.docx
 
