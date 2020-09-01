@@ -12,7 +12,7 @@ lobster.db = function( DS="complete.redo",p=p) {
 
   require(lubridate)
   require(RODBC)
-    fn.root =  file.path( project.datadirectory,('bio.lobster'), "data") 
+    fn.root =  file.path( project.datadirectory('bio.lobster'), "data") 
     fnODBC  =  file.path(fn.root, "ODBCDump")
     fnProducts = file.path(fn.root,'products')
     dir.create( fn.root, recursive = TRUE, showWarnings = FALSE )
