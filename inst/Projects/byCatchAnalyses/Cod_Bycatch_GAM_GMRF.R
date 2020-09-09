@@ -11,6 +11,11 @@ library(lubridate)
 library(MASS)
 library(sp)
 library(rgdal)
+require(PBSmapping)
+library(rgdal)
+library(proj4)
+library(spdep)
+library(viridis)
 
 load('~/tmp/atSeaData.rdata')
 load('~/tmp/AtSeaDataAggregatedWithEmptyTrapsCoates.rdata')
@@ -19,7 +24,7 @@ load('~/tmp/AtSeaDataAggregatedWithEmptyTrapsCoates.rdata')
 load('/SpinDr/backup/bio_data/bio.lobster/data/predspace.rdata')
 
     #Pull the data needed from atSS#
-    Cod2 <- atSS %>% dplyr::select(UID,STARTDATE, LFA, DEPTH, GRIDNO, SPECIESCODE, SPECIES, EST_NUM_CAUGHT, EST_KEPT_WT, EST_DISCARD_WT, NUM_HOOK_HAUL, Sampled, Total, Nempty, Y, X)
+    Cod2 <- subset(atSS,select=c(UID,STARTDATE, LFA, DEPTH, GRIDNO, SPECIESCODE, SPECIES, EST_NUM_CAUGHT, EST_KEPT_WT, EST_DISCARD_WT, NUM_HOOK_HAUL, Sampled, Total, Nempty, Y, X))
 
     #Remove NA's from weight and # caught data# 
     Cod2$EST_KEPT_WT[is.na(Cod2$EST_KEPT_WT)] <- 0
@@ -31,22 +36,63 @@ load('/SpinDr/backup/bio_data/bio.lobster/data/predspace.rdata')
     Cod2$CODWEIGHT <- ifelse(Cod2$SPECIESCODE == 10,Cod2$EST_DISCARD_WT+Cod2$EST_KEPT_WT,0)
     Cod2$CODNUMBER <- ifelse(Cod2$SPECIESCODE == 10,Cod2$EST_NUM_CAUGHT,0)
 
-    #Select unique IUDs based on cod caught or no cod caught# 
-    Codfiltered <-  Cod2 %>% group_by(UID) %>% filter(CODWEIGHT==max(CODWEIGHT))
-    Codfiltered2 <- Codfiltered %>% distinct(UID, .keep_all = TRUE)
 
+     All = Cod2[!duplicated(Cod2[,c('UID')]),]
+     Co = subset(Cod2, SPECIESCODE==10)
+     CodFiltered = CoAll[!duplicated(CoAll$UID, fromLast=T),]
+
+    Codtot = CodFiltered
     #Leave base dataset alone and manipulate variables 
-    Codtot <- Codfiltered2
-    Codtot <- Codtot %>% mutate(Month = month(STARTDATE, label = TRUE))
-    Codtot$LFA <- as.factor((Codtot$LFA))
-    Codtot$Month <- as.factor(Codtot$Month)
-    Codtot <- Codtot %>% mutate(Year = year(STARTDATE)) %>% mutate(Day = day(STARTDATE))
+    Codtot$Month = month(Codtot$STARTDATE)
+    Codtot$Year = year(Codtot$STARTDATE)
     Codtot$Year <- as.factor(Codtot$Year)
+    Codtot$EID = 1:nrow(Codtot)
+    attr(Codtot,'projection') <- 'LL' 
+    Codtot = subset(Codtot,!is.na(X))
+    #Making a mesh for the data.based on grids
+LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
+    LFA41<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))
+    grL = subset(LFAgrid, PID>32 &PID < 100)    
+    grL$area=grL$PID
+    LFA41$area = LFA41$OFFAREA
+    LFA41$OFFAREA <- NULL
+    LFA41$SID = 1
 
-    #Before removing all NA data select only the variables necessary for the model#
-    totdat3 <- Codtot %>% dplyr::select(CODWEIGHT,CODNUMBER, Year, DEPTH, X, Y, Sampled,NUM_HOOK_HAUL)
-    totdat3 <- na.omit(totdat3)
-    totdat3 <- totdat3 %>% rename("SET_DEPTH" = "DEPTH")
+ Gr41 = makeGrid(y=seq(41,43.8,by=.1667),x=seq(-68,-63.6,by=.1667),addSID=F)
+LFA41u = joinPolys(LFA41,operation='UNION')
+LFA41u = subset(LFA41u,SID==1)
+LFA41u$PID=LFA41u$PID+100
+G41 = joinPolys(Gr41,LFA41u,'INT')
+G41$PID = G41$PID+1000
+G41$SID=1
+G41$area = '41'
+grs = rbind(grL,G41, all=T)
+    if(any(grs$area==T)) grs = grs[-which(grs$area==T),]
+attr(grs,'projection') <- 'LL'
+
+#grs is the grids
+grs$PID = (grs$PID+grs$SID/1000)*1000
+grs$SID=NULL
+
+F = findPolys(Codtot,grs)
+CF = merge(Codtot,F,by='EID')
+CF = subset(CF, Bdry==0)
+attr(CF,'projection') <- "LL"
+
+#making the list of connections to grids
+require(sp)
+g = split(grs,f=grs$PID)
+nm = c()
+gp = list()
+for(i in 1:length(g)){
+    gp[[i]] = Polygons(list(Polygon(g[[i]][,c('X','Y')])),unique(g[[i]]$PID))
+  }
+gpp = SpatialPolygons(gp,proj4string=CRS("+proj=longlat +datum=WGS84"))
+gpnb = poly2nb(gpp,row.names=names(gpp))
+names(gpnb)=names(gpp)
+
+gam()
+
 
     #Transform Decimal degree coordinates into UTM projection#
     latlon <- totdat3 %>% dplyr::select(X,Y)
@@ -67,121 +113,7 @@ load('/SpinDr/backup/bio_data/bio.lobster/data/predspace.rdata')
     totdat3 = subset(totdat3, NUM_HOOK_HAUL>1)
     totdat3$lHook = log(totdat3$NUM_HOOK_HAUL)
     save(totdat3,file='~/tmp/totdat3.rdata')
-    CTF = formula(CODWEIGHT~ as.factor(Year) + s(SET_DEPTH, k = 4) + s(plon, plat, bs='ts',k=100)+offset(lHook))
-
-    #want the offset to be same as link
-    CTM = gam(CTF,data=totdat3, family = Tweedie(p=1.25,link=log), method = "REML")
-
-
-    #Run diagnostics#
-    summary(CTM)
-    gam.check(CTM)
-    plot(CTM, scheme = 2)
-
-
-    #Cross-validate the model#
-    calc_RMSE <- function(pred, obs){
-      RMSE <- round(sqrt(mean((pred-obs)^2)),3)
-      return(RMSE)
-    }
-
-
-    totTweedie <- function(data=totdat3, model=CTF, prop.training=.85,nruns=100) {
-      
-      nsamp = round(nrow(data)*prop.training)
-      vec = 1:nrow(data)
-      RMSE = c()
-      test.data = list()
-      for(i in 1:nruns) {
-        iterror = tryCatch({
-          a = sample(vec,nsamp)
-          training = data[a,]
-          test = data[which(!vec %in% a),]
-          mod1 = gam(model,data=training,family = Tweedie(p=1.25,link=power(.1)), method = "REML")
-          test$pred = predict(mod1,newdata = test,type='response')
-          RMSE[i] =  calc_RMSE(test$pred,test$CODWEIGHT)
-          test.data[[i]] = test}
-          , error=function(e) e)
-        if(inherits(iterror, "error")) next
-        
-      }
-      return(RMSE)
-    }
-
-    totresults = totTweedie()
-
-    totresults
-
-    NNtotresults = na.omit(totresults)
-    mean(NNtotresults)
-
-    #Overall model
-    oo = totdat3$CODWEIGHT
-    pp = predict(CTM,type='response')
-
-    #normalized RMSE
-    calc_RMSE(pp,oo) / mean(oo)
-
-    plot(pp,oo)
-    abline(a=0,b=1)
-
-    #pull spatial data frame#
-    Ps = data.frame(EID=1:nrow(predSpace),predSpace[,c('plon','plat','z')])
-    Ps <- Ps %>% rename("SET_DEPTH" = "z")
-
-    #predict on 10 traps
-
-    Ps$lHook = log(10)
-    # annual predictions
-    R1index=c()
-    R1area = list()
-    R1surface=list()
-    ilink <- family(CTM)$linkinv # this is the inverse of the link function
-
-
-    Years = unique(totdat3$Year)
-
-    for(i in 1:length(Years)){
-      require(mgcv)
-      
-      #Ps$dyear =Years[i]+.5
-      Ps$Year = Years[i]
-      Ps$Sampled = mean(totdat3$Sampled)
-      
-      plo = as.data.frame(predict(CTM,Ps,type='link',se.fit=TRUE))
-      plo$upper = ilink(plo$fit - (1.96 * plo$se.fit))  
-      plo$lower = ilink(plo$fit - (1.96 * plo$se.fit))
-      plo$fitted = ilink(plo$fit)
-      
-      
-      xyz = data.frame(Ps[,c('plon','plat')],z=ilink(plo$fit))
-      corners = data.frame(lon=c(-67.8,-62),lat=c(41,46))
-      
-      R1area[[i]] = c(Years[i],length(which(xyz$z<5)))
-      planarMap(xyz, fn=paste("gamtwPAR1",Years[i],sep='.'), datascale=seq(0.1,1000,l=30), annot=Years[i],loc=fpf1, corners=corners,log.variable=T)
-      #planarMap( xyz, fn=paste("lobster.gambi.pred",Years[i],sep='.'), annot=Years[i],loc="output",corners=corners)
-      #planarMap( xyz, corners=corners)
-      R1surface[[i]]=xyz
-      R1index[i]= sum(xyz$z)
-    }
-
-
-#Next run
-load('~/tmp/totdat3.rdata')
-
-totdat3 = subset(totdat3, Year %in% c(2004:2016))
-
-#CTF2 = formula(CODWEIGHT~ as.factor(Year) + s(SET_DEPTH, k = 4) + s(plon, plat, bs='ts',k=100)+offset(lHook))
-#CTM2 = gam(CTF2,data=totdat3, family = Tweedie(p=1.25,link=log), method = "REML")
-
-CTF3 = formula(CODWEIGHT~ (Year) +  s(plon, plat, bs='ts',k=30)+offset(lHook))
-CTM3 = gam(CTF3,data=totdat3, family = Tweedie(p=1.25,link=log), method = "REML")
-
-memory.limit(size=16000)
-
-set.seed(1000)
-n_sims =1000	
-
+   
 require(PBSmapping)
 #logbook trap hauls by grid by year
   require(bio.lobster)
