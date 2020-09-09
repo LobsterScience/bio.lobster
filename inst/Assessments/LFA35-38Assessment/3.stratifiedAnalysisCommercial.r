@@ -10,31 +10,12 @@ fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 dir.create(fpf1,showWarnings=F)
 dir.create(fp1,showWarnings=F)
 
-p$yrs = 1970:2019
+p$yrs = 1970:2020
 p1 = p
 
 
 stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
-    p$series =c('summer')# p$series =c('georges');p$series =c('fall')
-    p$years.to.estimate = p$yrs
-    p$length.based = T
-    p$by.sex = T
-    p$size.class = c(83,300)
-    p$sex = c(1,2)
-    p$bootstrapped.ci=T
-    p$strata.files.return=F
-    p$vessel.correction.fixed=1.2
-    p$strat = NULL
-    p$clusters = c( rep( "localhost", 7) )
-    p$strata.efficiencies = F
-    p = make.list(list(yrs=p$years.to.estimate),Y=p)
-    p$define.by.polygons = T
-    p$lobster.subunits=F
-    p$area = lfa
-    p$reweight.strata = T #this subsets 
-
-    aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-    write.csv(aout,file=file.path(fpf, paste(lfa,'DFOCommB.csv')))
+   p$write.csv(aout,file=file.path(fpf, paste(lfa,'DFOCommB.csv')))
 
       p$add.reference.lines = F
     p$time.series.start.year = p$years.to.estimate[1]

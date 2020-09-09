@@ -102,7 +102,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         de = groundfish.db(DS='gsdet.odbc')
         set$X = convert.dd.dddd(set$slong) *-1
         set$Y = convert.dd.dddd(set$slat)
-      
+  
     
         
         stra$NH = as.numeric(stra$area)/0.011801

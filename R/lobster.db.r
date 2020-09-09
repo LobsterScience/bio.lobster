@@ -236,7 +236,8 @@ if(DS %in% c('seasonal.landings','seasonal.landings.redo')) {
         
                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                   seasonal.landings = sqlQuery(con,'select * from LOBSTER.SLIP_LAND_SEASONAL')
-                  print('Last two years of landings data may be incomplete, make sure to check with Cheryl.Denton@dfo-mpo.gc.ca on last update')
+                  seasonal.landings = seasonal.landings[order(seasonal.landings$SYEAR),]
+                   print('Last two years of landings data may be incomplete, make sure to check with Cheryl.Denton@dfo-mpo.gc.ca on last update')
                   print('LFA27 for >2015 does not have Gulf landings yet.....')
                   save(seasonal.landings,file=file.path(fnODBC,'seasonal.landings.rdata'))
             }
