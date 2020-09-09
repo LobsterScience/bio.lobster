@@ -13,7 +13,7 @@ fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 dir.create(fpf1,showWarnings=F)
 dir.create(fp1,showWarnings=F)
 p1 = p
-p1$yrs = 1970:2019
+p1$yrs = 1970:2020
 
 stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
                 p$series =c('summer')

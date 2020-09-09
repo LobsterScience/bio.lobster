@@ -9,7 +9,7 @@ ff = "LFA35-38Assessment"
 
 b$YR = substr(b$SYEAR,6,9)
 a = subset(a,YR<1976)
-b = subset(b,YR>1975 & YR<=2019)
+b = subset(b,YR>1975 & YR<=2020)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 

@@ -24,7 +24,7 @@ p$yrs = 1947:p$current.assessment.year
       lobster.db('historic.cpue.redo')
       lobster.db('vlog.redo')
 
-        datayrs=1970:2019
+        datayrs=1970:2020
         groundfish.db( DS="gscat.odbc.redo", datayrs=datayrs )
         groundfish.db( DS="gsdet.odbc.redo", datayrs=datayrs )
         groundfish.db( DS="gsinf.odbc.redo", datayrs=datayrs )
