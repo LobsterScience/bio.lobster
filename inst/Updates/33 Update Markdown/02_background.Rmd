@@ -1,0 +1,55 @@
+# Background
+
+## Description of the fishery
+
+The commercial fishery for American Lobster has been active for over 100 years in LFA 33. This
+area covers 25,722 km2 from Halifax to Shelburne County. Though the LFA extends out to
+92 km (50 nautical miles), the fishery is primarily prosecuted within 15 km (100 m depth contour)
+on the eastern end and more recently in offshore areas on the western end (Figure 1). The
+fishery is effort controlled, with restrictions on the number of licences, number of traps per
+licence (250), season length, Minimum Legal Size (MLS), and retention of berried females
+(Cook et al. 2020, DFO 2019b). The fishing season begins on the last Monday in November and
+goes until May 31. The landings in LFA 33 for the 2018-19 fishing season were xx mt
+(Table 1).
+
+
+```{r codemap, include = FALSE}
+
+	p = bio.lobster::load.environment()
+	require(SpatialHub)
+	require(lubridate)
+
+	la()
+
+		assessment.year = p$current.assessment.year
+		p$current.assessment.year = p$current.assessment.year - 1
+
+
+
+    	p$lfas = c("33") # specify lfas for data summary
+    	p$subareas = c("33W", "33E") # specify lfas for data summary
+
+	    # update data through ROracle
+	    NewDataPull =F
+	    #NewDataPull =T
+
+	    if(NewDataPull){
+    lobster.db('fsrs.redo')
+	  lobster.db('logs.redo')
+	    lobster.db('annual.landings.redo')
+	    lobster.db('vlog.redo')
+	    logs=lobster.db('process.logs.redo')
+	    }
+
+
+#png(filename="MapLFA33.png",width=6.5, height=6.5, units = "in", res = 800)
+#LobsterMap('33')
+#dev.off()
+```
+
+
+```{r ,fig.cap="Map of Lobster Fishing Area (LFA) 33 with logbook reporting grids outlined in grey."}
+knitr::include_graphics("MapLFA33.png")
+```
+
+

@@ -103,22 +103,6 @@ if(save) {
 	}
 	
 	
-	# Bathymetry
-		sn<-ifelse(sum(isobaths/10)==sum(round(isobaths/10)),"",1)
-		
-		if(!is.null(isobaths)){
-			bath.lst<-list()
-			for(i in unique(ceiling(isobaths/1000))){
-	 			load(file.path( project.datadirectory("bio.lobster"), "data","maps", bathy.source, paste0("bathy",sn,"Poly",i,".rdata")))
-	 			bath.lst[[i]]<-bathy.poly
-	 		}
- 			bathy.poly<-do.call(rbind,bath.lst)
- 		#browser()
-			bathy.poly<-subset(bathy.poly,Z%in%isobaths)
-			attr(bathy.poly,"projection") <- "LL"
-			addLines(bathy.poly,polyProps=data.frame(PID=unique(bathy.poly$PID),col=bathcol))
-			#browser()
-		}
 	
 	# NAFO
 	if(!is.null(nafo)){
@@ -203,7 +187,7 @@ if(save) {
 			}
 		}
 			#browser()
-		addPolys(LFAs)
+		addPolys(LFAs, lwd=2)
 		if('lfa'%in% labels){
 			LFAgrid$label<-LFAgrid$PID
 			LFAgrid$label[LFAgrid$label==311]<-'31A'
@@ -224,7 +208,8 @@ if(save) {
 	if(addGrids==T){
 			LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 		addPolys(LFAgrid,border=rgb(0,0,0,0.2),col=NULL)
-			
+		addLines(LFAs, lwd=2) #Overlays Thicker lfa lines over grid lines 
+		
 	}
 	if(boundaries=='scallop'){
 		SFA<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","SFA.csv"))
@@ -232,19 +217,45 @@ if(save) {
 		SPA<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","SPA.csv"))
 		addPolys(SPA,col=NULL)
 	}
-		
+	
+	# Bathymetry
+	sn<-ifelse(sum(isobaths/10)==sum(round(isobaths/10)),"",1)
+	
+	if(!is.null(isobaths)){
+	  bath.lst<-list()
+	  for(i in unique(ceiling(isobaths/1000))){
+	    load(file.path( project.datadirectory("bio.lobster"), "data","maps", bathy.source, paste0("bathy",sn,"Poly",i,".rdata")))
+	    bath.lst[[i]]<-bathy.poly
+	  }
+	  bathy.poly<-do.call(rbind,bath.lst)
+	  #browser()
+	  bathy.poly<-subset(bathy.poly,Z%in%isobaths)
+	  attr(bathy.poly,"projection") <- "LL"
+	  addLines(bathy.poly,polyProps=data.frame(PID=unique(bathy.poly$PID),col=bathcol))
+	  #browser()
+	}
+	
 	EEZ<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","EEZ.csv"))
 	addLines(EEZ,lty=4,lwd=2)
+	
+	
+	if(lfa=="33") { #Changes label positions adjacent to LFA 33  for map
+	  LFAgrid.dat$Y[LFAgrid.dat$PID %in% c(41, 40)] = 42.65 
+	  LFAgrid.dat$Y[LFAgrid.dat$PID=="34"] = 43.1 
+	  LFAgrid.dat$X[LFAgrid.dat$PID %in% c(34, 40)] = -65.5
+	  LFAgrid.dat$X[LFAgrid.dat$PID=="41"] = -64
+	}
 	
 	# plots land
 	if(LT){
 		addPolys(coast,col=land.col,...)
 		if(plot.rivers)addLines(rivers,...)
+	 
 		if(boundaries=='LFAs') if('lfa'%in% labels)	addLabels(subset(LFAgrid.dat,!duplicated(label)),col=rgb(0,0,0,0.8),cex=labcex)
-
-	}
+     } 
 	
 	if(stippling)addStipples (coast, pch='.')
+	
 	
 	# Topography
 	
