@@ -314,10 +314,13 @@ if (DS %in% c("logs.redo", "logs") ) {
               gc()  # garbage collection
               
               # old logs LFA 34
+              dd = dir(fnODBC)
+              if(!any("oldlogs34.rdata" %in% dd)){
              oldlogs34 = sqlQuery(con, "select * from lobster.lobster_log_data")
              save( oldlogs34, file=file.path( fnODBC, "oldlogs34.rdata"), compress=T)
               gc()  # garbage collection
               odbcClose(con)
+              }
             }
             load (file.path( fnODBC, "slip.rdata"), .GlobalEnv)
             load (file.path( fnODBC, "logs.rdata"), .GlobalEnv)
