@@ -1,5 +1,5 @@
 #' LobsterMap
-#' @param area = 'custom' where xlim & ylim are specified or select from area list below
+#' @param  area = 'custom' where xlim & ylim are specified or select from area list below
 #' @param mapRes = coastline detail ('LR' = low resolution, 'MR' = medium resolution, 'HR' = high resolution, 'UR' = ultra resolution)
 #' @param title = plot title
 #' @param boundaries = for ploting specific management boundaries
