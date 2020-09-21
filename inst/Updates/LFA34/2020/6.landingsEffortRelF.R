@@ -22,8 +22,8 @@ names(d) = c('YR','LFA','LAND')
 
 b$YR = substr(b$SYEAR,6,9)
 a = subset(a,YR<1976)
-b = subset(b,YR>1975 & YR<2019)
-fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment")
+b = subset(b,YR>1975 )
+fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Update")
 
 LFA = c('LFA34')
 for(i in LFA){
@@ -47,9 +47,9 @@ b34 = b[,c('YR','LFA34')]
 c34 = rbind(a34,b34)
 c34 = subset(c34,YR>1969)
 c34$yr = c34$YR
-dadir = file.path(project.datadirectory('bio.lobster'),'analysis','LFA34-38','indicators')
-df =  read.csv(file.path(dadir,'LFA34DFO.restratified.All.csv'))
-df2 = read.csv(file.path(dadir,'LFA34DFO.restratified.commercial.csv'))
+dadir = file.path(project.figuredirectory('bio.lobster'),'LFA34Update')
+df =  read.csv(file.path(dadir,'LFA34-DFOtotalabund.csv'))
+df2 = read.csv(file.path(dadir,'LFA34-DFOCommercialB.csv'))
 df = subset(df,yr<1999)
 df2 = subset(df2,yr>1998)
 df = as.data.frame(rbind(df,df2))
@@ -86,14 +86,9 @@ rl = median(subset(df,yr %in% 1970:1998,select=rM)[,1])
 		abline(h=rl,lwd=2,col='blue')
 		box(lwd=2)
 	 dev.off()
-write.csv(df,file='~/tmp/DFORelf34.csv')
-####aim for dfo
-	
-	#replacementRatio.relF(df$LFA34,df$w.Yst+df$LFA34, savePlot=F, years.lagged.replacement=8)
+write.csv(df,file=file.path(fpf1,'DFORelf34.csv'))
 
-###
-
-df = read.csv(file.path(dadir,'LFA34NEFSC.fall.restratified.commercial.csv'))
+df = read.csv(file.path(dadir,'LFA34-NEFSCSpringCommercialB.csv'))
 df = df[,c('yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')]
 df  =merge(df,c34)
 

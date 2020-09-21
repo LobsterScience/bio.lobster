@@ -9,7 +9,7 @@ require(bio.lobster)
 require(bio.utilities)
 require(bio.survey)
 la()
-ff = "LFA34Assessment"
+ff = "LFA34Update"
 dadir = file.path(project.figuredirectory('bio.lobster'),ff)
 
 
@@ -46,7 +46,7 @@ c34$yr = c34$YR
 
 ##
 
-fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment")
+fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Update")
 
                 p$reweight.strata = T
                 p$years.to.estimate = c(1969:2019)
@@ -92,7 +92,7 @@ fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment")
      ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=8,wd=11,save=F,Ylab='Commercial Biomass')
      abline(h=llb,col='blue',lwd=3)
      abline(h=ub,col='green',lwd=3)
-     savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'LFA34-NEFSCSpringCommB.png'))
+     savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Update",'LFA34-NEFSCSpringCommB.png'))
 
 
 ########
@@ -123,7 +123,7 @@ df$wMM = rmed(df$yr, df$w.Yst)[[2]]
    xx = rmed(df$yr,df$rM)
    with(xx,lines(yr,x,col='salmon',lwd=2))
    abline(h=rl,col='blue',lwd=2)
-savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'LFA34-NEFSCSpringRelativeF.png'))
+savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Update",'LFA34-NEFSCSpringRelativeF.png'))
 
 #HCR plots
     
@@ -168,7 +168,7 @@ savePlot(file.path(fpf1,'HCRNSpr.png'))
      ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,ht=8,wd=11,save=F,Ylab='Commercial Biomass')
      abline(h=llb,col='blue',lwd=3)
      abline(h=ub,col='green',lwd=3)
-     savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'LFA34-NEFSCFallCommB.png'))
+     savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Update",'LFA34-NEFSCFallCommB.png'))
 
 df = aout
 df = df[,c('yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')]
@@ -195,7 +195,7 @@ df$wMM = rmed(df$yr, df$w.Yst)[[2]]
    xx = rmed(df$yr,df$rM)
    with(xx,lines(yr,x,col='salmon',lwd=2))
    abline(h=rl,col='blue',lwd=2)
-savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'LFA34-NEFSCFallRelativeF.png'))
+savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Update",'LFA34-NEFSCFallRelativeF.png'))
 
 
 #HCR plots
@@ -233,7 +233,7 @@ df$w.ci.Yst.u[which(df$yr<1999)] <- df$w.ci.Yst.u[which(df$yr<1999)]*0.71
 abline(h = ub,lwd=2,col='green')
 abline(h = llb,lwd=2,col='blue')
 
-savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'LFA34-DFOCommercialB.png'))
+savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Update",'LFA34-DFOCommercialB.png'))
 
 df = df[,c('yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')]
 df  =merge(df,c34)
@@ -258,7 +258,7 @@ df$wMM = rmed(df$yr, df$w.Yst)[[2]]
    xx = rmed(df$yr,df$rM)
    with(xx,lines(yr,x,col='salmon',lwd=2))
    abline(h=rl,col='blue',lwd=2)
-savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'LFA34-DFORelativeF.png'))
+savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Update",'LFA34-DFORelativeF.png'))
    
 #HCR plots
        hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c(),yrs=c(rep('',length(df$yr)-3),2017:2019),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
@@ -290,7 +290,7 @@ aout = df
 abline(h = ub,lwd=2,col='green')
 abline(h = llb,lwd=2,col='blue')
 
-savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Assessment",'LFA34-ILTSCommercialB.png'))
+savePlot(file.path(project.figuredirectory('bio.lobster'),"LFA34Update",'LFA34-ILTSCommercialB.png'))
 
 df  =merge(df,c34)
 

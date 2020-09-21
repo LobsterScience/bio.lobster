@@ -286,6 +286,7 @@ if(DS %in% c('season.dates','season.dates.redo')) {
 
                     #Fish.Date = lobster.db('season.dates')
                     Fish.Date = season.dates = sqlQuery(con,'select * from LOBSTER.FISHING_SEASONS')
+                    print('Lobster.Fishing_Seasons needs to be updated in SQL if you want to use this season dates script--these dates come from FAM.')
                     season.dates = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
               
 

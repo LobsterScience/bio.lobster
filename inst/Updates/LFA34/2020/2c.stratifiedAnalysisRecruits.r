@@ -1,14 +1,13 @@
 require(bio.survey)
 require(bio.lobster)
-require(bio.groundfish)
 la()
 p = bio.lobster::load.environment()
 p$libs = NULL
-ff = "LFA34Assessment"
+ff = "LFA34Update"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 p1 = p
-p1$yrs = 1969:2019
+p1$yrs = 1969:2020
 
   
 stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=ht,wd=wd){
@@ -16,7 +15,7 @@ stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=f
 #NEFSC Setup
 if(survey=='NEFSC'){
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = p$yrs
+      p$years.to.estimate = p$yrs[-length(p$yrs)]
       p$length.based = T
       p$size.class= c(50,82)
       p$by.sex = T

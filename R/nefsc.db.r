@@ -257,7 +257,7 @@ options(scipen=999)  # this avoids scientific notation
 			   
 			      	de = merge(de, inf[,c('SVVESSEL','SVGEAR','ID')],by = 'ID') #removes some of the sets that do match the filtered sets from inf.clean use CV's were quite high below 50mm and vessel corrections were not great
            
-              load(file.path( project.codedirectory('bio.lobster'), "data", 'AlbatrossBigelowConv.rda')) #part of the bio.lobster Rpackage and is named 'a'
+              load(file.path( bio.directory,'bio.lobster', "data", 'AlbatrossBigelowConv.rda')) #part of the bio.lobster Rpackage and is named 'a'
             	a$Lm = a$CL * 10
             	de$Lm = round(de$FLEN)
             	de = merge(de,a,by='Lm',all.x=T) 
