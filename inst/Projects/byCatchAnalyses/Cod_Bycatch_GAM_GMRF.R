@@ -16,6 +16,7 @@ library(rgdal)
 library(proj4)
 library(spdep)
 library(viridis)
+require(bio.lobster)
 
 load('~/tmp/atSeaData.rdata')
 load('~/tmp/AtSeaDataAggregatedWithEmptyTrapsCoates.rdata')
@@ -39,6 +40,7 @@ load('/SpinDr/backup/bio_data/bio.lobster/data/predspace.rdata')
 
      All = Cod2[!duplicated(Cod2[,c('UID')]),]
      Co = subset(Cod2, SPECIESCODE==10)
+     CoAll = rbind( Co,All)
      CodFiltered = CoAll[!duplicated(CoAll$UID, fromLast=T),]
 
     Codtot = CodFiltered
@@ -58,11 +60,11 @@ LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps"
     LFA41$OFFAREA <- NULL
     LFA41$SID = 1
 
- Gr41 = makeGrid(y=seq(41,43.8,by=.1667),x=seq(-68,-63.6,by=.1667),addSID=F)
+Gr41 = makeGrid(y=seq(41,43.8,by=.1667),x=seq(-68,-63.6,by=.1667),addSID=FALSE)
 LFA41u = joinPolys(LFA41,operation='UNION')
 LFA41u = subset(LFA41u,SID==1)
 LFA41u$PID=LFA41u$PID+100
-G41 = joinPolys(Gr41,LFA41u,'INT')
+G41 = joinPolys(LFA41u,Gr41,'INT')
 G41$PID = G41$PID+1000
 G41$SID=1
 G41$area = '41'
@@ -80,8 +82,18 @@ CF = subset(CF, Bdry==0)
 attr(CF,'projection') <- "LL"
 
 #making the list of connections to grids
+
+
+    CF = subset(CF, NUM_HOOK_HAUL>1)
+    CF$lHook = log(CF$NUM_HOOK_HAUL)
+    save(CF,file='~/tmp/CF.rdata')
+    CF$LOCIDS = as.character(CF$PID)
+    ctrl <- gam.control(nthreads = 6) # use 6 parallel threads, reduce if fewer physical CPU cores
+    
+#make the neighbour joins
 require(sp)
-g = split(grs,f=grs$PID)
+gr = subset(grs, PID %in% unique(CF$LOCIDS))
+g = split(gr,f=gr$PID)
 nm = c()
 gp = list()
 for(i in 1:length(g)){
@@ -91,8 +103,13 @@ gpp = SpatialPolygons(gp,proj4string=CRS("+proj=longlat +datum=WGS84"))
 gpnb = poly2nb(gpp,row.names=names(gpp))
 names(gpnb)=names(gpp)
 
-gam()
+#need to figure out this problem of if needing a single value per grid. Hope not
+CW = aggregate(CODWEIGHT~LOCIDS, data=CF, FUN = mean)
+CD = aggregate(DEPTH~LOCIDS, data=CF, FUN = mean)
 
+    #want the offset to be same as link
+    CTF = formula(CODWEIGHT~ (Year) + s(LOCIDS, bs = 'mrf', k=50,xt = list(nb = gpnb)))
+    CTM = gam(CTF,data=CF, family = Tweedie(p=1.25,link=log), method = "REML")
 
     #Transform Decimal degree coordinates into UTM projection#
     latlon <- totdat3 %>% dplyr::select(X,Y)

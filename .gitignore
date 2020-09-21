@@ -7,4 +7,5 @@ LFA41figures.pdf
 *.RData
 *.doc
 *.docx
-
+*.Rhistory
+*.Rproj
