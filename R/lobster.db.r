@@ -286,6 +286,7 @@ if(DS %in% c('season.dates','season.dates.redo')) {
 
                     #Fish.Date = lobster.db('season.dates')
                     Fish.Date = season.dates = sqlQuery(con,'select * from LOBSTER.FISHING_SEASONS')
+                    print('Lobster.Fishing_Seasons needs to be updated in SQL if you want to use this season dates script--these dates come from FAM.')
                     season.dates = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
               
 
@@ -314,10 +315,13 @@ if (DS %in% c("logs.redo", "logs") ) {
               gc()  # garbage collection
               
               # old logs LFA 34
+              dd = dir(fnODBC)
+             if(!any("oldlogs34.rdata" %in% dd)){
              oldlogs34 = sqlQuery(con, "select * from lobster.lobster_log_data")
              save( oldlogs34, file=file.path( fnODBC, "oldlogs34.rdata"), compress=T)
               gc()  # garbage collection
               odbcClose(con)
+              }
             }
             load (file.path( fnODBC, "slip.rdata"), .GlobalEnv)
             load (file.path( fnODBC, "logs.rdata"), .GlobalEnv)

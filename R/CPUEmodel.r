@@ -6,7 +6,7 @@ CPUEmodel=function(mf,CPUE, combined=F,lfa,t=8,d=25){
   if(missing(lfa))  lfa = ifelse(!is.na(unique(CPUE$subarea)),unique(CPUE$subarea),unique(CPUE$LFA))
 
   fn.root =  file.path( project.datadirectory('bio.lobster'), "R", "CPUE", "ModelResults")
-  
+  dir.create(fn.root,showWarnings = F)
     CPUE = CPUE[order(CPUE$subarea,CPUE$SYEAR),]
     # create factor year
     CPUE$fYEAR=as.factor(CPUE$SYEAR)
