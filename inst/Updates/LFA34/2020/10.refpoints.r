@@ -1,8 +1,7 @@
 
-
+require(devtools)
 require(bio.lobster)
 p = bio.lobster::load.environment()
-require(bio.polygons)
 p$libs = NULL
 require(PBSmapping)
 require(bio.lobster)
