@@ -172,7 +172,7 @@ if(save) {
 				grids<-subset(LFAgrid,PID==lfa)
 				#browser()
 				if(addGrids=='lfaonly')addPolys(grids,border=rgb(0,0,0,0.2),col=NULL)
-				if(labels=='grid'){
+				if(any(grep('grid',labels))){
 					grids$label<-grids$SID
 	        		grids.dat<-merge(calcCentroid(grids),grids[c("PID","SID","label")])
 
