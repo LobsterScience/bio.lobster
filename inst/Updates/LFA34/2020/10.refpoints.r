@@ -11,6 +11,7 @@ require(bio.survey)
 la()
 ff = "LFA34Update"
 dadir = file.path(project.figuredirectory('bio.lobster'),ff)
+fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Update")
 
 
 ##landings
@@ -37,16 +38,15 @@ names(d) = c('YR','LFA','LAND')
 
 b$YR = substr(b$SYEAR,6,9)
 a = subset(a,YR<1976)
-b = subset(b,YR>1975 & YR<=2019)
+b = subset(b,YR>1975 & YR<=2020)
 a34 = a[,c('YR','LFA34')]
 b34 = b[,c('YR','LFA34')]
 c34 = rbind(a34,b34)
 c34 = subset(c34,YR>1969)
 c34$yr = c34$YR
-
+write.csv(c34,file=file.path(fpf1,'updatedlandings.csv') )
 ##
 
-fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Update")
 
                 p$reweight.strata = T
                 p$years.to.estimate = c(1969:2019)
@@ -215,7 +215,7 @@ df = df[,c('yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')] #proportion of total weight 
 df$w.Yst[which(df$yr<1999)] <- df$w.Yst[which(df$yr<1999)]*0.71
 df$w.ci.Yst.l[which(df$yr<1999)] <- df$w.ci.Yst.l[which(df$yr<1999)]*0.71
 df$w.ci.Yst.u[which(df$yr<1999)] <- df$w.ci.Yst.u[which(df$yr<1999)]*0.71
-
+write.csv(df,file=file.path(dadir,'LFA34-DFOCommercialB.csv'))
 #aout = df
    with(df,plot(yr,w.Yst/1000,pch=1,xlab='Year',ylab='Commerical Biomass (t x000)',ylim=c(0,9)))
    with(df,arrows(yr,y0=w.ci.Yst.u/1000,y1=w.ci.Yst.l/1000, length=0))

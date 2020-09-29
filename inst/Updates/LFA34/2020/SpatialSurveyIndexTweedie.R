@@ -8,18 +8,18 @@
 	require(lubridate)
 	la()
 
-ff = "LFA34Assessment"
+ff = "LFA34Update"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 
 ##Commercial
 	# Survey Data
-	surveyLobsters34index<-LobsterSurveyProcess(lfa="34", yrs=1996:2019, mths=c("Aug","Jul","Jun"), bin.size=2.5, Net='NEST',size.range=c(82.5,200),biomass=T)
+	surveyLobsters34index<-LobsterSurveyProcess(lfa="34", yrs=1996:2020, mths=c("Aug","Jul","Jun"), bin.size=2.5, Net='NEST',size.range=c(82.5,200),biomass=T)
 	surveyLobsters34index = lonlat2planar(surveyLobsters34index,"utm20", input_names=c("SET_LONG", "SET_LAT"))
 	surveyLobsters34index$dyear = decimal_date(as.Date(surveyLobsters34index$SET_DATE))
 
 	# Spatial temporal parameters
-	Years = 1996:2019
+	Years = 1996:2020
 	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
 	LFAs = lonlat2planar(LFAs,"utm20", input_names=c("X", "Y"))
 	LFAs = LFAs[,-which(names(LFAs)%in%c('X','Y'))]
@@ -207,7 +207,7 @@ dev.off()
 		R1index[i]= sum(xyz$z)
 	}
 
-Years = 1996:2019
+Years = 1996:2020
 
 
 #using the posterior distribution model coefs
