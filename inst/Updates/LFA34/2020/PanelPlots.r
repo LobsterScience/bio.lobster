@@ -12,6 +12,7 @@ Fa = read.csv(file=file.path(fpf,paste('LFA34-NEFSCFallCommercialB.csv',sep="-")
 IL = read.csv(file=file.path(fpf1,'ILTSCommB.csv'))
 c34 = read.csv(file=file.path(fpf1,'updatedlandings.csv') )
 c34 = c34[,-1]
+RP = list(c(1539,80.1),c(3232, 223), c(686,107),c(4574,1975))
 png(file=file.path(fpf,'commb.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
 par(mfrow=c(2,2), mar=c(4,4,2,1))
 
@@ -19,15 +20,15 @@ with(Sp,plot(yr,w.Yst,pch=16,xlab='Year',ylab = 'NEFSC Spring Commercial Biomass
 Spr = rmed(Sp$yr, Sp$w.Yst)
 lines(Spr$yr, Spr$x, lwd=2, col='salmon')
 with(Sp, arrows(yr, y0=w.ci.Yst.l, y1=w.ci.Yst.u, length=0))
-abline(h=1539, lwd=2, col='green',lty=2)
-abline(h=80.1, lwd=2, col='blue',lty=3)
+abline(h=RP[[1]][1], lwd=2, col='green',lty=2)
+abline(h=RP[[1]][2], lwd=2, col='blue',lty=3)
 
 with(Fa,plot(yr,w.Yst,pch=16,xlab='Year',ylab = 'NEFSC Fall Commercial Biomass'))
 Far = rmed(Fa$yr, Fa$w.Yst)
 lines(Far$yr, Far$x, lwd=2, col='salmon')
 with(Fa, arrows(yr, y0=w.ci.Yst.l, y1=w.ci.Yst.u, length=0))
-abline(h=3232, lwd=2, col='green',lty=2)
-abline(h=223, lwd=2, col='blue',lty=3)
+abline(h=RP[[2]][1], lwd=2, col='green',lty=2)
+abline(h=RP[[2]][2], lwd=2, col='blue',lty=3)
 
 with(DF,plot(yr,w.Yst,pch=1,xlab='Year',ylab = 'DFO Commercial Biomass'))
 with(subset(DF,yr>1998),points(yr,w.Yst,pch=16))
@@ -35,19 +36,21 @@ with(subset(DF,yr>1998),points(yr,w.Yst,pch=16))
 DFr = rmed(DF$yr, DF$w.Yst)
 lines(DFr$yr, DFr$x, lwd=2, col='salmon')
 with(DF, arrows(yr, y0=w.ci.Yst.l, y1=w.ci.Yst.u, length=0))
-abline(h=686, lwd=2, col='green',lty=2)
-abline(h=107, lwd=2, col='blue',lty=3)
+abline(h=RP[[3]][1], lwd=2, col='green',lty=2)
+abline(h=RP[[3]][1], lwd=2, col='blue',lty=3)
 
 with(IL,plot(Year,B,pch=16,xlab='Year',ylab = 'ILTS Commercial Biomass'))
 DFr = rmed(IL$Year, IL$B)
 lines(DFr$yr, DFr$x, lwd=2, col='salmon')
 with(IL, arrows(Year, y0=lB, y1=uB, length=0))
-abline(h=4574, lwd=2, col='green',lty=2)
-abline(h=1975, lwd=2, col='blue',lty=3)
+abline(h=RP[[4]][1], lwd=2, col='green',lty=2)
+abline(h=RP[[4]][2], lwd=2, col='blue',lty=3)
 
 dev.off()
 
 #Relative F
+
+RRs = list(.9113,10.5713,.97063,.83955)
 png(file=file.path(fpf,'relf.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
 par(mfrow=c(2,2), mar=c(4,4,2,1))
 
@@ -75,7 +78,7 @@ with(Sp,plot(yr,rM,pch=16,xlab='Year',ylab='Relative F',ylim=c(0.6,1)))
 with(Sp,arrows(yr,y0=rU,y1=rL, length=0))
 xx = rmed(Sp$yr,Sp$rM)
 with(xx,lines(yr,x,col='salmon',lwd=2))
-abline(h=rl,col='blue',lwd=2)
+abline(h=RRs[[1]],col='blue',lwd=2)
 
 
 Fa = Fa[,c('yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')]
@@ -92,11 +95,14 @@ Fa[which(!is.finite(Fa[,9])),9] <- NA
 rf = median(Fa$rM, an.rm=T)
 rl = mean(subset(Fa,yr %in% 1970:1998,select=rM)[,1],na.rm=T)
 
-Fa$rMM = rmed(Fa$yr, Fa$rM)[[2]]
-Fa$wMM = rmed(Fa$yr, Fa$w.Yst)[[2]]
+rMM = as.data.frame(do.call(cbind,rmed(Fa$yr, Fa$rM)))
+wMM = as.data.frame(do.call(cbind,rmed(Fa$yr, Fa$w.Yst)))
 
-Fa$rMM = rmed(Fa$yr, Fa$rM)[[2]]
-Fa$wMM = rmed(Fa$yr, Fa$w.Yst)[[2]]
+names(rMM)[2] = 'rMM'
+names(wMM)[2] = 'wMM'
+
+Fa = merge(Fa,rMM, all.x=T)
+Fa = merge(Fa,wMM,all.x=T)
 
 with(Fa,plot(yr,rM,pch=16,xlab='Year',ylab='Relative F'))
 with(Fa,arrows(yr,y0=rU,y1=rL, length=0))
@@ -133,13 +139,6 @@ with(xx,lines(yr,x,col='salmon',lwd=2))
 abline(h=rl,col='blue',lwd=2)
 
 
-with(subset(df,yr>1998),points(yr,w.Yst/1000,pch=16))
-xx = rmed(df$yr,df$w.Yst/1000)
-xx = as.data.frame(do.call(cbind,xx))
-with(subset(xx,yr<1999),lines(yr,x,col='salmon',lwd=2))
-with(subset(xx,yr>1998),lines(yr,x,col='salmon',lwd=3))
-
-
 names(IL) = c('x','yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')
 
 IL = IL[,c('yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')]
@@ -168,3 +167,21 @@ xx = rmed(IL$yr,IL$rM)
 with(xx,lines(yr,x,col='salmon',lwd=2))
 abline(h=rl,col='blue',lwd=2)
 dev.off()
+
+
+png(file=file.path(fpf,'phaseplots.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
+par(mfrow=c(2,2), mar=c(4,4,2,1))
+
+
+hcrPlot(B=Sp$wMM/1000,mF=Sp$rMM,USR=RP[[1]][1]/1000,LRP=RP[[1]][2]/1000,RR=RRs[[1]],labels=c(),yrs=c(rep('',length(Sp$yr)-3),2017:2019),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality'); box();
+hcrPlot(B=Fa$wMM/1000,mF=Fa$rMM,USR=RP[[2]][1]/1000,LRP=RP[[2]][2]/1000,RR=RRs[[2]],labels=c(),yrs=c(rep('',length(Fa$yr)-3),2017:2019),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality');box();
+hcrPlot(B=DF$wMM/1000,mF=DF$rMM,USR=RP[[3]][1]/1000,LRP=RP[[3]][2]/1000,RR=RRs[[3]],labels=c(),yrs=c(rep('',length(DF$yr)-3),2018:2020),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality');box();
+hcrPlot(B=IL$wMM/1000,mF=IL$rMM,USR=RP[[4]][1]/1000,LRP=RP[[4]][2]/1000,RR=RRs[[4]],labels=c(),yrs=c(rep('',length(IL$yr)-3),2018:2020),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality');box();
+
+
+
+
+
+graphics.off()
+
+

@@ -88,9 +88,9 @@ median(oo[,3])
 
 
 #survey data.
-lobster.db('survey.redo')
+lobster.db('survey')
 
-SL<-LobsterSurveyProcess(lfa="34", yrs=1996:2020, mths=c("Aug","Jul","Jun"), bin.size=2.5, Net='NEST',size.range=c(82.5,200),biomass=T)
+SL<-LobsterSurveyProcess(lfa="34", yrs=1996:2020, mths=c("Aug","Jul","Jun"), bin.size=5, Net='NEST',size.range=c(0,200),biomass=T)
     LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
     grL = subset(LFAgrid, PID==34)
     grL$area=grL$PID
@@ -106,3 +106,13 @@ Stsmb = findPolys(SL,smb)
 Stsmb = subset(SL, EID %in% Stsmb$EID)
 
 aggregate(SET_ID~YEAR, data=Stsmb,FUN=length)
+
+plot(aggregate(NUM_STANDARDIZED~YEAR, data=Stsmb, FUN=mean))
+lines(aggregate(NUM_STANDARDIZED~YEAR, data=SL, FUN=mean),col='red')
+
+aa = Stsmb[,c(1,2,grep('CL',names(Stsmb)))]
+require(bio.utilities)
+aa = na.zero(aa)
+aa$NSizes = rowSums(aa>0)-2
+
+aggregate(NSizes~YEAR,data=aa,FUN=median)

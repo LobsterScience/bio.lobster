@@ -3,8 +3,8 @@
 hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F,area.cols=c('lightgreen','lightgoldenrod','darksalmon'),...) {
 	
 	
-          if(is.null(ylims)) ylims = c(0, (max(mF,RR)*1.05))
-          if(is.null(xlims)) xlims = c(0, (max(B,USR)*1.05))
+          if(is.null(ylims)) ylims = c(0, (max(na.omit(mF),RR)*1.05))
+          if(is.null(xlims)) xlims = c(0, (max(na.omit(B),USR)*1.05))
           plot( B, mF,  type="b", xlim=xlims, ylim=ylims, col="darkorange", cex=0.8, lwd=2, xlab="", ylab="", pch=20,yaxs='i',xaxs='i',... )
           title( xlab=xlab ) 
           title( ylab=ylab ) 
