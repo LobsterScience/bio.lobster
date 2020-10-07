@@ -31,8 +31,9 @@ CatchRatePlot <- function(data,usr=NULL,lrp=NULL,lfa=NULL,fd=file.path(project.f
 
 		if(save){
 			savePlot(file.path(fd,paste(fn,'.png',sep='')),type='png')
-			write.csv(data,file.path(fd,paste(fn,'.csv',sep='')))
-		}
+			}
+		write.csv(data,file.path(fd,paste(fn,'.csv',sep='')))
+		
 		print(lfa)
 }
 			

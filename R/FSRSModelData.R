@@ -16,14 +16,44 @@ FSRSModelData = function(trap.type='recruitment',TempModelling){
 
 		FSRS.dat<-subset(FSRS.dat,SOAK_DAYS<6)	# Remove soak days greater than 5,  do not iclude berried females
 		FSRS.dat$HAUL_DATE<-as.Date(FSRS.dat$HAUL_DATE)
-
-
+    
+		#2020 Data does not include temp as of Sept 2020
+		#Will use avg temp for that week for the last three years as a proxy until temps are available
+		#determine mean temp by week for last 3 years
+		recent=FSRS.dat[FSRS.dat$SYEAR %in% c(2017:2019),]
+		recent$week=week(recent$HAUL_DATE)
+		week.temp=aggregate(TEMP~week+LFA, dat=recent[recent$TEMP>-4 & recent$TEMP <25,], FUN="mean") #removes obvious extraneous temps
+		
+		FSRS.old=FSRS.dat[FSRS.dat$SYEAR<2020,]
+		FSRS.new=FSRS.dat[FSRS.dat$SYEAR==2020,]
+		FSRS.new$week=week(FSRS.new$HAUL_DATE)
+		
+		test=merge(FSRS.new, week.temp, by=c("week","LFA"), all=T)
+		test=subset(test,is.finite(test$HAUL_DATE)) #removes empty records created by merge
+		test$TEMP=test$TEMP.y
+		test=subset(test, select=-c(TEMP.x, TEMP.y, week))
+		FSRS.dat=rbind(FSRS.old, test)
+		#FSRS.dat=subset(FSRS.dat,is.finite(FSRS.dat$HAUL_DATE))
+		
 		# this section is to deal with the fact that there are uneven binning going on for the different size categories
 		# it creates a pseudo CL (the mid point of each size category)
+		#FSRS moved to 5mm bins in 2020. So pre-2020 and post are separated for determination of sizes, then re-combined
+		
+		
+		fsrs.old=subset(FSRS.dat, SYEAR<=2019)
 		scd<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
 		scd$LENGTH<-rowMeans(scd[c("MIN_S","MAX_S")])
-		FSRS.dat<-merge(FSRS.dat,scd[c("SIZE_CD","LENGTH")])
-
+		fsrs.old<-merge(fsrs.old,scd[c("SIZE_CD","LENGTH")])
+		fsrs.old$CODES_VERSION="old"
+		
+	  fsrs.new=subset(FSRS.dat, SYEAR>2019)
+		scd.new<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES_NEW2020.csv"))
+		scd.new$LENGTH<-rowMeans(scd.new[c("MIN_S","MAX_S")])
+		fsrs.new<-merge(fsrs.new,scd.new[c("SIZE_CD","LENGTH")])
+		fsrs.new$CODES_VERSION="new"
+		 
+		FSRS.dat=rbind(fsrs.old, fsrs.new)
+	
 		wa<-c(0.000608, 0.001413, 0.00482)
 		wb<-c(3.058, 2.875, 2.638)
 
@@ -31,8 +61,6 @@ FSRSModelData = function(trap.type='recruitment',TempModelling){
 		for(i in 1:3){
 			FSRS.dat$WEIGHT[FSRS.dat$SEX==i]<-FSRS.dat$LENGTH[FSRS.dat$SEX==i]^wb[i]*wa[i]
 		}
-
-
 
 		## Aggregate by unique vessal and day, summerizing total traps, legals and shorts
 
@@ -45,12 +73,30 @@ FSRSModelData = function(trap.type='recruitment',TempModelling){
 		legal.lst<-with(subset(FSRS.dat,SHORT==0),tapply(TRAP_NO,VES_DATE,length)) 
 		legal.dat<-data.frame(VES_DATE=names(legal.lst),LEGALS=as.numeric(legal.lst))
 
-		recruit.lst<-with(subset(FSRS.dat,SHORT==1&SIZE_CD>7),tapply(TRAP_NO,VES_DATE,length)) 
-		recruit.dat<-data.frame(VES_DATE=names(recruit.lst),RECRUITS=as.numeric(recruit.lst))
+		
+		# Depends on FSRS sizes codes so is year dependent (coded above as CODEs_VERSION)
+		#recruit.lst<-with(subset(FSRS.dat,SHORT==1&SIZE_CD>7),tapply(TRAP_NO,VES_DATE,length)) 
+		#recruit.dat<-data.frame(VES_DATE=names(recruit.lst),RECRUITS=as.numeric(recruit.lst))
+		recruit.lst.old<-with(subset(FSRS.dat,SHORT==1 & SIZE_CD>7 & CODES_VERSION=="old"),tapply(TRAP_NO,VES_DATE,length)) 
+		recruit.dat.old<-data.frame(VES_DATE=names(recruit.lst.old),RECRUITS=as.numeric(recruit.lst.old))
+		
+		recruit.lst.new<-with(subset(FSRS.dat,SHORT==1 & SIZE_CD> 14 & CODES_VERSION=="new"),tapply(TRAP_NO,VES_DATE,length)) 
+		recruit.dat.new<-data.frame(VES_DATE=names(recruit.lst.new),RECRUITS=as.numeric(recruit.lst.new))
+		
+		recruit.dat=rbind(recruit.dat.old, recruit.dat.new)
+		rm(recruit.dat.new, recruit.dat.old)
+		
+		# Depends on FSRS sizes codes so is year dependent
+		#recbm.lst<-with(subset(FSRS.dat,SHORT==1&SIZE_CD>7),tapply(WEIGHT,VES_DATE,sum)) 
+		#recbm.dat<-data.frame(VES_DATE=names(recbm.lst),RECMASS=as.numeric(recbm.lst))
+		recbm.lst.old<-with(subset(FSRS.dat,SHORT==1 & SIZE_CD>7 & CODES_VERSION=="old"),tapply(WEIGHT,VES_DATE,sum)) 
+		recbm.dat.old<-data.frame(VES_DATE=names(recbm.lst.old),RECMASS=as.numeric(recbm.lst.old))
+		recbm.lst.new<-with(subset(FSRS.dat,SHORT==1 & SIZE_CD>14 & CODES_VERSION=="new"),tapply(WEIGHT,VES_DATE,sum)) 
+		recbm.dat.new<-data.frame(VES_DATE=names(recbm.lst.new),RECMASS=as.numeric(recbm.lst.new))
 
-		recbm.lst<-with(subset(FSRS.dat,SHORT==1&SIZE_CD>7),tapply(WEIGHT,VES_DATE,sum)) 
-		recbm.dat<-data.frame(VES_DATE=names(recbm.lst),RECMASS=as.numeric(recbm.lst))
-
+		recbm.dat=rbind(recbm.dat.old, recbm.dat.new)
+		rm(recbm.dat.old, recbm.dat.new)
+		
 		legalbm.lst<-with(subset(FSRS.dat,SHORT==0),tapply(WEIGHT,VES_DATE,sum)) 
 		legalbm.dat<-data.frame(VES_DATE=names(legalbm.lst),BIOMASS=as.numeric(legalbm.lst))
 
@@ -106,6 +152,7 @@ FSRSModelData = function(trap.type='recruitment',TempModelling){
 		names(scd)[1]="Size"
 		FSRScom.dat<-merge(FSRScom.dat,scd[c("Size","LENGTH")])
 
+		
 		wa<-c(0.000608, 0.001413, 0.00482)
 		wb<-c(3.058, 2.875, 2.638)
 

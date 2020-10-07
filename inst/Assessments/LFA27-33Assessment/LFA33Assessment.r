@@ -12,8 +12,8 @@
 
 
 	    # define place for figures to go
-	    figdir = file.path(project.datadirectory("bio.lobster"),"figures","Assessment","LFA33")
-
+	    figdir = file.path(project.datadirectory("bio.lobster"),"assessments","Updates","LFA33")
+	    
 	    p$lfas = "33" # specify lfa
     	p$subareas = c("33E", "33W") # specify subareas for data summary
 
