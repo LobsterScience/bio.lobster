@@ -357,6 +357,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     # imported logs from marfis
                           lobster.db('logs')
+                          
                          oldlogs34$LFA34_WEIGHT1_KGS=oldlogs34$LFA34_WEIGHT1_KGS/0.4536
                          oldlogs34$LFA34_WEIGHT2_KGS=oldlogs34$LFA34_WEIGHT2_KGS/0.4536
                           oldlogs34=subset(oldlogs34,select=c("VR_NUMBER","LICENCE_NO","LOBSTER_AREA","TRIP_ID","DATE_FISHED","GRID_NUMBER_A","LFA34_WEIGHT1_KGS","TRAP_HAULS_GRID_A","GRID_NUMBER_B","LFA34_WEIGHT2_KGS","TRAP_HAULS_GRID_B","V_NOTCHED","PORT_LANDED"))
@@ -1048,9 +1049,14 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
      if (DS=="fsrs.redo") {
         require(RODBC)
         con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-        
-        # fsrs
         fsrs = sqlQuery(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
+       #Merge any data that might not be loaded into db
+        #Create "flatfile" csv through "FSRS.load.from.text.r"
+        non.db.fsrs=read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv"))
+        ##BZ- ToDo Sept 20
+        ## ensure that files in non.db.fsrs are not already in db to avoid duplicate records.
+        fsrs= rbind(fsrs, non.db.fsrs[names(fsrs)]) 
+        
         save( fsrs, file=file.path( fnODBC, "fsrs.rdata"), compress=T)
         gc()  # garbage collection
         odbcClose(con)
@@ -1121,7 +1127,16 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
   if(DS %in% c('ccir','ccir.redo')){
 
       if(DS=='ccir.redo'){
-          lobster.db('fsrs')
+        
+        lobster.db('fsrs')
+        
+        #mls=read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","ccir_inputs.csv"))
+        #if (max(fsrs$HAUL_YEAR)>max(mls$Year)){
+        #     stop(paste("You need to update", file.path( project.datadirectory("bio.lobster"), "data","inputs","ccir_inputs.csv"),
+        #     "to reflect most recent year", sep=" "))
+        #  }
+        #BZ- To do. Remove the reference to MinLegalSize table and replace with ccir_inputs.csv. Only one table updated annually this way.
+          
           vars = c('RECORD_NUMBER','TRAP_NO','LOBSTER_NO','SEX','SIZE_CD','SHORT','VESSEL_CD','SOAK_DAYS','DEPTH','LFA','LATITUDE','LONGITUDE','TEMP','WIND_DIRECTION','WIND_SPEED','HAUL_DATE','HAUL_YEAR','LFA_GRID')
           fsrs = fsrs[,vars]
           fsrs = rename.df(fsrs,vars, c("Record.Number", "Trap.Number", "Lobster.Number", "Sex", "Size", "Short" , "Vessel.Code" ,"Soak.Days", "Depth", "LFA", "Latitude", "Longitude", 'Temperature',"Wind.Direction", "Wind.Speed" ,"DATE" , "YEAR",'Grid'))
@@ -1132,25 +1147,36 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
           fsrs$Sex = ifelse(fsrs$Sex == 3, 2, fsrs$Sex)
           fsrs$julian = round(as.numeric(julian(fsrs$DATE)))
 
-          mls = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
-          lfa = rep(unlist(lapply(strsplit(names(mls)[2:ncol(mls)],"LFA"),'[[',2)),each=nrow(mls))
-          mls = reshape(mls,idvar='Year',varying=list(2:14),v.names=c('MLS'),direction='long')
-          mls$lfa = lfa
-          i = which(mls$lfa=='31a')
-          mls$lfa[i] = '31.1'
-          i = which(mls$lfa=='31b')
-          mls$lfa[i] = '31.2'
-          mls$lfa = as.numeric(mls$lfa)
-          names(mls) = c('YEAR','ID','MLS','LFA')
-          mls$MLS_FSRS  =  NA
-          scd = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
-          for(i in 1:nrow(mls)) {
-              a = mls[i,'MLS']
-               mls$MLS_FSRS[i]= scd$SIZE_CD[intersect(which(scd$MIN_S<=a),which(scd$MAX_S>=a))]
-            }
-
-            fsrs = merge(fsrs,mls,by=c('LFA','YEAR'),all.x=T)
-
+           mls = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
+           lfa = rep(unlist(lapply(strsplit(names(mls)[2:ncol(mls)],"LFA"),'[[',2)),each=nrow(mls))
+           mls = reshape(mls,idvar='Year',varying=list(2:14),v.names=c('MLS'),direction='long')
+           mls$lfa = lfa
+           i = which(mls$lfa=='31a')
+           mls$lfa[i] = '31.1'
+           i = which(mls$lfa=='31b')
+           mls$lfa[i] = '31.2'
+           mls$lfa = as.numeric(mls$lfa)
+           names(mls) = c('YEAR','ID','MLS','LFA')
+           mls$MLS_FSRS  =  NA
+           scd.old = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
+           scd.new = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES_NEW2020.csv"))
+           
+           mls.old=mls[mls$YEAR<2020,]
+          for(i in 1:nrow(mls.old)) {  
+            a = mls.old[i,'MLS']
+            mls.old$MLS_FSRS[i]= scd.old$SIZE_CD[intersect(which(scd.old$MIN_S<=a),which(scd.old$MAX_S>=a))]
+             }
+          
+           mls.new=mls[mls$YEAR>2019,]
+           for(i in 1:nrow(mls.new)) {  
+             a = mls.new[i,'MLS']
+             mls.new$MLS_FSRS[i]= scd.new$SIZE_CD[intersect(which(scd.new$MIN_S<=a),which(scd.new$MAX_S>=a))]
+           }
+          mls=rbind(mls.old, mls.new)
+            
+          fsrs = merge(fsrs,mls,by=c('LFA','YEAR'),all.x=T)
+          fsrs=fsrs[is.finite(fsrs$MLS_FSRS),]
+          
           # remove berried
           fsrs = fsrs[order(fsrs$YEAR),]
           fsrs = subset(fsrs,Berried==0)
