@@ -13,6 +13,7 @@ dadir = file.path(project.figuredirectory('bio.lobster'),ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),"LFA34Update")
 
 
+
 ##landings
 
 ####LFA 34
@@ -274,6 +275,7 @@ df = read.csv(file.path(fpf1,'ILTSCommB.csv'))
 names(df) = c('x','yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')
 
 
+
 aout = df
    with(df,plot(yr,w.Yst/1000,pch=16,xlab='Year',ylab='Commerical Biomass',ylim=c(0,30)))
    with(df,arrows(yr,y0=w.ci.Yst.u/1000,y1=w.ci.Yst.l/1000, length=0))
@@ -316,7 +318,7 @@ df$rMM = rmed(df$yr, df$rM)[[2]]
 df$wMM = rmed(df$yr, df$w.Yst)[[2]]
 
 #HCR plots
-         hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c(),yrs=c(rep('',length(df$yr)-3),2017:2019),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
+         hcrPlot(B=df$wMM/1000,mF=df$rMM,USR=ub,LRP=llb,RR=rl,labels=c(),yrs=c(rep('',length(df$yr)-3),2018:2020),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality')
 box()
  
 savePlot(file.path(fpf1,'HCRILTS.png'))
