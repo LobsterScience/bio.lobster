@@ -177,7 +177,7 @@ if(save) {
 	        		
 					grids.dat<-merge(calcCentroid(grids),grids[c("PID","SID","label")])
 
-			#	addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.8),cex=1)
+				addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.8),cex=1)
 				}
 			}
 			else {
@@ -240,7 +240,7 @@ if(save) {
 	addLines(EEZ,lty=4,lwd=2)
 	
 	
-	if(lfa=="33") { #Changes label positions adjacent to LFA 33  for map
+	if(area=="33") { #Changes label positions adjacent to LFA 33  for map
 	  LFAgrid.dat$Y[LFAgrid.dat$PID %in% c(41, 40)] = 42.65 
 	  LFAgrid.dat$Y[LFAgrid.dat$PID=="34"] = 43.1 
 	  LFAgrid.dat$X[LFAgrid.dat$PID %in% c(34, 40)] = -65.5
@@ -291,8 +291,12 @@ if(save) {
 		gridlines<-makeGrid(x,y,byrow=TRUE,addSID=TRUE,projection="LL",zone=NULL)
 		addLines(gridlines,col='grey80',lwd=1)
 	}
-	if('grid'%in%labels) addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.5),cex=0.6*labcex)
-	if('subarea'%in%labels) addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.5),cex=labcex)
+	if('grid'%in%labels) {
+	  LFAgrid$label<-LFAgrid$SID
+	  grids.dat<-merge(calcCentroid(LFAgrid),LFAgrid[c("PID","SID","label")])
+	  addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.5),cex=0.2*labcex)
+	}
+	  if('subarea'%in%labels) addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.5),cex=labcex)
 	if(is.list(labels)) addLabels(labels[[1]],polyProps=labels[[2]])
 
 
