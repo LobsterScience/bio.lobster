@@ -1,5 +1,28 @@
 #Bank of packages needed to complete the following analysis:#
-Lo
+
+library(mgcv)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+require(devtools)
+require(SpatialHub)
+library(sf)
+library(lubridate)
+library(MASS)
+library(sp)
+library(rgdal)
+require(PBSmapping)
+library(rgdal)
+library(proj4)
+library(spdep)
+library(viridis)
+require(bio.lobster)
+require(bio.utilities)
+
+load('~/tmp/atSeaData.rdata')
+load('~/tmp/AtSeaDataAggregatedWithEmptyTrapsCoates.rdata')
+
+
 load('/SpinDr/backup/bio_data/bio.lobster/data/predspace.rdata')
 
     #Pull the data needed from atSS#
@@ -25,6 +48,8 @@ load('/SpinDr/backup/bio_data/bio.lobster/data/predspace.rdata')
     #Leave base dataset alone and manipulate variables 
     Codtot$Month = month(Codtot$STARTDATE)
     Codtot$Year = year(Codtot$STARTDATE)
+    Codtot = subset(Codtot, Year>2007)
+  
     Codtot$Year <- as.factor(Codtot$Year)
     Codtot$EID = 1:nrow(Codtot)
     attr(Codtot,'projection') <- 'LL' 
@@ -88,7 +113,7 @@ CW = aggregate(CODWEIGHT~LOCIDS, data=CF, FUN = mean)
 CD = aggregate(DEPTH~LOCIDS, data=CF, FUN = mean)
 
     #want the offset to be same as link
-    CTF = formula(CODWEIGHT~ (Year) + ti(LOCIDS, bs = 'mrf',xt = list(nb = gpnb))+offset(lHook))
+    CTF = formula(CODWEIGHT~ (Year) + s(LOCIDS, bs = 'mrf',xt = list(nb = gpnb))+offset(lHook))
     CTM = gam(CTF,data=CF, family = Tweedie(p=1.25,link=log), method = "REML")
     
 
@@ -124,7 +149,7 @@ uLG = names(gpp)
 
 #plot of overlaps
 plotPolys(grs) #all grids
-addPolys(subset(grs, PID%in% uLO),col='blue') #fishing grids
+addPolys(subset(grs, LOCIDS%in% uLO),col='blue') #fishing grids
 plot(gpp,add=T,col='red') #grids where we have bycatch info
 
 AG = aggregate(NUM_OF_TRAPS~PID,data=clogs1,FUN=sum)
@@ -133,7 +158,7 @@ AG2 = aggregate(NUM_OF_TRAPS~PID,data=subset(clogs1,PID %in% unique(gr$PID)),FUN
 sum(AG2[,2])/sum(AG[,2]) ##about 88% of trap hauls represnted
 
 
-pDat = subset(clogs1, LOCIDS %in% names(gpp) & Year<2019, select=c(Year, LOCIDS, lHook))
+pDat = subset(clogs1, LOCIDS %in% names(gpp) & Year > 2007 & Year<2019, select=c(Year, LOCIDS, lHook))
 
   ilink <- family(CTM)$linkinv   # this is the inverse of the link function
   plo = as.data.frame(predict(CTM,pDat, type='link',se.fit=TRUE))
@@ -147,7 +172,10 @@ pDat = subset(clogs1, LOCIDS %in% names(gpp) & Year<2019, select=c(Year, LOCIDS,
 outs = aggregate(fitted~Year,data=Fis,FUN=sum)
 
 #combined preds
-outsS = aggregate(fitted~LOCIDS,data=Fis,FUN=median)
+
+outsS = aggregate(fitted~LOCIDS,data=Fis,FUN=mean)
+outsSV = aggregate(fitted~LOCIDS,data=Fis,FUN=var)
+
 sum(outsS[,2])
 
 

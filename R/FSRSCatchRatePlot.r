@@ -1,6 +1,6 @@
 #' @export
 			
-FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,lfa=NULL,rm=F,fd=file.path(project.figuredirectory('bio.lobster','ReferencePoints')),title = paste('LFA',lfa),fn=paste0('FSRSRecruitCatchRate',lfa),...) {
+FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,save=T,lfa=NULL,rm=F,fd=file.path(project.figuredirectory('bio.lobster','ReferencePoints')),title = paste('LFA',lfa),fn=paste0('FSRSRecruitCatchRate',lfa),...) {
 	
 			dir.create( fd, recursive = TRUE, showWarnings = FALSE )
 			par(las=1)
@@ -45,7 +45,7 @@ FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,lfa=NU
 					mtext("Lobsters / Trap", 2, -1, outer = T,las=0)	
 					mtext("Year", 1, 2, outer = T)
 					
-					savePlot(file.path(fd,paste(fn,'png',sep='.')),type='png')
+					if (save){savePlot(file.path(fd,paste(fn,'png',sep='.')),type='png')}
 					if(!is.null(recruits))write.csv(recruits,file.path(fd,paste(fn,'recruits','csv',sep='.')))
 					if(!is.null(legals))write.csv(legals,file.path(fd,paste(fn,'legals','csv',sep='.')))
 					print(lfa)

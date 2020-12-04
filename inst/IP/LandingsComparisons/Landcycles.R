@@ -518,7 +518,6 @@ model.data = data.frame()
 				print(model.data)
 		} # end m loop
 } # end R loop
-#best model is diag and unequal R and Q with three trends
 write.csv(model.data,'~/tmp/model.data.TempsData16-22.csv')
 }
 

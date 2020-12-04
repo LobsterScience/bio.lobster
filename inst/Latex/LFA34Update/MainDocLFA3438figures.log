@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2020.7.6)  21 SEP 2020 15:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2020.7.6)  27 SEP 2020 19:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -789,7 +789,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  44i,7n,77p,825b,521s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-Output written on MainDocLFA3438figures.pdf (3 pages, 626000 bytes).
+Output written on MainDocLFA3438figures.pdf (3 pages, 623121 bytes).
 PDF statistics:
  99 PDF objects out of 1000 (max. 8388607)
  50 compressed objects within 1 object stream
