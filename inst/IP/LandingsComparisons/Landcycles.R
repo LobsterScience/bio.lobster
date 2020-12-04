@@ -481,7 +481,7 @@ x = ma(a$NAO[which(a$yr>1970)],1)
 
 
 ###############################################################################
-###temperature
+###temperature DFA
 os = read.csv(file='~/tmp/Bnamtrends.csv')
 rownames(os) = os$X
 os$X = NULL
@@ -498,7 +498,9 @@ for(i in spp){
 
 N.ts = nrow(cRR)
 nT = ncol(cRR)
-
+##need to redo
+nTR = F
+if(nTR){
 cntl.list = list(minit=200, maxit=5000, allow.degen=FALSE)
 find.best=T
 if(find.best){
@@ -520,7 +522,9 @@ model.data = data.frame()
 } # end R loop
 write.csv(model.data,'~/tmp/model.data.TempsData16-22.csv')
 }
+}
 
+#best m Oct 2020
 big.maxit.cntl.list = list(minit=200, maxit=30000, allow.degen=FALSE)
 model.list = list(m=17, R="equalvarcov")
 the.fit = MARSS(cRR, model=model.list, form="dfa", control=big.maxit.cntl.list)
@@ -548,7 +552,7 @@ mm=c(1,2,6,12)
 layout(matrix(c(1:4),4,2),widths=c(2,1))
  par(mfcol=c(4,2), mai=c(0.5,0.5,0.5,0.1), omi=c(0,0,0,0))
 par(mai=c(0.5,0.5,0.5,0.1), omi=c(0,0,0,0))
- plot the processes
+ #plot the processes
 
 for(i in 1:length(mm)) {
   ylm <- c(-1,1)*max(abs(trends.rot[mm[i],]))
@@ -564,7 +568,7 @@ for(i in 1:length(mm)) {
     axis(1,tt)
 }
 ## plot the loadings
-minZ <- 0.05
+FminZ <- 0.05
 ylm <- c(-1,1)*max(abs(Z.rot))
 for(i in 1:length(mm)) {
 	
@@ -579,7 +583,7 @@ for(i in 1:length(mm)) {
 }
 
 fpf1 = file.path(project.figuredirectory('bio.lobster'))
-savePlot(file.path(fpf1,'CanSGSLUSTempLoadings.png'))
+savePlot(file.path('~/tmp','CanSGSLUSTempLoadings.png'))
 
 #model fits
 getDFAfits <- function(MLEobj, alpha=0.05, covariates=NULL) {
@@ -645,7 +649,7 @@ geom_line(aes(t, .fitted)) +
 #geom_point(aes(t, y)) +
 geom_ribbon(aes(x=t, ymin=.conf.low, ymax=.conf.up), linetype=2, alpha=0.2) +
 facet_grid(~.rownames) +
-xlab("Year") + ylab("Standardized Landings")
+xlab("Year") + ylab("Detrended Temperature")
 
 d1 = subset(d,.rownames %in% c ('262',"27","29","30"))
 p1 = ggplot(data = d1) +
@@ -653,7 +657,7 @@ geom_line(aes(t, .fitted)) +
 #geom_point(aes(t, y)) +
 geom_ribbon(aes(x=t, ymin=.conf.low, ymax=.conf.up), linetype=2, alpha=0.2) +
 facet_grid(~.rownames) +
-xlab("Year") + ylab("Standardized Landings")
+xlab("Year") + ylab("Detrended Temperature")
 
 d2 = subset(d,.rownames %in% c ("311","312","32","33"))
 p2 = ggplot(data = d2) +
@@ -661,7 +665,7 @@ geom_line(aes(t, .fitted)) +
 #geom_point(aes(t, y)) +
 geom_ribbon(aes(x=t, ymin=.conf.low, ymax=.conf.up), linetype=2, alpha=0.2) +
 facet_grid(~.rownames) +
-xlab("Year") + ylab("Standardized Landings")
+xlab("Year") + ylab("Detrended Temperature")
 
 d3 = subset(d,.rownames %in% c ("34","35","36","38"))
 p3 = ggplot(data = d3) +
@@ -669,7 +673,7 @@ geom_line(aes(t, .fitted)) +
 #geom_point(aes(t, y)) +
 geom_ribbon(aes(x=t, ymin=.conf.low, ymax=.conf.up), linetype=2, alpha=0.2) +
 facet_grid(~.rownames) +
-xlab("Year") + ylab("Standardized Landings")
+xlab("Year") + ylab("Detrended Temperature")
 
 
 
