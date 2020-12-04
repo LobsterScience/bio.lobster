@@ -174,7 +174,7 @@ par(mfrow=c(2,2), mar=c(4,4,2,1))
 
 
 hcrPlot(B=Sp$wMM/1000,mF=Sp$rMM,USR=RP[[1]][1]/1000,LRP=RP[[1]][2]/1000,RR=RRs[[1]],labels=c(),yrs=c(rep('',length(Sp$yr)-3),2017:2019),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality'); box();
-hcrPlot(B=Fa$wMM/1000,mF=Fa$rMM,USR=RP[[2]][1]/1000,LRP=RP[[2]][2]/1000,RR=RRs[[2]],labels=c(),yrs=c(rep('',length(Fa$yr)-3),2017:2019),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality');box();
+hcrPlot(B=Fa$wMM/1000,mF=Fa$rMM,USR=RP[[2]][1]/1000,LRP=RP[[2]][2]/1000,RR=RRs[[2]],labels=c(),yrs=c(rep('',length(Fa$yr)-3),2017:2019),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality');box();
 hcrPlot(B=DF$wMM/1000,mF=DF$rMM,USR=RP[[3]][1]/1000,LRP=RP[[3]][2]/1000,RR=RRs[[3]],labels=c(),yrs=c(rep('',length(DF$yr)-3),2018:2020),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality');box();
 hcrPlot(B=IL$wMM/1000,mF=IL$rMM,USR=RP[[4]][1]/1000,LRP=RP[[4]][2]/1000,RR=RRs[[4]],labels=c(),yrs=c(rep('',length(IL$yr)-3),2018:2020),ylim=c(0.5,1.1),area.cols=rev(gray.colors(3,start=.4,end=1)),xlab='Commercial Biomass',ylab='Relative Fishing Mortality');box();
 

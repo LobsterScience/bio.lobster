@@ -1,27 +1,5 @@
 #Bank of packages needed to complete the following analysis:#
-
-library(mgcv)
-library(dplyr)
-library(ggplot2)
-library(tidyverse)
-require(devtools)
-require(SpatialHub)
-library(sf)
-library(lubridate)
-library(MASS)
-library(sp)
-library(rgdal)
-require(PBSmapping)
-library(rgdal)
-library(proj4)
-library(spdep)
-library(viridis)
-require(bio.lobster)
-
-load('~/tmp/atSeaData.rdata')
-load('~/tmp/AtSeaDataAggregatedWithEmptyTrapsCoates.rdata')
-
-
+Lo
 load('/SpinDr/backup/bio_data/bio.lobster/data/predspace.rdata')
 
     #Pull the data needed from atSS#
