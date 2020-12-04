@@ -42,7 +42,7 @@ df$w.ci.Yst.u[which(df$yr<1999)] <- df$w.ci.Yst.u[which(df$yr<1999)]*0.746
 
 
  	 #png(file=file.path(fpf1,'LFA35-38CommBDFOextended.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
- 	 with(df,plot(yr,w.Yst,pch=1,xlab='Year',ylab='Commerical Biomass (t)',ylim=c(0,9500)))
+ 	 with(df,plot(yr,w.Yst,pch=1,xlab='Year',ylab='Commercial Biomass (t)',ylim=c(0,9500)))
 	 with(df,arrows(yr,y0=w.ci.Yst.u,y1=w.ci.Yst.l, length=0))
 	 with(subset(df,yr>1998),points(yr,w.Yst,pch=16))
 	 xx = rmed(df$yr,df$w.Yst)

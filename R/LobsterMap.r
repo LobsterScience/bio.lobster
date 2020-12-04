@@ -239,7 +239,7 @@ if(save) {
 	addLines(EEZ,lty=4,lwd=2)
 	
 	
-	if(lfa=="33") { #Changes label positions adjacent to LFA 33  for map
+	if(area=="33") { #Changes label positions adjacent to LFA 33  for map
 	  LFAgrid.dat$Y[LFAgrid.dat$PID %in% c(41, 40)] = 42.65 
 	  LFAgrid.dat$Y[LFAgrid.dat$PID=="34"] = 43.1 
 	  LFAgrid.dat$X[LFAgrid.dat$PID %in% c(34, 40)] = -65.5
