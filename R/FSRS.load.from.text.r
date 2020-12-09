@@ -18,7 +18,7 @@ ca = read.csv('Catch.csv')
 tr = read.csv('Traps.csv')
 
 #Check location of data points. Choose LFA of choice below
-LobsterMap('33')
+LobsterMap('27-32')
 
 		xy$X =convert.dd.dddd(xy$Longitude)*-1
 		xy$Y =convert.dd.dddd(xy$Latitude)
