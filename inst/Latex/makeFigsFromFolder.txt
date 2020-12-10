@@ -1,0 +1,4 @@
+#navigate to the folder you want to make the figs from and run this in console
+
+
+for f in *.png; do echo "\\includegraphics[width=0.9\\textwidth]{\e $f}\\\\"; done;
