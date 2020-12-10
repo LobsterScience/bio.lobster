@@ -205,3 +205,6 @@ bA = subset(bA, YEAR>2012)
 plot2ax(x1=bA$YEAR,y1=bA$NBerried,ylim1=c(0,200),x2=bS$YEAR,y2=bS$NBerried, ylim2=c(0,1000),type1='l',type2='l',ylab='Mean Density of Berried LFA34', y2lab = 'Mean Density of Berried SMB',col='black',col2='red')
 legend('topleft',col=c('black','red'), lty=c(1,1),c('LFA 34','SMB'),bty='n')
 savePlot(file.path(project.figuredirectory('bio.lobster'),'LFA34Update','NBerried.png'))
+
+
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages -dCompressFonts=true -r150 -sOutputFile=output.pdf SR_LFA\ 34_Post\ meetingEdits_FinalEdits.pdf ATIPResultsDec2020.pdf
