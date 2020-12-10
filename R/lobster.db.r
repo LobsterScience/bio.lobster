@@ -1051,12 +1051,17 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         require(RODBC)
         con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         fsrs = sqlQuery(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
-       #Merge any data that might not be loaded into db
-        #Create "flatfile" csv through "FSRS.load.from.text.r"
-        non.db.fsrs=read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv"))
-        ##BZ- ToDo Sept 20
-        ## ensure that files in non.db.fsrs are not already in db to avoid duplicate records.
+        print("2020 data not in database, need to load manually w/ FSRS.load.from.text.r function")
+        
+        #Create csv through FSRS.load.from.text.r before running this step
+        
+        if (file.exists(file.path( bio.datadirectory,"bio.lobster", "data","inputs","non.db.fsrs.csv")))
+        {
+        non.db.fsrs=read.csv(file.path( bio.datadirectory,"bio.lobster", "data","inputs","non.db.fsrs.csv"))
+        ##BZ- ToDo Sept 2020- ensure that files in non.db.fsrs are not already in db to avoid duplicate records.
+        
         fsrs= rbind(fsrs, non.db.fsrs[names(fsrs)]) 
+        }
         
         save( fsrs, file=file.path( fnODBC, "fsrs.rdata"), compress=T)
         gc()  # garbage collection

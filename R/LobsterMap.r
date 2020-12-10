@@ -252,9 +252,14 @@ if(save) {
 		addPolys(coast,col=land.col,...)
 		if(plot.rivers)addLines(rivers,...)
 	 
-		if(boundaries=='LFAs') if('lfa'%in% labels)	addLabels(subset(LFAgrid.dat,!duplicated(label)),col=rgb(0,0,0,0.8),cex=labcex)
-     } 
-	
+		if(area=='27-32') { #Can adjust size and colour of LFA labels based on "area of interest"
+		  if(boundaries=='LFAs') if('lfa'%in% labels)	addLabels(subset(LFAgrid.dat,!duplicated(label)),col='white',cex=1.3*(labcex))
+		  if(boundaries=='LFAs') if('lfa'%in% labels)	addLabels(subset(LFAgrid.dat,!duplicated(label)),col='firebrick3',cex=(labcex))
+     } else {
+	  if(boundaries=='LFAs') if('lfa'%in% labels)	addLabels(subset(LFAgrid.dat,!duplicated(label)),col=rgb(0,0,0,0.8),cex=labcex)
+     }
+	}
+	  
 	if(stippling)addStipples (coast, pch='.')
 	
 	
