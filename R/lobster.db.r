@@ -1055,9 +1055,9 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         
         #Create csv through FSRS.load.from.text.r before running this step
         
-        if (file.exists(file.path( bio.datadirectory,"bio.lobster", "data","inputs","non.db.fsrs.csv")))
+        if (file.exists(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv")))
         {
-        non.db.fsrs=read.csv(file.path( bio.datadirectory,"bio.lobster", "data","inputs","non.db.fsrs.csv"))
+        non.db.fsrs=read.csv(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv"))
         ##BZ- ToDo Sept 2020- ensure that files in non.db.fsrs are not already in db to avoid duplicate records.
         
         fsrs= rbind(fsrs, non.db.fsrs[names(fsrs)]) 
