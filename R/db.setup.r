@@ -1,15 +1,4 @@
-#p = bio.lobster::load.environment()
-
-
-#oracle.server='ptran'
-#oracle.username = 'frailc'
-#oracle.password = 'kpsf7b'
-
-
-# This function allows all db queries within bio.lobster package to
-#be run through either ROracle or RODBC depending on versions of R and
-#intstalled packages
-
+#' @export
 db.setup=function(){
   
   if(!grepl('64',version$arch)) { #in 32-bit R, only RODBC will work
@@ -45,8 +34,5 @@ db.setup=function(){
        dbGetQuery(...)
      } } } }
   
-db.setup() 
 
 
-test.case=connect.command(con,'SELECT * from LOBSTER.port')
-head(test.case,10) 
