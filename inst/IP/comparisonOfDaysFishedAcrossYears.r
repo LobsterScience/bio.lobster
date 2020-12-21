@@ -33,3 +33,5 @@ for(i in y){
     u$cs = cumsum(u$Freq)/sum(u$Freq,na.rm=T)
 }
 dev.off()
+
+aggregate(DATE_FISHED~LFA,data=subset(gv,SYEAR>2012),FUN=median)
