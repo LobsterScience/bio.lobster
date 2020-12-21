@@ -61,6 +61,17 @@ if(DS %in% c('port','port.redo')){
                   save(ports,file=file.path(fnODBC,'ports.rdata'))          
         }
 
+if(DS %in% c('community_code','community_code.redo')){
+      if(DS == 'community_code') {
+        load(file=file.path(fnODBC,'community_code.rdata'))
+        return(ports)
+      }
+      con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+      ports = sqlQuery(con,'select * from MARFISSCI.COMMUNITIES')
+      save(ports,file=file.path(fnODBC,'community_code.rdata'))          
+    }
+    
+        
 if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
         if(DS == 'atSea.logbook.link') {
                   load(file=file.path(fnODBC,'atSea.logbook.link.rdata'))

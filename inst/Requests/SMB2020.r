@@ -43,8 +43,8 @@ require(spdep)
 g1 = split(grL,f=grL$SID)
 nm = c()
 gp = list()
-for(i in 1:length(g)){
-  gp[[i]] = Polygons(list(Polygon(g[[i]][,c('X','Y')])),unique(g1[[i]]$SID))
+for(i in 1:length(g1)){
+  gp[[i]] = Polygons(list(Polygon(g1[[i]][,c('X','Y')])),unique(g1[[i]]$SID))
 }
 gpp = SpatialPolygons(gp,proj4string=CRS("+proj=longlat +datum=WGS84"))
 gpnb = poly2nb(gpp,row.names=names(gpp))
