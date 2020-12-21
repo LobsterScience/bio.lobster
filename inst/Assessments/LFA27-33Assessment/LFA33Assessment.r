@@ -8,7 +8,9 @@
  
 	p = bio.lobster::load.environment()
 	la()
-
+  require(bio.ccir)
+	require(devtools)
+	load_all('~/git/bio.ccir')
 
 
 	    # define place for figures to go
