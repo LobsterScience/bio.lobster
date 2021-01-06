@@ -53,8 +53,8 @@ options(stringsAsFactors=F)
 	if(area=='34')		{ ylim=c(42.5,45);	 	xlim=c(-67.8,-65)	}
 	if(area=='35')		{ ylim=c(44.5,46);	 	xlim=c(-66,-63.2)	}
 	if(area=='36')		{ ylim=c(44.5,45.7); 	xlim=c(-67.2,-65)	}
-	if(area=='37')		{ ylim=c(44,45);		xlim=c(-67.3,-66.4) }
-	if(area=='38')		{ ylim=c(44,45);		xlim=c(-67.3,-66.4) }
+	if(area=='37')		{ ylim=c(44.5,45);		xlim=c(-67,-66.2) }
+	if(area=='38')		{ ylim=c(43.8,45);		xlim=c(-67.5,-66.2) }
 	if(area=='40')		{ ylim=c(42.25,43);		xlim=c(-66.5,-65.25)}
 	if(area=='41')		{ ylim=c(41.1,44); 		xlim=c(-68,-63.5)	}
 	if(area=='SWN')		{ ylim=c(42.5,45); 		xlim=c(-67.8,-62.2)	}

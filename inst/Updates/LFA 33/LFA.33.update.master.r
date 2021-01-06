@@ -108,7 +108,7 @@
 
 		logs = lobster.db('process.logs')
 
-#BZ Oct 2020- Needed to run CCIR in Linux
+
 		require(bio.ccir)
 		require(rstan)
 		#load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
@@ -120,16 +120,30 @@
 		for(i in 1:length(dat)) {
 			ds = dat[[i]]
 			ds$method = 'binomial'
-			x = ccir_stan_run(dat = ds,save=F)
+			x = ccir_stan_run(dat = ds,save=T)
 			out.binomial[[i]] <- ccir_stan_summarize(x)
 		}
+
+		#load statement below combines ccir summaries if broken runs
+		#ensure folder has only model run summaries
+		da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary') #modify as required
+
+		d = list.files(da,full.names=T)
+		out.binomial = list()
+
+		for( i in 1:length(d)){
+		  load(d[i])
+		  out.binomial[[i]] <- out
+		}
+
+
 		out.binomial[[1]]$LFA = "33W"
 		out.binomial[[2]]$LFA = "33E"
 		ouBin = ccir_collapse_summary(out.binomial)
 		attr(ouBin,'model') <- 'binomial'
 		#ouBin$Yr = ouBin$Yr +1
 		save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
-		#load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
+		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
 
 		g = unique(ouBin$Grid)
 		g = strsplit(g,"\\.")

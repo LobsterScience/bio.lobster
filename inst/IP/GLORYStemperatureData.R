@@ -62,8 +62,26 @@
 #python -m motuclient --motu http://my.cmems-du.eu/motu-web/Motu --service-id GLOBAL_REANALYSIS_PHY_001_030-TDS --product-id global-reanalysis-phy-001-030-daily --longitude-min -69 --longitude-max -57 --latitude-min 43 --latitude-max 47 --date-min "2018-01-01 12:00:00" --date-max "2018-12-31 12:00:00" --depth-min 0.493 --depth-max 5727.918 --variable bottomT --variable thetao --variable uo --variable vo --variable zos --out-dir ~/tmp/ --out-name GLORYS2018 --user acook2 --pwd 'Homarus1!'
 
 
-
+require(bio.lobster)
 require(satin)
-y1 = read.cmems(file.path(project.datadirectory('bio.lobster'),'data','GLORYS','GLORYS1993'))
+require(tidyr)
+setwd(file.path(project.datadirectory('bio.lobster'),'data','GLORYS'))
 
+y1 = read.cmems('GLORYS1993')
+a = y1$bottomT
 image(a@lon, a@lat, t(a@data[,,1,]))
+
+load(file='/SpinDr/backup/bio_data/bio.lobster/data/maps/LFA27-33100mIsobath.rdata') #Isob100 the 100 m isobath for 27-33
+
+
+fil = dir()
+fil = fil[grep('GLO',fil)]
+
+for(i in 1:length(fil)){
+		g = glorysSubset(glorysfile=fil[i], polygon=Isob100)
+		saveRDS(g,file = file.path('SummaryFiles',paste(fil[i],'Isobath100.rds',sep="_")))
+	}
+
+
+
+#error with 2018
