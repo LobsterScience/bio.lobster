@@ -60,11 +60,11 @@ for(j in 1:n) {
 		if(!is.null(out.date)){
 				da = as.Date(unique(out.date[,3]),format('%d/%m/%Y'))
 		}
-		browser()
+		
 		if(!is.null(out.sensors)) {
 				ose = data.frame(out.sensors)
 				ose$X1 = do.call(rbind,strsplit(ose$X1,"\\."))[,1]
-				ose$Date = da
+				#ose$Date = da
 				ose = ose[,c(21,1,6,9,10,15,16,19,20)]
 				names(ose) = c('Date','Time','Info','Info2','Measure','X1','X2','Info3', 'Info4')
 				ose$X1 = as.numeric(ose$X1)

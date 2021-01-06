@@ -1,11 +1,12 @@
-loadfunctions(c('lobster','utility','netmensuration'))
 options(stringsAsFactors=F)
-fpath = file.path(project.datadirectory('lobster'),'data','survey','2015')
+require(bio.lobster)
+require(bio.utilities)
+fpath = file.path(project.datadirectory('bio.lobster'),'data','survey','2015')
 
-#marpath = file.path(fpath,'marport')
-#tpath = file.path(fpath,'temperature')
+marpath = file.path(fpath,'marport')
+tpath = file.path(fpath,'temperature')
 
-fm = dir(fpath,full.names=T)
+fm = dir(marpath,full.names=T)
 
 gps = list()
 sensors = list()
@@ -22,5 +23,5 @@ for(i in fm) {
 
 gps = do.call(rbind,gps)
 sensors = do.call(rbind,sensors)
-save(sensors, file=file.path(project.datadirectory('lobster'),'data','survey','marport.rdata'))
-save(gps, file=file.path(project.datadirectory('lobster'),'data','survey','marport.gps.rdata'))
+save(sensors, file=file.path(project.datadirectory('bio.lobster'),'data','survey','marport.rdata'))
+save(gps, file=file.path(project.datadirectory('bio.lobster'),'data','survey','marport.gps.rdata'))
