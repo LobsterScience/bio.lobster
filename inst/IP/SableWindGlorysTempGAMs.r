@@ -149,3 +149,43 @@ outs = gam(lWt~	s(Year)+
 
 
 
+#Add in Glorys Temperature Data
+	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+	#Get the unique EIDS from GLORYS data
+		L = subset(LFAs,PID==32)
+		fd = file.path(project.datadirectory('bio.lobster'),'data','GLORYS','SummaryFiles')
+		gL = dir(fd,full.names=T)
+		gL = gL[grep('Isobath',gL)]
+		EIDs = readRDS(gL[1])
+		EIDs = EIDs[!duplicated(EIDs[,c('X','Y','EID')]),c('X','Y','EID')]
+		I = findPolys(EIDs,L)$EID
+g = subset(xx,LFA==32)
+    x = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~DATE_FISHED+Uspd+Vspd+Year+Wspd+Dir+
+	    	Uspd_L1+Vspd_L1+Wspd_L1+Dir_L1+
+	    	Uspd_L2+Vspd_L2+Wspd_L2+Dir_L2+
+	    	Uspd_L3+Vspd_L3+Wspd_L3+Dir_L3
+	    	,data=g,FUN=sum)
+	
+out = list()
+for(i in 1:length(gL)){
+	jk = readRDS(gL[i])
+	jk = subset(jk,EID %in% I & month(date) %in% 4:7 )
+	out[[i]] = jk
+}
+	out = do.call(rbind,out)
+	aGL = aggregate(cbind(vo_surface,vo_bottom,thetao,uo_surface,uo_bottom,bottomT,zos)~date, data=out,FUN=median)
+	 aGL$DATE = as.Date(aGL$date)
+
+	oo = merge(x,aGL, by.x='DATE_FISHED',by.y='DATE')
+
+outs = gam(lWt~	s(Year)+
+			   	s(Uspd_L1)+
+			   	s(Vspd_L1) +  s(bottomT)+ s(bottomT, Doy)+
+			   	offset(lTr),data=oo, method='REML')
+
+
+require(gratia)
+draw(outs)
+vis.gam(outs,view=c('bottomT','Doy'),plot.type='contour',too.far=.05)
+
+

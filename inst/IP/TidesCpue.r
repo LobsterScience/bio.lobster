@@ -4,7 +4,9 @@ require(bio.lobster)
 require(bio.utilities)
 require(lubridate)
 
-a = read.csv(file.path(project.datadirectory('bio.lobster'),'tideDataStJohn2005-2015.csv'),skip=7)
+# data from here: http://www.isdm-gdsi.gc.ca/isdm-gdsi/twl-mne/inventory-inventaire/data-donnees-eng.asp?user=isdm-gdsi&region=ATL&tst=1&no=65
+
+a = read.csv(file.path(project.datadirectory('bio.lobster'),'data','tides','STJOHNTIDEJAN20052020.csv'),skip=7)
 names(a) = c('Date','Height')
 
 a$date = as.Date(a$Date,'%Y/%m/%d')
