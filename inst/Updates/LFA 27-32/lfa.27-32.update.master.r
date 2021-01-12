@@ -276,6 +276,37 @@ for(i in c("27", "29", "30", "31A", "31B", "32")){
   
 }
 
+# Contextual Indicators #############
+
+
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#mood
+
+
+# run this "bio/bio.lobster/inst/LFA2733Framework/Assessment/ContextualIndicatorsSetup.r"
+# and this "bio/bio.lobster/inst/LFA2733Framework/Assessment/ContextualIndicators.r"
+
+
+
+# Phase plot for conclusions and advice
+
+load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
+RR75  = aggregate(ERf75~LFA,data=oo[oo$Yr<2017,],FUN=max)
+
+lfas2 = c("27", "29", "30", "31A", "31B", "32")
+for(i in 1:length(lfas2)){
+  
+  x11(width=8,height=7)
+  
+  x = read.csv(file.path(figdir,paste0("CatchRateRefs",lfas2[i],".csv")))
+  y = read.csv(file.path(figdir,paste0("ExploitationRefs",lfas2[i],".csv")))
+  
+  RR = subset(RR75,LFA==lfas2[i])$ERf75
+  
+  hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,yrs=min(y$Yr):assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T,main=paste("LFA",lfas2[i])) 
+  savePlot(file.path(figdir,paste0('PhasePlot',lfas2[i],'.png')),type='png')
+}
+
 
 ### Bycatch
 
