@@ -382,7 +382,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                           logs$TOTAL_WEIGHT_KG = logs$TOTAL_WEIGHT_LBS*0.4536
 
                     # select for records within season
-                          logs$DATE_FISHED = as.Date(logs$DATE_FISHED,"%Y-%m-%d")
+                          logs$DATE_FISHED = as.Date(logs$DATE_FISHED,"%Y-%m-%d", tz="UTC" )
                           #logs$SYEAR = year(logs$DATE_FISHED)
           
                         for(i in 1:length(lfa)) {

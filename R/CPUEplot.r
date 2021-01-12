@@ -18,7 +18,7 @@ CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,
 	for(i in 1:length(lfa)){
 		# daily
 		print(lfa[i])
-		if(lfa[i]=='31A') browser()
+		if(lfa[i]=='31A') #browser()
 		catch<-with(subset(logs,LFA==lfa[i]),tapply(WEIGHT_KG,DATE_FISHED,sum,na.rm=T))
 		effort<-with(subset(logs,LFA==lfa[i]),tapply(NUM_OF_TRAPS,DATE_FISHED,sum,na.rm=T))
 		daily[[i]]<-merge(data.frame(LFA=lfa[i],DATE=as.Date(names(catch)),CATCH=catch),data.frame(LFA=lfa[i],DATE=as.Date(names(effort)),EFFORT=effort),all=T)
