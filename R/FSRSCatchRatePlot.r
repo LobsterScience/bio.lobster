@@ -15,13 +15,14 @@ FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,save=T
 
 					ymax = max(c(ymaxr,ymaxl,lrp,usr))
 					if(!is.null(recruits)){
-						plot(recruits[,1],recruits[,2],xlab='',ylab='',type='n',main=title,ylim=c(0,ymax),...)
+						plot(recruits[,1],recruits[,2],xlab='',ylab='',type='n',main='',ylim=c(0,1.15*ymax),...)
+					  title(title, line = -1.1, cex.main=1.5)
 						polygon(c(recruits[,1],rev(recruits[,1])),c(recruits[,3],rev(recruits[,4])),col='grey',border=NA)
 						lines(recruits[,1],recruits[,2],lwd=2,pch=16,type='b')
 						if(rm){
 							recruits$running.median = rmed(recruits[,1],recruits[,2])$x
 							lines(recruits[,1],recruits$running.median,col='blue',lty=2,lwd=3)
-						}
+										}
 						axis(4,lab=F)
 			
 						if(!is.null(usr)) abline(h=usr,col='green',lwd=2,lty=2)
@@ -30,7 +31,7 @@ FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,save=T
 					}
 					
 					if(!is.null(legals)){
-						plot(legals[,1],legals[,2],xlab='',ylab='',type='n',main=title,ylim=c(0,ymax),...)
+						plot(legals[,1],legals[,2],xlab='',ylab='',type='n',main='',ylim=c(0,1.15*ymax),...)
 						polygon(c(legals[,1],rev(legals[,1])),c(legals[,3],rev(legals[,4])),col='grey',border=NA)
 						lines(legals[,1],legals[,2],lwd=2,pch=16,type='b')
 						if(rm){
@@ -44,7 +45,6 @@ FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,save=T
 					}
 					mtext("Lobsters / Trap", 2, -1, outer = T,las=0)	
 					mtext("Year", 1, 2, outer = T)
-					
 					if (save){savePlot(file.path(fd,paste(fn,'png',sep='.')),type='png')}
 					if(!is.null(recruits))write.csv(recruits,file.path(fd,paste(fn,'recruits','csv',sep='.')))
 					if(!is.null(legals))write.csv(legals,file.path(fd,paste(fn,'legals','csv',sep='.')))

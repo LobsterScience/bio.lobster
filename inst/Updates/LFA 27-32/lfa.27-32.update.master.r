@@ -92,28 +92,112 @@ dev.off()
 
 ## Continuous Change In Ratio (CCIR)
 
-lobster.db('ccir.redo')
-inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
-load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
-load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
-
-
-lobster.db('ccir')
+# lobster.db('ccir.redo')
+# inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
+# load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
+# load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
+# 
+# 
+# lobster.db('ccir')
+# 
+# logs = lobster.db('process.logs')
+# 
+# require(bio.ccir)
+# require(rstan)
+# #load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
+# ccir_data2 = subset(ccir_data,YEAR<=2021)
+# dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
+# 
+# out.binomial = list()
+# attr(out.binomial,'model') <- 'binomial'
+# for(i in 1:length(dat)) {
+#   ds = dat[[i]]
+#   ds$method = 'binomial'
+#   x = ccir_stan_run(dat = ds,save=T)
+#   out.binomial[[i]] <- ccir_stan_summarize(x)
+# }
+# 
+# #load statement below combines ccir summaries if broken runs
+# #ensure folder has only model run summaries
+# da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary') #modify as required
+# 
+# d = list.files(da,full.names=T)
+# out.binomial = list()
+# 
+# for( i in 1:length(d)){
+#   load(d[i])
+#   out.binomial[[i]] <- out
+# }
+# 
+# 
+# out.binomial[[1]]$LFA = "33W"
+# out.binomial[[2]]$LFA = "33E"
+# ouBin = ccir_collapse_summary(out.binomial)
+# attr(ouBin,'model') <- 'binomial'
+# #ouBin$Yr = ouBin$Yr +1
+# save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
+# load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
+# 
+# g = unique(ouBin$Grid)
+# g = strsplit(g,"\\.")
+# o = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[1]]),FUN=sum)
+# names(o)[2] = g[[1]][1]
+# o2 = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[2]]),FUN=sum)
+# names(o2)[2] = g[[2]][1]
+# o = merge(o,o2)
+# names(o)[1] = 'Yr'
+# oo <- ccir_timeseries_exploitation_plots(ouBin,combined.LFA=T,landings=o)
+# 
+# save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
+# load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
+# RR75 = max(oo$ERf75[oo$Yr<2021])#0.8338764
+# #########Linux to here
+# 
+# oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))
+# # plot
+# 
+# png(filename=file.path(figdir, "CCIR_LFA33.png"),width=8, height=5, units = "in", res = 800)
+# ExploitationRatePlots(data = oo[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR75,lfa = 33,fd=figdir, save=F)
+# dev.off()
+# 
+# write.csv(data,file.path(fd,paste(fn,'.csv',sep='')))
+# 
+# lobster.db('ccir.redo') 
+# ccir_data = subset(ccir_data,YEAR<2019)
+# 
+# inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
+# 
+# # fill in table where data is missing for recent years
+# inp.lst=list()
+# lfas = unique(inp$LFA)
+# for(i in 1:length(lfas)){
+#   inpt = subset(inp,LFA==lfas[i])
+#   maxyr=max(inpt$Year)
+#   inp.lst[[i]] = rbind(inpt, data.frame(LFA=lfas[i],Year=(maxyr+1):assessment.year,inpt[inpt$Year==maxyr,3:ncol(inpt)]))
+# }
+# inp = do.call("rbind",inp.lst)
+# 
+# write.csv(inp,file.path(project.datadirectory('bio.lobster'),'data','inputs',paste0('ccir_inputs',assessment.year,'.csv')))
+# 
+# 
+# load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
+# load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
+# lobster.db('ccir')
 
 logs = lobster.db('process.logs')
 
 require(bio.ccir)
 require(rstan)
-#load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
-ccir_data2 = subset(ccir_data,YEAR<=2021)
-dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
+
+load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
+dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 out.binomial = list()
 attr(out.binomial,'model') <- 'binomial'
 for(i in 1:length(dat)) {
   ds = dat[[i]]
   ds$method = 'binomial'
-  x = ccir_stan_run(dat = ds,save=T)
+  x = ccir_stan_run(dat = ds,save=F)
   out.binomial[[i]] <- ccir_stan_summarize(x)
 }
 
@@ -129,16 +213,16 @@ for( i in 1:length(d)){
   out.binomial[[i]] <- out
 }
 
-
-out.binomial[[1]]$LFA = "33W"
-out.binomial[[2]]$LFA = "33E"
+out.binomial[[1]]$LFA = "27N"
+out.binomial[[2]]$LFA = "27S"
 ouBin = ccir_collapse_summary(out.binomial)
-attr(ouBin,'model') <- 'binomial'
+attr(ouBin,'model') <- 'binomial' 
 #ouBin$Yr = ouBin$Yr +1
-save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
-load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
+save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
+#load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
 
-g = unique(ouBin$Grid)
+u = subset(ouBin, LFA == 27)
+g = unique(u$Grid)
 g = strsplit(g,"\\.")
 o = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[1]]),FUN=sum)
 names(o)[2] = g[[1]][1]
@@ -148,19 +232,40 @@ o = merge(o,o2)
 names(o)[1] = 'Yr'
 oo <- ccir_timeseries_exploitation_plots(ouBin,combined.LFA=T,landings=o)
 
-save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
-load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
-RR75 = max(oo$ERf75[oo$Yr<2021])#0.8338764
-#########Linux to here
+u = subset(ouBin, LFA != 27)
+kl = unique(u$Grid) 
+outs=list()
+for(i in 1:length(kl)) {
+  u = subset(ouBin, Grid == kl[i])
+  outs[[i]] <- ccir_timeseries_exploitation_plots(u)
+}
+o = do.call(rbind,outs)
+ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,ERf75,LFA))
 
-oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))
+oo = rbind(oo,ooo)
+oo$LFA[oo$LFA == "LFA 27 Combined"] = 27
+oo$LFA[oo$LFA == "LFA 29"] = 29
+oo$LFA[oo$LFA == "LFA 30"] = 30
+oo$LFA[oo$LFA == "LFA 31A"] = "31A"
+oo$LFA[oo$LFA == "LFA 31B"] = "31B"
+oo$LFA[oo$LFA == "LFA 32"] = 32
+
+save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
+load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
+RR75  = aggregate(ERf75~LFA,data=oo[oo$Yr<2017,],FUN=max)
+
 # plot
-
-png(filename=file.path(figdir, "CCIR_LFA33.png"),width=8, height=5, units = "in", res = 800)
-ExploitationRatePlots(data = oo[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR75,lfa = 33,fd=figdir, save=F)
-dev.off()
-
-write.csv(data,file.path(fd,paste(fn,'.csv',sep='')))
+for(i in c("27", "29", "30", "31A", "31B", "32")){
+  
+  o = subset(oo,LFA==i)
+  
+  RR7 = subset(RR75,LFA==i)$ERf75
+  
+  x11(width=8,height=5)
+  ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=figdir)
+  
+  
+}
 
 
 
@@ -197,7 +302,7 @@ data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
 par(mar=c(3,5,2.0,4.5))
 plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
 lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
-text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=3.3, col="darkred")
+text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7, col="darkred")
 
 par(new=T)
 
@@ -230,7 +335,7 @@ for (i in 1:length(lst)) {
   par(mar=c(3,5,2.0,4.5))
   plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
   lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
-  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=3.3, col="darkred")
+  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7, col="darkred")
   
   par(new=T)
   
@@ -271,10 +376,12 @@ for(i in c("27", "29", "30", "31A", "31B", "32")){
   
   
   # plot
-  x11(width=8,height=7)
-  FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],lfa = i,fd=figdir,title='')
-  
-}
+  #x11(width=8,height=7)
+  png(filename=file.path(figdir, paste('FSRSRecruitCatchRate',i,'png', sep='.')),width=8, height=6.5, units = "in", res = 800)
+  FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],
+                    lfa = i,fd=figdir,title=i, save=F, rm=F)
+  dev.off()
+  }
 
 # Contextual Indicators #############
 
@@ -289,6 +396,8 @@ for(i in c("27", "29", "30", "31A", "31B", "32")){
 
 
 # Phase plot for conclusions and advice
+
+#oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))
 
 load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
 RR75  = aggregate(ERf75~LFA,data=oo[oo$Yr<2017,],FUN=max)
@@ -310,24 +419,8 @@ for(i in 1:length(lfas2)){
 
 ### Bycatch
 
-Bycatch estimates are calculated using effort from logbook data for all LFAs except LFA 27. To estimate bycatch in LFA 27, effort was estimated from the combined Gulf Logbooks and Maritimes logbooks using the median CPUE and landings from the Gulf logs and logbook effort from the Maritimes Region. 2019 Gulf Landings in LFA 27 are calculated by adding estimated slip landings based on previous years to the logbook landings. 2019 Bycatch estimates for LFAs 27-32 are preliminary due to log records being incomplete with no bycatch estimate for LFA 29, 30 and 32 due to low sampling numbers or no data available.
+#Bycatch estimates are calculated using effort from logbook data for LFAs 31A and 31B
+#To estimate LFA 27 bycatch, gulf landings need to be added to logs. 
 
-```{r, fig.cap="Bycatch Estimates for LFA 27"}
-knitr::include_graphics("LFA27Bycatch.png")
-```
-
-
-
-```{r, fig.cap="Bycatch Estimates for LFA 31A. 1 Not Specified (contains Longhorn and Shorthorn Sculpin)"}
-knitr::include_graphics("LFA31ABycatch.png")
-```
-
-
-
-```{r, fig.cap="Bycatch Estimates for LFA 31B. 1 Not Specified (contains Longhorn and Shorthorn Sculpin)"}
-knitr::include_graphics("LFA31BBycatch.png")
-```
-
-
-
+Lobster.Bycatch(lfa=c("31A","31B"), save=T, save.dir=figdir)
 

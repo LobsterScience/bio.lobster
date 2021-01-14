@@ -2,13 +2,14 @@
 #extrapolates bycatch sampling to entire LFA landings
 #Provided by Cheryl Denton, January 2021
 #***Caveat-Currently only tested for 31A, 31B
+#save.dir sets save directory
+#lfa sets lfa's to be used
 
-
+Lobster.Bycatch= function(save.dir=getwd(), lfa=c("31A", "31B"), save=F){
 require(ROracle)
 
 con=ROracle::dbConnect(DBI::dbDriver("Oracle"),dbname=oracle.personal.server , username=oracle.personal.user, password=oracle.personal.password, believeNRows=F)
-lfa= c("31A", "31B")
-for l in lfa
+for (l in lfa){
 bycatch= ROracle::dbGetQuery(con, paste ("SELECT a.lfa,
   a.yr,
   a.species_code,
@@ -166,3 +167,14 @@ AND a.lfa   = ",
 )  )
 
 bc.table=xtabs(MT~COMMON+YR, data=bycatch)
+
+print(paste("LFA ",l))
+print(bc.table)
+print(paste("-------------------"))
+
+    if (save){
+        write.csv(bc.table, file=paste(save.dir, "/bycatch.table.",l, '.csv', sep=""))
+      print(paste("Bycatch table for ",l, " is at: ", save.dir, "/bycatch.table.",l, '.csv', sep=""))
+    }
+}
+}

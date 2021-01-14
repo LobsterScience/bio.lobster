@@ -1,14 +1,16 @@
-#Provides Ability to load data from FSRS that comes in three files (lines 15-17)
+#Provides Ability to load data from FSRS that comes in three files (lines 18-20)
 #if provided as .txt files, convert to .csv
 #Saves a file which is then read into the fsrs data through the lobster.db('fsrs.redo') function 
 require(bio.lobster)
 require(lubridate)
 require(bio.utilities)
 options(stringsAsFactors=F)
-setwd(file.path(project.datadirectory('bio.lobster'),'data','fsrs.text.dump','2020'))
+
+p = bio.lobster::load.environment()
+
+setwd(file.path(project.datadirectory('bio.lobster'),'data','fsrs.text.dump',p$current.assessment.year))
 
 #lobster.db('fsrs') #imports databased FSRS data 
-
 
 #-------------------------------------
 #import "new" frsr data from csv files from Shannon, etc
