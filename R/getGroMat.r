@@ -11,7 +11,6 @@ getGroMat = function(p){
 
 	mat=matrix(NA,length(p$lens),length(p$lens))
 	pM=c()
-
 	for (i in 1:(nrow(mat)-1)){
 
 		# get probablitiy of molting		
