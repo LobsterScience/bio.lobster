@@ -38,7 +38,7 @@ getSimList = function(p,sex=1, LS=82.5, Fadj = 1, Sadj = 1, Sclose='end', window
 		
 
 		#season adjustment
-		#)browser()
+		#browser()
 		p$season = as.Date(p$season)
 		if(length(p$season)==2){
 			if(Sclose=='end')p$season[2] = p$season[2] - (p$season[2]-p$season[1])*(1-Sadj)
@@ -73,8 +73,8 @@ getSimList = function(p,sex=1, LS=82.5, Fadj = 1, Sadj = 1, Sclose='end', window
 
 		p$mint = 10 # minimum temperature for a lobster to molt
 	
-		#growth 
-		p$Incr = getIncr(p)
+		#growth 		
+	p$Incr = getIncr(p)
 		
 		p$maxMolts = 15
 		p$maxTime = 20
