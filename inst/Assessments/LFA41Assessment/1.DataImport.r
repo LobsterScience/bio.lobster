@@ -7,12 +7,11 @@ p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
 p$yrs = 1947:p$current.assessment.year
-<<<<<<< HEAD
+
 load_all('~/GitHub/bio.survey/')
 
-=======
 #load_all('~/git/bio.survey/')
->>>>>>> 8166747bcdc1efa15ee4ccbc0b303a07181b8751
+
 
 
 windows=F
@@ -48,7 +47,6 @@ windows=F
 
 #### Landings
         
-<<<<<<< HEAD
        # LFA41 Landings Update
        require(magrittr)
         
@@ -73,7 +71,7 @@ windows=F
         
         ann.41<-tot.land%>%group_by(YEAR)%>%summarise(LAND_T=sum(LANDINGS_T,na.rm=TRUE), TH=sum(NUM_OF_TRAPS, na.rm=TRUE),
                                                       CPUE=sum((LANDINGS_T/TH)*1000,na.rm=TRUE))%>%ungroup()%>%data.frame()
-=======
+
 #      # LFA41 Landings Update
 #      require(maggittr)
 #       
@@ -98,5 +96,5 @@ windows=F
 #       
 #       ann.41<-tot.land%>%group_by(YEAR)%>%summarise(LAND_T=sum(LANDINGS_T,na.rm=TRUE), TH=sum(NUM_OF_TRAPS, na.rm=TRUE),
 #                                                     CPUE=sum((LANDINGS_T/TH)*1000,na.rm=TRUE))%>%ungroup()%>%data.frame()
->>>>>>> 8166747bcdc1efa15ee4ccbc0b303a07181b8751
+
 
