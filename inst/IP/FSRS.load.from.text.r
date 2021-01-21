@@ -19,10 +19,12 @@ xy = read.csv('Position.csv')
 ca = read.csv('Catch.csv')
 tr = read.csv('Traps.csv')
 
+xy$Longitude=(xy$Longitude)*-1 #Convert Longitudes to - values
+
 #Check location of data points. Choose LFA of choice below
 LobsterMap('27-32')
 
-		xy$X =convert.dd.dddd(xy$Longitude)*-1
+		xy$X =convert.dd.dddd(xy$Longitude)
 		xy$Y =convert.dd.dddd(xy$Latitude)
 		xy = makePBS(xy,polygon=F) #,coords=c('Longitude','Latitude'))
 		addPoints(xy,col='red',pch=16,cex=.5)
