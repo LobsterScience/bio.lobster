@@ -2,7 +2,7 @@ p = bio.lobster::load.environment()
 require(SpatialHub)
 require(lubridate)
 
-la()
+#la()
 
 #assessment.year = p$current.assessment.year 
 p$current.assessment.year = p$current.assessment.year - 1 
@@ -34,6 +34,23 @@ logs=lobster.db("process.logs")
 CPUE.data<-CPUEModelData(p,redo=F)
 cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2020, graphic='R')$annual.data
 
+#add lrp and USR
+
+cpueData$usr=NA
+cpueData$lrp=NA
+
+for (l in p$lfas){
+mu=median(cpueData$CPUE[cpueData$YEAR %in% c(1985:2009) & cpueData$LFA==l])
+cpueData$usr[cpueData$LFA==l]=0.8*mu
+cpueData$lrp[cpueData$LFA==l]=0.4*mu
+
+}
+
+running.median = with(rmed(data[,1],data[,2]),data.frame(YEAR=yr,running.median=x))
+data=merge(data,running.median,all=T)
+lines(data[,1],data$running.median,col='salmon',lty=1,lwd=3)
+
+
 ls=c('27', '28', '29', '30')
 ls2=c('31A', '31B', '32')
 
@@ -50,7 +67,6 @@ mu = median(crd$CPUE[crd$YEAR %in% c(1985:2009)])
 usr = mu * 0.8
 lrp = mu * 0.4
 crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
-
 
 par(mar=c(2.0,2.0,2.0,2.0))	
 plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/TH)',type='p',pch=16, xlim=xlim, ylim=c(lrp-.1,1.05*(max(crd$CPUE, na.rm = TRUE)) ))
@@ -92,52 +108,7 @@ dev.off()
 
 ## Continuous Change In Ratio (CCIR)
 
-# lobster.db('ccir.redo')
-# inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
-# load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
-# load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
-# 
-# 
-# lobster.db('ccir')
-# 
-# logs = lobster.db('process.logs')
-# 
-# require(bio.ccir)
-# require(rstan)
-# #load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
-# ccir_data2 = subset(ccir_data,YEAR<=2021)
-# dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
-# 
-# out.binomial = list()
-# attr(out.binomial,'model') <- 'binomial'
-# for(i in 1:length(dat)) {
-#   ds = dat[[i]]
-#   ds$method = 'binomial'
-#   x = ccir_stan_run(dat = ds,save=T)
-#   out.binomial[[i]] <- ccir_stan_summarize(x)
-# }
-# 
-# #load statement below combines ccir summaries if broken runs
-# #ensure folder has only model run summaries
-# da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary') #modify as required
-# 
-# d = list.files(da,full.names=T)
-# out.binomial = list()
-# 
-# for( i in 1:length(d)){
-#   load(d[i])
-#   out.binomial[[i]] <- out
-# }
-# 
-# 
-# out.binomial[[1]]$LFA = "33W"
-# out.binomial[[2]]$LFA = "33E"
-# ouBin = ccir_collapse_summary(out.binomial)
-# attr(ouBin,'model') <- 'binomial'
-# #ouBin$Yr = ouBin$Yr +1
-# save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
-# load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
-# 
+
 # g = unique(ouBin$Grid)
 # g = strsplit(g,"\\.")
 # o = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[1]]),FUN=sum)
@@ -182,8 +153,14 @@ dev.off()
 # 
 # load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
 # load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
-# lobster.db('ccir')
+ 
+#lobster.db('ccir.redo')
+lobster.db('ccir')
 
+ inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
+ load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
+ load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
+      
 logs = lobster.db('process.logs')
 
 require(bio.ccir)
@@ -213,13 +190,17 @@ for( i in 1:length(d)){
   out.binomial[[i]] <- out
 }
 
-out.binomial[[1]]$LFA = "27N"
-out.binomial[[2]]$LFA = "27S"
+#if(grepl(351,x$Grid[1])) Main = 'LFA 27 South'
+#if(grepl(356,x$Grid[1])) Main = 'LFA 27 North'
+
+#out.binomial[[1]]$LFA = "27N"
+#out.binomial[[2]]$LFA = "27S"
+
 ouBin = ccir_collapse_summary(out.binomial)
 attr(ouBin,'model') <- 'binomial' 
-#ouBin$Yr = ouBin$Yr +1
+
 save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
-#load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
+load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
 
 u = subset(ouBin, LFA == 27)
 g = unique(u$Grid)
@@ -230,15 +211,25 @@ o2 = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[2]]),FUN=sum)
 names(o2)[2] = g[[2]][1]
 o = merge(o,o2)
 names(o)[1] = 'Yr'
-oo <- ccir_timeseries_exploitation_plots(ouBin,combined.LFA=T,landings=o)
+
+ccir.dir=file.path(figdir, "ccir")
+dir.create( ccir.dir, recursive = TRUE, showWarnings = TRUE )
+
+#png(filename=file.path(ccir.dir, "TS.exploitation.27.combined.png"),width=8, height=5.5, units = "in", res = 800)
+oo <- ccir_timeseries_exploitation_plots(ouBin,combined.LFA=T,landings=o, fdir=ccir.dir)
+#dev.off()
 
 u = subset(ouBin, LFA != 27)
 kl = unique(u$Grid) 
 outs=list()
 for(i in 1:length(kl)) {
   u = subset(ouBin, Grid == kl[i])
-  outs[[i]] <- ccir_timeseries_exploitation_plots(u)
+ # png(filename=paste(ccir.dir,"/TS.exploitation.",u$LFA[1],".",u$Grid[1] ,".png", sep=""),width=8, height=5.5, units = "in", res = 800)
+  outs[[i]] <- ccir_timeseries_exploitation_plots(u, fdir=ccir.dir)
+ # dev.off()
 }
+
+
 o = do.call(rbind,outs)
 ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,ERf75,LFA))
 
@@ -252,21 +243,25 @@ oo$LFA[oo$LFA == "LFA 32"] = 32
 
 save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
 load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
-RR75  = aggregate(ERf75~LFA,data=oo[oo$Yr<2017,],FUN=max)
+RR75  = aggregate(ERf75~LFA,data=oo,FUN=max)
 
-# plot
+# plot Individual
 for(i in c("27", "29", "30", "31A", "31B", "32")){
-  
   o = subset(oo,LFA==i)
-  
   RR7 = subset(RR75,LFA==i)$ERf75
-  
-  x11(width=8,height=5)
-  ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=figdir)
-  
-  
+  png(filename=file.path(ccir.dir, paste0('ExploitationRefs',i, '.png')),width=8, height=4, units = "in", res = 800)
+  ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i)
+  dev.off()
 }
 
+# png(filename=file.path(ccir.dir, paste0('ExploitationRefs.all.png')),width=8, height=4, units = "in", res = 800)
+# par(mfrow=c(3,2)) 
+# for(i in c("27", "29", "30", "31A", "31B", "32")){
+#   o = subset(oo,LFA==i)
+#   RR7 = subset(RR75,LFA==i)$ERf75
+#   ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i)
+# }
+# dev.off()
 
 
 ## Secondary Indicators
@@ -302,7 +297,7 @@ data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
 par(mar=c(3,5,2.0,4.5))
 plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
 lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
-text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7, col="darkred")
+text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
 
 par(new=T)
 
@@ -335,7 +330,7 @@ for (i in 1:length(lst)) {
   par(mar=c(3,5,2.0,4.5))
   plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
   lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
-  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7, col="darkred")
+  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
   
   par(new=T)
   
@@ -400,21 +395,29 @@ for(i in c("27", "29", "30", "31A", "31B", "32")){
 #oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))
 
 load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
-RR75  = aggregate(ERf75~LFA,data=oo[oo$Yr<2017,],FUN=max)
+RR75  = aggregate(ERf75~LFA,data=oo,FUN=max)
 
 lfas2 = c("27", "29", "30", "31A", "31B", "32")
 for(i in 1:length(lfas2)){
   
-  x11(width=8,height=7)
+  #x11(width=8,height=7)
   
-  x = read.csv(file.path(figdir,paste0("CatchRateRefs",lfas2[i],".csv")))
-  y = read.csv(file.path(figdir,paste0("ExploitationRefs",lfas2[i],".csv")))
+  x = subset(cpueData,LFA==lfas2[i])
+  y = read.csv(file.path(figdir,"ccir",paste0("ExploitationRefs",lfas2[i],".csv")))
   
-  RR = subset(RR75,LFA==lfas2[i])$ERf75
+  #RR = subset(RR75,LFA==lfas2[i])$ERf75
+  usr=x$usr[1]
+  lrp=x$lrp[1]
+  RR=RR75$ERf75[RR75$LFA==lfas2[i]]
   
-  hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,yrs=min(y$Yr):assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T,main=paste("LFA",lfas2[i])) 
-  savePlot(file.path(figdir,paste0('PhasePlot',lfas2[i],'.png')),type='png')
+  running.median = with(rmed(x[,2],x[,6]),data.frame(YEAR=yr,running.median=x))
+  x=merge(x,running.median,all=T)
+  
+  png(file=file.path(figdir,paste0('PhasePlot',lfas2[i],'.png')))
+  hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T,main=paste("LFA",lfas2[i])) 
+  dev.off()
 }
+
 
 
 ### Bycatch
