@@ -25,9 +25,8 @@ if(NewDataPull){
 
 
 png(filename=file.path(figdir, "MapLFA2732.png") ,width=6.5, height=6.5, units = "in", res = 800)
- LobsterMap('27-32')
+LobsterMap('27-32')
 dev.off()
-
 
 logs=lobster.db("process.logs")
 
@@ -43,13 +42,7 @@ for (l in p$lfas){
 mu=median(cpueData$CPUE[cpueData$YEAR %in% c(1985:2009) & cpueData$LFA==l])
 cpueData$usr[cpueData$LFA==l]=0.8*mu
 cpueData$lrp[cpueData$LFA==l]=0.4*mu
-
 }
-
-running.median = with(rmed(data[,1],data[,2]),data.frame(YEAR=yr,running.median=x))
-data=merge(data,running.median,all=T)
-lines(data[,1],data$running.median,col='salmon',lty=1,lwd=3)
-
 
 ls=c('27', '28', '29', '30')
 ls2=c('31A', '31B', '32')
@@ -68,7 +61,7 @@ usr = mu * 0.8
 lrp = mu * 0.4
 crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
 
-par(mar=c(2.0,2.0,2.0,2.0))	
+par(mar=c(1.0,4.0,2.0,2.0))	
 plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/TH)',type='p',pch=16, xlim=xlim, ylim=c(lrp-.1,1.05*(max(crd$CPUE, na.rm = TRUE)) ))
 running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
 crd=merge(crd,running.median,all=T)
@@ -93,7 +86,7 @@ for (l in ls2) {
   crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
   
   
-  par(mar=c(2.0,2.0,2.0,2.0))
+  par(mar=c(1.0,4.0,2.0,2.0))
   plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/TH)',type='p',pch=16, xlim=xlim, ylim=c(lrp-.1,1.05*(max(crd$CPUE, na.rm = TRUE)) ))
   running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
   crd=merge(crd,running.median,all=T)
@@ -108,52 +101,6 @@ dev.off()
 
 ## Continuous Change In Ratio (CCIR)
 
-
-# g = unique(ouBin$Grid)
-# g = strsplit(g,"\\.")
-# o = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[1]]),FUN=sum)
-# names(o)[2] = g[[1]][1]
-# o2 = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[2]]),FUN=sum)
-# names(o2)[2] = g[[2]][1]
-# o = merge(o,o2)
-# names(o)[1] = 'Yr'
-# oo <- ccir_timeseries_exploitation_plots(ouBin,combined.LFA=T,landings=o)
-# 
-# save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
-# load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
-# RR75 = max(oo$ERf75[oo$Yr<2021])#0.8338764
-# #########Linux to here
-# 
-# oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))
-# # plot
-# 
-# png(filename=file.path(figdir, "CCIR_LFA33.png"),width=8, height=5, units = "in", res = 800)
-# ExploitationRatePlots(data = oo[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR75,lfa = 33,fd=figdir, save=F)
-# dev.off()
-# 
-# write.csv(data,file.path(fd,paste(fn,'.csv',sep='')))
-# 
-# lobster.db('ccir.redo') 
-# ccir_data = subset(ccir_data,YEAR<2019)
-# 
-# inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
-# 
-# # fill in table where data is missing for recent years
-# inp.lst=list()
-# lfas = unique(inp$LFA)
-# for(i in 1:length(lfas)){
-#   inpt = subset(inp,LFA==lfas[i])
-#   maxyr=max(inpt$Year)
-#   inp.lst[[i]] = rbind(inpt, data.frame(LFA=lfas[i],Year=(maxyr+1):assessment.year,inpt[inpt$Year==maxyr,3:ncol(inpt)]))
-# }
-# inp = do.call("rbind",inp.lst)
-# 
-# write.csv(inp,file.path(project.datadirectory('bio.lobster'),'data','inputs',paste0('ccir_inputs',assessment.year,'.csv')))
-# 
-# 
-# load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
-# load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
- 
 #lobster.db('ccir.redo')
 lobster.db('ccir')
 
@@ -378,21 +325,7 @@ for(i in c("27", "29", "30", "31A", "31B", "32")){
   dev.off()
   }
 
-# Contextual Indicators #############
-
-
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#mood
-
-
-# run this "bio/bio.lobster/inst/LFA2733Framework/Assessment/ContextualIndicatorsSetup.r"
-# and this "bio/bio.lobster/inst/LFA2733Framework/Assessment/ContextualIndicators.r"
-
-
-
-# Phase plot for conclusions and advice
-
-#oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))
+# Phase plots for conclusions and advice
 
 load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
 RR75  = aggregate(ERf75~LFA,data=oo,FUN=max)
@@ -405,7 +338,6 @@ for(i in 1:length(lfas2)){
   x = subset(cpueData,LFA==lfas2[i])
   y = read.csv(file.path(figdir,"ccir",paste0("ExploitationRefs",lfas2[i],".csv")))
   
-  #RR = subset(RR75,LFA==lfas2[i])$ERf75
   usr=x$usr[1]
   lrp=x$lrp[1]
   RR=RR75$ERf75[RR75$LFA==lfas2[i]]
@@ -417,8 +349,6 @@ for(i in 1:length(lfas2)){
   hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T,main=paste("LFA",lfas2[i])) 
   dev.off()
 }
-
-
 
 ### Bycatch
 
