@@ -105,7 +105,7 @@ if(DS %in% c('historic.cpue.redo', 'historic.cpue')){
           }
                    #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                   hcpue = connect.command(con,"select a.port, sdate, to_char(sdate,'yyyy') year, lfa, portname, lbsptrap from lobster.histcatch a, lobster.port b where 
-a.port = b.port;")
+a.port = b.port")
                   hcpue$SYEAR = year(hcpue$SDATE)
                   hcpue$MONTH = month(hcpue$SDATE)
                   ii = which(hcpue$MONTH>8)
@@ -124,7 +124,7 @@ if(DS %in% c('historic.landings.redo', 'historic.landings')){
                 return(hland)
           }
                    #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  hland = connect.command(con,"select * from lobster.historical_county_land ;")
+                  hland = connect.command(con,"select * from lobster.historical_county_land")
                   save(hland,file=file.path(fnODBC,'historic.landings.rdata'))       
           }
 
@@ -498,7 +498,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
         
         # vlog
         vlog = connect.command(con, "select a.FDATE,a.N_TRP,a.W_TOT,a.FCODE,a.N_L,a.W_AVG,a.PORT,a.CPTH,a.NBF,a.SEASON,a.W_C,a.CPTH_C, b.LFA,b.COUNTY,b.STAT,b.PORT_CODE,b.LATITUDE,b.LONGITUDE,b.COMMENTS from lobster.CRLOGDATA a, lobster.CRLOCATIONS b where a.port = b.port")
-        vlogs34 = connect.command(con, "select * from lobster.logdata_other;")
+        vlogs34 = connect.command(con, "select * from lobster.logdata_other")
         save( vlog, file=file.path( fnODBC, "vlog.rdata"), compress=T)
         save( vlogs34, file=file.path( fnODBC, "vlogs34.rdata"), compress=T)
       
@@ -574,7 +574,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                 query41 = "select * from lobster.logs41"
                 slipquery41 = "select  * from lobster.slips41"
                 ziffquery41  =  "select * from lobster.ziff41"
-                offquery41  =  "select * from lobster.crislog41;" # table not view
+                offquery41  =  "select * from lobster.crislog41" # table not view
 
                 slip41 = connect.command(con, slipquery41)
                 logs41 = connect.command(con, query41)
@@ -793,7 +793,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
            require(RODBC)
            #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
        
-            atSeaCatchLevel = connect.command(con, "select * from lobster.atseacatchlevel;")
+            atSeaCatchLevel = connect.command(con, "select * from lobster.atseacatchlevel")
             save( atSeaCatchLevel, file=file.path( fnODBC, "atSeaCatchLevel.rdata"), compress=T)
             gc()  # garbage collection
             odbcClose(con)
@@ -1045,7 +1045,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
                                                                         AND ca.catch_id      = fish.catch_id(+)
                                                                         AND fish_length     IS NOT NULL
 
-;"))
+"))
 
         save( obs.samp, file=file.path( fnODBC, "lfa41.observer.samples.rdata"), compress=T)
         gc()  # garbage collection
