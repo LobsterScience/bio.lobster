@@ -420,3 +420,21 @@ draw(outs)
 vis.gam(outs,view=c('bottomT','Doy'),plot.type='contour',too.far=.05)
 
 
+##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36
+##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36
+##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36##LFA 36
+require(bio.lobster)
+require(bio.utilities)
+require(lubridate)
+require(PBSmapping)
+require(mgcv)
+
+		logs = lobster.db("process.logs")
+	
+		tmp1 = subset(logs,select=c("DATE_FISHED","SYEAR","WEIGHT_KG","LFA","NUM_OF_TRAPS","subarea","GRID_NUM"))
+		tmp1$type = 'mandatory'
+	
+	    cpue.data = tmp1
+	    cD = subset(cpue.data,LFA==36)
+		fd = file.path(project.datadirectory('bio.lobster'),'data','GLORYS','SummaryFiles')
+
