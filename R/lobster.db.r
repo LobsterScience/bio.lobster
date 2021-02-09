@@ -51,7 +51,17 @@ lobster.db = function( DS="complete.redo",p=p) {
         
         }
       
-
+    
+if(DS %in% c('port_location','port_location.redo')){
+      if(DS == 'port_location') {
+        load(file=file.path(fnODBC,'port_locs.rdata'))
+        return(port_locs)
+      }
+      #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+      port_locs = connect.command(con,'select * from frailc.port_locs')
+      save(port_locs,file=file.path(fnODBC,'port_locs.rdata'))          
+    }
+    
 if(DS %in% c('port','port.redo')){
         if(DS == 'port') {
                   load(file=file.path(fnODBC,'ports.rdata'))
