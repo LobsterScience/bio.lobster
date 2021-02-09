@@ -1,7 +1,9 @@
 #' @title simMolt
 #' @description Prediction of moulting based on day since last moult, size and can include temperature through a degree day metric
 #' @param \code{p} :parameter list containing (at a minimum) region, doy (day of year), temp (temperature at doy)
-#' @param \code{cw} : carapace width 
+#' @param \code{gdd} : growing degree day
+#' @param \code{continuous.recruitment} : T/F whether you want to add new recruits at startPop size at an annual time step
+#' @param \code{recruitment.vector} : Variable Recruitment vector of length p$nt/round(365/p$timestep)
 #' @return The predicted probability of moulting
 #' @author  Brad Hubley, \email{Brad.Hubley@@dfo-mpo.gc.ca}
 #' @export
@@ -18,8 +20,11 @@ simMolt = function(p,gdd=T,continuous.recruitment=F){
 	moltProbs = totalPop
 	totalEggs = array(0,dim=c(p$nt,length(p$lens)))
 	totalPop[1,1,1,1] = p$StartPop # start with
-	if(continuous.recruitment)totalPop[,1,1,1] = p$StartPop # start with
-
+	if(continuous.recruitment) {
+			xxs = round(365/p$timestep)
+			xx = seq(1,p$nt,by=xxs)
+			totalPop[xx,1,1,1] = p$StartPop # start with
+	}
 	if(length(p$F) == 1) {
 		p$Fl = getFvec(p$F,p$LS,p$lens,p$window)
 		} else {

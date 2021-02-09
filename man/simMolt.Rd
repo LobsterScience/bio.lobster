@@ -9,7 +9,11 @@ simMolt(p, gdd = T, continuous.recruitment = F)
 \arguments{
 \item{\code{p}}{:parameter list containing (at a minimum) region, doy (day of year), temp (temperature at doy)}
 
-\item{\code{cw}}{: carapace width}
+\item{\code{gdd}}{: growing degree day}
+
+\item{\code{continuous.recruitment}}{: T/F whether you want to add new recruits at startPop size at an annual time step}
+
+\item{\code{recruitment.vector}}{: Variable Recruitment vector of length p$nt/round(365/p$timestep)}
 }
 \value{
 The predicted probability of moulting

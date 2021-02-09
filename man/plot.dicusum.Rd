@@ -4,7 +4,7 @@
 \alias{plot.dicusum}
 \title{plot.dicusum}
 \usage{
-\method{plot}{dicusum}(x, x.index, h, ...)
+plot.dicusum(x, x.index, h, ...)
 }
 \arguments{
 \item{\code{x}}{:output of dicusum.r}

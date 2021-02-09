@@ -188,4 +188,235 @@ require(gratia)
 draw(outs)
 vis.gam(outs,view=c('bottomT','Doy'),plot.type='contour',too.far=.05)
 
+###############
+##LFA 31A
+
+
+
+	    g = subset(xx,LFA %in% c('311','31A'))
+
+	    x = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~DATE_FISHED+Uspd+Vspd+Year+Wspd+Dir+
+	    	Uspd_L1+Vspd_L1+Wspd_L1+Dir_L1+
+	    	Uspd_L2+Vspd_L2+Wspd_L2+Dir_L2+
+	    	Uspd_L3+Vspd_L3+Wspd_L3+Dir_L3
+	    	,data=g,FUN=sum)
+	    x$CPUE = x$WEIGHT_KG / x$NUM_OF_TRAPS
+	    x=x[order(x$DATE_FISHED),]
+	    x$lWt = log(x$WEIGHT_KG)
+	    x$lTr = log(x$NUM_OF_TRAPS)
+	    x$Doy = yday(x$DATE_FISHED)
+
+#does Wind affect effort on a given day?
+## offset to max traps fished within season so that total reporting effort is captured
+	mT = aggregate(NUM_OF_TRAPS~Year,data=x, FUN=max)
+	names(mT)[2] = 'maxTraps'
+	x = merge(x,mT)
+	x$propMaxTraps = x$NUM_OF_TRAPS / x$maxTraps
+
+outs = gam(propMaxTraps~	s(Year)+
+			   	s(Doy)+
+			   	s(Uspd,Vspd)
+			   	,data=x, family = betar(link='logit'), method='REML')
+
+#you will get a warning about saturation -- likely due to low dispersion parameter--not terribly concerning
+
+
+outs = gam(lWt~	s(Year)+
+			   	s(Doy)+
+			   	s(Uspd_L1)+
+			   	s(Vspd_L1) +
+			   	offset(lTr),data=x, method='REML')
+
+
+
+#Add in Glorys Temperature Data
+	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+	#Get the unique EIDS from GLORYS data
+		L = subset(LFAs,PID==311)
+		fd = file.path(project.datadirectory('bio.lobster'),'data','GLORYS','SummaryFiles')
+		gL = dir(fd,full.names=T)
+		gL = gL[grep('Isobath',gL)]
+		EIDs = readRDS(gL[1])
+		EIDs = EIDs[!duplicated(EIDs[,c('X','Y','EID')]),c('X','Y','EID')]
+		I = findPolys(EIDs,L)$EID
+	
+out = list()
+for(i in 1:length(gL)){
+	jk = readRDS(gL[i])
+	jk = subset(jk,EID %in% I & month(date) %in% 4:7 )
+	out[[i]] = jk
+}
+	out = do.call(rbind,out)
+	aGL = aggregate(cbind(vo_surface,vo_bottom,thetao,uo_surface,uo_bottom,bottomT,zos)~date, data=out,FUN=median)
+	 aGL$DATE = as.Date(aGL$date)
+
+	oo = merge(x,aGL, by.x='DATE_FISHED',by.y='DATE')
+	oo$lWt =log(oo$WEIGHT_KG)
+	oo$lTr = log(oo$NUM_OF_TRAPS)
+
+outs = gam(lWt~	s(Year)+
+			   	s(Uspd_L1)+
+			   	s(Vspd_L1) +  s(bottomT)+ s(bottomT, Doy)+
+			   	offset(lTr),data=oo, method='REML')
+
+
+require(gratia)
+draw(outs)
+vis.gam(outs,view=c('bottomT','Doy'),plot.type='contour',too.far=.05)
+##################
+##31b
+
+
+
+
+	    g = subset(xx,LFA %in% c('312','31B'))
+
+	    x = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~DATE_FISHED+Uspd+Vspd+Year+Wspd+Dir+
+	    	Uspd_L1+Vspd_L1+Wspd_L1+Dir_L1+
+	    	Uspd_L2+Vspd_L2+Wspd_L2+Dir_L2+
+	    	Uspd_L3+Vspd_L3+Wspd_L3+Dir_L3
+	    	,data=g,FUN=sum)
+	    x$CPUE = x$WEIGHT_KG / x$NUM_OF_TRAPS
+	    x=x[order(x$DATE_FISHED),]
+	    x$lWt = log(x$WEIGHT_KG)
+	    x$lTr = log(x$NUM_OF_TRAPS)
+	    x$Doy = yday(x$DATE_FISHED)
+
+#does Wind affect effort on a given day?
+## offset to max traps fished within season so that total reporting effort is captured
+	mT = aggregate(NUM_OF_TRAPS~Year,data=x, FUN=max)
+	names(mT)[2] = 'maxTraps'
+	x = merge(x,mT)
+	x$propMaxTraps = x$NUM_OF_TRAPS / x$maxTraps
+
+outs = gam(propMaxTraps~	s(Year)+
+			   	s(Doy)+
+			   	s(Uspd,Vspd)
+			   	,data=x, family = betar(link='logit'), method='REML')
+
+#you will get a warning about saturation -- likely due to low dispersion parameter--not terribly concerning
+
+
+outs = gam(lWt~	s(Year)+
+			   	s(Doy)+
+			   	s(Uspd_L1)+
+			   	s(Vspd_L1) +
+			   	offset(lTr),data=x, method='REML')
+
+
+
+#Add in Glorys Temperature Data
+	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+	#Get the unique EIDS from GLORYS data
+		L = subset(LFAs,PID==312)
+		fd = file.path(project.datadirectory('bio.lobster'),'data','GLORYS','SummaryFiles')
+		gL = dir(fd,full.names=T)
+		gL = gL[grep('Isobath',gL)]
+		EIDs = readRDS(gL[1])
+		EIDs = EIDs[!duplicated(EIDs[,c('X','Y','EID')]),c('X','Y','EID')]
+		I = findPolys(EIDs,L)$EID
+	
+out = list()
+for(i in 1:length(gL)){
+	jk = readRDS(gL[i])
+	jk = subset(jk,EID %in% I & month(date) %in% 4:7 )
+	out[[i]] = jk
+}
+	out = do.call(rbind,out)
+	aGL = aggregate(cbind(vo_surface,vo_bottom,thetao,uo_surface,uo_bottom,bottomT,zos)~date, data=out,FUN=median)
+	 aGL$DATE = as.Date(aGL$date)
+
+	oo = merge(x,aGL, by.x='DATE_FISHED',by.y='DATE')
+	oo$lWt =log(oo$WEIGHT_KG)
+	oo$lTr = log(oo$NUM_OF_TRAPS)
+
+outs = gam(lWt~	s(Year)+
+			   	s(Uspd_L1)+
+			   	s(Vspd_L1) +  s(bottomT)+ s(bottomT, Doy)+
+			   	offset(lTr),data=oo, method='REML')
+
+
+require(gratia)
+draw(outs)
+vis.gam(outs,view=c('bottomT','Doy'),plot.type='contour',too.far=.05)
+
+
+
+#################
+##30
+
+
+
+
+	    g = subset(xx,LFA %in% c('30'))
+
+	    x = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~DATE_FISHED+Uspd+Vspd+Year+Wspd+Dir+
+	    	Uspd_L1+Vspd_L1+Wspd_L1+Dir_L1+
+	    	Uspd_L2+Vspd_L2+Wspd_L2+Dir_L2+
+	    	Uspd_L3+Vspd_L3+Wspd_L3+Dir_L3
+	    	,data=g,FUN=sum)
+	    x$CPUE = x$WEIGHT_KG / x$NUM_OF_TRAPS
+	    x=x[order(x$DATE_FISHED),]
+	    x$lWt = log(x$WEIGHT_KG)
+	    x$lTr = log(x$NUM_OF_TRAPS)
+	    x$Doy = yday(x$DATE_FISHED)
+
+#does Wind affect effort on a given day?
+## offset to max traps fished within season so that total reporting effort is captured
+	mT = aggregate(NUM_OF_TRAPS~Year,data=x, FUN=max)
+	names(mT)[2] = 'maxTraps'
+	x = merge(x,mT)
+	x$propMaxTraps = x$NUM_OF_TRAPS / x$maxTraps
+
+outs = gam(propMaxTraps~	s(Year)+
+			   	s(Doy)+
+			   	s(Uspd,Vspd)
+			   	,data=x, family = betar(link='logit'), method='REML')
+
+#you will get a warning about saturation -- likely due to low dispersion parameter--not terribly concerning
+
+
+outs = gam(lWt~	s(Year)+
+			   	s(Doy)+
+			   	s(Uspd_L1)+
+			   	s(Vspd_L1) +
+			   	offset(lTr),data=x, method='REML')
+
+
+
+#Add in Glorys Temperature Data
+	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+	#Get the unique EIDS from GLORYS data
+		L = subset(LFAs,PID==30)
+		fd = file.path(project.datadirectory('bio.lobster'),'data','GLORYS','SummaryFiles')
+		gL = dir(fd,full.names=T)
+		gL = gL[grep('Isobath',gL)]
+		EIDs = readRDS(gL[1])
+		EIDs = EIDs[!duplicated(EIDs[,c('X','Y','EID')]),c('X','Y','EID')]
+		I = findPolys(EIDs,L)$EID
+	
+out = list()
+for(i in 1:length(gL)){
+	jk = readRDS(gL[i])
+	jk = subset(jk,EID %in% I & month(date) %in% 4:7 )
+	out[[i]] = jk
+}
+	out = do.call(rbind,out)
+	aGL = aggregate(cbind(vo_surface,vo_bottom,thetao,uo_surface,uo_bottom,bottomT,zos)~date, data=out,FUN=median)
+	 aGL$DATE = as.Date(aGL$date)
+
+	oo = merge(x,aGL, by.x='DATE_FISHED',by.y='DATE')
+	oo$lWt =log(oo$WEIGHT_KG)
+	oo$lTr = log(oo$NUM_OF_TRAPS)
+
+outs = gam(lWt~	s(Year)+
+			   	s(Uspd_L1)+
+			   	s(Vspd_L1) +  s(bottomT, Doy) +
+			   	offset(lTr),data=oo, method='REML')
+
+
+require(gratia)
+draw(outs)
+vis.gam(outs,view=c('bottomT','Doy'),plot.type='contour',too.far=.05)
+
 
