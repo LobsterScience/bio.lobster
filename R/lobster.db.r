@@ -11,7 +11,8 @@ lobster.db = function( DS="complete.redo",p=p) {
     options(stringsAsFactors=F)
 
   require(lubridate)
-  require(RODBC)
+  #require(RODBC)
+  db.setup() #Chooses RODBC vs ROracle based on R version and installed packages. db.setup(RODBC=T) will force RODBC
     fn.root =  file.path( project.datadirectory('bio.lobster'), "data") 
     fnODBC  =  file.path(fn.root, "ODBCDump")
     fnProducts = file.path(fn.root,'products')
@@ -50,14 +51,24 @@ lobster.db = function( DS="complete.redo",p=p) {
         
         }
       
-
+    
+if(DS %in% c('port_location','port_location.redo')){
+      if(DS == 'port_location') {
+        load(file=file.path(fnODBC,'port_locs.rdata'))
+        return(port_locs)
+      }
+      #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+      port_locs = connect.command(con,'select * from frailc.port_locs')
+      save(port_locs,file=file.path(fnODBC,'port_locs.rdata'))          
+    }
+    
 if(DS %in% c('port','port.redo')){
         if(DS == 'port') {
                   load(file=file.path(fnODBC,'ports.rdata'))
                 return(ports)
           }
-                  con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  ports = sqlQuery(con,'select * from LOBSTER.port')
+                  #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  ports = connect.command(con,'select * from LOBSTER.port')
                   save(ports,file=file.path(fnODBC,'ports.rdata'))          
         }
 
@@ -66,8 +77,8 @@ if(DS %in% c('community_code','community_code.redo')){
         load(file=file.path(fnODBC,'community_code.rdata'))
         return(ports)
       }
-      con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-      ports = sqlQuery(con,'select * from MARFISSCI.COMMUNITIES')
+      #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+      ports = connect.command(con,'select * from MARFISSCI.COMMUNITIES')
       save(ports,file=file.path(fnODBC,'community_code.rdata'))          
     }
     
@@ -77,8 +88,8 @@ if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
                   load(file=file.path(fnODBC,'atSea.logbook.link.rdata'))
                 return(links)
           }
-                  con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  links = sqlQuery(con,'select * from LOBSTER.ATSEA_LOG_LINK;')
+                  #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  links = connect.command(con,'select * from LOBSTER.ATSEA_LOG_LINK')
                   save(links,file=file.path(fnODBC,'atSea.logbook.link.rdata'))          
         }
 
@@ -87,8 +98,8 @@ if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
         load(file=file.path(fnODBC,'temperature.rdata'))
         return(TempData)
       }
-      con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-      TempData = sqlQuery(con,"select * from SNOWCRAB.SC_TEMP_MERGE   ;")
+      #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+      TempData = connect.command(con,"select * from SNOWCRAB.SC_TEMP_MERGE")
       save(TempData,file=file.path(fnODBC,'temperature.rdata'))       
     }
     
@@ -102,9 +113,9 @@ if(DS %in% c('historic.cpue.redo', 'historic.cpue')){
                   load(file=file.path(fnODBC,'historic.cpue.rdata'))
                 return(hcpue)
           }
-                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  hcpue = sqlQuery(con,"select a.port, sdate, to_char(sdate,'yyyy') year, lfa, portname, lbsptrap from lobster.histcatch a, lobster.port b where 
-a.port = b.port;")
+                   #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  hcpue = connect.command(con,"select a.port, sdate, to_char(sdate,'yyyy') year, lfa, portname, lbsptrap from lobster.histcatch a, lobster.port b where 
+a.port = b.port")
                   hcpue$SYEAR = year(hcpue$SDATE)
                   hcpue$MONTH = month(hcpue$SDATE)
                   ii = which(hcpue$MONTH>8)
@@ -122,8 +133,8 @@ if(DS %in% c('historic.landings.redo', 'historic.landings')){
                   load(file=file.path(fnODBC,'historic.landings.rdata'))
                 return(hland)
           }
-                   con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  hland = sqlQuery(con,"select * from lobster.historical_county_land ;")
+                   #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  hland = connect.command(con,"select * from lobster.historical_county_land")
                   save(hland,file=file.path(fnODBC,'historic.landings.rdata'))       
           }
 
@@ -135,7 +146,7 @@ if(DS %in% c('landings.by.port.redo','landings.by.port')) {
 
      con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                           #1975 - 1996
-                          oldd = sqlQuery(con,paste("SELECT date_landed da, prov_code||district||port_code port, cfv boatvesid, wt_lbs, lfa FROM
+                          oldd = connect.command(con,paste("SELECT date_landed da, prov_code||district||port_code port, cfv boatvesid, wt_lbs, lfa FROM
                                   (SELECT date_landed,
                                 prov_code,    CASE      WHEN district = ' 1'      THEN '01'      WHEN district = ' 2'      THEN '02'      WHEN district = ' 3'      THEN '03'      WHEN district = ' 4'      THEN '04'      WHEN district = ' 5'      THEN '05'
                                   WHEN district = ' 6'      THEN '06'      WHEN district = ' 7'      THEN '07'      WHEN district = ' 8'      THEN '08'      WHEN district = ' 9'      THEN '09'      ELSE district    END district,
@@ -151,10 +162,10 @@ if(DS %in% c('landings.by.port.redo','landings.by.port')) {
                            oldd <- transform(oldd, DA = as.Date(as.character(DA), "%Y%m%d"))
                            oldd = subset(oldd,year(oldd$DA)>1979)
                         #1997 - 2001
-                          midd = sqlQuery(con,paste("SELECT date_fished da,  port_landed port,  licence_id boatvesid,  weight_lbs wt_lbs,  lfa FROM lobster.LOB_LOG_EST_1997_2001"))
+                          midd = connect.command(con,paste("SELECT date_fished da,  port_landed port,  licence_id boatvesid,  weight_lbs wt_lbs,  lfa FROM lobster.LOB_LOG_EST_1997_2001"))
 
                         #2002 - current
-                            newd = sqlQuery(con,paste("SELECT date_fished da,  community_code port ,  licence_id boatvesid,  NVL(weight_lbs,0)+NVL(weight_lbs_b,0)+NVL(weight_lbs_c,0) wt_lbs,  lfa FROM marfissci.lobster_sd_log"))
+                            newd = connect.command(con,paste("SELECT date_fished da,  community_code port ,  licence_id boatvesid,  NVL(weight_lbs,0)+NVL(weight_lbs_b,0)+NVL(weight_lbs_c,0) wt_lbs,  lfa FROM marfissci.lobster_sd_log"))
                          
                           dats = rbind(oldd,midd,newd)
                           dats = subset(dats,LFA<41)
@@ -232,8 +243,8 @@ if(DS %in% c('annual.landings','annual.landings.redo')) {
                 return(annual.landings)
                   }
         
-                  con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  annual.landings = sqlQuery(con,'select * from LOBSTER.SLIP_LAND_ANNUAL')
+                  #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  annual.landings = connect.command(con,'select * from LOBSTER.SLIP_LAND_ANNUAL')
                   print('make sure to check with Cheryl.Denton@dfo-mpo.gc.ca on last update')
                 
                   save(annual.landings,file=file.path(fnODBC,'annual.landings.rdata'))
@@ -245,8 +256,8 @@ if(DS %in% c('seasonal.landings','seasonal.landings.redo')) {
                 return(seasonal.landings)
                   }
         
-                  con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  seasonal.landings = sqlQuery(con,'select * from LOBSTER.SLIP_LAND_SEASONAL')
+                  #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  seasonal.landings = connect.command(con,'select * from LOBSTER.SLIP_LAND_SEASONAL')
                   seasonal.landings = seasonal.landings[order(seasonal.landings$SYEAR),]
                    print('Last two years of landings data may be incomplete, make sure to check with Cheryl.Denton@dfo-mpo.gc.ca on last update')
                   print('LFA27 for >2015 does not have Gulf landings yet.....')
@@ -262,8 +273,8 @@ if(DS %in% c('historical.landings','historical.landings.redo')) {
         
                 historical.landings = read.delim(file.path(project.datadirectory('bio.lobster'),"data","inputs","LFA34_Landings_1892-2004.txt"))
 
-                  #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  #historical.landings = sqlQuery(con,'select * from LOBSTER.SLIP_LAND_HISTORICAL')
+                  ##con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  #historical.landings = connect.command(con,'select * from LOBSTER.SLIP_LAND_HISTORICAL')
                   save(historical.landings,file=file.path(fnODBC,'historical.landings.rdata'))
             }
 
@@ -272,7 +283,7 @@ if(DS %in% c('season.dates','season.dates.redo')) {
                 load(file=file.path(fnODBC,'season.dates.rdata'))
                 return(season.dates)
                   }
-                  con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                  #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                 
               #using dats from landings by port redo AMC Dec 1 2017
               #  a = aggregate(mns~SYEAR+LFA+SDATE,data=dats,FUN=length)
@@ -296,7 +307,7 @@ if(DS %in% c('season.dates','season.dates.redo')) {
               #         save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
 
                     #Fish.Date = lobster.db('season.dates')
-                    Fish.Date = season.dates = sqlQuery(con,'select * from LOBSTER.FISHING_SEASONS')
+                    Fish.Date = season.dates = connect.command(con,'select * from LOBSTER.FISHING_SEASONS')
                     print('Lobster.Fishing_Seasons needs to be updated in SQL if you want to use this season dates script--these dates come from FAM.')
                     season.dates = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
               
@@ -314,21 +325,21 @@ if (DS %in% c("logs.redo", "logs") ) {
 
            if (DS=="logs.redo") {
               require(RODBC)
-             con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+             #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
               
               # logs
-               logs = sqlQuery(con, "select * from marfissci.lobster_sd_log")
+               logs = connect.command(con, "select * from marfissci.lobster_sd_log")
               save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
              
               # slips
-              slips = sqlQuery(con, "select * from marfissci.lobster_sd_slip")
+              slips = connect.command(con, "select * from marfissci.lobster_sd_slip")
               save( slips, file=file.path( fnODBC, "slip.rdata"), compress=T)
               gc()  # garbage collection
               
               # old logs LFA 34
               dd = dir(fnODBC)
              if(!any("oldlogs34.rdata" %in% dd)){
-             oldlogs34 = sqlQuery(con, "select * from lobster.lobster_log_data")
+             oldlogs34 = connect.command(con, "select * from lobster.lobster_log_data")
              save( oldlogs34, file=file.path( fnODBC, "oldlogs34.rdata"), compress=T)
               gc()  # garbage collection
               odbcClose(con)
@@ -493,11 +504,11 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
      if (DS=="vlog.redo") {
         require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # vlog
-        vlog = sqlQuery(con, "select a.FDATE,a.N_TRP,a.W_TOT,a.FCODE,a.N_L,a.W_AVG,a.PORT,a.CPTH,a.NBF,a.SEASON,a.W_C,a.CPTH_C, b.LFA,b.COUNTY,b.STAT,b.PORT_CODE,b.LATITUDE,b.LONGITUDE,b.COMMENTS from lobster.CRLOGDATA a, lobster.CRLOCATIONS b where a.port = b.port")
-        vlogs34 = sqlQuery(con, "select * from lobster.logdata_other;")
+        vlog = connect.command(con, "select a.FDATE,a.N_TRP,a.W_TOT,a.FCODE,a.N_L,a.W_AVG,a.PORT,a.CPTH,a.NBF,a.SEASON,a.W_C,a.CPTH_C, b.LFA,b.COUNTY,b.STAT,b.PORT_CODE,b.LATITUDE,b.LONGITUDE,b.COMMENTS from lobster.CRLOGDATA a, lobster.CRLOCATIONS b where a.port = b.port")
+        vlogs34 = connect.command(con, "select * from lobster.logdata_other")
         save( vlog, file=file.path( fnODBC, "vlog.rdata"), compress=T)
         save( vlogs34, file=file.path( fnODBC, "vlogs34.rdata"), compress=T)
       
@@ -567,18 +578,18 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
              if (DS=="logs41.redo") {
                 require(RODBC)
-                con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                 
                 # logs from LFA 41 Cheryl's query for adjusted catch and assigning subareas
                 query41 = "select * from lobster.logs41"
                 slipquery41 = "select  * from lobster.slips41"
                 ziffquery41  =  "select * from lobster.ziff41"
-                offquery41  =  "select * from lobster.crislog41;" # table not view
+                offquery41  =  "select * from lobster.crislog41" # table not view
 
-                slip41 = sqlQuery(con, slipquery41)
-                logs41 = sqlQuery(con, query41)
-                ziff41 = sqlQuery(con, ziffquery41)
-                off41 = sqlQuery(con, offquery41)
+                slip41 = connect.command(con, slipquery41)
+                logs41 = connect.command(con, query41)
+                ziff41 = connect.command(con, ziffquery41)
+                off41 = connect.command(con, offquery41)
             
                 off41 = subset(off41,DATE_FISHED < '1995-01-01')
 
@@ -663,12 +674,12 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
            if (DS=="logs41jonah.redo") {
               require(RODBC)
-              con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+              #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
               
               # logs from LFA 41 Cheryl's query for adjusted catch and assigning subareas
               query41 = 'NEED TO IDENITFY'
                
-              logs41jonah = sqlQuery(con, query41)
+              logs41jonah = connect.command(con, query41)
               logs41jonah$DDLON = logs41jonah$DDLON*-1
               save( logs41jonah, file=file.path( fnODBC, "logs41jonah.rdata"), compress=T)
               gc()  # garbage collection
@@ -683,10 +694,10 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
         if (DS=="observer41.redo") {
                 require(RODBC)
-                con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+                #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                 
                 # logs from LFA 41 Cheryl's query for adjusted catch and assigning subareas
-                observer41 = sqlQuery(con, 'select * from lobster.observer41') #pulling from a materialized view
+                observer41 = connect.command(con, 'select * from lobster.observer41') #pulling from a materialized view
                 save( observer41, file=file.path( fnODBC, "observer41.rdata"), compress=T)
                 gc()  # garbage collection
                 odbcClose(con)
@@ -700,7 +711,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
       if(DS == 'lfa41.vms.redo') {
            require(RODBC)
-           con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+           #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
   #Define a list of VRNs from offshore lobster vrns
 
@@ -716,7 +727,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                  AND p.vr_number IN ('",vrn.vector,"')",
                   sep="" )
 
-      vms.data  =  sqlQuery(con, vms.q, believeNRows=FALSE)  
+      vms.data  =  connect.command(con, vms.q, believeNRows=FALSE)  
       odbcClose(con)
         vms.data$VMSDATE  =  as.POSIXct(vms.data$VMSDATE,tz="GMT")  # VMS data is in UTC, assign timezone
   
@@ -742,11 +753,11 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
          if (DS=="atSea.redo") {
            require(RODBC)
-           con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+           #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
             
             # atSea
-            atSea = sqlQuery(con, "select * from lobster.LOBSTER_ATSEA_VW")
-           atSea2 = sqlQuery(con, "select * from cooka.lobster_bycatch_assoc")
+            atSea = connect.command(con, "select * from lobster.LOBSTER_ATSEA_VW")
+           atSea2 = connect.command(con, "select * from cooka.lobster_bycatch_assoc")
  
             atSea2$PORT = NA
             atSea2$PORTNAME = NA
@@ -790,9 +801,9 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
            if(DS == 'atSea.CatchLevel.redo') {    
             # atSea
            require(RODBC)
-           con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+           #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
        
-            atSeaCatchLevel = sqlQuery(con, "select * from lobster.atseacatchlevel;")
+            atSeaCatchLevel = connect.command(con, "select * from lobster.atseacatchlevel")
             save( atSeaCatchLevel, file=file.path( fnODBC, "atSeaCatchLevel.rdata"), compress=T)
             gc()  # garbage collection
             odbcClose(con)
@@ -872,10 +883,10 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
      if (DS=="port.sampling.redo") {
         require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # port
-        port = sqlQuery(con, "select a.SAMPLE_SEQ,a.SAMPLE_NO,a.SDATE,a.SEASON,a.NTRAPS,a.LATITUDE,a.LONGITUDE,a.GRADE, b.L_SIZE,b.N_MALES,b.N_FEM,b.NBF, d.LFA,c.PORT,c.COUNTY,c.STAT,c.PORT_CODE,c.LATITUDE port_lat,c.LONGITUDE port_lon from lobster.CRLENGCODE a, lobster.CRLENGFREQ b, lobster.CRLOCATIONS c, frailc.lfa_port d where a.sample_seq = b.sample_seq and a.port = c.port and c.PORT_CODE = d.port(+) and a.type = 'P' ")
+        port = connect.command(con, "select a.SAMPLE_SEQ,a.SAMPLE_NO,a.SDATE,a.SEASON,a.NTRAPS,a.LATITUDE,a.LONGITUDE,a.GRADE, b.L_SIZE,b.N_MALES,b.N_FEM,b.NBF, d.LFA,c.PORT,c.COUNTY,c.STAT,c.PORT_CODE,c.LATITUDE port_lat,c.LONGITUDE port_lon from lobster.CRLENGCODE a, lobster.CRLENGFREQ b, lobster.CRLOCATIONS c, frailc.lfa_port d where a.sample_seq = b.sample_seq and a.port = c.port and c.PORT_CODE = d.port(+) and a.type = 'P' ")
         save( port, file=file.path( fnODBC, "port.rdata"), compress=T)
         gc()  # garbage collection
         odbcClose(con)
@@ -938,14 +949,14 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
      if (DS=="cris.redo") {
         require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # cris
-        cris.trips = sqlQuery(con, "select * from cris.crtrips")
+        cris.trips = connect.command(con, "select * from cris.crtrips")
         save( cris.trips, file=file.path( fnODBC, "crisTrips.rdata"), compress=T)
-        cris.traps = sqlQuery(con, "select * from cris.crtraps")
+        cris.traps = connect.command(con, "select * from cris.crtraps")
         save( cris.traps, file=file.path( fnODBC, "crisTraps.rdata"), compress=T)
-        cris.samples = sqlQuery(con, "select * from cris.crsamples")
+        cris.samples = connect.command(con, "select * from cris.crsamples")
         save( cris.samples, file=file.path( fnODBC, "crisSamples.rdata"), compress=T)
         gc()  # garbage collection
         odbcClose(con)
@@ -968,10 +979,10 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 if(DS %in% c('lfa41.observer.samples.redo','lfa41.observer.samples')) {
    if (DS=="lfa41.observer.samples.redo") {
         require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # Denton Script Sept 28 2016
-        obs.samp  =  sqlQuery(con, paste("
+        obs.samp  =  connect.command(con, paste("
 SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, st.fishset_id
                                         FROM isdb.istrips trip, isdb.isfishsets st,   isdb.iscatches ca, isdb.isfish fish,
                                                                           (SELECT 
@@ -1044,7 +1055,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
                                                                         AND ca.catch_id      = fish.catch_id(+)
                                                                         AND fish_length     IS NOT NULL
 
-;"))
+"))
 
         save( obs.samp, file=file.path( fnODBC, "lfa41.observer.samples.rdata"), compress=T)
         gc()  # garbage collection
@@ -1060,8 +1071,8 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
 
      if (DS=="fsrs.redo") {
         require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-        fsrs = sqlQuery(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
+        #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        fsrs = connect.command(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
         print("2020 data not in database, need to load manually w/ FSRS.load.from.text.r function")
         
         #Create csv through FSRS.load.from.text.r before running this step
@@ -1069,8 +1080,10 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         if (file.exists(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv")))
         {
         non.db.fsrs=read.csv(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv"))
+        non.db.fsrs=non.db.fsrs[names(fsrs)] #only retain Variables in 'fsrs'
+        non.db.fsrs$RECAPTURED=as.integer(non.db.fsrs$RECAPTURED)
+        non.db.fsrs$HAUL_DATE=as.POSIXct(non.db.fsrs$HAUL_DATE)
         ##BZ- ToDo Sept 2020- ensure that files in non.db.fsrs are not already in db to avoid duplicate records.
-        
         fsrs= rbind(fsrs, non.db.fsrs[names(fsrs)]) 
         }
         
@@ -1217,12 +1230,12 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
 
      if (DS=="scallop.redo") {
         require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.scallop.user, pwd=oracle.scallop.password, believeNRows=F) # believeNRows=F required for oracle db's
+        #con = odbcConnect(oracle.server , uid=oracle.scallop.user, pwd=oracle.scallop.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # scallop
-        scallop.catch = sqlQuery(con, "select * from SCALLSUR.SCBYCATCHES")
+        scallop.catch = connect.command(con, "select * from SCALLSUR.SCBYCATCHES")
         save( scallop.catch, file=file.path( fnODBC, "scallopCatch.rdata"), compress=T)
-        scallop.tows = sqlQuery(con, "select * from SCALLSUR.SCTOWS")
+        scallop.tows = connect.command(con, "select * from SCALLSUR.SCTOWS")
         save( scallop.tows, file=file.path( fnODBC, "scallopTows.rdata"), compress=T)
         gc()  # garbage collection
         odbcClose(con)
@@ -1237,20 +1250,20 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       if (DS=="survey.redo") {
         # survey
         require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-        ILTS2016TowDepth = sqlQuery(con, "select * from FRAILC.MARPORT_DEPTH")
-        ILTS2016TowSpread = sqlQuery(con, "select * from FRAILC.MARPORT_SPREAD")
-        ILTS2016Tracks = sqlQuery(con, "select * from FRAILC.MARPORT_TRACKS")
-        #ILTSTemp = sqlQuery(con, "select * from FRAILC.MINILOG_TEMP")
-        ILTSTemp = sqlQuery(con, "select * from lobster.ILTS_TEMPERATURE")
-        ILTSSensor = sqlQuery(con, "select * from lobster.ILTS_SENSORS")
+        #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        ILTS2016TowDepth = connect.command(con, "select * from FRAILC.MARPORT_DEPTH")
+        ILTS2016TowSpread = connect.command(con, "select * from FRAILC.MARPORT_SPREAD")
+        ILTS2016Tracks = connect.command(con, "select * from FRAILC.MARPORT_TRACKS")
+        #ILTSTemp = connect.command(con, "select * from FRAILC.MINILOG_TEMP")
+        ILTSTemp = connect.command(con, "select * from lobster.ILTS_TEMPERATURE")
+        ILTSSensor = connect.command(con, "select * from lobster.ILTS_SENSORS")
         ILTS2016Tracks = ILTS2016Tracks[order(ILTS2016Tracks$TTIME),]
         #NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
         #netMensuration = merge( NM1,ILTS2016Tracks)#merge net mensuration into one file
         #netMensuration$TTIME = NULL #remove load date from merged file
-        surveyCatch = sqlQuery(con, "select * from lobster.ILTSSETS_MV")
-        surveyMeasurements = sqlQuery(con, "select * from lobster.ILTSDETAILS_MV")
-        fishMeasurements = sqlQuery(con, "select * from lobster.ILTSFISHLENGTHS_MV")
+        surveyCatch = connect.command(con, "select * from lobster.ILTSSETS_MV")
+        surveyMeasurements = connect.command(con, "select * from lobster.ILTSDETAILS_MV")
+        fishMeasurements = connect.command(con, "select * from lobster.ILTSFISHLENGTHS_MV")
        
         
         with(surveyMeasurements,paste(TRIP_ID,SET_NO,sep=''))->surveyMeasurements$SET_ID
@@ -1264,7 +1277,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
  
 
  #browser()
-        surveyStationID = sqlQuery(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
+        surveyStationID = connect.command(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
         save(list=c("ILTS2016TowDepth","ILTS2016TowSpread","ILTS2016Tracks") , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)
         save(surveyMeasurements, file=file.path(fnODBC, "surveyMeasurements.rdata"), compress=T)
@@ -1289,7 +1302,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
 if(DS %in% c('rv.survey.samples.redo','rv.survey.samples.samples')) {
    if (DS=="rv.survey.samples.redo") {
         require(RODBC)
-        con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+        #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         
         # Denton Script May 2017
 

@@ -11,9 +11,10 @@ require(ggplot2)
 require(ggridges)
 library(viridis)
 library(ggsci)
-library(wesanderson)
+require(wesanderson)
 require(tidyverse)
 require(dplyr)
+require(stringi)
 require(gbm)
 
 
@@ -400,11 +401,16 @@ effortcorrect$lpa<-(effortcorrect$num/effortcorrect$area)
 
 portionsex$sex_factor <- factor(portionsex$sex, levels = c( 1, 2, 3))
 
+pal<-wes_palette("Zissou1")[c(5,4,1)]
+
 nsex<-ggplot(portionsex, aes(y =num, x = as.factor(year), fill=as.factor(sex))) + geom_bar(stat= "identity") +
-  scale_fill_viridis_d(option= "D",begin = 0, end =0.8, "Sex")+
-  scale_y_continuous(expand = c(0,0), limits=c(0,1000))+ 
-  labs(x= " ", y = "Number of Lobsters")+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour='black'),panel.border=element_rect(colour ="black", fill=NA, size=1), axis.text.x = element_text(angle = 90))
+  scale_fill_manual(values=pal, labels = c("Male", "Female", "Berried"))+
+  scale_y_continuous(expand = c(0,0), limits=c(0,950))+ 
+  labs(x= " ", y = "Number of Lobsters", fill="Sex", size = 12)+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.line = element_line(colour='black'),
+        panel.border=element_rect(colour ="black", fill=NA, size=1),
+        axis.text.x = element_text(angle = 90, size = 12), axis.text.y = element_text(size = 12))
 
 pdf(file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019",'FlaggCoveNumofLob.pdf'),width=11,height=12)
 grid.arrange(nsex)
@@ -414,7 +420,9 @@ lobperarea<-ggplot(effortcorrect, aes(y =lpa, x = as.factor(year), fill=as.facto
   scale_fill_viridis_d(option= "D",begin = 0, end =0.8, "Sex")+
   scale_y_continuous(expand = c(0,0), limits=c(0,0.1))+ 
   labs(x= " ", y = "Number of Lobsters/m squared")+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour='black'),panel.border=element_rect(colour ="black", fill=NA, size=1), axis.text.x = element_text(angle = 90))
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour='black'),panel.border=element_rect(colour ="black", fill=NA, size=1), 
+        axis.text.x = element_text(angle = 90))
 
 pdf(file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019",'FlaggCoveLobsterPerArea.pdf'),width=11,height=12)
 grid.arrange(lobperarea)
@@ -423,10 +431,13 @@ dev.off()
 
 
 psex<-ggplot(portionsex, aes(y =num, x = as.factor(year), fill=as.factor(sex))) +geom_bar(stat= "identity", position='fill') +
-  scale_fill_viridis_d(option= "D",begin = 0, end =0.8, "Sex")+
-  labs(x= " ", y = "Number of Lobsters")+
+  #scale_fill_viridis_d(option= "D",begin = 0, end =0.8, "Sex")+
+  scale_fill_manual(values=pal, labels = c("Male", "Female", "Berried"))+
+  labs(x= " ", y = "Number of Lobsters",fill="Sex", size = 12)+
   scale_y_continuous(expand = c(0,0))+ 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.line = element_line(colour='black'), axis.text.x = element_text(angle = 90))
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour='black'), axis.text.x = element_text(angle = 90, size = 12), 
+        axis.text.y = element_text(size = 12))
 
 pdf(file.path(project.figuredirectory('bio.lobster'),"LFA3438Framework2019",'FlaggCoveSexProportion.pdf'),width=11,height=12)
 grid.arrange(psex)
