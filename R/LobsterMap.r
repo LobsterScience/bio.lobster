@@ -26,7 +26,7 @@
 #' @export
 LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, fname = 'LobsterMap',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',
 	isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,
-	addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,...){
+	addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,grid.labcex=1,...){
 
 options(stringsAsFactors=F)		
 	require(PBSmapping)|| stop("Install PBSmapping Package")
@@ -299,7 +299,9 @@ if(save) {
 	if('grid'%in%labels) {
 	  LFAgrid$label<-LFAgrid$SID
 	  grids.dat<-merge(calcCentroid(LFAgrid),LFAgrid[c("PID","SID","label")])
-	  addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.5),cex=0.2*labcex)
+	  #if (area %in% grids.dat$PID){
+	    #grids.dat=subset(grids.dat, PID==area)}
+	  addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.5),cex=grid.labcex)
 	}
 	  if('subarea'%in%labels) addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.5),cex=labcex)
 	if(is.list(labels)) addLabels(labels[[1]],polyProps=labels[[2]])
