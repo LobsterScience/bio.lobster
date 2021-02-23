@@ -1,6 +1,6 @@
 #' @export
 			
-FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,save=T,lfa=NULL,rm=F,fd=file.path(project.figuredirectory('bio.lobster','ReferencePoints')),title = paste('LFA',lfa),fn=paste0('FSRSRecruitCatchRate',lfa),...) {
+FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,save=T,lfa=NULL,rm=F, French=F, fd=file.path(project.figuredirectory('bio.lobster','ReferencePoints')),title = paste('LFA',lfa),fn=paste0('FSRSRecruitCatchRate',lfa),...) {
 	
 			dir.create( fd, recursive = TRUE, showWarnings = FALSE )
 			par(las=1)
@@ -10,6 +10,14 @@ FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,save=T
 				lab=c('(a)','(b)')
 			}
 
+			if (French){
+			lobtext='Homards/casier'  
+			yrtext='Année'  
+			}else{
+			  lobtext='Lobsters / Trap'  
+			  yrtext='Year'   
+			  
+			}
 					ymaxr = ifelse(!is.null(recruits),max(recruits[,-1]),0)
 					ymaxl = ifelse(!is.null(legals),max(legals[,-1]),0)
 
@@ -43,8 +51,8 @@ FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,save=T
 						if(!is.null(lrp)) abline(h=lrp,col='red',lwd=2,lty=3)
 					mtext(lab[2], 3, -4, outer = F,adj=0.05,cex=1.25)	
 					}
-					mtext("Lobsters / Trap", 2, -1, outer = T,las=0)	
-					mtext("Year", 1, 2, outer = T)
+					mtext(lobtext, 2, -1, outer = T,las=0)	
+					mtext(yrtext, 1, 2, outer = T)
 					if (save){savePlot(file.path(fd,paste(fn,'png',sep='.')),type='png')}
 					if(!is.null(recruits))write.csv(recruits,file.path(fd,paste(fn,'recruits','csv',sep='.')))
 					if(!is.null(legals))write.csv(legals,file.path(fd,paste(fn,'legals','csv',sep='.')))

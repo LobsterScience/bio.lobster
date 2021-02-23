@@ -1,5 +1,5 @@
 #' @export
-CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,effort.min=10,export=F,path=file.path( project.figuredirectory("bio.lobster")),...){
+CPUEplot<-function(logs,lfa=NULL,yrs,French= F, subarea=NULL,lab='',graphic='R',wd=8,ht=11,effort.min=10,export=F,path=file.path( project.figuredirectory("bio.lobster")),...){
 
 	if(is.null(lfa)&&is.null(subarea))stop("specify LFA or subarea")
 
@@ -47,8 +47,10 @@ CPUEplot<-function(logs,lfa=NULL,yrs,subarea=NULL,lab='',graphic='R',wd=8,ht=11,
 		lines(CPUE~DATE,subset(annual.dat,LFA==lfa[i]),type='b',pch=21,bg='red')
 		text(min(daily.dat$DATE,na.rm=T),max(daily.dat$CPUE,na.rm=T)*.8,paste("LFA",lfa[i]),cex=2,pos=4)
 	}
-	mtext("CPUE (kg/TH)", 2, 3, outer = T, cex = 1.5,las=0)	
-
+		
+  if (French){mtext('CPUE (kg/casier levé)', 2, 3, outer = T, cex = 1.5,las=0)	}
+	else {mtext("CPUE (kg/TH)", 2, 3, outer = T, cex = 1.5,las=0)}
+	
 	if(graphic=='pdf')dev.off()
 
 	if(export)write.csv(annual.dat,file.path( project.datadirectory("bio.lobster"), "data","products","CommercialCPUE.csv"),row.names=F)

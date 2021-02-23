@@ -53,7 +53,7 @@ ls2=c('31A', '31B', '32')
 
 xlim=c(1985,p$current.assessment.year)
 
-crplot= function(){
+crplot= function(x, French=F){
   crd = subset(cpueData,LFA==l,c("YEAR","CPUE"))	
   mu = median(crd$CPUE[crd$YEAR %in% c(1985:2009)])
   usr = mu * 0.8
@@ -61,7 +61,10 @@ crplot= function(){
   crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
   
   par(mar=c(3.0,5.0,2.0,2.0))	
-  plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/TH)',type='p',pch=16, xlim=xlim, ylim=c(lrp-.1,1.05*(max(crd$CPUE, na.rm = TRUE)) ))
+  
+  ylab='CPUE (kg/TH)'
+  if (French){ylab='CPUE (kg/casier levé)'}
+  plot(crd[,1],crd[,2],xlab=' ',ylab=ylab,type='p',pch=16, xlim=xlim, ylim=c(lrp-.1,1.05*(max(crd$CPUE, na.rm = TRUE)) ))
   running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
   crd=merge(crd,running.median,all=T)
   lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
@@ -79,7 +82,7 @@ write.csv(cpueData, file=paste0(cpue.dir, "/fishery.stats.27-32.csv"), row.names
 png(filename=file.path(cpue.dir, "CPUE_LFA27-30.png"),width=8, height=5.5, units = "in", res = 800)
 par(mfrow=c(2,2))		
   for (l in ls) {
-    crplot()
+    crplot(French=F) #Change to crplot(French=T) to produce French axis labels
     }
 dev.off()
 
@@ -204,7 +207,8 @@ for(i in c("27", "29", "30", "31A", "31B", "32")){
   o = subset(oo,LFA==i)
   RR7 = subset(RR75,LFA==i)$ERf75
   png(filename=file.path(ccir.dir, paste0('ExploitationRefs',i, '.png')),width=8, height=4, units = "in", res = 800)
-  ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i)
+  #French =T in following line if you want figures with French labels
+  ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i, French=T) 
   dev.off()
 }
 
@@ -241,6 +245,16 @@ xlim<-c(1982,p$current.assessment.year)
 #1 Landings Figure- LFAs 27, 28, 29, 20)
 #-------------------------------------------
 
+French=T #change to T to create landings figures with French Labels
+if (French){
+  ylab= 'Débarquements (t)'  
+  efftext= "Effort (x 1000 casiers levés)"   
+}else  {
+ylab= 'Landings (t)'  
+efftext= "Effort ('000s Trap Hauls)" 
+}
+
+
 png(filename=file.path(land.dir, "Landings_LFA27-30.png"),width=8, height=5.5, units = "in", res = 800)
 par(mfrow=c(2,2))
 
@@ -254,7 +268,7 @@ data=fishData = merge(d2,d1)
 data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
 
 par(mar=c(3,5,2.0,4.5))
-plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
+plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
 lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
 text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
 
@@ -263,7 +277,7 @@ par(new=T)
 plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
 points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,size = 2,bg='black')
 axis(4)
-if (i %in% c(2,4)) {mtext("Effort ('000s Trap Hauls)",cex = 0.75, side=4, line = 3, outer = F, las = 0)}
+if (i %in% c(2,4)) {mtext(efftext,cex = 0.75, side=4, line = 3, outer = F, las = 0)}
 }
 
 dev.off()
@@ -285,7 +299,7 @@ for (i in 1:length(lst)) {
   data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
   
   par(mar=c(3,5,2.0,4.5))
-  plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
+  plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
   lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
   text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
   
@@ -294,7 +308,7 @@ for (i in 1:length(lst)) {
   plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
   points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,size = 2,bg='black')
   axis(4)
-  if (i %in% c(2,3)) {mtext("Effort ('000s Trap Hauls)",cex = 0.75, side=4, line = 3, outer = F, las = 0)}
+  if (i %in% c(2,3)) {mtext(efftext,cex = 0.75, side=4, line = 3, outer = F, las = 0)}
 
   }
 dev.off()
@@ -315,7 +329,7 @@ png(filename=file.path(land.dir, paste0("Landings_LFA",lst[i],".png")),width=8, 
   data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
   
   par(mar=c(3,5,2.0,4.5))
-  plot(data$YEAR,data$LANDINGS,ylab='Landings(t)',type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
+  plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
   lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
   text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
   
@@ -324,9 +338,11 @@ png(filename=file.path(land.dir, paste0("Landings_LFA",lst[i],".png")),width=8, 
   plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
   points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,size = 2,bg='black')
   axis(4)
-  mtext("Effort ('000s Trap Hauls)",cex = 0.75, side=4, line = 3, outer = F, las = 0)
+  mtext(efftext,cex = 0.75, side=4, line = 3, outer = F, las = 0)
 dev.off()
 }
+
+
 
 ### Recruitment Trap Catch Rates 
 fsrs.dir=file.path(figdir, "fsrs")
@@ -361,7 +377,7 @@ for(i in c("27", "29", "30", "31A", "31B", "32")){
   #x11(width=8,height=7)
   png(filename=file.path(fsrs.dir, paste('FSRSRecruitCatchRate',i,'png', sep='.')),width=8, height=6.5, units = "in", res = 800)
   FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],
-                    lfa = i,fd=figdir,title=i, save=F, rm=F)
+                    lfa = i,fd=figdir,title=i, save=F, rm=F, French=F) #Change French=T for french labels in figure
   dev.off()
   }
 
@@ -388,8 +404,26 @@ for(i in 1:length(lfas2)){
   running.median = with(rmed(x[,2],x[,6]),data.frame(YEAR=yr,running.median=x))
   x=merge(x,running.median,all=T)
   
+ 
+  
+  French=T #change to T here and in HCR plot call for French labels
+  if (French){
+  labs= c('PRS','PRL','NER')
+  xlab=  'CPUE'
+  ylab= 'Exploitation'
+  ltext='ZPH'
+     }else{
+    labs=c('USR','LRP','RR')  
+    xlab=  'CPUE'
+    ylab= 'Exploitation'
+    ltext='LFA'
+  }
+  
   png(file=file.path(hcr.dir,paste0('PhasePlot',lfas2[i],'.png')))
-  hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T,main=paste("LFA",lfas2[i])) 
+  
+  hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,big.final=T, 
+          yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=labs,
+          RRdec=F, ylab= ylab, xlab= xlab, yr.ends=T, main=paste(ltext,lfas2[i])) #French=T for French labels
   dev.off()
 }
 
