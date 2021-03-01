@@ -6,7 +6,7 @@
 #' @export
 
 db.setup=function(RODBC=F){
-  
+  if(!.Platform$OS.type == "unix") {
   if(!grepl('64',version$arch) || RODBC) { #in 32-bit R, only RODBC will work
       print("Using RODBC package for Oracle db connections")
       require(RODBC)
@@ -40,6 +40,6 @@ db.setup=function(RODBC=F){
               }
         }
   }
-  
+}  
 
 
