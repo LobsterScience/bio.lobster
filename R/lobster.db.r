@@ -406,13 +406,13 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                         logs = subset(logs,!is.na(SYEAR))
                    
                     # add week of season (WOS) variable
-                        logs$WOS = NA
+                        logs$DOS = logs$WOS = NA
                             for(i in 1:length(lfa)) {
                                   h  =  Fish.Date[Fish.Date$LFA==lfa[i],]  
                                for(j in unique(logs$SYEAR[logs$LFA==lfa[i]])){
                                    print(c(lfa[i],j))
-                                
-                                     logs$WOS[logs$LFA==lfa[i]&logs$SYEAR==j] = floor(as.numeric(logs$DATE_FISHED[logs$LFA==lfa[i]&logs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                  logs$DOS[logs$SYEAR==j&logs$LFA==lfa[i]]<-logs$DATE_FISHED[logs$SYEAR==j&logs$LFA==lfa[i]]-min(logs$DATE_FISHED[logs$SYEAR==j&logs$LFA==lfa[i]])+1
+                                  logs$WOS[logs$LFA==lfa[i]&logs$SYEAR==j] = floor(as.numeric(logs$DATE_FISHED[logs$LFA==lfa[i]&logs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
                               }
 
@@ -424,7 +424,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       logs$quarter[month(logs$DATE_FISHED)%in%10:12] = 4
 
 
-                    commonCols = c("SUM_DOC_ID", "VR_NUMBER", "VESSEL_NAME", "SUBMITTER_NAME", "LICENCE_ID", "LFA", "COMMUNITY_CODE","SD_LOG_ID", "DATE_FISHED","SYEAR","WOS",'quarter',"TOTAL_NUM_TRAPS","TOTAL_WEIGHT_KG")
+                    commonCols = c("SUM_DOC_ID", "VR_NUMBER", "VESSEL_NAME", "SUBMITTER_NAME", "LICENCE_ID", "LFA", "COMMUNITY_CODE","SD_LOG_ID", "DATE_FISHED","SYEAR","WOS",'quarter',"TOTAL_NUM_TRAPS","TOTAL_WEIGHT_KG","DOS")
 
                     logsInSeasonA = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS),c(commonCols,"GRID_NUM", "WEIGHT_LBS", "NUM_OF_TRAPS"))
                     logsInSeasonB = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_B)&!is.na(NUM_OF_TRAPS_B),c(commonCols,"GRID_NUM_B", "WEIGHT_LBS_B", "NUM_OF_TRAPS_B"))
@@ -472,8 +472,6 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       }
                     }
                      save(logsInSeason,file=file.path( fnProducts,"logsInSeasonUnfiltered.rdata"),row.names=F)
-
-                    
 
                     # filter by max trap
                     if(length(max_trap)==length(lfa)){   #these do not match Jan 31, 2018 this code was added but not checked LFA 38 gets dropped
