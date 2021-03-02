@@ -1,5 +1,5 @@
 #' @export
-CPUEModelData = function(p,redo=T,TempModelling){
+CPUEModelData = function(p,redo=T,TempModelling, TempSkip=F){
 
 	if(redo){
 
@@ -47,8 +47,12 @@ CPUEModelData = function(p,redo=T,TempModelling){
 		}
 	    
 
+		
+		if (TempSkip){
+		  write.csv(cpue.data,file.path( project.datadirectory("bio.lobster"), "data","products","CPUEModelData.csv"),row.names=F)
+		}
 	 
-			if(missing(TempModelling)) TempModelling = TempModel(annual.by.area=F)
+		{	if(missing(TempModelling)) TempModelling = TempModel(annual.by.area=F)
 		#	save(TempModelling,file=file.path( project.datadirectory('bio.lobster'), "data","products","TempModelling.rdata"))
 		#	}else load(file.path( project.datadirectory('bio.lobster'), "data","products","TempModelling.rdata"))
 
@@ -60,7 +64,8 @@ CPUEModelData = function(p,redo=T,TempModelling){
 		cpue.data$TEMP = predict(TempModelling$Model, newdata, type='response')
 
 
-		write.csv(cpue.data,file.path( project.datadirectory("bio.lobster"), "data","products","CPUEModelData.csv"),row.names=F)
+		write.csv(cpue.data,file.path( project.datadirectory("bio.lobster"), "data","products","CPUEModelData.csv"),row.names=F)}
+		
 	}
 	cpue.data = read.csv(file.path( project.datadirectory("bio.lobster"), "data","products","CPUEModelData.csv"))
 
