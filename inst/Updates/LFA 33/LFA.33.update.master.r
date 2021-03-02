@@ -60,7 +60,7 @@
 	#
 		logs=lobster.db("process.logs")
 
-		#Choose one to redo or not
+		#Choose one to redo or not Add TempSkip=T to not model CPUE with Temps
 		#CPUE.data<-CPUEModelData(p,redo=T)
 		#CPUE.data<-CPUEModelData(p,redo=F)
 		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(CPUE.data$SYEAR),graphic='R')$annual.data

@@ -34,7 +34,7 @@ dev.off()
 
 logs=lobster.db("process.logs")
 
-CPUE.data<-CPUEModelData(p,redo=F)
+CPUE.data<-CPUEModelData(p,redo=F, TempSkip=T)
 cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2020, graphic='R')$annual.data
 
 #add lrp and USR
