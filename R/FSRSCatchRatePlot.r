@@ -12,7 +12,7 @@ FSRSCatchRatePlot <- function(recruits=NULL,legals=NULL,usr=NULL,lrp=NULL,save=T
 
 			if (French){
 			lobtext='Homards/casier'  
-			yrtext='Année'  
+			yrtext='Annee'  
 			}else{
 			  lobtext='Lobsters / Trap'  
 			  yrtext='Year'   
