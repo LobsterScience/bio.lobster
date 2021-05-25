@@ -14,7 +14,6 @@ moltModel = function(p,redo.dd=T){
 			TempModelling = TempModel()
 			p$TempModel = TempModelling$Model
 		}
-
 		degreedays=c()
 		cat('|-')
 		for(i in 1:nrow(tagging.data)){

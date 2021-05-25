@@ -1,7 +1,12 @@
 #' @export
 
-hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F,area.cols=c('lightgreen','lightgoldenrod','darksalmon'),...) {
-	
+hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F,big.final=F, area.cols=c('lightgreen','lightgoldenrod','darksalmon'),French=F,...) {
+	        
+          if (French) {
+	          labels=c('USR','LRP','RR')  
+	          ylab='Mortalite par peche'
+	          xlab='Biomasse'
+	        }
 	
           if(is.null(ylims)) ylims = c(0, (max(na.omit(mF),RR)*1.05))
           if(is.null(xlims)) xlims = c(0, (max(na.omit(B),USR)*1.05))
@@ -30,6 +35,6 @@ hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR
                }
 
           if(!yr.ends) text( B, mF,  labels=yrs, pos=3, cex= 0.8 )
-          if(yr.ends) text( B[c(1,length(B))], mF[c(1,length(B))],  labels=yrs[c(1,length(B))], pos=3, cex= 0.8 )
-
-}
+	        if(big.final) points( B[length(B)], mF[length(B)],  pch=18, col="blue",  cex= 1.7)
+	        if(yr.ends) text( B[c(1,length(B))], mF[c(1,length(B))],  labels=yrs[c(1,length(B))], pos=3, cex= 0.8 )
+	        }

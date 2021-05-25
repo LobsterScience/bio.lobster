@@ -3,7 +3,7 @@ lobGridPlot <- function(Data,lvls,bcol="YlGnBu",border=1,FUN=mean,place=2,rev=F)
 
 	require(PBSmapping)
 	require(RColorBrewer)
-	if(FUN=='LU') {lu = function(x) length(unique(x)); FUN=lu}
+#	if(FUN=='LU') {lu = function(x) length(unique(x)); FUN=lu}
 
 	names(Data)[1:3]<-c("LFA","GRID","Z")
 	Data$LFA[Data$LFA=="31A"]<-311
