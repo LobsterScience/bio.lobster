@@ -60,7 +60,7 @@ a$Date = as.Date(with(a, paste(Year, Mo, Dy, sep="-")), '%Y-%m-%d')
 		xx = rename.df(xx,c('CENTLON','CENTLAT'),c('X','Y'))
 ###
 
-	    g = subset(xx,LFA.x ==29)
+	    g = subset(xx,LFA.x ==27)
 
 	    x = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~DATE_FISHED+COMMUNITY_CODE+Uspd+Vspd+Year+Wspd+Dir+
 	  	Uspd_L1+Vspd_L1+Wspd_L1+Dir_L1+
@@ -98,14 +98,14 @@ uvToSpeed = function(u,v){
 #Add in Glorys Temperature Data
 	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
 	#Get the unique EIDS from GLORYS data
-		L = subset(LFAs,PID==29)
+		L = subset(LFAs,PID==27)
 		fd = file.path(project.datadirectory('bio.lobster'),'data','GLORYS','SummaryFiles')
 		gL = dir(fd,full.names=T)
 		gL = gL[grep('Isobath',gL)]
 		EIDs = readRDS(gL[1])
 		EIDs = EIDs[!duplicated(EIDs[,c('X','Y','EID')]),c('X','Y','EID')]
 		I = findPolys(EIDs,L)$EID
-g = subset(xx,LFA.x==29)
+g = subset(xx,LFA.x==27)
 
 
 	#by LFA
@@ -155,7 +155,7 @@ require(bio.survey)
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis","LFA34-38")
 p=list()
 #loadfunctions('bio.groundfish')
-p$strat=443:457
+p$strat=440:442
 p$series =c('summer')# p$series =c('4vswcod');p$series =c('georges')
 p$years.to.estimate = c(1970:2017)
 p$functional.groups = T
@@ -203,8 +203,8 @@ outs = bam(lWt~	as.factor(Year)+
 #outall$yr = outall$n.yst = outall$w.yst = outall$LBP = NULL
 require(gratia)
 draw(outs, parametric=F)
-savePlot('~/dellshared/lfa29CPUEFactors.png')
-newD = data.frame(Year=as.factor(1993:2018), Uspd_L1=0, Vspd_L1=0, bottomT = 3.9, Doy = 112, COMMUNITY_CODEf = '10902', SoakDays=2, lTr = log(1), LBP=4)
+savePlot('~/dellshared/lfa27CPUEFactors.png')
+newD = data.frame(Year=as.factor(1993:2018), Uspd_L1=0, Vspd_L1=0, bottomT = 0.5, Doy = 130, COMMUNITY_CODEf = '10429', SoakDays=2, lTr = log(1), LBP=4)
 predict(outs, newdata=newD)
 	a_lp_matrix = predict(object = outs, newD,
 		               type = "lpmatrix")
@@ -222,7 +222,7 @@ predict(outs, newdata=newD)
 	ag = apply(apreds[,1:1000],1,quantile,c(.025,0.5,.975))
 par(mfrow = c(2,1), mar = c(1, 4, 1, 1), omi = c(0.2, 0.3, 0, 0.2))
 #par(mfrow=c(1,2))  
-plot(1993:2018, ag[2,],type='b',pch=16,xlab='Year', ylab='Standardized CPUE',ylim=c(0,4.1), xlim=c(1986,2020))
+plot(1993:2018, ag[2,],type='b',pch=16,xlab='Year', ylab='Standardized CPUE',ylim=c(0,5.1), xlim=c(1981,2020))
 arrows(1993:2018,y0=ag[3,], y1=ag[1,], length=0)		
 
    yrs =1993:2018 
@@ -239,26 +239,14 @@ arrows(1993:2018,y0=ag[3,], y1=ag[1,], length=0)
 lines(1993:2018, ag[2,],type='b',pch=16)
 arrows(1993:2018,y0=ag[3,], y1=ag[1,], length=0)		
 
-cD = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SYEAR, data=subset(cpue.data, LFA.x==29),FUN=sum)
+cD = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SYEAR, data=subset(cpue.data, LFA.x==27),FUN=sum)
 cD$CPUE = cD$WEIGHT_KG / cD$NUM_OF_TRAPS
 #x11()
-plot(cD$CPUE~cD$SYEAR,type='b',xlab='Year',pch=16,ylab='Raw CPUE')
+plot(cD$CPUE~cD$SYEAR,type='b',xlab='Year',pch=16,ylab='Raw CPUE',xlim=c(1981,2020))
 abline(h=median(cD$CPUE[1:24])*.4,lwd=2,col='red')
-savePlot('dellshared/LFA29CPUE.png')
+savePlot('dellshared/LFA27CPUE.png')
 
 ##MLS 81 1997, 1998 82.5, 1999 84
-cl=70:100
-g = cbind(cl,1/(1+(exp(14.173+(-.1727*cl)))))
-
-#from hcrs inc mls
-tt = data.frame(cbind(c(1,3.5,6), c(24,43,76)))
-names(tt) = c('Size','Eggs')
-gg = lm(Eggs~Size+0,data=tt)
-predict(gg,newdata=data.frame(Size=c(-3,-1.5,0,1,3.5,6)))
-#20% increase in egg prod with each size increase
-plot(1994:2018,(ag[2,2:ncol(ag)] - ag[2,1:(ncol(ag)-1)])/ag[2,1:(ncol(ag)-1)])
-abline(v=c(1998,1999,2005,2006))
-
 
 pred = aggregate(LBP~Year,data=outall, FUN=mean)
 temp = aggregate(bottomT~Year,data=outall, FUN=mean)
@@ -269,43 +257,29 @@ cor.test((temp[1:19,2]),(ag[2,8:ncol(ag)]))
 plot((pred[,2]),(ag[2,]))
 plot((temp[1:19,2]),(ag[2,8:ncol(ag)]))
 
-plot(1993:2018, ag[2,],type='b',pch=16,xlab='Year', ylab='Standardized CPUE',ylim=c(0,4.1), xlim=c(1986,2020))
+
+par(mar = c(5, 5, 3, 5))
+plot(1993:2018, ag[2,],type='b',pch=16,xlab='Year', ylab='Standardized CPUE',ylim=c(0,5), xlim=c(1981,2028))
 arrows(1993:2018,y0=ag[3,], y1=ag[1,], length=0)		
-abline(v=c(1998,1999,2005,2006),col=c('blue','blue','red','red'))
-savePlot('dellshared/LFA29MLSinc.png')
+
+mls=data.frame(yr=1981:2020, mls=c(rep(70,17),71.5,73,73,74.5,rep(76,5), 77.5,79, rep(81, 5), rep(82.5,7)))
+mls2=data.frame(yr=c(1998,1999,2001,2002,2007,2008,2009,2014),sz=c(1.5,1.5,1.5,1.5,1.5,1.5,2,1.5))
+par(new = TRUE)
+plot(mls$yr, mls$mls, type = "l", xaxt = "n", yaxt = "n",xlim=c(1981,2028),
+     ylab = "", xlab = "", col = "red", lty = 2,ylim=c(68,83.5))
+lines(mls$yr+6, mls$mls, type = "l", xaxt = "n", yaxt = "n",
+     ylab = "", xlab = "", col = "green", lty = 2)
+
+axis(side = 4)
+mtext("MLS", side = 4, line = 3)
+legend("topleft", c("CPUE", "MLS"),
+       col = c("blue", "red"), lty = c(1, 2))
 
 
-#offset to max traps fished within season so that total reporting effort is captured
-	
-ooo = aggregate(NUM_OF_TRAPS~Year+COMMUNITY_CODE+DATE_FISHED+Doy+Uspd+Uspd_L1+Uspd_L2+Uspd_L3+Vspd+Vspd_L1+Vspd_L2+Vspd_L3,data=outall, FUN=sum)
-	mT = aggregate(NUM_OF_TRAPS~Year+COMMUNITY_CODE,data=ooo, FUN=max)
-	names(mT)[3] = 'maxTraps'
-	oo = merge(ooo,mT)
-	oo$propMaxTraps = oo$NUM_OF_TRAPS / oo$maxTraps
-	oo$COMMUNITY_CODEf	= as.factor(oo$COMMUNITY_CODE)
-outsEffort = gam(propMaxTraps~	s(Year)+
-			   	s(Doy)+
-			   	s(Uspd,Vspd, by=COMMUNITY_CODEf)
-			   	,data=subset(oo,Year>1991), family = betar(link='logit'), method='REML')
-draw(outsEffort)
-savePlot('~/tmp/lfa29Effort.png')
 
-outT = gam(bottomT~	s(Year)+
-			   	s(Uspd_L1,Vspd_L1)+s(Doy),
-			   	data=outall, method='REML')
-draw(outT)
-savePlot('~/tmp/lfa29bottomT.png')
+par(mar = c(5, 5, 3, 5))
+plot(1993:2018, ag[2,],type='b',pch=16,xlab='Year', ylab='Standardized CPUE',ylim=c(0,5), xlim=c(1981,2028))
+arrows(1993:2018,y0=ag[3,], y1=ag[1,], length=0)		
 
-outW = gam(Uspd~	s(Year)+
-			   	s(Doy),
-			   	data=outall, method='REML')
-draw(outW)
-savePlot('~/tmp/lfa29WU.png')
-
-outV = gam(Vspd~	s(Year)+
-			   	s(Doy),
-			   	data=outall, method='REML')
-draw(outV)
-savePlot('~/tmp/lfa29WV.png')
-
-
+mls2=data.frame(yr=c(1998,1999,2001,2002,2007,2008,2009,2014),sz=c(1.5,1.5,1.5,1.5,1.5,1.5,2,1.5))
+abline(v=mls2$yr+6,col='red')

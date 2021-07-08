@@ -111,7 +111,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 
 
 	if(species == 2550){
-		LongForm = aggregate(FISH_NO~floor(FISH_LENGTH)+SEX+SET_ID,data=surveyMeasurements,FUN=length)
+		LongForm = aggregate(FISH_NO~floor(FISH_LENGTH)+SEX+SET_ID,data=subset(surveyMeasurements,SPECCD_ID==2550),FUN=length)
 		names(LongForm) = c("FISH_LENGTH","SEX","SET_ID","NUM_AT_LENGTH")
 		LongForm$BM_AT_LENGTH = LongForm$NUM_AT_LENGTH * lobLW(LongForm$FISH_LENGTH, sex= LongForm$SEX)/1000
 		x = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data',"survey","summarybootRhoNestBall.rds"))

@@ -60,7 +60,7 @@ a$Date = as.Date(with(a, paste(Year, Mo, Dy, sep="-")), '%Y-%m-%d')
 		xx = rename.df(xx,c('CENTLON','CENTLAT'),c('X','Y'))
 ###
 
-	    g = subset(xx,LFA.x ==29)
+	    g = subset(xx,LFA.x %in% c(311,'33'))
 
 	    x = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~DATE_FISHED+COMMUNITY_CODE+Uspd+Vspd+Year+Wspd+Dir+
 	  	Uspd_L1+Vspd_L1+Wspd_L1+Dir_L1+
@@ -98,21 +98,20 @@ uvToSpeed = function(u,v){
 #Add in Glorys Temperature Data
 	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
 	#Get the unique EIDS from GLORYS data
-		L = subset(LFAs,PID==29)
+		L = subset(LFAs,PID==33)
 		fd = file.path(project.datadirectory('bio.lobster'),'data','GLORYS','SummaryFiles')
 		gL = dir(fd,full.names=T)
 		gL = gL[grep('Isobath',gL)]
 		EIDs = readRDS(gL[1])
 		EIDs = EIDs[!duplicated(EIDs[,c('X','Y','EID')]),c('X','Y','EID')]
 		I = findPolys(EIDs,L)$EID
-g = subset(xx,LFA.x==29)
 
 
 	#by LFA
 out = list()
 for(i in 1:length(gL)){
 	jk = readRDS(gL[i])
-	jk = subset(jk,EID %in% I & month(date) %in% 4:7 )
+	jk = subset(jk,EID %in% I & month(date) %in% 11:5 )
 	out[[i]] = jk
 }
 	out = do.call(rbind,out)
@@ -146,16 +145,18 @@ for(i in 1:length(iu)){
 outall = do.call(rbind,outt)
 outall = subset(outall,SoakDays<10)
 outall = subset(outall, is.finite(lWt))
+#1993 is incomplete
 
+outall = subset(outall, SYEAR>1993)
 
 ###predators 
 
-p = bio.groundfish::load.groundfish.environment("BIOsurvey")
+
 require(bio.survey)
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis","LFA34-38")
 p=list()
 #loadfunctions('bio.groundfish')
-p$strat=443:457
+p$strat=450:475
 p$series =c('summer')# p$series =c('4vswcod');p$series =c('georges')
 p$years.to.estimate = c(1970:2017)
 p$functional.groups = T
@@ -189,22 +190,29 @@ aout$SYEAR7 = aout$yr+7
 aout$LBP = log(aout$w.yst)
 outall = merge(outall, aout, by.x='Year', by.y='SYEAR7')
 
+outall$DOS = NA
+ii = unique(outall$SYEAR)
+for(i in 1:length(ii)){
+	j = which(outall$SYEAR==ii[i])
+	mi = min(outall$DATE_FISHED[j])
+	outall$DOS[j] = as.numeric(outall$DATE_FISHED[j] - mi)
+
+}
 
 #best model Feb 16
-outs = bam(lWt~	as.factor(Year)+
-			   	s(Uspd_L1,Vspd_L1)+
+outs = bam(lWt~	as.factor(SYEAR)+
+			  s(Uspd_L1,Vspd_L1)+
 			   	s(bottomT)+ 
-			   	s(Doy,bottomT)+
-			   	COMMUNITY_CODEf +
+			   	s(DOS,bottomT)+
+		#	   	COMMUNITY_CODEf +
 			   	(SoakDays) +
-			 #  	(LBP) + predators didnt really add anything
-			   	offset(lTr),data=subset(outall,month(DATE_FISHED)>4), method='REML')
+			   	offset(lTr),data=subset(outall), method='REML')
 
 #outall$yr = outall$n.yst = outall$w.yst = outall$LBP = NULL
 require(gratia)
 draw(outs, parametric=F)
-savePlot('~/dellshared/lfa29CPUEFactors.png')
-newD = data.frame(Year=as.factor(1993:2018), Uspd_L1=0, Vspd_L1=0, bottomT = 3.9, Doy = 112, COMMUNITY_CODEf = '10902', SoakDays=2, lTr = log(1), LBP=4)
+savePlot('~/dellshared/lfa33CPUEFactors.png')
+newD = data.frame(SYEAR=as.factor(1994:2018), Uspd_L1=0, Vspd_L1=0, bottomT = 3.9, DOS = 10, COMMUNITY_CODEf = '13001', SoakDays=2, lTr = log(1), LBP=4)
 predict(outs, newdata=newD)
 	a_lp_matrix = predict(object = outs, newD,
 		               type = "lpmatrix")
@@ -222,8 +230,8 @@ predict(outs, newdata=newD)
 	ag = apply(apreds[,1:1000],1,quantile,c(.025,0.5,.975))
 par(mfrow = c(2,1), mar = c(1, 4, 1, 1), omi = c(0.2, 0.3, 0, 0.2))
 #par(mfrow=c(1,2))  
-plot(1993:2018, ag[2,],type='b',pch=16,xlab='Year', ylab='Standardized CPUE',ylim=c(0,4.1), xlim=c(1986,2020))
-arrows(1993:2018,y0=ag[3,], y1=ag[1,], length=0)		
+plot(1994:2018, ag[2,],type='b',pch=16,xlab='Year', ylab='Standardized CPUE', xlim=c(1986,2020))
+arrows(1994:2018,y0=ag[3,], y1=ag[1,], length=0)		
 
    yrs =1993:2018 
   		  
@@ -239,23 +247,25 @@ arrows(1993:2018,y0=ag[3,], y1=ag[1,], length=0)
 lines(1993:2018, ag[2,],type='b',pch=16)
 arrows(1993:2018,y0=ag[3,], y1=ag[1,], length=0)		
 
-cD = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SYEAR, data=subset(cpue.data, LFA.x==29),FUN=sum)
+cD = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SYEAR, data=subset(cpue.data, LFA.x %in% c(311,'31A')),FUN=sum)
 cD$CPUE = cD$WEIGHT_KG / cD$NUM_OF_TRAPS
 #x11()
 plot(cD$CPUE~cD$SYEAR,type='b',xlab='Year',pch=16,ylab='Raw CPUE')
 abline(h=median(cD$CPUE[1:24])*.4,lwd=2,col='red')
-savePlot('dellshared/LFA29CPUE.png')
+savePlot('dellshared/LFA31ACPUE.png')
+#MLS
+1997	31A	81
+1998	31A	82.5
+1999	31A	84
+2000	31A	86
+2001	31A	86
+2002	31A	86
+2003	31A	86
+2004	31A	84
+2005	31A	84
+2006	31A	84
+2007	31A	82.5
 
-##MLS 81 1997, 1998 82.5, 1999 84
-cl=70:100
-g = cbind(cl,1/(1+(exp(14.173+(-.1727*cl)))))
-
-#from hcrs inc mls
-tt = data.frame(cbind(c(1,3.5,6), c(24,43,76)))
-names(tt) = c('Size','Eggs')
-gg = lm(Eggs~Size+0,data=tt)
-predict(gg,newdata=data.frame(Size=c(-3,-1.5,0,1,3.5,6)))
-#20% increase in egg prod with each size increase
 plot(1994:2018,(ag[2,2:ncol(ag)] - ag[2,1:(ncol(ag)-1)])/ag[2,1:(ncol(ag)-1)])
 abline(v=c(1998,1999,2005,2006))
 
@@ -269,11 +279,16 @@ cor.test((temp[1:19,2]),(ag[2,8:ncol(ag)]))
 plot((pred[,2]),(ag[2,]))
 plot((temp[1:19,2]),(ag[2,8:ncol(ag)]))
 
-plot(1993:2018, ag[2,],type='b',pch=16,xlab='Year', ylab='Standardized CPUE',ylim=c(0,4.1), xlim=c(1986,2020))
+plot(1993:2018, ag[2,],type='b',pch=16,xlab='Year', ylab='Standardized CPUE',ylim=c(0,2), xlim=c(1986,2020))
 arrows(1993:2018,y0=ag[3,], y1=ag[1,], length=0)		
-abline(v=c(1998,1999,2005,2006),col=c('blue','blue','red','red'))
-savePlot('dellshared/LFA29MLSinc.png')
+abline(v=c(1998,1999,2000,2001, 2005,2006, 2007,2008),col=c('blue','blue','blue','green','red','red','red','orange'))
+savePlot('dellshared/LFA31AMLSinc.png')
 
+
+plot(1993:2018, ag[2,],type='b',pch=16,xlab='Year', ylab='Standardized CPUE',ylim=c(0,2), xlim=c(1986,2020))
+arrows(1993:2018,y0=ag[3,], y1=ag[1,], length=0)		
+abline(v=c(2003,2004, 2007, 2010,2011, 2012),col=c('blue','blue','blue','red','red','red','red'))
+savePlot('dellshared/LFA31AMLSdec.png')
 
 #offset to max traps fished within season so that total reporting effort is captured
 	

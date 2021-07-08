@@ -47,9 +47,10 @@ CPUEplot<-function(logs,lfa=NULL,yrs,French= F, subarea=NULL,lab='',graphic='R',
 		lines(CPUE~DATE,subset(annual.dat,LFA==lfa[i]),type='b',pch=21,bg='red')
 		text(min(daily.dat$DATE,na.rm=T),max(daily.dat$CPUE,na.rm=T)*.8,paste("LFA",lfa[i]),cex=2,pos=4)
 	}
-		
-  if (French){mtext('CPUE (kg/casier levé)', 2, 3, outer = T, cex = 1.5,las=0)	}
-	else {mtext("CPUE (kg/TH)", 2, 3, outer = T, cex = 1.5,las=0)}
+	tx ="CPUE (kg/TH)" 	
+  	if(French) tx="CPUE (kg/casier leve)"
+	
+	  mtext(tx, 2, 3, outer = T, cex = 1.5,las=0)
 	
 	if(graphic=='pdf')dev.off()
 

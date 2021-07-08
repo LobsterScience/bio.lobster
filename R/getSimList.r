@@ -69,8 +69,9 @@ getSimList = function(p,sex=1, LS=82.5, Fadj = 1, Sadj = 1, Sclose='end', window
 		#p$dailytemps = rDailyTemps(x=1:(p$nt*p$timestep),b=10,m=10,s=coldestday)
 	
 		# predicted temperature from temp model (for degree day growth)
+		if(p$Area == '31A') p$Area = 311
 		p$dailytemps = TempModelPredict(p)
-
+		p$Area = '31A'
 		p$mint = 10 # minimum temperature for a lobster to molt
 	
 		#growth 		

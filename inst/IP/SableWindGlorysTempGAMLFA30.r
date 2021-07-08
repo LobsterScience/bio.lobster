@@ -6,6 +6,7 @@ require(lubridate)
 require(PBSmapping)
 require(mgcv)
 require(gratia)
+require(devtools)
 dr = file.path(project.datadirectory('bio.lobster'),'data','wind')
 a = read.table(file=file.path(dr, 'sable_daily.txt'),skip=13,header=T)
 la()
@@ -81,13 +82,14 @@ a$Date = as.Date(with(a, paste(Year, Mo, Dy, sep="-")), '%Y-%m-%d')
 ## offset to max traps fished within season so that total reporting effort is captured
 	
 	mT = aggregate(NUM_OF_TRAPS~Year+COMMUNITY_CODE,data=g, FUN=max)
-	names(mT)[2] = 'maxTraps'
+	names(mT)[3] = 'maxTraps'
 	x = merge(g,mT)
 	x$propMaxTraps = x$NUM_OF_TRAPS / x$maxTraps
+	x$RUsp = round(x$Uspd,1)
 
 outs = gam(propMaxTraps~	s(Year)+
 			   	s(Doy)+
-			   	s(Uspd,Vspd)
+			   	s(Uspd,Vspd,by=Doy)
 			   	,data=subset(x,Year>1998), family = betar(link='logit'), method='REML')
 draw(outs)
 #you will get a warning about saturation -- likely due to low dispersion parameter--not terribly concerning
@@ -104,9 +106,6 @@ uvToSpeed = function(u,v){
 x$COMMUNITY_CODEf = as.factor(x$COMMUNITY_CODE)
 outs = gam(lWt~	s(Year)+
 			   	s(Doy)+ 
-			   	s(Uspd_L1,Vspd_L1)+
-			   	
-			  	(COMMUNITY_CODEf)+
 			   	offset(lTr),data=x, method='REML')
 draw(outs,parametric=F)
 vis.gam(outs,view=c('Uspd_L1','Vspd_L1'),plot.type='contour',too.far=.05)

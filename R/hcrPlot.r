@@ -4,7 +4,7 @@ hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR
 	        
           if (French) {
 	          labels=c('USR','LRP','RR')  
-	          ylab='Mortalité par pêche'
+	          ylab='Mortalite par peche'
 	          xlab='Biomasse'
 	        }
 	

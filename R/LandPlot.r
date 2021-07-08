@@ -13,8 +13,8 @@ LandPlot <- function(land,usr,lrp,lfa,out.dir='bio.lobster', French=F) {
 					labs = 'Wt'
 
 					if (French){
-					xlab='Année'
-					ylab='Débarquements (t)'
+					xlab='Annee'
+					ylab='Debarquements (t)'
 					} else{
 					  xlab='Year'
 					  ylab='Landings (t)' 
