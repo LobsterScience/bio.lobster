@@ -164,7 +164,9 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
 
                 se = set[iy,]
                 ca = cas[iv,]
+                if(nrow(se)>1){
                   se$z = (se$dmin+se$dmax) / 2
+                
                 vars.2.keep = c('mission','slat','slong','setno','sdate','dist','strat','z','bottom_temperature','bottom_salinity','type')
                 se = se[,vars.2.keep]
                 se$slong = convert.dd.dddd(se$slong)
@@ -267,7 +269,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             
 
                 print(out[mp,'v'])
-              } else {
+              }} else {
                # out[mp,] = c(yr,v,rep(0,15))
                   out[mp,] = c(yr,rep(0,22))
              
