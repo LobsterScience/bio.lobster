@@ -3,8 +3,8 @@ require(bio.utilities)
 require(RODBC)
 require(lubridate)
 #SWLSS
-x20 = read.csv(	'C:/Users/cooka/Desktop/BYCATCH/Bycatch Validation 20-21/SummaryOfTrips/CompiledData.SWLSS.2021-06-28.csv')
-x19 = read.csv(	'C:/Users/cooka/Desktop/BYCATCH/Bycatch Validation 19-20/SummaryOfTrips/CompiledData.SWLSS.2020-10-28.csv')
+x20 = read.csv(	'C:/Users/cooka/Desktop/BYCATCH/Bycatch Validation 20-21/SummaryOfTrips/CompiledData.SWLSS.2021-07-09.csv')
+x19 = read.csv(	'C:/Users/cooka/Desktop/BYCATCH/Bycatch Validation 19-20/SummaryOfTrips/CompiledData.SWLSS.2021-07-09.csv')
 x18 = read.csv(	'C:/Users/cooka/Desktop/BYCATCH/Bycatch Validation Oct 2019/SummaryOfTrips/CompiledData.SWLSS.2020-02-21.csv')
 
 xAll = rbind(x18,x19,x20)
