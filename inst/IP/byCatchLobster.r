@@ -19,6 +19,8 @@ x = subset(x,LFA %in% c(33,34,35) & SYEAR %in% 2019:2021)
 saveRDS(x,'C:/Users/cooka/Desktop/sharedfolder/Bycatch in the Lobster Fishery/data/Compiledlogs.rds')
 
 
+
+
 #OBSERVERS
 con = odbcConnect(oracle.lobster.server , uid=oracle.lobster.user, pwd=oracle.lobster.password, believeNRows=F) # believeNRows=F required for oracle db's
 

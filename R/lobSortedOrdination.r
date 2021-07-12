@@ -25,8 +25,16 @@ if(is.null(outfilenames)) {
     corel[ is.na(corel) ] = 0
     
     s = svd(corel)  # eigenanalysis via singular value decomposition
-    
-    scores = matrix.multiply (b, s$v)  # i.e., b %*% s$v  .. force a multiplication ignoring NAs
+
+    ndat = dim(b)[1]
+    scores = matrix(0, nrow = ndat, ncol = 2)
+    for (j in 1:2) {
+        for (i in 1:ndat) {
+            scores[i, j] = sum(b[i, ] * t(s$v[, j]), na.rm = T)
+          }
+      }
+
+
     evec = s$v
     eval = s$d
     
@@ -78,7 +86,7 @@ if(is.null(outfilenames)) {
     if (colscheme=="rainbow")  {
       cols=rainbow(length(br)-1, start=0, end=1/3)
     } else if (colscheme=="redgreen") {
-      cols=rev(green.red(length(br)))    
+      cols=rev(red_green(length(br)))    
     } else if (colscheme=="bluered") {
       cols=rev(blue.red(length(br)))    
     } else if (colscheme=="heat") { 
