@@ -93,21 +93,43 @@ oo$RR75[oo$LFA==i]=RR75$ERf75[RR75$LFA==i]
 }
 
 
-png(filename=file.path(figdir, "exploitation.27-31A.png"),width=10, height=7, units = "in", res = 800)
+png(filename=file.path(figdir, "exploitation.27-30.png"),width=10, height=7, units = "in", res = 800)
   par(mfrow=c(2,2))	
-  for(i in c("27", "29", "30", "31A")){
+  for(i in c("27", "28", "29", "30")){
+      if (i=="28"){
+        #par(mar = c(0,0,0,0))
+        plot(c(0, 1), c(0, 1), ann = F, bty = 'n', type = 'n', xaxt = 'n', yaxt = 'n')
+        text(x = 0.5, y = 0.5, paste("LFA 28- No Data Available"),  cex = 1.5, col = "black")
+      }else{
       o = subset(oo,LFA==i)
       RR7 = subset(RR75,LFA==i)$ERf75
       ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=figdir, save=F, title=i) 
-      }
+      }}
 dev.off()
   
-png(filename=file.path(figdir, "exploitation.31B-33.png"),width=10, height=7, units = "in", res = 800)
+png(filename=file.path(figdir, "exploitation.31A-33.png"),width=10, height=7, units = "in", res = 800)
 par(mfrow=c(2,2))	
-for(i in c("31B", "32", "33")){
+for(i in c("31A", "31B", "32", "33")){
   o = subset(oo,LFA==i)
   RR7 = subset(RR75,LFA==i)$ERf75
   ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=figdir, save=F, title=i) 
 }
 dev.off()
+
+
+#fsrs plot
+
+lobster.db('fsrs')
+test=fsrs[fsrs$S_LABEL %in% c(paste(p$current.assessment.year-1, p$current.assessment.year, sep="-"), p$current.assessment.year),] 
+test$X=test$LONG_DD
+test$Y=test$LAT_DD
+test$PID=1:length(test$RECORD_NUMBER)
+test=as.PolyData(test)
+
+png(filename=file.path(figdir, "fsrs.map.small.png"),width=10, height=6.5, units = "in", res = 800)
+LobsterMap('27-38', labels='lfa')
+addPoints(test, col="red", pch=20, cex=0.6)
+dev.off()
+
+
 

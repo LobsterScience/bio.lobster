@@ -764,7 +764,8 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             atSea2$GRIDNO = NA
             atSea2$SPECIESCODE = atSea2$SPECCD_ID
             atSea2$CULL = NA
-            atSea2$CALWT = NA
+            #atSea2$CALWT=NA  #BZ Remoed and replaced with line below. Sept 2021
+            atSea2$CALWT = atSea2$CALWT_G
             atSea2$STARTDATE = as.Date(NA)
             atSea2$SPECIES = NA
 
@@ -777,8 +778,11 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
 
             names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", 
-                     "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH", "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH","CALWT")
+                     "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH", 
+                     "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT")
 
+      #BZ. Sept2021- Added "DISEASE", "CONDITION_CD", "CLUTCH" to above list to include these variables and match fields from atSea dataset
+            
             atSea2 = subset(atSea2,select=names2)
             atSea2$COMAREA_ID = substr(atSea2$COMAREA_ID,2,nchar(atSea2$COMAREA_ID))
             atSea2$LATDDMM = convert.dd.dddd(atSea2$LATDDMM)
@@ -790,7 +794,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
             save( atSea, file=file.path( fnODBC, "atSea.rdata"), compress=T)
             gc()  # garbage collection
-            odbcClose(con)
+            #odbcClose(con)
           }
           load(file.path( fnODBC, "atSea.rdata"), .GlobalEnv)
      }

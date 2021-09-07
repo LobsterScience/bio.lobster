@@ -20,7 +20,7 @@
 	      lobster.db('logs.redo')
 	      lobster.db('annual.landings.redo')
 	      lobster.db('seasonal.landings.redo')
-	      lobster.db('vlog.redo')
+	      #lobster.db('vlog.redo')
 	      logs=lobster.db('process.logs.redo')
 	    }
 

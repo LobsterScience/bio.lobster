@@ -19,7 +19,7 @@ if(NewDataPull){
   lobster.db('fsrs.redo')
   lobster.db('logs.redo')
   lobster.db('annual.landings.redo')
-  lobster.db('vlog.redo')
+  lobster.db('vlog')
   logs=lobster.db('process.logs.redo')
 }
 
