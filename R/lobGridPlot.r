@@ -20,8 +20,7 @@ lobGridPlot <- function(Data,lvls,bcol="YlGnBu",border=1,FUN=mean,place=2,rev=F)
 	cols   <- brewer.pal(length(lvls),bcol) 
 	if(rev) cols = rev(cols)
 	lvls<-c(lvls,max(lvls)*100)
-	#browser()
-	
+	if(any(is.na(pdata$SID))) pdata = subset(pdata, !is.na(SID))
 	pdata  <- makeProps(pdata, lvls, "col", cols) 
 	pdata$border<-border
 	
