@@ -43,9 +43,9 @@ if(landings.numbers){
 				os$vec<-NULL
 			outS[[i]] <- os
 		# brad ran to here to get data for a plot
-		#outS[[i]] <- op$vec
-		#} 
-		#save(outS,file=file.path(project.datadirectory("bio.lobster"),"outputs","atSeaCLF.rdata"))
+		outS[[i]] <- op$vec
+		} 
+		save(outS,file=file.path(project.datadirectory("bio.lobster"),"outputs","atSeaCLF.rdata"))
 
 			#Tc is fractional year of catch
 				if(po == 27) 	{ll = "LFA27-30"; 	lle = 'all areas'; lp = g[,c('YR',names(g)[grep(po,names(g))])]; dt = DTs[[grep('27N',names(DTs))]]; Tc = 0.67}
@@ -83,7 +83,7 @@ if(landings.numbers){
 				outS[[i]] = c(outS[[i]], PropMating = pMature,EggProduction = eggProd)			
 			
 
-				brks = seq(mm,max(as.numeric(names(dt))),by=5)
+				brks = seq(mm,max(as.numeric(names(dt))),by=5) #throws error
 				dt = dt[which.min(abs(brks[1]-as.numeric(names(dt)))):length(dt)]
 				dt =data.frame(dt=dt,brks = as.numeric(names(dt)))
 				dt$dt = dt$dt / 365 #* (5 / (as.numeric(names(dt))*0.15))
