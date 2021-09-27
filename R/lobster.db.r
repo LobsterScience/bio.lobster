@@ -1091,7 +1091,9 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         
         save( fsrs, file=file.path( fnODBC, "fsrs.rdata"), compress=T)
         gc()  # garbage collection
-        odbcClose(con)
+        if(!("ROracle" %in% (.packages()))){
+          odbcClose(con) 
+        }
       }
       load(file.path( fnODBC, "fsrs.rdata"), .GlobalEnv)
      }

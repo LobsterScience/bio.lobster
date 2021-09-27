@@ -61,7 +61,7 @@
 		logs=lobster.db("process.logs")
 
 		#Choose one to redo or not Add TempSkip=T to not model CPUE with Temps
-		#CPUE.data<-CPUEModelData(p,redo=T)
+		#CPUE.data<-CPUEModelData(p,redo=T,TempSkip=T)
 		#CPUE.data<-CPUEModelData(p,redo=F)
 		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(CPUE.data$SYEAR),graphic='R')$annual.data
 		crd = subset(cpueData,LFA==33,c("YEAR","CPUE"))
@@ -97,13 +97,16 @@
 
 
 # CCIR ###############
-
+#The following two tables need to be updated to reflect current year:
+#C:\bio.data\bio.lobster\data\inputs\ccir.inputs.csv
+#C:\bio.data\bio.lobster\data\inputs\MinLegalSize
+    
 		lobster.db('ccir.redo')
 		inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
 		load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
 		load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
 
-
+    
 		lobster.db('ccir')
 
 		logs = lobster.db('process.logs')
@@ -112,7 +115,7 @@
 		require(bio.ccir)
 		require(rstan)
 		#load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
-		ccir_data = subset(ccir_data,YEAR<=2021)
+		ccir_data = subset(ccir_data,YEAR<=2022)
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 		out.binomial = list()
@@ -231,7 +234,7 @@ write.csv(data,file.path(fd,paste(fn,'.csv',sep='')))
     	  axis(4)
     	  mtext("Effort ('000s Trap Hauls)", 4, 3.5, outer = F,las=0)
 
-    	  write.csv(data,file.path(figdir,paste('FisheryPlot33.csv',sep='')))
+    	  write.csv(fishData,file.path(figdir,paste('FisheryPlot33.csv',sep='')))
 	  dev.off()
 
 	  #-----------------------------------------------------------------------
