@@ -96,7 +96,8 @@ if(save) {
 	}
 	if(!is.null(poly.lst)){
 		addPolys(poly.lst[[1]],polyProps=poly.lst[[2]])
-		if('density'%in%names(poly.lst[[2]])){
+	  browser()
+		if('density'%in%names(poly.lst[[2]]) & all(!is.na(poly.lst[[2]]$density))){
 			x=subset(poly.lst[[2]],!is.na(density))
 			addPolys(subset(poly.lst[[1]],SID==x$SID),density=x$density,angle=x$angle,col=x$linecol,border=x$border)
 		}

@@ -26,7 +26,7 @@ load_all('~/git/bio.survey/')
         nefsc.db( DS = 'odbc.dump.redo',fn.root = file.path(project.datadirectory('bio.lobster'),'data'),p=p)
  
 
-        datayrs=1970:2020
+        datayrs=1970:2021
         groundfish.db( DS="gscat.odbc.redo", datayrs=datayrs )
         groundfish.db( DS="gsdet.odbc.redo", datayrs=datayrs )
         groundfish.db( DS="gsinf.odbc.redo", datayrs=datayrs )
