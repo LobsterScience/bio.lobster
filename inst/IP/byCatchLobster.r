@@ -5,20 +5,16 @@ require(lubridate)
 options(stringAsFactors=F)
 #SWLSS
 if(data.redo){
-			x20 = read.csv(	'C:/Users/cooka/Desktop/BYCATCH/Bycatch Validation 20-21/SummaryOfTrips/CompiledData.SWLSS.2021-07-09.csv')
-			x19 = read.csv(	'C:/Users/cooka/Desktop/BYCATCH/Bycatch Validation 19-20/SummaryOfTrips/CompiledData.SWLSS.2021-07-09.csv')
-			x18 = read.csv(	'C:/Users/cooka/Desktop/BYCATCH/Bycatch Validation Oct 2019/SummaryOfTrips/CompiledData.SWLSS.2020-02-21.csv')
-
-			xAll = rbind(x18,x19,x20)
-			xAll$X = convert.dd.dddd(xAll$LONGDDMM)*-1
+			channel=odbcConnect(dsn='ptran',uid='cooka',pwd='bzz7plf')
+			xAll = sqlQuery(channel,'select * from cooka.lobster_bycatch_assoc')
+				xAll$X = convert.dd.dddd(xAll$LONGDDMM)*-1
 			xAll$Y = convert.dd.dddd(xAll$LATDDMM)
-			xAll$EID = 1:nrow(xAll)
-			saveRDS(xAll,'C:/Users/cooka/Desktop/sharedfolder/Bycatch in the Lobster Fishery/data/CompiledSWLSS.rds')
+			saveRDS(xAll,'C:/Users/cooka/Desktop/sharedfolder/Bycatch in the Lobster Fishery/data/CompiledAtSeaSept2021.rds')
 
 			#LOGS
 			x = lobster.db('process.logs.unfiltered')
 			x = subset(x,LFA %in% c(33,34,35) & SYEAR %in% 2019:2021)
-			saveRDS(x,'C:/Users/cooka/Desktop/sharedfolder/Bycatch in the Lobster Fishery/data/Compiledlogs.rds')
+			saveRDS(x,'C:/Users/cooka/Desktop/sharedfolder/Bycatch in the Lobster Fishery/data/LogbooksProUnf.rds')
 		
 		con = odbcConnect(oracle.lobster.server , uid=oracle.lobster.user, pwd=oracle.lobster.password, believeNRows=F) # believeNRows=F required for oracle db's
 
@@ -33,70 +29,66 @@ saveRDS(list(tr,se,de),file='C:/Users/cooka/Desktop/sharedfolder/Bycatch in the 
 
 
 setwd('~/dellshared/Bycatch in the Lobster Fishery')
-a = readRDS('data/CompiledSWLSS.rds')
-b = readRDS('data/Compiledlogs.rds')
+#a = readRDS('data/CompiledSWLSS.rds')
+a = readRDS('data/CompiledAtSeaSept2021.rds')
+a = subset(a, OWNER_GROUP=='SWLSS')
+b = readRDS('data/LogbooksProUnf.rds')
 o = readRDS('data/ObserverInfo.rds')
  ms = read.csv('data/SWLSSTripmatch.csv')
+ ms = subset(ms,select=c(TRIP,SD_LOG_ID_1,QUALITY))
+
+a$Legal = ifelse(a$SPECCD_ID == 2550 & a$FISH_LENGTH > 82 & a$SEXCD_ID %in% 1:2,1,0)
+a$Berried = ifelse(a$SPECCD_ID == 2550 & a$SEXCD_ID %in% 3,1,0)
+a$Lobster = ifelse(a$SPECCD_ID == 2550,1,0)
+a$Cod = ifelse(a$SPECCD_ID == 10,1,0)
+a$Cusk = ifelse(a$SPECCD_ID == 15,1,0)
+a$Jonah = ifelse(a$SPECCD_ID == 2511,1,0)
+a$Empty = ifelse(a$SPECCD_ID == 9999,1,0)
+a$LegalWt = a$Legal * a$CALWT_G/1000
+a$LegalWt = na.zero(a$LegalWt) 
+a$LegalWt[which(is.na(a$LegalWt))] <- 0
 
 
-#SWLSS Data
-a$BOARD_DATE = as.Date(a$BOARD_DATE)
-a$LANDING_DATE = as.Date(a$LANDING_DATE)
+a$Sz = round(a$FISH_LENGTH/5)*5
+a$SP_SZ = paste(a$SPECCD_ID, a$Sz, sep="-")
 
-outputs = list()
-m=0
-for(i in 1:nrow(ms)) {
-	g = ms[i,]
-	print(i)
-	p = subset(a,TRIP==g$TRIP)
-	p$COMMENTS=NA
-    w = grep('SD_LOG',names(g))
-	k = which(!is.na(g[,w]))
-	if(length(k)==1){
-			l = subset(b,SD_LOG_ID==g[,w[k]], select=c(SYEAR,WOS,DOS,GRID_NUM,WEIGHT_KG,NUM_OF_TRAPS))
-			if(nrow(l)==1){
-				m=m+1
-				print(paste(m,'One Grid'))
-				ll = l[rep(seq_len(nrow(l)),each=nrow(p)),]
-				 ll$GRID_NUM = NULL
-				 p$COMMENTS ='Only one grid and matches'
-				 outputs[[m]] = cbind(p,ll)
-			}
-			if(nrow(l)>1){
-				m=m+1
-				v = unique(l$GRID_NUM)
-				vv = unique(p$STRATUM_ID)
-				if(all(v %in% vv)){
-					print(paste(m,'all match'))
-					p = merge(p,l,by.x='STRATUM_ID',by.y='GRID_NUM')
-					p$COMMENTS ='Multiple grids match'
-				   p$GRID_NUM = NULL
-				 outputs[[m]] = p
-				 	
-				} else if(any(vv %in% v)) {
-					print(paste(m,'some match'))
-					l = aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR+WOS+DOS,data=l,FUN=sum)
-				 ll = l[rep(seq_len(nrow(l)),each=nrow(p)),]
-				 p$COMMENTS ='Some grids dont match'
-				 ll$GRID_NUM = NULL
-				 outputs[[m]] = cbind(p,ll)
-				} else {
-					print(paste(m,'no match'))
-				l = aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR+WOS+DOS,data=l,FUN=sum)
-				 ll = l[rep(seq_len(nrow(l)),each=nrow(p)),]
-				 ll$GRID_NUM = NULL
-				p$COMMENTS = 'Grids Dont Match'
-				outputs[[m]] = cbind(p,ll)
-				}
-			}
-		}
-	}
+a$UID = paste(a$TRIP, a$FISHSET_ID, a$TRAP_ID,sep="-")
+a$P = 1
+bb = reshape(a[,c('UID','SP_SZ','P')],idvar='UID',timevar='SP_SZ', direction='wide')
+bb = na.zero(bb)
+ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt)~UID+TRIP+X+Y+TRAP_ID+FISHSET_ID+COMAREA_ID+STRATUM_ID+NUM_HOOK_HAUL, data=a,FUN=sum)
+
+CDa = merge(ac,bb,by='UID')
+CDa$'P.9999-NA' = NULL
+
+#Start with averages
+
+aC = aggregate(cbind(Lobster,Cod,Cusk,Jonah,Legal,Berried, Empty,LegalWt)~TRIP+FISHSET_ID+COMAREA_ID+STRATUM_ID+NUM_HOOK_HAUL,data=CDa,FUN=median)
+
+aC$TotLegal = aC$LegalWt * aC$NUM_HOOK_HAUL
+
+aCC = aggregate(cbind(TotLegal,NUM_HOOK_HAUL)~TRIP,data=aC,FUN=sum)
+
+bL = merge(b,ms,by.x='SD_LOG_ID', by.y='SD_LOG_ID_1')
+bLL = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SD_LOG_ID+TRIP,data=bL,FUN=sum)
+SBUMP = merge(aCC,bLL)
+
+#any bias in reported landings?
+with(SBUMP,plot(TotLegal,WEIGHT_KG))
+abline(b=1,a=0)
+
+with(SBUMP,lm(log(WEIGHT_KG)~log(TotLegal)-1)) #treating the SWLSS data as 'truth'
+
+#using NUM_OF_TRAPS
+
+SBUMP$WEIGHT_ASS_LOGS = SBUMP$TotLegal/SBUMP$NUM_HOOK_HAUL * SBUMP$NUM_OF_TRAPS
+with(SBUMP,plot(WEIGHT_ASS_LOGS,WEIGHT_KG))
+abline(b=1,a=0)
 
 
-## need to finish for the rows with multiple SD_LOGS
-s=do.call(rbind,outputs)
 
-t = aggregate(NUM_HOOK_HAUL~TRIP+NUM_OF_TRAPS+WEIGHT_KG+STRATUM_ID,data=s,FUN=sum)
+#any bias in reported trap hauls?
+we expect NUM_HOOK_HAUL is under represtned, not entire trip being sampled.dd
 
 
 
