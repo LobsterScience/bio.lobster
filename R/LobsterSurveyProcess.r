@@ -16,7 +16,9 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	RLibrary("CircStats","PBSmapping","SpatialHub","spatstat")
 	if(missing(yrs))yrs=sort(unique(surveyCatch$YEAR))
 
+	surveyCatch$LFA <- NULL
 	# add column for LFA
+	#removed this section 2021 AMC -- cdenton added LFA to the Oracle Table
 	LFAs=read.csv(file.path(project.datadirectory('bio.lobster'),"data",'maps','Polygons_LFA.csv'))
 	SurvLocs=subset(surveyCatch,select=c("SET_ID","SET_LONG","SET_LAT"))
 	names(SurvLocs)[2:3]=c("X","Y")
@@ -24,22 +26,20 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	key=findPolys(SurvLocs,LFAs)
 	SurvLFAs=merge(subset(SurvLocs,select=c("EID","SET_ID")),merge(key,subset(LFAs,!duplicated(PID),c("PID","LFA"))))
 	surveyCatch=merge(surveyCatch,subset(SurvLFAs,!duplicated(SET_ID),c("SET_ID","LFA")),all=T)
-	
 	# select for Lobsters
 	setNames=c("SET_ID", "TRIP_ID", "TRIPCD_ID", "SURVEY_TYPE", "CFV", "VESSEL_NAME", "BOARD_DATE", "LANDING_DATE","HAULCCD_ID", "SET_NO","GEAR","FISHSET_ID",
 	        "STATION", "STRATUM_ID", "SET_LAT", "SET_LONG", "SET_DEPTH", "SET_TIME", "SET_DATE", "HAUL_LAT", "HAUL_LONG", "HAUL_DEPTH", "HAUL_TIME", 
 	        "HAUL_DATE", "YEAR", "LFA")           
 	surveyLobsters=merge(subset(surveyCatch,SPECCD_ID==species),subset(surveyCatch,!duplicated(SET_ID),setNames),all=T) #includes zeros
 	# number of lobsters with detailed data
-	
 	if(species == 2550){
-
+		surveyMeasurements = subset(surveyMeasurements,SPECCD_ID ==2550) #added Sept 2021
 		NLM = with(surveyMeasurements,tapply(SET_ID,SET_ID,length))
 		MEAN_LENGTH = with(surveyMeasurements,tapply(FISH_LENGTH,SET_ID,mean,na.rm=T))
 
 		#shell
-		SOFT_SHELL =  with(subset(surveyMeasurements,SHELL<5),tapply(SHELL,SET_ID,length))
-		HARD_SHELL =  with(subset(surveyMeasurements,SHELL>4),tapply(SHELL,SET_ID,length))
+		SOFT_SHELL =  with(subset(surveyMeasurements,SHELL %in% c(1,2,3,7)),tapply(SHELL,SET_ID,length))
+		HARD_SHELL =  with(subset(surveyMeasurements,SHELL %in% 4:5),tapply(SHELL,SET_ID,length))
 		shell = merge(data.frame(SET_ID=names(SOFT_SHELL),SOFT_SHELL=SOFT_SHELL),data.frame(SET_ID=names(HARD_SHELL),HARD_SHELL=HARD_SHELL),by='SET_ID',all=T)
 		shell[is.na(shell)]=0
 		shell$pSOFT = shell$SOFT_SHELL / (shell$SOFT_SHELL + shell$HARD_SHELL)
@@ -52,9 +52,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	}
 	surveyLobsters = merge(merge(surveyLobsters,data.frame(SET_ID=names(NLM),NUM_MEASURED=NLM),by='SET_ID',all=T),data.frame(SET_ID=names(MEAN_LENGTH),MEAN_LENGTH=MEAN_LENGTH),by='SET_ID',all=T)
 	surveyLobsters = subset(surveyLobsters,GEAR !='3/4 OTTER TRAWL') # Remove 2015 survey portion on Fundy Spray
-	#surveyLobsters$GEAR[surveyLobsters$YEAR==2017] = "NEST" # Incorrectly entered as BALLOON in 2017 # fixed in lobster.db
-
-	#browser()
+	
 	# add column for tow length
 	lat1 = surveyLobsters$SET_LAT
 	lat2 = surveyLobsters$HAUL_LAT
@@ -132,7 +130,6 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	LongForm$NEST_DENSITY = LongForm$DENSITY * LongForm$NestCF
 	LongForm$BALLOON_DENSITY = LongForm$DENSITY * LongForm$BalloonCF
 
-
 	# add columns for length bins
 	bins=seq(size.range[1],size.range[2],bin.size)
 	LongForm$BIN = ceiling(LongForm$FISH_LENGTH/bin.size) * bin.size
@@ -150,7 +147,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	CLF = merge(CLF,data.frame(SET_ID=rep(sids,length(bins)-1),BIN=sort(rep(bins[-1],length(sids)))),all=T)
 	CLF = reshape(CLF[order(CLF$BIN),],idvar='SET_ID',timevar='BIN',direction='wide',sep='')
 	CLF[is.na(CLF)] = 0
-	
+
 	surveyLobsters=merge(surveyLobsters,CLF,all.x=T)
 	
 	# subset by time and area
@@ -164,7 +161,6 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	surveyLobsters$LobDenNotCorrected=surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT
 	surveyLobsters$LobDen=surveyLobsters$LobDenCorrected
 	surveyLobsters$pLC=surveyLobsters$LobDenCorrected/surveyLobsters$LobDenNotCorrected
-
 	x=aggregate(pLC~YEAR,surveyLobsters,median,na.rm=T)
 	names(x)[2]='mpLC'
 	#browser()
