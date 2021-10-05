@@ -2,7 +2,7 @@
 CPUEplot<-function(logs,lfa=NULL,yrs,French= F, subarea=NULL,lab='',graphic='R',wd=8,ht=11,effort.min=10,export=F,path=file.path( project.figuredirectory("bio.lobster")),...){
 
 	if(is.null(lfa)&&is.null(subarea))stop("specify LFA or subarea")
-browser()
+#browser()
 	if(missing(yrs))yrs<-unique(logData$SYEAR)
 	if(!is.null(lfa))logs<-subset(logs,LFA%in%lfa&SYEAR%in%yrs,c("SYEAR","LFA","DATE_FISHED","WEIGHT_KG","NUM_OF_TRAPS","subarea"))
 	logs$DATE_FISHED<-as.Date(logs$DATE_FISHED)
