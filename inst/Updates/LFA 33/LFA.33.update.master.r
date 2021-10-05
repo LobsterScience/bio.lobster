@@ -63,6 +63,7 @@
 		#Choose one to redo or not Add TempSkip=T to not model CPUE with Temps
 		#CPUE.data<-CPUEModelData(p,redo=T,TempSkip=T)
 		#CPUE.data<-CPUEModelData(p,redo=F)
+		
 		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(CPUE.data$SYEAR),graphic='R')$annual.data
 		crd = subset(cpueData,LFA==33,c("YEAR","CPUE"))
 		mu = median(crd$CPUE[crd$YEAR %in% c(1990:2016)])
@@ -115,12 +116,12 @@
 		require(bio.ccir)
 		require(rstan)
 		#load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
-		ccir_data = subset(ccir_data,YEAR<=2022)
+		ccir_data = subset(ccir_data,YEAR<=2021)
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 		out.binomial = list()
 		attr(out.binomial,'model') <- 'binomial'
-		for(i in 1:length(dat)) {
+		for(i in 34:length(dat)) { #if run breaks, update 1:length(dat) to reflect run# ie.e 16:length(dat)
 			ds = dat[[i]]
 			ds$method = 'binomial'
 			x = ccir_stan_run(dat = ds,save=T)
@@ -160,23 +161,24 @@
 
 		save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
 		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
-		RR75 = max(oo$ERf75[oo$Yr<2021])#0.8338764
+		RR75 = max(oo$ERf75[oo$Yr<2021])#0.8343305
 #########Linux to here
 
-oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))
+#oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))
 	# plot
 
 png(filename=file.path(figdir, "CCIR_LFA33.png"),width=8, height=5, units = "in", res = 800)
 ExploitationRatePlots(data = oo[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR75,lfa = 33,fd=figdir, save=F)
 dev.off()
 
-write.csv(data,file.path(fd,paste(fn,'.csv',sep='')))
+#data = oo[,c("Yr","ERfm","ERfl","ERfu")]
+#write.csv(data,file.path(figdir,paste('CCIR_LFA33.csv',sep='')))
 
 # FSRS #############
 
 		FSRSvesday<-FSRSModelData()
 
-		mdata = subset(FSRSvesday,LFA==33&SYEAR<2021)
+		mdata = subset(FSRSvesday,LFA==33&SYEAR<2022)
 
 		FSRSModelResultsLegal=FSRSmodel(mdata,lfa=33, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
 		FSRSModelShortsRecruit=FSRSmodel(mdata,lfa=33, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
@@ -198,9 +200,10 @@ write.csv(data,file.path(fd,paste(fn,'.csv',sep='')))
 
 
 	# plot
-	x11(width=8,height=7)
+	#x11(width=8,height=7)
+ 	png(filename=file.path(figdir, "FSRS.legals.recruits.png"),width=8, height=5, units = "in", res = 800)
 	FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],lfa = 33,fd=figdir,title='')
-
+dev.off()
 
 # Landings and Effort ############
 
@@ -260,15 +263,33 @@ write.csv(data,file.path(fd,paste(fn,'.csv',sep='')))
     	  days.y0=days[days$SYEAR==max(days$SYEAR),]
     	  days.y1=days[days$SYEAR==(max(days$SYEAR)-1),]
     	  plot(x=days$WOS,y=days$unique_days, type='n', main= "Days Fished by Week", xlab="Week of Season", ylab="Days Fished", xlim=c(2,27), xaxt='n')
-    	  axis(side=1, at=seq(2,25,by=4.5), lab=c('Dec','Jan', 'Feb', "Mar", 'Apr', 'May'))
+    	  axis(side=1, at=seq(1,25,by=4.4), lab=c('Dec','Jan', 'Feb', "Mar", 'Apr', 'May'))
     	  lines(days.y0$WOS, days.y0$unique_days, col="red")
     	  text(paste(days.y0$SYEAR[1]), x=26, y=300, col="red", cex=1.5)
     	  lines(days.y1$WOS, days.y1$unique_days, col="blue")
     	  text(paste(days.y1$SYEAR[1]), x=26, y=800, col="blue", cex=1.5)
 	  dev.off()
 
-
-
+	  
+	  # Phase plot for conclusions and advice
+	  
+	  #x11(width=8,height=7)
+	  
+	  x = read.csv(file.path(figdir,"CatchRateRefs33.csv"))
+	  y = read.csv(file.path(figdir,"ExploitationRefs33.csv"))
+	  
+	  x=x[x$YEAR %in% unique(y$Yr)]
+	  
+	  RR75 = 0.8343305
+	  usr = 0.2840067
+	  lrp = 0.1420034
+	  
+	  png(filename=file.path(figdir, "PhasePlot_LFA33.png"),width=8, height=8, units = "in", res = 800)
+	  hcrPlot(B=x$running.median[x$YEAR>2005],mF=y$running.median,USR=usr,LRP=lrp,RR=RR75,yrs=2006:max(x$YEAR),ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T)
+	  dev.off()
+	  
+	  #hcrPlot(B=x$CPUE[x$YEAR>2005],mF=y$ERfm,USR=usr,LRP=lrp,RR=RR75,yrs=2006:2018,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T)
+	  #savePlot(file.path(figdir,'PhasePlot33.png'),type='png')
 
 
 # Contextual Indicators #############
@@ -280,29 +301,6 @@ write.csv(data,file.path(fd,paste(fn,'.csv',sep='')))
 
 # run this "bio/bio.lobster/inst/LFA2733Framework/Assessment/1.IndicatorEstimation.CohortAnalysis.r"
 # and this "bio/bio.lobster/inst/LFA2733Framework/Assessment/ContextualIndicators.r"
-
-
-
-# Phase plot for conclusions and advice
-
-x11(width=8,height=7)
-
-x = read.csv(file.path(figdir,"CatchRateRefs33.csv"))
-y = read.csv(file.path(figdir,"ExploitationRefs33.csv"))
-
-x=x[x$YEAR %in% unique(y$Yr)]
-
-		RR75 = 0.8338764
-		usr = 0.2840067
-		lrp = 0.1420034
-
-png(filename=file.path(figdir, "PhasePlot_LFA33.png"),width=8, height=8, units = "in", res = 800)
-hcrPlot(B=x$running.median[x$YEAR>2005],mF=y$running.median,USR=usr,LRP=lrp,RR=RR75,yrs=2006:max(x$YEAR),ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T)
-dev.off()
-
-#hcrPlot(B=x$CPUE[x$YEAR>2005],mF=y$ERfm,USR=usr,LRP=lrp,RR=RR75,yrs=2006:2018,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T)
-#savePlot(file.path(figdir,'PhasePlot33.png'),type='png')
-
 
 # Fishery footprint
 
