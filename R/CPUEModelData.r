@@ -51,7 +51,7 @@ CPUEModelData = function(p,redo=T,TempModelling, TempSkip=F){
 		if (TempSkip){
 		  write.csv(cpue.data,file.path( project.datadirectory("bio.lobster"), "data","products","CPUEModelData.csv"),row.names=F)
 		}
-	 
+	 else
 		{	if(missing(TempModelling)) TempModelling = TempModel(annual.by.area=F)
 		#	save(TempModelling,file=file.path( project.datadirectory('bio.lobster'), "data","products","TempModelling.rdata"))
 		#	}else load(file.path( project.datadirectory('bio.lobster'), "data","products","TempModelling.rdata"))
