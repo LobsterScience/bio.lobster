@@ -1074,7 +1074,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
      if (DS=="fsrs.redo") {
         require(RODBC)
         #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-        fsrs = connect.command(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW_TEST") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
+        fsrs = connect.command(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
         print("FYI. Starting Fall 2019 (LFA 27-35) and spring 2018 (LFA 36)")
         print("New size groups used 1-27 (5mm bins), replacing 1-16 (10mm bins)")
         

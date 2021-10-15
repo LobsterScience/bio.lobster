@@ -121,7 +121,7 @@
 
 		out.binomial = list()
 		attr(out.binomial,'model') <- 'binomial'
-		for(i in 34:length(dat)) { #if run breaks, update 1:length(dat) to reflect run# ie.e 16:length(dat)
+		for(i in 1:length(dat)) { #if run breaks, update 1:length(dat) to reflect run# ie.e 16:length(dat)
 			ds = dat[[i]]
 			ds$method = 'binomial'
 			x = ccir_stan_run(dat = ds,save=T)
