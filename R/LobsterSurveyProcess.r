@@ -149,7 +149,6 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	CLF[is.na(CLF)] = 0
 
 	surveyLobsters=merge(surveyLobsters,CLF,all.x=T)
-	
 	# subset by time and area
 	surveyLobsters=subset(surveyLobsters,LFA%in%lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
 	
@@ -197,7 +196,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 
 	write.csv(surveyLobsters,file.path(project.datadirectory('bio.lobster'),"data","products","surveyLobsters.csv"),row.names=F) # Save data as csv
 	
-	if(lfa=='34'){
+	if(all(lfa=='34')){
 
 	#	 STATIONS assigned based on proximity
 		ITQspat34=subset(surveyLobsters,select=c("SET_ID","SET_LONG","SET_LAT","HAUL_LONG","HAUL_LAT","STATION","GEAR"))

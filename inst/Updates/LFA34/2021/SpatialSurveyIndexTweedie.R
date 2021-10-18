@@ -156,12 +156,12 @@ dev.off()
 ################################################
 ###Recruits
 	# Survey Data
-	surveyLobsters34index<-LobsterSurveyProcess(lfa="34", yrs=1996:2019, mths=c("Aug","Jul","Jun"), bin.size=2.5, Net='NEST',size.range=c(70,82.5),biomass=F)
+	surveyLobsters34index<-LobsterSurveyProcess(lfa="34", yrs=1996:2021, mths=c("Aug","Jul","Jun"), bin.size=2.5, Net='NEST',size.range=c(70,82.5),biomass=F)
 	surveyLobsters34index = lonlat2planar(surveyLobsters34index,"utm20", input_names=c("SET_LONG", "SET_LAT"))
 	surveyLobsters34index$dyear = decimal_date(as.Date(surveyLobsters34index$SET_DATE))
 
 	# Spatial temporal parameters
-	Years = 1996:2019
+	Years = 1996:2021
 	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
 	LFAs = lonlat2planar(LFAs,"utm20", input_names=c("X", "Y"))
 	LFAs = LFAs[,-which(names(LFAs)%in%c('X','Y'))]
@@ -218,7 +218,7 @@ dev.off()
 		R1index[i]= sum(xyz$z)
 	}
 
-Years = 1996:2020
+Years = 1996:2021
 
 
 #using the posterior distribution model coefs
