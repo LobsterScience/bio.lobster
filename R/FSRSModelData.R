@@ -20,19 +20,19 @@ FSRSModelData = function(trap.type='recruitment',TempModelling){
 		#2020 Data does not include temp as of Sept 2020
 		#Will use avg temp for that week for the last three years as a proxy until temps are available
 		#determine mean temp by week for last 3 years
-		recent=FSRS.dat[FSRS.dat$SYEAR %in% c(2017:2019),]
-		recent$week=week(recent$HAUL_DATE)
-		week.temp=aggregate(TEMP~week+LFA, dat=recent[recent$TEMP>-4 & recent$TEMP <25,], FUN="mean") #removes obvious extraneous temps
+		#recent=FSRS.dat[FSRS.dat$SYEAR %in% c(2017:2019),]
+		#recent$week=week(recent$HAUL_DATE)
+		#week.temp=aggregate(TEMP~week+LFA, dat=recent[recent$TEMP>-4 & recent$TEMP <25,], FUN="mean") #removes obvious extraneous temps
 		
-		FSRS.old=FSRS.dat[FSRS.dat$SYEAR<2020,]
-		FSRS.new=FSRS.dat[FSRS.dat$SYEAR==2020,]
-		FSRS.new$week=week(FSRS.new$HAUL_DATE)
+		#FSRS.old=FSRS.dat[FSRS.dat$SYEAR<2020,]
+	#	FSRS.new=FSRS.dat[FSRS.dat$SYEAR==2020,]
+		#FSRS.new$week=week(FSRS.new$HAUL_DATE)
 		
-		test=merge(FSRS.new, week.temp, by=c("week","LFA"), all=T)
-		test=subset(test,is.finite(test$HAUL_DATE)) #removes empty records created by merge
-		test$TEMP=test$TEMP.y
-		test=subset(test, select=-c(TEMP.x, TEMP.y, week))
-		FSRS.dat=rbind(FSRS.old, test)
+		#test=merge(FSRS.new, week.temp, by=c("week","LFA"), all=T)
+		#test=subset(test,is.finite(test$HAUL_DATE)) #removes empty records created by merge
+		#test$TEMP=test$TEMP.y
+		#test=subset(test, select=-c(TEMP.x, TEMP.y, week))
+		#FSRS.dat=rbind(FSRS.old, test)
 		#FSRS.dat=subset(FSRS.dat,is.finite(FSRS.dat$HAUL_DATE))
 		
 		# this section is to deal with the fact that there are uneven binning going on for the different size categories

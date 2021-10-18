@@ -1075,20 +1075,23 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         require(RODBC)
         #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
         fsrs = connect.command(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
-        print("2020 data not in database, need to load manually w/ FSRS.load.from.text.r function")
+        print("FYI. Starting Fall 2019 (LFA 27-35) and spring 2018 (LFA 36)")
+        print("New size groups used 1-27 (5mm bins), replacing 1-16 (10mm bins)")
         
+        #print("If loading data manually use FSRS.load.from.text.r function")
         #Create csv through FSRS.load.from.text.r before running this step
+        # 
+        # if (file.exists(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv")))
+        # {
+        # non.db.fsrs=read.csv(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv"))
+        # non.db.fsrs=non.db.fsrs[names(fsrs)] #only retain Variables in 'fsrs'
+        # non.db.fsrs$RECAPTURED=as.integer(non.db.fsrs$RECAPTURED)
+        # non.db.fsrs$HAUL_DATE=as.POSIXct(non.db.fsrs$HAUL_DATE)
+        # fsrs= rbind(fsrs, non.db.fsrs[names(fsrs)]) 
+        # }
         
-        if (file.exists(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv")))
-        {
-        non.db.fsrs=read.csv(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv"))
-        non.db.fsrs=non.db.fsrs[names(fsrs)] #only retain Variables in 'fsrs'
-        non.db.fsrs$RECAPTURED=as.integer(non.db.fsrs$RECAPTURED)
-        non.db.fsrs$HAUL_DATE=as.POSIXct(non.db.fsrs$HAUL_DATE)
-        ##BZ- ToDo Sept 2020- ensure that files in non.db.fsrs are not already in db to avoid duplicate records.
-        fsrs= rbind(fsrs, non.db.fsrs[names(fsrs)]) 
-        }
-        
+        fsrs$SIZE_CD=fsrs$SIZE_GRP
+        fsrs=within(fsrs, rm(SIZE_GRP))
         save( fsrs, file=file.path( fnODBC, "fsrs.rdata"), compress=T)
         gc()  # garbage collection
         if(!("ROracle" %in% (.packages()))){
