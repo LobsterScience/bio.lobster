@@ -13,6 +13,8 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 
   dir.create( path=loc, recursive=T, showWarnings=F )
 
+db.setup() #Chooses RODBC vs ROracle based on R version and installed packages. db.setup(RODBC=T) will force RODBC
+  
   if (DS %in% c("odbc.redo") ) {
 
     # ODBC data dump of bio.groundfish tables
@@ -47,17 +49,23 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 			return (out)
     }
 
-    require(RODBC)
-    connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user, pwd=oracle.personal.password, believeNRows=F)
+    #require(RODBC)
+    #connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user, pwd=oracle.personal.password, believeNRows=F)
 
 		for ( YR in datayrs ) {
 			fny = file.path( fn.root, paste( YR,"rdata", sep="."))
-      gscat = sqlQuery( connect,  paste(
-             "select i.*, substr(mission,4,4) year " ,
-      "    from groundfish.gscat i " ,
-      "    where substr(MISSION,4,4)=", YR, ";"
-      ) )
+      # gscat = sqlQuery( connect,  paste(
+      #        "select i.*, substr(mission,4,4) year " ,
+      # "    from groundfish.gscat i " ,
+      # "    where substr(MISSION,4,4)=", YR, ";"
+      # ) )
 
+			 gscat = connect.command(con,  paste(
+			        "select i.*, substr(mission,4,4) year " ,
+			 "    from groundfish.gscat i " ,
+			 "    where substr(MISSION,4,4)=", YR, ";"
+			 ) )
+			
       names(gscat) =  tolower( names(gscat) )
      # dontwant = c("length_type", "length_units", "weight_type",  "weight_units")
      # gscat = gscat[,which(!names(gscat)%in%dontwant)]
@@ -67,7 +75,7 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 			print(YR)
 		}
 
-    odbcClose(connect)
+    #odbcClose(connect)
     return (fn.root)
 
 	}
@@ -196,8 +204,8 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 			return (out)
     }
 
-    require(RODBC)
-    connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user, pwd=oracle.personal.password, believeNRows=F)
+    # require(RODBC)
+    # connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user, pwd=oracle.personal.password, believeNRows=F)
 
 		for ( YR in datayrs ) {
 			fny = file.path( fn.root, paste( YR,"rdata", sep="."))
@@ -213,7 +221,7 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 			gc()  # garbage collection
 			print(YR)
 		}
-    odbcClose(connect)
+    #odbcClose(connect)
 
     return (fn.root)
 
@@ -279,14 +287,19 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 			return (out)
     }
 
-    require(RODBC)
-    connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user, pwd=oracle.personal.password, believeNRows=F)
+    # require(RODBC)
+    # connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user, pwd=oracle.personal.password, believeNRows=F)
 
 		for ( YR in datayrs ) {
 			fny = file.path( fn.root, paste( YR,"rdata", sep="."))
-      gsinf = sqlQuery( connect,  paste(
-      "select * from groundfish.gsinf where EXTRACT(YEAR from SDATE) = ", YR, ";"
-      ) )
+      # gsinf = sqlQuery( connect,  paste(
+      # "select * from groundfish.gsinf where EXTRACT(YEAR from SDATE) = ", YR, ";"
+      # ) )
+			
+			gsinf = connect.command(con,  paste(
+			"select * from groundfish.gsinf where EXTRACT(YEAR from SDATE) = ", YR, ";"
+			 ) )
+			
       names(gsinf) =  tolower( names(gsinf) )
       save(gsinf, file=fny, compress=T)
       print(fny)
@@ -294,7 +307,7 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 			print(YR)
 		}
 
-    odbcClose(connect)
+    #odbcClose(connect)
     return (fn.root)
 
 	}
@@ -449,17 +462,25 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 			return (out)
     }
 
-    require(RODBC)
-    connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user, pwd=oracle.personal.password, believeNRows=F)
+    # require(RODBC)
+    # connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user, pwd=oracle.personal.password, believeNRows=F)
 
 		for ( YR in datayrs ) {
 			fny = file.path( fn.root, paste( YR,"rdata", sep="."))
-      gshyd = sqlQuery( connect,  paste(
-      "select i.*, j.YEAR " ,
-      "    from groundfish.gshyd i, groundfish.gsmissions j " ,
-      "    where i.MISSION(+)=j.MISSION " ,
-      "    and YEAR=", YR, ";"
+      # gshyd = sqlQuery( connect,  paste(
+      # "select i.*, j.YEAR " ,
+      # "    from groundfish.gshyd i, groundfish.gsmissions j " ,
+      # "    where i.MISSION(+)=j.MISSION " ,
+      # "    and YEAR=", YR, ";"
+      # ) )
+      
+      gshyd = connect.command(con,  paste(
+        "select i.*, j.YEAR " ,
+        "    from groundfish.gshyd i, groundfish.gsmissions j " ,
+        "    where i.MISSION(+)=j.MISSION " ,
+        "    and YEAR=", YR, ";"
       ) )
+      
       names(gshyd) =  tolower( names(gshyd) )
       if(all(is.na(gshyd$mission))) {
       	#if gshyd is not loaded and the odf files are obtained AMC
@@ -473,7 +494,7 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 			gc()  # garbage collection
 			print(YR)
 		}
-		odbcClose(connect)
+		#odbcClose(connect)
 
     return ( fn.root )
 
@@ -587,11 +608,12 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
       load( fn )
       return (gsstratum)
     }
-    require(RODBC)
-    connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user,
-        pwd=oracle.personal.password, believeNRows=F)
-    gsstratum =  sqlQuery(connect, "select * from groundfish.gsstratum", as.is=T)
-    odbcClose(connect)
+    # require(RODBC)
+    # connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user,
+    #     pwd=oracle.personal.password, believeNRows=F)
+    #gsstratum =  sqlQuery(connect, "select * from groundfish.gsstratum", as.is=T)
+    gsstratum =  connect.command(con, "select * from groundfish.gsstratum", as.is=T)
+    #odbcClose(connect)
     names(gsstratum) =  tolower( names(gsstratum) )
     save(gsstratum, file=fn, compress=T)
     print(fn)
@@ -608,11 +630,12 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
       load( fn )
       return (gsgear)
     }
-    require(RODBC)
-    connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user,
-        pwd=oracle.personal.password, believeNRows=F)
-    gsgear =  sqlQuery(connect, "select * from groundfish.gsgear", as.is=T)
-    odbcClose(connect)
+    #require(RODBC)
+    #connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user,
+     #   pwd=oracle.personal.password, believeNRows=F)
+    #gsgear =  sqlQuery(connect, "select * from groundfish.gsgear", as.is=T)
+    gsgear =  connect.command(con, "select * from groundfish.gsgear", as.is=T)
+    #odbcClose(connect)
     names(gsgear) =  tolower( names(gsgear) )
     save(gsgear, file=fn, compress=T)
     print(fn)
@@ -629,9 +652,24 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
       return ( set )
     }
 
-          require(RODBC)
-      connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user, pwd=oracle.personal.password, believeNRows=F)
-      set =  sqlQuery(connect, " select G.MISSION,G.SETNO,G.SPEC,G.SIZE_CLASS,G.SPECIMEN_ID,G.FLEN,G.FWT, G.FSEX,  G.CLEN, 
+      #    require(RODBC)
+      #connect=odbcConnect( oracle.groundfish.server, uid=oracle.personal.user, pwd=oracle.personal.password, believeNRows=F)
+      # set =  sqlQuery(connect, " select G.MISSION,G.SETNO,G.SPEC,G.SIZE_CLASS,G.SPECIMEN_ID,G.FLEN,G.FWT, G.FSEX,  G.CLEN, 
+      #                             max(case when key= 'Spermatophore Presence' then value else NULL END) Sperm_Plug,
+      #                             max(case when key= 'Abdominal Width' then value else NULL END) Ab_width,
+      #                             max(case when key= 'Egg Stage' then value else NULL END) Egg_St,
+      #                             max(case when key= 'Clutch Fullness Rate' then value else NULL END) Clutch_Full
+      #                             from
+      #                                 (select mission, setno, spec, size_class, specimen_id, flen, fwt, fsex, fmat, fshno, agmat, remarks, age, clen from groundfish.gsdet) G,
+      #                                 (select mission, spec, specimen_id, lv1_observation key, data_value value  from groundfish.gs_lv1_observations
+      #                                     where spec=2550) FC
+      #                                 where 
+      #                                   G.mission = FC.mission (+) and
+      #                                   G.spec = FC.spec and
+      #                                   G.specimen_id = FC.specimen_id (+)
+      #                                     group by G.MISSION,G.SETNO,G.SPEC,G.SIZE_CLASS,G.SPECIMEN_ID,G.FLEN,G.FWT, G.FSEX,  G.CLEN;", as.is=T)
+      # 
+      set =  connect.command(con, "select G.MISSION,G.SETNO,G.SPEC,G.SIZE_CLASS,G.SPECIMEN_ID,G.FLEN,G.FWT, G.FSEX,  G.CLEN, 
                                   max(case when key= 'Spermatophore Presence' then value else NULL END) Sperm_Plug,
                                   max(case when key= 'Abdominal Width' then value else NULL END) Ab_width,
                                   max(case when key= 'Egg Stage' then value else NULL END) Egg_St,
@@ -644,8 +682,8 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
                                         G.mission = FC.mission (+) and
                                         G.spec = FC.spec and
                                         G.specimen_id = FC.specimen_id (+)
-                                          group by G.MISSION,G.SETNO,G.SPEC,G.SIZE_CLASS,G.SPECIMEN_ID,G.FLEN,G.FWT, G.FSEX,  G.CLEN;", as.is=T)
-                                odbcClose(connect)
+                                          group by G.MISSION,G.SETNO,G.SPEC,G.SIZE_CLASS,G.SPECIMEN_ID,G.FLEN,G.FWT, G.FSEX,  G.CLEN", as.is=T)
+                                #odbcClose(connect)
                                 set = toNums(set,2:13)
                                 save ( set, file=fn, compress=F )
       }

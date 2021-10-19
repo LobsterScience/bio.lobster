@@ -12,6 +12,7 @@
 
 nefsc.db <- function(DS  = 'odbc.dump.redo', fn.root=NULL,p=p){
 
+    db.setup() #Chooses RODBC vs ROracle based on R version and installed packages. db.setup(RODBC=T) will force RODBC
     if(is.null(fn.root)) {fn.root =  file.path( project.datadirectory("bio.lobster"), "data") }
     fnODBC  =  file.path(fn.root, "ODBCDump")
 
@@ -19,7 +20,7 @@ nefsc.db <- function(DS  = 'odbc.dump.redo', fn.root=NULL,p=p){
     dir.create( fnODBC, recursive = TRUE, showWarnings = FALSE )
 
 
-if(grepl('redo.odbc',DS)) { require(RODBC); channel = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F)} # believeNRows=F required for oracle db's
+if(grepl('redo.odbc',DS)) { #require(RODBC); channel = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F)} # believeNRows=F required for oracle db's
 
 options(stringsAsFactors = FALSE) #necessary?
 options(scipen=999)  # this avoids scientific notation
@@ -53,7 +54,20 @@ options(scipen=999)  # this avoids scientific notation
                 ### matches inputs from B.Shank Sept 2016 ###
                 ## need the distinct clause in the uss_mstr_cruise as some of the early cruises have multiple entries for a single survey-station combination
 
-                  usinf = sqlQuery(channel,paste("SELECT *
+                  # usinf = sqlQuery(channel,paste("SELECT *
+                  #   FROM  USNEFSC.USS_STATION a, 
+                  #         (select distinct cruise6, season, year 
+                  #             from usnefsc.uss_mstr_cruise 
+                  #             where status_code in (10,15) 
+                  #             and purpose_code = 10
+                  #             and season in ('SPRING','FALL')
+                  #             and year>=1968) b
+                  #   where   a.cruise6 = b.cruise6
+                  #       and to_number(SHG) <= 136
+                  #       and stratum like '01%' 
+                  #       ;")) 
+                   
+                  usinf = connect.command(con,paste("SELECT *
                     FROM  USNEFSC.USS_STATION a, 
                           (select distinct cruise6, season, year 
                               from usnefsc.uss_mstr_cruise 
@@ -64,12 +78,12 @@ options(scipen=999)  # this avoids scientific notation
                     where   a.cruise6 = b.cruise6
                         and to_number(SHG) <= 136
                         and stratum like '01%' 
-                        ;")) 
-                   
+                        ")) 
+                  
                     usinf = rename.df(usinf,c('CRUISE6','STATION'),c('MISSION','SETNO'))
                     usinf$SETNO = as.numeric(usinf$SETNO)
                     save(usinf, file = file.path(fnODBC, 'usnefsc.inf.rdata'))
-                    odbcCloseAll()
+                    #odbcCloseAll()
 				}
 
  if(DS %in% c('usinf.clean','usinf.clean.redo')) {
@@ -135,14 +149,20 @@ options(scipen=999)  # this avoids scientific notation
           return(uscat)
         } 
 
-             uscat = sqlQuery(channel, "select cruise6 mission,to_number(station) setno, stratum, 1 size_class, sum(expcatchwt) totwgt, 0 sampwgt, sum(expcatchnum) totno, 0 calwt
+             # uscat = sqlQuery(channel, "select cruise6 mission,to_number(station) setno, stratum, 1 size_class, sum(expcatchwt) totwgt, 0 sampwgt, sum(expcatchnum) totno, 0 calwt
+             #                         from  usnefsc.uss_catch 
+             #                         WHERE to_number(svspp)=301
+             #                         and stratum like '01%'
+             #                         group by cruise6, to_number(station),stratum")
+
+             uscat = connect.command(con, "select cruise6 mission,to_number(station) setno, stratum, 1 size_class, sum(expcatchwt) totwgt, 0 sampwgt, sum(expcatchnum) totno, 0 calwt
                                      from  usnefsc.uss_catch 
                                      WHERE to_number(svspp)=301
                                      and stratum like '01%'
                                      group by cruise6, to_number(station),stratum")
-
+             
              save(uscat, file = file.path(fnODBC, 'usnefsc.catch.rdata'))
-	         odbcCloseAll()
+	         #odbcCloseAll()
         }
 
    if(DS %in% c('uscat.clean','uscat.clean.redo')) {
@@ -209,7 +229,19 @@ options(scipen=999)  # this avoids scientific notation
            #              group by cruise6,station,stratum,length"))
             
           
-            usdet<- sqlQuery(channel,paste("select len.cruise6 mission, len.stratum, len.tow, len.station setno, len.svspp, len.catchsex fsex, len.length*10 as flen, len.expnumlen CLEN
+            # usdet<- sqlQuery(channel,paste("select len.cruise6 mission, len.stratum, len.tow, len.station setno, len.svspp, len.catchsex fsex, len.length*10 as flen, len.expnumlen CLEN
+            #               from usnefsc.uss_lengths len, 
+            #               (select distinct cruise6, purpose_code, status_code, year, season from usnefsc.uss_mstr_cruise
+            #                 where purpose_code =10
+            #                 and STATUS_CODE in (10,15)
+            #                 and YEAR >=1968
+            #                 and season in ('SPRING','FALL')) cru  
+            #               where len.cruise6 = cru.cruise6  
+            #               and STRATUM like '01%'
+            #               and len.svspp = 301
+            #                ",sep=""))
+            
+            usdet<- connect.command(con,paste("select len.cruise6 mission, len.stratum, len.tow, len.station setno, len.svspp, len.catchsex fsex, len.length*10 as flen, len.expnumlen CLEN
                           from usnefsc.uss_lengths len, 
                           (select distinct cruise6, purpose_code, status_code, year, season from usnefsc.uss_mstr_cruise
                             where purpose_code =10
@@ -220,12 +252,11 @@ options(scipen=999)  # this avoids scientific notation
                           and STRATUM like '01%'
                           and len.svspp = 301
                            ",sep=""))
-            
            
                     usdet$SETNO = as.numeric(usdet$SETNO)
                    
           save(usdet, file = file.path(fnODBC, 'usnefsc.det.rdata'))
-          odbcCloseAll()
+          #odbcCloseAll()
 
             }
 
@@ -296,7 +327,4 @@ options(scipen=999)  # this avoids scientific notation
       
         }
 }
-
-
-
-
+}
