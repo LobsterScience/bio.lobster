@@ -109,7 +109,7 @@ if(save) {
 	if(!is.null(nafo)){
 		
         nafo.xy<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","nafo.csv"))
-        if(nafo[1]=='all')nafo<-unique(nafo.xy$label)
+        if(nafo=='all')nafo<-unique(nafo.xy$label)
         nafo.sel<-subset(nafo.xy,label%in%nafo)
         nafo.dat<-merge(calcCentroid(nafo.sel),nafo.sel[c("PID","label")])[!duplicated(nafo.sel[c("PID","label")]),]
         nafo.dat$label[nafo.dat$label=="5ZC"]<-"5ZEM"
@@ -122,11 +122,13 @@ if(save) {
 #groundfish survey summer strata	
 	if(addSummerStrata) {
 			  require('bio.polygons')
-			  a = find.bio.gis('summer_strata_labels',return.one.match=F)
+			  #a = find.bio.gis('summer_strata_labels',return.one.match=F)
+			  a = file.path( project.datadirectory("bio.lobster"), "data","maps","summer_strata_labels.csv")
 			  a = read.csv(a,header=T)
 			  names(a)[4] <- 'label'
-			  b = find.bio.gis('strat.gf',return.one.match=F)
-			  b = read.table(b)
+			  #b = find.bio.gis('strat.gf',return.one.match=F)
+			  b = file.path( project.datadirectory("bio.lobster"), "data","maps","summerstrata.csv")
+			  b = read.csv(b)
 			  names(b) <- c('X','Y','PID')
 			  
 		if(!is.null(subsetSummerStrata)) {
@@ -139,14 +141,16 @@ if(save) {
 			}
     if(addGeorgesStrata) {
 			  require('bio.polygons')
-			  b = file.path(project.datadirectory('bio.polygons'),'data','Science','PED','GeorgesBankStrata.rdata')
+			  #b = file.path(project.datadirectory('bio.polygons'),'data','Science','PED','GeorgesBankStrata.rdata')
+			  b = file.path( project.datadirectory("bio.lobster"), "data","maps",'GeorgesBankStrata.rdata')
 			  load(b)
 				  addPolys(out,lty=1,border='red',col=adjustcolor('white',alpha.f=1))
 				
 				}
     if(addAmericanStrata) {
 			  require('bio.polygons')
-			   b = importShapefile(find.bio.gis('bts',return.one.match=F))
+			   #b = importShapefile(find.bio.gis('bts',return.one.match=F))
+			   b = importShapefile(file.path( project.datadirectory("bio.lobster"), "data","maps","BTS_Strata"), readDBF=F)
 			   attr(b,'projection') <- "LL"
 			  addPolys(b,lty=1,border='blue',col=adjustcolor('white',alpha.f=0))
 				}
@@ -252,7 +256,9 @@ if(save) {
 	if(LT){
 		addPolys(coast,col=land.col,...)
 		if(plot.rivers)addLines(rivers,...)
-	 
+	
+	  # add LFA labels
+	 # if (area %in% c('27-38', 'all')) {labcex=0.9} #can copy / modify this line if you want label size to be associated with area chosen
 		if(area=='27-32') { #Can adjust size and colour of LFA labels based on "area of interest"
 		  if(boundaries=='LFAs') if('lfa'%in% labels)	addLabels(subset(LFAgrid.dat,!duplicated(label)),col='white',cex=1.3*(labcex))
 		  if(boundaries=='LFAs') if('lfa'%in% labels)	addLabels(subset(LFAgrid.dat,!duplicated(label)),col='firebrick3',cex=(labcex))
