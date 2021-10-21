@@ -187,7 +187,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
       
       p$length.based = F
       p$by.sex = F
-      p$bootstrapped.ci=T
+      p$bootstrapped.ci=F
       p$strata.files.return=F
       p$vessel.correction.fixed=1.2
       p$strat = NULL

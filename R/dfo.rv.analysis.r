@@ -180,7 +180,7 @@ pi='base'
                     }
 #browser()
                 se = set[intersect(iy,iz),]
-                browser()
+                
                 if(nrow(se)>0){
                 se$EID = 1:nrow(se)
                 ca = cas[iv,]
