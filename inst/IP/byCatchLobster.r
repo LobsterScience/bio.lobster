@@ -205,3 +205,9 @@ seR = aggregate(SPECCD_ID~TRIP+TRIP_ID+FISHSET_ID+CFV+HAUL_DATE+SET_NO+X+Y+COMAR
 merge(seR, subset(tr,select=c(TRIP, TRIP_ID, FISHSET_ID, SET_NO, STRING_NO, NUM_OF_TRAPS, TRAP_NO, GEAR_COND, GEARCOMPONENT_ID, BAIT_1, BAIT_2)))
 
 
+################\
+#relying on atSea.clean for observer data
+
+
+g = lobster.db('atSea.clean')
+gg = subset(g,DESCRIPTION=='ISDB' & SYEAR > 2018 & LFA %in% 33:35)
