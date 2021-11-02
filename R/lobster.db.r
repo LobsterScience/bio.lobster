@@ -858,6 +858,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                        aS$WOS = NA
                        m=0
                         lfa = unique(aS$LFA) 
+                        lfa = na.omit(lfa)
                             for(i in 1:length(lfa)) {
                                   h  = season.dates[season.dates$LFA==lfa[i],]  
                                   k = na.omit(unique(aS$SYEAR[aS$LFA==lfa[i]]))
@@ -865,7 +866,8 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                                   k = intersect(k,h$SYEAR)
                                for(j in k){
                                    m=m+1
-                                   aS$WOS[aS$LFA==lfa[i] & aS$SYEAR==j] = floor(as.numeric(aS$SDATE[aS$LFA==lfa[i] & aS$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                   ll = which(aS$LFA==lfa[i] & aS$SYEAR==j)
+                                   aS$WOS[ll] <- floor(as.numeric(aS$SDATE[ll]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
                           }
                           if(any(!is.finite(aS$WOS))) {kl = which(!is.finite(aS$WOS)); aS$WOS[kl] = NA}
