@@ -211,3 +211,23 @@ merge(seR, subset(tr,select=c(TRIP, TRIP_ID, FISHSET_ID, SET_NO, STRING_NO, NUM_
 
 g = lobster.db('atSea.clean')
 gg = subset(g,DESCRIPTION=='ISDB' & SYEAR > 2018 & LFA %in% 33:35)
+
+#add in details where traps are empty
+gg$UID = paste(gg$TRIPNO,gg$STRINGNO,sep='_')
+iu = unique(gg$UID)
+out=list()
+for(i in 1:length(iu)){
+	kk = which(gg$UID == iu[i])
+	tw = gg[kk,]
+	if(any(is.na(tw$X))){ 
+			oi = tw$TRAPNO[which(is.na(tw$X))]
+			ttw = subset(tw,!is.na(X))
+			if(any(ttw$TRAPNO %in% oi)) {
+				m = m+1
+				out[[m]] = subset(tw,TRAPNO==oi)
+	}
+
+}
+}
+
+out = do.call(rbind,out)
