@@ -132,7 +132,8 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 
 	# add columns for length bins
 	bins=seq(size.range[1],size.range[2],bin.size)
-	LongForm$BIN = ceiling(LongForm$FISH_LENGTH/bin.size) * bin.size
+	LongForm$BIN = bins[cut(LongForm$FISH_LENGTH,bins,labels=FALSE)]
+	#LongForm$BIN = ceiling(LongForm$FISH_LENGTH/bin.size) * bin.size
 	assign("LongForm", LongForm, pos = 1)
 	if(is.null(Net))CLF = aggregate(DENSITY~BIN+SET_ID,data=subset(LongForm,SEX%in%sex),FUN=sum)
 	else {

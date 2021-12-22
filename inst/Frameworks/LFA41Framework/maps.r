@@ -57,7 +57,7 @@ a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T)
                           l = attributes(a)$PolyData[,c('PID','STRATA')]
                           a = merge(a,l,by='PID',all.x=T)
    # addPolys(a,border='red')                      
-    addPolys(subset(a,STRATA %in% c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1340, 1360)),lty=1,border='red',col=adjustcolor('white',alpha.f=1))
+    addPolys(subset(a,STRATA %in% c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1340, 1360,1330,1360,1351,1352,3920,3900)),lty=1,border='red',col=adjustcolor('white',alpha.f=1))
 			
          
 	addPolys(LFA41,border='blue',lwd=2)
@@ -72,6 +72,11 @@ a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T)
 
 #LFA41 total
 		LFA41 = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))
+		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+		
+		addPolys(subset(a,STRATA %in% c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1340, 1360,1330,1360,1351,1352,3920,3900)),lty=1,border='red',col=adjustcolor('white',alpha.f=1))
+		
+		
 				LFA41 = joinPolys(as.PolySet(LFA41),operation='UNION')
 				LFA41 = subset(LFA41,SID==1)
 				attr(LFA41,'projection') <- 'LL'
@@ -105,6 +110,9 @@ a41 = calcArea(LFA41)$area
 # 7274 / 32686 = 0.222
 
      		   b = importShapefile(find.bio.gis('bts',return.one.match=F))
+     		   addPolys(subset(a,STRATA %in% c(1160, 1170, 1180, 1190, 1200, 1210, 1220, 1290, 1300, 1340, 1360,1330,1360,1351,1352,3920,3900)),lty=1,border='red',col=adjustcolor('white',alpha.f=1))
+     		   
+     		   
 			  d = joinPolys(LFA41,b,'INT')
 			  attr(d,'projection') <- "LL"
 			  d = joinPolys(d,operation='UNION')

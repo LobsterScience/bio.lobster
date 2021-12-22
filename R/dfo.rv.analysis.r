@@ -17,10 +17,10 @@ dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', 
     loc = file.path( project.datadirectory(out.dir), "analysis" )
 
     dir.create( path=loc, recursive=T, showWarnings=F )
-          props = 1
+          props = 1 
          if(p$series=='summer')  {mns = c('June','July','August')     ;     strat = c(440:495)}
          if(p$series=='georges') {mns = c('February','March','April');      strat = c('5Z1','5Z2','5Z3','5Z4','5Z5','5Z6','5Z7','5Z8','5Z9')}
-         
+         if(p$area=='EGOM')                                                 {strat = c(467:495); props=1}
          if(p$area=='Georges.Canada' & p$series == 'georges')              {strat = c('5Z1','5Z2')  }
          if(p$area=='Georges.US' & p$series =='georges')                   {strat = c('5Z3','5Z4','5Z5','5Z6','5Z7','5Z8')}
          if(p$area== 'LFA41' & p$series =='summer')                        {strat = c(472,473,477,478,481,482,483,484,485,480); props = 1}
@@ -119,7 +119,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         io = which(is.na(cas$sampwgt) & !is.na(cas$totwgt))
         cas[io,'sampwgt'] <- cas[io,'totwgt']
         strata.files = list()
-    out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA,gini = NA,gini.lo =NA, gini.hi=NA)
+    out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA,gini = NA,gini.lo =NA, gini.hi=NA,df.yst=NA)
   big.out = matrix(NA,nrow=p$nruns,ncol=length(seq(0.01,0.99,0.01))+1)
    
     mp=0
@@ -291,7 +291,7 @@ pi='base'
                   }
 
                 out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[[1]][1],bsW[[1]][2],ssW[[3]]/1000,bsW[[1]][1]*nt,bsW[[1]][2]*nt,
-                ssN[[1]],ssN[[2]],bsN[[1]][1],bsN[[1]][2],ssN[[3]]/1000,bsN[[1]][1]*nt,bsN[[1]][2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]),round(sum(sc$totno)),ssN$gini,bsN[[2]][1],bsN[[2]][2])
+                ssN[[1]],ssN[[2]],bsN[[1]][1],bsN[[1]][2],ssN[[3]]/1000,bsN[[1]][1]*nt,bsN[[1]][2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]),round(sum(sc$totno)),ssN$gini,bsN[[2]][1],bsN[[2]][2],ssN$df.yst)
                 print(out[mp,'yr'])
               } else {
                 out[mp,] = c(yr,rep(0,22))
@@ -326,6 +326,5 @@ pi='base'
              if(p$strata.files.return) return(strata.files)
              return(out)
 
-   }
-
-}
+     }
+  }

@@ -13,7 +13,7 @@ groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NUL
 
   dir.create( path=loc, recursive=T, showWarnings=F )
 
-db.setup() #Chooses RODBC vs ROracle based on R version and installed packages. db.setup(RODBC=T) will force RODBC
+if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R version and installed packages. db.setup(RODBC=T) will force RODBC
   
   if (DS %in% c("odbc.redo") ) {
 

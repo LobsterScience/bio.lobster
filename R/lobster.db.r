@@ -867,7 +867,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                                for(j in k){
                                    m=m+1
                                    ll = which(aS$LFA==lfa[i] & aS$SYEAR==j)
-                                   aS$WOS[ll] <- floor(as.numeric(aS$SDATE[ll]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                   aS$WOS[ll] = floor(as.numeric(aS$SDATE[ll]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
                           }
                           if(any(!is.finite(aS$WOS))) {kl = which(!is.finite(aS$WOS)); aS$WOS[kl] = NA}
