@@ -1,13 +1,17 @@
 #' @export
 
-hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F,big.final=F, area.cols=c('lightgreen','lightgoldenrod','darksalmon'),French=F,...) {
+hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F,big.final=F, area.cols=c('lightgreen','lightgoldenrod','darksalmon'),French=F,FrenchCPUE=F,...) {
 	        
           if (French) {
-	          labels=c('USR','LRP','RR')  
-	          ylab='Mortalite par peche'
+            labels=c("PRS","PRL","Taux d'exploitation de référence")    
+	          ylab='Exploitation'
 	          xlab='Biomasse'
 	        }
-	
+          if (FrenchCPUE) {
+            labels=c("PRS","PRL","Taux d'exploitation de référence")  
+            ylab='Exploitation'
+            xlab='CPUE'
+          }	
           if(is.null(ylims)) ylims = c(0, (max(na.omit(mF),RR)*1.05))
           if(is.null(xlims)) xlims = c(0, (max(na.omit(B),USR)*1.05))
           plot( B, mF,  type="b", xlim=xlims, ylim=ylims, col="darkorange", cex=0.8, lwd=2, xlab="", ylab="", pch=20,yaxs='i',xaxs='i',... )

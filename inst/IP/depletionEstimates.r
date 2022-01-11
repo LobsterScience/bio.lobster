@@ -13,7 +13,7 @@ h=h[order(h$YR),]
 t = setupDepletionData(logs=subset(g,LFA==29&SYEAR>2007),landings=h[,c('YR','LFA29')],lfa=29)
 
 #xample
-x = subset(t,season==2008)
+x = subset(t,season==2020)
 deluryLeslie(y=x,estimate='delury',method='robust',weight = x$n / max(x$n) )
 
 
@@ -35,7 +35,8 @@ outSPBd = c(outSPBd,rr[[3]])
 
 }
 
-plot(yy,outSPBd,type = 'b' ,pch=16, col='black')
+#plot(yy,outSPBl,type = 'b' ,pch=16, col='black', main="Leslie")
+plot(yy,outSPBd,type = 'b' ,pch=16, col='black', main="Delury Depletion")
 
 
 ##!SPB
@@ -54,4 +55,6 @@ outoSPBd = c(outoSPBd,rr[[3]])
 
 }
 par(new=T)
+#plot(yy,outoSPBl,type = 'b' ,pch=16, col='red', main="Leslie")
 plot(yy,outoSPBd,type = 'b' ,pch=16, col='red')
+legend("bottomright", c("SPB", "Not SPB"),col=c("black", "red"), lty=c(1,1), bty="n")

@@ -19,7 +19,7 @@ if(NewDataPull){
   lobster.db('fsrs.redo')
   lobster.db('logs.redo')
   lobster.db('annual.landings.redo')
-  lobster.db('vlog')
+  #lobster.db('vlog') #These are static now, no need to update
   logs=lobster.db('process.logs.redo')
 }
 
@@ -34,8 +34,11 @@ dev.off()
 
 logs=lobster.db("process.logs")
 
-CPUE.data<-CPUEModelData(p,redo=F, TempSkip=T)
-cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2020, graphic='R')$annual.data
+#Choose One:
+#CPUE.data<-CPUEModelData(p,redo=T, TempSkip=T) #Reruns cpue model
+CPUE.data<-CPUEModelData(p,redo=F, TempSkip=T) #Defaults to not rerunning model
+
+cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2021, graphic='R')$annual.data
 
 #add lrp and USR
 
@@ -406,24 +409,24 @@ for(i in 1:length(lfas2)){
   
  
   
-  French=T #change to T here and in HCR plot call for French labels
-  if (French){
-  labs= c('PRS','PRL','NER')
-  xlab=  'CPUE'
-  ylab= 'Exploitation'
-  ltext='ZPH'
-     }else{
-    labs=c('USR','LRP','RR')  
-    xlab=  'CPUE'
-    ylab= 'Exploitation'
-    ltext='LFA'
-  }
+ # French=T #change to T here and in HCR plot call for French labels
+  #if (French){
+  #labs= c('PRS','PRL','NER')
+  #xlab=  'CPUE'
+  #ylab= 'Exploitation'
+  #ltext='ZPH'
+  #   }else{
+  #  labs=c('USR','LRP','RR')  
+  #  xlab=  'CPUE'
+   # ylab= 'Exploitation'
+   # ltext='LFA'
+ # }
   
   png(file=file.path(hcr.dir,paste0('PhasePlot',lfas2[i],'.png')))
   
   hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,big.final=T, 
-          yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=labs,
-          RRdec=F, ylab= ylab, xlab= xlab, yr.ends=T, main=paste(ltext,lfas2[i])) #French=T for French labels
+          yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR') ,
+          RRdec=F,  ylab = 'Exploitation', xlab = 'CPUE', yr.ends=T, main=paste(ltext,lfas2[i])) #FrenchCPUE=T for French labels
   dev.off()
 }
 
