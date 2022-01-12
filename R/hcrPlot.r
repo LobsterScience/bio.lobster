@@ -3,12 +3,12 @@
 hcrPlot <- function(B,mF,USR,LRP,RR=NULL,yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F,big.final=F, area.cols=c('lightgreen','lightgoldenrod','darksalmon'),French=F,FrenchCPUE=F,...) {
 	        
           if (French) {
-            labels=c("PRS","PRL","Taux d'exploitation de référence")    
+            labels=c("PRS","PRL","Taux d'exploitation de reference")    
 	          ylab='Exploitation'
 	          xlab='Biomasse'
 	        }
           if (FrenchCPUE) {
-            labels=c("PRS","PRL","Taux d'exploitation de référence")  
+            labels=c("PRS","PRL","Taux d'exploitation de reference")  
             ylab='Exploitation'
             xlab='CPUE'
           }	

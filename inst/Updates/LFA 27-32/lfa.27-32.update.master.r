@@ -248,7 +248,7 @@ xlim<-c(1982,p$current.assessment.year)
 #1 Landings Figure- LFAs 27, 28, 29, 20)
 #-------------------------------------------
 
-French=T #change to T to create landings figures with French Labels
+French=F #change to T to create landings figures with French Labels
 if (French){
   ylab= 'Débarquements (t)'  
   efftext= "Effort (x 1000 casiers levés)"   
