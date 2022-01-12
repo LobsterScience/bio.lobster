@@ -91,6 +91,20 @@
         abline(h=usr,col='green',lwd=2,lty=2)
         abline(h=lrp,col='red',lwd=2,lty=3)
     dev.off()
+    
+    #French Version of Figure:
+    png(filename=file.path(figdir, "CPUE_LFA33.French.png"),width=8, height=5.5, units = "in", res = 800)
+    par(mar=c(2.0,5.5,2.0,3.0))
+    xlim=c(1990,max(crd$YEAR))
+    plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/casier levé)',type='p',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
+    points(max(crd$YEAR), crd$CPUE[which(crd$YEAR==max(crd$YEAR))], pch=17, col='red', cex=1.2)
+    running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
+    crd=merge(crd,running.median,all=T)
+    lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
+    abline(h=usr,col='green',lwd=2,lty=2)
+    abline(h=lrp,col='red',lwd=2,lty=3)
+    dev.off()
+    
     # plot
     #x11(width=8,height=5)
     CatchRatePlot(data = crd ,usr = usr,lrp=lrp,lfa = 33,fd=figdir, save=F)
@@ -171,6 +185,12 @@ png(filename=file.path(figdir, "CCIR_LFA33.png"),width=8, height=5, units = "in"
 ExploitationRatePlots(data = oo[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR75,lfa = 33,fd=figdir, save=F)
 dev.off()
 
+#French Version
+png(filename=file.path(figdir, "CCIR_LFA33.French.png"),width=8, height=5, units = "in", res = 800)
+ExploitationRatePlots(data = oo[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR75,lfa = 33,fd=figdir, save=F, French=T)
+dev.off()
+
+
 #data = oo[,c("Yr","ERfm","ERfl","ERfu")]
 #write.csv(data,file.path(figdir,paste('CCIR_LFA33.csv',sep='')))
 
@@ -184,31 +204,40 @@ dev.off()
 		FSRSModelShortsRecruit=FSRSmodel(mdata,lfa=33, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
 		FSRSModelResultsRecruit=FSRSmodel(mdata,lfa=33, response="RECRUITS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
 
-		FSRSModelResultsLegal=FSRSmodel(mdata,lfa=33, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
+		#FSRSModelResultsLegal=FSRSmodel(mdata,lfa=33, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
 		legals = FSRSModelResultsLegal$pData
 		legals$Area = 33
 
-		FSRSModelResultsRecruit=FSRSmodel(mdata,lfa=33, response="RECRUITS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
+		#FSRSModelResultsRecruit=FSRSmodel(mdata,lfa=33, response="RECRUITS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
 		recruit =  FSRSModelResultsRecruit$pData
 		recruit$Area = 33
 
-		FSRSModelShortsRecruit=FSRSmodel(mdata,lfa=33, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
+		#FSRSModelShortsRecruit=FSRSmodel(mdata,lfa=33, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=F,ptraps=1000)
 		shorts =  FSRSModelShortsRecruit$pData
 		shorts$Area = 33
 
  	save(list=c("shorts","legals","recruit"),file=file.path(project.datadirectory("bio.lobster"),"outputs","fsrsModelIndicators33.rdata"))
-
+  
+ 	load(file=file.path(project.datadirectory("bio.lobster"),"outputs","fsrsModelIndicators33.rdata"))
 
 	# plot
 	#x11(width=8,height=7)
  	png(filename=file.path(figdir, "FSRS.legals.recruits.png"),width=8, height=5, units = "in", res = 800)
-	FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],lfa = 33,fd=figdir,title='')
+	FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],lfa = 33,fd=figdir,title='', save=F)
 dev.off()
+
+png(filename=file.path(figdir, "FSRS.legals.recruits.French.png"),width=8, height=5, units = "in", res = 800)
+FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],lfa = 33,fd=figdir,title='',French=T, save=F)
+dev.off()
+
 
 # Landings and Effort ############
 
 	 	land = lobster.db('seasonal.landings')
 
+#if running this section without having done the CPUE analysis during the same session, run 2 lines below 
+#CPUE.data<-CPUEModelData(p,redo=F)
+#cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(CPUE.data$SYEAR),graphic='R')$annual.data
 
 		land$YEAR = as.numeric(substr(land$SYEAR,6,9))
 		land$LANDINGS = land$LFA33
@@ -239,6 +268,22 @@ dev.off()
 
     	  write.csv(fishData,file.path(figdir,paste('FisheryPlot33.csv',sep='')))
 	  dev.off()
+	  
+	  #French Version
+	  
+	  png(filename=file.path(figdir, "Landings_Effort_LFA33_French.png"),width=8, height=5, units = "in", res = 800)
+	  #FisheryPlot <- function(data,lfa=NULL,fd=file.path(project.figuredirectory('bio.lobster','ReferencePoints')),title = paste('LFA',lfa),fn=paste0('FisheryPlot',lfa),preliminary=NULL,units='t',...) {
+	  par(mar=c(5.1, 4.1, 4.1, 5.1),las=1)
+	  plot(fishData$YEAR,fishData$LANDINGS,xlab='Année',ylab='Débarquements (t)',type='h',main="LFA 33",ylim=c(0,max(fishData$LANDINGS)*1.2),pch=15,col='grey',lwd=10,lend=3)
+	  lines(max(fishData$YEAR),fishData$LANDINGS[length(fishData$LANDINGS)],type='h',pch=21,col=rgb(1,0.6,0),lwd=10,lend=3)
+	  
+	  par(new=T)
+	  plot(fishData$YEAR,fishData$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,ylim=c(0,max(fishData$EFFORT2/1000,na.rm=T)))
+	  points(max(fishData$YEAR),fishData$EFFORT2[length(fishData$EFFORT2)]/1000, type='b', pch=21,bg=rgb(1,0.6,0))
+	  axis(4)
+	  mtext("Effort (x 1000 casiers levés)", 4, 3.5, outer = F,las=0)
+	  dev.off()
+
 
 	  #-----------------------------------------------------------------------
 
@@ -278,7 +323,7 @@ dev.off()
 	  x = read.csv(file.path(figdir,"CatchRateRefs33.csv"))
 	  y = read.csv(file.path(figdir,"ExploitationRefs33.csv"))
 	  
-	  x=x[x$YEAR %in% unique(y$Yr)]
+	  x=x[x$YEAR %in% unique(y$Yr),]
 	  
 	  RR75 = 0.8343305
 	  usr = 0.2840067
@@ -287,6 +332,12 @@ dev.off()
 	  png(filename=file.path(figdir, "PhasePlot_LFA33.png"),width=8, height=8, units = "in", res = 800)
 	  hcrPlot(B=x$running.median[x$YEAR>2005],mF=y$running.median,USR=usr,LRP=lrp,RR=RR75,yrs=2006:max(x$YEAR),ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T)
 	  dev.off()
+	  
+	  #French Version
+	  png(filename=file.path(figdir, "PhasePlot_LFA33_French.png"),width=8, height=8, units = "in", res = 800)
+	  hcrPlot(B=x$running.median[x$YEAR>2005],mF=y$running.median,USR=usr,LRP=lrp,RR=RR75,yrs=2006:max(x$YEAR),ylims=c(0,1),xlims=NULL,FrenchCPUE=T, labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T)
+	  dev.off()
+	  
 	  
 	  #hcrPlot(B=x$CPUE[x$YEAR>2005],mF=y$ERfm,USR=usr,LRP=lrp,RR=RR75,yrs=2006:2018,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T)
 	  #savePlot(file.path(figdir,'PhasePlot33.png'),type='png')
