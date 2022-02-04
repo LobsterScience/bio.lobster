@@ -122,7 +122,7 @@ for(l in lfas){
   dev.off()
 } 
 
-
+lfas= c("27", "31A", "31B", "32")
 
 #Discards
 
@@ -138,7 +138,7 @@ for (i in 1:length(lfas)){
       o.ber=c[c$SEX=="3" & c$CARLENGTH>82,]
       
       
-      discard=rbind(u,berried)
+      #discard=rbind(u,berried)
       
       tot=length(c$SEX)
       under=(length(u$SEX))

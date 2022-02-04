@@ -50,7 +50,6 @@ mu=median(cpueData$CPUE[cpueData$YEAR %in% c(1985:2009) & cpueData$LFA==l])
 cpueData$usr[cpueData$LFA==l]=0.8*mu
 cpueData$lrp[cpueData$LFA==l]=0.4*mu
 }
-
 ls=c('27', '28', '29', '30')
 ls2=c('31A', '31B', '32')
 
@@ -80,6 +79,7 @@ cpue.dir=file.path(figdir, "cpue")
 dir.create( cpue.dir, recursive = TRUE, showWarnings = TRUE )
 
 write.csv(cpueData, file=paste0(cpue.dir, "/fishery.stats.27-32.csv"), row.names=F )
+save(cpueData, file=paste0(cpue.dir, "/cpueData.Rdata") )
 
 # Begin first CPUE figure (27, 28, 29, 30)
 png(filename=file.path(cpue.dir, "CPUE_LFA27-30.png"),width=8, height=5.5, units = "in", res = 800)
@@ -89,13 +89,33 @@ par(mfrow=c(2,2))
     }
 dev.off()
 
+#French 27-30
+png(filename=file.path(cpue.dir, "CPUE_LFA27-30.French.png"),width=8, height=5.5, units = "in", res = 800)
+par(mfrow=c(2,2))		
+for (l in ls) {
+  crplot(French=T) #Change to crplot(French=T) to produce French axis labels
+}
+dev.off()
+
+
 # Begin second CPUE figure 31A, 31B, 32
 png(filename=file.path(cpue.dir, "CPUE_LFA31A-32.png"),width=8, height=5.5, units = "in", res = 800)
 par(mfrow=c(2,2))		
 for (l in ls2) {
-  crplot()
+  crplot(French=F) #Change to crplot(French=T) to produce French axis labels
 }
 dev.off()
+
+
+# French 31A, 31B, 32
+png(filename=file.path(cpue.dir, "CPUE_LFA31A-32.French.png"),width=8, height=5.5, units = "in", res = 800)
+par(mfrow=c(2,2))		
+for (l in ls2) {
+  crplot(French=F) #Change to crplot(French=T) to produce French axis labels
+}
+dev.off()
+
+
 
 #Create individual plots for AC Meetings
 for (l in p$lfas){
@@ -107,7 +127,7 @@ for (l in p$lfas){
 
 ## Continuous Change In Ratio (CCIR)
 
-#lobster.db('ccir.redo')
+#lobster.db('ccir.redo') #Must 'redo' to bring in new data
 lobster.db('ccir')
 
  inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
@@ -122,9 +142,22 @@ require(rstan)
 load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
 dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
+#Code to check CCIR Data
+# d = dat[c(57)] "adjust for area in question"
+# i = length(d)
+# par(mfrow=c(2,2))
+# out = list()
+# for(g in 1:i){
+#   with(d[[g]], plot(Cuml,p,main=Yr,ylim=c(0,.8)))
+#   out[[g]] = with(d[[g]],c(mean(p[1:4]),mean(p[length(p):(length(p)-3)]),Nexp, Nrec))
+# }
+# ou = do.call(rbind,out)
+# names(ou)=c('Pstart','Pend','NExp','Nrec')
+
+
 out.binomial = list()
 attr(out.binomial,'model') <- 'binomial'
-for(i in 1:length(dat)) {
+for(i in 1:length(dat)) { #Change to restart a broken run based on iteration number (count files in summary folder...run from there)
   ds = dat[[i]]
   ds$method = 'binomial'
   x = ccir_stan_run(dat = ds,save=F)
@@ -155,6 +188,7 @@ attr(ouBin,'model') <- 'binomial'
 save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
 load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
 
+#Combine  LFA 27 north and south
 u = subset(ouBin, LFA == 27)
 g = unique(u$Grid)
 g = strsplit(g,"\\.")
@@ -209,21 +243,41 @@ write.csv(ccir.sum, file=paste0(ccir.dir, "/ccir.27-32.csv"), row.names=F )
 for(i in c("27", "29", "30", "31A", "31B", "32")){
   o = subset(oo,LFA==i)
   RR7 = subset(RR75,LFA==i)$ERf75
+  #English
   png(filename=file.path(ccir.dir, paste0('ExploitationRefs',i, '.png')),width=8, height=4, units = "in", res = 800)
-  #French =T in following line if you want figures with French labels
+  ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i, French=F) 
+  dev.off()
+  #French
+  png(filename=file.path(ccir.dir, paste0('ExploitationRefs',i, '.French.png')),width=8, height=4, units = "in", res = 800)
   ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i, French=T) 
   dev.off()
+  
 }
 
-# png(filename=file.path(ccir.dir, paste0('ExploitationRefs.all.png')),width=8, height=4, units = "in", res = 800)
-# par(mfrow=c(3,2)) 
-# for(i in c("27", "29", "30", "31A", "31B", "32")){
-#   o = subset(oo,LFA==i)
-#   RR7 = subset(RR75,LFA==i)$ERf75
-#   ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i)
-# }
-# dev.off()
+#Plot as one figure for document
 
+#English
+png(filename=file.path(ccir.dir, paste0('Fig 4.ExploitationRefs 27-32.png')),width=10, height=8, units = "in", res = 800)
+par(mfrow=c(3,2))
+
+for(i in c("27", "29", "30", "31A", "31B", "32")){
+  o = subset(oo,LFA==i)
+  RR7 = subset(RR75,LFA==i)$ERf75
+  ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i, French=F) 
+}
+dev.off()
+
+#French
+png(filename=file.path(ccir.dir, paste0('Fig 4. ExploitationRefs27-32.French.png')),width=10, height=8, units = "in", res = 800)
+par(mfrow=c(3,2))
+
+for(i in c("27", "29", "30", "31A", "31B", "32")){
+  o = subset(oo,LFA==i)
+  RR7 = subset(RR75,LFA==i)$ERf75
+  #French
+  ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i, French=T) 
+}
+dev.off()
 
 ## Secondary Indicators
 
@@ -249,6 +303,7 @@ xlim<-c(1982,p$current.assessment.year)
 #-------------------------------------------
 
 French=F #change to T to create landings figures with French Labels
+#French=T
 if (French){
   ylab= 'Débarquements (t)'  
   efftext= "Effort (x 1000 casiers levés)"   
@@ -384,6 +439,21 @@ for(i in c("27", "29", "30", "31A", "31B", "32")){
   dev.off()
   }
 
+#French Figures
+for(i in c("27", "29", "30", "31A", "31B", "32")){
+load(file=file.path(project.datadirectory("bio.lobster"),"outputs",paste0("fsrsModelIndicators",i,".rdata")))
+
+# plot
+  png(filename=file.path(fsrs.dir, paste('FSRSRecruitCatchRate',i,'French.png', sep='.')),width=8, height=6.5, units = "in", res = 800)
+  FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],
+                    lfa = i,fd=figdir,title=i, save=F, rm=F, French=T) #Change French=T for french labels in figure
+  dev.off()
+}
+
+#All in one figure for document
+#Could not determine how to output FSRSCatchRatePlot into panels (mfrow)
+#Used online converter to merge png's
+
 # Phase plots for conclusions and advice
 
 hcr.dir=file.path(figdir, "hcr")
@@ -391,6 +461,8 @@ dir.create( hcr.dir, recursive = TRUE, showWarnings = TRUE )
 
 load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
 RR75  = aggregate(ERf75~LFA,data=oo,FUN=max)
+load(file=paste0(figdir, "/cpue/cpueData.Rdata") )
+
 
 lfas2 = c("27", "29", "30", "31A", "31B", "32")
 for(i in 1:length(lfas2)){
@@ -399,6 +471,7 @@ for(i in 1:length(lfas2)){
   
   x = subset(cpueData,LFA==lfas2[i])
   y = read.csv(file.path(figdir,"ccir",paste0("ExploitationRefs",lfas2[i],".csv")))
+  y=y[y$Yr>2004,]
   
   usr=x$usr[1]
   lrp=x$lrp[1]
@@ -409,25 +482,31 @@ for(i in 1:length(lfas2)){
   
  
   
- # French=T #change to T here and in HCR plot call for French labels
-  #if (French){
-  #labs= c('PRS','PRL','NER')
-  #xlab=  'CPUE'
-  #ylab= 'Exploitation'
-  #ltext='ZPH'
-  #   }else{
-  #  labs=c('USR','LRP','RR')  
-  #  xlab=  'CPUE'
-   # ylab= 'Exploitation'
-   # ltext='LFA'
- # }
+# French=F #change to T here and in HCR plot call for French labels
+#   if (French){
+#   labs= c('PRS','PRL','NER')
+#   xlab=  'CPUE'
+#   ylab= 'Exploitation'
+#   ltext='ZPH'
+#      }else{
+#     labs=c('USR','LRP','RR')  
+#     xlab=  'CPUE'
+#    ylab= 'Exploitation'
+#    ltext='LFA'
+#  }
   
   png(file=file.path(hcr.dir,paste0('PhasePlot',lfas2[i],'.png')))
+     hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,big.final=T, 
+     yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR') ,
+     RRdec=F,  ylab = 'Exploitation', xlab = 'CPUE', yr.ends=T, main=paste0("LFA ",lfas2[i]), cex.main=1.6 )
+  dev.off()
   
+  png(file=file.path(hcr.dir,paste0('PhasePlot',lfas2[i],'.French.png')))
   hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,big.final=T, 
           yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR') ,
-          RRdec=F,  ylab = 'Exploitation', xlab = 'CPUE', yr.ends=T, main=paste(ltext,lfas2[i])) #FrenchCPUE=T for French labels
+          RRdec=F,  ylab = 'Exploitation', xlab = 'CPUE', yr.ends=T, main=paste0("ZPH ",lfas2[i]) , cex.main=1.6, FrenchCPUE=T) 
   dev.off()
+  
 }
 
 ### Bycatch
