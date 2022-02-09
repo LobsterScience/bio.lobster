@@ -779,7 +779,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
             names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", 
                      "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH", 
-                     "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT")
+                     "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT",'NUM_HOOK_HAUL')
 
       #BZ. Sept2021- Added "DISEASE", "CONDITION_CD", "CLUTCH" to above list to include these variables and match fields from atSea dataset
             
@@ -808,7 +808,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             atSeaCatchLevel = connect.command(con, "select * from lobster.atseacatchlevel")
             save( atSeaCatchLevel, file=file.path( fnODBC, "atSeaCatchLevel.rdata"), compress=T)
             gc()  # garbage collection
-            odbcClose(con)
+          #  odbcClose(con)
           }
           load(file.path( fnODBC, "atSeaCatchLevel.rdata"), .GlobalEnv)
      }

@@ -2,62 +2,30 @@ require(bio.lobster)
 require(bio.utilities)
 require(RODBC)
 require(lubridate)
+require(devtools)
 options(stringAsFactors=F)
-#SWLSS
-if(data.redo){
-			channel=odbcConnect(dsn='ptran',uid='cooka',pwd='')
-			xAll = sqlQuery(channel,'select * from cooka.lobster_bycatch_assoc')
-				xAll$X = convert.dd.dddd(xAll$LONGDDMM)*-1
-			xAll$Y = convert.dd.dddd(xAll$LATDDMM)
-			saveRDS(xAll,'C:/Users/cooka/Desktop/sharedfolder/Bycatch in the Lobster Fishery/data/CompiledAtSeaSept2021.rds')
-
-			#LOGS
-			x = lobster.db('process.logs.unfiltered')
-			x = subset(x,LFA %in% c(33,34,35) & SYEAR %in% 2019:2021)
-			saveRDS(x,'C:/Users/cooka/Desktop/sharedfolder/Bycatch in the Lobster Fishery/data/LogbooksProUnf.rds')
-		
-		con = odbcConnect(oracle.lobster.server , uid=oracle.lobster.user, pwd=oracle.lobster.password, believeNRows=F) # believeNRows=F required for oracle db's
-
-			tr = sqlQuery(con,'select * from lobster.istraps')
-			se = sqlQuery(con,'select * from lobster.issets_mv')
-			de = sqlQuery(con,'select * from lobster.isdetails_mv')
-saveRDS(list(tr,se,de),file='C:/Users/cooka/Desktop/sharedfolder/Bycatch in the Lobster Fishery/data/ObserverInfo.rds')
 
 
+wd = ('C:/Users/CookA/Desktop/dellshared/Bycatch in the Lobster Fishery')
+setwd(wd)
 
-		}
+bycatch.db(DS='odbc.redo',wd=wd)
 
+#LOADING AND MERGING LOGBOOKS with TARGETS
+    #bycatch.db(DS='logbook.merge.redo',wd=wd)
 
-setwd('~/dellshared/Bycatch in the Lobster Fishery')
-#a = readRDS('data/CompiledSWLSS.rds')
+        b = bycatch.db('logbook.merge',wd=wd) 
+
+        t = bycatch.db('targets',wd=wd) 
+
+#SWLSS sea sampling handings
 a = readRDS('data/CompiledAtSeaSept2021.rds')
 a = subset(a, OWNER_GROUP=='SWLSS')
-x = lobster.db('process.logs.unfiltered')
-b = subset(x,LFA %in% c(33,34,35) & SYEAR %in% 2019:2021)
 a$COMAREA_ID = toupper(a$COMAREA_ID)
 a$COMAREA_ID[which(a$TRIP== '107869-081219')] <- "L33"
 o = readRDS('data/ObserverInfo.rds')
 ms = read.csv('data/SWLSSTripmatch.csv')
- ms = subset(ms,select=c(TRIP,SD_LOG_ID_1,QUALITY))
- gt = read.csv('data/Grids2Targets.csv')
-
-#logbook handling
-b$mn = month(b$DATE_FISHED)
-b$GridGroup = b$target = b$Period = NA
-for(i in 1:nrow(b)){
-	pit = gt$GridGrouping[which(b$GRID_NUM[i]==gt$GRID_NUM & gt$LFA==b$LFA[i])]
-	if(length(pit)>0){
-	b$GridGroup[i] = pit
-	m = b$mn[i]
-	k = subset(gt,GRID_NUM==b$GRID_NUM[i]& gt$LFA==b$LFA[i])
-	ll = ifelse(m >=k$Period1.Start & m<=k$Period1.End,'Period1',ifelse(m >=k$Period2.Start & m<=k$Period2.End,'Period2',ifelse(m >=k$Period3.Start & m<=k$Period3.End,'Period3','Period4')))
-	lll = as.numeric(strsplit(ll,'Period')[[1]][2])
-	b$target[i] <- k[,ll]
-	b$Period[i] = lll
-	}
-}
-saveRDS(b,'data/logbookReady.rds')
-#SWLSS sea sampling handings
+ms = subset(ms,select=c(TRIP,SD_LOG_ID_1,QUALITY))
 
 a$Legal = ifelse(a$SPECCD_ID == 2550 & a$FISH_LENGTH > 82 & a$SEXCD_ID %in% 1:2,1,0)
 a$Berried = ifelse(a$SPECCD_ID == 2550 & a$SEXCD_ID %in% 3,1,0)
@@ -208,9 +176,10 @@ merge(seR, subset(tr,select=c(TRIP, TRIP_ID, FISHSET_ID, SET_NO, STRING_NO, NUM_
 ################\
 #relying on atSea.clean for observer data
 
-
+#g = lobster.db('atSea.redo')
+#g = lobster.db('atSea.clean.redo')
 g = lobster.db('atSea.clean')
-gg = subset(g,DESCRIPTION=='ISDB' & SYEAR > 2018 & LFA %in% 33:35)
+gg = subset(g,DESCRIPTION=='ISDB' & SYEAR %in% (2019:2021)  & LFA %in% 33:35)
 
 #add in details where traps are empty
 gg$UID = paste(gg$TRIPNO,gg$STRINGNO,sep='_')

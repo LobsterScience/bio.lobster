@@ -178,7 +178,7 @@ pi='base'
                     }} else {
                               iz = which(set$strat %in% c(strat))
                     }
-#browser()
+
                 se = set[intersect(iy,iz),]
                 
                 if(nrow(se)>0){
