@@ -147,9 +147,10 @@ if(DS %in% c('SWLSS','SWLSS.redo')){
         CDa$Period[i] = lll
         #	rm(k,m,ll,lll)
       }
-    }	
-    
-    
+    }
+    CDa$COMAREA_ID = NULL
+    names(CDa)[5:9] =c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED')
+
     saveRDS(CDa,file=file.path(wd,'data','SWLSSreshape.rds'))
     return(CDa)
     }
