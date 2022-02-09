@@ -5,18 +5,52 @@ db.setup()
 require(lubridate)
 
 da = connect.command(con,'select * from FRAILC.lobslip_quarter ')
-da$QUARTER = ifelse(da$QUARTER=='Q4','Q3',da$QUARTER)
+#da$QUARTER = ifelse(da$QUARTER=='Q4','Q3',da$QUARTER)
 da = aggregate(SLIP_WEIGHT_LBS~YR+QUARTER,data=da,FUN=sum)
 da$T = da$SLIP_WEIGHT_LBS/2.2/1000
 
 da = subset(da,YR<2021,select=c(YR,QUARTER,T))
-daA = data.frame(YR=1975:2020,QUARTER='Q4',T=0)
+#daA = data.frame(YR=1975:2020,QUARTER='Q4',T=0)
 
-da = data.frame(rbind(da,daA))
+#da = data.frame(rbind(da,daA))
 da = da[order(da$YR,da$QUARTER),]
 da$CV = .1
 da$Fleet=1
-da$CVCPUE = da$CPUE2=da$CPUE=-1
+
+#CPUE
+
+
+a = lobster.db('process.logs,redo')
+p$lfas = c('33',"34", "35", "36", "38") # specify lfas for data summary
+p$subareas = c("34", "35", "36", "38") # specify lfas for data summary
+
+lS<-lobster.db('process.logs')
+lS = subset(lS,SYEAR<2021 & LFA %in% c(33,34,35,36,38))
+lS$MONTH = month(lS$DATE_FISHED)
+lS$Quarter = ifelse(lS$MONTH %in% c(10,11,12),'Q1',ifelse(lS$MONTH %in% c(1,2,3),'Q2',ifelse(lS$MONTH %in% c(4,5,6),'Q3','Q4')))
+
+lSa = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SYEAR+Quarter,data=lS,FUN=sum)
+lSa$CPUE = lSa$WEIGHT_KG / lSa$NUM_OF_TRAPS
+lSa$WEIGHT_KG = lSa$NUM_OF_TRAPS = NULL
+
+lobster.db('process.vlog')
+V = vlog
+V$SYEAR = as.numeric(year(V$FDATE))
+V$SYEAR = year(V$FDATE)
+V$MONTH = month(V$FDATE)
+ii = which(V$MONTH>9)
+V$SYEAR[ii] = V$SYEAR[ii]+1 
+
+V$Q = ifelse(V$MONTH %in% c(10,11,12),1,ifelse(V$MONTH %in% c(1,2,3),2,ifelse(V$MONTH %in% c(4,5,6),3,4)))
+
+Va = aggregate(cbind(W_KG,N_TRP)~SYEAR+Q, data=subset(V,LFA %in% p$lfas), FUN=sum)
+Va$CPUE = Va$W_KG / Va$N_TRP
+Va$W_KG = Va$N_TRP = NULL
+names(Va) = c('SYEAR','Quarter','CPUE')
+
+CpE = as.data.frame(rbind(Va,lSa))
+
+da = merge(da,CpE,by.x=c('YR','QUARTER'),by.y=c('SYEAR','Quarter'),all.x=T)
 
 #se = connect.command(con, 'select * from lobster.lobster_atsea_vw')
 sc1=seq(53,223,by=5)
@@ -39,8 +73,9 @@ ssAR = reshape(ssA[,c('YR','QUARTER','CL','Pr')],idvar=c('YR','QUARTER'),timevar
 ssU= aggregate(TRIPNO~YR+QUARTER,data=see, FUN= function(x) length(unique(x)) )
 ssARU = merge(ssAR,ssU)
 ssARU = na.zero(ssARU)
-
+#ii = which(ssARU$QUARTER=='Q4')
+#ssARU[ii,3:37] <- -1
 daS = merge(da,ssARU,all.x=T)
 daS[is.na(daS)] <- -1
 
-write.csv(daS,file=file.path(wd,paste('EGOM','Catch_props.csv',sep="-")))
+write.csv(daS,file=file.path(wd,paste('EGOM','Catch_propsv2.csv',sep="-")))

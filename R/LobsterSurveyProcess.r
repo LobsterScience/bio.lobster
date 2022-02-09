@@ -15,17 +15,16 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	lobster.db("survey")
 	RLibrary("CircStats","PBSmapping","SpatialHub","spatstat")
 	if(missing(yrs))yrs=sort(unique(surveyCatch$YEAR))
-
-	surveyCatch$LFA <- NULL
+	#surveyCatch$LFA <- NULL
 	# add column for LFA
 	#removed this section 2021 AMC -- cdenton added LFA to the Oracle Table
-	LFAs=read.csv(file.path(project.datadirectory('bio.lobster'),"data",'maps','Polygons_LFA.csv'))
-	SurvLocs=subset(surveyCatch,select=c("SET_ID","SET_LONG","SET_LAT"))
-	names(SurvLocs)[2:3]=c("X","Y")
-	SurvLocs$EID=1:nrow(SurvLocs)
-	key=findPolys(SurvLocs,LFAs)
-	SurvLFAs=merge(subset(SurvLocs,select=c("EID","SET_ID")),merge(key,subset(LFAs,!duplicated(PID),c("PID","LFA"))))
-	surveyCatch=merge(surveyCatch,subset(SurvLFAs,!duplicated(SET_ID),c("SET_ID","LFA")),all=T)
+#	LFAs=read.csv(file.path(project.datadirectory('bio.lobster'),"data",'maps','Polygons_LFA.csv'))
+#	SurvLocs=subset(surveyCatch,select=c("SET_ID","SET_LONG","SET_LAT"))
+#	names(SurvLocs)[2:3]=c("X","Y")
+#	SurvLocs$EID=1:nrow(SurvLocs)
+#	key=findPolys(SurvLocs,LFAs)
+#	SurvLFAs=merge(subset(SurvLocs,select=c("EID","SET_ID")),merge(key,subset(LFAs,!duplicated(PID),c("PID","LFA"))))
+#	surveyCatch=merge(surveyCatch,subset(SurvLFAs,!duplicated(SET_ID),c("SET_ID","LFA")),all=T)
 	# select for Lobsters
 	setNames=c("SET_ID", "TRIP_ID", "TRIPCD_ID", "SURVEY_TYPE", "CFV", "VESSEL_NAME", "BOARD_DATE", "LANDING_DATE","HAULCCD_ID", "SET_NO","GEAR","FISHSET_ID",
 	        "STATION", "STRATUM_ID", "SET_LAT", "SET_LONG", "SET_DEPTH", "SET_TIME", "SET_DATE", "HAUL_LAT", "HAUL_LONG", "HAUL_DEPTH", "HAUL_TIME", 
@@ -85,9 +84,8 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	
 	
 	surveyLobsters = do.call(rbind,out)
-
-	# Net mensuration data available for 2016
 	
+	# Net mensuration data available for 2016
 	#surveyLobsters
 	
 	dist = calcAreaSwept()
@@ -103,8 +101,8 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	#temperature
 	ILTSTemp$SET_ID = paste0(ILTSTemp$TRIP_ID,ILTSTemp$SET_NO)
 
-	x = aggregate(TEMPC ~ SET_ID, data = ILTSTemp, median,na.rm=T)
-	surveyLobsters = merge(surveyLobsters,x,all=T)
+#	x = aggregate(TEMPC ~ SET_ID, data = ILTSTemp, median,na.rm=T)
+#	surveyLobsters = merge(surveyLobsters,x,all=T)
 
 
 
@@ -142,7 +140,6 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 
 	}
 	names(CLF)[3] = "CL"
-	#browser()
 	sids=unique(CLF$SET_ID)
 	CLF = subset(CLF,BIN%in%bins)
 	CLF = merge(CLF,data.frame(SET_ID=rep(sids,length(bins)-1),BIN=sort(rep(bins[-1],length(sids)))),all=T)
@@ -163,11 +160,10 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	surveyLobsters$pLC=surveyLobsters$LobDenCorrected/surveyLobsters$LobDenNotCorrected
 	x=aggregate(pLC~YEAR,surveyLobsters,median,na.rm=T)
 	names(x)[2]='mpLC'
-	#browser()
 	ompLC = median(surveyLobsters$pLC,na.rm=T)
 	surveyLobsters = merge(surveyLobsters,x,all=T)
 	surveyLobsters$mpLC[is.na(surveyLobsters$mpLC)] = ompLC
-
+	
 	surveyLobsters$LobDen[is.na(surveyLobsters$LobDenCorrected)] = surveyLobsters$LobDenNotCorrected[is.na(surveyLobsters$LobDenCorrected)]*surveyLobsters$mpLC[is.na(surveyLobsters$LobDenCorrected)]
 	surveyLobsters$NUM_STANDARDIZED=surveyLobsters$NUM_CAUGHT/surveyLobsters$DIST_KM
 	if(comparative){
