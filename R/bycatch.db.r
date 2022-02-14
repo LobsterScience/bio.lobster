@@ -149,8 +149,8 @@ if(DS %in% c('SWLSS','SWLSS.redo')){
       }
     }
     CDa$COMAREA_ID = NULL
-    names(CDa)[5:9] =c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED')
-
+    names(CDa)[c(5:9,21)] =c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED','CALWT')
+    CDa$DID = 'ASSOC'
     saveRDS(CDa,file=file.path(wd,'data','SWLSSreshape.rds'))
     return(CDa)
     }
@@ -233,8 +233,8 @@ if(DS %in% c('ISDB.redo','ISDB')){
       BF = merge(ac,bb,by='UID')
       BF$'P.9999-NA' = NULL
       BF$P=1
-      
-        
+      names(BF)[c(2,6,8,9)] = c('TRIP','NUM_TRAPS','GRIDNUM','DATE_FISHED')
+      BF$DID = 'OBS'
       saveRDS(BF,file=file.path(wd,'data','ISDBreshape.rds'))
       return(BF)
     }

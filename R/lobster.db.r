@@ -51,6 +51,53 @@ lobster.db = function( DS="complete.redo",p=p) {
         
         }
       
+if(DS %in% c('vessels.by.port','vessels.by.port.redo')){
+  if(grepl('redo',DS)) {
+    
+    vsP = connect.command(con,"SELECT DISTINCT
+                a.vr_number,
+                b.vessel_name,
+                a.lfa,
+                MAX(a.community_code) port, 
+                TO_CHAR(date_fished, 'yyyy') yr_fished,
+                b.year_built,
+                b.gross_tonnage,
+                b.bhp,
+                b.loa,
+                b.breadth,
+                b.depth
+            FROM
+                marfissci.lobster_sd_log   a,
+                marfissci.vessels          b
+            WHERE
+                a.vr_number = b.vr_number
+            GROUP BY
+                a.vr_number,
+                b.vessel_name,
+                a.lfa,
+                TO_CHAR(date_fished, 'yyyy'),
+                b.year_built,
+                b.gross_tonnage,
+                b.bhp,
+                b.loa,
+                b.breadth,
+                b.depth")
+  save(vsP, file=file.path(fnODBC,'vessels_port.rdata'))
+  return(vsP)
+  }
+  load(file=file.path(fnODBC,'vessels_port.rdata'))
+  return(vsP)
+  
+}
+    
+if(DS %in% 'civi'){
+  
+  load(file.path(fn.root,'CIVI','CIVI.rdata'))
+  return(civi)  
+  
+}
+    
+    
     
 if(DS %in% c('port_location','port_location.redo')){
       if(DS == 'port_location') {
