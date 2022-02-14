@@ -43,6 +43,7 @@ options(stringsAsFactors=F)
 	if(area=='35-36')	{ ylim=c(44.5,46);	 	xlim=c(-67.2,-63.2)	}
 	if(area=='west')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-64)	}
 	if(area=='27')		{ ylim=c(44.9,47.9); 	xlim=c(-61,-57.8)	}
+  if(area=='27.Crop')		{ ylim=c(45.4,47.6); 	xlim=c(-61.1,-58.8)	}
 	if(area=='28')		{ ylim=c(45.3,46);	 	xlim=c(-61.6,-60.3)	}
 	if(area=='29')		{ ylim=c(45.3,46); 		xlim=c(-61.6,-60.3)	}
 	if(area=='30')		{ ylim=c(44.6,45.9); 	xlim=c(-60.8,-59.6)	}

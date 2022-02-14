@@ -5,6 +5,10 @@ require(ggplot2)
 figdir = file.path(project.datadirectory("bio.lobster","requests","season.shift.lfa27",p$current.assessment.year))
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 
+png(filename=file.path(figdir, "MapLFA27.png"),width=5, height=5, units = "in", res = 800)
+LobsterMap('27')
+dev.off()
+
 #load("C:/bio.data/bio.lobster/data/ODBCDump/atSea.rdata") #Import AtSea data
 #lobster.db('atSea.redo')
 #lobster.db('atSea.clean.redo')
@@ -37,10 +41,27 @@ c$SEX[c$SEX==3]="Eggs"
 c$SEX=factor(c$SEX, levels=c("Eggs", "No Eggs", "Male"))
 c$week=factor(paste0("Week ", c$WOS))
 
+
+
+#Map samples
+div= read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","areas.27.csv"))
+png(filename=file.path(figdir, "LFA27.Zones.png"),width=6, height=6, units = "in", res = 800)
+LobsterMap('27.Crop',addGrids=F, labels="")
+addPolys(div[div$area=="27.North",],col="red", density=12, angle =45)
+addPolys(div[div$area=="27.Central",],col="blue", density=12, angle =90)
+addPolys(div[div$area=="27.South",],col="green", density=12, angle =0)
+addPoints(c[is.finite(c$Y),], pch=16, cex=0.3)
+dev.off()
+
+require(sp) #sp package allows determination of in/out of poly
+
 #create North/South index
-n.ind=which(is.finite(c$Y) & c$X< -60.175416 & c$Y >46) #Split at Victoria Mines
-s1.ind=which(is.finite(c$Y) & c$X> -60.175416) #misses some gabarus samples
-s2.ind=which(is.finite(c$Y) & c$X< -60.175416 & c$Y <46) #catches those gabarus samples
+n.ind=which(point.in.polygon(c$X[1], c$Y[1],div$X[div$area=="27.North"],div$Y[div$area=="27.North",])) #Little River and North
+c.ind=which(point.in.polygon(c$X, c$Y,div$X[div$area=="27.Central",],div$Y[div$area=="27.Central",]) ) #South Bar to Little River
+s.ind=which(point.in.polygon(c$X, c$Y,div$X[div$area=="27.South",],div$Y[div$area=="27.South",]) ) #Gabarus to South Bar
+
+#s1.ind=which(is.finite(c$Y) & c$X> -60.175416) #misses some gabarus samples
+#s2.ind=which(is.finite(c$Y) & c$X< -60.175416 & c$Y <46) #catches those gabarus samples
 c$area=NA
 
 for (i in length(c$EID)){
@@ -48,7 +69,6 @@ for (i in length(c$EID)){
   c$area[s1.ind]="south"
   c$area[s2.ind]="south"
 }
-
 
 #Samples   
      png(filename=paste0(figdir, "/Yearly Samples LFA",l,".png"))
@@ -279,12 +299,12 @@ bar.p=melt(catches, id.vars="LFA")
 
 mycolors <- c("green3", "firebrick4", "coral2", "red1")
 
-png(filename=paste0(figdir,"/catch.proportions 27-32.png"))
+png(filename=paste0(figdir,"/catch.proportions 27-32.png"),width = 150, height = 150, units='mm', res = 300)
 ggplot(bar.p, aes(x = LFA, y = value, fill = variable)) +
 geom_col(position="fill") +
 scale_y_continuous(labels = scales::percent) +
   scale_fill_manual(values=mycolors, name="Lobster") +
-  labs( x="Lobster", y= "% of Catch") 
+  labs( x="Lobster Fishing Area", y= "% of Catch") 
 dev.off()
 
 
