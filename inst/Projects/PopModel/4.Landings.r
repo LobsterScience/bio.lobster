@@ -79,3 +79,29 @@ daS = merge(da,ssARU,all.x=T)
 daS[is.na(daS)] <- -1
 
 write.csv(daS,file=file.path(wd,paste('EGOM','Catch_propsv2.csv',sep="-")))
+
+
+##if by sex
+
+see$SID = ifelse(see$SEX %in% c(2,3),paste("F",see$CL,sep="-"),paste('M',see$CL,sep="-"))
+
+ssA = aggregate(P~SID+CL+SEX+YR+QUARTER,data=see,FUN=sum)
+ssAA = aggregate(P~YR+QUARTER,data=see,FUN=sum)
+names(ssAA)[3] = 'TP'
+
+ssA = merge(ssA,ssAA)
+ssA$Pr = ssA$P/ssA$TP
+ssA = ssA[order(ssA$SEX,ssA$CL,ssA$YR,ssA$QUARTER),]
+ssAR = reshape(ssA[,c('YR','QUARTER','SID','Pr')],idvar=c('YR','QUARTER'),timevar = 'SID',direction = 'wide')
+ssU= aggregate(TRIPNO~YR+QUARTER,data=see, FUN= function(x) length(unique(x)) )
+ssARU = merge(ssAR,ssU)
+ssARU = na.zero(ssARU)
+#ii = which(ssARU$QUARTER=='Q4')
+#ssARU[ii,3:37] <- -1
+daS = merge(da,ssARU,all.x=T)
+daS[is.na(daS)] <- -1
+
+
+write.csv(daS,file=file.path(wd,paste('EGOM','Catch_props_sexv3.csv',sep="-")))
+
+

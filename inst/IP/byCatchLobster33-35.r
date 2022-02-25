@@ -31,23 +31,11 @@ setwd(wd)
         
 #building the polygons of grid groupings
         
-        gt = bycatch.db('targets',wd=wd) 
-        gt$gp = paste(gt$LFA, gt$GridGrouping,sep="-")
-        gG = split(gt,f=gt$gp)
         gG<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA_33_TO_ 38_GRID_GROUPS_NAD83.csv"))
-        gG$SID = bio.utilities::recode(gG$label, "'4A'=41; '4B'=42; '2A'=21; '2B'=22; ")
-        out = list()
-        for(i in 1:length(gG)){
-          
-          o = gG[[i]]
-          og = subset(LFAgrid,SID %in% o$GRID_NUM)
-          og$PID = og$SID
-          og$SID=1
-          ou = joinPolys(og,operation = 'UNION')
-          ou$GG = unique(o$gp)
-          out = ou[[i]]
-        }
+        addLabels(gG,placement='CENTROID')
         
+
+############################################################################################################################        
 #Describing the fishery from these logbooks
 #LFA by LFA
         
@@ -95,7 +83,7 @@ setwd(wd)
     #best model is diag and unequal R and Q with three trends
     write.csv(model.data,'results/Landings34DFAmodel.data.csv')
     
-  }
+
   
   big.maxit.cntl.list = list(minit=200, maxit=30000, allow.degen=FALSE)
   model.list = list(m=3, R="diagonal and equal",Q = "diagonal and equal")
@@ -222,8 +210,11 @@ setwd(wd)
   require(ggpubr)
   ggarrange(p1,p2,ncol=1,nrow=2)
   savePlot(file.path(fpf1,'FitsDFALFA34.png'))
-  ##
   
+  
+  
+  ##
+  ####################################################################################################
   
   
 #SWLSS sea sampling
@@ -402,7 +393,7 @@ summary(RLMSW)$sigma
 biasSWLSS = sum(SBUMP$WEIGHT_KG - SBUMP$TotLegal)/nrow(SBUMP) 
 biasOBs = sum(SBUMP0$WEIGHT_KG - SBUMP0$TotLegalNTraps )/nrow(SBUMP0) 
 
-###
+####################################################################################################################
 #Comparing Temporal sampling with Fishing (by LFA)
 
 b = bycatch.db('logbook.merge',wd=wd) 
@@ -427,6 +418,48 @@ aA = rbind(aO,aS)
 aA$GPY = paste(aA$SYEAR,aA$LFA,aA$GridGroup,aA$Period,sep="-")
 io = unique(aA$GPY)
 aA$GP = paste(aA$LFA,aA$GridGroup,sep="-")
+
+write.csv(aA,file=file.path('results','CompliedDataForModelling.csv'))
+
+
+###predicting lobster landings from obs
+gP = glm(LobsterWt~Period+GP+LobsterWt,data=aA,family=poisson(link='log'))
+
+require(statmod)
+require(mgcv)
+gt = glm(LegalWt~Period+GP+SYEAR,data=aA,family=tweedie(var.power=1.5, link.power=0)) #link power 0 is log
+
+b$GP = paste(b$LFA, b$GridGroup,sep="-")
+newd = aggregate(cbind(NUM_OF_TRAPS, WEIGHT_KG)~SYEAR+GP+Period,data=b,FUN=sum)
+newd$pred = predict(gt,newdata = newd, type='response')
+newd$TotW = newd$pred * newd$NUM_OF_TRAPS
+
+#predictions are biased low at highest catch rates and time intervals
+plot(newd$WEIGHT_KG,newd$TotW)
+abline(a=0,b=1)
+cor.test(newd$WEIGHT_KG,newd$TotW)
+
+
+
+#merging matching grid groupings sampled across periods -- when and where sampled did a good job
+rW = aggregate(LegalWt~Period+GP+SYEAR,data=aA, FUN=mean)
+newdMerge = merge(newd,rW)
+newdMerge$Raw2Total = newdMerge$NUM_OF_TRAPS * newdMerge$LegalWt
+with(newdMerge,plot(TotW,Raw2Total))
+abline(a=0,b=1)
+with(newdMerge,cor.test(TotW,Raw2Total))
+
+
+
+gt = gam(LegalWt~(Period)+(GP)+SYEAR,data=aA,family=Tweedie(p=1.5, link=log),method='REML')
+
+
+
+#Cod v lob catches
+gP = glm(Cod~Period+GP+Lobster,data=aA,family=poisson(link='log'))
+zP = zeroinfl(Cod~Period+GP+Lobster,data=aA, dist='negbin')
+
+
 
 
 #poisson and test for dispersion
