@@ -34,3 +34,10 @@ setwd(wd)
         gG<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA_33_TO_ 38_GRID_GROUPS_NAD83.csv"))
         addLabels(gG,placement='CENTROID')
         
+        #inshore midshore offshore
+        
+        ggs = list(i=c(1,'2A','2B'),m=c(3,'4A','4B'),o=c('5,6'))
+        
+
+        
+        

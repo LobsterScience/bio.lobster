@@ -26,7 +26,7 @@
 #' @export
 LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, fname = 'LobsterMap',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',
 	isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,
-	addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,grid.labcex=1,...){
+	addGridGroups=F, addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,grid.labcex=1,...){
 
 options(stringsAsFactors=F)		
 	require(PBSmapping)|| stop("Install PBSmapping Package")
@@ -149,15 +149,16 @@ if(save) {
 				
 				}
     if(addAmericanStrata) {
-			  require('bio.polygons')
-			   #b = importShapefile(find.bio.gis('bts',return.one.match=F))
 			   b = importShapefile(file.path( project.datadirectory("bio.lobster"), "data","maps","BTS_Strata"), readDBF=F)
 			   attr(b,'projection') <- "LL"
 			  addPolys(b,lty=1,border='blue',col=adjustcolor('white',alpha.f=0))
 				}
 
   # 
-
+    if(addGridGroups){
+        io = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA_33_TO_ 38_GRID_GROUPS_NAD83.csv"))
+        addPolys(io)
+    }
   # Boundries
 	
 	if(boundaries=='LFAs'){

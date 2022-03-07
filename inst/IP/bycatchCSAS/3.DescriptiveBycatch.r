@@ -110,9 +110,7 @@ write.csv(STTraps,file=file.path('results','SWLSSandObsTrips2TargetsTrapsandTrip
 ####pertrap info using
 
 ao = bycatch.db('ISDB.reshape.redo')
-
-
-aCo = aggregate(cbind(Lobster,Cod,Cusk,Jonah,Legal,Berried, Empty,LegalWt)~TRIPNO+LFA+NUM_HOOK_HAUL,data=ao,FUN=median)
+aCo = aggregate(cbind(Lobster,Cod,Cusk,Jonah,Legal,Berried, Empty,LegalWt)~TRIP+LFA+NUM_HOOK_HAUL,data=ao,FUN=median)
 
 
 

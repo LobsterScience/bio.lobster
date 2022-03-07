@@ -4,25 +4,27 @@ require(bio.utilities)
 require(RODBC)
 require(lubridate)
 require(devtools)
+require(mgcv)
+require(statmod)
 options(stringAsFactors=F)
 la()
-
+require(PBSmapping)
 
 wd = ('C:/Users/CookA/Desktop/dellshared/Bycatch in the Lobster Fishery')
 setwd(wd)
-
-
-
 
 aA = read.csv(file=file.path('results','CompliedDataForModelling.csv'))
 
 
 ###predicting lobster landings from obs
-gP = glm(LobsterWt~Period+GP+LobsterWt,data=aA,family=poisson(link='log'))
+gPT = gam(LobsterWt~s(WOS)+LFA,data=aA,family=Tweedie(p=1.5, link=log),method='REML')
 
-require(statmod)
-require(mgcv)
-gt = glm(LegalWt~Period+GP+SYEAR,data=aA,family=tweedie(var.power=1.5, link.power=0)) #link power 0 is log
+
+#subset aA to where we dont have good location info
+
+aAr = subset(aA, !is.na(GridGroup))
+
+gt = glm(LegalWt~Period+GP+SYEAR,data=aAr,family=tweedie(var.power=1.5, link.power=0)) #link power 0 is log
 
 b$GP = paste(b$LFA, b$GridGroup,sep="-")
 newd = aggregate(cbind(NUM_OF_TRAPS, WEIGHT_KG)~SYEAR+GP+Period,data=b,FUN=sum)
@@ -46,7 +48,8 @@ with(newdMerge,cor.test(TotW,Raw2Total))
 
 
 
-gt = gam(LegalWt~(Period)+(GP)+SYEAR,data=aA,family=Tweedie(p=1.5, link=log),method='REML')
+
+gt = gam(LegalWt~(Period)+(GP)+SYEAR,data=aA,family=)
 
 
 
