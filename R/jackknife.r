@@ -1,7 +1,7 @@
 #' @export
 
-jackknife<-function(data,err='sd',run=T){
-	
+jackknife<-function(data,run=T){
+	#From Smith CJFAs 1980
 	start<-Sys.time()
 	data<-na.omit(data)
 	t<-sort(unique(data$time))
@@ -15,20 +15,16 @@ jackknife<-function(data,err='sd',run=T){
 	
 	if(run){
 		for (i in 1:length(t)){
-			
 			Rj<-Cf[i]
 			if(n[i]>1){
 				Rj<-c()
 				for (j in 1:n[i]){
 					Rj[j]<-n[i]*Cf[i] - (n[i]-1)*(sum(data$catch[data$time==t[i]][-j])/sum(data$effort[data$time==t[i]][-j]))
 				}
-			}
-			out.dat$cpue[i]<-mean(Rj)
-			if(err=='sd')out.dat$cpue.var[i]<-var(Rj)
-			if(err=='se')out.dat$cpue.var[i]<-1/(n[i]*(n[i]-1))*sum((Rj-mean(Rj))^2)
-			if(err=='both'){
-				out.dat$cpue.sd[i]<-var(Rj)
-				out.dat$cpue.se[i]<-1/(n[i]*(n[i]-1))*sum((Rj-mean(Rj))^2)
+			
+			out.dat$cpue.jack[i]<-mean(Rj)
+			out.dat$cpue.var[i]<-1/(n[i]*(n[i]-1))*sum((Rj-mean(Rj))^2)
+			out.dat$cpue.se[i] <- abs(out.dat$cpue.jack[i]-out.dat$cpue[i]) / (sqrt(out.dat$cpue.var[i]))
 			}
 		}
 	}

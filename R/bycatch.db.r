@@ -31,7 +31,7 @@ bycatch.db <- function(DS='redo.data',p=p,wd='C:/Users/CookA/Desktop/dellshared/
   if(DS %in% c('logbook.merge.redo','logbook.merge')){
     
     if(grepl('redo',DS)){
-          x = lobster.db('process.logs.unfiltered')
+          x = lobster.db('process.logs')
           b = subset(x,LFA %in% c(33,34,35) & SYEAR %in% 2019:2021)
           gt = read.csv(file.path(wd,'data/Grids2Targets.csv'))
           
@@ -50,7 +50,7 @@ bycatch.db <- function(DS='redo.data',p=p,wd='C:/Users/CookA/Desktop/dellshared/
               b$Period[i] = lll
             }
           }
-          saveRDS(b,file=file.path(wd,'data/logbookReady.rds'))
+          saveRDS(b,file=file.path(wd,'data/logbookReadyFILTERED.rds'))
         return('complete')
         }
        return(readRDS(file.path(wd,'data/logbookReady.rds')))
