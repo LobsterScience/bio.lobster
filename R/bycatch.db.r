@@ -1,7 +1,7 @@
 #' @export
 
 
-bycatch.db <- function(DS='redo.data',p=p,wd='C:/Users/CookA/Desktop/dellshared/Bycatch in the Lobster Fishery'){
+bycatch.db <- function(DS='redo.data',p=p,wd='C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster'){
   options(stringsAsFactors=F)
   require(lubridate)
   dir.create(file.path(wd,'data'),showWarnings = F)
@@ -13,14 +13,8 @@ bycatch.db <- function(DS='redo.data',p=p,wd='C:/Users/CookA/Desktop/dellshared/
     xAll = connect.command(con,'select * from cooka.lobster_bycatch_assoc')
     xAll$X = convert.dd.dddd(xAll$LONGDDMM)*-1
     xAll$Y = convert.dd.dddd(xAll$LATDDMM)
-    saveRDS(xAll,file.path(wd,'data/CompiledAtSeaSept2021.rds'))
+    saveRDS(xAll,file.path(wd,'data/CompiledAtSeaMarch2022.rds'))
     
-    #LOGS
-    lobster.db('logs.redo')
-    lobster.dv('process.logs.redo')
-    x = lobster.db('process.logs.unfiltered')
-    x = subset(x,LFA %in% c(33,34,35) & SYEAR %in% 2019:2021)
-    saveRDS(x,file.path(wd,'/data/LogbooksProUnf.rds'))
     
     tr = connect.command(con,'select * from lobster.istraps')
     se = connect.command(con,'select * from lobster.issets_mv')
@@ -33,6 +27,9 @@ bycatch.db <- function(DS='redo.data',p=p,wd='C:/Users/CookA/Desktop/dellshared/
     if(grepl('redo',DS)){
           x = lobster.db('process.logs')
           b = subset(x,LFA %in% c(33,34,35) & SYEAR %in% 2019:2021)
+          bb = subset(x, LFA %in% c(27) & SYEAR %in% 2019)
+          bbb = subset(x, LFA %in% c('31A','31B') & SYEAR %in% 2018:2019)
+          b = as.data.frame(rbind(rbind(b,bb),bbb))
           gt = read.csv(file.path(wd,'data/Grids2Targets.csv'))
           
           #logbook handling
@@ -53,7 +50,7 @@ bycatch.db <- function(DS='redo.data',p=p,wd='C:/Users/CookA/Desktop/dellshared/
           saveRDS(b,file=file.path(wd,'data/logbookReadyFILTERED.rds'))
         return('complete')
         }
-       return(readRDS(file.path(wd,'data/logbookReady.rds')))
+       return(readRDS(file.path(wd,'data/logbookReadyFILTERED.rds')))
     }
   
 if(DS=='targets'){
@@ -64,7 +61,7 @@ if(DS=='targets'){
 if(DS %in% c('SWLSS','SWLSS.redo')){
   
   if(grepl('redo',DS)){
-    a = readRDS(file.path(wd,'data','CompiledAtSeaSept2021.rds'))
+    a = readRDS(file.path(wd,'data','CompiledAtSeaMarch2022.rds'))
     a = subset(a, OWNER_GROUP=='SWLSS')
     a$COMAREA_ID = toupper(a$COMAREA_ID)
     a$COMAREA_ID[which(a$TRIP== '107869-081219')] <- "L33"
@@ -96,7 +93,9 @@ if(DS %in% c('SWLSS','SWLSS.redo')){
     
     a$UID = paste(a$TRIP, a$FISHSET_ID, a$TRAP_ID,sep="-")
     a$P = 1
-    bb = reshape(a[,c('UID','SP_SZ','P')],idvar='UID',timevar='SP_SZ', direction='wide')
+    aa = aggregate(P~UID+SP_SZ,data=a,FUN=sum)
+    
+    bb = reshape(aa[,c('UID','SP_SZ','P')],idvar='UID',timevar='SP_SZ', direction='wide')
     bb = na.zero(bb)
     
     
@@ -126,8 +125,7 @@ if(DS %in% c('SWLSS','SWLSS.redo')){
     
     
     #per trap
-    ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CALWT_G,CodWt,CuskWt,JonahWt,LobsterWt)~UID
-                   +TRIP+X+Y+TRAP_ID+FISHSET_ID+COMAREA_ID+STRATUM_ID+NUM_HOOK_HAUL+BOARD_DATE+WOS+LFA+SYEAR, data=a,FUN=sum,na.rm=F)
+    ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CALWT_G,CodWt,CuskWt,JonahWt,LobsterWt)~UID+TRIP+X+Y+TRAP_ID+FISHSET_ID+COMAREA_ID+STRATUM_ID+NUM_HOOK_HAUL+BOARD_DATE+WOS+LFA+SYEAR, data=a,FUN=sum,na.rm=F)
     
     CDa = merge(ac,bb,by='UID')
     CDa$'P.9999-NA' = NULL
@@ -151,6 +149,14 @@ if(DS %in% c('SWLSS','SWLSS.redo')){
     CDa$COMAREA_ID = NULL
     names(CDa)[c(5:9,21)] =c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED','CALWT')
     CDa$DID = 'ASSOC'
+    CDa$ll = paste(CDa$X,CDa$Y,sep='ll')
+    CDa$Cluster = NA
+    cc = unique(CDa$TRIP)
+    for(i in 1:length(cc)){
+      k = which(CDa$TRIP == cc[i])
+      CDa$Cluster[k] = create_seq_from_column(CDa$ll[k])
+    }
+    CDa$ll <- NULL
     saveRDS(CDa,file=file.path(wd,'data','SWLSSreshape.rds'))
     return(CDa)
     }
@@ -223,7 +229,8 @@ if(DS %in% c('ISDB.redo','ISDB')){
       a$Sz = round(a$CARLENGTH/5)*5
       a$SP_SZ = paste(a$SPECIESCODE, a$Sz, sep="-")
       a$P = 1
-      bb = reshape(a[,c('UID','SP_SZ','P')],idvar='UID',timevar='SP_SZ', direction='wide')
+      aa = aggregate(P~UID+SP_SZ,data=a,FUN=sum)
+      bb = reshape(aa[,c('UID','SP_SZ','P')],idvar='UID',timevar='SP_SZ', direction='wide')
       bb = na.zero(bb)
       
       #per trap
@@ -235,7 +242,16 @@ if(DS %in% c('ISDB.redo','ISDB')){
       BF$P=1
       names(BF)[c(2,6,8,9)] = c('TRIP','NUM_TRAPS','GRIDNUM','DATE_FISHED')
       BF$DID = 'OBS'
-      saveRDS(BF,file=file.path(wd,'data','ISDBreshape.rds'))
+      BF$ll = paste(BF$X,BF$Y,sep='ll')
+      BF$Cluster = NA
+      cc = unique(BF$TRIP)
+      for(i in 1:length(cc)){
+        k = which(BF$TRIP == cc[i])
+        BF$Cluster[k] = create_seq_from_column(BF$ll[k])
+      }
+      BF$ll <- NULL
+      
+       saveRDS(BF,file=file.path(wd,'data','ISDBreshape.rds'))
       return(BF)
     }
     
@@ -294,7 +310,7 @@ if(DS %in% c('ISDB.redo','ISDB')){
   if(DS %in% c('SWLSS.all.species','SWLSS.all.species.redo')){
     
     if(grepl('redo',DS)){
-      a = readRDS(file.path(wd,'data','CompiledAtSeaSept2021.rds'))
+      a = readRDS(file.path(wd,'data','CompiledAtSeaMarch2022.rds'))
       a = subset(a, OWNER_GROUP=='SWLSS')
       a$COMAREA_ID = toupper(a$COMAREA_ID)
       a$COMAREA_ID[which(a$TRIP== '107869-081219')] <- "L33"
@@ -388,6 +404,220 @@ if(DS %in% c('ISDB.redo','ISDB')){
     }
     return(readRDS(file=file.path(wd,'data','SWLSS.all.species.reshape.rds')))
   }
+
+if(DS %in% c('CBFHA.redo','CBFHA') ){
+    if(grepl('redo',DS)){
+    a =   readRDS(file.path(wd,'data/CompiledAtSeaMarch2022.rds'))
+    a = subset(a,OWNER_GROUP=='CBFHA')
+    
+    a$COMAREA_ID = toupper(a$COMAREA_ID)
+  
+    
+    a$Legal = ifelse(a$SPECCD_ID == 2550 & a$FISH_LENGTH > 82 & a$SEXCD_ID %in% 1:2,1,0)
+    a$Berried = ifelse(a$SPECCD_ID == 2550 & a$SEXCD_ID %in% 3,1,0)
+    a$Lobster = ifelse(a$SPECCD_ID == 2550,1,0)
+    a$Cod = ifelse(a$SPECCD_ID == 10,1,0)
+    a$Cusk = ifelse(a$SPECCD_ID == 15,1,0)
+    a$Jonah = ifelse(a$SPECCD_ID == 2511,1,0)
+    a$SPECCD_ID  = ifelse(is.na(a$SPECCD_ID),9999,a$SPECCD_ID)
+    a$Empty = ifelse(a$SPECCD_ID == 9999,1,0)
+    a$LegalWt = a$Legal * a$CALWT_G/1000
+    a$LegalWt[which(is.na(a$LegalWt))] <- 0
+    a$CodWt = a$Cod * a$CALWT_G/1000
+    a$CuskWt = a$Cusk * a$CALWT_G/1000
+    a$JonahWt = a$Jonah * a$CALWT_G/1000
+    a$CodWt[which(is.na(a$CodWt))] <- 0
+    a$CuskWt[which(is.na(a$CuskWt))] <- 0 
+    a$JonahWt[which(is.na(a$JonahWt))] <- 0
+    a$CALWT_G[which(is.na(a$CALWT_G))] <- 0
+    a$LobsterWt = a$Lobster * a$CALWT_G/1000
+    a$LobsterWt[which(is.na(a$LobsterWt))] <- 0
+    a$SPECCD_ID = bio.utilities::recode(a$SPECCD_ID, "300=310; 301=310; 302=310; 118=10;")
+    
+    
+    a$Sz = round(a$FISH_LENGTH/5)*5
+    a$SP_SZ = paste(a$SPECCD_ID, a$Sz, sep="-")
+    
+    a$UID = paste(a$TRIP, a$FISHSET_ID, a$TRAP_ID,sep="-")
+    a$P = 1
+    aa = aggregate(P~UID+SP_SZ,data=a,FUN=sum)
+    bb = reshape(aa[,c('UID','SP_SZ','P')],idvar='UID',timevar='SP_SZ', direction='wide')
+    bb = na.zero(bb)
+    
+    
+    season.dates = backFillSeasonDates(lobster.db('season.dates'),eyr=year(Sys.time()))
+    a = subset(a, !is.na(BOARD_DATE))
+    a$LFA = as.numeric(unlist(lapply(strsplit(a$COMAREA_ID,'L'),"[[",2)))
+    a = addSYEAR(a,date.field = 'BOARD_DATE')
+    a$WOS = NA
+    m=0
+    lfa = unique(a$LFA) 
+    lfa = na.omit(lfa)
+    for(i in 1:length(lfa)) {
+      h  = season.dates[season.dates$LFA==lfa[i],]  
+      k = na.omit(unique(a$SYEAR[a$LFA==lfa[i]]))
+      #h = na.omit(h)
+      k = intersect(k,h$SYEAR)
+      for(j in k){
+        m=m+1
+        ll = which(a$LFA==lfa[i] & a$SYEAR==j)
+        a$WOS[ll] = floor(as.numeric(a$BOARD_DATE[ll]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+      }
+    }
+    if(any(!is.finite(a$WOS))) {kl = which(!is.finite(a$WOS)); a$WOS[kl] = NA}
+    a = subset(a,WOS>0)
+    
+    
+    
+    #per trap
+    ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CALWT_G,CodWt,CuskWt,JonahWt,LobsterWt)~UID
+                   +TRIP+X+Y+TRAP_ID+FISHSET_ID+COMAREA_ID+STRATUM_ID+NUM_HOOK_HAUL+BOARD_DATE+WOS+LFA+SYEAR, data=a,FUN=sum,na.rm=F)
+    
+    CDa = merge(ac,bb,by='UID')
+    CDa$'P.9999-NA' = NULL
+    CDa$P=1
+    CDa$mn = month(CDa$BOARD_DATE)
+    gt = bycatch.db('targets',wd=wd) 
+    CDa$GridGroup = CDa$target = CDa$Period = NA
+    for(i in 1:nrow(CDa)){
+      pit = gt$GridGrouping[which(CDa$STRATUM_ID[i]==gt$GRID_NUM & gt$LFA==strsplit(CDa$COMAREA_ID[i],'L')[[1]][2])]
+      if(length(pit)>0){
+        CDa$GridGroup[i] = (pit)
+        m = CDa$mn[i]
+        k = subset(gt,GRID_NUM==CDa$STRATUM_ID[i] & LFA==strsplit(CDa$COMAREA_ID[i],'L')[[1]][2])
+        ll = ifelse(m >=k$Period1.Start & m<=k$Period1.End,'Period1',ifelse(m >=k$Period2.Start & m<=k$Period2.End,'Period2',ifelse(m >=k$Period3.Start & m<=k$Period3.End,'Period3','Period4')))
+        lll = as.numeric(strsplit(ll,'Period')[[1]][2])
+        CDa$target[i] <- as.numeric(k[,ll])
+        CDa$Period[i] = lll
+        #	rm(k,m,ll,lll)
+      }
+    }
+    CDa$COMAREA_ID = NULL
+    names(CDa)[c(5:9,21)] =c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED','CALWT')
+    CDa$DID = 'ASSOC'
+    CDa$ll = paste(CDa$X,CDa$Y,sep='ll')
+    CDa$Cluster = NA
+    cc = unique(CDa$TRIP)
+    for(i in 1:length(cc)){
+      k = which(CDa$TRIP == cc[i])
+      CDa$Cluster[k] = create_seq_from_column(CDa$ll[k])
+    }
+    CDa$ll <- NULL
+    
+    CDa$SYEAR = year(CDa$DATE_FISHED)
+    saveRDS(CDa,file=file.path(wd,'data','CBFHA.reshape.rds'))
+    return(CDa)
+    }
+  return(readRDS(file=file.path(wd,'data','CBFHA.reshape.rds')))
+  }
+
+if(DS %in% c('GCIFA',"GCIFA.redo")){
+  if(grepl('redo',DS)){
+    a =   readRDS(file.path(wd,'data/CompiledAtSeaMarch2022.rds'))
+    a = subset(a,OWNER_GROUP=='GCIFA')
+    
+    a$COMAREA_ID = toupper(a$COMAREA_ID)
+    
+    a$Legal = ifelse(a$SPECCD_ID == 2550 & a$FISH_LENGTH > 82 & a$SEXCD_ID %in% 1:2,1,0)
+    a$Berried = ifelse(a$SPECCD_ID == 2550 & a$SEXCD_ID %in% 3,1,0)
+    a$Lobster = ifelse(a$SPECCD_ID == 2550,1,0)
+    a$Cod = ifelse(a$SPECCD_ID == 10,1,0)
+    a$Cusk = ifelse(a$SPECCD_ID == 15,1,0)
+    a$Jonah = ifelse(a$SPECCD_ID == 2511,1,0)
+    a$SPECCD_ID  = ifelse(is.na(a$SPECCD_ID),9999,a$SPECCD_ID)
+    a$Empty = ifelse(a$SPECCD_ID == 9999,1,0)
+    a$LegalWt = a$Legal * a$CALWT_G/1000
+    a$LegalWt[which(is.na(a$LegalWt))] <- 0
+    a$CodWt = a$Cod * a$CALWT_G/1000
+    a$CuskWt = a$Cusk * a$CALWT_G/1000
+    a$JonahWt = a$Jonah * a$CALWT_G/1000
+    a$CodWt[which(is.na(a$CodWt))] <- 0
+    a$CuskWt[which(is.na(a$CuskWt))] <- 0 
+    a$JonahWt[which(is.na(a$JonahWt))] <- 0
+    a$CALWT_G[which(is.na(a$CALWT_G))] <- 0
+    a$LobsterWt = a$Lobster * a$CALWT_G/1000
+    a$LobsterWt[which(is.na(a$LobsterWt))] <- 0
+    a$SPECCD_ID = bio.utilities::recode(a$SPECCD_ID, "21=23; 65=9991; 120=122; 250=9991; 300=310; 455=640; 4250=4210; 301=310; 302=310; 118=10;")
+    
+    
+    a$Sz = round(a$FISH_LENGTH/5)*5
+    a$SP_SZ = paste(a$SPECCD_ID, a$Sz, sep="-")
+    
+    a$UID = paste(a$TRIP, a$FISHSET_ID, a$TRAP_ID,sep="-")
+    a$P = 1
+    aa = aggregate(P~UID+SP_SZ,data=a,FUN=sum)
+    bb = reshape(aa[,c('UID','SP_SZ','P')],idvar='UID',timevar='SP_SZ', direction='wide')
+    bb = na.zero(bb)
+    
+    
+    season.dates = backFillSeasonDates(lobster.db('season.dates'),eyr=year(Sys.time()))
+    a = subset(a, !is.na(BOARD_DATE))
+    a$LFA = (unlist(lapply(strsplit(a$COMAREA_ID,'L'),"[[",2)))
+    a = addSYEAR(a,date.field = 'BOARD_DATE')
+    a$WOS = NA
+    m=0
+    lfa  = c('31A','31B')
+    a = subset(a,LFA %in% lfa)
+    for(i in 1:length(lfa)) {
+      h  = season.dates[season.dates$LFA==lfa[i],]  
+      k = na.omit(unique(a$SYEAR[a$LFA==lfa[i]]))
+      #h = na.omit(h)
+      k = intersect(k,h$SYEAR)
+      for(j in k){
+        ll = which(a$LFA==lfa[i] & a$SYEAR==j)
+        a$WOS[ll] = floor(as.numeric(a$BOARD_DATE[ll]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+      }
+    }
+    if(any(!is.finite(a$WOS))) {kl = which(!is.finite(a$WOS)); a$WOS[kl] = NA}
+    a = subset(a,WOS>0)
+    
+    #per trap
+    ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CALWT_G,CodWt,CuskWt,JonahWt,LobsterWt)~UID
+                   +TRIP+X+Y+TRAP_ID+FISHSET_ID+COMAREA_ID+STRATUM_ID+BOARD_DATE+WOS+LFA+SYEAR, data=a,FUN=sum,na.rm=F)
+    
+    CDa = merge(ac,bb,by='UID')
+    CDa$'P.9999-NA' = NULL
+    CDa$P=1
+    CDa$mn = month(CDa$BOARD_DATE)
+    gt = bycatch.db('targets',wd=wd) 
+    CDa$GridGroup = CDa$target = CDa$Period = NA
+    for(i in 1:nrow(CDa)){
+      pit = gt$GridGrouping[which(CDa$STRATUM_ID[i]==gt$GRID_NUM & gt$LFA==strsplit(CDa$COMAREA_ID[i],'L')[[1]][2])]
+      if(length(pit)>0){
+        CDa$GridGroup[i] = (pit)
+        m = CDa$mn[i]
+        k = subset(gt,GRID_NUM==CDa$STRATUM_ID[i] & LFA==strsplit(CDa$COMAREA_ID[i],'L')[[1]][2])
+        ll = ifelse(m >=k$Period1.Start & m<=k$Period1.End,'Period1',ifelse(m >=k$Period2.Start & m<=k$Period2.End,'Period2',ifelse(m >=k$Period3.Start & m<=k$Period3.End,'Period3','Period4')))
+        lll = as.numeric(strsplit(ll,'Period')[[1]][2])
+        CDa$target[i] <- as.numeric(k[,ll])
+        CDa$Period[i] = lll
+        #	rm(k,m,ll,lll)
+      }
+    }
+    CDa$COMAREA_ID = NULL
+    names(CDa)[c(5:8,20)] =c('TRAPNO','SETNO','GRIDNUM','DATE_FISHED','CALWT')
+    CDa$DID = 'ASSOC'
+    CDa$ll = paste(CDa$X,CDa$Y,sep='ll')
+    CDa$Cluster = NA
+    cc = unique(CDa$TRIP)
+    for(i in 1:length(cc)){
+      k = which(CDa$TRIP == cc[i])
+      CDa$Cluster[k] = create_seq_from_column(CDa$ll[k])
+    }
+    CDa$ll <- NULL
+    
+    
+    saveRDS(CDa,file=file.path(wd,'data','GCIFA.reshape.rds'))
+    return(CDa)
+  }
+  return(readRDS(file=file.path(wd,'data','GCIFA.reshape.rds')))
   
   
+      }
+  
+  
+  
+  
+  
+    
 }

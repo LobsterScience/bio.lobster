@@ -6,154 +6,278 @@ require(devtools)
 options(stringAsFactors=F)
 la()
 
+wd = ('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster')
 
-wd = ('C:/Users/CookA/Desktop/dellshared/Bycatch in the Lobster Fishery')
 setwd(wd)
 
+bycatch.db('SWLSS.redo')
+bycatch.db('GCIFA.redo')
+bycatch.db('CBFHA.redo')
 
+
+####Trips to Targets 
+      b = bycatch.db('logbook.merge',wd=wd) 
+      gt = t = bycatch.db('targets',wd=wd) 
+      t = subset(t,LFA%in%c(27,'31A','31B',33:35))
+      tt = aggregate(cbind(Period1,Period2,Period3)~LFA+GridGrouping,data=t,FUN=min)
+      
+      bA = aggregate(SD_LOG_ID~Period+GridGroup+LFA+SYEAR,data=b,FUN=function(x) length(unique(x)))
+      tR = as.data.frame(reshape(tt,varying=3:5,direction = 'long',sep=""))
+      names(tR) = c('LFA','GridGroup','Period','Target','Nt')
+      tR$Nt = NULL
+
+      bA = merge(bA,tR,all.x=T)
+
+      sss = readRDS('results/BumpedUpEffortByGridGroup.rds')
+      sss= subset(sss,select=c(Period,GridGroup,LFA,SYEAR,BTTH))
+      
+      bA = merge(bA,sss)
+      names(bA)[c(5,7)] = c('LogsReported','BumpTH')
+write.csv(bA,file=file.path(wd,'results','LogbooksAgg and Targets.csv'))
 
 #logbooks
 
     bA = read.csv(file=file.path(wd,'results','LogbooksAgg and Targets.csv'))
-
+    bA$X = NULL
 #SWLSS sea sampling
-    CDa = bycatch.db(DS='SWLSS')
-        
-        
-#Empties by month
-CDa$mn = month(CDa$BOARD_DATE)
-CDa$SYEAR = year(CDa$BOARD_DATE)
-CDa$SYEAR = ifelse(CDa$mn>=10,CDa$SYEAR+1,CDa$SYEAR)
-Emp = aggregate(cbind(Empty,P)~COMAREA_ID+mn,data=CDa,FUN=sum)
-Emp$PropEmt = Emp$Empty / Emp$P
-
-#Traps Sampled By Area Need to merge in grid2targets
-
-CDa$GridGroup = CDa$target = CDa$Period = NA
-for(i in 1:nrow(CDa)){
-	pit = gt$GridGrouping[which(CDa$STRATUM_ID[i]==gt$GRID_NUM & gt$LFA==strsplit(CDa$COMAREA_ID[i],'L')[[1]][2])]
-	if(length(pit)>0){
-	CDa$GridGroup[i] = (pit)
-	m = CDa$mn[i]
-	k = subset(gt,GRID_NUM==CDa$STRATUM_ID[i] & LFA==strsplit(CDa$COMAREA_ID[i],'L')[[1]][2])
-	ll = ifelse(m >=k$Period1.Start & m<=k$Period1.End,'Period1',ifelse(m >=k$Period2.Start & m<=k$Period2.End,'Period2',ifelse(m >=k$Period3.Start & m<=k$Period3.End,'Period3','Period4')))
-	lll = as.numeric(strsplit(ll,'Period')[[1]][2])
-	CDa$target[i] <- as.numeric(k[,ll])
-	CDa$Period[i] = lll
-#	rm(k,m,ll,lll)
-	}
-}	
-
-
-#Total number of traps per Year, Period and GridGrouping
-        STraps = aggregate(P~SYEAR+GridGroup+COMAREA_ID+Period+target,data=CDa,FUN=sum)
-        STraps$LFA = as.numeric(unlist(lapply(strsplit(STraps$COMAREA_ID,'L'),"[[",2)))
-        
-        ATrips = aggregate(TRIP~SYEAR+COMAREA_ID+Period+target+GridGroup,data=CDa,FUN=function(x) length(unique(x)))
-        
-        ATrips$LFA = as.numeric(unlist(lapply(strsplit(ATrips$COMAREA_ID,'L'),"[[",2)))
-        
-        TTraps = aggregate(NUM_OF_TRAPS~SYEAR+LFA+GridGroup+Period+target,data=b,FUN=sum)
-        
-        STTraps = merge(TTraps,STraps, all.x=T)
-        
-        STTraps =merge(STTraps,ATrips,all=T)
-        
-        STTraps$Prp = STTraps$P / STTraps$NUM_OF_TRAPS *100
-  write.csv(STTraps,file=file.path('results','SWLSSTrips2Targets.csv'))
-  
-
-       STTraps = merge(STTraps,bA,all=T)
-        names(STTraps) = c('Year','LFA','GridGroup','Period','Target','CI','NUM_OF_TRAPS_FISHED','NUM_OF_TRAPS_SAMPLED_SWLSS','NUM_OF_TRIPS_SAMPLED_SWLSS','P','NUM_SDLOGS','tt')
-        STTraps$CI = STTraps$tt =NULL
-        
-        
+        CDa = bycatch.db(DS='SWLSS')
+        STraps = aggregate(P~SYEAR+GridGroup+LFA+Period+target,data=CDa,FUN=sum)
+        ATrips = aggregate(TRIP~SYEAR+LFA+Period+target+GridGroup,data=CDa,FUN=function(x) length(unique(x)))
+        STTraps =merge(STraps,ATrips,all=T)
+        names(STTraps)[6:7] = c('NTrapsSampledSWLSS','NTripsSampledSWLSS')
+          write.csv(STTraps,file=file.path('results','SWLSSTrips2Targets.csv'))
+       
+        STTraps = merge(STTraps,bA,all=T)
         write.csv(STTraps,file=file.path('results','SWLSSTrips2TargetsTrapsandTrips.csv'))
-  
-        STTraps  = read.csv(file=file.path('results','SWLSSTrips2TargetsTrapsandTrips.csv'))
+        STTraps = read.csv(file=file.path('results','SWLSSTrips2TargetsTrapsandTrips.csv'))
+        STTraps$x = NULL
+#adding IN ISBD
+        gg = bycatch.db('ISDB')
+        ## Trips that dont match with grids or something
+        gr = subset(gg,is.na(target))
+        gr = as.data.frame(unique(cbind(gr$TRIPNO,gr$LFA,gr$GRIDNO)))
+        se = connect.command(con,'select * from lobster.issets_mv')
         
-  
-  boxplot(Prp~SYEAR+LFA,data=STTraps,las=2,xlab='',ylab='Total Traps Hauled (%)')
-
-
-hist(CDa$Lobster,breaks=0:50,main="",xlab='Number of Lobster')
-savePlot('Figures/DistributionOfLobsterCatchesSampledTraps.png')
-
-
-
-gg = bycatch.db('ISDB')
-
-
-## Trips that dont match with grids or something
-gr = subset(gg,is.na(target))
-gr = as.data.frame(unique(cbind(gr$TRIPNO,gr$LFA,gr$GRIDNO)))
-se = connect.command(con,'select * from lobster.issets_mv')
-
-names(gr) = c('TRIP_ID','LFA','Grid')
-ss = as.data.frame(unique(cbind(se$TRIP_ID,se$TRIP)))
-names(ss) = c('TRIP_ID','TRIP')
-merge(gr,ss)
+        names(gr) = c('TRIP_ID','LFA','Grid')
+        ss = as.data.frame(unique(cbind(se$TRIP_ID,se$TRIP)))
+        names(ss) = c('TRIP_ID','TRIP')
+        merge(gr,ss)
 
 ###Moving on to summary of observer data update later after we get more complete info
 
-UTraps = aggregate(UID~SYEAR+LFA+GridGroup+Period+target,data=gg,FUN=function(x) length(unique(x)))
-UTrips = aggregate(TRIPNO~SYEAR+LFA+GridGroup+Period+target,data=gg,FUN=function(x) length(unique(x)))
-ggg = merge(UTrips,UTraps,all=T)
-names(ggg)[c(1,5:7)] = c('Year','Target','ObserverTrips','ObserverTraps')
+        UTraps = aggregate(UID~SYEAR+LFA+GridGroup+Period+target,data=gg,FUN=function(x) length(unique(x)))
+        UTrips = aggregate(TRIPNO~SYEAR+LFA+GridGroup+Period+target,data=gg,FUN=function(x) length(unique(x)))
+        ggg = merge(UTrips,UTraps,all=T)
+        names(ggg)[c(1,5:7)] = c('SYEAR','Target','ObserverTrips','ObserverTraps')
+        
+        STTraps = merge(STTraps,ggg,all=T)
+        STTraps$X=STTraps$target = NULL
+        
+        write.csv(STTraps,file=file.path('results','SWLSSandObsTrips2TargetsTrapsandTrips.csv'))
+        STTraps = read.csv(file=file.path('results','SWLSSandObsTrips2TargetsTrapsandTrips.csv'))
 
-STTraps = merge(STTraps,ggg,all=T)
+#adding in CBFHA
 
-write.csv(STTraps,file=file.path('results','SWLSSandObsTrips2TargetsTrapsandTrips.csv'))
+        gg = bycatch.db('CBFHA')
+        STraps = aggregate(P~SYEAR+GridGroup+LFA+Period+target,data=gg,FUN=sum)
+        ATrips = aggregate(TRIP~SYEAR+LFA+Period+target+GridGroup,data=gg,FUN=function(x) length(unique(x)))
+        CBTraps =merge(STraps,ATrips,all=T)
+        names(CBTraps)[6:7] = c('NTrapsSampledCBFHA','NTripsSampledCBFHA')
+        CBTraps$target=NULL
+        write.csv(CBTraps,file=file.path('results','CBFHATrips2Targets.csv'))
+        
+        STTraps = merge(STTraps,CBTraps,all=T)
+        write.csv(STTraps,file=file.path('results','CBFHA_OBS_SWLSSTrips2TargetsTrapsandTrips.csv'))
+        STTraps = read.csv(file=file.path('results','CBFHA_OBS_SWLSSTrips2TargetsTrapsandTrips.csv'))
+        STTraps$X.1 = STTraps$X = NULL
+
+#adding in GCIFA
+
+        gg = bycatch.db('GCIFA')
+        STraps = aggregate(P~SYEAR+GridGroup+LFA+Period+target,data=gg,FUN=sum)
+        ATrips = aggregate(TRIP~SYEAR+LFA+Period+target+GridGroup,data=gg,FUN=function(x) length(unique(x)))
+        CBTraps =merge(STraps,ATrips,all=T)
+        CBTraps$target = NULL
+        names(CBTraps)[5:6] = c('NTrapsSampledGCIFA','NTripsSampledGCIFA')
+        write.csv(CBTraps,file=file.path('results','GCIFATrips2Targets.csv'))
+        
+        STTraps = merge(STTraps,CBTraps,all=T)
+        write.csv(STTraps,file=file.path('results','GCIFA_CBFHA_OBS_SWLSSTrips2TargetsTrapsandTrips.csv'))
 
 
+####Comparison of Lobster Trap catches to Reported on Logs
 
-####pertrap info using
+        b=bycatch.db('logbook.merge')
+     
+      
+      #ISDB 
+        ao = bycatch.db('ISDB.reshape')
+        aCo = aggregate(cbind(Lobster,Cod,Cusk,Jonah,Legal,Berried, Empty,LegalWt)~TRIP+LFA+NUM_TRAPS+Cluster,data=ao,FUN=median)
+        aCC = aggregate(UID~TRIP+LFA+Cluster,data=ao,FUN=function(x) length(unique(x)))
+        
+        aCo =merge(aCo, aCC)
+        #clustered mean
+        
+        
+        
+        aCo$TotLegal = aCo$LegalWt * aCo$NUM_TRAPS
+        aCoC = aggregate(cbind(TotLegal,NUM_TRAPS)~TRIP,data=aCo,FUN=sum)
+        aCoC = merge(aCoC,aCC)
+        ms = read.csv('data/ISDB_Trip_id to sd_log_idFinal.csv')
+      ms = subset(ms,!is.na(SD_LOG_ID_1),select=c(trip_id,SD_LOG_ID_1))
+      
+      bLo = merge(b,ms,by.x='SD_LOG_ID', by.y='SD_LOG_ID_1')
+      bLoL = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SD_LOG_ID+trip_id+LFA+SYEAR,data=bLo,FUN=sum)
+      SBUMP0 = merge(aCoC,bLoL,by.x='TRIP',by.y='trip_id')
 
-ao = bycatch.db('ISDB.reshape.redo')
-aCo = aggregate(cbind(Lobster,Cod,Cusk,Jonah,Legal,Berried, Empty,LegalWt)~TRIP+LFA+NUM_HOOK_HAUL,data=ao,FUN=median)
+      SBUMP0$TotLegalNTraps = SBUMP0$TotLegal/SBUMP0$NUM_TRAPS * SBUMP0$NUM_OF_TRAPS
 
+      #SWLSS
+  
+      aoS = bycatch.db('SWLSS')
+      aCoS = aggregate(cbind(Lobster,Cod,Cusk,Jonah,Legal,Berried, Empty,LegalWt)~TRIP+LFA+NUM_TRAPS,data=aoS,FUN=median)
+      aCoS$TotLegal = aCoS$LegalWt * aCoS$NUM_TRAPS
+      aCoCS = aggregate(cbind(TotLegal,NUM_TRAPS)~TRIP,data=aCoS,FUN=sum)
+      aCC = aggregate(UID~TRIP+LFA,data=aoS,FUN=function(x) length(unique(x)))
+      aCoCS = merge(aCoCS,aCC)
+      
+       ms = read.csv('data/SWLSSTripmatch.csv')
+      ms = subset(ms,!is.na(SD_LOG_ID_1),select=c(TRIP,SD_LOG_ID_1))
+      
+      bLoS = merge(b,ms,by.x='SD_LOG_ID', by.y='SD_LOG_ID_1')
+      bLoLS = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SD_LOG_ID+TRIP+LFA+SYEAR,data=bLoS,FUN=sum)
+      SBUMPS = merge(aCoCS,bLoLS,by.x='TRIP',by.y='TRIP')
+      
+      SBUMPS$TotLegalNTraps = SBUMPS$TotLegal/SBUMPS$NUM_TRAPS * SBUMPS$NUM_OF_TRAPS
+      
+      
+      
+SBUMP0 = subset(SBUMP0,TotLegal>0)
+SBUMPS = subset(SBUMPS,TotLegal>0)
+      
+#FOR ALL DATA COMBINED          
+SB = rbind(SBUMPS,SBUMP0)          
 
-
-aCo$TotLegal = aCo$LegalWt * aCo$NUM_HOOK_HAUL
-
-aCoC = aggregate(cbind(TotLegal,NUM_HOOK_HAUL)~TRIPNO,data=aCo,FUN=sum)
-
-
-ms = read.csv('data/ISDB_Trip_id to sd_log_idFinal.csv')
-ms = subset(ms,!is.na(SD_LOG_ID_1),select=c(trip_id,SD_LOG_ID_1))
-
-bLo = merge(b,ms,by.x='SD_LOG_ID', by.y='SD_LOG_ID_1')
-bLoL = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SD_LOG_ID+trip_id,data=bLo,FUN=sum)
-SBUMP0 = merge(aCoC,bLoL,by.x='TRIPNO',by.y='trip_id')
-
-
-
-###Comparison of precited v reported landings between SWLSS and Observer
-with(SBUMP0,plot(WEIGHT_KG,TotLegal))
-SBUMP0$TotLegalNTraps = SBUMP0$TotLegal/SBUMP0$NUM_HOOK_HAUL * SBUMP0$NUM_OF_TRAPS
 require(MASS)
-par(mfrow=c(1,2))
-with(SBUMP,plot(WEIGHT_KG,TotLegal,ylab='Extrapolated landings from Sea Samples',main='SWLSS'))
-abline(a=0,b=1)
-LMSW = with(SBUMP,lm(log(TotLegal+.01)~log(WEIGHT_KG+.01)-1)) #treating the SWLSS data as 'truth'
-RLMSW = with(SBUMP,rlm(log(TotLegal+.01)~log(WEIGHT_KG+.01)-1)) #treating the SWLSS data as 'truth'
-with(SBUMP0,plot(WEIGHT_KG,TotLegalNTraps,ylab='Extrapolated landings from Sea Samples',main='Observer'))
-abline(a=0,b=1)
-LMO = (with(SBUMP0,lm(log(TotLegalNTraps+.01)~log(WEIGHT_KG+.01)-1)))
-RLMO = (with(SBUMP0,rlm(log(TotLegalNTraps+.01)~log(WEIGHT_KG+.01)-1)))
+          require(SimDesign)
+                par(mfrow=c(1,2))
+          with(SBUMPS,plot(WEIGHT_KG,TotLegalNTraps,ylab='Extrapolated landings from Sea Samples',main='SWLSS'))
+          abline(a=0,b=1)
+          LMSW = with(SBUMPS,lm((TotLegalNTraps)~(WEIGHT_KG)-1)) #treating the SWLSS data as 'truth'
+          RLMSW = with(SBUMPS,rlm((TotLegalNTraps)~(WEIGHT_KG)-1)) #treating the SWLSS data as 'truth'
+          with(SBUMP0,plot(WEIGHT_KG,TotLegalNTraps,ylab='Extrapolated landings from Sea Samples',main='Observer'))
+          abline(a=0,b=1)
+          LMO = (with(SBUMP0,lm((TotLegalNTraps)~(WEIGHT_KG)-1)))
+          RLMO = (with(SBUMP0,rlm((TotLegalNTraps)~(WEIGHT_KG)-1)))
+          
+          with(SB,plot(WEIGHT_KG,TotLegalNTraps,ylab='Extrapolated landings from Sea Samples',main='All'))
+          abline(a=0,b=1)
+          LMA = (with(SB,lm((TotLegalNTraps)~(WEIGHT_KG)-1)))
+          RLMA = (with(SB,rlm((TotLegalNTraps)~(WEIGHT_KG)-1)))
+          
+          
+          #RMSE
+          summary(LMO)$sigma
+          summary(RLMO)$sigma
+          
+          summary(LMSW)$sigma
+          summary(RLMSW)$sigma
+          
+          summary(LMA)$sigma
+          summary(RLMA)$sigma
+          
+          biasSWLSS = SimDesign::bias(SBUMPS$TotLegalNTraps,SBUMPS$WEIGHT_KG,type='relative')
+          biasOBs = SimDesign::bias( SBUMP0$TotLegalNTraps ,SBUMP0$WEIGHT_KG ,type='relative') # sum(SBUMP0$TotLegalNTraps - SBUMP0$WEIGHT_KG)/nrow(SBUMP0) under
+          biasC = SimDesign::bias( SB$TotLegalNTraps ,SB$WEIGHT_KG ,type='relative') 
+          
+          
+       
 
-#RMSE
-summary(LMO)$sigma
-summary(RLMO)$sigma
+#For Each LFA and YEAR
+SBS = split(SB, f=list(SB$LFA,SB$SYEAR))
+SBS = rm.from.list(SBS)
+ooo = list()
+for(i in 1:length(SBS)){
+    O = SBS[[i]]        
+  L = with(O,lm((TotLegalNTraps)~(WEIGHT_KG)-1)) #treating the SWLSS data as 'truth'
+  RL = with(O,rlm((TotLegalNTraps)~(WEIGHT_KG)-1)) #treating the SWLSS data as 'truth'
+                  #RMSE
+          summary(L)$sigma
+          summary(RL)$sigma
+          
+          
+          biasS = SimDesign::bias(O$TotLegalNTraps,O$WEIGHT_KG,type='relative')
+    ooo[[i]] = c(unique(O$LFA),unique(O$SYEAR),nrow(O),biasS,coef(L),summary(L)$sigma,coef(RL),summary(RL)$sigma)   
+          
+}
+  ooo = as.data.frame(do.call(rbind,ooo))
 
-summary(LMSW)$sigma
-summary(RLMSW)$sigma
+###GCIFA and CBFHA
+  gg = bycatch.db('GCIFA')
+  ggo = aggregate(cbind(Lobster,Cod,Cusk,Jonah,Legal,Berried, Empty,LegalWt)~TRIP+LFA,data=gg,FUN=median)
+  ms = read.csv('data/GCIFACBFHATripMatch.csv')
+  ms$SD_LOG_ID_DO[which(is.na(ms$SD_LOG_ID_DO))] = ms$SD_LOG_ID_DB[which(is.na(ms$SD_LOG_ID_DO))]
+  ms$SD_LOG_ID_DO[which(is.na(ms$SD_LOG_ID_DO))] = ms$SD_LOG_ID_DA[which(is.na(ms$SD_LOG_ID_DO))]
+  
+  ms = subset(ms,select=c(TRIP,SD_LOG_ID_DO))
+  
+  bLo = merge(b,ms,by.x='SD_LOG_ID', by.y='SD_LOG_ID_DO')
+  bLoL = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SD_LOG_ID+TRIP+LFA+SYEAR,data=bLo,FUN=sum)
+  bu = merge(ggo,bLoL)
+  
+  bu$TotLegalNTraps = bu$LegalWt * bu$NUM_OF_TRAPS
+  
+  GC = split(bu,f=list(bu$LFA,bu$SYEAR))
+  og = list()
+  for(i in 1:length(GC)){
+    O = GC[[i]]        
+    L = with(O,lm((TotLegalNTraps)~(WEIGHT_KG)-1)) #treating the SWLSS data as 'truth'
+    RL = with(O,rlm((TotLegalNTraps)~(WEIGHT_KG)-1)) #treating the SWLSS data as 'truth'
+    biasS = SimDesign::bias(O$TotLegalNTraps,O$WEIGHT_KG,type='relative')
+    og[[i]] = c(unique(O$LFA),unique(O$SYEAR),nrow(O),biasS,coef(L),summary(L)$sigma,coef(RL),summary(RL)$sigma)   
+    
+  }
+  og = as.data.frame(do.call(rbind,og))
+  
+  
 
-biasSWLSS = sum(SBUMP$WEIGHT_KG - SBUMP$TotLegal)/nrow(SBUMP) 
-biasOBs = sum(SBUMP0$WEIGHT_KG - SBUMP0$TotLegalNTraps )/nrow(SBUMP0) 
-
-
-
+  #################
+  ### CBFHA
+  
+  gg = bycatch.db('CBFHA')
+  ggo = aggregate(cbind(Lobster,Cod,Cusk,Jonah,Legal,Berried, Empty,LegalWt)~TRIP+LFA,data=gg,FUN=mean)
+  ms = read.csv('data/GCIFACBFHATripMatch.csv')
+  ms$SD_LOG_ID_DO[which(is.na(ms$SD_LOG_ID_DO))] = ms$SD_LOG_ID_DB[which(is.na(ms$SD_LOG_ID_DO))]
+  ms$SD_LOG_ID_DO[which(is.na(ms$SD_LOG_ID_DO))] = ms$SD_LOG_ID_DA[which(is.na(ms$SD_LOG_ID_DO))]
+  
+  ms = subset(ms,select=c(TRIP,SD_LOG_ID_DO))
+  
+  bLo = merge(b,ms,by.x='SD_LOG_ID', by.y='SD_LOG_ID_DO')
+  bLoL = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SD_LOG_ID+TRIP+LFA+SYEAR,data=bLo,FUN=sum)
+  bu = merge(ggo,bLoL)
+  
+  bu$TotLegalNTraps = bu$LegalWt * bu$NUM_OF_TRAPS
+  
+  GC = split(bu,f=list(bu$LFA,bu$SYEAR))
+  og = list()
+  for(i in 1:length(GC)){
+    O = GC[[i]]        
+    L = with(O,lm((TotLegalNTraps)~(WEIGHT_KG)-1)) #treating the SWLSS data as 'truth'
+    RL = with(O,rlm((TotLegalNTraps)~(WEIGHT_KG)-1)) #treating the SWLSS data as 'truth'
+    biasS = SimDesign::bias(O$TotLegalNTraps,O$WEIGHT_KG,type='relative')
+    og[[i]] = c(unique(O$LFA),unique(O$SYEAR),nrow(O),biasS,coef(L),summary(L)$sigma,coef(RL),summary(RL)$sigma)   
+    
+  }
+  og = as.data.frame(do.call(rbind,og))
+  
+  
+  
+  
+  
+  
+  
+  
+  ##########################################################
 b = bycatch.db('logbook.merge',wd=wd) 
 bW = aggregate(NUM_OF_TRAPS~WOS+SYEAR+LFA,data=b,FUN=sum)
 

@@ -10,7 +10,7 @@ options(stringAsFactors=F)
 la()
 require(PBSmapping)
 
-wd = ('C:/Users/CookA/Desktop/dellshared/Bycatch in the Lobster Fishery')
+wd = ('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster')
 setwd(wd)
 
 aA = read.csv(file=file.path('results','CompliedDataForModelling.csv'))

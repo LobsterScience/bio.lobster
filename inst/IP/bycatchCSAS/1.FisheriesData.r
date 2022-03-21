@@ -7,7 +7,7 @@ options(stringAsFactors=F)
 la()
 
 
-wd = ('C:/Users/CookA/Desktop/dellshared/Bycatch in the Lobster Fishery')
+wd = setwd('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster')
 setwd(wd)
 
 #bycatch.db(DS='odbc.redo',wd=wd)
@@ -38,6 +38,12 @@ setwd(wd)
         
         ggs = list(i=c(1,'2A','2B'),m=c(3,'4A','4B'),o=c('5,6'))
         
+        
+        ##trips by LFA and year
+        
+g = lobster.db('process.logs.unfiltered')
 
-        
-        
+g$ID = paste(g$LICENCE_ID,g$DATE_FISHED,sep="-")
+gg = aggregate(ID~LFA+SYEAR+LICENCE_ID,data=g,FUN=function(x) length(unique(x)))
+ggg = aggregate(ID~LFA+SYEAR,data=gg,FUN=mean)    
+write.csv(ggg,'data/MeanUniqueTripsPerLicenceLFAandSY.csv')
