@@ -43,32 +43,34 @@ c$week=factor(paste0("Week ", c$WOS))
 
 
 
-#Map samples
+
+require(sp) #sp package allows determination of in/out of poly
 div= read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","areas.27.csv"))
+
+#create North/South index
+n.ind=which(point.in.polygon(c$X, c$Y,div$X[div$area=="27.North"],div$Y[div$area=="27.North"])==1) #Little River and North
+c.ind=which(point.in.polygon(c$X, c$Y,div$X[div$area=="27.Central"],div$Y[div$area=="27.Central"])==1)  #South Bar to Little River
+s.ind=which(point.in.polygon(c$X, c$Y,div$X[div$area=="27.South"],div$Y[div$area=="27.South"])==1)  #Gabarus to South Bar
+
+
+c$area=NA
+c$area[n.ind]="north"
+c$area[c.ind]="central"
+c$area[s.ind]="south"
+
+#Map samples
+
 png(filename=file.path(figdir, "LFA27.Zones.png"),width=6, height=6, units = "in", res = 800)
 LobsterMap('27.Crop',addGrids=F, labels="")
 addPolys(div[div$area=="27.North",],col="red", density=12, angle =45)
 addPolys(div[div$area=="27.Central",],col="blue", density=12, angle =90)
 addPolys(div[div$area=="27.South",],col="green", density=12, angle =0)
 addPoints(c[is.finite(c$Y),], pch=16, cex=0.3)
+addPoints(c[c$area %in% "north",], pch=16, cex=0.3, col="red")
+addPoints(c[c$area %in% "central",], pch=16, cex=0.3, col="blue")
+addPoints(c[c$area %in% "south",], pch=16, cex=0.3, col="green")
 dev.off()
 
-require(sp) #sp package allows determination of in/out of poly
-
-#create North/South index
-n.ind=which(point.in.polygon(c$X[1], c$Y[1],div$X[div$area=="27.North"],div$Y[div$area=="27.North",])) #Little River and North
-c.ind=which(point.in.polygon(c$X, c$Y,div$X[div$area=="27.Central",],div$Y[div$area=="27.Central",]) ) #South Bar to Little River
-s.ind=which(point.in.polygon(c$X, c$Y,div$X[div$area=="27.South",],div$Y[div$area=="27.South",]) ) #Gabarus to South Bar
-
-#s1.ind=which(is.finite(c$Y) & c$X> -60.175416) #misses some gabarus samples
-#s2.ind=which(is.finite(c$Y) & c$X< -60.175416 & c$Y <46) #catches those gabarus samples
-c$area=NA
-
-for (i in length(c$EID)){
-  c$area[n.ind]="north"
-  c$area[s1.ind]="south"
-  c$area[s2.ind]="south"
-}
 
 #Samples   
      png(filename=paste0(figdir, "/Yearly Samples LFA",l,".png"))
@@ -106,12 +108,9 @@ for (i in length(c$EID)){
 
 e=c[c$SEX %in% c("No Eggs", "Eggs") & c$CARLENGTH<141,] #Separate female lobster
 
-north=e[e$area %in% "north",] #Split at Victoria Mines
-south=e[e$area %in% "south",]
-    
 # ALL-----------------------------------
 #-------------------------------------------------
-png(filename=paste0(figdir,"/Berried Week LFA 27.png"))    
+png(filename=paste0(figdir,figdir,"/LFA27.all.berried.week.png"))    
         weeks=c("2","4","8")
         gg=e[e$WOS %in% weeks,]  
             
@@ -130,47 +129,32 @@ png(filename=paste0(figdir,"/Berried Week LFA 27.png"))
                 scale_y_continuous(expand = c(0,0.5))
 dev.off()
 
-#North
-#-------------------------------------------------
-png(filename=paste0(figdir,"/Berried Week Northern LFA 27.png"))    
+areas.27=c("north", "central", "south")
 weeks=c("2","4","8")
-gg=north[north$WOS %in% weeks,]  
 
-ggplot(data = gg, aes(x = CARLENGTH, fill = SEX)) +
-  xlim(40, 120) +
-  geom_histogram(colour = 'white', binwidth=2, center=1) +
-  facet_grid(week~.)+
-  geom_vline(xintercept = 82.5, linetype="dashed", color = "red", size=1) +
-  geom_hline(yintercept=0) +
-  scale_fill_manual(values = c("orange1", "deepskyblue1"), name= "Egg Status") +  
-  labs( x="Carapace Length (mm)", y= "Number of Lobster") +
-  ggtitle("Northern LFA 27 Berried by Week")+
-  theme(legend.position = c(0.85, 0.5), plot.title = element_text(hjust = 0.5, size=14, face="bold")) +
-  theme(axis.line = element_line(colour = "black"))+
-  theme(panel.background = element_blank()) +
-  scale_y_continuous(expand = c(0,0.5))
-dev.off()
-
-#South
-#-------------------------------------------------
-png(filename=paste0(figdir,"/Berried Week Southern LFA 27.png"))    
-weeks=c("2","4","8")
-gg=south[south$WOS %in% weeks,]  
-
-ggplot(data = gg, aes(x = CARLENGTH, fill = SEX)) +
-  xlim(40, 120) +
-  geom_histogram(colour = 'white', binwidth=2, center=1) +
-  facet_grid(week~.)+
-  geom_vline(xintercept = 82.5, linetype="dashed", color = "red", size=1) +
-  geom_hline(yintercept=0) +
-  scale_fill_manual(values = c("orange1", "deepskyblue1"), name= "Egg Status") +  
-  labs( x="Carapace Length (mm)", y= "Number of Lobster") +
-  ggtitle("Southern LFA 27 Berried by Week")+
-  theme(legend.position = c(0.85, 0.5), plot.title = element_text(hjust = 0.5, size=14, face="bold")) +
-  theme(axis.line = element_line(colour = "black"))+
-  theme(panel.background = element_blank()) +
-  scale_y_continuous(expand = c(0,0.5))
-dev.off()
+for (i in areas.27) {
+  
+    j=e[e$area==i,]
+    gg=j[j$WOS %in% weeks,]  
+    
+    png(filename=paste0(figdir,"/LFA27.",i,".berried.week.png")) 
+      print(
+        ggplot(data = gg, aes(x = CARLENGTH, fill = SEX)) +
+          xlim(40, 120) +
+          geom_histogram(colour = 'white', binwidth=2, center=1) +
+          facet_grid(week~.)+
+          geom_vline(xintercept = 82.5, linetype="dashed", color = "red", size=1) +
+          geom_hline(yintercept=0) +
+          scale_fill_manual(values = c("orange1", "deepskyblue1"), name= "Egg Status") +  
+          labs( x="Carapace Length (mm)", y= "Number of Lobster") +
+          ggtitle(paste0("LFA 27 ",i," Berried by Week"))+
+          theme(legend.position = c(0.85, 0.5), plot.title = element_text(hjust = 0.5, size=14, face="bold")) +
+          theme(axis.line = element_line(colour = "black"))+
+          theme(panel.background = element_blank()) +
+          scale_y_continuous(expand = c(0,0.5))
+      )
+        dev.off()
+}
 
 
 # Percent Ovigerous
@@ -189,39 +173,57 @@ for (w in week){
 names(berried)=c("Week", "All.Percent Berried")
 
  n.berried=data.frame() #north
+
  for (w in week){
-   gg=north[north$WOS==w,]  
-   n.num.ber=length(gg$EID[gg$SEX=="Eggs"])
-   n.num.not=length(gg$EID[gg$SEX=="No Eggs"])
+   g=e[e$area=="north",]
+   g=g[g$WOS %in% w,] 
+   n.num.ber=length(g$EID[g$SEX=="Eggs"])
+   n.num.not=length(g$EID[g$SEX=="No Eggs"])
    n.per.ber=n.num.ber/(n.num.ber + n.num.not)*100
    n.output=c(w,n.per.ber)
    n.berried=rbind(n.berried, n.output)
  }
  names(n.berried)=c("Week", "N.Percent Berried")
  
+ 
+c.berried=data.frame() #central
+for (w in week){
+    g=e[e$area=="central",] 
+   g=g[g$WOS %in% w,] 
+   c.num.ber=length(g$EID[g$SEX=="Eggs"])
+   c.num.not=length(g$EID[g$SEX=="No Eggs"])
+   c.per.ber=c.num.ber/(c.num.ber + c.num.not)*100
+   c.output=c(w,c.per.ber)
+   c.berried=rbind(c.berried, c.output)
+ }
+ names(c.berried)=c("Week", "C.Percent Berried")
+ 
  s.berried=data.frame() #south
+
  for (w in week){
-   gg=south[south$WOS==w,]  
-   s.num.ber=length(gg$EID[gg$SEX=="Eggs"])
-   s.num.not=length(gg$EID[gg$SEX=="No Eggs"])
+   g=e[e$area=="south",]
+   g=g[g$WOS %in% w,] 
+   s.num.ber=length(g$EID[g$SEX=="Eggs"])
+   s.num.not=length(g$EID[g$SEX=="No Eggs"])
    s.per.ber=s.num.ber/(s.num.ber + s.num.not)*100
    s.output=c(w,s.per.ber)
    s.berried=rbind(s.berried, s.output)
  }
  names(s.berried)=c("Week", "S.Percent Berried")
 
-ber=cbind(berried, n.berried[2], s.berried[2], by=berried$Week)
-
+ber=cbind(berried, n.berried[2], c.berried [2], s.berried[2], by=berried$Week)
 
 png(filename=paste0(figdir,"/Percent Berried LFA 27.png"))    
     plot(berried$Week, berried$`Percent Berried`, main="LFA 27", ylab="% Berried", xlab="Week of Season", col="green", type="n", ylim=c(10, 30))
     #points(berried$Week, berried$`Percent Berried`, col="green", pch=16)
     #lines(berried$Week, berried$`Percent Berried`, col="green")
-    points(n.berried$Week, n.berried$`N.Percent Berried`, col="green3", pch=16)
-    lines(n.berried$Week, n.berried$`N.Percent Berried`, col="green3")
-    points(s.berried$Week, s.berried$`S.Percent Berried`, col="blue", pch=16)
-    lines(s.berried$Week, s.berried$`S.Percent Berried`, col="blue")
-    legend(x = "bottomright", legend = c("North", "South"),lty = c(1, 1), col = c("green3", "blue"), bty="n", pch=16)
+    points(ber$Week, ber$`N.Percent Berried`, col="red", pch=16)
+    lines(ber$Week, ber$`N.Percent Berried`, col="red")
+    points(ber$Week, ber$`C.Percent Berried`, col="blue", pch=16)
+    lines(ber$Week, ber$`C.Percent Berried`, col="blue")
+    points(ber$Week, ber$`S.Percent Berried`, col="green", pch=16)
+    lines(ber$Week, ber$`S.Percent Berried`, col="green")
+    legend(x = "bottomright", legend = c("North", "Central", "South"),lty = c(1, 1), col = c("red", "blue", "green"), bty="n", pch=16)
 dev.off()
 
 
@@ -244,6 +246,62 @@ png(filename=paste0(figdir,"/Percent Berried Sublegals.png"))
 plot(berried$Week, berried$`Sublegal.Percent Berried`, main="LFA 27 Sublegal(78-82.4mm)", ylab="% Berried", xlab="Week of Season", col="blue", type="l", ylim=c(10, 30))
 points(berried$Week, berried$`Sublegal.Percent Berried`, col="green", pch=16)
 dev.off()
+
+n.berried=data.frame() #north
+
+for (w in week){
+  g=e[e$area=="north" & e$CARLENGTH>78 & e$CARLENGTH<82.5,]
+  g=g[g$WOS %in% w,] 
+  n.num.ber=length(g$EID[g$SEX=="Eggs"])
+  n.num.not=length(g$EID[g$SEX=="No Eggs"])
+  n.per.ber=n.num.ber/(n.num.ber + n.num.not)*100
+  n.output=c(w,n.per.ber)
+  n.berried=rbind(n.berried, n.output)
+}
+names(n.berried)=c("Week", "N.Percent Berried")
+
+
+c.berried=data.frame() #central
+for (w in week){
+  g=e[e$area=="central" & e$CARLENGTH>78 & e$CARLENGTH<82.5,] 
+  g=g[g$WOS %in% w,] 
+  c.num.ber=length(g$EID[g$SEX=="Eggs"])
+  c.num.not=length(g$EID[g$SEX=="No Eggs"])
+  c.per.ber=c.num.ber/(c.num.ber + c.num.not)*100
+  c.output=c(w,c.per.ber)
+  c.berried=rbind(c.berried, c.output)
+}
+names(c.berried)=c("Week", "C.Percent Berried")
+
+s.berried=data.frame() #south
+
+for (w in week){
+  g=e[e$area=="south" & e$CARLENGTH>78 & e$CARLENGTH<82.5,]
+  g=g[g$WOS %in% w,] 
+  s.num.ber=length(g$EID[g$SEX=="Eggs"])
+  s.num.not=length(g$EID[g$SEX=="No Eggs"])
+  s.per.ber=s.num.ber/(s.num.ber + s.num.not)*100
+  s.output=c(w,s.per.ber)
+  s.berried=rbind(s.berried, s.output)
+}
+names(s.berried)=c("Week", "S.Percent Berried")
+
+ber=cbind(berried, n.berried[2], c.berried [2], s.berried[2], by=berried$Week)
+
+png(filename=paste0(figdir,"/Sublegal Percent Berried LFA 27.png"))    
+plot(berried$Week, berried$`Percent Berried`, main="LFA 27", ylab="% Berried", xlab="Week of Season", col="green", type="n", ylim=c(15, 35))
+#points(berried$Week, berried$`Percent Berried`, col="green", pch=16)
+#lines(berried$Week, berried$`Percent Berried`, col="green")
+points(ber$Week, ber$`N.Percent Berried`, col="red", pch=16)
+lines(ber$Week, ber$`N.Percent Berried`, col="red")
+points(ber$Week, ber$`C.Percent Berried`, col="blue", pch=16)
+lines(ber$Week, ber$`C.Percent Berried`, col="blue")
+points(ber$Week, ber$`S.Percent Berried`, col="green", pch=16)
+lines(ber$Week, ber$`S.Percent Berried`, col="green")
+legend(x = "bottomright", legend = c("North", "Central", "South"),lty = c(1, 1), col = c("red", "blue", "green"), bty="n", pch=16)
+dev.off()
+
+
 
 
 
@@ -308,26 +366,26 @@ scale_y_continuous(labels = scales::percent) +
 dev.off()
 
 
-# Discards 27 North vs South
+# Discards 27 North vs Central vs South
 
 b=a[a$yr>2009 & a$LFA=="27",]
 b=b[is.finite(b$CARLENGTH) & is.finite(b$SEX),]
 c=b
 
 #create North/South index
-n.ind=which(is.finite(c$Y) & c$X< -60.175416 & c$Y >46) #Split at Victoria Mines
-s1.ind=which(is.finite(c$Y) & c$X> -60.175416) #misses some gabarus samples
-s2.ind=which(is.finite(c$Y) & c$X< -60.175416 & c$Y <46) #catches those gabarus samples
-c$area=NA
+n.ind=which(point.in.polygon(c$X, c$Y,div$X[div$area=="27.North"],div$Y[div$area=="27.North"])==1) #Little River and North
+c.ind=which(point.in.polygon(c$X, c$Y,div$X[div$area=="27.Central"],div$Y[div$area=="27.Central"])==1)  #South Bar to Little River
+s.ind=which(point.in.polygon(c$X, c$Y,div$X[div$area=="27.South"],div$Y[div$area=="27.South"])==1)  #Gabarus to South Bar
 
-for (i in length(c$EID)){
-  c$area[n.ind]="27 North"
-  c$area[s1.ind]="27 South"
-  c$area[s2.ind]="27 South"
-}
+
+c$area=NA
+c$area[n.ind]="North"
+c$area[c.ind]="Central"
+c$area[s.ind]="South"
+
 b=c[!is.na(c$area),]
 
-areas=c("27 North", "27 South")
+areas=c("North","Central", "South")
 
 catches=data.frame(matrix(, nrow=length(areas), ncol=5))
 names(catches)=c("Area","Legal", "Undersize", "Over.Berried", "Under.Berried")
@@ -361,22 +419,23 @@ names(catches)=c("Area", "Legal-Size", "Legal-Size Egged", "Undersize Egged", "U
 
 
 bar.p=melt(catches, id.vars="Area")
+bar.p$Area=factor(bar.p$Area, levels=c("North", "Central", "South"))
 
 mycolors <- c("green3", "firebrick4", "coral2", "red1")
 
-png(filename=paste0(figdir,"/catch.proportions LFA 27 North vs South.png"))
+png(filename=paste0(figdir,"/catch.proportions LFA 27 by Area.png"))
 ggplot(bar.p, aes(x = Area, y = value, fill = variable)) +
   geom_col(position="fill") +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_manual(values=mycolors, name="") +
-  labs( x="Area", y= "% of Catch") 
+  labs( x="LFA27 Sub-Area", y= "% of Catch") 
 dev.off()
 
 # By week
 # ----------------------------------
 
 week=c(1:8)
-areas=c("27 North", "27 South")
+areas=c("North", "South", "Central")
 
 for (aa in areas){
 
@@ -410,13 +469,14 @@ library(reshape2)
 library(EnvStats)
 
 names(catches)=c("Week", "Legal", "Undersize", ">mls w/eggs", "<mls w/eggs")
-catches=catches[,  c("Week", "Legal", ">mls w/eggs", "<mls w/eggs", "Undersize")]
+catches=catches[,  c("Week", "Legal", ">mls w/eggs", "<mls w/eggs", "Undersize")] #reorder
 names(catches)=c("Week", "Legal", "Legal-Size Eggs", "Undersize Eggs", "Undersize")
 
 
 bar.p=melt(catches, id.vars="Week")
 
 mycolors <- c("green3", "firebrick4", "coral2", "red1")
+
 png(filename=paste0(figdir,"/weekly.catch.composition.",aa, ".png"))
 print(ggplot(bar.p, aes(x = Week, y = value, fill = variable)) +
   geom_col(position="fill") +
