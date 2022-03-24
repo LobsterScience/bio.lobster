@@ -7,7 +7,7 @@ options(stringAsFactors=F)
 la()
 
 
-wd = setwd('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster')
+wd = ('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster')
 setwd(wd)
 
 #bycatch.db(DS='odbc.redo',wd=wd)
@@ -28,17 +28,15 @@ setwd(wd)
         bA = merge(bA,tR,all.x=T)
         
         write.csv(bA,file=file.path(wd,'results','LogbooksAgg and Targets.csv'))
-        
-#polygons of grid groupings
-        
-        gG<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA_33_TO_ 38_GRID_GROUPS_NAD83.csv"))
-        addLabels(gG,placement='CENTROID')
-        
-        #inshore midshore offshore
-        
-        ggs = list(i=c(1,'2A','2B'),m=c(3,'4A','4B'),o=c('5,6'))
+
+     
+
         
         
+        
+        
+        
+                
         ##trips by LFA and year
         
 g = lobster.db('process.logs.unfiltered')

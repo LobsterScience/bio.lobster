@@ -108,6 +108,7 @@ gpp = SpatialPolygons(gp,proj4string=CRS("+proj=longlat +datum=WGS84"))
 gpnb = poly2nb(gpp,row.names=names(gpp))
 names(gpnb)=names(gpp)
 
+
 #need to figure out this problem of if needing a single value per grid. Hope not
 CW = aggregate(CODWEIGHT~LOCIDS, data=CF, FUN = mean)
 CD = aggregate(DEPTH~LOCIDS, data=CF, FUN = mean)

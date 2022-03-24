@@ -580,19 +580,17 @@ if(DS %in% c('GCIFA',"GCIFA.redo")){
     CDa$P=1
     CDa$mn = month(CDa$BOARD_DATE)
     gt = bycatch.db('targets',wd=wd) 
-    CDa$GridGroup = CDa$target = CDa$Period = NA
+     CDa$target = CDa$Period = NA
+    CDa$GridGroup = 1
     for(i in 1:nrow(CDa)){
-      pit = gt$GridGrouping[which(CDa$STRATUM_ID[i]==gt$GRID_NUM & gt$LFA==strsplit(CDa$COMAREA_ID[i],'L')[[1]][2])]
-      if(length(pit)>0){
-        CDa$GridGroup[i] = (pit)
         m = CDa$mn[i]
-        k = subset(gt,GRID_NUM==CDa$STRATUM_ID[i] & LFA==strsplit(CDa$COMAREA_ID[i],'L')[[1]][2])
+        k = subset(gt, LFA==strsplit(CDa$COMAREA_ID[i],'L')[[1]][2])
+        k = k[1,]
         ll = ifelse(m >=k$Period1.Start & m<=k$Period1.End,'Period1',ifelse(m >=k$Period2.Start & m<=k$Period2.End,'Period2',ifelse(m >=k$Period3.Start & m<=k$Period3.End,'Period3','Period4')))
         lll = as.numeric(strsplit(ll,'Period')[[1]][2])
         CDa$target[i] <- as.numeric(k[,ll])
         CDa$Period[i] = lll
         #	rm(k,m,ll,lll)
-      }
     }
     CDa$COMAREA_ID = NULL
     names(CDa)[c(5:8,20)] =c('TRAPNO','SETNO','GRIDNUM','DATE_FISHED','CALWT')

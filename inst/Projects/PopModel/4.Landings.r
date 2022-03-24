@@ -20,7 +20,7 @@ da$Fleet=1
 #CPUE
 
 
-a = lobster.db('process.logs,redo')
+a = lobster.db('process.logs')
 p$lfas = c('33',"34", "35", "36", "38") # specify lfas for data summary
 p$subareas = c("34", "35", "36", "38") # specify lfas for data summary
 
@@ -53,6 +53,10 @@ CpE = as.data.frame(rbind(Va,lSa))
 da = merge(da,CpE,by.x=c('YR','QUARTER'),by.y=c('SYEAR','Quarter'),all.x=T)
 
 #se = connect.command(con, 'select * from lobster.lobster_atsea_vw')
+see = subset(se,SPECIESCODE==2550 & LFA %in% c(33,34,35,36,38,41),select=c(TRIPNO,STARTDATE,TRAPNO,SPECIESCODE,SEX,CARLENGTH))
+
+a =   readRDS(file.path('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster/data/CompiledAtSeaMarch2022.rds'))
+a = subset(a,COMAREA_ID %in% c('L33','L34','L35') & SPECCD_ID==2550,select=c(TRIP,BOARD_DATE,TRAP_ID,SPECCD_ID,SEXCD_ID,FISH_LENGTH))    
 sc1=seq(53,223,by=5)
 
 see = subset(se,SPECIESCODE==2550 & LFA %in% c(33,34,35,36,38,41))
