@@ -63,7 +63,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
 			 gscat = connect.command(con,  paste(
 			        "select i.*, substr(mission,4,4) year " ,
 			 "    from groundfish.gscat i " ,
-			 "    where substr(MISSION,4,4)=", YR, ";"
+			 "    where substr(MISSION,4,4)=", YR, ""
 			 ) )
 			
       names(gscat) =  tolower( names(gscat) )
@@ -209,10 +209,10 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
 
 		for ( YR in datayrs ) {
 			fny = file.path( fn.root, paste( YR,"rdata", sep="."))
-      gsdet = sqlQuery( connect,  paste(
+      gsdet = connect.command( con,  paste(
       "select i.*, substr(mission,4,4) year" ,
       "    from groundfish.gsdet i " ,
-      "    where substr(mission,4,4)=", YR, ";"
+      "    where substr(mission,4,4)=", YR, ""
       ) )
       names(gsdet) =  tolower( names(gsdet) )
       gsdet$mission = as.character( gsdet$mission )
@@ -297,7 +297,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
       # ) )
 			
 			gsinf = connect.command(con,  paste(
-			"select * from groundfish.gsinf where EXTRACT(YEAR from SDATE) = ", YR, ";"
+			"select * from groundfish.gsinf where EXTRACT(YEAR from SDATE) = ", YR, ""
 			 ) )
 			
       names(gsinf) =  tolower( names(gsinf) )

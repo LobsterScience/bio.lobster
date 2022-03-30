@@ -56,10 +56,15 @@ da = merge(da,CpE,by.x=c('YR','QUARTER'),by.y=c('SYEAR','Quarter'),all.x=T)
 see = subset(se,SPECIESCODE==2550 & LFA %in% c(33,34,35,36,38,41),select=c(TRIPNO,STARTDATE,TRAPNO,SPECIESCODE,SEX,CARLENGTH))
 
 a =   readRDS(file.path('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster/data/CompiledAtSeaMarch2022.rds'))
-a = subset(a,COMAREA_ID %in% c('L33','L34','L35') & SPECCD_ID==2550,select=c(TRIP,BOARD_DATE,TRAP_ID,SPECCD_ID,SEXCD_ID,FISH_LENGTH))    
+a = subset(a,COMAREA_ID %in% c('L33','L34','L35') & SPECCD_ID==2550,select=c(TRIP,BOARD_DATE,TRAP_ID,SPECCD_ID,SEXCD_ID,FISH_LENGTH))  
+
+names(a) = c('TRIPNO','STARTDATE','TRAPNO','SPECIESCODE','SEX','CARLENGTH')
+
+see = rbind(see,a)
+
+
 sc1=seq(53,223,by=5)
 
-see = subset(se,SPECIESCODE==2550 & LFA %in% c(33,34,35,36,38,41))
 see$YR = year(see$STARTDATE)
 see$Mon = month(see$STARTDATE)
 see$QUARTER = ifelse(see$Mon %in% c(10,11,12),'Q1', ifelse(see$Mon %in% c(1,2,3), 'Q2', ifelse(see$Mon %in% c(4,5,6), 'Q3','Q4')))
@@ -106,6 +111,6 @@ daS = merge(da,ssARU,all.x=T)
 daS[is.na(daS)] <- -1
 
 
-write.csv(daS,file=file.path(wd,paste('EGOM','Catch_props_sexv4.csv',sep="-")))
+write.csv(daS,file=file.path(wd,paste('EGOM','Catch_props_sexv5.csv',sep="-")))
 
 
