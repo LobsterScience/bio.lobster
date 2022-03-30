@@ -7,8 +7,8 @@ require(devtools)
 options(stringAsFactors=F)
 la()
 
+wd = ('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster')
 
-wd = ('C:/Users/CookA/Desktop/dellshared/Bycatch in the Lobster Fishery')
 setwd(wd)
 
 
