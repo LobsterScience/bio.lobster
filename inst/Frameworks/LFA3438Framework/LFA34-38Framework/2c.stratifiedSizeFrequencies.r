@@ -16,7 +16,7 @@ stratifiedAnalysesLengthFreqs = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1
         p$lobster.subunits=F
         p$area = lfa
         p$reweight.strata = T #this subsets 
-        p$years.to.estimate = c(1999:2018)
+        p$years.to.estimate = c(2019:2021)
         p$length.based = T
         p$by.sex = F
         p$bootstrapped.ci=F

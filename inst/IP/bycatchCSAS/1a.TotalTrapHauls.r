@@ -2,7 +2,7 @@
 require(bio.lobster)
 require(bio.utilities)
 load_all('C:/Users/Cooka/Documents/git/bio.utilities')
-
+la()
 wd = ('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster')
 
 setwd(wd)
@@ -97,3 +97,24 @@ for(i in 1:length(sL)){
 partEffort = do.call(rbind, partEffort)
 
 saveRDS(partEffort,'results/BumpedUpEffortByGridGroup.rds')
+
+###########################################
+#part the effort to grids
+
+partEffort = list()
+
+for(i in 1:length(sL)){
+  tmp = sL[[i]]
+  tTH = aggregate(NUM_OF_TRAPS~LFA,data=tmp,FUN=sum)
+  tC = subset(cAll, LFA==unique(tmp$LFA) & YR == unique(tmp$SYEAR)) 
+  pTH = aggregate(NUM_OF_TRAPS~GRID_NUM+WOS+LFA+SYEAR,data=tmp,FUN=sum)
+  pTH$BTTH = pTH$NUM_OF_TRAPS / tTH$NUM_OF_TRAPS * tC$NTRAPs
+  pTH$BlTH = pTH$NUM_OF_TRAPS / tTH$NUM_OF_TRAPS * tC$NTRAPSL
+  pTH$BuTH = pTH$NUM_OF_TRAPS / tTH$NUM_OF_TRAPS * tC$NTRAPSU
+  
+  partEffort[[i]] = pTH
+}
+
+partEffort = do.call(rbind, partEffort)
+saveRDS(partEffort,'results/BumpedUpEffortByGridNUM.rds')
+

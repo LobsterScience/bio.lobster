@@ -188,7 +188,7 @@ Years = 1996:2021
 	  require(mgcv)
 	  
 	  #Ps$dyear =Years[i]+.5
-	  Ps$YEAR =Years[i]
+	  Ps$YEAR =Years[3]
 	  Ps$AREA_SWEPT = mean(sL$AREA_SWEPT)
 	  
 	  plo = as.data.frame(predict(aa,Ps,type='link',se.fit=TRUE))
@@ -198,18 +198,18 @@ Years = 1996:2021
 	  
 	  
 	  xyz = data.frame(Ps[,c('plon','plat')],z=ilink(plo$fit))
-	  corners = data.frame(lon=c(-67.8,-65),lat=c(42.5,45))
+	  corners = data.frame(lon=c(-67.8,-63),lat=c(44.2,46.2))
 	  
 	  R1area[[i]] = c(Years[i],length(which(xyz$z<5)))
-	  #planarMap( xyz, save=T,fn=paste("gamtwPAR1",Years[i],sep='.'), datascale=seq(0.1,10000,l=30), annot=Years[i],loc='', corners=corners,log.variable=T)
-	  #planarMap( xyz, fn=paste("lobster.gambi.pred",Years[i],sep='.'), annot=Years[i],loc="output",corners=corners)
-	  #planarMap( xyz, corners=corners)
+	  planarMap( xyz, save=F,fn=paste("gamtwPAR1",Years[i],sep='.'), datascale=seq(0.1,10000,l=30), annot=Years[i],loc='', corners=corners,log.variable=T)
+	  planarMap( xyz, fn=paste("lobster.gambi.pred",Years[i],sep='.'), annot=Years[i],loc="output",corners=corners)
+	  planarMap( xyz, corners=corners)
 	  R1surface[[i]]=xyz
 	  R1index[i]= sum(xyz$z)
 	  R1index.se[i] = sum(plo$se.fit)
 	}
 	
-	Years = 2019:2020
+	Years = 2019:2021
 	
 	
 	#using the posterior distribution model coefs

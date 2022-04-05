@@ -26,10 +26,10 @@ if(get.odbc.data){
       p$define.by.polygons = F
       p$lobster.subunits=F
       p$area = 'custom'
-      p$years.to.estimate = c(1970:2016)
+      p$years.to.estimate = c(1970:2021)
       p$length.based = F
       p$by.sex = F
-      p$bootstrapped.ci=T
+      p$bootstrapped.ci=F
       p$strata.files.return=F
       p$vessel.correction.fixed=1.2
       p$strat = 490:495
