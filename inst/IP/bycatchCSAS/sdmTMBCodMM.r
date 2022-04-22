@@ -103,6 +103,7 @@ aT$WOS = ceiling(aT$DOS/7)
 						       n_knots = 200, type = "kmeans")
 						     plot(spde)
 						     
+
 						     # Add on the barrier mesh component:
 						     bspde <- add_barrier_mesh(
 						       spde, ns_coast, range_fraction = 0.1,
@@ -125,6 +126,7 @@ aT$WOS = ceiling(aT$DOS/7)
 						 # the land are barrier triangles..
 
 ##prediction grids
+
 
      	gr<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 		attr(gr,'projection') <- "LL"
@@ -153,19 +155,237 @@ aT$WOS = ceiling(aT$DOS/7)
 #LFAs for prediction grids
 
 
- fit = sdmTMB(LegalWt~
+
+ fit = sdmTMB(CodWt~
  				s(Depth,k=5),
  				data=aT,
  				time='WOS', 
  				mesh=bspde, 
  				family=tweedie(link='log'),
  				spatial='on',
- 				spatialtemporal='ar1')
+ 				spatialtemporal='ar1'
+ 				)
+g = predict(fit,newdata=be)
 
- tidy(fit, conf.int = TRUE)
-tidy(fit, effects = "ran_pars", conf.int = TRUE)
-plot_smooth(fit, ggplot = TRUE)
 
+
+saveRDS(list(fit,g),file='codsdmTMBFull.rds')
+
+
+ fit1 = sdmTMB(CodWt~
+ 				s(Depth,k=5),
+ 				data=aT,
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on'
+ 				)
+g1 = predict(fit1,newdata=be)
+
+
+
+saveRDS(list(fit1,g1),file='codsdmTMBSpace.rds')
+
+
+
+ fit2 = sdmTMB(CodWt~
+ 				s(Depth,k=5),
+ 				data=aT,
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='off'
+ 				)
+g2 = predict(fit2,newdata=be)
+
+
+
+saveRDS(list(fit2,g2),file='codsdmTMBDepth.rds')
+
+fit3 = sdmTMB(CodWt~
+ 				s(Depth,k=5) + s(WOS,k=5),
+ 				data=aT,
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='off',
+ 				)
+
+g3 = predict(fit3,newdata=be)
+
+saveRDS(list(fit3,g3),file='codsdmTMBDepthWeeks.rds')
+
+
+
+ fit4 = sdmTMB(CodWt~
+ 				s(Depth,k=5) + s(LobsterWt,k=3),
+ 				data=aT,
+ 				#time='WOS', 
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on',
+ 				#spatialtemporal='ar1'
+ 				)
+
+#g4 = predict(fit4,newdata=be)
+
+saveRDS(fit4,file='codsdmTMBDepthSpaceLobs.rds')
+
+ fit5 = sdmTMB(CodWt~
+ 				s(Depth,k=5) + s(LobsterWt,k=3),
+ 				data=aT,
+ 				time='WOS', 
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on',
+ 				spatialtemporal='ar1'
+ 				)
+
+g5 = predict(fit5,newdata=be)
+
+saveRDS(list(fit5,g5),file='codsdmTMBDepthSpaceTimeLobs.rds')
+
+
+AIC(fit)
+AIC(fit1)
+AIC(fit2)
+AIC(fit3)
+
+aT = cv_SpaceTimeFolds(aT,idCol = 'TRIP',nfolds=8)
+
+ fit_cv = sdmTMB_cv(CodWt~
+ 				s(Depth,k=5),
+ 				data=aT,
+ 				time='WOS', 
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on',
+ 				fold_ids = 'fold_id',
+ 				spatialtemporal='ar1',
+ 				k_folds=8,
+ 				constant_mesh=F)
+ 				)
+
+ fit1_cv = sdmTMB_cv(CodWt~
+ 				s(Depth,k=5),
+ 				data=aT,
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on',
+ 				fold_ids = 'fold_id',
+ 			  k_folds=8,
+ 				constant_mesh=F
+ 				)
+
+ fit2_cv = sdmTMB_cv(CodWt~
+ 				s(Depth,k=5),
+ 				data=aT,
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='off',
+ 				k_folds=8
+ 				)
+
+
+fit3_cv = sdmTMB_cv(CodWt~
+ 				s(Depth,k=5) + s(WOS,k=5),
+ 				data=aT,
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='off',
+ 				k_folds=8
+ 				)
+
+
+ fit4_cv = sdmTMB_cv(CodWt~
+ 				s(Depth,k=5)+s(LobsterWt,k=3),
+ 				data=aT,
+ 				#time='WOS', 
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on',
+ 				fold_ids = 'fold_id',
+ 				#spatialtemporal='ar1',
+ 				k_folds=8,
+ 				constant_mesh=F)
+ 				)
+
+fit5_cv = sdmTMB_cv(CodWt~
+ 				s(Depth,k=5)+s(LobsterWt,k=3),
+ 				data=aT,
+ 				time='WOS', 
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on',
+ 				fold_ids = 'fold_id',
+ 				spatialtemporal='ar1',
+ 				k_folds=8,
+ 				constant_mesh=F)
+ 				)
+
+
+
+mae<- function(x,y){
+	sum(abs(x-y))/length(x)
+}
+
+rmse = function(x,y){
+	sqrt((sum(y-x)^2)/length(x))
+
+}
+
+with(fit_cv$data,mae(as.numeric(CodWt),as.numeric(cv_predicted)))
+
+with(fit1_cv$data,mae(as.numeric(CodWt),as.numeric(cv_predicted)))
+
+with(fit2_cv$data,mae(as.numeric(CodWt),as.numeric(cv_predicted)))
+
+with(fit3_cv$data,mae(as.numeric(CodWt),as.numeric(cv_predicted)))
+
+with(fit_cv$data,rmse(as.numeric(CodWt),as.numeric(cv_predicted)))
+
+with(fit1_cv$data,rmse(as.numeric(CodWt),as.numeric(cv_predicted)))
+
+with(fit2_cv$data,rmse(as.numeric(CodWt),as.numeric(cv_predicted)))
+
+with(fit3_cv$data,rmse(as.numeric(CodWt),as.numeric(cv_predicted)))
+
+
+#highest elpd has predictions closest to those from true generating process
+
+fit_cv$elpd
+fit1_cv$elpd
+fit2_cv$elpd
+fit3_cv$elpd
+
+
+
+
+
+#residuals 
+
+	sfit = simulate(fit,nsim=100) 
+	rf = dharma_residuals(sfit,fit)
+
+r <- dharma_residuals(sfit, fit, plot = FALSE)
+
+     plot(r$expected, r$observed)
+     abline(a = 0, b = 1)
+
+
+ r1 = fit$family$linkinv(predict(fit)$est_non_rf)
+ r2 = DHARMa::createDHARMa(simulatedResponse=sfit,
+ 									observedResponse=fit$data$CodWt,
+ 									fittedPredictedResponse=fit$data$cv_predicted)
+
+ plot(r2)
+
+sfit1 = simulate(fit1,nsim=100) 
+r11 = fit$family$linkinv(predict(fit1)$est_non_rf)
+ r21 = DHARMa::createDHARMa(simulatedResponse=sfit1,
+ 									observedResponse=fit$data$CodWt,
+ 									fittedPredictedResponse=r11)
+
+ plot(r2)
+
+########
 
 g = predict(fit,newdata=be, nsim=200)
 g1 = fit$family$linkinv(g)
@@ -184,7 +404,7 @@ plot_map <- function(dat,column='est'){
 			coord_fixed()
 	}
 
-saveRDS(list(fit,be),file='lobstersdmTMB.rds')
+saveRDS(list(fit,be),file='codsdmTMB.rds')
 #r = readRDS(file='lobstersdmTMB.rds')
 #fit=r[[1]]
 #g=r[[2]]
