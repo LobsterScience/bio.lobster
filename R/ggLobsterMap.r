@@ -2,7 +2,7 @@
 
 ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
                          attrData=NULL, addGrids=T,bathy=T,fw=NULL,legLab="",
-                         addLFALabels=F,scaleTrans='identity',...){
+                         addLFALabels=F,scaleTrans='identity',brks,...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
   if(area=='27-38')	{ ylim=c(42.5,48); 		xlim=c(-67.4,-57.8)	}
@@ -84,7 +84,7 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   if(!is.null(fw)){
         p =  p + 
           geom_sf(data=r1 , aes(fill=Z)) +
-          scale_fill_viridis_c(trans=scaleTrans,values=scales::rescale(brks)) +
+          scale_fill_viridis_c(trans=scaleTrans,limits=brks) +
           labs(fill=legLab) +
           facet_wrap(fw) +
           geom_sf(data=ns_coast,fill='grey')
@@ -92,7 +92,7 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
         p =  p + 
           geom_sf(data=r1 , aes(fill=Z)) +
           labs(fill=legLab) +
-          scale_fill_viridis_c(trans=scaleTrans) +
+          scale_fill_viridis_c(trans=scaleTrans,limits=brks) +
           geom_sf(data=ns_coast,fill='grey')
             }
   }
