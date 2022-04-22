@@ -26,7 +26,7 @@
 #' @export
 LobsterMap<-function(area='custom',ylim=c(40,52),xlim=c(-74,-47),save=F, fname = 'LobsterMap',mapRes='HR',land.col='wheat',title='',nafo=NULL,boundaries='LFAs',bathy.source='topex',
 	isobaths=seq(100,1000,100),bathcol=rgb(0,0,1,0.1),topolines=NULL,topocol=rgb(0.8,0.5,0,0.2),points.lst=NULL,pt.cex=1,lines.lst=NULL,poly.lst=NULL,contours=NULL,image.lst=NULL,color.fun=tim.colors,zlim,grid=NULL,stippling=F,lol=F,labels='lfa',labcex=1.5,LT=T,plot.rivers=T,
-	addGridGroups=F, addSummerStrata=F,addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,grid.labcex=1,...){
+	addGridGroups=F, addSummerStrata=F,polylstend=F, addsubareas=F,subsetSummerStrata=NULL, addGeorgesStrata=F, addAmericanStrata=F,addGrids=T,land.only=F,grid.labcex=1,special.labels=NULL,...){
 
 options(stringsAsFactors=F)		
 	require(PBSmapping)|| stop("Install PBSmapping Package")
@@ -96,6 +96,7 @@ if(save) {
 		}
 	}
 	if(!is.null(poly.lst)){
+	  
 		addPolys(poly.lst[[1]],polyProps=poly.lst[[2]])
 
 		if('density'%in%names(poly.lst[[2]]) & any(!is.na(poly.lst[[2]]$density))){
@@ -195,7 +196,7 @@ if(save) {
 			}
 		}
 			#browser()
-		addPolys(LFAs, lwd=2)
+		addPolys(LFAs, lwd=2,col=NULL)
 		if('lfa'%in% labels){
 			LFAgrid$label<-LFAgrid$PID
 			LFAgrid$label[LFAgrid$label==311]<-'31A'
@@ -315,7 +316,19 @@ if(save) {
 	  if('subarea'%in%labels) addLabels(subset(grids.dat,!duplicated(label)),col=rgb(0.5,0.5,0.5,0.5),cex=labcex)
 	if(is.list(labels)) addLabels(labels[[1]],polyProps=labels[[2]])
 
-
+	if(polylstend==T & !is.null(poly.lst)){
+	
+	    addPolys(poly.lst[[1]],polyProps=poly.lst[[2]])
+	  if(is.null(special.labels))  addLabels(subset(LFAgrid.dat,!duplicated(label)),col=rgb(0,0,0,0.8),cex=labcex)
+	  if(!is.null(special.labels)) {
+	    re = subset(LFAgrid.dat,!duplicated(label))
+	    re = merge(re,special.labels,by.y='LFA',by.x='PID')
+	    re$label = re$labs
+	    addLabels(re,col=rgb(0,0,0,0.8),cex=labcex)
+	  }
+	}
+	
+	
 	box(lwd=2)
 	
 

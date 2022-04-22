@@ -1,5 +1,5 @@
 #' @export
-lobGridPlot <- function(Data,lvls,bcol="YlGnBu",border=1,FUN=mean,place=2,rev=F) {  
+lobGridPlot <- function(Data,lvls,bcol="YlGnBu",border=1,FUN=mean,place=2,rev=F,cuts=F) {  
 
 	require(PBSmapping)
 	require(RColorBrewer)
@@ -21,6 +21,8 @@ lobGridPlot <- function(Data,lvls,bcol="YlGnBu",border=1,FUN=mean,place=2,rev=F)
 	lvls<-c(lvls,max(lvls)*100)
 	if(any(is.na(pdata$SID))) pdata = subset(pdata, !is.na(SID))
 	pdata  <- makeProps(pdata, lvls, "col", cols) 
+	l = lvls[-1]
+	if(cuts) pdata$cuts = l[match(pdata$col,cols)]
 	pdata$border<-border
 	
 
