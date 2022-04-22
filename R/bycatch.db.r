@@ -519,6 +519,8 @@ if(DS %in% c('GCIFA',"GCIFA.redo")){
     a$COMAREA_ID = toupper(a$COMAREA_ID)
     
     a$Legal = ifelse(a$SPECCD_ID == 2550 & a$FISH_LENGTH > 82 & a$SEXCD_ID %in% 1:2,1,0)
+    a$Legal = ifelse(a$SPECCD_ID == 2550 & a$COMAREA_ID=='L31A' & a$FISH_LENGTH %in% 115:125 & a$SEXCD_ID %in% 2,0,a$Legal)
+    
     a$Berried = ifelse(a$SPECCD_ID == 2550 & a$SEXCD_ID %in% 3,1,0)
     a$Lobster = ifelse(a$SPECCD_ID == 2550,1,0)
     a$Cod = ifelse(a$SPECCD_ID == 10,1,0)
