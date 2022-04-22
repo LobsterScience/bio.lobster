@@ -100,7 +100,7 @@ aT$WOS = ceiling(aT$DOS/7)
 						     aT$Y1000 <- surv_utm_coords[,2] / 1000
 						     
 						     spde <- make_mesh(aT, xy_cols = c("X1000", "Y1000"),
-						       n_knots = 200, type = "kmeans")
+						       cutoff = 10, type = "kmeans")
 						     plot(spde)
 						     
 						     # Add on the barrier mesh component:
@@ -129,7 +129,7 @@ aT$WOS = ceiling(aT$DOS/7)
      	gr<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 		attr(gr,'projection') <- "LL"
 		gr = subset(gr,PID %in% 33:35)
-				baXY$EID = 1:nrow(ba)
+				baXY$EID = 1:nrow(baXY)
 				baXY$X = baXY$lon
 				baXY$Y = baXY$lat
 		ff = findPolys(baXY,gr,maxRows=dim(baXY)[1])
@@ -165,33 +165,23 @@ aT$WOS = ceiling(aT$DOS/7)
  tidy(fit, conf.int = TRUE)
 tidy(fit, effects = "ran_pars", conf.int = TRUE)
 plot_smooth(fit, ggplot = TRUE)
+ba$WOS=1
 
 
-g = predict(fit,newdata=be, nsim=200)
-g1 = fit$family$linkinv(g)
+g = predict(fit,newdata=be)
 
-be$pred = apply(g1,1,median)
-be$sd = apply(g1,1,sd)
-be$lQ = apply(g1,1,quantile,0.25)
-be$uQ = apply(g1,1,quantile,0.75)
+gsf = st_as_sf(g,coords = c("X","Y"),crs=32619,remove=F)
 
-gsf = st_as_sf(be,coords = c("X","Y"),crs=32619,remove=F)
 
-plot_map <- function(dat,column='est'){
-		ggplot(dat,aes_string("X","Y",fill=column)) +
-			geom_raster() + 
-		#	facet_wrap(~WOS) +
-			coord_fixed()
-	}
-
-saveRDS(list(fit,be),file='lobstersdmTMB.rds')
+saveRDS(list(fit,g),file='lobstersdmTMB.rds')
 #r = readRDS(file='lobstersdmTMB.rds')
+
 #fit=r[[1]]
 #g=r[[2]]
 
 	
-ggplot(subset(gsf,WOS %in% 6)) +
-			geom_sf(aes(fill=pred,color=pred)) + 
+ggplot(subset(gsf,WOS %in% 1:12)) +
+			geom_sf(aes(fill=est,color=est)) + 
 			scale_fill_viridis_c() +
 			scale_color_viridis_c() +
 			facet_wrap(~WOS) +
@@ -204,9 +194,58 @@ ggplot(subset(gsf,WOS %in% 6)) +
         		   ) +
  			coord_sf()
 
+savePlot('LobsterWk1-12.png')
+
+ggplot(subset(gsf,WOS %in% 13:24)) +
+			geom_sf(aes(fill=est,color=est)) + 
+			scale_fill_viridis_c() +
+			scale_color_viridis_c() +
+			facet_wrap(~WOS) +
+ 			theme( axis.ticks.x = element_blank(),
+        		   axis.text.x = element_blank(),
+				   axis.title.x = element_blank(),
+				   axis.ticks.y = element_blank(),
+        		   axis.text.y = element_blank(),
+        		   axis.title.y = element_blank()
+        		   ) +
+ 			coord_sf()
+savePlot('LobsterWk13-24.png')
 
 
-ag = aggregate(cbind(pred,lQ,uQ)~SID+PID+WOS,data=be,FUN=median)
+ggplot(subset(gsf,WOS %in% 25:36)) +
+			geom_sf(aes(fill=est,color=est)) + 
+			scale_fill_viridis_c() +
+			scale_color_viridis_c() +
+			facet_wrap(~WOS) +
+ 			theme( axis.ticks.x = element_blank(),
+        		   axis.text.x = element_blank(),
+				   axis.title.x = element_blank(),
+				   axis.ticks.y = element_blank(),
+        		   axis.text.y = element_blank(),
+        		   axis.title.y = element_blank()
+        		   ) +
+ 			coord_sf()
+savePlot('LobsterWk25-36.png')
+
+
+ggplot(subset(gsf,WOS %in% 37:48)) +
+			geom_sf(aes(fill=est,color=est)) + 
+			scale_fill_viridis_c() +
+			scale_color_viridis_c() +
+			facet_wrap(~WOS) +
+ 			theme( axis.ticks.x = element_blank(),
+        		   axis.text.x = element_blank(),
+				   axis.title.x = element_blank(),
+				   axis.ticks.y = element_blank(),
+        		   axis.text.y = element_blank(),
+        		   axis.title.y = element_blank()
+        		   ) +
+ 			coord_sf()
+savePlot('LobsterWk37-plus.png')
+
+
+ag = aggregate(est~SID+PID+WOS,data=g,FUN=mean)
+ag$este = exp(ag$est)
 
 ef = readRDS('results/BumpedUpEffortByGridNUM.rds')
 ef = subset(ef,LFA %in% 33:35)
@@ -216,8 +255,37 @@ names(ef)[c(1,3)] = c('SID','PID')
 
 ff = merge(ag,ef)
 
-ff$L = ff$pred*ff$BTTH
-ff$Ll = ff$lQ*ff$BlTH
-ff$Lu = ff$uQ*ff$BuTH
+ff$L = ff$este*ff$BTTH
 
-L = aggregate(cbind(L,Ll,Lu)~PID,data=ff,FUN=sum)
+L = aggregate(L~PID,data=ff,FUN=sum)
+
+
+####spatially varying 
+
+aT$scaled_wk <- (aT$WOS - mean(aT$WOS)) / sd(aT$WOS) 
+
+
+ fit11 = sdmTMB(LegalWt~
+ 				s(Depth,k=5)+scaled_wk,
+ 				data=aT,
+ 				time='WOS', 
+ 				mesh=bspde, 
+ 				spatial_varying = ~0 + scaled_wk,
+ 				family=tweedie(link='log'),
+ 				spatial='on',
+ 				spatialtemporal='ar1')
+
+ tidy(fit, conf.int = TRUE)
+tidy(fit, effects = "ran_pars", conf.int = TRUE)
+plot_smooth(fit, ggplot = TRUE)
+
+
+m1 <- sdmTMB(density ~ scaled_year, data = d,
+  mesh = pcod_spde, family = tweedie(link = "log"),
+  spatial_varying = ~ 0 + scaled_year, time = "year",
+  spatiotemporal = "off")
+#> Warning: `spatial_varying` may not be mean-centered.
+We have turned off spatiotemporal random fields for this example for simplicity, but they also could be IID or AR1.
+
+Let’s extract some parameter estimates. Look for sigma_Z:
+

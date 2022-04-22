@@ -164,10 +164,12 @@ aT$WOS = ceiling(aT$DOS/7)
 
  tidy(fit, conf.int = TRUE)
 tidy(fit, effects = "ran_pars", conf.int = TRUE)
-plot_smooth(fit, ggplot = TRUE)
+#plot_smooth(fit, ggplot = TRUE)
 
 
 g = predict(fit,newdata=be)
+
+
 
 gsf = st_as_sf(g,coords = c("X","Y"),crs=32619,remove=F)
 
@@ -205,6 +207,7 @@ ef$WOS  = ifelse(ef$LFA %in% 33:34,ef$WOS+6,ef$WOS)
 names(ef)[c(1,3)] = c('SID','PID')
 
 ff = merge(ag,ef)
+
 
 ff$L = ff$este*ff$BTTH
 

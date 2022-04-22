@@ -151,29 +151,38 @@ aT$WOS = ceiling(aT$DOS/7)
 		be = as.data.frame(sapply(ba,rep.int,41))
 		be$WOS = rep(0:40,each=dim(ba)[1])
 #LFAs for prediction grids
+aT$PA = ifelse(aT$LegalWt>0,1,0)
 
-
- fit = sdmTMB(LegalWt~
+ fit = sdmTMB(PA~
  				s(Depth,k=5),
  				data=aT,
  				time='WOS', 
  				mesh=bspde, 
- 				family=tweedie(link='log'),
+ 				family=binomial(link='logit'),
+ 				spatial='on',
+ 				spatialtemporal='ar1')
+aT2 = subset(aT,LegalWt>0)
+bspde2 = make_mesh(aT2,xy_cols=c('X1000','Y1000'),mesh=bspde$mesh)
+
+ fitD = sdmTMB(LegalWt~
+ 				s(Depth,k=5),
+ 				data=aT2,
+ 				time='WOS', 
+ 				mesh=bspde2, 
+ 				family=Gamma(link='log'),
  				spatial='on',
  				spatialtemporal='ar1')
 
- tidy(fit, conf.int = TRUE)
-tidy(fit, effects = "ran_pars", conf.int = TRUE)
-plot_smooth(fit, ggplot = TRUE)
+
+g = predict(fit,newdata=be)
+g2 = predict(fitD,newdata=be)
+
+g_bin = fit$family$linkinv(g$est)
+g2_bin = fitD$family$linkinv(g2$est)
+
+be$preds = g_bin * g2_bin
 
 
-g = predict(fit,newdata=be, nsim=200)
-g1 = fit$family$linkinv(g)
-
-be$pred = apply(g1,1,median)
-be$sd = apply(g1,1,sd)
-be$lQ = apply(g1,1,quantile,0.25)
-be$uQ = apply(g1,1,quantile,0.75)
 
 gsf = st_as_sf(be,coords = c("X","Y"),crs=32619,remove=F)
 
@@ -184,14 +193,14 @@ plot_map <- function(dat,column='est'){
 			coord_fixed()
 	}
 
-saveRDS(list(fit,be),file='lobstersdmTMB.rds')
+saveRDS(list(fit,g),file='lobstersdmTMB.rds')
 #r = readRDS(file='lobstersdmTMB.rds')
 #fit=r[[1]]
 #g=r[[2]]
 
 	
-ggplot(subset(gsf,WOS %in% 6)) +
-			geom_sf(aes(fill=pred,color=pred)) + 
+ggplot(subset(gsf,WOS %in% 1:10)) +
+			geom_sf(aes(fill=preds,color=preds)) + 
 			scale_fill_viridis_c() +
 			scale_color_viridis_c() +
 			facet_wrap(~WOS) +
@@ -204,9 +213,8 @@ ggplot(subset(gsf,WOS %in% 6)) +
         		   ) +
  			coord_sf()
 
+ag = aggregate(preds~SID+PID+WOS,data=be,FUN=mean)
 
-
-ag = aggregate(cbind(pred,lQ,uQ)~SID+PID+WOS,data=be,FUN=median)
 
 ef = readRDS('results/BumpedUpEffortByGridNUM.rds')
 ef = subset(ef,LFA %in% 33:35)
@@ -216,8 +224,21 @@ names(ef)[c(1,3)] = c('SID','PID')
 
 ff = merge(ag,ef)
 
-ff$L = ff$pred*ff$BTTH
-ff$Ll = ff$lQ*ff$BlTH
-ff$Lu = ff$uQ*ff$BuTH
+ff$L = ff$preds*ff$BTTH
 
-L = aggregate(cbind(L,Ll,Lu)~PID,data=ff,FUN=sum)
+L = aggregate(L~PID,data=ff,FUN=sum)
+
+
+##Kfold cv
+
+
+ fit_cv = sdmTMB_cv(PA~
+ 				s(Depth,k=5),
+ 				data=aT,
+ 				time='WOS', 
+ 				mesh=bspde, 
+ 				family=binomial(link='logit'),
+ 				spatial='on',
+ 				spatialtemporal='ar1',
+ 				k_folds=8
+ 				)
