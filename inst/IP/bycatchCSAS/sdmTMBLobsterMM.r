@@ -103,6 +103,7 @@ aT$WOS = ceiling(aT$DOS/7)
 						       n_knots = 200, type = "kmeans")
 						     plot(spde)
 						     
+
 						     # Add on the barrier mesh component:
 						     bspde <- add_barrier_mesh(
 						       spde, ns_coast, range_fraction = 0.1,
@@ -125,6 +126,7 @@ aT$WOS = ceiling(aT$DOS/7)
 						 # the land are barrier triangles..
 
 ##prediction grids
+
 
      	gr<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 		attr(gr,'projection') <- "LL"
@@ -152,72 +154,171 @@ aT$WOS = ceiling(aT$DOS/7)
 		be$WOS = rep(0:40,each=dim(ba)[1])
 #LFAs for prediction grids
 
+aT$LegWt10 = aT$LegalWt*10
+fit0 =  sdmTMB(LegWt10~
+ 				s(Depth,k=5) + DID,
+ 				data=aT,
+ 				time='WOS', 
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on',
+ 				spatialtemporal='ar1'
+ 				)
+ 
 
- fit = sdmTMB(LegalWt~
+ fit = sdmTMB(LegWt10~
  				s(Depth,k=5),
  				data=aT,
  				time='WOS', 
  				mesh=bspde, 
  				family=tweedie(link='log'),
  				spatial='on',
- 				spatialtemporal='ar1')
-
- tidy(fit, conf.int = TRUE)
-tidy(fit, effects = "ran_pars", conf.int = TRUE)
-plot_smooth(fit, ggplot = TRUE)
+ 				spatialtemporal='ar1'
+ 				)
+g = predict(fit,newdata=be)
 
 
-g = predict(fit,newdata=be, nsim=200)
-g1 = fit$family$linkinv(g)
 
-be$pred = apply(g1,1,median)
-be$sd = apply(g1,1,sd)
-be$lQ = apply(g1,1,quantile,0.25)
-be$uQ = apply(g1,1,quantile,0.75)
+saveRDS(list(fit,g),file='lobstersdmTMBFull.rds')
 
-gsf = st_as_sf(be,coords = c("X","Y"),crs=32619,remove=F)
 
-plot_map <- function(dat,column='est'){
-		ggplot(dat,aes_string("X","Y",fill=column)) +
-			geom_raster() + 
-		#	facet_wrap(~WOS) +
-			coord_fixed()
-	}
+ fit1 = sdmTMB(LegalWt~
+ 				s(Depth,k=5),
+ 				data=aT,
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on'
+ 				)
+g1 = predict(fit1,newdata=be)
 
-saveRDS(list(fit,be),file='lobstersdmTMB.rds')
-#r = readRDS(file='lobstersdmTMB.rds')
-#fit=r[[1]]
-#g=r[[2]]
 
-	
-ggplot(subset(gsf,WOS %in% 6)) +
-			geom_sf(aes(fill=pred,color=pred)) + 
-			scale_fill_viridis_c() +
-			scale_color_viridis_c() +
+
+saveRDS(list(fit1,g1),file='lobstersdmTMBSpace.rds')
+
+
+
+ fit2 = sdmTMB(LegalWt~
+ 				s(Depth,k=5),
+ 				data=aT,
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='off'
+ 				)
+g2 = predict(fit2,newdata=be)
+
+
+
+saveRDS(list(fit2,g2),file='lobstersdmTMBDepth.rds')
+
+
+
+
+AIC(fit)
+AIC(fit1)
+AIC(fit2)
+
+aT = cv_SpaceTimeFolds(aT,idCol = 'TRIP',nfolds=5)
+aT$LegWt10=aT$LegalWt*10
+
+ fit_cv = sdmTMB_cv(LegWt10~
+ 				s(Depth,k=5)+DID,
+ 				data=aT,
+ 				time='WOS', 
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on',
+ 				fold_ids = 'fold_id',
+ 				spatialtemporal='ar1',
+ 				k_folds=5,
+ 				constant_mesh=F)
+ 				
+
+fit1_cv = sdmTMB_cv(LegWt10~
+				s(Depth,k=5)+DID,
+				data=aT,
+				mesh=bspde, 
+				family=tweedie(link='log'),
+				spatial='on',
+				fold_ids = 'fold_id',
+				k_folds=5,
+				constant_mesh=F
+				)
+
+fit2_cv = sdmTMB_cv(LegWt10~
+				s(Depth,k=5),
+				data=aT,
+				mesh=bspde, 
+				family=tweedie(link='log'),
+				spatial='off',
+				fold_ids = 'fold_id',
+				k_folds=5,
+				constant_mesh=F
+				)
+
+
+fit3_cv = sdmTMB_cv(LegWt10~
+ 				s(Depth,k=5) + DID,
+ 				data=aT,
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='off',
+ 				fold_ids = 'fold_id',
+ 				k_folds=5,
+ 				constant_mesh=F
+ 				)
+
+mae<- function(x,y){
+	sum(abs(x-y))/length(x)
+}
+
+rmse = function(x,y){
+	sqrt((sum(y-x)^2)/length(x))
+
+}
+
+with(fit_cv$data,mae(as.numeric(LegWt10),as.numeric(cv_predicted)))
+
+with(fit1_cv$data,mae(as.numeric(LegWt10),as.numeric(cv_predicted)))
+
+with(fit2_cv$data,mae(as.numeric(LegWt10),as.numeric(cv_predicted)))
+
+with(fit3_cv$data,mae(as.numeric(LegWt10),as.numeric(cv_predicted)))
+
+
+with(fit_cv$data,rmse(as.numeric(LegWt10),as.numeric(cv_predicted)))
+
+with(fit1_cv$data,rmse(as.numeric(LegWt10),as.numeric(cv_predicted)))
+
+with(fit2_cv$data,rmse(as.numeric(LegWt10),as.numeric(cv_predicted)))
+
+with(fit3_cv$data,rmse(as.numeric(LegWt10),as.numeric(cv_predicted)))
+
+
+
+#highest elpd has predictions closest to those from true generating process
+
+fit_cv$elpd
+fit1_cv$elpd
+fit2_cv$elpd
+
+	sfit = simulate(fit,nsim=100) 
+	rf = dharma_residuals(sfit,fit)
+
+r <- dharma_residuals(sfit, fit, plot = FALSE)
+
+     plot(r$expected, r$observed)
+     abline(a = 0, b = 1)
+
+
+ r1 = fit$family$linkinv(predict(fit))
+ r2 = DHARMa::createDHARMa(simulatedResponse=sfit,
+ 									observedResponse=fit$data$LegWt10,
+ 									fittedPredictedResponse=r1)
+
+ plot(r2)
+aT$SRS = r2$scaledResiduals
+	ggplot(data=ns_coast) + geom_sf() +
+			geom_point(data = subset(aT,WOS %in% 1:42),aes(x = X1000*1000, y = Y1000*1000,colour = SRS), shape = 19,size=0.3) +
 			facet_wrap(~WOS) +
- 			theme( axis.ticks.x = element_blank(),
-        		   axis.text.x = element_blank(),
-				   axis.title.x = element_blank(),
-				   axis.ticks.y = element_blank(),
-        		   axis.text.y = element_blank(),
-        		   axis.title.y = element_blank()
-        		   ) +
- 			coord_sf()
+			scale_colour_gradient2(midpoint=.5,low='blue',mid='white',high='red',space='Lab')
 
-
-
-ag = aggregate(cbind(pred,lQ,uQ)~SID+PID+WOS,data=be,FUN=median)
-
-ef = readRDS('results/BumpedUpEffortByGridNUM.rds')
-ef = subset(ef,LFA %in% 33:35)
-ef = aggregate(cbind(BTTH, BlTH,BuTH)~GRID_NUM+WOS+LFA,data=ef,FUN=mean)
-ef$WOS  = ifelse(ef$LFA %in% 33:34,ef$WOS+6,ef$WOS)
-names(ef)[c(1,3)] = c('SID','PID')
-
-ff = merge(ag,ef)
-
-ff$L = ff$pred*ff$BTTH
-ff$Ll = ff$lQ*ff$BlTH
-ff$Lu = ff$uQ*ff$BuTH
-
-L = aggregate(cbind(L,Ll,Lu)~PID,data=ff,FUN=sum)
