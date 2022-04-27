@@ -62,6 +62,9 @@ aA$DOS[k] = aA$DATE_FISHED[k] - min(aA$DATE_FISHED[k])
 
 aT = as_tibble(aA)
 aT$WOS = ceiling(aT$DOS/7)
+aT$MOS = floor(aT$WOS/4)+1
+aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
+
 ####making mesh
 						map_data <- rnaturalearth::ne_countries(
 								   scale = "medium",
@@ -128,10 +131,10 @@ aT$WOS = ceiling(aT$DOS/7)
 ##prediction grids
 
 
-     	gr<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
+          	gr<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 		attr(gr,'projection') <- "LL"
 		gr = subset(gr,PID %in% 33:35)
-				baXY$EID = 1:nrow(ba)
+				baXY$EID = 1:nrow(baXY)
 				baXY$X = baXY$lon
 				baXY$Y = baXY$lat
 		ff = findPolys(baXY,gr,maxRows=dim(baXY)[1])
@@ -152,11 +155,15 @@ aT$WOS = ceiling(aT$DOS/7)
 		ba$geometry <- NULL
 		be = as.data.frame(sapply(ba,rep.int,41))
 		be$WOS = rep(0:40,each=dim(ba)[1])
-#LFAs for prediction grids
+		beR = as.data.frame(rbind(be,be))
+		beR$DID = rep(c('OBS','ASSOC'), each=nrow(be))
+		be=beR
 
 aT$LegWt10 = aT$LegalWt*10
-fit0 =  sdmTMB(LegWt10~
- 				s(Depth,k=5) + DID,
+aT$lZ = log(aT$Depth)
+
+fit =  sdmTMB(LegalWt~
+ 				s(lZ,k=5) + DID,
  				data=aT,
  				time='WOS', 
  				mesh=bspde, 
@@ -166,16 +173,7 @@ fit0 =  sdmTMB(LegWt10~
  				)
  
 
- fit = sdmTMB(LegWt10~
- 				s(Depth,k=5),
- 				data=aT,
- 				time='WOS', 
- 				mesh=bspde, 
- 				family=tweedie(link='log'),
- 				spatial='on',
- 				spatialtemporal='ar1'
- 				)
-g = predict(fit,newdata=be)
+g = predict(fit)
 
 
 
@@ -183,13 +181,13 @@ saveRDS(list(fit,g),file='lobstersdmTMBFull.rds')
 
 
  fit1 = sdmTMB(LegalWt~
- 				s(Depth,k=5),
+ 				s(lZ,k=5) +DID,
  				data=aT,
  				mesh=bspde, 
  				family=tweedie(link='log'),
  				spatial='on'
  				)
-g1 = predict(fit1,newdata=be)
+g1 = predict(fit1)
 
 
 
@@ -198,13 +196,13 @@ saveRDS(list(fit1,g1),file='lobstersdmTMBSpace.rds')
 
 
  fit2 = sdmTMB(LegalWt~
- 				s(Depth,k=5),
+ 				s(lZ,k=5) +DID,
  				data=aT,
  				mesh=bspde, 
  				family=tweedie(link='log'),
  				spatial='off'
  				)
-g2 = predict(fit2,newdata=be)
+g2 = predict(fit2)
 
 
 
@@ -217,11 +215,12 @@ AIC(fit)
 AIC(fit1)
 AIC(fit2)
 
-aT = cv_SpaceTimeFolds(aT,idCol = 'TRIP',nfolds=5)
+aT$IDS = paste(aT$WOS,aT$GridGroup,sep="-")
+aT = cv_SpaceTimeFolds(aT,idCol = 'IDS',nfolds=5)
 aT$LegWt10=aT$LegalWt*10
 
- fit_cv = sdmTMB_cv(LegWt10~
- 				s(Depth,k=5)+DID,
+ fit_cv = sdmTMB_cv(LegalWt~
+ 				s(lZ,k=5)+DID,
  				data=aT,
  				time='WOS', 
  				mesh=bspde, 
@@ -233,39 +232,27 @@ aT$LegWt10=aT$LegalWt*10
  				constant_mesh=F)
  				
 
-fit1_cv = sdmTMB_cv(LegWt10~
-				s(Depth,k=5)+DID,
+fit1_cv1 = sdmTMB_cv(LegalWt~
+				s(lZ,k=5)+DID,
 				data=aT,
 				mesh=bspde, 
-				family=tweedie(link='log'),
-				spatial='on',
-				fold_ids = 'fold_id',
-				k_folds=5,
-				constant_mesh=F
-				)
-
-fit2_cv = sdmTMB_cv(LegWt10~
-				s(Depth,k=5),
-				data=aT,
-				mesh=bspde, 
-				family=tweedie(link='log'),
-				spatial='off',
-				fold_ids = 'fold_id',
-				k_folds=5,
-				constant_mesh=F
-				)
-
-
-fit3_cv = sdmTMB_cv(LegWt10~
- 				s(Depth,k=5) + DID,
- 				data=aT,
- 				mesh=bspde, 
+ 				spatial='on',
  				family=tweedie(link='log'),
- 				spatial='off',
- 				fold_ids = 'fold_id',
- 				k_folds=5,
- 				constant_mesh=F
- 				)
+				fold_ids = 'fold_id',
+				k_folds=5,
+				constant_mesh=F
+				)
+
+fit2_cv = sdmTMB_cv_nomesh(LegalWt~
+				s(lZ,k=5)+DID,
+				data=aT,
+				family=tweedie(link='log'),
+				fold_ids = aT$fold_id,
+				k_folds=5
+				)
+
+
+
 
 mae<- function(x,y){
 	sum(abs(x-y))/length(x)
@@ -276,22 +263,17 @@ rmse = function(x,y){
 
 }
 
-with(fit_cv$data,mae(as.numeric(LegWt10),as.numeric(cv_predicted)))
+with(fit_cv$data,mae(as.numeric(LegalWt),as.numeric(cv_predicted)))
 
-with(fit1_cv$data,mae(as.numeric(LegWt10),as.numeric(cv_predicted)))
+with(fit1_cv1$data,mae(as.numeric(LegalWt),as.numeric(cv_predicted)))
 
-with(fit2_cv$data,mae(as.numeric(LegWt10),as.numeric(cv_predicted)))
+with(fit2_cv$data,mae(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(cv_predicted))))
 
-with(fit3_cv$data,mae(as.numeric(LegWt10),as.numeric(cv_predicted)))
+with(fit_cv$data,rmse(as.numeric(LegalWt),as.numeric(cv_predicted)))
 
+with(fit1_cv1$data,rmse(as.numeric(LegalWt),as.numeric(cv_predicted)))
 
-with(fit_cv$data,rmse(as.numeric(LegWt10),as.numeric(cv_predicted)))
-
-with(fit1_cv$data,rmse(as.numeric(LegWt10),as.numeric(cv_predicted)))
-
-with(fit2_cv$data,rmse(as.numeric(LegWt10),as.numeric(cv_predicted)))
-
-with(fit3_cv$data,rmse(as.numeric(LegWt10),as.numeric(cv_predicted)))
+with(fit2_cv$data,rmse(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(cv_predicted))))
 
 
 
@@ -312,7 +294,7 @@ r <- dharma_residuals(sfit, fit, plot = FALSE)
 
  r1 = fit$family$linkinv(predict(fit))
  r2 = DHARMa::createDHARMa(simulatedResponse=sfit,
- 									observedResponse=fit$data$LegWt10,
+ 									observedResponse=fit$data$LegalWt,
  									fittedPredictedResponse=r1)
 
  plot(r2)
@@ -322,3 +304,5 @@ aT$SRS = r2$scaledResiduals
 			facet_wrap(~WOS) +
 			scale_colour_gradient2(midpoint=.5,low='blue',mid='white',high='red',space='Lab')
 
+
+#

@@ -152,20 +152,22 @@ aT$WOS = ceiling(aT$DOS/7)
 		be$WOS = rep(0:40,each=dim(ba)[1])
 #LFAs for prediction grids
 aT$PA = ifelse(aT$LegalWt>0,1,0)
-
- fit = sdmTMB(PA~
- 				s(Depth,k=5),
+aT$lZ = log(aT$Depth)
+ fitH = sdmTMB(PA~
+ 				s(lZ,k=5)+DID,
  				data=aT,
  				time='WOS', 
  				mesh=bspde, 
  				family=binomial(link='logit'),
  				spatial='on',
  				spatialtemporal='ar1')
+
+
 aT2 = subset(aT,LegalWt>0)
 bspde2 = make_mesh(aT2,xy_cols=c('X1000','Y1000'),mesh=bspde$mesh)
 
  fitD = sdmTMB(LegalWt~
- 				s(Depth,k=5),
+ 				s(lZ,k=5)+DID,
  				data=aT2,
  				time='WOS', 
  				mesh=bspde2, 

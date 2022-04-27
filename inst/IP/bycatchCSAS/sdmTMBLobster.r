@@ -62,6 +62,26 @@ aA$DOS[k] = aA$DATE_FISHED[k] - min(aA$DATE_FISHED[k])
 
 aT = as_tibble(aA)
 aT$WOS = ceiling(aT$DOS/7)
+						jittering =T
+						if(jittering){
+							redo=F
+							if(redo){
+								aT$II = paste(aT$X,aT$Y,sep="-")
+								j = split(aT,f=list(aT$II))
+						for(i in 1:length(j)){
+									if(nrow(j[[i]])==1) next
+											for(k in 2:nrow(j[[i]])){
+													j[[i]][k,'X'] = j[[i]][k,'X']+runif(1,-0.0001,0.0001)
+													j[[i]][k,'Y'] = j[[i]][k,'Y']+runif(1,-0.0001,0.0001)
+													}	
+												}
+											aTj = as_tibble(do.call(rbind,j))
+											aTl = st_as_sf(aTj,coords = c("X", "Y"),crs= 4326)
+									saveRDS(aTj,file=file.path('results','CompliedDataForModellingjit.rds'))
+									}
+								aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
+						}
+
 ####making mesh
 						map_data <- rnaturalearth::ne_countries(
 								   scale = "medium",
@@ -96,9 +116,10 @@ aT$WOS = ceiling(aT$DOS/7)
 						     # Then we will scale coordinates to km so the range parameter
 						     # is on a reasonable scale for estimation:
 						
+
 						  aT$X1000 <- surv_utm_coords[,1] / 1000
-						     aT$Y1000 <- surv_utm_coords[,2] / 1000
-						     
+						  aT$Y1000 <- surv_utm_coords[,2] / 1000
+						
 						     spde <- make_mesh(aT, xy_cols = c("X1000", "Y1000"),
 						       n_knots = 200, type = "kmeans")
 						     plot(spde)
@@ -123,6 +144,8 @@ aT$WOS = ceiling(aT$DOS/7)
 						       geom_sf(data = mesh_df_land, size = 1, colour = "green")
 						  
 						 # the land are barrier triangles..
+
+
 
 ##prediction grids
 
@@ -150,11 +173,14 @@ aT$WOS = ceiling(aT$DOS/7)
 		ba$geometry <- NULL
 		be = as.data.frame(sapply(ba,rep.int,41))
 		be$WOS = rep(0:40,each=dim(ba)[1])
+		beR = as.data.frame(rbind(be,be))
+		beR$DID = rep(c('OBS','ASSOC'), each=nrow(be))
+		be=beR
 #LFAs for prediction grids
 
-
+aT$LegWt10 = aT$LegalWt*10
  fit = sdmTMB(LegalWt~
- 				s(Depth,k=5),
+ 				s(Depth,k=5)+DID,
  				data=aT,
  				time='WOS', 
  				mesh=bspde, 
@@ -166,8 +192,8 @@ aT$WOS = ceiling(aT$DOS/7)
 tidy(fit, effects = "ran_pars", conf.int = TRUE)
 plot_smooth(fit, ggplot = TRUE)
 
-
-g = predict(fit,newdata=be, nsim=200)
+go =predict(fit) 
+g = predict(fit,newdata=be,nsim=50)
 g1 = fit$family$linkinv(g)
 
 be$pred = apply(g1,1,median)
@@ -178,9 +204,9 @@ be$uQ = apply(g1,1,quantile,0.75)
 gsf = st_as_sf(be,coords = c("X","Y"),crs=32619,remove=F)
 
 plot_map <- function(dat,column='est'){
-		ggplot(dat,aes_string("X","Y",fill=column)) +
-			geom_raster() + 
-		#	facet_wrap(~WOS) +
+		ggplot(dat,aes_string(fill=column)) +
+			geom_sf() + 
+			facet_wrap(~WOS) +
 			coord_fixed()
 	}
 
@@ -207,6 +233,7 @@ ggplot(subset(gsf,WOS %in% 6)) +
 
 
 ag = aggregate(cbind(pred,lQ,uQ)~SID+PID+WOS,data=be,FUN=median)
+#ag = aggregate(cbind(pred)~SID+PID+WOS,data=be,FUN=median)
 
 ef = readRDS('results/BumpedUpEffortByGridNUM.rds')
 ef = subset(ef,LFA %in% 33:35)
@@ -217,7 +244,8 @@ names(ef)[c(1,3)] = c('SID','PID')
 ff = merge(ag,ef)
 
 ff$L = ff$pred*ff$BTTH
-ff$Ll = ff$lQ*ff$BlTH
-ff$Lu = ff$uQ*ff$BuTH
+ff$Ll = ff$lQ*ff$BTTH
+ff$Lu = ff$uQ*ff$BTTH
 
 L = aggregate(cbind(L,Ll,Lu)~PID,data=ff,FUN=sum)
+L = aggregate(L~PID,data=ff,FUN=sum)
