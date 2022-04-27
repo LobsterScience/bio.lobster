@@ -292,12 +292,3 @@ aS = bycatch.db('GCIFA')
 	gs = toNums(gs,2:5)
 	gs[,3:5] = gs[,3:5]/1000
 
-	gg = lobster.db('annual.landings')
-	gg = subset(gg,YR %in% c(2018,2019),select=c(YR,LFA31A,LFA31B))
-	gg = reshape(gg,idvar='YR',varying=list(2:3),direction='long')
-	gg$LFA = c('31A','31A','31B','31B')
-	gg$SYEAR=gg$YR
-	 gg = merge(gs,gg)
-	 gg = toNums(gg,2:5)
-	 gg[,3:5] = gg[,3:5]/1000
-	 

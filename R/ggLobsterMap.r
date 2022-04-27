@@ -99,7 +99,13 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
       if(addLFALabels){
         p = p + geom_sf_text(data=cents, aes(label=label),family='sans')+coord_sf(xlim=xlim,ylim=ylim)
       }
-  p
+  p + theme_bw()+
+    theme( panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
+          axis.text.x=element_text(angle=90,hjust=1)) +
+    scale_x_continuous(breaks=round(seq(xlim[1],xlim[2],length.out = 4),2)) +
+    scale_y_continuous(breaks=round(seq(ylim[1],ylim[2],length.out = 4))) 
+    
           }
       
 

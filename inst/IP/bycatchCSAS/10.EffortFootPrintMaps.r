@@ -41,8 +41,8 @@ for(i in 1:length(oi)){
 names(o)[1:2] <- c('LFA','GRID_NO')
 
 x =  subset(o,LFA==27)
-ux = unique(x$cuts)
-ux = scales::rescale(ux[order(ux)])
+ux = c(min(x$Z),max(x$Z))
+
 ggLobsterMap('27',bathy=T,attrData = subset(o,LFA==27),fw='WOS',legLab='TrapHauls',addLFALabels = F,brks=ux)
 
 
@@ -51,25 +51,25 @@ ggLobsterMap('31A',bathy=T,attrData = subset(o,LFA==311),fw='WOS',legLab='TrapHa
 ggLobsterMap('31B',bathy=T,attrData = subset(o,LFA==312),fw='WOS',legLab='TrapHauls',addLFALabels = F)
 
 
-x =  subset(o,LFA==33)
-ux = unique(x$cuts)
-ux = scales::rescale(ux[order(ux)])
 
-ggLobsterMap('33',bathy=T,attrData = subset(o,LFA==33 & WOS %in% 1:12),fw='WOS',legLab='TrapHauls',addLFALabels = F,scaleTrans='sqrt',brks=ux)
+ggLobsterMap('33',bathy=T,attrData = subset(o,LFA==33 & WOS %in% 1:24),fw='WOS',legLab='TrapHauls',addLFALabels = F,scaleTrans='sqrt',brks=ux)
 ggLobsterMap('33',bathy=T,attrData = subset(o,LFA==33 & WOS %in% 13:24),fw='WOS',legLab='TrapHauls',addLFALabels = F,scaleTrans='sqrt',brks=ux)
 
 
 x =  subset(o,LFA==34)
 ux = c(min(x$Z),max(x$Z))
-
-ggLobsterMap('34',bathy=T,attrData = subset(o,LFA==34 & WOS %in% 1:12),fw='WOS',legLab='TrapHauls',addLFALabels = F,scaleTrans='sqrt',brks=ux)
+u = unique(x$WOS)
+ggLobsterMap('34',bathy=T,attrData = subset(o,LFA==34 & WOS%in%1:12),fw='WOS',legLab='TrapHauls',addLFALabels = F,scaleTrans='sqrt',brks=ux)
 ggLobsterMap('34',bathy=T,attrData = subset(o,LFA==34 & WOS %in% 13:24),fw='WOS',legLab='TrapHauls',addLFALabels = F,scaleTrans='sqrt',brks=ux)
+
 
 
 
 x =  subset(o,LFA==35)
 ux = c(min(x$Z),max(x$Z))
-ggLobsterMap('35',bathy=T,attrData = subset(o,LFA==35 & WOS %in% 1:12),fw='WOS',legLab='TrapHauls',addLFALabels = F,scaleTrans ='sqrt',brks=ux)
-
+ggLobsterMap('35',bathy=T,attrData = subset(o,LFA==35 & WOS %in% c(1:10)),fw='WOS',legLab='TrapHauls',addLFALabels = F,scaleTrans ='sqrt',brks=ux)
+ggLobsterMap('35',bathy=T,attrData = subset(o,LFA==35 & WOS %in% c(22:31)),fw='WOS',legLab='TrapHauls',addLFALabels = F,scaleTrans ='sqrt',brks=ux)
+ggLobsterMap('35',bathy=T,attrData = subset(o,LFA==35 & WOS %in% c(32:42)),fw='WOS',legLab='TrapHauls',addLFALabels = F,scaleTrans ='sqrt',brks=ux)
+                          
 
 
