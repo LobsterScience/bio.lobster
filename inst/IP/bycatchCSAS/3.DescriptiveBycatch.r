@@ -128,11 +128,10 @@ write.csv(bA,file=file.path(wd,'results','LogbooksAgg and Targets.csv'))
         ui = unique(aCo$TRIP)
         for(i in 1:length(ui)){
               j = which(aCo$TRIP == ui[i])
-              o[[i]] =c(TRIP=unique(aCo$TRIP[j]),LFA=unique(aCo$LFA[j]),clusterStatistics(aCo[j,],thresh=1))      
+              o[[i]] =c(TRIP=unique(aCo$TRIP[j]),LFA=unique(aCo$LFA[j]),clusterStatistics(aCo[j,]))      
             }
         aCo = as.data.frame(do.call(rbind,o))
         aCo = toNums(aCo,1:6)
-        
         
       ms = read.csv('data/ISDB_Trip_id to sd_log_idFinal.csv')
       ms = subset(ms,!is.na(SD_LOG_ID_1),select=c(trip_id,SD_LOG_ID_1))
@@ -163,7 +162,9 @@ write.csv(bA,file=file.path(wd,'results','LogbooksAgg and Targets.csv'))
             }
         aCoS = as.data.frame(do.call(rbind,o))
         aCoS = toNums(aCoS,2:6)
-    
+        aacc = as.data.frame(rbind(aCo,aCoS))
+        write.csv(aacc,file='results/TRIPCPUE33-35.csv')
+        
       
        ms = read.csv('data/SWLSSTripmatch.csv')
       ms = subset(ms,!is.na(SD_LOG_ID_1),select=c(TRIP,SD_LOG_ID_1))
@@ -256,7 +257,7 @@ for(i in 1:length(SBS)){
             }
         aCog = as.data.frame(do.call(rbind,o))
        ggo = toNums(aCog,3:6)
-    
+    gga=ggo
   ms = read.csv('data/GCIFACBFHATripMatch.csv')
   #off record matching...skip
   #ms$SD_LOG_ID_DO[which(is.na(ms$SD_LOG_ID_DO))] = ms$SD_LOG_ID_DB[which(is.na(ms$SD_LOG_ID_DO))]
@@ -306,7 +307,8 @@ for(i in 1:length(SBS)){
         aCog = as.data.frame(do.call(rbind,o))
        ggo = toNums(aCog,3:6)
 
-
+gggg = as.data.frame(rbind(gga,ggo))
+write.csv(gggg,file='results/CBFHAGCIFACPUE.csv')
 
   ms = read.csv('data/GCIFACBFHATripMatch.csv')
   #ms$SD_LOG_ID_DO[which(is.na(ms$SD_LOG_ID_DO))] = ms$SD_LOG_ID_DB[which(is.na(ms$SD_LOG_ID_DO))]

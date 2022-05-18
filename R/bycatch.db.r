@@ -419,6 +419,7 @@ if(DS %in% c('CBFHA.redo','CBFHA') ){
     a$Cod = ifelse(a$SPECCD_ID == 10,1,0)
     a$Cusk = ifelse(a$SPECCD_ID == 15,1,0)
     a$Jonah = ifelse(a$SPECCD_ID == 2511,1,0)
+    a$Cunner = ifelse(a$SPECCD_ID == 122,1,0)
     a$SPECCD_ID  = ifelse(is.na(a$SPECCD_ID),9999,a$SPECCD_ID)
     a$Empty = ifelse(a$SPECCD_ID == 9999,1,0)
     a$LegalWt = a$Legal * a$CALWT_G/1000
@@ -426,10 +427,14 @@ if(DS %in% c('CBFHA.redo','CBFHA') ){
     a$CodWt = a$Cod * a$CALWT_G/1000
     a$CuskWt = a$Cusk * a$CALWT_G/1000
     a$JonahWt = a$Jonah * a$CALWT_G/1000
+    a$CunnerWt = a$Cunner * a$CALWT_G/1000
+    
     a$CodWt[which(is.na(a$CodWt))] <- 0
     a$CuskWt[which(is.na(a$CuskWt))] <- 0 
     a$JonahWt[which(is.na(a$JonahWt))] <- 0
     a$CALWT_G[which(is.na(a$CALWT_G))] <- 0
+    a$CunnerWt[which(is.na(a$CunnerWt))] <- 0
+    
     a$LobsterWt = a$Lobster * a$CALWT_G/1000
     a$LobsterWt[which(is.na(a$LobsterWt))] <- 0
     a$SPECCD_ID = bio.utilities::recode(a$SPECCD_ID, "300=310; 301=310; 302=310; 118=10;")
@@ -470,7 +475,7 @@ if(DS %in% c('CBFHA.redo','CBFHA') ){
     
     
     #per trap
-    ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CALWT_G,CodWt,CuskWt,JonahWt,LobsterWt)~UID
+    ac = aggregate(cbind(Lobster, Cod, Cusk, Cunner, Jonah, Legal, Berried,Empty,CunnerWt, LegalWt,CALWT_G,CodWt,CuskWt,JonahWt,LobsterWt)~UID
                    +TRIP+X+Y+TRAP_ID+FISHSET_ID+COMAREA_ID+STRATUM_ID+NUM_HOOK_HAUL+BOARD_DATE+WOS+LFA+SYEAR, data=a,FUN=sum,na.rm=F)
     
     CDa = merge(ac,bb,by='UID')
@@ -493,7 +498,7 @@ if(DS %in% c('CBFHA.redo','CBFHA') ){
       }
     }
     CDa$COMAREA_ID = NULL
-    names(CDa)[c(5:9,21)] =c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED','CALWT')
+    names(CDa)[c(5:9,24)] =c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED','CALWT')
     CDa$DID = 'ASSOC'
     CDa$ll = paste(CDa$X,CDa$Y,sep='ll')
     CDa$Cluster = NA
@@ -628,16 +633,22 @@ if(DS %in% c('GCIFA',"GCIFA.redo")){
     a$Cod = ifelse(a$SPECCD_ID == 10,1,0)
     a$Cusk = ifelse(a$SPECCD_ID == 15,1,0)
     a$Jonah = ifelse(a$SPECCD_ID == 2511,1,0)
+    a$Cunner = ifelse(a$SPECCD_ID == 122,1,0)
+    
     a$SPECCD_ID  = ifelse(is.na(a$SPECCD_ID),9999,a$SPECCD_ID)
     a$Empty = ifelse(a$SPECCD_ID == 9999,1,0)
     a$LegalWt = a$Legal * a$CALWT_G/1000
     a$LegalWt[which(is.na(a$LegalWt))] <- 0
     a$CodWt = a$Cod * a$CALWT_G/1000
     a$CuskWt = a$Cusk * a$CALWT_G/1000
+    a$CunnerWt = a$Cunner * a$CALWT_G/1000
+    
     a$JonahWt = a$Jonah * a$CALWT_G/1000
     a$CodWt[which(is.na(a$CodWt))] <- 0
     a$CuskWt[which(is.na(a$CuskWt))] <- 0 
     a$JonahWt[which(is.na(a$JonahWt))] <- 0
+    a$CunnerWt[which(is.na(a$CunnerWt))] <- 0
+    
     a$CALWT_G[which(is.na(a$CALWT_G))] <- 0
     a$LobsterWt = a$Lobster * a$CALWT_G/1000
     a$LobsterWt[which(is.na(a$LobsterWt))] <- 0
@@ -676,7 +687,7 @@ if(DS %in% c('GCIFA',"GCIFA.redo")){
     a = subset(a,WOS>0)
     
     #per trap
-    ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CALWT_G,CodWt,CuskWt,JonahWt,LobsterWt)~UID
+    ac = aggregate(cbind(Lobster, Cod, Cunner, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CunnerWt, CALWT_G,CodWt,CuskWt,JonahWt,LobsterWt)~UID
                    +TRIP+X+Y+TRAP_ID+FISHSET_ID+COMAREA_ID+STRATUM_ID+BOARD_DATE+WOS+LFA+SYEAR, data=a,FUN=sum,na.rm=F)
     
     CDa = merge(ac,bb,by='UID')
@@ -697,7 +708,7 @@ if(DS %in% c('GCIFA',"GCIFA.redo")){
         #	rm(k,m,ll,lll)
     }
     CDa$COMAREA_ID = NULL
-    names(CDa)[c(5:8,20)] =c('TRAPNO','SETNO','GRIDNUM','DATE_FISHED','CALWT')
+      names(CDa)[c(5:8,22)] =c('TRAPNO','SETNO','GRIDNUM','DATE_FISHED','CALWT')
     CDa$DID = 'ASSOC'
     CDa$ll = paste(CDa$X,CDa$Y,sep='ll')
     CDa$Cluster = NA

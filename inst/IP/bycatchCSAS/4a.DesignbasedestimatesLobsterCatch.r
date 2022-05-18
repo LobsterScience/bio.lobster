@@ -380,7 +380,6 @@ aS = bycatch.db('GCIFA')
 	  au = merge(uu,aCo,all.x=T)
 
 	  #for unsampled strata use the mean and of the time period from all others using the same clustering 
-	  i = which(is.na(au$mean))
 	  ff = au
 	  ff = toNums(ff,8:10)
      #stratified totals

@@ -62,7 +62,8 @@ options(stringsAsFactors=F)
 	if(area=='BoF')		{ ylim=c(43.75,46); 	xlim=c(-67.8,-63.2)	}
 	if(area=='33-35')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-63.2)	}
   if(area=='33-34')	{ ylim=c(42.5,45); 		xlim=c(-67.5,-62.2)	}	
-
+  if(area=='ENS')	  { ylim=c(44.0,45.7); 	xlim=c(-62.2,-59.8)	}
+  
 	coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline",mapRes,".csv")))
 	rivers<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("rivers",mapRes,".csv")))
 	attr(coast,"projection")<-"LL"

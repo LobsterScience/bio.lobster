@@ -8,6 +8,7 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   if(area=='27-38')	{ ylim=c(42.5,48); 		xlim=c(-67.4,-57.8)	}
   if(area=='27-33')	{ ylim=c(42.5,48); 		xlim=c(-66.6,-57.8)	}
   if(area=='27-32')	{ ylim=c(43.5,48); 		xlim=c(-63.6,-57.8)	}
+  if(area=='ENS')	  { ylim=c(44.0,45.7); 	xlim=c(-62.2,-59.8)	}
   if(area=='34-38')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-63.5)	}
   if(area=='35-36')	{ ylim=c(44.5,46);	 	xlim=c(-67.2,-63.2)	}
   if(area=='west')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-64)	}
@@ -84,7 +85,8 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   if(!is.null(fw)){
         p =  p + 
           geom_sf(data=r1 , aes(fill=Z)) +
-          scale_fill_viridis_c(trans=scaleTrans,limits=brks) +
+          #scale_fill_viridis_c(trans=scaleTrans,limits=brks,palette='spectral') +
+          scale_fill_distiller(trans=scaleTrans,limits=brks,palette='Spectral') +
           labs(fill=legLab) +
           facet_wrap(fw) +
           geom_sf(data=ns_coast,fill='grey')
@@ -92,7 +94,8 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
         p =  p + 
           geom_sf(data=r1 , aes(fill=Z)) +
           labs(fill=legLab) +
-          scale_fill_viridis_c(trans=scaleTrans,limits=brks) +
+          #scale_fill_viridis_c(trans=scaleTrans,limits=brks) +
+          scale_fill_distiller(trans=scaleTrans,limits=brks,palette='Spectral') +
           geom_sf(data=ns_coast,fill='grey')
             }
   }
