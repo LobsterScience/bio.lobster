@@ -21,11 +21,14 @@ wd = ('~/dellshared/Bycatch in the Lobster Fishery')
 setwd(wd)
 
 
+aA = bycatch.db('CBFHA',wd=wd)
+aA$EID = 1:nrow(aA)
+k = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFAgridPolys.csv'))
+kk = findPolys(aA,k)
 
+aA = subset(aA,EID %in% kk$EID)
 
-aA = read.csv(file=file.path('results','CompliedDataForModelling.csv'))
-aA$X.1 = NULL
-aA = subset(aA,X< -30 | Y>30)
+#aA = subset(aA,X< -30 | Y>30)
 aA$DATE_FISHED = as.Date(aA$DATE_FISHED)
 attr(aA,'projection') = "LL"
 aA = lonlat2planar(aA,input_names=c('X','Y'),proj.type = p$internal.projection)
@@ -40,52 +43,27 @@ baXY = planar2lonlat(ba,proj.type=p$internal.projection)
 aA$Depth = ba$z[locsmap]
 i = which(aA$Depth<0)
 aA = aA[-i,] 
-i = which(aA$plon>0)
-aA = aA[-i,] 
 aA$DOS =  NA
-i = which(aA$LFA %in% c(33,34,35))
-j = which(aA$SYEAR %in% 2019)
+aA$II = paste(aA$SYEAR,aA$LFA,sep="-")
+aW = split(aA,f=aA$II)
 
-k = intersect(i,j)
-aA$DOS[k] = aA$DATE_FISHED[k] - min(aA$DATE_FISHED[k])
+for(i in 1:length(aW)){
+	aW[[i]]$DOS = aW[[i]]$DATE_FISHED - min(aW[[i]]$DATE_FISHED)
+}
+aA = as.data.frame(do.call(rbind,aW))
+i = which(aA$X> -59.5)
+aA = aA[-i,]
 
-j = which(aA$SYEAR %in% 2020)
-
-k = intersect(i,j)
-aA$DOS[k] = aA$DATE_FISHED[k] - min(aA$DATE_FISHED[k])
-
-j = which(aA$SYEAR %in% 2021)
-
-k = intersect(i,j)
-aA$DOS[k] = aA$DATE_FISHED[k] - (min(aA$DATE_FISHED[k])-30) #sampling did not occur until later this year
+i = which(aA$Y<45.5)
+aA = aA[-i,]
 
 
+
+ i=c(2498:2505,  9742:9755, 11325)
+aA= aA[-i,]
 aT = as_tibble(aA)
 aT$WOS = ceiling(aT$DOS/7)
 aT$WOS = ifelse(aT$WOS==0,aT$WOS+1,aT$WOS)
-
-
-aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
-
-						jittering =F
-						if(jittering){
-							redo=F
-							if(redo){
-								aT$II = paste(aT$X,aT$Y,sep="-")
-								j = split(aT,f=list(aT$II))
-						for(i in 1:length(j)){
-									if(nrow(j[[i]])==1) next
-											for(k in 2:nrow(j[[i]])){
-													j[[i]][k,'X'] = j[[i]][k,'X']+runif(1,-0.0001,0.0001)
-													j[[i]][k,'Y'] = j[[i]][k,'Y']+runif(1,-0.0001,0.0001)
-													}	
-												}
-											aTj = as_tibble(do.call(rbind,j))
-											aTl = st_as_sf(aTj,coords = c("X", "Y"),crs= 4326)
-									saveRDS(aTj,file=file.path('results','CompliedDataForModellingjit.rds'))
-									}
-								aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
-						}
 
 ####making mesh
 						map_data <- rnaturalearth::ne_countries(
@@ -96,7 +74,7 @@ aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
 						      st_bbox(map_data)
 						      ns_coast <- suppressWarnings(suppressMessages(
 						        st_crop(map_data,
-						          c(xmin = -67, ymin = 42, xmax = -53, ymax = 46))))
+						          c(xmin = -62, ymin = 45.5, xmax = -58, ymax = 47.5))))
 						 crs_utm20 <- 2961
 						     
 						     st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
@@ -126,7 +104,7 @@ aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
 						  aT$Y1000 <- surv_utm_coords[,2] / 1000
 						
 						     spde <- make_mesh(aT, xy_cols = c("X1000", "Y1000"),
-						       n_knots = 400, type = "kmeans")
+						       n_knots = 100, type = "kmeans")
 						     plot(spde)
 						     
 						     # Add on the barrier mesh component:
@@ -151,18 +129,17 @@ aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
 						 # the land are barrier triangles..
 
 
-
 ##prediction grids
 
 	     	gr<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 			attr(gr,'projection') <- "LL"
-			gr = subset(gr,PID %in% 33:35)
+			gr = subset(gr,PID %in% 27)
 					baXY$EID = 1:nrow(baXY)
 					baXY$X = baXY$lon
 					baXY$Y = baXY$lat
 			ff = findPolys(baXY,gr,maxRows=dim(baXY)[1])
 			baXY = merge(baXY,ff,by='EID')
-
+			baXY = subset(baXY,z<(70) & z >0)
 					baXY$Depth = baXY$z	
 		     baT <- baXY %>%     st_as_sf(crs = 4326, coords = c("lon", "lat")) %>%
 								   #st_crop(c(xmin = -68, ymin = 42, xmax = -53, ymax = 47)) %>%						
@@ -176,24 +153,22 @@ aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
 			ba = baT[,c('X','Y','Depth','X1000','Y1000','SID','PID')]
 			ba = subset(ba,Depth>5)
 			ba$geometry <- NULL
-			be = as.data.frame(sapply(ba,rep.int,41))
-			be$WOS = rep(1:42,each=dim(ba)[1])
-			beR = as.data.frame(rbind(be,be))
-			beR$DID = rep(c('OBS','ASSOC'), each=nrow(be))
-			be=beR
+			be =ba
+					be = as.data.frame(sapply(ba,rep.int,9))
+		be$WOS = rep(1:9,each=dim(ba)[1])
 			be$lZ = log(be$Depth)
 #LFAs for prediction grids
 
 aT$lZ = log(aT$Depth)
  fit = sdmTMB(LegalWt~
- 				s(lZ,k=5)+DID,
+ 				s(lZ,k=5),
+ 				time='WOS',
  				data=aT,
- 				time='WOS', 
  				mesh=bspde, 
- 				extra_time=c(33,41),
  				family=tweedie(link='log'),
  				spatial='on',
- 				spatialtemporal='ar1')
+ 				spatialtemporal='ar1'
+ 				)
 
  tidy(fit, conf.int = TRUE)
 tidy(fit, effects = "ran_pars", conf.int = TRUE)
@@ -201,8 +176,7 @@ plot_smooth(fit, ggplot = TRUE)
 
 go =predict(fit) 
 go$pred = fit$family$linkinv(go$est)
-saveRDS(go,file='results/lobsterFullPred.rds')
-
+saveRDS(go,file='results/lobsterFullPred27.rds')
 g = predict(fit,newdata=be,nsim=50)
 g1 = fit$family$linkinv(g)
 
@@ -213,26 +187,19 @@ be$uQ = apply(g1,1,quantile,0.75)
 
 gsf = st_as_sf(be,coords = c("X","Y"),crs=32619,remove=F)
 
-plot_map <- function(dat,column='est'){
-		ggplot(dat,aes_string(fill=column)) +
-			geom_sf() + 
-			facet_wrap(~WOS) +
-			coord_fixed()
-	}
-
-saveRDS(list(fit,be),file='lobstersdmTMB.rds')
+saveRDS(list(fit,be),file='lobstersdmTMB27.rds')
 #r = readRDS(file='lobstersdmTMB.rds')
 #fit=r[[1]]
 #g=r[[2]]
 
-png('Figures/ModelOutput/lobstersdmTMBwk1-12.png')
-mm = c(0.001,max(gsf$pred))
-ggplot(subset(gsf,WOS %in% 1:12)) +
+png('Figures/ModelOutput/lobstersdmTMB27.png')
+mm = c(0.0,max(gsf$pred))
+ggplot(subset(gsf,WOS %in% 1:9)) +
 			geom_sf(aes(fill=pred,color=pred)) + 
+			facet_wrap(~WOS)+
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
-			facet_wrap(~WOS) +
- 			theme( axis.ticks.x = element_blank(),
+				theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),
 				   axis.ticks.y = element_blank(),
@@ -241,64 +208,13 @@ ggplot(subset(gsf,WOS %in% 1:12)) +
         		   ) +
  			coord_sf()
 dev.off()
-
-png('Figures/ModelOutput/lobstersdmTMBwk13-24.png')
-ggplot(subset(gsf,WOS %in% 13:24)) +
-			geom_sf(aes(fill=pred,color=pred)) + 
-			scale_fill_viridis_c(trans='sqrt',limits=mm) +
-			scale_color_viridis_c(trans='sqrt',limits=mm) +
-			facet_wrap(~WOS) +
- 			theme( axis.ticks.x = element_blank(),
-        		   axis.text.x = element_blank(),
-				   axis.title.x = element_blank(),
-				   axis.ticks.y = element_blank(),
-        		   axis.text.y = element_blank(),
-        		   axis.title.y = element_blank()
-        		   ) +
- 			coord_sf()
-dev.off()
-
-	png('Figures/ModelOutput/lobstersdmTMBwk25-36.png')
-	ggplot(subset(gsf,WOS %in% 25:36)) +
-				geom_sf(aes(fill=pred,color=pred)) + 
-				scale_fill_viridis_c(trans='sqrt',limits=mm) +
-				scale_color_viridis_c(trans='sqrt',limits=mm) +
-				facet_wrap(~WOS) +
-	 			theme( axis.ticks.x = element_blank(),
-	        		   axis.text.x = element_blank(),
-					   axis.title.x = element_blank(),
-					   axis.ticks.y = element_blank(),
-	        		   axis.text.y = element_blank(),
-	        		   axis.title.y = element_blank()
-	        		   ) +
-	 			coord_sf()
-	dev.off()
-
-
-	png('Figures/ModelOutput/lobstersdmTMBwk37-40.png')
-	ggplot(subset(gsf,WOS %in% 37:40)) +
-				geom_sf(aes(fill=pred,color=pred)) + 
-				scale_fill_viridis_c(trans='sqrt',limits=mm) +
-				scale_color_viridis_c(trans='sqrt',limits=mm) +
-				facet_wrap(~WOS) +
-	 			theme( axis.ticks.x = element_blank(),
-	        		   axis.text.x = element_blank(),
-					   axis.title.x = element_blank(),
-					   axis.ticks.y = element_blank(),
-	        		   axis.text.y = element_blank(),
-	        		   axis.title.y = element_blank()
-	        		   ) +
-	 			coord_sf()
-	dev.off()
-
 
 ag = aggregate(cbind(pred,lQ,uQ)~SID+PID+WOS,data=be,FUN=median)
 #ag = aggregate(cbind(pred)~SID+PID+WOS,data=be,FUN=median)
 
 ef = readRDS('results/BumpedUpEffortByGridNUM.rds')
-ef = subset(ef,LFA %in% 33:35)
+ef = subset(ef,LFA %in% 27)
 ef = aggregate(cbind(BTTH, BlTH,BuTH)~GRID_NUM+WOS+LFA,data=ef,FUN=mean)
-ef$WOS  = ifelse(ef$LFA %in% 33:34,ef$WOS+6,ef$WOS)
 names(ef)[c(1,3)] = c('SID','PID')
 
 ff = merge(ag,ef)
@@ -319,5 +235,5 @@ fl = merge(ff,el)
 fl$err = (fl$L-fl$WEIGHT_KG)/(fl$WEIGHT_KG)
 fl$Rediduals=fl$L-fl$WEIGHT_KG
 
-saveRDS(fl,file='results/LandingsPredictedActual.rds')
+saveRDS(fl,file='results/LandingsPredictedActual27.rds')
 

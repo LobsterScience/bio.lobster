@@ -128,57 +128,8 @@ aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
 						  
 						 # the land are barrier triangles..
 
-##prediction grids
 
-
-          	gr<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
-		attr(gr,'projection') <- "LL"
-		gr = subset(gr,PID %in% 33:35)
-				baXY$EID = 1:nrow(baXY)
-				baXY$X = baXY$lon
-				baXY$Y = baXY$lat
-		ff = findPolys(baXY,gr,maxRows=dim(baXY)[1])
-		baXY = merge(baXY,ff,by='EID')
-
-				baXY$Depth = baXY$z	
-	     baT <- baXY %>%     st_as_sf(crs = 4326, coords = c("lon", "lat")) %>%
-							   #st_crop(c(xmin = -68, ymin = 42, xmax = -53, ymax = 47)) %>%						
-						       st_transform(crs_utm20) 
-		b = st_coordinates(baT)
-		baT$X1000 = b[,1]/1000
-		baT$Y1000 = b[,2]/1000
-		baT$X = b[,1]
-		baT$Y = b[,2]
-
-		ba = baT[,c('X','Y','Depth','X1000','Y1000','SID','PID')]
-		ba = subset(ba,Depth>5)
-		ba$geometry <- NULL
-		be = as.data.frame(sapply(ba,rep.int,41))
-		be$WOS = rep(0:40,each=dim(ba)[1])
-		beR = as.data.frame(rbind(be,be))
-		beR$DID = rep(c('OBS','ASSOC'), each=nrow(be))
-		be=beR
-
-aT$LegWt10 = aT$LegalWt*10
 aT$lZ = log(aT$Depth)
-
-fit =  sdmTMB(LegalWt~
- 				s(lZ,k=5) + DID,
- 				data=aT,
- 				time='WOS', 
- 				mesh=bspde, 
- 				family=tweedie(link='log'),
- 				spatial='on',
- 				spatialtemporal='ar1'
- 				)
- 
-
-g = predict(fit)
-
-
-
-saveRDS(list(fit,g),file='lobstersdmTMBFull.rds')
-
 
  fit1 = sdmTMB(LegalWt~
  				s(lZ,k=5) +DID,
@@ -199,7 +150,7 @@ saveRDS(list(fit1,g1),file='lobstersdmTMBSpace.rds')
  				s(lZ,k=5) +DID,
  				data=aT,
  				mesh=bspde, 
- 				family=tweedie(link='log'),
+ 					family=tweedie(link='log'),
  				spatial='off'
  				)
 g2 = predict(fit2)
@@ -264,45 +215,89 @@ rmse = function(x,y){
 }
 
 with(fit_cv$data,mae(as.numeric(LegalWt),as.numeric(cv_predicted)))
-
 with(fit1_cv1$data,mae(as.numeric(LegalWt),as.numeric(cv_predicted)))
-
 with(fit2_cv$data,mae(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(cv_predicted))))
-
 with(fit_cv$data,rmse(as.numeric(LegalWt),as.numeric(cv_predicted)))
-
 with(fit1_cv1$data,rmse(as.numeric(LegalWt),as.numeric(cv_predicted)))
-
 with(fit2_cv$data,rmse(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(cv_predicted))))
 
+#train rmse v test rmse
+
+fit_cvTT = sdmTMBcv_tntpreds(fit_cv)
+
+fitTT = dplyr::bind_rows(fit_cvTT)
+fitTT$sqR = fitTT$LegalWt - fitTT$pred
+with(subset(fitTT,tt=='train'),mae(as.numeric(LegalWt),as.numeric(pred)))
+with(subset(fitTT,tt=='test'),mae(as.numeric(LegalWt),as.numeric(pred)))
+with(subset(fitTT,tt=='train'),rmse(as.numeric(LegalWt),as.numeric(pred)))
+with(subset(fitTT,tt=='test'),rmse(as.numeric(LegalWt),as.numeric(pred)))
+
+require(ggplot2)
+
+ggplot(fitTT,aes(sqR,after_stat(density))) + 
+geom_histogram() + facet_wrap(~tt) + xlab('Residuals')
+savePlot('Figures/ModelOutput/TrainTestDepthSpaceTime.png')
+
+fit_cvTT2 = sdmTMBcv_tntpreds(fit2_cv)
+fitTT2 = dplyr::bind_rows(fit_cvTT2)
+fitTT2$sqR = fitTT2$LegalWt - fit2$family$linkinv(fitTT2$pred)
+with(subset(fitTT2,tt=='train'),mae(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(pred))))
+with(subset(fitTT2,tt=='test'),mae(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(pred))))
+with(subset(fitTT2,tt=='train'),rmse(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(pred))))
+with(subset(fitTT2,tt=='test'),rmse(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(pred))))
 
 
-#highest elpd has predictions closest to those from true generating process
 
-fit_cv$elpd
-fit1_cv$elpd
-fit2_cv$elpd
-
-	sfit = simulate(fit,nsim=100) 
-	rf = dharma_residuals(sfit,fit)
-
-r <- dharma_residuals(sfit, fit, plot = FALSE)
-
-     plot(r$expected, r$observed)
-     abline(a = 0, b = 1)
+require(ggplot2)
+ggplot(fitTT2,aes(sqR,after_stat(density))) + 
+geom_histogram() + facet_wrap(~tt) + xlab('Residuals')
+savePlot('Figures/ModelOutput/TrainTestDepth.png')
 
 
- r1 = fit$family$linkinv(predict(fit))
- r2 = DHARMa::createDHARMa(simulatedResponse=sfit,
- 									observedResponse=fit$data$LegalWt,
- 									fittedPredictedResponse=r1)
-
- plot(r2)
-aT$SRS = r2$scaledResiduals
-	ggplot(data=ns_coast) + geom_sf() +
-			geom_point(data = subset(aT,WOS %in% 1:42),aes(x = X1000*1000, y = Y1000*1000,colour = SRS), shape = 19,size=0.3) +
-			facet_wrap(~WOS) +
-			scale_colour_gradient2(midpoint=.5,low='blue',mid='white',high='red',space='Lab')
+fit_cvTT1 = sdmTMBcv_tntpreds(fit1_cv1)
+fitTT1 = dplyr::bind_rows(fit_cvTT1)
+fitTT1$sqR = fitTT1$LegalWt - fitTT1$pred
+with(subset(fitTT1,tt=='train'),mae(as.numeric(LegalWt),as.numeric((pred))))
+with(subset(fitTT1,tt=='test'),mae(as.numeric(LegalWt),as.numeric((pred))))
+with(subset(fitTT1,tt=='train'),rmse(as.numeric(LegalWt),as.numeric((pred))))
+with(subset(fitTT1,tt=='test'),rmse(as.numeric(LegalWt),as.numeric((pred))))
 
 
+require(ggplot2)
+ggplot(fitTT1,aes(sqR,after_stat(density))) + 
+geom_histogram() + facet_wrap(~tt) + xlab('Residuals')
+savePlot('Figures/ModelOutput/TrainTestDepthSpace.png')
+
+
+######end MM lobsters
+
+
+##highest elpd has predictions closest to those from true generating process
+#
+#fit_cv$elpd
+#fit1_cv$elpd
+#fit2_cv$elpd
+#
+#	sfit = simulate(fit,nsim=100) 
+#	rf = dharma_residuals(sfit,fit)
+#
+#r <- dharma_residuals(sfit, fit, plot = FALSE)
+#
+#     plot(r$expected, r$observed)
+#     abline(a = 0, b = 1)
+#
+#
+# r1 = fit$family$linkinv(predict(fit))
+# r2 = DHARMa::createDHARMa(simulatedResponse=sfit,
+# 									observedResponse=fit$data$LegalWt,
+# 									fittedPredictedResponse=r1)
+#
+# plot(r2)
+#aT$SRS = r2$scaledResiduals
+#	ggplot(data=ns_coast) + geom_sf() +
+#			geom_point(data = subset(aT,WOS %in% 1:42),aes(x = X1000*1000, y = Y1000*1000,colour = SRS), shape = 19,size=0.3) +
+#			facet_wrap(~WOS) +
+#			scale_colour_gradient2(midpoint=.5,low='blue',mid='white',high='red',space='Lab')
+#
+#
 #

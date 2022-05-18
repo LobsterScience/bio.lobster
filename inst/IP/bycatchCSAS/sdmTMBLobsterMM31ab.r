@@ -1,4 +1,3 @@
-setting up for sdmTMB
 
 require(sdmTMB)
 require(bio.lobster)
@@ -21,11 +20,9 @@ wd = ('~/dellshared/Bycatch in the Lobster Fishery')
 setwd(wd)
 
 
+aA = bycatch.db('GCIFA',wd=wd)
 
-
-aA = read.csv(file=file.path('results','CompliedDataForModelling.csv'))
-aA$X.1 = NULL
-aA = subset(aA,X< -30 | Y>30)
+#aA = subset(aA,X< -30 | Y>30)
 aA$DATE_FISHED = as.Date(aA$DATE_FISHED)
 attr(aA,'projection') = "LL"
 aA = lonlat2planar(aA,input_names=c('X','Y'),proj.type = p$internal.projection)
@@ -40,30 +37,28 @@ baXY = planar2lonlat(ba,proj.type=p$internal.projection)
 aA$Depth = ba$z[locsmap]
 i = which(aA$Depth<0)
 aA = aA[-i,] 
-i = which(aA$plon>0)
+
+i = which(aA$Y<44.5)
 aA = aA[-i,] 
-aA$DOS =  NA
-i = which(aA$LFA %in% c(33,34,35))
-j = which(aA$SYEAR %in% 2019)
 
-k = intersect(i,j)
-aA$DOS[k] = aA$DATE_FISHED[k] - min(aA$DATE_FISHED[k])
+i = which(aA$Y>45.5)
+aA = aA[-i,] 
+ i=c(2013:2076 ,2077:2097,8533:8545,5109:5123,5155:5191,5244:5250, 10265:10328)
+aA = aA[-i,] 
 
-j = which(aA$SYEAR %in% 2020)
+i=c(10078:10107,9049:9062)
+aA = aA[-i,] 
 
-k = intersect(i,j)
-aA$DOS[k] = aA$DATE_FISHED[k] - min(aA$DATE_FISHED[k])
-
-j = which(aA$SYEAR %in% 2021)
-
-k = intersect(i,j)
-aA$DOS[k] = aA$DATE_FISHED[k] - min(aA$DATE_FISHED[k])
-
+k = unique(aA$SYEAR)
+aA$DOS = NA
+for(i in 1:length(k)){
+	l = which(aA$SYEAR==k[i])
+	aA$DOS[l] = aA$DATE_FISHED[l] -min(aA$DATE_FISHED[l])
+}
 
 aT = as_tibble(aA)
 aT$WOS = ceiling(aT$DOS/7)
-aT$MOS = floor(aT$WOS/4)+1
-aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
+aT$WOS = ifelse(aT$WOS==0,aT$WOS+1,aT$WOS)
 
 ####making mesh
 						map_data <- rnaturalearth::ne_countries(
@@ -74,7 +69,7 @@ aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
 						      st_bbox(map_data)
 						      ns_coast <- suppressWarnings(suppressMessages(
 						        st_crop(map_data,
-						          c(xmin = -67, ymin = 42, xmax = -53, ymax = 46))))
+						          c(xmin = -62.2, ymin = 44, xmax = -60, ymax = 45.5))))
 						 crs_utm20 <- 2961
 						     
 						     st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
@@ -99,14 +94,14 @@ aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
 						     # Then we will scale coordinates to km so the range parameter
 						     # is on a reasonable scale for estimation:
 						
+
 						  aT$X1000 <- surv_utm_coords[,1] / 1000
-						     aT$Y1000 <- surv_utm_coords[,2] / 1000
-						     
+						  aT$Y1000 <- surv_utm_coords[,2] / 1000
+						
 						     spde <- make_mesh(aT, xy_cols = c("X1000", "Y1000"),
-						       n_knots = 200, type = "kmeans")
+						       n_knots = 100, type = "kmeans")
 						     plot(spde)
 						     
-
 						     # Add on the barrier mesh component:
 						     bspde <- add_barrier_mesh(
 						       spde, ns_coast, range_fraction = 0.1,
@@ -128,156 +123,67 @@ aT = readRDS(file=file.path('results','CompliedDataForModellingjit.rds'))
 						  
 						 # the land are barrier triangles..
 
-##prediction grids
 
 
-          	gr<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
-		attr(gr,'projection') <- "LL"
-		gr = subset(gr,PID %in% 33:35)
-				baXY$EID = 1:nrow(baXY)
-				baXY$X = baXY$lon
-				baXY$Y = baXY$lat
-		ff = findPolys(baXY,gr,maxRows=dim(baXY)[1])
-		baXY = merge(baXY,ff,by='EID')
+#
 
-				baXY$Depth = baXY$z	
-	     baT <- baXY %>%     st_as_sf(crs = 4326, coords = c("lon", "lat")) %>%
-							   #st_crop(c(xmin = -68, ymin = 42, xmax = -53, ymax = 47)) %>%						
-						       st_transform(crs_utm20) 
-		b = st_coordinates(baT)
-		baT$X1000 = b[,1]/1000
-		baT$Y1000 = b[,2]/1000
-		baT$X = b[,1]
-		baT$Y = b[,2]
+aT$IDS = 'I'
+aT = cv_SpaceTimeFolds(aT,idCol = 'IDS',nfolds=5)
 
-		ba = baT[,c('X','Y','Depth','X1000','Y1000','SID','PID')]
-		ba = subset(ba,Depth>5)
-		ba$geometry <- NULL
-		be = as.data.frame(sapply(ba,rep.int,41))
-		be$WOS = rep(1:41,each=dim(ba)[1])
-		beR = as.data.frame(rbind(be,be))
-		beR$DID = rep(c('OBS','ASSOC'), each=nrow(be))
-		be=beR
-
-aT$lZ = log(aT$Depth)
-
-fit =  sdmTMB(CodWt~
- 				s(lZ,k=5) + DID ,
+ fit_cv = sdmTMB_cv(LegalWt~
+ 				s(lZ,k=5),
  				data=aT,
  				time='WOS', 
  				mesh=bspde, 
  				family=tweedie(link='log'),
  				spatial='on',
- 				spatialtemporal='ar1'
- 				)
- 
-
-g = predict(fit)
-
-
-saveRDS(list(fit,g),file='codsdmTMBFull.rds')
-
-
-	 fit1 = sdmTMB(CodWt~
-	 				s(lZ,k=5) +DID,
-	 				data=aT,
-	 				mesh=bspde, 
-	 				family=tweedie(link='log'),
-	 				spatial='on'
-	 				)
-	g1 = predict(fit1)
-
-
-
-saveRDS(list(fit1,g1),file='codsdmTMBSpace.rds')
-
-
-
- fit2 = sdmTMB(CodWt~
- 				s(lZ,k=5) +DID,
- 				data=aT,
- 				mesh=bspde, 
- 					family=tweedie(link='log'),
- 				spatial='off'
- 				)
-g2 = predict(fit2)
-
-
-
-saveRDS(list(fit2,g2),file='codsdmTMBDepth.rds')
-
-
-
-
-AIC(fit)
-AIC(fit1)
-AIC(fit2)
-
-aT$IDS = 'I'
-aT = cv_SpaceTimeFolds(aT,idCol = 'IDS',nfolds=5)
-
-###self CV
-#oi = list()
-#for(i in 2:5){
-#
-# aT$Weight = ifelse(aT$fold_id==i,0,1)
-# fit = sdmTMB(CodWt~
-# 				s(lZ,k=5)+DID,
-# 				data=aT,
-# 				time='WOS', 
-# 				mesh=bspde, 
-# 				family=tweedie(link='log'),
-# 				spatial='on',
-# 				spatialtemporal='ar1',
-# 				weights = aT$Weight
-# 				)
-# k = predict(fit,newdata=subset(aT,Weight==1))
-# f = predict(fit,newdata=subset(aT,Weight==0))
-# k$TT = 'train'
-# f$TT = 'test'
-# ff = list(k,f)
-# oil= dplyr::bind_rows(ff)
-# oil$pred = fit$family$linkinv(oil$est)
-# oil$FOLD=i
-# oi[[i]] = oil
-#}
-#	 				
-#	 ot = dplyr::bind_rows(oi)
-#
-#bspde2 = make_mesh(aT2,xy_cols=c('X1000','Y1000'),mesh=bspde$mesh)
-
-
- fit_cv = sdmTMB_cv(CodWt~
- 				s(lZ,k=5)+DID+s(LobsterWt,k=3),
- 				data=aT,
- 				#time='WOS', 
- 				mesh=bspde, 
- 				family=tweedie(link='log'),
- 				spatial='on',
  				fold_ids = 'fold_id',
- 			#	spatialtemporal='ar1',
+ 				spatialtemporal='ar1',
  				k_folds=5,
  				#constant_mesh=F
  				)
  				
 
-fit1_cv1 = sdmTMB_cv(CodWt~
-				s(lZ,k=5)+DID,
+ fit_cv = sdmTMB_cv(LegalWt~
+ 				s(lZ,k=5),
+ 				data=aT,
+ 				time='SYEAR', 
+ 				mesh=bspde, 
+ 				family=tweedie(link='log'),
+ 				spatial='on',
+ 				fold_ids = 'fold_id',
+ 				spatialtemporal='ar1',
+ 				k_folds=5,
+ 				#constant_mesh=F
+ 				)
+ 				
+
+
+fit1_cv1 = sdmTMB_cv(LegalWt~
+				s(lZ,k=5),
 				data=aT,
 				mesh=bspde, 
  				spatial='on',
  				family=tweedie(link='log'),
 				fold_ids = 'fold_id',
-				k_folds=5#,
+				k_folds=5,
 				#constant_mesh=F
 				)
 
-fit2_cv = sdmTMB_cv_nomesh(CodWt~
-				s(lZ,k=5)+DID,
+fit2_cv = sdmTMB_cv_nomesh(LegalWt~
+				s(lZ,k=5),
 				data=aT,
 				family=tweedie(link='log'),
 				fold_ids = aT$fold_id,
 				k_folds=5
+				)
+
+fit2 = sdmTMB(LegalWt~
+				s(lZ,k=5),
+				data=aT,
+				mesh=bspde, 
+ 				spatial='off',
+ 				family=tweedie(link='log'),
 				)
 
 
@@ -292,59 +198,59 @@ rmse = function(x,y){
 
 }
 
-with(fit_cv$data,mae(as.numeric(CodWt),as.numeric(cv_predicted)))
-with(fit1_cv1$data,mae(as.numeric(CodWt),as.numeric(cv_predicted)))
-with(fit2_cv$data,mae(as.numeric(CodWt),as.numeric(fit2$family$linkinv(cv_predicted))))
-with(fit_cv$data,rmse(as.numeric(CodWt),as.numeric(cv_predicted)))
-with(fit1_cv1$data,rmse(as.numeric(CodWt),as.numeric(cv_predicted)))
-with(fit2_cv$data,rmse(as.numeric(CodWt),as.numeric(fit2$family$linkinv(cv_predicted))))
+with(fit_cv$data,mae(as.numeric(LegalWt),as.numeric(cv_predicted)))
+with(fit1_cv1$data,mae(as.numeric(LegalWt),as.numeric(cv_predicted)))
+with(fit2_cv$data,mae(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(cv_predicted))))
+with(fit_cv$data,rmse(as.numeric(LegalWt),as.numeric(cv_predicted)))
+with(fit1_cv1$data,rmse(as.numeric(LegalWt),as.numeric(cv_predicted)))
+with(fit2_cv$data,rmse(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(cv_predicted))))
 
 #train rmse v test rmse
 
 fit_cvTT = sdmTMBcv_tntpreds(fit_cv)
 
 fitTT = dplyr::bind_rows(fit_cvTT)
-fitTT$sqR = fitTT$CodWt - fitTT$pred
-with(subset(fitTT,tt=='train'),mae(as.numeric(CodWt),as.numeric(pred)))
-with(subset(fitTT,tt=='test'),mae(as.numeric(CodWt),as.numeric(pred)))
-with(subset(fitTT,tt=='train'),rmse(as.numeric(CodWt),as.numeric(pred)))
-with(subset(fitTT,tt=='test'),rmse(as.numeric(CodWt),as.numeric(pred)))
+fitTT$sqR = fitTT$LegalWt - fitTT$pred
+with(subset(fitTT,tt=='train'),mae(as.numeric(LegalWt),as.numeric(pred)))
+with(subset(fitTT,tt=='test'),mae(as.numeric(LegalWt),as.numeric(pred)))
+with(subset(fitTT,tt=='train'),rmse(as.numeric(LegalWt),as.numeric(pred)))
+with(subset(fitTT,tt=='test'),rmse(as.numeric(LegalWt),as.numeric(pred)))
 
 require(ggplot2)
 
 ggplot(fitTT,aes(sqR,after_stat(density))) + 
 geom_histogram() + facet_wrap(~tt) + xlab('Residuals')
-savePlot('Figures/ModelOutput/CodTrainTestDepthSpaceTime.png')
+savePlot('Figures/ModelOutput/LegalTrainTestDepthSpaceTime31ab.png')
 
 fit_cvTT2 = sdmTMBcv_tntpreds(fit2_cv)
 fitTT2 = dplyr::bind_rows(fit_cvTT2)
-fitTT2$sqR = fitTT2$CodWt - fit2$family$linkinv(fitTT2$pred)
-with(subset(fitTT2,tt=='train'),mae(as.numeric(CodWt),as.numeric(fit2$family$linkinv(pred))))
-with(subset(fitTT2,tt=='test'),mae(as.numeric(CodWt),as.numeric(fit2$family$linkinv(pred))))
-with(subset(fitTT2,tt=='train'),rmse(as.numeric(CodWt),as.numeric(fit2$family$linkinv(pred))))
-with(subset(fitTT2,tt=='test'),rmse(as.numeric(CodWt),as.numeric(fit2$family$linkinv(pred))))
+fitTT2$sqR = fitTT2$LegalWt - fit2$family$linkinv(fitTT2$pred)
+with(subset(fitTT2,tt=='train'),mae(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(pred))))
+with(subset(fitTT2,tt=='test'),mae(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(pred))))
+with(subset(fitTT2,tt=='train'),rmse(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(pred))))
+with(subset(fitTT2,tt=='test'),rmse(as.numeric(LegalWt),as.numeric(fit2$family$linkinv(pred))))
 
 
 
 require(ggplot2)
 ggplot(fitTT2,aes(sqR,after_stat(density))) + 
 geom_histogram() + facet_wrap(~tt) + xlab('Residuals')
-savePlot('Figures/ModelOutput/CodTrainTestDepth.png')
+savePlot('Figures/ModelOutput/LegalTrainTestDepth31ab.png')
 
 
 fit_cvTT1 = sdmTMBcv_tntpreds(fit1_cv1)
 fitTT1 = dplyr::bind_rows(fit_cvTT1)
-fitTT1$sqR = fitTT1$CodWt - fitTT1$pred
-with(subset(fitTT1,tt=='train'),mae(as.numeric(CodWt),as.numeric((pred))))
-with(subset(fitTT1,tt=='test'),mae(as.numeric(CodWt),as.numeric((pred))))
-with(subset(fitTT1,tt=='train'),rmse(as.numeric(CodWt),as.numeric((pred))))
-with(subset(fitTT1,tt=='test'),rmse(as.numeric(CodWt),as.numeric((pred))))
+fitTT1$sqR = fitTT1$LegalWt - fitTT1$pred
+with(subset(fitTT1,tt=='train'),mae(as.numeric(LegalWt),as.numeric((pred))))
+with(subset(fitTT1,tt=='test'),mae(as.numeric(LegalWt),as.numeric((pred))))
+with(subset(fitTT1,tt=='train'),rmse(as.numeric(LegalWt),as.numeric((pred))))
+with(subset(fitTT1,tt=='test'),rmse(as.numeric(LegalWt),as.numeric((pred))))
 
 
 require(ggplot2)
 ggplot(fitTT1,aes(sqR,after_stat(density))) + 
 geom_histogram() + facet_wrap(~tt) + xlab('Residuals')
-savePlot('Figures/ModelOutput/CodTrainTestDepthSpace.png')
+savePlot('Figures/ModelOutput/LegalTrainTestDepthSpace31ab.png')
 
 
 ######end MM lobsters
