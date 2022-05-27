@@ -130,21 +130,8 @@ aT$WOS = ifelse(aT$WOS==0,aT$WOS+1,aT$WOS)
 aT$IDS = 'I'
 aT = cv_SpaceTimeFolds(aT,idCol = 'IDS',nfolds=5)
 aT$lZ = log(aT$Depth)
- fit_cv = sdmTMB_cv(CodWt~
- 				s(lZ,k=5),
- 				data=aT,
- 				time='WOS', 
- 				mesh=bspde, 
- 				family=tweedie(link='log'),
- 				spatial='on',
- 				fold_ids = 'fold_id',
- 				spatialtemporal='ar1',
- 				k_folds=5,
- 				#constant_mesh=F
- 				)
- 				
-
- fit_cv = sdmTMB_cv(CodWt~
+ 
+ fit_cv = sdmTMB_cv(CunnerWt~
  				s(lZ,k=5),
  				data=aT,
  				time='SYEAR', 
@@ -159,7 +146,7 @@ aT$lZ = log(aT$Depth)
  				
 
 
-fit1_cv1 = sdmTMB_cv(CodWt~
+fit1_cv1 = sdmTMB_cv(CunnerWt~
 				s(lZ,k=5),
 				data=aT,
 				mesh=bspde, 
@@ -170,7 +157,7 @@ fit1_cv1 = sdmTMB_cv(CodWt~
 				#constant_mesh=F
 				)
 
-fit2_cv = sdmTMB_cv_nomesh(CodWt~
+fit2_cv = sdmTMB_cv_nomesh(CunnerWt~
 				s(lZ,k=5),
 				data=aT,
 				family=tweedie(link='log'),
@@ -178,7 +165,7 @@ fit2_cv = sdmTMB_cv_nomesh(CodWt~
 				k_folds=5
 				)
 
-fit2 = sdmTMB(CodWt~
+fit2 = sdmTMB(CunnerWt~
 				s(lZ,k=5),
 				data=aT,
 				mesh=bspde, 
@@ -198,59 +185,59 @@ rmse = function(x,y){
 
 }
 
-with(fit_cv$data,mae(as.numeric(CodWt),as.numeric(cv_predicted)))
-with(fit1_cv1$data,mae(as.numeric(CodWt),as.numeric(cv_predicted)))
-with(fit2_cv$data,mae(as.numeric(CodWt),as.numeric(fit2$family$linkinv(cv_predicted))))
-with(fit_cv$data,rmse(as.numeric(CodWt),as.numeric(cv_predicted)))
-with(fit1_cv1$data,rmse(as.numeric(CodWt),as.numeric(cv_predicted)))
-with(fit2_cv$data,rmse(as.numeric(CodWt),as.numeric(fit2$family$linkinv(cv_predicted))))
+with(fit_cv$data,mae(as.numeric(CunnerWt),as.numeric(cv_predicted)))
+with(fit1_cv1$data,mae(as.numeric(CunnerWt),as.numeric(cv_predicted)))
+with(fit2_cv$data,mae(as.numeric(CunnerWt),as.numeric(fit2$family$linkinv(cv_predicted))))
+with(fit_cv$data,rmse(as.numeric(CunnerWt),as.numeric(cv_predicted)))
+with(fit1_cv1$data,rmse(as.numeric(CunnerWt),as.numeric(cv_predicted)))
+with(fit2_cv$data,rmse(as.numeric(CunnerWt),as.numeric(fit2$family$linkinv(cv_predicted))))
 
 #train rmse v test rmse
 
 fit_cvTT = sdmTMBcv_tntpreds(fit_cv)
 
 fitTT = dplyr::bind_rows(fit_cvTT)
-fitTT$sqR = fitTT$CodWt - fitTT$pred
-with(subset(fitTT,tt=='train'),mae(as.numeric(CodWt),as.numeric(pred)))
-with(subset(fitTT,tt=='test'),mae(as.numeric(CodWt),as.numeric(pred)))
-with(subset(fitTT,tt=='train'),rmse(as.numeric(CodWt),as.numeric(pred)))
-with(subset(fitTT,tt=='test'),rmse(as.numeric(CodWt),as.numeric(pred)))
+fitTT$sqR = fitTT$CunnerWt - fitTT$pred
+with(subset(fitTT,tt=='train'),mae(as.numeric(CunnerWt),as.numeric(pred)))
+with(subset(fitTT,tt=='test'),mae(as.numeric(CunnerWt),as.numeric(pred)))
+with(subset(fitTT,tt=='train'),rmse(as.numeric(CunnerWt),as.numeric(pred)))
+with(subset(fitTT,tt=='test'),rmse(as.numeric(CunnerWt),as.numeric(pred)))
 
 require(ggplot2)
 
 ggplot(fitTT,aes(sqR,after_stat(density))) + 
 geom_histogram() + facet_wrap(~tt) + xlab('Residuals')
-savePlot('Figures/ModelOutput/CodTrainTestDepthSpaceTime31ab.png')
+savePlot('Figures/ModelOutput/CunnerTrainTestDepthSpaceTime31ab.png')
 
 fit_cvTT2 = sdmTMBcv_tntpreds(fit2_cv)
 fitTT2 = dplyr::bind_rows(fit_cvTT2)
-fitTT2$sqR = fitTT2$CodWt - fit2$family$linkinv(fitTT2$pred)
-with(subset(fitTT2,tt=='train'),mae(as.numeric(CodWt),as.numeric(fit2$family$linkinv(pred))))
-with(subset(fitTT2,tt=='test'),mae(as.numeric(CodWt),as.numeric(fit2$family$linkinv(pred))))
-with(subset(fitTT2,tt=='train'),rmse(as.numeric(CodWt),as.numeric(fit2$family$linkinv(pred))))
-with(subset(fitTT2,tt=='test'),rmse(as.numeric(CodWt),as.numeric(fit2$family$linkinv(pred))))
+fitTT2$sqR = fitTT2$CunnerWt - fit2$family$linkinv(fitTT2$pred)
+with(subset(fitTT2,tt=='train'),mae(as.numeric(CunnerWt),as.numeric(fit2$family$linkinv(pred))))
+with(subset(fitTT2,tt=='test'),mae(as.numeric(CunnerWt),as.numeric(fit2$family$linkinv(pred))))
+with(subset(fitTT2,tt=='train'),rmse(as.numeric(CunnerWt),as.numeric(fit2$family$linkinv(pred))))
+with(subset(fitTT2,tt=='test'),rmse(as.numeric(CunnerWt),as.numeric(fit2$family$linkinv(pred))))
 
 
 
 require(ggplot2)
 ggplot(fitTT2,aes(sqR,after_stat(density))) + 
 geom_histogram() + facet_wrap(~tt) + xlab('Residuals')
-savePlot('Figures/ModelOutput/CodTrainTestDepth31ab.png')
+savePlot('Figures/ModelOutput/CunnerTrainTestDepth31ab.png')
 
 
 fit_cvTT1 = sdmTMBcv_tntpreds(fit1_cv1)
 fitTT1 = dplyr::bind_rows(fit_cvTT1)
-fitTT1$sqR = fitTT1$CodWt - fitTT1$pred
-with(subset(fitTT1,tt=='train'),mae(as.numeric(CodWt),as.numeric((pred))))
-with(subset(fitTT1,tt=='test'),mae(as.numeric(CodWt),as.numeric((pred))))
-with(subset(fitTT1,tt=='train'),rmse(as.numeric(CodWt),as.numeric((pred))))
-with(subset(fitTT1,tt=='test'),rmse(as.numeric(CodWt),as.numeric((pred))))
+fitTT1$sqR = fitTT1$CunnerWt - fitTT1$pred
+with(subset(fitTT1,tt=='train'),mae(as.numeric(CunnerWt),as.numeric((pred))))
+with(subset(fitTT1,tt=='test'),mae(as.numeric(CunnerWt),as.numeric((pred))))
+with(subset(fitTT1,tt=='train'),rmse(as.numeric(CunnerWt),as.numeric((pred))))
+with(subset(fitTT1,tt=='test'),rmse(as.numeric(CunnerWt),as.numeric((pred))))
 
 
 require(ggplot2)
 ggplot(fitTT1,aes(sqR,after_stat(density))) + 
 geom_histogram() + facet_wrap(~tt) + xlab('Residuals')
-savePlot('Figures/ModelOutput/CodTrainTestDepthSpace31ab.png')
+savePlot('Figures/ModelOutput/CunnerTrainTestDepthSpace31ab.png')
 
 
 ######end MM lobsters
@@ -273,7 +260,7 @@ savePlot('Figures/ModelOutput/CodTrainTestDepthSpace31ab.png')
 #
 # r1 = fit$family$linkinv(predict(fit))
 # r2 = DHARMa::createDHARMa(simulatedResponse=sfit,
-# 									observedResponse=fit$data$CodWt,
+# 									observedResponse=fit$data$CunnerWt,
 # 									fittedPredictedResponse=r1)
 #
 # plot(r2)

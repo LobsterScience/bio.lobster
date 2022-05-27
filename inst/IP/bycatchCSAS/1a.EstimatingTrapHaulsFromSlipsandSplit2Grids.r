@@ -36,23 +36,6 @@ sL = rm.from.list(sL)
 cpue.lst<-list()
 cpue.ann = list()
 
-#if using blocked approach ##
-blocking=F
-if(blocking){
-    for(i in 1:length(sL)){
-      tmp<-sL[[i]]
-      tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
-      names(tmp)<-c('time','catch','effort')
-      tmp$date<-as.Date(tmp$time)
-      first.day<-min(tmp$date)
-      tmp$time<-julian(tmp$date,origin=first.day-1)
-      g<-blockedBootstrap(tmp,block.center = 14,block.range = 7)
-      cpue.lst[[i]] <- c(lfa=unique(sL[[i]]$LFA),yr = unique(sL[[i]]$SYEAR),g)
-    }
-    
-    cc =as.data.frame(do.call(rbind,cpue.lst))
-}
-
 biasCorrectedRatio=T
 if(biasCorrectedRatio){
   for(i in 1:length(sL)){

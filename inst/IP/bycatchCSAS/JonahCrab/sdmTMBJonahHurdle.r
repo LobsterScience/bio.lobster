@@ -132,7 +132,7 @@ aT$lZ = log(aT$Depth)
  				mesh=bspde, 
  				family=binomial(link='logit'),
  				spatial='on',
- 				#spatialtemporal='ar1'
+ 				spatialtemporal='ar1'
  				)
 
 
@@ -187,13 +187,13 @@ plot_map <- function(dat,column='est'){
 	}
 
 saveRDS(list(fitH,fitD,be),file='jonahsdmTMB.rds')
-#r = readRDS(file='lobstersdmTMB.rds')
+#r = readRDS(file='jonahsdmTMB.rds')
 #fit=r[[1]]
-#g=r[[2]]
+#be=r[[3]]]
 png('Figures/ModelOutput/JonahsdmTMBwk1-12.png')
-mm = c(0.,max(gsf$predC))
-ggplot(subset(gsf,WOS %in% 1:12)) +
-			geom_sf(aes(fill=predC,color=predC)) + 
+mm = c(0.,max(gsf$predBin))
+ggplot(subset(gsf,WOS %in% c(1,2,6))) +
+			geom_sf(aes(fill=predBin,color=predBin)) + 
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
 			facet_wrap(~WOS) +
@@ -207,9 +207,10 @@ ggplot(subset(gsf,WOS %in% 1:12)) +
  			coord_sf()
 dev.off()
 
+
 png('Figures/ModelOutput/JonahsdmTMBwk13-24.png')
 ggplot(subset(gsf,WOS %in% 13:24)) +
-			geom_sf(aes(fill=predC,color=predC)) + 
+			geom_sf(aes(fill=predBin,color=predBin)) + 
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
 			facet_wrap(~WOS) +
@@ -225,7 +226,7 @@ dev.off()
 
 	png('Figures/ModelOutput/JonahsdmTMBwk25-36.png')
 	ggplot(subset(gsf,WOS %in% 25:36)) +
-				geom_sf(aes(fill=predC,color=predC)) + 
+				geom_sf(aes(fill=predBin,color=predBin)) + 
 				scale_fill_viridis_c(trans='sqrt',limits=mm) +
 				scale_color_viridis_c(trans='sqrt',limits=mm) +
 				facet_wrap(~WOS) +
@@ -242,7 +243,7 @@ dev.off()
 
 	png('Figures/ModelOutput/JonahsdmTMBwk37-40.png')
 	ggplot(subset(gsf,WOS %in% 37:40)) +
-				geom_sf(aes(fill=predC,color=predC)) + 
+				geom_sf(aes(fill=predBin,color=predBin)) + 
 				scale_fill_viridis_c(trans='sqrt',limits=mm) +
 				scale_color_viridis_c(trans='sqrt',limits=mm) +
 				facet_wrap(~WOS) +
@@ -256,7 +257,20 @@ dev.off()
 	 			coord_sf()
 	dev.off()
 
-	
+ggplot(subset(gsf,WOS %in% 37:40)) +
+				geom_sf(aes(fill=predBin,color=predBin)) + 
+				scale_fill_viridis_c(trans='sqrt',limits=mm) +
+				scale_color_viridis_c(trans='sqrt',limits=mm) +
+				facet_wrap(~WOS) +
+	 			theme( axis.ticks.x = element_blank(),
+	        		   axis.text.x = element_blank(),
+					   axis.title.x = element_blank(),
+					   axis.ticks.y = element_blank(),
+	        		   axis.text.y = element_blank(),
+	        		   axis.title.y = element_blank()
+	        		   ) +
+	 			coord_sf()
+		
 
 ag = aggregate(cbind(predC,predCL,predCU)~SID+PID+WOS,data=be,FUN=mean)
 

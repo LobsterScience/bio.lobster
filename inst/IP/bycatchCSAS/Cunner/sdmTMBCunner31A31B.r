@@ -21,12 +21,7 @@ wd = ('~/dellshared/Bycatch in the Lobster Fishery')
 setwd(wd)
 
 
-aA = bycatch.db('CBFHA',wd=wd)
-aA$EID = 1:nrow(aA)
-k = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFAgridPolys.csv'))
-kk = findPolys(aA,k)
-
-aA = subset(aA,EID %in% kk$EID)
+aA = bycatch.db('GCIFA',wd=wd)
 
 #aA = subset(aA,X< -30 | Y>30)
 aA$DATE_FISHED = as.Date(aA$DATE_FISHED)
@@ -43,24 +38,25 @@ baXY = planar2lonlat(ba,proj.type=p$internal.projection)
 aA$Depth = ba$z[locsmap]
 i = which(aA$Depth<0)
 aA = aA[-i,] 
-aA$DOS =  NA
-aA$II = paste(aA$SYEAR,aA$LFA,sep="-")
-aW = split(aA,f=aA$II)
 
-for(i in 1:length(aW)){
-	aW[[i]]$DOS = aW[[i]]$DATE_FISHED - min(aW[[i]]$DATE_FISHED)
+i = which(aA$Y<44.5)
+aA = aA[-i,] 
+
+i = which(aA$Y>45.5)
+aA = aA[-i,] 
+ i=c(2013:2076 ,2077:2097,8533:8545,5109:5123,5155:5191,5244:5250, 10265:10328)
+aA = aA[-i,] 
+
+i=c(10078:10107,9049:9062)
+aA = aA[-i,] 
+
+k = unique(aA$SYEAR)
+aA$DOS = NA
+for(i in 1:length(k)){
+	l = which(aA$SYEAR==k[i])
+	aA$DOS[l] = aA$DATE_FISHED[l] -min(aA$DATE_FISHED[l])
 }
-aA = as.data.frame(do.call(rbind,aW))
-i = which(aA$X> -59.5)
-aA = aA[-i,]
 
-i = which(aA$Y<45.5)
-aA = aA[-i,]
-
-
-
- i=c(2498:2505,  9742:9755, 11325)
-aA= aA[-i,]
 aT = as_tibble(aA)
 aT$WOS = ceiling(aT$DOS/7)
 aT$WOS = ifelse(aT$WOS==0,aT$WOS+1,aT$WOS)
@@ -74,7 +70,7 @@ aT$WOS = ifelse(aT$WOS==0,aT$WOS+1,aT$WOS)
 						      st_bbox(map_data)
 						      ns_coast <- suppressWarnings(suppressMessages(
 						        st_crop(map_data,
-						          c(xmin = -62, ymin = 45.5, xmax = -58, ymax = 47.5))))
+						          c(xmin = -62.2, ymin = 44, xmax = -60, ymax = 45.5))))
 						 crs_utm20 <- 2961
 						     
 						     st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
@@ -129,17 +125,18 @@ aT$WOS = ifelse(aT$WOS==0,aT$WOS+1,aT$WOS)
 						 # the land are barrier triangles..
 
 
+
 ##prediction grids
 
 	     	gr<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 			attr(gr,'projection') <- "LL"
-			gr = subset(gr,PID %in% 27)
+			gr = subset(gr,PID %in% 311:312)
 					baXY$EID = 1:nrow(baXY)
 					baXY$X = baXY$lon
 					baXY$Y = baXY$lat
 			ff = findPolys(baXY,gr,maxRows=dim(baXY)[1])
 			baXY = merge(baXY,ff,by='EID')
-			baXY = subset(baXY,z<(70) & z >0)
+			baXY = subset(baXY,z<70)
 					baXY$Depth = baXY$z	
 		     baT <- baXY %>%     st_as_sf(crs = 4326, coords = c("lon", "lat")) %>%
 								   #st_crop(c(xmin = -68, ymin = 42, xmax = -53, ymax = 47)) %>%						
@@ -151,25 +148,32 @@ aT$WOS = ifelse(aT$WOS==0,aT$WOS+1,aT$WOS)
 			baT$Y = b[,2]
 
 			ba = baT[,c('X','Y','Depth','X1000','Y1000','SID','PID')]
+			ba = subset(ba,Y>4960000)
+			ba = subset(ba,X<690000)
+			
 			ba = subset(ba,Depth>5)
 			ba$geometry <- NULL
-			be =ba
-					be = as.data.frame(sapply(ba,rep.int,9))
-		be$WOS = rep(1:9,each=dim(ba)[1])
-			be$lZ = log(be$Depth)
+			be = as.data.frame(sapply(ba,rep.int,10))
+			be$WOS = rep(1:10,each=dim(ba)[1])
+			be = as.data.frame(sapply(be,rep.int,2))
+			be$SYEAR = rep(2018:2019,each=dim(be)[1]/2)
+			
+					be$lZ = log(be$Depth)
 #LFAs for prediction grids
 
 aT$lZ = log(aT$Depth)
-aT$PA = ifelse(aT$CunnerWt>0,1,0)
  fit = sdmTMB(CunnerWt~
  				s(lZ,k=5),
- 			#	time='WOS',
  				data=aT,
+ 				#time='SYEAR', 
  				mesh=bspde, 
  				family=tweedie(link='log'),
  				spatial='on',
  			#	spatialtemporal='ar1'
  				)
+
+ summary(fit)
+ AIC(fit)
 
  tidy(fit, conf.int = TRUE)
 tidy(fit, effects = "ran_pars", conf.int = TRUE)
@@ -177,8 +181,10 @@ plot_smooth(fit, ggplot = TRUE)
 
 go =predict(fit) 
 go$pred = fit$family$linkinv(go$est)
-saveRDS(go,file='results/CunnerFullPred27.rds')
-be = subset(be,WOS==1)
+saveRDS(go,file='results/CunnerFullPred31ab.rds')
+
+be = subset(be,WOS==1 & SYEAR==2019)
+
 g = predict(fit,newdata=be,nsim=50)
 g1 = fit$family$linkinv(g)
 
@@ -189,19 +195,26 @@ be$uQ = apply(g1,1,quantile,0.75)
 
 gsf = st_as_sf(be,coords = c("X","Y"),crs=32619,remove=F)
 
-saveRDS(list(fit,be),file='CunnersdmTMB27.rds')
+plot_map <- function(dat,column='est'){
+		ggplot(dat,aes_string(fill=column)) +
+			geom_sf() + 
+			facet_wrap(~WOS) +
+			coord_fixed()
+	}
+
+saveRDS(list(fit,be),file='CunnersdmTMB.rds')
 #r = readRDS(file='lobstersdmTMB.rds')
 #fit=r[[1]]
 #g=r[[2]]
 
-png('Figures/ModelOutput/CunnersdmTMB27.png')
-mm = c(0.0,max(gsf$pred))
-ggplot(subset(gsf)) +
+png('Figures/ModelOutput/CunnersdmTMB31ab.png')
+mm = c(0.,max(gsf$pred))
+ggplot(gsf) +
 			geom_sf(aes(fill=pred,color=pred)) + 
-		#	facet_wrap(~WOS)+
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
-				theme( axis.ticks.x = element_blank(),
+			facet_wrap(~SYEAR) +
+ 			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),
 				   axis.ticks.y = element_blank(),
@@ -211,14 +224,16 @@ ggplot(subset(gsf)) +
  			coord_sf()
 dev.off()
 
-ag = aggregate(cbind(pred,lQ,uQ)~SID+PID+WOS,data=be,FUN=median)
+ag = aggregate(cbind(pred,lQ,uQ)~SID+PID,data=be,FUN=mean)
 #ag = aggregate(cbind(pred)~SID+PID+WOS,data=be,FUN=median)
 
 ef = readRDS('results/BumpedUpEffortByGridNUM.rds')
-ef = subset(ef,LFA %in% 27)
-ef = aggregate(cbind(BTTH, BlTH,BuTH)~GRID_NUM+WOS+LFA,data=ef,FUN=mean)
-names(ef)[c(1,3)] = c('SID','PID')
+ef = subset(ef,LFA %in% c('31A','31B'))
+ef = aggregate(cbind(BTTH, BlTH,BuTH)~GRID_NUM+SYEAR+LFA,data=ef,FUN=sum)
+ef = aggregate(cbind(BTTH, BlTH,BuTH)~GRID_NUM+LFA,data=ef,FUN=mean)
 
+names(ef)[c(1,2)] = c('SID','PID')
+ag$PID = ifelse(ag$PID==311,'31A','31B')
 ff = merge(ag,ef)
 
 ff$L = ff$pred*ff$BTTH
@@ -231,11 +246,11 @@ L = aggregate(cbind(L,Ll,Lu)~PID,data=ff,FUN=sum)
 
 el = readRDS('results/LandingsByGridNUM.rds')
 names(el)[c(1,3)] = c('SID','PID')
-el = aggregate(WEIGHT_KG~SID+WOS+PID,data=el,FUN=mean)
+el = aggregate(WEIGHT_KG~SID+PID+SYEAR,data=el,FUN=sum)
 
 fl = merge(ff,el)
 fl$err = (fl$L-fl$WEIGHT_KG)/(fl$WEIGHT_KG)
 fl$Rediduals=fl$L-fl$WEIGHT_KG
 
-saveRDS(fl,file='results/LandingsPredictedActual27.rds')
+saveRDS(fl,file='results/LandingsPredictedActual31ab.rds')
 
