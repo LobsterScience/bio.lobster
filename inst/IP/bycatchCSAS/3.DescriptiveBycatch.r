@@ -348,7 +348,7 @@ b = bycatch.db('logbook.merge',wd=wd)
 bW = aggregate(NUM_OF_TRAPS~WOS+SYEAR+LFA,data=b,FUN=sum)
 
 
-aO = bycatch.db('ISDB.reshape')
+aO = bycatch.db('ISDB.reshape.redo')
 aS = bycatch.db(DS='SWLSS')
 
 nO = names(aO)
@@ -358,7 +358,7 @@ nO = grep('P.',nO,invert=T)
 nS = grep('P.',nS,invert=T)
 
 aO = aO[,c(nO,12)]
-aS = aS[,c(nS,426)]
+aS = aS[,c(nS,427)]
 
 aS$SETNO = aS$mn = NULL
 aA = rbind(aO,aS)
@@ -368,7 +368,7 @@ io = unique(aA$GPY)
 aA$GP = paste(aA$LFA,aA$GridGroup,sep="-")
 
 write.csv(aA,file=file.path('results','CompliedDataForModelling.csv'))
-
+aa = read.csv(file=file.path('results','CompliedDataForModelling.csv'))
 
 
 #Comparing Temporal sampling with Fishing (by LFA)

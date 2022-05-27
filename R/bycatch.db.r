@@ -15,6 +15,16 @@ bycatch.db <- function(DS='redo.data',p=p,wd='C:\\Users\\Cooka\\OneDrive - DFO-M
     xAll$Y = convert.dd.dddd(xAll$LATDDMM)
     saveRDS(xAll,file.path(wd,'data/CompiledAtSeaMarch2022.rds'))
     
+    xAll = connect.command(con,'select * from cooka.bycatch_cbfha_2022')
+    xAll$X = convert.dd.dddd(xAll$LONGDDMM)*-1
+    xAll$Y = convert.dd.dddd(xAll$LATDDMM)
+    saveRDS(xAll,file.path(wd,'data/CBFHA_2021_atsea.rds'))
+    
+    xAll = connect.command(con,'select * from cooka.bycatch_esfpa_2022')
+    xAll$X = convert.dd.dddd(xAll$LONGDDMM)*-1
+    xAll$Y = convert.dd.dddd(xAll$LATDDMM)
+    saveRDS(xAll,file.path(wd,'data/ESFPA_2019_atsea.rds'))
+    
     
     tr = connect.command(con,'select * from lobster.istraps')
     se = connect.command(con,'select * from lobster.issets_mv')
@@ -81,6 +91,7 @@ if(DS %in% c('SWLSS','SWLSS.redo')){
     a$CodWt = a$Cod * a$CALWT_G/1000
     a$CuskWt = a$Cusk * a$CALWT_G/1000
     a$JonahWt = a$Jonah * a$CALWT_G/1000
+    a$JonahRtWt = ifelse(a$Jonah==1 & a$SEXCD_ID==1 & a$FISH_LENGTH>=130, a$JonahWt, 0)
     a$CodWt[which(is.na(a$CodWt))] <- 0
     a$CuskWt[which(is.na(a$CuskWt))] <- 0 
     a$JonahWt[which(is.na(a$JonahWt))] <- 0
@@ -125,7 +136,7 @@ if(DS %in% c('SWLSS','SWLSS.redo')){
     
     
     #per trap
-    ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CALWT_G,CodWt,CuskWt,JonahWt,LobsterWt)~UID+TRIP+X+Y+TRAP_ID+FISHSET_ID+COMAREA_ID+STRATUM_ID+NUM_HOOK_HAUL+BOARD_DATE+WOS+LFA+SYEAR, data=a,FUN=sum,na.rm=F)
+    ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CALWT_G,CodWt,CuskWt,JonahWt,JonahRtWt,LobsterWt)~UID+TRIP+X+Y+TRAP_ID+FISHSET_ID+COMAREA_ID+STRATUM_ID+NUM_HOOK_HAUL+BOARD_DATE+WOS+LFA+SYEAR, data=a,FUN=sum,na.rm=F)
     
     CDa = merge(ac,bb,by='UID')
     CDa$'P.9999-NA' = NULL
@@ -147,7 +158,7 @@ if(DS %in% c('SWLSS','SWLSS.redo')){
       }
     }
     CDa$COMAREA_ID = NULL
-    names(CDa)[c(5:9,21)] =c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED','CALWT')
+    CDa = bio.utilities::rename.df(CDa, c('TRAP_ID', 'FISHSET_ID','STRATUM_ID','NUM_HOOK_HAUL','BOARD_DATE','CALWT_G'),c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED','CALWT'))
     CDa$DID = 'ASSOC'
     CDa$ll = paste(CDa$X,CDa$Y,sep='ll')
     CDa$Cluster = NA
@@ -219,6 +230,7 @@ if(DS %in% c('ISDB.redo','ISDB')){
       a$CodWt = a$Cod * a$CALWT/1000
       a$CuskWt = a$Cusk * a$CALWT/1000
       a$JonahWt = a$Jonah * a$CALWT/1000
+      a$JonahRtWt = ifelse(a$Jonah==1 & a$SEX==1 & a$CARLENGTH>=130, a$JonahWt, 0)
       a$CodWt[which(is.na(a$CodWt))] <- 0
       a$CuskWt[which(is.na(a$CuskWt))] <- 0 
       a$JonahWt[which(is.na(a$JonahWt))] <- 0
@@ -234,7 +246,7 @@ if(DS %in% c('ISDB.redo','ISDB')){
       bb = na.zero(bb)
       
       #per trap
-      ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CALWT,CodWt,CuskWt,JonahWt,LobsterWt)~UID
+      ac = aggregate(cbind(Lobster, Cod, Cusk, Jonah, Legal, Berried,Empty,LegalWt,CALWT,CodWt,CuskWt,JonahWt,JonahRtWt,LobsterWt)~UID
                      +TRIPNO+X+Y+TRAPNO+NUM_HOOK_HAUL+LFA+GRIDNO+SDATE+SYEAR+WOS+Period+target+GridGroup, data=a,FUN=sum,na.rm=F)
       
       BF = merge(ac,bb,by='UID')
@@ -409,6 +421,10 @@ if(DS %in% c('CBFHA.redo','CBFHA') ){
     if(grepl('redo',DS)){
     a =   readRDS(file.path(wd,'data/CompiledAtSeaMarch2022.rds'))
     a = subset(a,OWNER_GROUP=='CBFHA')
+    aa =  readRDS(file.path(wd,'data/CBFHA_2021_atsea.rds'))
+    aa$PORT_NAME = aa$VENT_CODE = aa$CULLS = NULL
+    
+    a = as.data.frame(rbind(a,aa))
     
     a$COMAREA_ID = toupper(a$COMAREA_ID)
   
@@ -520,6 +536,10 @@ if(DS %in% c('CBFHA.redo','CBFHA') ){
     if(grepl('redo',DS)){
       a =   readRDS(file.path(wd,'data/CompiledAtSeaMarch2022.rds'))
       a = subset(a,OWNER_GROUP=='CBFHA')
+      aa =  readRDS(file.path(wd,'data/CBFHA_2021_atsea.rds'))
+      aa$PORT_NAME = aa$VENT_CODE = aa$CULLS = NULL
+      
+      a = as.data.frame(rbind(a,aa))
       
       a$COMAREA_ID = toupper(a$COMAREA_ID)
       
