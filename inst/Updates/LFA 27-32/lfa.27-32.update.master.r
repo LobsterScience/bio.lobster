@@ -8,6 +8,8 @@ require(lubridate)
 p$current.assessment.year = p$current.assessment.year - 1 
 
 figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32",p$current.assessment.year))
+#figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32","2022"))
+
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 
 p$lfas = c("27", "28", "29", "30", "31A", "31B", "32") # specify lfas for data summary

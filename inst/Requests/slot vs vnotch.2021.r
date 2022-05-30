@@ -1,3 +1,4 @@
+
 p = bio.lobster::load.environment()
 
 figdir = file.path(project.datadirectory("bio.lobster","requests","vnotch",p$current.assessment.year))
@@ -184,7 +185,7 @@ escape=rbind(big.vent, small.vent)
 biggest=5*(ceiling(max(escape$CARLENGTH)/5))
 vents=unique(escape$vent)
 escape$size[escape$vent=="Small"]="44mm"
-escape$size[escape$vent=="Big"]="50mm"
+escape$size[escape$vent=="Big"]="49mm"
 
 
 for (v in vents){
