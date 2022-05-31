@@ -35,13 +35,17 @@ LobsterMap(
   labcex = 1.5,
   LT = T,
   plot.rivers = T,
+  addGridGroups = F,
   addSummerStrata = F,
+  polylstend = F,
   addsubareas = F,
   subsetSummerStrata = NULL,
   addGeorgesStrata = F,
   addAmericanStrata = F,
   addGrids = T,
   land.only = F,
+  grid.labcex = 1,
+  special.labels = NULL,
   ...
 )
 }

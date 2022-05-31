@@ -8,8 +8,9 @@ Read in and reshape the bnam model output file. This currentely requires a speci
 bnamR(
   redo = F,
   bnam_location = "~/Downloads/BNAM_Tbtm_1990_2018.mat",
-  outfile = file.path(project.datadirectory("bio.lobster"), "data",
-    "bnams.reshape.rds")
+  outfile = file.path(project.datadirectory("bio.lobster"), "data", "BNAM",
+    "bnams.reshape.rds"),
+  standard = T
 )
 }
 \arguments{

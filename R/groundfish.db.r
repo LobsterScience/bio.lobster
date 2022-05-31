@@ -3,7 +3,6 @@
 #' @param \code{DS} :the selection of analysis, options include \code{stratified.estimates}
 #' @param \code{p} : the parameter list which contains the specifics of the analysis at a minimum includes the season and area for analysis
 #' @return saves or loads .rdata objects 
-#' @examples
 #' @author  Adam Cook, \email{Adam.Cook@@dfo-mpo.gc.ca}
 #' @export
 

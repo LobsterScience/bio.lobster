@@ -9,12 +9,6 @@ calcAreaSwept(
   GearSpreadRange = list(NEST = c(5, 15), `280 BALLOON` = c(5, 25))
 )
 }
-\value{
-
-}
 \description{
 calcTrackDist
-}
-\author{
-Brad Hubley
 }
