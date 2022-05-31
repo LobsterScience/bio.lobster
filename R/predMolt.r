@@ -2,7 +2,6 @@
 #' @description Prediction of moulting based on day since last moult, size and can include temperature through a degree day metric
 #' @param \code{p} :parameter list containing (at a minimum) area, doy (day of year), temp (temperature at doy)
 #' @param \code{cl} : carapace width 
-#' @citation  Bergeron 2011 MSc thesis Lobster Age Size Relationships U of Maine
 #' @return The predicted probability of moulting
 #' @examples
 #' require(devtools)

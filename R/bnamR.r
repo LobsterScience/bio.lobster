@@ -3,7 +3,6 @@
 #' @param redo = if redo = T redo the reshape, else load in the previously reshaped file
 #' @param bnam_location = location of the file (Brickman Oct 2019 structure)
 #' @param outfile = where you want the output to live
-#' @value list of three objects. locP = locations of bottom temperature data with the pertient model info. bTs = predicted bottom temperatures one row per location (rownames for matrix match the locP EID. timeS = time steps for each column of the bTs matrix.)
 #' @author Adam Cook
 #' @examples
 #' anc = bnam(redo = T)

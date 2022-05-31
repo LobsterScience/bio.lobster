@@ -1,7 +1,4 @@
 #' calcTrackDist
-#' @param 
-#' @author Brad Hubley
-#' @return 
 #' @export
 calcAreaSwept = function(sensors="Marport",GearSpreadRange=list("NEST"=c(5,15),"280 BALLOON"=c(5,25))){
 	

@@ -1,13 +1,7 @@
 #bio.lobster
-Scripts and Functions for lobster stock assessments. Interoperable with github projects under Beothuk and PEDLibrary.  
+Scripts and Functions for DFO Maritimes Region Lobster Ecology and Assessment Team. 
 To install this package via devtools:
+devtools::install_github( "LobsterScience/bio.lobster" ) 
 
-# to enable inter-operability with github
-require( devtools ) # or install.packages( "devtools", dependencies=TRUE )
-
-install_github( "LobsterScience/bio.lobster" ) 
-
-# to use some of the functionality:
-require( bio.lobster ) # this should ideally be placed into your .Rprofile
-
-# scripts to use the functionality are maintained in the inst folder.
+## Scripts to make use of the .R functions are maintained in the inst folder.
+## Most of the scripts will not run without a local copy of bio.data/bio.lobster 
