@@ -12,7 +12,7 @@ wd = ('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster')
 setwd(wd)
 p = bio.lobster::load.environment()
 
-g = readRDS('results/CusksdmTMBF.rds')
+g = readRDS('results/CodsdmTMBF.rds')
 g$res = g$pred - g$CuskWt
 gP = aggregate(res~LFA+GRIDNUM,data=g,FUN=mean)
 gP = bio.utilities::rename.df(gP,'GRIDNUM','GRID_NO')
@@ -21,8 +21,8 @@ x =  gP
 x$Z = x$res
 ux = c(min(x$Z),max(x$Z))
 
-png('Figures/ModelOutput/cuskResidualsSAll.png',width=10,height=12,units='in',res=300)
-ggLobsterMap('33-35',bathy=T,attrData =x,legLab='Mean Residual',addLFALabels = F,scaleTrans = 'identity' ,brks=ux)
+png('Figures/ModelOutput/codResiduals33-1-12.png',width=10,height=12,units='in',res=300)
+ggLobsterMap('33',bathy=T,subset(x,LFA==33& WOS %in% 1:12),fw='WOS',legLab='Mean Residual',addLFALabels = F,scaleTrans = 'identity' ,brks=ux)
 dev.off()
 
 png('Figures/ModelOutput/codResiduals33-13-24.png',width=10,height=12,units='in',res=300)

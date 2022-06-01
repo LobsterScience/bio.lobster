@@ -1,0 +1,20 @@
+#Run me first
+
+require(sdmTMB)
+require(bio.lobster)
+require(bio.utilities)
+require(lubridate)
+require(devtools)
+require(dplyr)
+require(ggplot2)
+require(INLA)
+options(stringAsFactors=F)
+require(PBSmapping)
+require(SpatialHub)
+require(sf)
+la()
+
+p = bio.lobster::load.environment()
+p = spatial_parameters(type='canada.east')
+wd = ('C:/Users/Cooka/Desktop/dellshared/Bycatch in the Lobster Fishery')
+setwd(wd)
