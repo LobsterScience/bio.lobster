@@ -389,7 +389,7 @@ if (DS %in% c("logs.redo", "logs") ) {
              oldlogs34 = connect.command(con, "select * from lobster.lobster_log_data")
              save( oldlogs34, file=file.path( fnODBC, "oldlogs34.rdata"), compress=T)
               gc()  # garbage collection
-              odbcClose(con)
+              #odbcClose(con)
               }
             }
             load (file.path( fnODBC, "slip.rdata"), .GlobalEnv)
@@ -558,7 +558,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
         save( vlogs34, file=file.path( fnODBC, "vlogs34.rdata"), compress=T)
       
         gc()  # garbage collection
-        odbcClose(con)
+        #odbcClose(con)
       }
       load(file.path( fnODBC, "vlog.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "vlogs34.rdata"), .GlobalEnv)
@@ -644,7 +644,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                 save( ziff41, file=file.path( fnODBC, "ziff41.rdata"), compress=T)
                 save( off41, file=file.path( fnODBC, "off41.rdata"), compress=T)
                 gc()  # garbage collection
-                odbcClose(con)
+                #odbcClose(con)
               }
               load (file.path( fnODBC, "logs41.rdata"), .GlobalEnv)
               load (file.path( fnODBC, "slip41.rdata"), .GlobalEnv)
@@ -728,7 +728,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
               logs41jonah$DDLON = logs41jonah$DDLON*-1
               save( logs41jonah, file=file.path( fnODBC, "logs41jonah.rdata"), compress=T)
               gc()  # garbage collection
-              odbcClose(con)
+              #odbcClose(con)
             }
             load (file.path( fnODBC, "logs41jonah.rdata"), .GlobalEnv)
             
@@ -745,7 +745,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                 observer41 = connect.command(con, 'select * from lobster.observer41') #pulling from a materialized view
                 save( observer41, file=file.path( fnODBC, "observer41.rdata"), compress=T)
                 gc()  # garbage collection
-                odbcClose(con)
+                #odbcClose(con)
               }
               load (file.path( fnODBC, "observer41.rdata"), .GlobalEnv)
       
@@ -773,7 +773,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                   sep="" )
 
       vms.data  =  connect.command(con, vms.q, believeNRows=FALSE)  
-      odbcClose(con)
+      #odbcClose(con)
         vms.data$VMSDATE  =  as.POSIXct(vms.data$VMSDATE,tz="GMT")  # VMS data is in UTC, assign timezone
   
   # Create date and time variables in local time
@@ -841,7 +841,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
             save( atSea, file=file.path( fnODBC, "atSea.rdata"), compress=T)
             gc()  # garbage collection
-            #odbcClose(con)
+            ##odbcClose(con)
           }
           load(file.path( fnODBC, "atSea.rdata"), .GlobalEnv)
      }
@@ -855,7 +855,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             atSeaCatchLevel = connect.command(con, "select * from lobster.atseacatchlevel")
             save( atSeaCatchLevel, file=file.path( fnODBC, "atSeaCatchLevel.rdata"), compress=T)
             gc()  # garbage collection
-          #  odbcClose(con)
+          #  #odbcClose(con)
           }
           load(file.path( fnODBC, "atSeaCatchLevel.rdata"), .GlobalEnv)
      }
@@ -940,7 +940,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
         port = connect.command(con, "select a.SAMPLE_SEQ,a.SAMPLE_NO,a.SDATE,a.SEASON,a.NTRAPS,a.LATITUDE,a.LONGITUDE,a.GRADE, b.L_SIZE,b.N_MALES,b.N_FEM,b.NBF, d.LFA,c.PORT,c.COUNTY,c.STAT,c.PORT_CODE,c.LATITUDE port_lat,c.LONGITUDE port_lon from lobster.CRLENGCODE a, lobster.CRLENGFREQ b, lobster.CRLOCATIONS c, frailc.lfa_port d where a.sample_seq = b.sample_seq and a.port = c.port and c.PORT_CODE = d.port(+) and a.type = 'P' ")
         save( port, file=file.path( fnODBC, "port.rdata"), compress=T)
         gc()  # garbage collection
-        odbcClose(con)
+        #odbcClose(con)
       }
       load(file.path( fnODBC, "port.rdata"), .GlobalEnv)
      }
@@ -1010,7 +1010,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
         cris.samples = connect.command(con, "select * from cris.crsamples")
         save( cris.samples, file=file.path( fnODBC, "crisSamples.rdata"), compress=T)
         gc()  # garbage collection
-        odbcClose(con)
+        #odbcClose(con)
       }
       load(file.path( fnODBC, "crisTrips.rdata"), .GlobalEnv)       
       load(file.path( fnODBC, "crisTraps.rdata"), .GlobalEnv)       
@@ -1110,7 +1110,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
 
         save( obs.samp, file=file.path( fnODBC, "lfa41.observer.samples.rdata"), compress=T)
         gc()  # garbage collection
-        odbcClose(con)
+        #odbcClose(con)
       }
 
       load(file=file.path( fnODBC, "lfa41.observer.samples.rdata"),.GlobalEnv)
@@ -1144,7 +1144,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         save( fsrs, file=file.path( fnODBC, "fsrs.rdata"), compress=T)
         gc()  # garbage collection
         if(!("ROracle" %in% (.packages()))){
-          odbcClose(con) 
+          #odbcClose(con) 
         }
       }
       load(file.path( fnODBC, "fsrs.rdata"), .GlobalEnv)
@@ -1294,7 +1294,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         scallop.tows = connect.command(con, "select * from SCALLSUR.SCTOWS")
         save( scallop.tows, file=file.path( fnODBC, "scallopTows.rdata"), compress=T)
         gc()  # garbage collection
-        odbcClose(con)
+        #odbcClose(con)
       }
       load(file.path( fnODBC, "scallopCatch.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "scallopTows.rdata"), .GlobalEnv)
@@ -1397,7 +1397,7 @@ if(DS %in% c('rv.survey.samples.redo','rv.survey.samples.samples')) {
 
         save( rv.samp, file=file.path( fnODBC, "rv.survey.samples.rdata"), compress=T)
         gc()  # garbage collection
-        odbcClose(con)
+        #odbcClose(con)
       }
 
       load(file=file.path( fnODBC, "rv.survey.samples.rdata"),.GlobalEnv)

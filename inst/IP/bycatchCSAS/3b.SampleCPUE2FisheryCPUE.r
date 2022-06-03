@@ -29,7 +29,7 @@ x1 = aggregate(TRIP~CP,data=subset(x,LFA==33),FUN=function(x) length(unique(x)))
 x1$p = cumsum(x1$TRIP)/sum(x1$TRIP)
 
 g3 = ggplot(b1,aes(x=CP,y=p)) + geom_line() + geom_line(data=x1, aes(x=CP,y=p,col='red'),size=1.5) + 
-  xlab('CPUE') + ylab('Cumulative Proportion') +theme(legend.position="none")+ ggtitle('LFA 33')
+  xlab('CPUE') + ylab('Cumulative Distribution') +theme(legend.position="none")+ ggtitle('LFA 33')
 
 #LFA 34
 b1 = aggregate(SD_LOG_ID~CP,data=subset(b,LFA==34),FUN=function(x) length(unique(x)))
@@ -39,7 +39,7 @@ x1 = aggregate(TRIP~CP,data=subset(x,LFA==34),FUN=function(x) length(unique(x)))
 x1$p = cumsum(x1$TRIP)/sum(x1$TRIP)
 
 g4 = ggplot(b1,aes(x=CP,y=p)) + geom_line() + geom_line(data=x1, aes(x=CP,y=p,col='red'),size=1.5) + 
-  xlab('CPUE') + ylab('Cumulative Proportion') +theme(legend.position="none") + ggtitle('LFA 34')
+  xlab('CPUE') + ylab('Cumulative Distribution') +theme(legend.position="none") + ggtitle('LFA 34')
 
 #LFA 35
 b1 = aggregate(SD_LOG_ID~CP,data=subset(b,LFA==35),FUN=function(x) length(unique(x)))
@@ -49,7 +49,7 @@ x1 = aggregate(TRIP~CP,data=subset(x,LFA==35),FUN=function(x) length(unique(x)))
 x1$p = cumsum(x1$TRIP)/sum(x1$TRIP)
 
 g5 = ggplot(b1,aes(x=CP,y=p)) + geom_line() + geom_line(data=x1, aes(x=CP,y=p,col='red'),size=1.5) + 
-  xlab('CPUE') + ylab('Cumulative Proportion') +theme(legend.position="none")+ ggtitle('LFA 35')
+  xlab('CPUE') + ylab('Cumulative Distribution') +theme(legend.position="none")+ ggtitle('LFA 35')
 
 
 #eastern shore and CB
@@ -70,7 +70,7 @@ x1 = aggregate(TRIP~CP,data=subset(g,LFA==27),FUN=function(x) length(unique(x)))
 x1$p = cumsum(x1$TRIP)/sum(x1$TRIP)
 
 g27 = ggplot(b1,aes(x=CP,y=p)) + geom_line() + geom_line(data=x1, aes(x=CP,y=p,col='red'),size=1.5) + 
-  xlab('CPUE') + ylab('Cumulative Proportion') +theme(legend.position="none")+ ggtitle('LFA 27')
+  xlab('CPUE') + ylab('Cumulative Distribution') +theme(legend.position="none")+ ggtitle('LFA 27')
 
 
 b1 = aggregate(SD_LOG_ID~CP,data=subset(b,LFA=='31A'),FUN=function(x) length(unique(x)))
@@ -80,7 +80,7 @@ x1 = aggregate(TRIP~CP,data=subset(g,LFA=='31A'),FUN=function(x) length(unique(x
 x1$p = cumsum(x1$TRIP)/sum(x1$TRIP)
 
 g31A = ggplot(b1,aes(x=CP,y=p)) + geom_line() + geom_line(data=x1, aes(x=CP,y=p,col='red'),size=1.5) + 
-  xlab('CPUE') + ylab('Cumulative Proportion') +theme(legend.position="none")+ ggtitle('LFA 31A')
+  xlab('CPUE') + ylab('Cumulative Distribution') +theme(legend.position="none")+ ggtitle('LFA 31A')
 
 
 b1 = aggregate(SD_LOG_ID~CP,data=subset(b,LFA=='31B'),FUN=function(x) length(unique(x)))
@@ -90,7 +90,7 @@ x1 = aggregate(TRIP~CP,data=subset(g,LFA=='31B'),FUN=function(x) length(unique(x
 x1$p = cumsum(x1$TRIP)/sum(x1$TRIP)
 
 g31B = ggplot(b1,aes(x=CP,y=p)) + geom_line() + geom_line(data=x1, aes(x=CP,y=p,col='red'),size=1.5) + 
-  xlab('CPUE') + ylab('Cumulative Proportion') +theme(legend.position="none")+ ggtitle('LFA 31B')
+  xlab('CPUE') + ylab('Cumulative Distribution') +theme(legend.position="none")+ ggtitle('LFA 31B')
 
 
 require(gridExtra)

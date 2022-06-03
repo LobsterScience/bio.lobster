@@ -29,7 +29,6 @@ be$sd = apply(g1,1,sd)
 be$lQ = apply(g1,1,quantile,0.25)
 be$uQ = apply(g1,1,quantile,0.75)
 
-gsf = st_as_sf(be,coords = c("X","Y"),crs=32620,remove=F)
 
 saveRDS(list(fit,be),file='lobstersdmTMB.rds')
 
@@ -37,8 +36,10 @@ reload=F
 if(reload){
   r = readRDS(file='lobstersdmTMB.rds')
   fit=r[[1]]
-  g=r[[2]]
+  be=r[[2]]
 }
+
+gsf = st_as_sf(be,coords = c("X","Y"),crs=32620,remove=F)
 
 rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
 st_crs(rL) <- 4326
@@ -54,7 +55,7 @@ rL <- st_transform(rL, crs_utm20)
 
 
 #Maps
-png('Figures/ModelOutput/lobstersdmTMBwk1-12.png')
+png('Figures/ModelOutput/lobstersdmTMBwk1-12.png', width = 10, height = 12,units='in',pointsize=12, res=300,type='cairo')
 mm = c(0.001,max(gsf$pred))
 ggplot(subset(gsf,WOS %in% 1:12)) +
 			geom_sf(aes(fill=pred,color=pred)) + 
@@ -71,14 +72,10 @@ ggplot(subset(gsf,WOS %in% 1:12)) +
         		   ) +
  			coord_sf()
 dev.off()
-ggplot(rL)+geom_sf(data=subset(gsf,WOS==1),aes(fill=pred,color=pred)) + 
-
-
- scale_fill_viridis_c(trans='sqrt',limits=mm) 
 
 
 
-png('Figures/ModelOutput/lobstersdmTMBwk13-24.png')
+png('Figures/ModelOutput/lobstersdmTMBwk13-24.png', width = 10, height = 12,units='in',pointsize=12, res=300,type='cairo')
 ggplot(subset(gsf,WOS %in% 13:24)) +
 			geom_sf(aes(fill=pred,color=pred)) + 
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
@@ -96,7 +93,7 @@ ggplot(subset(gsf,WOS %in% 13:24)) +
  			coord_sf()
 dev.off()
 
-	png('Figures/ModelOutput/lobstersdmTMBwk25-36.png')
+	png('Figures/ModelOutput/lobstersdmTMBwk25-36.png', width = 10, height = 12,units='in',pointsize=12, res=300,type='cairo')
 	ggplot(subset(gsf,WOS %in% 25:36)) +
 				geom_sf(aes(fill=pred,color=pred)) + 
 				scale_fill_viridis_c(trans='sqrt',limits=mm) +
@@ -115,7 +112,7 @@ dev.off()
 	dev.off()
 
 
-	png('Figures/ModelOutput/lobstersdmTMBwk37-40.png')
+	png('Figures/ModelOutput/lobstersdmTMBwk37-40.png', width = 10, height = 12,units='in',pointsize=12, res=300,type='cairo')
 	ggplot(subset(gsf,WOS %in% 37:40)) +
 				geom_sf(aes(fill=pred,color=pred)) + 
 				scale_fill_viridis_c(trans='sqrt',limits=mm) +

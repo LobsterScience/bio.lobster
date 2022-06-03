@@ -59,28 +59,40 @@ be$predCL = be$predBinL*be$predGamL
 be$predCU = be$predBinU*be$predGamU
 
 
-
-gsf = st_as_sf(be,coords = c("X","Y"),crs=32619,remove=F)
-
-
-plot_map <- function(dat,column='est'){
-		ggplot(dat,aes_string("X","Y",fill=column)) +
-			geom_raster() + 
-		#	facet_wrap(~WOS) +
-			coord_fixed()
-	}
-
 saveRDS(list(fitH,fitD,be),file='jonahsdmTMB.rds')
-#r = readRDS(file='jonahsdmTMB.rds')
-#fit=r[[1]]
-#be=r[[3]]]
-png('Figures/ModelOutput/JonahsdmTMBwk1-12.png')
+
+
+reload=F
+if(reload){
+  r = readRDS(file='jonahsdmTMB.rds')
+  fitH=r[[1]]
+  fitD=r[[2]]
+  be=r[[3]]
+}
+
+gsf = st_as_sf(be,coords = c("X","Y"),crs=32620,remove=F)
+
+rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
+st_crs(rL) <- 4326
+crs_utm20 <- 32620
+rL = rL[-which(!(st_is_valid(rL))),]
+rL <- suppressWarnings(suppressMessages(
+  st_crop(rL,
+          c(xmin = -67.5, ymin = 42, xmax = -62.5, ymax = 46))))
+
+ns_coast <- st_transform(ns_coast, crs_utm20)
+rL <- st_transform(rL, crs_utm20)
+
+
+
+png('Figures/ModelOutput/JonahsdmTMBwk1-12.png', width = 10, height = 12,units='in',pointsize=12, res=300,type='cairo')
 mm = c(0.,max(gsf$predBin))
 ggplot(subset(gsf,WOS %in% c(1,2,6))) +
 			geom_sf(aes(fill=predBin,color=predBin)) + 
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
 			facet_wrap(~WOS) +
+			geom_sf(rL,size=0.7,color='black',fill=NA ) +
  			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),
@@ -92,12 +104,14 @@ ggplot(subset(gsf,WOS %in% c(1,2,6))) +
 dev.off()
 
 
-png('Figures/ModelOutput/JonahsdmTMBwk13-24.png')
+png('Figures/ModelOutput/JonahsdmTMBwk13-24.png', width = 10, height = 12,units='in',pointsize=12, res=300,type='cairo')
 ggplot(subset(gsf,WOS %in% 13:24)) +
 			geom_sf(aes(fill=predBin,color=predBin)) + 
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
 			facet_wrap(~WOS) +
+ 			geom_sf(rL,size=0.7,color='black',fill=NA ) +
+ 		
  			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),
@@ -108,12 +122,14 @@ ggplot(subset(gsf,WOS %in% 13:24)) +
  			coord_sf()
 dev.off()
 
-	png('Figures/ModelOutput/JonahsdmTMBwk25-36.png')
+	png('Figures/ModelOutput/JonahsdmTMBwk25-36.png', width = 10, height = 12,units='in',pointsize=12, res=300,type='cairo')
 	ggplot(subset(gsf,WOS %in% 25:36)) +
 				geom_sf(aes(fill=predBin,color=predBin)) + 
 				scale_fill_viridis_c(trans='sqrt',limits=mm) +
 				scale_color_viridis_c(trans='sqrt',limits=mm) +
 				facet_wrap(~WOS) +
+	 		geom_sf(rL,size=0.7,color='black',fill=NA ) +
+ 		
 	 			theme( axis.ticks.x = element_blank(),
 	        		   axis.text.x = element_blank(),
 					   axis.title.x = element_blank(),
@@ -125,12 +141,14 @@ dev.off()
 	dev.off()
 
 
-	png('Figures/ModelOutput/JonahsdmTMBwk37-40.png')
+	png('Figures/ModelOutput/JonahsdmTMBwk37-40.png', width = 10, height = 12,units='in',pointsize=12, res=300,type='cairo')
 	ggplot(subset(gsf,WOS %in% 37:40)) +
 				geom_sf(aes(fill=predBin,color=predBin)) + 
 				scale_fill_viridis_c(trans='sqrt',limits=mm) +
 				scale_color_viridis_c(trans='sqrt',limits=mm) +
 				facet_wrap(~WOS) +
+	 		geom_sf(rL,size=0.7,color='black',fill=NA ) +
+ 		
 	 			theme( axis.ticks.x = element_blank(),
 	        		   axis.text.x = element_blank(),
 					   axis.title.x = element_blank(),
@@ -140,21 +158,6 @@ dev.off()
 	        		   ) +
 	 			coord_sf()
 	dev.off()
-
-ggplot(subset(gsf,WOS %in% 37:40)) +
-				geom_sf(aes(fill=predBin,color=predBin)) + 
-				scale_fill_viridis_c(trans='sqrt',limits=mm) +
-				scale_color_viridis_c(trans='sqrt',limits=mm) +
-				facet_wrap(~WOS) +
-	 			theme( axis.ticks.x = element_blank(),
-	        		   axis.text.x = element_blank(),
-					   axis.title.x = element_blank(),
-					   axis.ticks.y = element_blank(),
-	        		   axis.text.y = element_blank(),
-	        		   axis.title.y = element_blank()
-	        		   ) +
-	 			coord_sf()
-		
 
 ag = aggregate(cbind(predC,predCL,predCU)~SID+PID+WOS,data=be,FUN=mean)
 

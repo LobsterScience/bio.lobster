@@ -4,30 +4,16 @@ u = readRDS(file='results/dataForLFA33-35.rds')
 
 aT = u$data
 bspde = u$grid
-be = u$predshsetting up for sdmTMB
+be = u$pred
 
  fit = sdmTMB(CuskWt~
  				s(lZ,k=5)+DID,
  				data=aT,
- 				#time='WOS',
- 				#extra_time=c(33), 
  				mesh=bspde, 
  				family=tweedie(link='log'),
  				spatial='on',
- 				#spatialtemporal='ar1'
  				)
 
- tidy(fit, conf.int = TRUE)
-tidy(fit, effects = "ran_pars", conf.int = TRUE)
-#plot_smooth(fit, ggplot = TRUE)
-
-
-be = subset(be,WOS==1)
-g = predict(fit)
-g$pred = fit$family$linkinv(g$est)
-
-
-saveRDS(list(g),file='CusksdmTMB.rds')
 
 g = predict(fit,newdata=be,nsim=50)
 g1 = fit$family$linkinv(g)
@@ -37,21 +23,35 @@ be$sd = apply(g1,1,sd)
 be$lQ = apply(g1,1,quantile,0.25)
 be$uQ = apply(g1,1,quantile,0.75)
 
-gsf = st_as_sf(be,coords = c("X","Y"),crs=32619,remove=F)
+gsf = st_as_sf(be,coords = c("X","Y"),crs=32620,remove=F)
 
 
 saveRDS(list(fit,be),file='CusksdmTMBsims.rds')
-#r = readRDS(file='lobstersdmTMB.rds')
-#fit=r[[1]]
-#g=r[[2]]
+if(reload){
+	r = readRDS(file='CusksdmTMBsims.rds')
+	fit=r[[1]]
+	be=r[[2]]
+	}
 
-png('Figures/ModelOutput/CusksdmTMB.png')
+
+rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
+st_crs(rL) <- 4326
+crs_utm20 <- 32620
+rL = rL[-which(!(st_is_valid(rL))),]
+rL <- suppressWarnings(suppressMessages(
+  st_crop(rL,
+          c(xmin = -67.5, ymin = 42, xmax = -62.5, ymax = 46))))
+rL <- st_transform(rL, crs_utm20)
+
+gsf = st_as_sf(be,coords = c("X","Y"),crs=32620,remove=F)
+
+
+png('Figures/ModelOutput/CusksdmTMB.png', width = 10, height = 12,units='in',pointsize=12, res=300,type='cairo')
 mm = c(0.,max(gsf$pred))
 ggplot(subset(gsf,WOS %in% 1)) +
 			geom_sf(aes(fill=pred,color=pred)) + 
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
-			#facet_wrap(~WOS) +
  			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),
