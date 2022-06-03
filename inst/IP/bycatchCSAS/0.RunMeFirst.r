@@ -16,5 +16,5 @@ la()
 
 p = bio.lobster::load.environment()
 p = spatial_parameters(type='canada.east')
-wd = ('C:/Users/Cooka/Desktop/dellshared/Bycatch in the Lobster Fishery')
+wd = ('~/dellshared/Bycatch in the Lobster Fishery')
 setwd(wd)

@@ -52,13 +52,14 @@ ns_coast <- suppressWarnings(suppressMessages(
   st_crop(ns_coast,
           c(xmin = -67.5, ymin = 42, xmax = -62.5, ymax = 46))))
 
+rL = rL[-which(!(st_is_valid(rL))),]
+
 rL <- suppressWarnings(suppressMessages(
   st_crop(rL,
           c(xmin = -67.5, ymin = 42, xmax = -62.5, ymax = 46))))
 
 ns_coast <- st_transform(ns_coast, crs_utm20)
 rL <- st_transform(rL, crs_utm20)
-
 # Project our survey data coordinates:
 survey <- aT %>%   st_as_sf(crs = 4326, coords = c("X", "Y")) %>%
   st_transform(crs_utm20)

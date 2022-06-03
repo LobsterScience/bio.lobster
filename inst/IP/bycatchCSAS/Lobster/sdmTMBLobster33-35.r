@@ -29,7 +29,7 @@ be$sd = apply(g1,1,sd)
 be$lQ = apply(g1,1,quantile,0.25)
 be$uQ = apply(g1,1,quantile,0.75)
 
-gsf = st_as_sf(be,coords = c("X","Y"),crs=32619,remove=F)
+gsf = st_as_sf(be,coords = c("X","Y"),crs=32620,remove=F)
 
 saveRDS(list(fit,be),file='lobstersdmTMB.rds')
 
@@ -40,6 +40,19 @@ if(reload){
   g=r[[2]]
 }
 
+rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
+st_crs(rL) <- 4326
+crs_utm20 <- 32620
+rL = rL[-which(!(st_is_valid(rL))),]
+rL <- suppressWarnings(suppressMessages(
+  st_crop(rL,
+          c(xmin = -67.5, ymin = 42, xmax = -62.5, ymax = 46))))
+
+ns_coast <- st_transform(ns_coast, crs_utm20)
+rL <- st_transform(rL, crs_utm20)
+
+
+
 #Maps
 png('Figures/ModelOutput/lobstersdmTMBwk1-12.png')
 mm = c(0.001,max(gsf$pred))
@@ -48,6 +61,7 @@ ggplot(subset(gsf,WOS %in% 1:12)) +
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
 			facet_wrap(~WOS) +
+			geom_sf(data=rL,size=.7,colour='black',fill=NA)+
  			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),
@@ -57,6 +71,12 @@ ggplot(subset(gsf,WOS %in% 1:12)) +
         		   ) +
  			coord_sf()
 dev.off()
+ggplot(rL)+geom_sf(data=subset(gsf,WOS==1),aes(fill=pred,color=pred)) + 
+
+
+ scale_fill_viridis_c(trans='sqrt',limits=mm) 
+
+
 
 png('Figures/ModelOutput/lobstersdmTMBwk13-24.png')
 ggplot(subset(gsf,WOS %in% 13:24)) +
@@ -64,6 +84,8 @@ ggplot(subset(gsf,WOS %in% 13:24)) +
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
 			facet_wrap(~WOS) +
+ 			geom_sf(data=rL,size=.7,colour='black',fill=NA)+
+ 
  			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),
@@ -80,6 +102,8 @@ dev.off()
 				scale_fill_viridis_c(trans='sqrt',limits=mm) +
 				scale_color_viridis_c(trans='sqrt',limits=mm) +
 				facet_wrap(~WOS) +
+	 			geom_sf(data=rL,size=.7,colour='black',fill=NA)+
+ 
 	 			theme( axis.ticks.x = element_blank(),
 	        		   axis.text.x = element_blank(),
 					   axis.title.x = element_blank(),
@@ -97,7 +121,8 @@ dev.off()
 				scale_fill_viridis_c(trans='sqrt',limits=mm) +
 				scale_color_viridis_c(trans='sqrt',limits=mm) +
 				facet_wrap(~WOS) +
-	 			theme( axis.ticks.x = element_blank(),
+	geom_sf(data=rL,size=.7,colour='black',fill=NA)+
+ 	 			theme( axis.ticks.x = element_blank(),
 	        		   axis.text.x = element_blank(),
 					   axis.title.x = element_blank(),
 					   axis.ticks.y = element_blank(),
