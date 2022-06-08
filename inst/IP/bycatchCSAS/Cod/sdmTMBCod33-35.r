@@ -41,15 +41,14 @@ if(reload){
 
 
 rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
+rL = rL[rL$LFA %in% c(33:35),]
 st_crs(rL) <- 4326
 crs_utm20 <- 32620
-rL = rL[-which(!(st_is_valid(rL))),]
 rL <- suppressWarnings(suppressMessages(
   st_crop(rL,
-          c(xmin = -67.5, ymin = 42, xmax = -62.5, ymax = 46))))
-
-ns_coast <- st_transform(ns_coast, crs_utm20)
+          c(xmin = -67.5, ymin = 42, xmax = -62.1, ymax = 46))))
 rL <- st_transform(rL, crs_utm20)
+
 gsf = st_as_sf(be,coords = c("X","Y"),crs=32620,remove=F)
 
 
@@ -59,7 +58,7 @@ ggplot(subset(gsf,WOS %in% 1)) +
 			geom_sf(aes(fill=pred,color=pred)) + 
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
-			geom_sf(rL,size=0.7,color='black',fill=NA ) +
+			geom_sf(data=rL,size=1,color='black',fill=NA ) +
  	 			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),

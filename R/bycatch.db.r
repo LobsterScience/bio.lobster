@@ -514,7 +514,7 @@ if(DS %in% c('CBFHA.redo','CBFHA') ){
       }
     }
     CDa$COMAREA_ID = NULL
-    names(CDa)[c(5:9,24)] =c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED','CALWT')
+    names(CDa)[c(5:9,23)] =c('TRAPNO','SETNO','GRIDNUM','NUM_TRAPS','DATE_FISHED','CALWT')
     CDa$DID = 'ASSOC'
     CDa$ll = paste(CDa$X,CDa$Y,sep='ll')
     CDa$Cluster = NA

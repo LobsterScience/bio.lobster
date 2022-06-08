@@ -42,14 +42,13 @@ if(reload){
 gsf = st_as_sf(be,coords = c("X","Y"),crs=32620,remove=F)
 
 rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
+rL = rL[rL$LFA %in% c(33:35),]
 st_crs(rL) <- 4326
 crs_utm20 <- 32620
-rL = rL[-which(!(st_is_valid(rL))),]
+#rL = rL[-which(!(st_is_valid(rL))),]
 rL <- suppressWarnings(suppressMessages(
   st_crop(rL,
-          c(xmin = -67.5, ymin = 42, xmax = -62.5, ymax = 46))))
-
-ns_coast <- st_transform(ns_coast, crs_utm20)
+          c(xmin = -67.5, ymin = 42, xmax = -62.1, ymax = 46))))
 rL <- st_transform(rL, crs_utm20)
 
 
@@ -62,7 +61,7 @@ ggplot(subset(gsf,WOS %in% 1:12)) +
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
 			facet_wrap(~WOS) +
-			geom_sf(data=rL,size=.7,colour='black',fill=NA)+
+			geom_sf(data=rL,size=1,colour='black',fill=NA)+
  			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),
@@ -81,7 +80,7 @@ ggplot(subset(gsf,WOS %in% 13:24)) +
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
 			facet_wrap(~WOS) +
- 			geom_sf(data=rL,size=.7,colour='black',fill=NA)+
+ 			geom_sf(data=rL,size=1,colour='black',fill=NA)+
  
  			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
@@ -99,7 +98,7 @@ dev.off()
 				scale_fill_viridis_c(trans='sqrt',limits=mm) +
 				scale_color_viridis_c(trans='sqrt',limits=mm) +
 				facet_wrap(~WOS) +
-	 			geom_sf(data=rL,size=.7,colour='black',fill=NA)+
+	 			geom_sf(data=rL,size=1,colour='black',fill=NA)+
  
 	 			theme( axis.ticks.x = element_blank(),
 	        		   axis.text.x = element_blank(),
@@ -118,7 +117,7 @@ dev.off()
 				scale_fill_viridis_c(trans='sqrt',limits=mm) +
 				scale_color_viridis_c(trans='sqrt',limits=mm) +
 				facet_wrap(~WOS) +
-	geom_sf(data=rL,size=.7,colour='black',fill=NA)+
+	geom_sf(data=rL,size=1,colour='black',fill=NA)+
  	 			theme( axis.ticks.x = element_blank(),
 	        		   axis.text.x = element_blank(),
 					   axis.title.x = element_blank(),
