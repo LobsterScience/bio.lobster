@@ -12,16 +12,18 @@ be = u$preds
 
 aT$lZ = log(aT$Depth)
  fit = sdmTMB(LegalWt~
- 				s(lZ,k=5),
+ 				s(lZ,k=3),
  				data=aT,
- 				time='WOS', 
+ 				time='SYEAR', 
  				mesh=bspde, 
  				family=tweedie(link='log'),
- 				spatial='off',
+ 				spatial='on',
  				spatiotemporal='ar1'
  				)
 
-
+be = subset(be,WOS%in%1:2)
+be$SYEAR = ifelse(be$WOS==1,2018,2019)
+be$WOS=NULL
 g = predict(fit,newdata=be,nsim=50)
 
 g1 = fit$family$linkinv(g)

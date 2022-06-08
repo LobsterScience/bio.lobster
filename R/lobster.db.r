@@ -739,13 +739,11 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
         if (DS=="observer41.redo") {
                 require(RODBC)
-                #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                 
-                # logs from LFA 41 Cheryl's query for adjusted catch and assigning subareas
-                observer41 = connect.command(con, 'select * from lobster.observer41') #pulling from a materialized view
+                observer41 = connect.command(con, 'select * from lobster.lobster_atsea_vw') #pulling from a materialized view
+                observer41 = subset(observer41, LFA=='41')
                 save( observer41, file=file.path( fnODBC, "observer41.rdata"), compress=T)
                 gc()  # garbage collection
-                #odbcClose(con)
               }
               load (file.path( fnODBC, "observer41.rdata"), .GlobalEnv)
       
