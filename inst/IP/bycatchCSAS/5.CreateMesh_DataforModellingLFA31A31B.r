@@ -58,11 +58,11 @@ st_crs(rL) <- 4326
 crs_utm20 <- 32620
 ns_coast <- suppressWarnings(suppressMessages(
   st_crop(ns_coast,
-          c(xmin = -62, ymin = 44.9, xmax = -60.5, ymax = 45.45))))
+          c(xmin = -62.2, ymin = 44., xmax = -59.8, ymax = 45.6))))
 
 rL <- suppressWarnings(suppressMessages(
   st_crop(rL,
-          c(xmin = -62, ymin = 44.9, xmax = -60.5, ymax = 45.45))))
+          c(xmin = -62.2, ymin = 44., xmax = -59.8, ymax = 45.6))))
 
 ns_coast <- st_transform(ns_coast, crs_utm20)
 rL <- st_transform(rL, crs_utm20)
@@ -133,5 +133,5 @@ be$SYEAR = rep(2018:2019,each=dim(be)[1]/2)
 be$lZ = log(be$Depth)
 aT$lZ = log(aT$Depth)
 
-saveRDS(list(data=aT,grid=bspde,preds=be),file='results/dataForLFA31A31B.rds')
+saveRDS(list(data=aT,grid=bspde,preds=be,rL=rL),file='results/dataForLFA31A31B.rds')
 

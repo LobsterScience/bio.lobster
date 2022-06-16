@@ -1,5 +1,5 @@
 
-#Make sure to run 0.RunMeFirst.R and 5.CreateMesh_DataforModellingLFA27.R
+#Make sure to run 0.RunMeFirst.R and 5.CreateMesh_DataforModellingLFA31A31B.R
 
 rm(aT,be,bspde)
 u = readRDS(file='results/dataForLFA31A31B.rds')
@@ -7,12 +7,13 @@ u = readRDS(file='results/dataForLFA31A31B.rds')
 aT = u$data
 bspde = u$grid
 be = u$preds
+rL = u$rL
 
 #LFAs for prediction grids
 
 aT$lZ = log(aT$Depth)
  fit = sdmTMB(LegalWt~
- 				s(lZ,k=3),
+ 				s(lZ,k=5),
  				data=aT,
  				time='SYEAR', 
  				mesh=bspde, 
@@ -36,7 +37,7 @@ be$uQ = apply(g1,1,quantile,0.75)
 
 saveRDS(list(fit,be),file='lobstersdmTMB31A32B.rds')
 if(reload){
-      r = readRDS(file='lobstersdmTMB.rds')
+      r = readRDS(file='lobstersdmTMB31A32B.rds')
       fit=r[[1]]
       be=r[[2]]
 
@@ -44,15 +45,6 @@ if(reload){
 
 
 gsf = st_as_sf(be,coords = c("X","Y"),crs=32620,remove=F)
-
-rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
-rL = rL[rL$LFA %in% c(311,312),]
-st_crs(rL) <- 4326
-crs_utm20 <- 32620
-rL <- suppressWarnings(suppressMessages(
-  st_crop(rL,
-          c(xmin = -62, ymin = 44.9, xmax = -60.5, ymax = 45.45))))
-rL <- st_transform(rL, crs_utm20)
 
 png('Figures/ModelOutput/lobstersdmTMBwk1-12.png')
 mm = c(0.,max(gsf$pred))

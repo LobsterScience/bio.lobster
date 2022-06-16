@@ -2,7 +2,7 @@
 
 ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
                          attrData=NULL, addGrids=T,bathy=T,fw=NULL,legLab="",
-                         addLFALabels=F,scaleTrans='identity',brks,return.object=F, ...){
+                         addLFALabels=F,scaleTrans='identity',brks=NULL,return.object=F, ...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
   if(area=='27-38')	{ ylim=c(42.5,48); 		xlim=c(-67.4,-57.8)	}
@@ -38,7 +38,7 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   theme_set(theme_bw())
   library("sf")
   
-  
+ if(is.null(brks)) brks = c(min(attrData$Z),max(attrData$Z))
     sf_use_s2(FALSE) #needed for cropping
   ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
   r<-readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolysSF.rds"))

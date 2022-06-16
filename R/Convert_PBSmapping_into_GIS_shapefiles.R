@@ -128,3 +128,6 @@ if(env.object==T)  return(dat.sdf.list)
 #r2$V2 = NULL
 #saveRDS(r2,file.path( project.datadirectory("bio.lobster"), "data","maps","bathy100SF.rds"))
 
+
+
+

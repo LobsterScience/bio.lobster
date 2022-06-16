@@ -52,7 +52,7 @@ ggplot(subset(gsf,WOS %in% 1)) +
 			geom_sf(aes(fill=pred,color=pred)) + 
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
-			geom_sf(rL,color='black',size=1,fill=NA) +
+			geom_sf(data=rL,color='black',size=1,fill=NA) +
  			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),
