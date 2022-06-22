@@ -16,7 +16,7 @@ aT$lZ = log(aT$Depth)
  				mesh=bspde, 
  				family=binomial(link='logit'),
  				spatial='on',
- 				spatialtemporal='ar1'
+ 				spatiotemporal='ar1'
  				)
 
 
@@ -90,9 +90,7 @@ ggplot(subset(gsf,WOS %in% c(10))) +
 			scale_fill_viridis_c(trans='sqrt',limits=mm) +
 			scale_color_viridis_c(trans='sqrt',limits=mm) +
 			geom_sf(data=rL, size=1,color='black',fill=NA)+
-			#facet_wrap(~WOS) +
-			geom_sf(rL,size=1,color='black',fill=NA ) +
- 			theme( axis.ticks.x = element_blank(),
+			theme( axis.ticks.x = element_blank(),
         		   axis.text.x = element_blank(),
 				   axis.title.x = element_blank(),
 				   axis.ticks.y = element_blank(),
