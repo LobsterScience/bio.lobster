@@ -75,8 +75,6 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   
   if(!is.null(attrData)) {
         g = attrData
-        browser()
-        
         if(!any(names(g)== 'Z')) g$Z = g[,attrColumn]
         if(is.null(brks)) brks = c(min(g$Z),max(g$Z))
         if(any(grepl('GRID',toupper(names(g))))) { 
