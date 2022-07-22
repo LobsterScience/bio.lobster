@@ -52,13 +52,13 @@ lobster.db = function( DS="complete.redo",p=p) {
         }
       
 if(DS %in% c('vessels.by.port','vessels.by.port.redo')){
+  print('Lobster Vessels by LFA, Port and Year--NOTE there are duplicates with multiple ports per VRN per year')
   if(grepl('redo',DS)) {
     
     vsP = connect.command(con,"SELECT DISTINCT
                 a.vr_number,
-                b.vessel_name,
                 a.lfa,
-                MAX(a.community_code) port, 
+                (a.community_code) port, 
                 TO_CHAR(date_fished, 'yyyy') yr_fished,
                 b.year_built,
                 b.gross_tonnage,
@@ -71,17 +71,7 @@ if(DS %in% c('vessels.by.port','vessels.by.port.redo')){
                 marfissci.vessels          b
             WHERE
                 a.vr_number = b.vr_number
-            GROUP BY
-                a.vr_number,
-                b.vessel_name,
-                a.lfa,
-                TO_CHAR(date_fished, 'yyyy'),
-                b.year_built,
-                b.gross_tonnage,
-                b.bhp,
-                b.loa,
-                b.breadth,
-                b.depth")
+            ")
   save(vsP, file=file.path(fnODBC,'vessels_port.rdata'))
   return(vsP)
   }
