@@ -1,11 +1,11 @@
 #' @export
-lobLW <- function(CL,fsrs=F,sex=2) {
+lobLW <- function(CL,fsrs.old=F,sex=2,fsrs=F) {
 
 
 	a=c(0.000608,0.000608,0.001413,0.00482) # a[1] is the same as a[2] assumed to be male when sex=0
 	b=c(3.0583,3.0583,2.8746,2.638)
 
-				if(fsrs){
+				if(fsrs.old){
 							CL[CL==1] <- 5
 							CL[CL==2] <- 16
 							CL[CL==3] <- 26
@@ -25,7 +25,12 @@ lobLW <- function(CL,fsrs=F,sex=2) {
 
 						}
 
-
+	if(fsrs){
+	  j = seq(2.5,135,by=5)
+	  CL <- j[CL]
+	  }
+	
+  
 	wv = a[sex+1]*CL^b[sex+1] # +1 to deal with sex=0
 
 	return(wv)

@@ -50,7 +50,26 @@ lobster.db = function( DS="complete.redo",p=p) {
         
         
         }
+
+    
+    if(DS %in% c('inflation')){
       
+      #from https://www.in2013dollars.com/Canada-inflation
+      infl = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inflation_data2022.csv'))
+      return(infl)
+    }
+    
+    
+if(DS %in% c('slips','slips.redo')){
+  if(grepl('redo',DS)) {
+    vsP = connect.command(con,"select * from MARFISSCI.LOBSTER_SD_SLIP")
+    save(vsP, file=file.path(fnODBC,'slips.rdata'))
+    return(vsP)
+  }
+  load(file=file.path(fnODBC,'slips.rdata'))
+  return(vsP)
+}
+    
 if(DS %in% c('vessels.by.port','vessels.by.port.redo')){
   print('Lobster Vessels by LFA, Port and Year--NOTE there are duplicates with multiple ports per VRN per year')
   if(grepl('redo',DS)) {
@@ -79,7 +98,8 @@ if(DS %in% c('vessels.by.port','vessels.by.port.redo')){
   return(vsP)
   
 }
-    
+
+        
 if(DS %in% 'civi'){
   
   load(file.path(fn.root,'CIVI','CIVI.rdata'))
@@ -790,7 +810,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             
             # atSea
             atSea = connect.command(con, "select * from lobster.LOBSTER_ATSEA_VW")
-           atSea2 = connect.command(con, "select * from cooka.lobster_bycatch_assoc")
+            atSea2 = connect.command(con, "select * from cooka.lobster_bycatch_assoc")
  
             atSea2$PORT = NA
             atSea2$PORTNAME = NA
@@ -813,8 +833,8 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
 
             names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", 
-                     "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO", "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH", 
-                     "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT",'NUM_HOOK_HAUL')
+                     "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO",'NUM_HOOK_HAUL', "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH", 
+                     "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT")
 
       #BZ. Sept2021- Added "DISEASE", "CONDITION_CD", "CLUTCH" to above list to include these variables and match fields from atSea dataset
             
@@ -1114,6 +1134,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         fsrs = connect.command(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
         print("FYI. Starting Fall 2019 (LFA 27-35) and spring 2018 (LFA 36)")
         print("New size groups used 1-27 (5mm bins), replacing 1-16 (10mm bins)")
+        print("Users need to specify year and size to ensure you get the right coding")
         
         #print("If loading data manually use FSRS.load.from.text.r function")
         #Create csv through FSRS.load.from.text.r before running this step
@@ -1129,6 +1150,10 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         
         fsrs$SIZE_CD=fsrs$SIZE_GRP
         fsrs=within(fsrs, rm(SIZE_GRP))
+        fsrs$mn = lubridate::month(fsrs$HAUL_DATE)
+        fsrs$SYEAR= lubridate::year(fsrs$HAUL_DATE)
+        ii = which(fsrs$LFA>32 & fsrs$mn %in% c(10,11,12))
+        fsrs$SYEAR[ii] = fsrs$SYEAR[ii]+1
         save( fsrs, file=file.path( fnODBC, "fsrs.rdata"), compress=T)
         gc()  # garbage collection
         if(!("ROracle" %in% (.packages()))){

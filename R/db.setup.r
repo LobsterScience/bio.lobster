@@ -5,12 +5,12 @@
 #' @author Ben Zisserson
 #' @export
 
-db.setup=function(RODBC=F){
+db.setup=function(RODBC=F,un=oracle.username,pw = oracle.password){
   if(!.Platform$OS.type == "unix") {
   if(!grepl('64',version$arch) || RODBC) { #in 32-bit R, only RODBC will work
       print("Using RODBC package for Oracle db connections")
       require(RODBC)
-      con <<- odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+      con <<- odbcConnect(oracle.server , uid=un, pwd=pw, believeNRows=F) # believeNRows=F required for oracle db's
       connect.command<<-function(...) {
          sqlQuery(...)}
         }
@@ -28,7 +28,7 @@ db.setup=function(RODBC=F){
             else {
             print("Using ROracle for Oracle db connections")
             require('ROracle')
-            con<<-dbConnect(DBI::dbDriver("Oracle"),username=oracle.username, password=oracle.password, dbname=oracle.server)
+            con<<-dbConnect(DBI::dbDriver("Oracle"),username=un, password=pw, dbname=oracle.server)
             }
          
    connect.command<<-function(...) {

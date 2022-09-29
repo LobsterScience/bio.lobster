@@ -7,7 +7,7 @@ la()
 LobsterMap('38',labels='grid')
 
 
-setwd('~/Documents/Adam/Lobster/LFA38/Jan2020')
+setwd('C:/Users/cooka/Desktop/dellshared/Jan2020')
 a  = dir()
 a = a[grep('.csv',a)]
 

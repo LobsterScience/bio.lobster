@@ -2,7 +2,7 @@
 assignArea = function(data, coords = c("lon","lat")){
 	
 		data = makePBS(data,polygon=F, coords=coords)
-		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys2.csv"))
+		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
 		
         a = which(is.na(data$Y) | is.na(data$X))
         if(length(a)>0) {
