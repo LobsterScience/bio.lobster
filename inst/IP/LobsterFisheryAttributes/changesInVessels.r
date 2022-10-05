@@ -13,4 +13,3 @@ names(rr)[3] = 'LOA'
  lines(rr$YR_FISHED,rr$LOA[,2],type='l')
  lines(rr$YR_FISHED,rr$LOA[,5],type='l')
 
- have you noticed any changes in distribution outside of what you would typically expect year to year variations?

@@ -47,6 +47,8 @@ case
     then '2019/2020'
     when date_landed between '2020-11-01' and '2021-10-31'
     then '2020/2021'
+    when date_landed between '2021-11-01' and '2022-10-31'
+    then '2021/2022'    
     else 'premarfis'
     end SEASON,
 sum(slip_weight_lbs) wt_lbs
@@ -97,6 +99,8 @@ case
     then '2019/2020'
     when date_landed between '2020-10-01' and '2021-09-30'
     then '2020/2021'
+    when date_landed between '2021-10-01' and '2022-09-30'
+    then '2021/2022'
     
     else 'premarfis'
     end SEASON,

@@ -1,8 +1,9 @@
 #' @export
 
 ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
-                         attrData=NULL, addGrids=T,bathy=T,fw=NULL,legLab="",
-                         addLFALabels=F,scaleTrans='identity',brks=NULL,return.object=F, ...){
+                         attrData=NULL,attrColumn='Z', addGrids=T,bathy=T,fw=NULL,legLab="",
+                         addLFALabels=F,scaleTrans='identity',brks=NULL,return.object=F,
+                         layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"), ...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
   if(area=='27-38')	{ ylim=c(42.5,48); 		xlim=c(-67.4,-57.8)	}
@@ -38,11 +39,10 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   theme_set(theme_bw())
   library("sf")
   
- if(is.null(brks)) brks = c(min(attrData$Z),max(attrData$Z))
     sf_use_s2(FALSE) #needed for cropping
-  ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
-  r<-readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolysSF.rds"))
-  rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
+  ns_coast =readRDS(file.path( layerDir,"CoastSF.rds"))
+  r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
+  rL = readRDS(file.path(layerDir,"LFAPolysSF.rds"))
   
   st_crs(r) <- 4326
   st_crs(rL) <- 4326
@@ -52,13 +52,13 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
     r = suppressWarnings(suppressMessages(st_crop(r,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
   rL = suppressWarnings(suppressMessages(st_crop(rL,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
   
-  b = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","bathy10-300SF.rds"))
-  l = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
+  b = readRDS(file.path( layerDir,"bathy10-300SF.rds"))
+  l = readRDS(file.path( layerDir,"LFAPolysSF.rds"))
   st_crs(b) <- 4326
   st_crs(l) <- 4326
   b = suppressWarnings(suppressMessages(st_crop(b,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
   l = suppressWarnings(suppressMessages(st_crop(l,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
-  cents = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFALabelsSF.rds"))
+  cents = readRDS(file.path( layerDir,"LFALabelsSF.rds"))
   
       p =  ggplot(data=l) + 
           geom_sf(size=1.25) + 
@@ -75,7 +75,11 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   
   if(!is.null(attrData)) {
         g = attrData
+        if(!any(names(g)== 'Z')) g$Z = g[,attrColumn]
+        if(is.null(brks)) brks = c(min(g$Z),max(g$Z))
         if(any(grepl('GRID',toupper(names(g))))) { 
+              m = (grep('GRID',toupper(names(g))))
+              names(g)[m] = 'GRID_NO'
               rL <- r
               r1 = st_as_sf(merge(g,rL,by.x=c('LFA','GRID_NO'),by.y=c('LFA','GRID_NO')))
             } else {

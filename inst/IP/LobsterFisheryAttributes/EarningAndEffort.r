@@ -170,7 +170,7 @@ rm.from.list<-function(list1) {
   return(list1)
 }
 
-lo = lobster.db('process.logs')
+lo = lobster.db('process.logs.unfiltered')
 lo = aggregate(cbind(DATE_FISHED,DOS)~SYEAR+LFA,data=subset(lo,SYEAR>2004),FUN=min)
 lo$D = as.Date(lo$DATE_FISHED,origin=as.Date('1970-01-01'))
 lo = subset(lo, DOS==1 & LFA %ni% '28')
