@@ -208,6 +208,7 @@ savePlot(file.path(fpf1,'HCRFal.png'))
 ######DFO
 df =  read.csv(file.path(dadir,'LFA34-DFOtotalabund.csv'))
 df2 = read.csv(file.path(dadir,'LFA34-DFOCommercialB.csv'))
+df2$X = NULL
 df = subset(df,yr<1999)
 df2 = subset(df2,yr>1998)
 df = as.data.frame(rbind(df,df2))
@@ -216,7 +217,7 @@ df$w.Yst[which(df$yr<1999)] <- df$w.Yst[which(df$yr<1999)]*0.71
 df$w.ci.Yst.l[which(df$yr<1999)] <- df$w.ci.Yst.l[which(df$yr<1999)]*0.71
 df$w.ci.Yst.u[which(df$yr<1999)] <- df$w.ci.Yst.u[which(df$yr<1999)]*0.71
 write.csv(df,file=file.path(dadir,'LFA34-DFOCommercialB.csv'))
-#aout = df
+aout = df
    with(df,plot(yr,w.Yst/1000,pch=1,xlab='Year',ylab='Commerical Biomass (t x000)',ylim=c(0,9)))
    with(df,arrows(yr,y0=w.ci.Yst.u/1000,y1=w.ci.Yst.l/1000, length=0))
    with(subset(df,yr>1998),points(yr,w.Yst/1000,pch=16))

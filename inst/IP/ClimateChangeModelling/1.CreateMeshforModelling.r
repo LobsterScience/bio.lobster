@@ -28,6 +28,7 @@ locsmap = match(
 
 baXY = planar2lonlat(ba,proj.type=p$internal.projection)
 
+
 aA$Depth = ba$z[locsmap]
 i = which(aA$Depth<0)
 aA = aA[-i,] 
@@ -52,6 +53,13 @@ crs_utm20 <- 32620
 rL = rL[-which(!(st_is_valid(rL))),]
 
 rL <- st_transform(rL, crs_utm20)
+
+baX = st_as_sf(as_tibble(baXY), coords=c('lon','lat'),crs=4326)
+baX = st_transform(baX, crs_utm20)
+
+baXr = st_filter(baX, rL)
+baXrr = subset(baXr,z<400 )
+
 # Project our survey data coordinates:
 survey <- aT %>%   
   st_as_sf(crs = 4326, coords = c("LONGITUDE", "LATITUDE")) %>% 
@@ -162,8 +170,8 @@ png('Figures/ModelOutput/lobstersdmTMBwk1-12.png', width = 10, height = 12,units
 mm = c(0.001,max(gsf$pred))
 ggplot(subset(gsf,W %in% 1)) +
   geom_sf(aes(fill=pred,color=pred)) + 
-  scale_fill_viridis_c(trans='sqrt',limits=mm) +
-  scale_color_viridis_c(trans='sqrt',limits=mm) +
+  scale_fill_viridis_c(trans='log',limits=mm) +
+  scale_color_viridis_c(trans='log',limits=mm) +
   facet_wrap(~W) +
   geom_sf(data=rL,size=1,colour='black',fill=NA)+
   theme( axis.ticks.x = element_blank(),

@@ -50,6 +50,7 @@ c34$yr = c34$YR
 dadir = file.path(project.figuredirectory('bio.lobster'),'LFA34Update')
 df =  read.csv(file.path(dadir,'LFA34-DFOtotalabund.csv'))
 df2 = read.csv(file.path(dadir,'LFA34-DFOCommercialB.csv'))
+df2$X = NULL
 df = subset(df,yr<1999)
 df2 = subset(df2,yr>1998)
 df = as.data.frame(rbind(df,df2))

@@ -78,7 +78,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
   if(survey=='DFO'){
     p$series =c('summer')# p$series =c('georges');p$series =c('fall')
-    p$years.to.estimate = p$yrs[c(-1)]
+    p$years.to.estimate = c(1970:2020,2022)
     p$length.based = T
     p$by.sex = T
     p$size.class = c(83,300)
