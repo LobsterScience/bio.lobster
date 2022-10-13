@@ -1,0 +1,37 @@
+# Sources of Information
+
+<!-- This is an optional section -->
+
+<div id="refs"></div>
+
+<!-- Required for proper indentation in following sections -->
+\setlength{\parindent}{0in} 
+\setlength{\leftskip}{0in} 
+\setlength{\parskip}{4pt}
+
+DFO. 2009. A fishery decision-making framework incorporating the precautionary approach.
+
+DFO. 2021a. Assessment of American Lobster (Homarus americanus) in Lobster Fishing Areas
+35–38. DFO Can. Sci. Advis. Sec. Sci. Advis. Rep. 2021/020.
+
+DFO. 2021b. Stock Status update of Lobster (Homarus americanus) in Lobster Fishing Area 35
+for 2020. DFO Can. Sci. Advis. Sec. Sci. Advis. Rep. 2021/028.
+
+DFO. 2022. Stock Status Update of Lobster (Homarus americanus) in Lobster Fishing Area 35
+for 2021. DFO Can. Sci. Advis. Sec. Sci. Resp. 2022/005. 
+
+Drinkwater, K.F., Tremblay, M.J., and Comeau, M. 2006. The influence of wind and temperature
+on the catch rate of the American Lobster (Homarus americanus) during spring fisheries off
+eastern Canada. Fish. Oceanogr. 15(2): 150–165.
+
+Sameoto, J.A., Smith, S.J., Hubley, B., Pezzack, D., Denton, C., Nasmith, L., and Glass, A.
+2012. Scallop Fishing Area 29: Stock status and update for 2012. DFO Can. Sci. Advis. Sec.
+Res. Doc. 2012/042. iv + 63 p.
+
+Smith, S.J., Glass, A., Sameoto. J., Hubley, B., Reeves, A., and Nasmith, L. 2013. Comparative
+survey between Digby and Miracle drag gear for scallop surveys in the Bay of Fundy. DFO
+Can. Sci. Advis. Sec. Res. Doc. 2012/161. iv + 20 p.
+
+Tremblay, M.J., Smith, S.J., Todd, B.J., Clement, P.M., and McKeown, D.L. 2009. Associations
+of lobsters (Homarus americanus) off southwestern Nova Scotia with bottom type from
+images and geophysical maps. ICES Journal of Marine Sciences. 66(9): 2060–2067.

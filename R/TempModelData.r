@@ -1,5 +1,5 @@
 #' @export
-TempModelData = function(redo=F, save=F){
+TempModelData = function(redo=F, save=T){
 if(redo){
 	p = bio.lobster::load.environment()
 

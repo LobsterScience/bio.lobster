@@ -1,0 +1,20 @@
+#Background
+##Description of the fishery
+
+Commercial Lobster fishing in LFA 35 occurs in the Bay of Fundy (Figure 1) and borders the
+biggest Lobster fishery in the Canadian Northwest Atlantic, LFA 34, which has the highest
+landings and the most participants of any LFA in Canada. Landings in LFA 35 began a long-term
+increase in the mid-1990s, and current landings are near a record high. A similar increase
+in landings was also observed in most of the Gulf of Maine regions and other LFAs in Atlantic
+Canada.
+The fishery is managed by input controls including a Minimum Legal Size (MLS, 82.5 mm
+Carapace Length [CL]), prohibition on landing of both egg-bearing and V-notched females (with
+no setal hairs), limited entry licensing, split fishing season (October 14th–December 31st; last
+day of February–July 31st), and trap limits (300). Other management measures include the
+requirement of vents to allow sub-legal-size Lobster to escape and biodegradable trap
+mechanisms to mitigate ghost fishing by lost traps.
+
+```{r ,fig.cap="Map of Lobster Fishing Areas (LFAs) 36-38 with logbook reporting grids outlined in grey."}
+knitr::include_graphics("BOFLFA.png")
+```
+

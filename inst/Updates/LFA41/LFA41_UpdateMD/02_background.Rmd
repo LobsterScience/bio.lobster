@@ -1,0 +1,19 @@
+# Background
+
+Commercial Lobster fishing in LFA 41 (Figure 1) occurs offshore, from the 50 nautical mile line
+(92 km) to the upper continental slope. While LFA 41 extends to the easterly boundary of the 4V
+Northwest Atlantic Fisheries Organization (NAFO) line, the fishery is limited to NAFO Divisions
+4X and 5Zc.
+
+```{r maps, fig.cap="Map showing LFA 41 offshore subareas for primary indicators (4X – Crowell Basin, Southwest Browns, and Southeast Browns, and 5Z – Georges Basin and Georges Bank).", out.width="3.8in"}
+
+
+knitr::include_graphics(here::here("41map.jpg"))
+
+```
+
+
+The LFA 41 fishery operates under the Offshore Lobster and Jonah Crab Integrated Fisheries Management Plan (DFO 2020). It is the only Lobster fishery in Canada that is managed with a Total Allowable Catch (TAC). The minimum legal size is 82.5 mm Carapace Length (CL), and there is a prohibition on landing berried and/or v-notched females. The fishery operates yearround. Currently, there is no trap limit.
+
+The annual TAC (720 t) was established in 1985 based on historical landings. Annual landings from 2002 to 2021 are presented in Figure 2. In recent years, the TAC has been managed under a three-year management cycle that allows for quota overruns and carry-forward of uncaught quota. At the end of the third year of a cycle, no more than three times the annual quotas (i.e., no more than 2,160 t) may be landed.
+

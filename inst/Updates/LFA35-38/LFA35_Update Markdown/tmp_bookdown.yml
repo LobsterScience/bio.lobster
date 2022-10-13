@@ -1,0 +1,10 @@
+book_filename: "sr"
+rmd_files: ["tmp-tmp-index.Rmd",
+            "tmp-tmp-01_context.Rmd",
+            "tmp-tmp-02_background.Rmd",
+            "tmp-tmp-03_analysis.Rmd",
+            "tmp-tmp-04_conclusions.Rmd",
+            "tmp-tmp-05_contributors.Rmd",
+            "tmp-tmp-06_approval.Rmd",
+            "tmp-tmp-07_bibliography.Rmd"]
+delete_merged_file: true
