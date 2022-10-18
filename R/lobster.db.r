@@ -375,6 +375,7 @@ if(DS %in% c('season.dates','season.dates.redo')) {
                   save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
             }
 
+    
 
 
 ### Inshore Commercial Logs and slips
@@ -625,7 +626,19 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
         load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)      
     }
 
-
+if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
+    #these are the monitoring doc logs exclusively used for 41 and grey zone fishing      
+      if (DS=="greyzone_logs.redo") {
+        query_md = "select * from marfissci.lobster_md_log where mon_doc_defn_id=49"
+        db.setup(un=oracle.lobster.user, pw = oracle.lobster.password)
+        log_md = connect.command(con, query_md)
+        save( log_md, file=file.path( fnODBC, "greyzonelogs.rdata"), compress=T)
+        gc()  # garbage collection
+        
+        }
+      return(load(file=file.path( fnODBC, "greyzonelogs.rdata")))
+    }
+        
 
 
 ### Offshore Commercial Logs
@@ -636,7 +649,9 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                 #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
                 
                 # logs from LFA 41 Cheryl's query for adjusted catch and assigning subareas
-                query41 = "select * from lobster.logs41"
+               query41 = "select * from marfissci.lobster_md_log where mon_doc_defn_id=19"
+               db.setup(un=oracle.lobster.user, pw = oracle.lobster.password)
+               
                 slipquery41 = "select  * from lobster.slips41"
                 ziffquery41  =  "select * from lobster.ziff41"
                 offquery41  =  "select * from lobster.crislog41" # table not view
@@ -648,7 +663,6 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
             
                 off41 = subset(off41,DATE_FISHED < '1995-01-01')
 
-                logs41$DDLON = logs41$DDLON*-1
                 save( logs41, file=file.path( fnODBC, "logs41.rdata"), compress=T)
                 save( slip41, file=file.path( fnODBC, "slip41.rdata"), compress=T)
                 save( ziff41, file=file.path( fnODBC, "ziff41.rdata"), compress=T)
