@@ -20,7 +20,6 @@ sf_use_s2(FALSE) #needed for cropping
 
 ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
 st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
-st_crs(rL) <- 4326
 crs_utm20 <- 32620
 ns_coast <- suppressWarnings(suppressMessages(
   st_crop(ns_coast,
@@ -29,7 +28,6 @@ ns_coast <- suppressWarnings(suppressMessages(
 ns_coast <- st_transform(ns_coast, crs_utm20)
 
 st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
-st_crs(rL) <- 4326
 crs_utm20 <- 32620
 
 # Project our survey data coordinates:
@@ -111,6 +109,14 @@ g = predict(fit,newdata=(be))
 
   gsf = st_as_sf(g,coords = c("X1000","Y1000"),crs=32620,remove=F)
 
+rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
+rL = st_as_sf(rL)
+st_crs(rL) <- 4326
+rL = st_transform(rL,32620) 
+st_geometry(rL) <- st_geometry(st_as_sf(rL$geometry/1000)) 
+st_crs(rL) <- 32620
+
+
 
 
 #Maps
@@ -129,7 +135,67 @@ ggplot(subset(gsf,W %in% 0:26)) +
          axis.title.y = element_blank()
   ) +
   coord_sf()
-dev.off()
 savePlot('wtWeek600k.png') 
-saveRDS(list(data=survey,grid=bspde,preds=be,model=fit),file='AllwtTw600k.rds')
+
+
+mm = c(0.001,max(gsf$pred))
+ggplot(subset(gsf1)) +
+  geom_sf(aes(fill=pred,color=pred)) + 
+  scale_fill_viridis_c(trans='log',limits=mm) +
+  scale_color_viridis_c(trans='log',limits=mm) +
+  geom_sf(data=rL,size=1,colour='black',fill=NA)+
+  theme( axis.ticks.x = element_blank(),
+         axis.text.x = element_blank(),
+         axis.title.x = element_blank(),
+         axis.ticks.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.title.y = element_blank()
+  ) +
+  coord_sf()
+savePlot('wt600k.png') 
+
+
+
+
+
+
+
+saveRDS(list(data=survey,grid=bspde,preds=gsf,model=fit),file='AllwtTw600k.rds')
+
+a=readRDS('AllwtTw600k.rds')
+survey=a[[1]]
+bspde=a[[2]]
+gsf=st_as_sf(a[[3]])
+fit=a[[4]]
+
+gsf$X = gsf$X1000*1000
+gsf$Y = gsf$Y1000*1000
+st_geometry(gsf) <-NULL
+gsf = st_as_sf(gsf,coords=c('X','Y'))
+st_crs(gsf) <- 32620
+
+rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
+st_crs(rL) <- 4326
+rL <- st_transform(rL, 32620)
+rl = st_coordinates(rL)
+rl[,1] = rl[,1]/1000
+rl[,2] = rl[,2]/1000
+
+rl = st_as_sf(rl,)
+
+i = st_intersects(gsf,rL,sparse=F)
+    gsf$i = unlist(apply(i,1,function(x) ifelse(any(x), which(x),NA))) #this generates the index for LFAs, without this points outside LFAs dont get counted and make a mess
+gsf$LFA = rL$LFA[gsf$i]
+gsf1 = gsf
+
+st_geometry(gsf) <-NULL
+
+ggplot(subset(gsf,!is.na(LFA)),aes(log(pred)))+
+  geom_histogram(aes(y=..density..),position='identity')+
+  facet_wrap(~LFA)+
+  geom_vline(xintercept=0)
+  savePlot('DistributionOfPredictedDensity.png') 
+
+
+###predictions
 
