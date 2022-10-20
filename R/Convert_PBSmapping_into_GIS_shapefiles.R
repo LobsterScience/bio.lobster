@@ -69,7 +69,7 @@ dat.sdf <- NULL
 if(env.object == T) dat.sdf.list <- NULL
 for(i in 1:length(layer.name))
 {
- 
+ browser()
   subs <- which(dat[,names(dat) == layer.names] == layer.name[i])
   tmp <- dat[subs,]
   tmp <- as.PolySet(tmp,projection = proj) # The proj can be "LL", "UTM", or "NULL".
