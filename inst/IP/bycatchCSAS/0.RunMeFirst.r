@@ -16,7 +16,7 @@ la()
 
 p = bio.lobster::load.environment()
 p = spatial_parameters(type='canada.east')
-wd = ('C:/Users/CookA/Desktop/dellshared/Bycatch in the Lobster Fishery')
+wd = ('dellshared/Bycatch in the Lobster Fishery')
 setwd(wd)
 
 #note ... some model runs will result in DLL conflicts which need to be resolved prior to next model run or prediction
