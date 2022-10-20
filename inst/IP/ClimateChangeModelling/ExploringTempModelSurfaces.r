@@ -449,6 +449,7 @@ Had3 = ggplot(Had) +
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
+require(gridExtra)
 
 
 grid.arrange(baseCan,baseMPI,baseHad,ll,
