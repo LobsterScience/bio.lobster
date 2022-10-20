@@ -1,0 +1,54 @@
+# Background
+
+## Description of the fishery
+
+Commercial Lobster fishing in LFA 35 occurs in the Bay of Fundy (Figure \@ref(fig:BOF)) and borders the
+biggest Lobster fishery in the Canadian Northwest Atlantic, LFA 34, which has the highest
+landings and the most participants of any LFA in Canada. Landings in LFA 35 began a long-term
+increase in the mid-1990s, and current landings are near a record high. A similar increase
+in landings was also observed in most of the Gulf of Maine regions and other LFAs in Atlantic
+Canada.
+
+The fishery is managed by input controls including a Minimum Legal Size (MLS, 82.5 mm
+Carapace Length [CL]), prohibition on landing of both egg-bearing and V-notched females (with
+no setal hairs), limited entry licensing, split fishing season (October 14th–December 31st; last
+day of February–July 31st), and trap limits (300). Other management measures include the
+requirement of vents to allow sub-legal-size Lobster to escape and biodegradable trap
+mechanisms to mitigate ghost fishing by lost traps.
+
+```{r BOF,fig.cap="Map of Lobster Fishing Areas (LFAs) 36-38 with logbook reporting grids outlined in grey."}
+
+#knitr::include_graphics("BOFLFA.png")
+setwd("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA35-38/LFA35_Update")
+
+require(rgdal)
+require(devtools)
+require(roxygen2)
+require(geosphere)
+require(SpatialHub)
+require(lubridate)
+require(bio.utilities)
+require(bio.lobster)
+require(rstanarm)
+require(rlang)
+require(glue)
+require(PBSmapping)
+
+	p = bio.lobster::load.environment()
+	la()
+	assessment.year = 2022 ##Check Year
+	p$syr = 1989
+  p$yrs = p$syr:assessment.year
+
+
+
+figdir = file.path("LFA35_Update")
+    
+	    p$lfas = c("35") # specify lfa
+
+	    
+x11(width=5, height=5)
+LobsterMap(ylim=c(43.3,46),	xlim=c(-67.8,-63.2))
+
+```
+

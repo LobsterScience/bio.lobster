@@ -1,0 +1,609 @@
+
+```{r,include=FALSE, echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE, error=FALSE}
+
+require(RODBC)
+require(rgdal)
+require(devtools)
+require(roxygen2)
+require(geosphere)
+require(SpatialHub)
+require(lubridate)
+require(bio.utilities)
+require(bio.lobster)
+require(rstanarm)
+require(rlang)
+require(glue)
+require(PBSmapping)
+
+ 
+	p = bio.lobster::load.environment()
+	la()
+	assessment.year = 2022 ##Check Year
+	p$syr = 1989
+  p$yrs = p$syr:assessment.year
+
+
+
+figdir = file.path("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_UpdateMD")
+    
+	    p$lfas = c("41") # specify lfa
+
+	   
+
+## from Oracle
+#lobster.db('logs.redo') 
+
+#groundfish.db('odbc.redo',datayrs = 1970:2022)
+
+	
+#Not Oracle		
+#logs=lobster.db('process.logs.redo')
+logs=lobster.db("process.logs")
+
+#land=lobster.db('annual.landings.redo')
+land = lobster.db('annual.landings')
+#land = lobster.db('seasonal.landings')
+#land=lobster.db('seasonal.landings.redo')
+	    
+#groundfish.db('gscat.odbc.redo')
+#groundfish.db('gsinf.odbc.redo')
+#groundfish.db('gsdet.odbc.redo')
+
+#check what's in there
+#a = groundfish.db('gsinf.odbc')
+#summary(a)
+
+```
+
+
+
+```{r data load, include= FALSE}
+
+require(bio.survey)
+require(bio.lobster)
+require(dplyr)
+p = bio.lobster::load.environment()
+p$libs = NULL
+fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+la()
+p$yrs = 1947:p$current.assessment.year
+load_all('~/GitHub/bio.survey/')
+
+        # run in windows environment
+      # lobster.db( DS = 'annual.landings.redo', p=p) #static annual landings tabke needs to be updated by CDenton
+       #lobster.db( DS = 'seasonal.landings.redo', p=p) #static seasonal landings table needs to be updated by CDenton
+      lobster.db( DS = 'logs41.redo', p=p) 
+        
+	# load .RData objects
+      # lobster.db( DS = 'annual.landings', p=p) #static annual landings take needs to be updated by CDenton
+      # lobster.db( DS = 'seasonal.landings', p=p) #static seasonal landings table needs to be updated by CDenton
+      lobster.db( DS = 'logs41', p=p)
+        
+annual.landings=lobster.db( DS = 'annual.landings', p=p)
+
+
+
+
+## Add Map
+
+
+
+require(devtools)
+
+require(geosphere)
+require(SpatialHub)
+require(lubridate)
+require(bio.utilities)
+require(bio.lobster)
+
+require(PBSmapping)
+
+
+
+p = bio.lobster::load.environment()
+la()
+LFAs<-read.csv(file.path(project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
+
+	pdf(file.path(figdir, "MapLFA41.pdf"), width=6.5, height=5)
+#png(filename=file.path(figdir, "MapLFA41.png"),width=8, height=6, units = "in", res = 800)
+LobsterMap( ylim=c(41,44),xlim=c(-68,-63),nafo ="all",addGrids=F)
+
+dev.off() 
+```
+
+```{r landings, include=TRUE, echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE, error=FALSE, fig.cap = "Landings (t) for Lobster Fishing Area 41 from 2002–2022 against a Total Allowable Catch of 720t. Horizontal red line denotes the TAC. Note: Red bar (hash marks) for 2022 landings indicates incomplete data."}
+
+##Landings barplot
+        ll<- land
+        ll <- ll[order(ll$YR),]
+        par(mar=c(3,5,3,3))
+        cols<-c("steelblue4","steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4","steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4","steelblue4","steelblue4","steelblue4","steelblue4", "firebrick3")
+        bardens<-c(500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,30)
+        
+      lands<- barplot(ll$LFA41[ll$YR > 2001], ylim =c(0,1000), col = cols, density = bardens, names.arg = 2002:2022, cex.names= 0.8, space =c(0,0), ylab = "Landings (t)" )
+        box()
+        abline(h=720, col ='red', lwd = 2)
+
+```
+
+
+## Analysis and Response
+
+### Indicators of Stock Status
+
+The status of Lobster in LFA 41 is assessed using two indicators of stock health: survey commercial biomass and reproductive potential. The reference points defining the Healthy, Cautious, and Critical zones—the Upper Stock Reference (USR) and the Limit Reference Point (LRP)—are based on the survey biomass. Both indicators use fishery-independent data available from four multispecies surveys, two conducted by DFO and two conducted by NEFSC.
+
+The NEFSC surveys were not conducted in 2020 due to concerns with the COVID-19 global pandemic; therefore, the data from these surveys are not updated. The NEFSC spring survey did occur in 2021 but the Autumn survey was not yet completed at the time of this update. The DFO RV survey was completed in 2020 but was not completed in 2021. Information is updated where possible.
+
+One year of missing survey data will have little to no impact on the median because it is a 3-year running median.
+
+The DFO Summer Research Vessel Survey (RV41) covers the offshore portions on the Scotian Shelf, and the DFO Spring Research Vessel Survey (GB) covers the offshore portions on Georges Bank. The NEFSC surveys cover the Gulf of Maine and Georges Bank in the spring (NSpr41) and autumn (Naut41).
+ 
+
+### Primary Indicators and Stock Status
+
+#### Commercial Biomass from Research Vessel Surveys  
+
+Lobster biomass is measured by four multispecies surveys from which commercial biomass indices are used to determine overall stock health. The commercial biomass is calculated for each survey, and a 3-year running median is used to assess stock status relative to reference indicators. The Limit Reference Indicator (LRI) for each index is defined as the median of the five lowest non-zero biomasses in the time series. The Upper Stock Indicator (USI) is defined as 40% of the median of the higher productivity period (i.e., 2000–2015). For the stock to be considered in the Healthy Zone, the commercial biomass indices for at least three of the four surveys must be above their respective USIs (Figure 3). Currently, all four surveys are above their respective USIs. Therefore, the stock is in the Healthy Zone, and it has been since 2002.
+
+```{r prim biomass, include=TRUE, echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE, error=FALSE, fig.cap ="Commercial biomass time series along with the 3-year running median (red line), compared to LRI (solid blue line), and USI (dot-dash grey line). Top row: left- RV41, right – GB. Bottom row: left –NSpr41, right – Naut41. Note: Different scales used on both x-axis and y-axis."}
+
+require(bio.lobster)
+p = bio.lobster::load.environment()
+require(bio.polygons)
+p$libs = NULL
+require(PBSmapping)
+require(bio.lobster)
+require(bio.utilities)
+require(dplyr)
+
+la()
+ 
+source("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_UpdateMD/1.DataImport.r") 
+source("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_UpdateMD/2.stratifiedAnalysis.r") 
+source("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_UpdateMD/2d.stratifiedAnalysisCommercial.r") 
+source("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_UpdateMD/2e.femalestratifiedSizeFrequencies.r") 
+source("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_UpdateMD/3.reproductivePotential.r") 
+
+
+
+assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
+fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2022','indicators')
+
+jpeg("biomass41_2022.jpeg", width = 9, height = 7, units = "in",res=600, bg = "white")
+par(mfrow = c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
+
+ ###DFO RV survey
+all.out=read.csv(file.path(fp,'DFO.restratified.All.csv'))
+
+out=read.csv(file.path(fp,'DFO.restratified.commercial.csv'))
+      a = merge(all.out,out,by='yr')
+      #median(a$w.Yst.y/a$w.Yst.x)    #0.876 proportion of total weight that comprises commercial animals....assuming constant over
+      ao = all.out[,c('yr','w.Yst')]
+      ao$w.Yst = ao$w.Yst * 0.876
+      ao$w.Yst[ao$yr %in% out$yr] <- out$w.Yst[which(!is.na(out$yr))]
+      ao$w.Yst = ao$w.Yst/1000
+
+#ao is full time series of biomasses
+
+       plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		   points(ao$yr,ao$w.Yst,type='p',lty=1,pch=16,lwd=2)
+		   rmm = rmed(ao$yr,ao$w.Yst)
+       lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+
+
+              ub = median(subset(ao,yr %in% 2000:2015,select=w.Yst)[,1]) * 0.4
+              llb = ao$w.Yst[which(ao$w.Yst>0)]
+              llb = median(sort(llb)[1:5])
+              abline(h=llb,col='dodgerblue4',lwd=2)
+              abline(h=ub,col='lightcyan4',lwd=2, lty=4)
+
+
+
+
+###Georges###
+rm(out)
+       aout=read.csv(file.path(fp,'DFO.Georges.All.csv'))
+                        aout = aout[,c('yr','w.Yst')]
+                       out=read.csv(file.path(fp,'DFO.Georges.commercial.csv'))
+                        out = subset(out,yr>=2007)
+                        out = out[,c('yr','w.Yst')]
+
+                            aa=merge(out,aout,all.x=T,by='yr')
+                            #sum(aa[,2])/sum(aa[,3]) #0.872 commercial
+                        aout$w.Yst = aout$w.Yst * 0.872
+                        aout$w.Yst[aout$yr %in% out$yr] <- out$w.Yst
+
+
+                  ao = aout
+                  ao$w.Yst = ao$w.Yst/1000
+
+      plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		   points(ao$yr,ao$w.Yst,type='p',lty=1,pch=16,lwd=2)
+		   rmm = rmed(ao$yr,ao$w.Yst)
+       lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+
+                  #based on bcp
+                  ub = median(subset(ao,yr %in% 2000:2015,select=w.Yst)[,1]) * 0.4
+                  llb = ao$w.Yst[which(ao$w.Yst>0)]
+                  llb = median(sort(llb)[1:5])
+
+              abline(h=llb,col='dodgerblue4',lwd=2)
+              abline(h=ub,col='lightcyan4',lwd=2, lty=4)
+
+
+###Spring ###
+    out=read.csv(file.path(fp,'NEFSC.spring.restratified.commercial.csv'))
+  ao = out[,c('yr','w.Yst')]
+  ao$w.Yst = ao$w.Yst/1000
+
+  plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		   points(ao$yr,ao$w.Yst,type='p',lty=1,pch=16,lwd=2)
+		   rmm = rmed(ao$yr,ao$w.Yst)
+       lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+
+ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1]) * 0.4
+            llb = ao$w.Yst[which(ao$w.Yst>0)]
+              llb = median(sort(llb)[1:5])
+            abline(h=llb,col='dodgerblue4',lwd=2)
+            abline(h=ub,col='lightcyan4',lwd=2, lty=4)
+
+
+###Fall###
+
+  out=read.csv(file.path(fp,'NEFSC.fall.restratified.commercial.csv'))
+  ao = out[,c('yr','w.Yst')]
+  ao$w.Yst = ao$w.Yst/1000
+
+
+
+      plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		   points(ao$yr,ao$w.Yst,type='p',lty=1,pch=16,lwd=2)
+		   rmm = rmed(ao$yr,ao$w.Yst)
+       lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+
+ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1]) * 0.4
+             llb = ao$w.Yst[which(ao$w.Yst>0)]
+              llb = median(sort(llb)[1:5])
+              abline(h=llb,col='dodgerblue4',lwd=2)
+              abline(h=ub,col='lightcyan4',lwd=2, lty=4)
+
+
+
+                            mtext(" ",1,1,outer=T, cex= 2)
+                            mtext("Stratified Total Weight (kt)",2,1,outer=T,las=0, cex = 2)
+```
+
+
+
+#### Reproductive Potential
+
+Reproductive potential consists of an integrated index combining female abundance at size, fecundity at size, and size-at-maturity. It represents an estimate of total eggs produced within the stock area and can also be viewed as a surrogate for Spawning Stock Biomass (SSB). An Upper Boundary (UB) and Lower Boundary (LB) have been set (where sufficient data is available) to help gauge the significance of changes in egg production relative to long-term medians (Cook et al.2017).
+
+Reproductive potential is above the long-term median and the respective UBs in all survey indices. Estimates of reproductive potential are at or near the highest values on record (Figure 4). An increase in overall abundance was the main driver of the increase in reproductive potential despite a decrease in median size of the Lobsters as was observed in the at-sea samples and documented during the 2017 stock assessment. 
+
+```{r repro potent, include=TRUE, echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE, error=FALSE, fig.cap = "Reproductive potential in millions of eggs estimated from the 4 surveys covering LFA 41 along with the 3-year running median (solid red line). Lower bound are represented by solid blue line and upper bounds by dot-dash grey line. No bounds are identified for the Georges Bank DFO survey and only upper bounds are identified for the Summer Research Vessel Survey due to the brevity of the time series. Top row: left- NSpr41, right – NAut41. Bottom row: left – RV41, right – GB. Note: Different scales used on x-axis and y-axis."}
+
+require(bio.lobster)
+la()
+
+       ff = c(
+ file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2022','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+ file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2022','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+ file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2022','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+ file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2022','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+
+
+jpeg("reproPotential41_2022_.jpeg", width = 11, height = 8, units = "in",res=600, bg = "white")
+par(mfrow = c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
+
+
+
+#DFO summer
+ i=1
+          load(ff[i])
+            yll = max(aa$n.yst)
+             h = split(aa,f=aa$yr)
+             out= c()
+                for(j in 1:length(h)) {
+                    g = h[[j]]
+                    y = unique(g$yr)
+                    #g$Mat = exp(-17.8583 +(0.1894 *g$FLEN)) / (1+exp(-17.8583 +(0.1894 *g$FLEN))) #pezzack and duggan 1989
+                    g$Mat = 1 / (1+exp(-(-22.5522 +0.2455 *g$FLEN))) #gaudette 2016 from offshore lobsters collected in 2016
+                    g$Fec = (g$Mat * 0.0031829 * g$FLEN ^ 3.353501)  # campbell and Robinson 1983
+                    g$Fecm = g$Fec * g$n.Yst / 1000000
+                    n = aggregate(cbind(n.Yst,Fecm)~yr,data = g, FUN=sum, na.rm=T)
+                    out = rbind(out,n)
+                    }
+
+
+       plot(out$yr,out$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		   points(out$yr,out$Fecm,type='p',lty=1,pch=16,lwd=2)
+		   rmm = rmed(out$yr,out$Fecm)
+       lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+
+                          ub = median(subset(out,yr %in% 2000:2015,select=Fecm)[,1]) * 0.4
+                         abline(h=ub,col='lightcyan4',lwd=2,lty = 4)
+
+
+ #  DFO Georges
+i=4
+         load(ff[i])
+          yll = max(aa$n.yst)
+           h = split(aa,f=aa$yr)
+           out= c()
+              for(j in 1:length(h)) {
+                  g = h[[j]]
+                  y = unique(g$yr)
+                  #g$Mat = exp(-17.8583 +(0.1894 *g$FLEN)) / (1+exp(-17.8583 +(0.1894 *g$FLEN))) #pezzack and duggan 1989
+                  g$Mat = 1 / (1+exp(-(-22.5522 +0.2455 *g$FLEN))) #gaudette 2016 from offshore lobsters collected in 2016
+                  g$Fec = (g$Mat * 0.0031829 * g$FLEN ^ 3.353501)  # campbell and Robinson 1983
+                  g$Fecm = g$Fec * g$n.Yst / 1000000
+                  n = aggregate(cbind(n.Yst,Fecm)~yr,data = g, FUN=sum, na.rm=T)
+                  out = rbind(out,n)
+                  }
+
+       plot(out$yr,out$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		   points(out$yr,out$Fecm,type='p',lty=1,pch=16,lwd=2)
+		   rmm = rmed(out$yr,out$Fecm)
+       lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+
+
+                           nub = median(subset(out,yr %in% 1999:2015,select=Fecm)[,1])
+
+
+#NEFSC Spring survey
+  i=2
+       		load(ff[i])
+          	yll = max(aa$n.yst)
+	           h = split(aa,f=aa$yr)
+	           out= c()
+              	for(j in 1:length(h)) {
+              			g = h[[j]]
+              			y = unique(g$yr)
+              			#g$Mat = exp(-17.8583 +(0.1894 *g$FLEN)) / (1+exp(-17.8583 +(0.1894 *g$FLEN))) #pezzack and duggan 1989
+              			g$Mat = 1 / (1+exp(-(-22.5522 +0.2455 *g$FLEN))) #gaudette 2016 from offshore lobsters collected in 2016
+                    g$Mat = ifelse(g$FLEN<120, g$Mat/2,g$Mat*(2/3))
+                    g$Fec = (g$Mat * 0.0031829 * g$FLEN ^ 3.353501)  # campbell and Robinson 1983
+              			g$Fecm = g$Fec * g$n.Yst / 1000000
+              			if(sum(g$n.Yst,na.rm=T)>0){
+              			n = aggregate(cbind(n.Yst,Fecm)~yr,data = g, FUN=sum, na.rm=T)
+                    out = rbind(out,n)
+              			}}
+
+
+       plot(out$yr,out$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		   points(out$yr,out$Fecm,type='p',lty=1,pch=16,lwd=2)
+		   rmm = rmed(out$yr,out$Fecm)
+       lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+
+		             ub = median(subset(out,yr %in% 2001:2015,select=Fecm)[,1]) * 0.4
+                 llb = out$Fecm[which(out$Fecm>0)]
+                 llb = median(sort(llb)[1:5])
+
+                 abline(h=llb,col='dodgerblue4',lwd=2)
+                 abline(h=ub,col='lightcyan4',lwd=2, lty = 4 )
+
+
+#NEFSC Autumn survey
+i=3
+         load(ff[i])
+          yll = max(aa$n.yst)
+           h = split(aa,f=aa$yr)
+           out= c()
+              for(j in 1:length(h)) {
+                  g = h[[j]]
+                  y = unique(g$yr)
+                  g$Mat = 1 / (1+exp(-(-22.5522 +0.2455 *g$FLEN))) #gaudette 2016 from offshore lobsters collected in 2016
+                  g$Fec = (g$Mat * 0.0031829 * g$FLEN ^ 3.353501)  # campbell and Robinson 1983
+                  g$Fecm = g$Fec * g$n.Yst / 1000000
+                  if(sum(g$n.Yst,na.rm=T)>0){
+                  n = aggregate(cbind(n.Yst,Fecm)~yr,data = g, FUN=sum, na.rm=T)
+                  out = rbind(out,n)
+                  }}
+
+       plot(out$yr,out$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		   points(out$yr,out$Fecm,type='p',lty=1,pch=16,lwd=2)
+		   rmm = rmed(out$yr,out$Fecm)
+       lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+
+                 ub = median(subset(out,yr %in% 2000:2015,select=Fecm)[,1]) * 0.4
+                 llb = out$Fecm[which(out$Fecm>0)]
+                 llb = median(sort(llb)[1:5])
+
+                 abline(h=llb,col='dodgerblue4',lwd=2)
+                 abline(h=ub,col='lightcyan4',lwd=2,lty = 4)
+
+mtext("Year",1,1,outer=T, cex= 2)
+mtext("Reproductive Potential",2,1,outer=T,las=0, cex = 2)
+```
+
+
+
+```{r}
+
+require(bio.lobster)
+la()
+
+summerRV<-read.csv("C:/Users/Howsevj/Documents/bio.data/bio.lobster/assessments/LFA41/2022/indicators/Fec.maturefemaleLengthFrequenciesLFA41polygonSummerRV.csv")
+
+georgesRV<-read.csv("C:/Users/Howsevj/Documents/bio.data/bio.lobster/assessments/LFA41/2022/indicators/Fec.maturefemaleLengthFrequenciesLFA41dfogeorges.csv")
+
+
+#summerRV<-read.csv("C:/Users/Howsevj/Documents/bio.data/bio.lobster/assessments/LFA41/2021/Fec.maturefemaleLengthFrequenciesLFA41polygonSummerRV.csv")
+
+#georgesRV<-read.csv("C:/Users/Howsevj/Documents/bio.data/bio.lobster/assessments/LFA41/2021/Fec.maturefemaleLengthFrequenciesLFA41dfogeorges.csv")
+
+#nefscFall<-read.csv("C:/Users/Howsevj/Documents/bio.data/bio.lobster/assessments/LFA41/2021/Fec.maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.csv")
+
+#nefscSpring<-read.csv("C:/Users/Howsevj/Documents/bio.data/bio.lobster/assessments/LFA41/2021/Fec.maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.csv")
+
+
+jpeg("reproPotent41_2022.jpeg", width = 11, height = 8, units = "in",res=600, bg = "white")
+par(mfrow = c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
+
+
+##RV SUMMER
+                    
+       plot(summerRV$yr,summerRV$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		   points(summerRV$yr,summerRV$Fecm,type='p',lty=1,pch=16,lwd=2)
+		   rmm = rmed(summerRV$yr,summerRV$Fecm)
+       lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')              
+             
+                          ub = median(subset(summerRV,yr %in% 2000:2015,select=Fecm)[,1]) * 0.4
+                         abline(h=ub,col='lightcyan4',lwd=2,lty = 4)
+                         
+ ##GEORGES                        
+       plot(georgesRV$yr,georgesRV$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		   points(georgesRV$yr,georgesRV$Fecm,type='p',lty=1,pch=16,lwd=2)
+		   rmm = rmed(georgesRV$yr,georgesRV$Fecm)
+       lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')              
+                           
+             
+                           nub = median(subset(georgesRV,yr %in% 1999:2015,select=Fecm)[,1])
+            
+                           
+##NEFSC SPRING                        
+     #  plot(nefscSpring$yr,nefscSpring$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		 #  points(nefscSpring$yr,nefscSpring$Fecm,type='p',lty=1,pch=16,lwd=2)
+		 #  rmm = rmed(nefscSpring$yr,nefscSpring$Fecm)
+     #  lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')              
+
+		    #         ub = median(subset(nefscSpring,yr %in% 2001:2015,select=Fecm)[,1]) * 0.4
+        #         llb = nefscSpring$Fecm[which(nefscSpring$Fecm>0)]
+        #         llb = median(sort(llb)[1:5])
+   
+        #         abline(h=llb,col='dodgerblue4',lwd=2)
+        #         abline(h=ub,col='lightcyan4',lwd=2, lty = 4 )
+                 
+                 
+  ##FALL
+     #             plot(nefscFall$yr,nefscFall$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
+		 #  points(nefscFall$yr,nefscFall$Fecm,type='p',lty=1,pch=16,lwd=2)
+		 #  rmm = rmed(nefscFall$yr,nefscFall$Fecm)
+     #  lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')              
+       
+         #        ub = median(subset(nefscFall,yr %in% 2000:2015,select=Fecm)[,1]) * 0.4
+         #        llb = nefscFall$Fecm[which(nefscFall$Fecm>0)]
+         #        llb = median(sort(llb)[1:5])
+  
+                 
+          #       abline(h=llb,col='dodgerblue4',lwd=2)
+           #      abline(h=ub,col='lightcyan4',lwd=2,lty = 4)
+                
+
+                            mtext("Year",1,1,outer=T, cex= 2)
+                            mtext("Reproductive Potential",2,1,outer=T,las=0, cex = 2)
+                         
+```
+
+### Bycatch
+At-sea observer data are aggregated by 3-year time blocks to represent average annual bycatch estimates in LFA 41 (Table 1). Bycatch amounts for crabs (Cancer sp.), Cusk, Atlantic Cod, and White Hake have decreased consistently since 2011. Non-retained Lobster catch consists of undersized, berried, v-notched, and potentially cull (one or zero claws), soft, and jumbos (≥ 140 mm CL). The target for number of observed trips is 6 per season for LFA 41. The total number of trips, observed trips, and the percentage of observer coverage are reported in Table 2. Bycatch trip targets were not met during the 2020 season due to concerns with the COVID-19 global pandemic, and at the time of this update only ONE OR TWO??? trips have been completed for the 2021 season.
+
+
+```{r bycatch}
+require(lubridate)
+require(ggplot2)
+require(dplyr)
+require(tidyr)
+require(data.table)
+
+#MARFISSCI.LOBSTER_MD_LOG - is the string by string estimated catch and effort from logs.
+
+#ISTRAPS is the data collected by the observer during observed trips on the gear success form (attached).
+
+#ISSETSMV is the data collected by the observer on the catch per set (string). It is an estimation based on the observed traps. Like the catch card we fill out on the ILTS, but bumped up to the entire string of traps.
+
+#loginfo is the number of traps  = effort - total fished traps
+loginfo<-read.csv("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/Lobster_Md_log.csv")
+loginfo<-loginfo[loginfo$YR>2017,]
+colnames(loginfo)<-c("YEAR","TOTALTRAPS")
+
+
+Obstraps<-read.csv("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/lobster_atsea_vw.csv")
+## trap_no is the number of observed traps
+Obstraps$dates<-as.POSIXct(Obstraps$STARTDATE, format="%d-%b-%y")
+Obstraps$MONTH = month(Obstraps$dates)
+Obstraps$YEAR= year(Obstraps$dates)
+
+##only data from November 2018 -2022
+Obstraps<-Obstraps[Obstraps$YEAR >2017,]
+
+Obstraps<- subset(Obstraps, dates > as.Date("2018-11-01"))
+
+
+##number of observed traps per year
+hookhaul<-aggregate(NUM_HOOK_HAUL ~ YEAR, data=Obstraps, FUN=sum)
+num_obtrap<-aggregate(TRAPNO ~ YEAR, data=Obstraps, function(x) length(unique(x)))
+
+### NEED MEAN weight per trap
+
+### Species  = CALWT  by year
+weight_spec<-aggregate(Obstraps$CALWT, by=list(Obstraps$SPECIES, Obstraps$YEAR), FUN=sum)
+weight_spec<-weight_spec[(weight_spec$Group.1=="AMERICAN LOBSTER") | (weight_spec$Group.1=="COD(ATLANTIC)") | (weight_spec$Group.1=="JONAH CRAB") 
+            | (weight_spec$Group.1=="WHITE HAKE") |(weight_spec$Group.1=="SQUIRREL OR RED HAKE") |(weight_spec$Group.1=="SEA RAVEN") | (weight_spec$Group.1=="CUSK") | (weight_spec$Group.1 == "HADDOCK"),]
+
+colnames(weight_spec)<-c("SPECIES","YEAR","SPEC_WEIGHT")
+#convert to kg
+
+weight_spec$WEIGHT_KG<-(weight_spec$SPEC_WEIGHT)/1000
+
+#merge
+Annualbycatch<-merge(num_obtrap, weight_spec, by="YEAR")
+Annualbycatch<-merge(Annualbycatch, loginfo, by="YEAR")
+
+#Average per trap
+Annualbycatch$TRAPWEIGHT<-(Annualbycatch$WEIGHT_KG)/(Annualbycatch$TRAPNO)
+
+#BumpUp weight
+Annualbycatch$BUMPUP_WEIGHT<-(Annualbycatch$TRAPWEIGHT)*(Annualbycatch$TOTALTRAPS)
+
+######################NEED TO FIX WHITE HAKE ISSUE####################
+
+
+
+
+####################### CALCULATE % COVERAGE
+##Get the average of each species over each year
+Totalestbycatch<-Annualbycatch%>%
+  group_by(SPECIES)%>%
+  summarise(bumpwt=mean(BUMPUP_WEIGHT, na.rm=TRUE))
+Totalestbycatch<-as.data.frame(Totalestbycatch)
+
+
+### GET TOTAL NUMBER OF TRIPS AT SEA per Year
+#TripTrap<-read.csv("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/ISTRAPS.csv")
+#TripTrap$dates<-as.POSIXct(TripTrap$BOARD_DATE, format="%d-%b-%y")
+#TripTrap$MONTH = month(TripTrap$dates)
+#TripTrap$YEAR= year(TripTrap$dates)
+
+#TT_obs<-aggregate(TRIP_ID ~ YEAR, data=TripTrap, function(x) length(unique(x)))
+## GIVES WRONG NUMBER OF OBSERVED TRIPS FOR 2019
+
+
+## GIVES WRONG NUMBER OF OBSERVED TRIPS FOR 2019
+#Trips_observed<-aggregate(TRIPNO ~ YEAR, data=Obstraps, function(x) length(unique(x)))
+
+##SET data
+sets<-read.csv("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/ISSETSMV.csv")
+sets$dates<-as.POSIXct(sets$HAUL_DATE, format="%d-%b-%y")
+sets$MONTH = month(sets$dates)
+sets$YEAR= year(sets$dates)
+
+set_obs<-aggregate(TRIP_ID ~ YEAR, data=sets, function(x) length(unique(x)))
+#2018 doesn't line up because data clipped at November?
+
+
+###try logs
+md_log<-read.csv("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/full_md_log.csv")
+md_log$dates<-as.POSIXct(md_log$FV_FISHED_DATETIME, format="%d-%b-%y")
+md_log$MONTH = month(md_log$dates)
+md_log$YEAR= year(md_log$dates)
+
+md_log_trips<-aggregate(MON_DOC_ID  ~ YEAR, data=md_log, function(x) length(unique(x)))
+
+
+```
+
+

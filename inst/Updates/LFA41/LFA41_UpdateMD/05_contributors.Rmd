@@ -1,0 +1,21 @@
+# Contributors
+
+Mandatory section and title.
+
+```{r, echo=FALSE, include=FALSE}
+contributors <- tibble::tribble(
+  ~Name,          ~Affiliation,
+  "Victoria Howse",   "DFO Science, Maritimes Region",
+  "Adam Cook",   "DFO Science, Maritimes Region",
+   "Cheryl Denton",   "DFO Science, Maritimes Region",
+   "Verna Docherty",   "DFO Fisheries Management , Maritimes Region",
+   "Rabindra Singh",   "DFO Science, Maritimes Region",
+   "Brad Hubley",   "DFO Science, Maritimes Region",
+   "Kyle Gillespie",   "DFO Science, Maritimes Region",
+  
+)
+```
+
+```{r, results='asis'}
+csasdown::csas_table(contributors)
+```

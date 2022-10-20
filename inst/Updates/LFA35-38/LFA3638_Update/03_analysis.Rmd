@@ -1,0 +1,457 @@
+```{r,include=FALSE, echo=FALSE, warning=FALSE, message=FALSE, comment = FALSE, error = FALSE}
+setwd("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA35-38/LFA3638_Update")
+
+require(rgdal)
+require(devtools)
+require(roxygen2)
+require(geosphere)
+require(SpatialHub)
+require(lubridate)
+require(bio.utilities)
+require(bio.lobster)
+require(rstanarm)
+require(rlang)
+require(glue)
+require(PBSmapping)
+require(bio.survey)
+
+ 
+	p = bio.lobster::load.environment()
+	la()
+	assessment.year = 2022 ##Check Year
+	p$syr = 1989
+  p$yrs = p$syr:assessment.year
+
+
+
+figdir = file.path("LFA35_Update Markdown")
+    
+	    p$lfas = c("36", "38") # specify lfa
+
+	   
+
+## from Oracle
+#lobster.db('logs.redo') 
+#lobster.db('temperature.data.redo')
+#logs=lobster.db('process.logs.redo')
+logs=lobster.db("process.logs")
+#land = lobster.db('annual.landings.redo')
+land =lobster.db("annual.landings")
+#Sland=lobster.db('seasonal.landings.redo')
+Sland = lobster.db('seasonal.landings')
+
+
+```
+## Analysis and Response
+
+### Indicators of stock status
+
+The stock status of the Lobster in LFA 36-38 is assessed using primary, secondary, and contextual indicators. This update includes the primary indicator that is used to define stock status in relation to reference points defined in Cook et al. (In press.1 ) and secondary indicators that display time-series trends but do not have reference points. The data sources available for establishing indicators for LFAs 36 and 38 come from both fishery-dependent and fishery-independent data sources. Fishery-dependent data consist of commercial logbooks that report information on date, location (grid), effort (number of traps hauled), and estimated catch. The fishery-independent data sources are from the DFO Maritimes Region Summer Research Vessel Survey (herein RV survey), and the DFO Inshore Scallop Science survey. Indicators from surveys were updated where data were available.
+
+
+## Primary Indicator
+
+Stock status in LFAs 36 and 38 are evaluated separately through one primary indicator, which
+describes the time-series trends relative to reference points. The primary indicator for describing stock status is standardized commercial Catch Per Unit Effort (CPUE). There is currently no primary indicator of fishing pressure or exploitation in either LFA.
+
+### Catch Per Unit Effort
+
+Commercial catch rates are a preferred indicator over landings data, as they are standardized to
+account for the level of fishing effort. This is especially important in effort-controlled fisheries.
+The commercial fishing data used to estimate CPUE were obtained from mandatory logbooks
+that were implemented in the mid-2000s. It has been well documented that trap-based catch
+rates will vary throughout a fishing season due to factors apart from available biomass, including
+fishing behavior, localized depletion, and environmental conditions (Drinkwater et al. 2006,
+Miller and Rodger 1996). In an effort to account for these factors, CPUE data were standardized
+through generalized linear modelling with explanatory variables of Year, Day of Season,
+Temperature, and the interaction between Day of Season and Temperature. Year effects were
+treated as factors rather than a continuous variable to reduce smoothing across years and allow
+for data to better inform inter-annual variability.
+
+Model predictions were made for the first day of the fishing season at the median day-one
+temperature across all years. The available time series covers both a high- and low-productivity
+period. The median of the high-productivity period (2011–2018) was used as the proxy for the
+biomass at carrying capacity (K). Following the recommendations of DFO (2009), the Upper
+Stock Reference (USR) and Limit Reference Point (LRP) were set to 40% and 20% of the K
+proxy, respectively. A 3-year running median1 was used to smooth data points and to compare
+the standardized CPUE to the USR and LRP. This value will dampen the impact of any
+anomalous years, which may occur due to factors unrelated to changes in abundance
+
+
+```{r CPUE36, echo=FALSE, results=FALSE, fig.cap="Time series of standardized commercial catch rates (kg/trap haul; black dots) for LFA 36, along with the 3-year running median (solid blue line). The horizontal lines represent the Upper Stock Reference (dashed green line) and Limit Reference Point (dotted red line). The data for 2021-2022 fishing season are incompleted (grey triangle)."}
+
+	logs=lobster.db("process.logs")
+	TempModelling = TempModel( annual.by.area=F, redo.data=F)
+			CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
+
+			## Commercial CPUE MOdels
+			mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)
+
+			CPUE.data<- CPUEModelData(p,redo=F)
+			t=with(subset(CPUE.data,DOS==1),tapply(TEMP,LFA,mean))
+		
+			pData=list()
+
+			CPUEModelResults = list()
+
+			for(i in 1:length( p$lfas)){
+
+				mdata = subset(CPUE.data,LFA==p$lfas[i]&SYEAR%in%p$yrs)
+				if(nrow(mdata)>10){
+				CPUEModelResults[[i]] = CPUEmodel(mf1,mdata,t=t[i],d=1)
+				pData[[i]]=CPUEModelResults[[i]]$pData
+				pData[[i]]$LFA=p$lfas[i]
+			}
+			}
+
+			names(CPUEModelResults) = p$lfas
+
+			CPUEindex=do.call("rbind",pData)
+
+
+	# plot
+
+	#tiff("C:/Users/Howsevj/Documents/3638_Update/36plotcpue.tiff", width=7,height=6, units="in",res=300)
+
+	l36 = subset(CPUEindex,LFA==36,c("YEAR","mu"))
+	k = median(l36$mu[which(l36$YEAR %in% 2011:2018)])
+	usr = .4*k
+	lrp = .2*k
+	
+
+plot(l36$YEAR,l36$mu,xlab='Year',ylab=' Standardized CPUE (kg/TH)',type='p',pch=16,ylim=c(0,6),xlim=c(2005,2022))
+	running.median = with(rmed(l36$YEAR,l36$mu),data.frame(YEAR=yr,running.median=x))
+	l36=merge(l36,running.median,all=T)
+	lines(l36$YEAR,l36$running.median,col='blue',lty=1,lwd=3)
+	points(l36$YEAR[nrow(l36)],l36$mu[nrow(l36)], type='b', pch=24,bg='blue')
+	abline(h=usr,col='green',lwd=2,lty=2)
+	abline(h=lrp,col='red',lwd=2,lty=3)
+	
+dev.off()
+```
+
+```{r RAWCPUE36, echo=FALSE, results=FALSE, fig.cap="Time series of unstandardized commercial catch rates (kg/trap haul; black dots) for LFA 36. The data for 2021-2022 fishing season are incomplete (blue triangle)."}
+
+### USING RAW UNPROCESSED LOGS
+
+a = lobster.db('process.logs')
+a = subset(a,LFA==36)
+b=aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR,data=a,FUN=sum)
+b$CPUE=b$WEIGHT_KG/b$NUM_OF_TRAPS
+
+
+## Raw CPUE
+plot(b$SYEAR, b$CPUE, xlab="Year", ylab="CPUE (kg/TH)", type='p', pch=16, ylim=c(0,2.5))
+	points(b$SYEAR[nrow(b)],b$CPUE[nrow(b)], type='b', pch=24,cex = 1.5, bg='blue')
+			running.median = with(rmed(b$SYEAR,b$CPUE),data.frame(SYEAR=yr,running.median=x))
+	b=merge(b,running.median,all=T)
+	lines(b$SYEAR,b$running.median,col='blue',lty=1,lwd=3)
+	
+dev.off()
+```
+
+The trend in the standardized CPUE for LFA 36 indicates that an increase in stock biomass occurred around 2010 (Figure ##). Standardized CPUE has remained high (more than twice the USR) since 2013. The 3-year running median for CPUE for the 2022 season is 3.27 kg per Trap Haul (kg/TH), which is above the USR (1.51 kg/TH) and LRP (0.75 kg/TH). The Standardized CPUE estimate for 2022 is preliminary due to outstanding logs; as of August 23rd the monthly reporting rate was between 51% to 77% for the 2021–2022 fishing year. Temperature data incorporated into the standardized CPUE estimates were limited for 2022 at the time of the update so the model CPUE model only includes temperature data up to 2021. In the standardized CPUE model, the average daily temperatures from the previous 3-years were used for 2022 (Figure ##). Unstandardized CPUE, calculated from logbook data was included  for comparison purposes (Figure ##).
+
+```{r CPUE38, echo=FALSE, results=FALSE, fig.cap="Time series of standardized commercial catch rates (kg/trap haul; black dots) for LFA 38, along with the 3-year running median (solid blue line). The horizontal lines represent the Upper Stock Reference (dashed green line) and Limit Reference Point (dotted red line). The data for 2021-2022 fishing season are incomplete (grey triangle)."}
+
+	logs=lobster.db("process.logs")
+	TempModelling = TempModel( annual.by.area=F, redo.data=F)
+			CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
+
+			## Commercial CPUE MOdels
+			mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)
+
+			CPUE.data<- CPUEModelData(p,redo=F)
+			t=with(subset(CPUE.data,DOS==1),tapply(TEMP,LFA,mean))
+		
+			pData=list()
+
+			CPUEModelResults = list()
+
+			for(i in 1:length( p$lfas)){
+
+				mdata = subset(CPUE.data,LFA==p$lfas[i]&SYEAR%in%p$yrs)
+				if(nrow(mdata)>10){
+				CPUEModelResults[[i]] = CPUEmodel(mf1,mdata,t=t[i],d=1)
+				pData[[i]]=CPUEModelResults[[i]]$pData
+				pData[[i]]$LFA=p$lfas[i]
+			}
+			}
+
+			names(CPUEModelResults) = p$lfas
+
+			CPUEindex=do.call("rbind",pData)
+
+
+	# plot
+
+	#tiff("C:/Users/Howsevj/Documents/3638_Update/36plotcpue.tiff", width=7,height=6, units="in",res=300)
+
+	l38 = subset(CPUEindex,LFA==38,c("YEAR","mu"))
+	k = median(l38$mu[which(l38$YEAR %in% 2011:2018)])
+	usr = .4*k
+	lrp = .2*k
+	
+
+plot(l38$YEAR,l38$mu,xlab='Year',ylab=' Standardized CPUE (kg/TH)',type='p',pch=16,ylim=c(0,6),xlim=c(2005,2022))
+	running.median = with(rmed(l38$YEAR,l38$mu),data.frame(YEAR=yr,running.median=x))
+	l38=merge(l38,running.median,all=T)
+	lines(l38$YEAR,l38$running.median,col='blue',lty=1,lwd=3)
+	points(l38$YEAR[nrow(l38)],l38$mu[nrow(l38)], type='b', pch=24,bg='blue')
+	abline(h=usr,col='green',lwd=2,lty=2)
+	abline(h=lrp,col='red',lwd=2,lty=3)
+	
+dev.off()
+```
+
+```{r RAWCPUE38, echo=FALSE, results=FALSE, fig.cap="Time series of unstandardized commercial catch rates (kg/trap haul; black dots) for LFA 38. The data for 2021-2022 fishing season are incomplete (blue triangle)."}
+
+### USING RAW UNPROCESSED LOGS
+
+a = lobster.db('process.logs')
+a = subset(a,LFA==38)
+b=aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR,data=a,FUN=sum)
+b$CPUE=b$WEIGHT_KG/b$NUM_OF_TRAPS
+
+
+## Raw CPUE
+plot(b$SYEAR, b$CPUE, xlab="Year", ylab="CPUE (kg/TH)", type='p', pch=16, ylim=c(0,2.5))
+	points(b$SYEAR[nrow(b)],b$CPUE[nrow(b)], type='b', pch=24,cex = 1.5, bg='blue')
+			running.median = with(rmed(b$SYEAR,b$CPUE),data.frame(SYEAR=yr,running.median=x))
+	b=merge(b,running.median,all=T)
+	lines(b$SYEAR,b$running.median,col='blue',lty=1,lwd=3)
+dev.off()
+```
+
+The CPUE trend for LFA 38 indicates an increase in stock biomass occurred between 2013 and
+2014 (Figure ##). The CPUE time-series has remained high (more than twice the USR) since
+2014. The 3-year running median for CPUE for the 2021–2022 season is 4.65 kg/TH. This is
+above the USR (2.18 kg/TH) and the LRP (1.09 kg/TH). The CPUE for 2021–2022 is
+4.65 kg/TH. This is preliminary due to outstanding logs; as of August 23rd, 2022, the monthly
+reporting rate was between 67% to 88% by month. Unstandardized CPUE, calculated from logbook data was included for comparison purposes (Figure ##).
+
+
+
+## Secondary Indicators
+Secondary indicators represent time-series trends that are tracked individually, without defined
+reference points. The secondary indicators for LFAs 36 and 38 include the LFA-specific
+landings and total effort, as well as recruit abundance, commercial biomass, and relative fishing
+mortality estimates from the RV survey Bay of Fundy region (strata 484, 490–495 with sets
+occurring within the boundaries of LFAs 35–38). Additionally, recruit abundance from the DFO Inshore Scallop Science survey will be included in this update for the first time since the assessment with available data at the time of the update meeting (DFO 2021).
+
+
+
+
+### Landings and Effort
+
+
+Commercial landings are related to population biomass, as fishery controls are input- (effort
+controls) rather than output-based (e.g., total allowable catch). There are many factors that can affect this relationship, including changes in levels of fishing effort, catchability (including the effects of environment, and gear efficiency), Lobster size distribution, and the spatial overlap
+between distribution of Lobster biomass and effort.
+
+Fishing effort, recorded as the number of THs in the Lobster fishery, is controlled by fishing
+season length, trap limits, and limited number of fishing licences. Consequently, there is a
+maximum fishing effort that can be deployed; however, this maximum is never met as factors
+such as weather conditions, seasonally variable catch rates, and fishing partnerships limit the
+total number of THs. Total fishing effort is calculated from mandatory logbooks. 
+
+```{r landings and effort36,echo=FALSE, results=FALSE, fig.cap="Time series of landings (bars), and effort (sold line with points) for LFA 36. The data for 2021-2022 fishing season is incomplete (blue bar for landings, black triangle for effort))."}
+
+a=lobster.db('process.logs')
+a = subset(a,LFA==36)
+b=aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR,data=a,FUN=sum)
+b$CPUE=b$WEIGHT_KG/b$NUM_OF_TRAPS
+h=lobster.db('seasonal.landings.redo')
+h=lobster.db('seasonal.landings')
+h
+h=h[,c('SYEAR','LFA36')]
+h
+h$SYEAR=1976:2023
+merge(b,h)
+g=merge(b,h)
+g$EFF = g$LFA36/g$CPUE
+
+
+
+#tiff("C:/Users/Howsevj/Documents/3638_Update/36landings.tiff", width=8,height=6, units="in",res=300)
+
+par(mar=c(5.1, 4.1, 4.1, 5.1),las=1)
+
+plot(g$SYEAR,g$LFA36,xlab='Year',ylab='Landings(t)',type='h',ylim=c(0,max(g$LFA36)*1.2),pch=15,col='grey',lwd=10,lend=3)
+lines(g$SYEAR[nrow(g)],g$LFA36[nrow(g)],type='h',pch=21,col='steelblue4',lwd=10,lend=3)
+par(new=T)
+
+plot(g$SYEAR,g$EFF,ylab='',xlab='', type='b', pch=16, axes=F,ylim=c(0,max(g$EFF,na.rm=T)))
+points(g$SYEAR[nrow(g)],g$EFF[nrow(g)], type='b', pch=24,bg='black')
+axis(4)
+mtext("Effort ('000s Trap Hauls)", 4, 3.5, outer = F,las=0)	
+dev.off()		
+
+
+subsamp<-g[g$SYEAR >2009 & g$SYEAR <2023,]
+range(subsamp$LFA36)
+median(subsamp$LFA36)
+```
+
+The historical landings in LFA 36 between 1947 and 1980 had a median of 227 t with a range of
+47–338 t, then increased slightly between 1981 and 1996 to a median of 268.5 t (range of
+156–427 t), and again from 1997 to 2010 there was a steady increase in landings to 1,594 t
+(Cook et al. In press1). From 2010–2020, median landings were 3,325 t (range of
+1,594–4,073 t). In recent years, LFA 36 landings have varied and, despite a decline since 2018,
+remain relatively high for the time series. The landings for 2021–2022 season are 2064t but do
+not represent the total for the season due to the outstanding logs (Figure ##).
+
+
+
+
+```{r landings and effort38,echo=FALSE, results=FALSE, fig.cap="Time series of landings (bars), and effort (sold line with points) for LFA 38. The data for 2021-2022 fishing season is incomplete (blue bar for landings, black triangle for effort))."}
+
+a=lobster.db('process.logs')
+a = subset(a,LFA==38)
+b=aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR,data=a,FUN=sum)
+b$CPUE=b$WEIGHT_KG/b$NUM_OF_TRAPS
+h=lobster.db('seasonal.landings.redo')
+h=lobster.db('seasonal.landings')
+h
+h=h[,c('SYEAR','LFA38')]
+h
+h$SYEAR=1976:2023
+merge(b,h)
+g=merge(b,h)
+g$EFF = g$LFA38/g$CPUE
+
+
+
+#tiff("C:/Users/Howsevj/Documents/3638_Update/36landings.tiff", width=8,height=6, units="in",res=300)
+
+par(mar=c(5.1, 4.1, 4.1, 5.1),las=1)
+
+plot(g$SYEAR,g$LFA38,xlab='Year',ylab='Landings(t)',type='h',ylim=c(0,max(g$LFA38)*1.2),pch=15,col='grey',lwd=10,lend=3)
+lines(g$SYEAR[nrow(g)],g$LFA38[nrow(g)],type='h',pch=21,col='steelblue4',lwd=10,lend=3)
+par(new=T)
+
+plot(g$SYEAR,g$EFF,ylab='',xlab='', type='b', pch=16, axes=F,ylim=c(0,max(g$EFF,na.rm=T)))
+points(g$SYEAR[nrow(g)],g$EFF[nrow(g)], type='b', pch=24,bg='black')
+axis(4)
+mtext("Effort ('000s Trap Hauls)", 4, 3.5, outer = F,las=0)	
+dev.off()		
+
+
+subsamp<-g[g$SYEAR >2009 & g$SYEAR <2023,]
+range(subsamp$LFA38)
+median(subsamp$LFA38)
+```
+
+The historical landings in LFA 38 between 1947 and 1988 had a median of 325 t with a range of
+170–450 t, then increased between 1989 and 1997 to a median of 512 t (range 467–661 t), and
+again from 1997–2013 there was a steady increase in landings to 2,682 t (Cook et al. In press1).
+From 2010–2020, median landings were 4,196 t (range of 2,035–5,711 t) and, in the more
+recent years, LFA 38 landings have varied. Despite a decline since 2016, landings remain
+relatively high for the time series. The landings for 2021–2022 season are 3076 t but do not
+represent the total for the season due to the outstanding logs (Figure ##).
+
+
+## Scallop Survey Recruit Abundance
+
+Annual DFO surveys for Sea Scallops have been conducted since the early 1980s to assess abundance (Sameoto et al. 2012, Smith et al. 2012). These surveys started in the Bay of Fundy in 1981 and were extended into southwest Nova Scotia in 1991. Lobster are caught as a bycatch in a subset of the stations and are measured prior to being released. Scallops are typically found on gravel sea bottoms, a habitat not favored by Lobster (Tremblay et al. 2009), but the two species do overlap in some areas. The surveys are primarily conducted in July for the Bay of Fundy (LFAs 35 and 36) and August around Grand Manan Island (LFA 38), scallop dredges tend to capture Lobster that are under the legal size and the survey is a useful indicator of recruitment. 
+
+
+```{r Scalrecruit36,echo=FALSE, results=FALSE, fig.cap=" Time series of recruit abundance from the DFO Inshore Scallop Science survey in LFA 36.The red line represents the 3-year running median. Due to missing data in 2020, the three year running median could not be continued into 2021.."}
+p = bio.lobster::load.environment()
+la()
+
+assessment.year = 2021 ########### check the year ############### !!!!!!!!!!!
+
+p$syr = 1989
+p$yrs = p$syr:assessment.year
+
+
+
+# define place for figures to go
+#figdir = file.path("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA35-38")
+
+p$lfas = c("36") # specify lfa
+p$subareas = c("36") # specify subareas for data summary
+
+# update data through RODBC
+
+#lobster.db('scallop.redo')
+lobster.db('scallop')
+
+scalSurv<-ScallopSurveyProcess(size.range=c(70,82.5),bin.size=2.5)
+scalSurv<-scalSurv[scalSurv$YEAR <2022,] # 2022 data not complete yet
+
+R1.ab.36=with(subset(scalSurv,LFA%in%c(36,37)&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+R1.ab.36_19=with(subset(scalSurv,LFA==36&YEAR>1998&YEAR<2020),tapply(LobDen,YEAR,mean,na.rm=T))
+
+
+
+require(dplyr)
+
+RA36<-as.data.frame(R1.ab.36)
+RA36<-data.frame(cbind(rownames(RA36), data.frame(RA36, row.names = NULL)))
+RA36<-RA36 %>%
+  rename(Year = rownames.RA36., 
+         Recruit_Abundance = R1.ab.36)
+
+plot(RA36$Year, RA36$Recruit_Abundance, pch=16,xlab='Year',ylab = 'Recruit Abundance')
+lines(1999:2019,runmed(R1.ab.36_19,3),lwd=2, col='salmon')
+#points(x = 2021, y = 29.697509, pch = 16, col='blue')
+dev.off()
+
+
+```
+
+The abundance of Lobster recruits (70–82 mm carapace length) from DFO Inshore Scallop Science survey tows within LFA 36 had been increasing after from 2005 to 2010 and has been high and unstable since 2011; however, the most recent data point (2021) shows a decline. Surveys were not completed in 2020 due to the COVID-19 global pandemic (Figure ##), and 2022 data was not yet available at the time of this update.
+
+```{r Scalrecruit38,echo=FALSE, results=FALSE, fig.cap=" Time series of recruit abundance from the DFO Inshore Scallop Science survey in LFA 38.The red line represents the 3-year running median. Due to missing data in 2020, the three year running median could not be continued into 2021.."}
+p = bio.lobster::load.environment()
+la()
+
+assessment.year = 2021 ########### check the year ############### !!!!!!!!!!!
+
+p$syr = 1989
+p$yrs = p$syr:assessment.year
+
+
+
+# define place for figures to go
+#figdir = file.path("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA35-38")
+
+p$lfas = c("38") # specify lfa
+p$subareas = c("38") # specify subareas for data summary
+
+# update data through RODBC
+
+#lobster.db('scallop.redo')
+lobster.db('scallop')
+
+scalSurv<-ScallopSurveyProcess(size.range=c(70,82.5),bin.size=2.5)
+scalSurv<-scalSurv[scalSurv$YEAR <2022,] # 2022 data not complete yet
+
+R1.ab.38=with(subset(scalSurv,LFA%in%c(38)&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+R1.ab.38_19=with(subset(scalSurv,LFA==38&YEAR>1998&YEAR<2020),tapply(LobDen,YEAR,mean,na.rm=T))
+
+require(dplyr)
+
+RA38<-as.data.frame(R1.ab.38)
+RA38<-data.frame(cbind(rownames(RA38), data.frame(RA38, row.names = NULL)))
+RA38<-RA38 %>%
+  rename(Year = rownames.RA38., 
+         Recruit_Abundance = R1.ab.38)
+##Fill 2004 - where survey data is absent
+newrow<-c(2004, NA)
+RA38<-rbind(RA38, newrow)
+
+RA38<-RA38[order(RA38$Year),]
+
+
+#png(file=file.path(fpf1,'S38recruitabund.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+plot(RA38$Year, RA38$Recruit_Abundance, pch=16,xlab='Year',ylab = 'Recruit Abundance')
+lines(1999:2019,runmed(R1.ab.38,3),lwd=2, col='salmon')
+dev.off()
+
+```
+
+The abundance of Lobster recruits (70–82 mm carapace length) from DFO Inshore Scallop Science survey tows within LFA 38 have been variable. The early 2000s showed low estimates of recruit abundance followed by 4 years of high densities (2009-2012), and then 4 years of low densities (2013-2016). Since 2016 abundance estimates increased with a return to low recruit abundance in 2021. Surveys were not completed in 2020 due to the COVID-19 global pandemic (Figure ##), and 2022 data was not yet available at the time of this update.
+

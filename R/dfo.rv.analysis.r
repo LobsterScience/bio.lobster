@@ -106,7 +106,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
     
         
         stra$NH = as.numeric(stra$area)/0.011801
-        ii = which(months(set$sdate) %in% mns & set$strat %in% strat & set$type %in% c(1,5))
+        ii = which(months(set$sdate) %in% mns & set$strat %in% strat & set$type %in% c(1,5) & set$gear %in% c(3,9))
         print('Both set types 1 and 5 are saved in data frame but only 1 is used for stratified')
         set = set[ii,]
 
