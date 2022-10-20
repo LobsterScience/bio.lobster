@@ -3,28 +3,21 @@
 #yr <- 1970:2010
 
 
-gamTimeTrends <- 	function(y, x,niter=4999,save.loc= "C:\\Users\\CookA\\Desktop\\") {
+gamTimeTrends <- 	function(y, x,niter=4999,save.loc= "C:\\Users\\CookA\\Desktop\\",plot=F) {
 	plot(x,y,type="b",pch=16)
 	output <- list()
 			require('mgcv')
-				ogam <- list()
+				
 				mod = formula(y~s(x,k=20))
 				test.model <- try(gam(mod),silent=T)
-				if(length(test.model)>1) {
-					if(summary(test.model$gam)$edf>1.2) {
-				ogam[[1]] <- try(gam(mod),silent=T)
-				ogam[[2]] <- try(gam(mod, correlation = corARMA(form = ~ yr, p = 1)),silent=T)
-				ogam[[3]] <- try(gam(mod, correlation = corARMA(form = ~ yr, p = 2)),silent=T)
-				ogam[[4]] <- try(gam(mod, correlation = corARMA(form = ~ yr, p = 3)),silent=T)
-				aic.ogam <- c(AIC(ogam[[1]]$lme),AIC(ogam[[2]]$lme),AIC(ogam[[3]]$lme),AIC(ogam[[4]]$lme))
-				mod <- which.min(floor(aic.ogam/2)*2)
-				model <- ogam[[mod]]$gam
-				mm <- matrix(NA,nrow=length(yr),ncol=niter+1)
-				fd <- matrix(NA,nrow=length(yr),ncol=niter+1)
-				sd <- matrix(NA,nrow=length(yr),ncol=niter+1)
+				model <- try(gam(mod),silent=T)
+				mm <- matrix(NA,nrow=length(x),ncol=niter+1)
+				fd <- matrix(NA,nrow=length(x),ncol=niter+1)
+				sd <- matrix(NA,nrow=length(x),ncol=niter+1)
 				rs <- model$residuals
 				fs <- model$fitted
-				dd <- try(derivs(m=model,yr=yr),silent=T)
+				dd <- try(derivs(m=model,x),silent=T)
+				
 				if(length(dd)>1	) {
 				mm[,1] <- model$fitted
 				fd[,1] <- dd[[1]]
@@ -33,10 +26,10 @@ gamTimeTrends <- 	function(y, x,niter=4999,save.loc= "C:\\Users\\CookA\\Desktop\
 			for(i in 1:niter) {
 					ri <- sample(rs,length(rs),replace=T)
 					new.resp <- as.numeric(fs+ri)
-					new.model <- try(gamm(new.resp ~ s(yr,k=20)),silent=T)
+					new.model <- try(gam(new.resp ~ s(x,k=20)),silent=T)
 					if(length(new.model)>1) {
-					dd <- try(derivs(m=new.model$gam,yr=yr),silent=T)
-					mm[,i+1] <- new.model$gam$fitted
+					dd <- try(derivs(m=new.model,x),silent=T)
+					mm[,i+1] <- new.model$fitted
 					fd[,i+1] <- dd[[1]]
 					sd[,i+1] <- dd[[2]]
 					}
@@ -54,41 +47,27 @@ gamTimeTrends <- 	function(y, x,niter=4999,save.loc= "C:\\Users\\CookA\\Desktop\
 			slopes.pos <- which(fdCI[,1]>0 & fdCI[,2]>0 & fdCI[,3]>0)
 			slopes.neg <- which(fdCI[,1]<0 & fdCI[,2]<0 & fdCI[,3]<0)
 			thresholds <- which(sdCI[,1]>0 & sdCI[,2]>0 & sdCI[,3]>0)
-			par(mar=c(5,4,3,5),xpd=T)
-			plot(yr,mmCI[,2],type='l',ylab=indicator.name,ylim=c(min(resp),max(resp)),xlab='Year')
-			polygon(c(yr,rev(yr)),c(mmCI[,1],rev(mmCI[,3])),col='grey',border='grey')
-			lines(yr,mmCI[,2],lwd=2)
-			points(yr,resp,pch=16,cex=0.5)
-			lines(yr[slopes.pos],mmCI[slopes.pos,2],lwd=4,col='red')
-			lines(yr[slopes.neg],mmCI[slopes.neg,2],lwd=4,col='blue')
-			lines(yr[thresholds],mmCI[thresholds,2],lwd=4,col='green')
+		if(plot){
+				par(mar=c(5,4,3,5),xpd=T)
+			plot(x,mmCI[,2],type='l',ylim=c(min(y),max(y)),xlab='Year')
+			polygon(c(x,rev(x)),c(mmCI[,1],rev(mmCI[,3])),col='grey',border='grey')
+			lines(x,mmCI[,2],lwd=2)
+			points(x,y,pch=16,cex=0.5)
+			lines(x[slopes.pos],mmCI[slopes.pos,2],lwd=4,col='red')
+			lines(x[slopes.neg],mmCI[slopes.neg,2],lwd=4,col='blue')
+			lines(x[thresholds],mmCI[thresholds,2],lwd=4,col='green')
 			legend('topright',inset=c(-0.2,0),lty=c(1,1,1,1),lwd=c(1,4,4,4),col=c('black','blue','red','green'),bty='n',cex=0.7,c('GAM model','Sig. -ve','Sig. +ve','Threshold'))	
-			db <- data.frame(Positive.slope.years = rep(NA,45),Negative.slope.years=NA,Threshold.years=NA)
-			if(length(slopes.pos)>0) db$Positive.slope.years[1:length(slopes.pos)] <- yr[slopes.pos]
-			if(length(slopes.neg)>0) db$Negative.slope.years[1:length(slopes.neg)] <- yr[slopes.neg]
-			if(length(thresholds)>0) db$Threshold.years[1:length(thresholds)] <- yr[thresholds]
-			db <- db[apply(db, 1, function(y) !all(is.na(y))),] #remove rows that are all na
-			output[[1]]<-db
-				}
-			}
 		}
-			return(output)
+			db <- data.frame(Positive.slope.years =rep(NA,length(x)),Negative.slope.years=NA,Threshold.years=NA)
+				if(length(slopes.pos)>0) db$Positive.slope.years[1:length(slopes.pos)] <- x[slopes.pos]
+			if(length(slopes.neg)>0) db$Negative.slope.years[1:length(slopes.neg)] <- x[slopes.neg]
+			if(length(thresholds)>0) db$Threshold.years[1:length(thresholds)] <- x[thresholds]
+			db <- db[apply(db, 1, function(y) !all(is.na(y))),] #remove rows that are all na
+			
+				}
+			
+			return(db)
 }					
 	
 	
 
-
-derivs <- function(m=model,x=x,eps=0.01) {
-				pre 	<- predict(m,type='response',se.fit=T)
-				mod1 	<- predict(m,type='lpmatrix')
-				newx 	<- data.frame(x=x-eps)
-				mod2 	<- predict(m,newx,type='lpmatrix')
-				modp 	<- (mod1-mod2)/eps
-				fd_mod 	<- modp %*% coef(m) #first derivative
-				model2 	<- gam(fd_mod~s(yr,k=20))
-				mod3 	<- predict(model2,type='lpmatrix')
-				mod4 	<- predict(model2,newyr,type='lpmatrix')
-				modpp 	<- (mod3-mod4)/eps
-				sdmod 	<- modpp %*% coef(model2) 
-			return(list(fd=fd_mod,sd=sdmod))
-				}
