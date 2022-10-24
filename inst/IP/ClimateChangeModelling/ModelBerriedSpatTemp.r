@@ -33,6 +33,7 @@ crs_utm20 <- 32620
 # Project our survey data coordinates:
 survey <- aT %>%   
   st_as_sf()
+survey = subset(survey,SOURCE!='NEFSC_RV')
     
 surv_utm_coords <- st_coordinates(survey)
 
@@ -61,7 +62,7 @@ survey$W = round(survey$DYEAR*365 / 14) # 2 week intervals
 i = which(survey$OFFSET_METRIC == 'Number of traps')
 survey$OFFSET[i] = survey$OFFSET[i] * pi*(.014^2)
 survey$LO = log(survey$OFFSET)
-fit = sdmTMB(WEIGHT_KG~
+fit = sdmTMB(Berried~
                s(lZ,k=5)+s(BT),
              data=as_tibble(survey),
             offset = 'LO',
