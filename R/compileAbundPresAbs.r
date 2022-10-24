@@ -210,7 +210,7 @@ compileAbundPresAbs <- function(redo=F,size=T){
             nwlp = subset(nwlp, LONGITUDE< -50 & LATITUDE>43 & LATITUDE<50)
             nwlp = makePBS(nwlp,polygon=F,coords = c('LONGITUDE','LATITUDE'))
             coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline",'HR',".csv")))
-            d2 = PBSmapping::findPolys(nwlp,coast,includeBdry = F, maxRows = nrow(d1))
+            d2 = PBSmapping::findPolys(nwlp,coast,includeBdry = F, maxRows = nrow(nwlp))
             nwlp = rename.df(nwlp, c('X','Y'),c('LONGITUDE','LATITUDE'))
             nwlp = subset(nwlp, EID %ni% d2$EID)
             nwlp = subset(nwlp, LONGITUDE> -66 & LONGITUDE< -62)
@@ -234,13 +234,9 @@ compileAbundPresAbs <- function(redo=F,size=T){
             trapsNoSize  = subset(trapsNoSize,Legal>=0)
             trapSize  = subset(trapSize,Legal>=0)
             
-            if(ftype=='rds'){
               saveRDS(trapSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesSize.rds')) 
               saveRDS(trapsNoSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesNoSize.rds')) 
-            }
-            #trapSize= readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesSize.rds'))trapsNoSize=readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesNoSize.rds')) )
-            #trapsNoSize=readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesNoSize.rds')) )
-
+            
     #ILTS and ITQ
             
             ilts = ILTS_ITQ_sets()  
@@ -266,7 +262,7 @@ compileAbundPresAbs <- function(redo=F,size=T){
             combinedNoSize$X = combinedNoSize$Y = combinedNoSize$EID = combinedNoSize$id = NULL
             
             combinedSize = plyr::rbind.fill(trapSize,ww)
-            
+          
             saveRDS(combinedSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesSize.rds')) 
             saveRDS(combinedNoSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesNoSize.rds')) 
 } else {
