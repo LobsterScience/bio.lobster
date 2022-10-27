@@ -36,8 +36,8 @@ survey <- aT %>%
     
 surv_utm_coords <- st_coordinates(survey)
 
-survey$X1000 <- surv_utm_coords[,1] / 1000
-survey$Y1000 <- surv_utm_coords[,2] / 1000
+survey$X1000 <- surv_utm_coords[,1] 
+survey$Y1000 <- surv_utm_coords[,2] 
 
 spde <- make_mesh(as_tibble(survey), xy_cols = c("X1000", "Y1000"),
                    n_knots=600,type = "cutoff_search")
@@ -50,24 +50,24 @@ bspde <- add_barrier_mesh(
 )
 
 
-survey$lZ = log(survey$z)
-survey$W = round(survey$DYEAR*365 / 14) # 2 week intervals
+survey$lZ = log(survey$CanZ)
 
 #what is the right offset for gear
 #km2 for tows is estimated from sensors
 #km2 for traps from Watson et al 2009 NJZ MFR 43 1 -- home radius of 17m, bait radius of 11m == 28m 'attraction zone'
 # pi*(.014^2) # assuming traps are independent
+survey$W = ceiling(yday(survey$DATE)/366*25)
 
 i = which(survey$OFFSET_METRIC == 'Number of traps')
 survey$OFFSET[i] = survey$OFFSET[i] * pi*(.014^2)
 survey$LO = log(survey$OFFSET)
+survey$BT = survey$HadBT
 fit = sdmTMB(WEIGHT_KG~
                s(lZ,k=5)+s(BT),
              data=as_tibble(survey),
             offset = 'LO',
              time='W', 
              mesh=bspde,
-             extra_time = 17,
              family=tweedie(link='log'),
              spatial='on',
              spatiotemporal='ar1')
