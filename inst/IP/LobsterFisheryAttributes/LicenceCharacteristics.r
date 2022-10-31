@@ -72,6 +72,7 @@ ggplot(subset(xvog, SYEAR==2019 & CPUE<8),aes(x=CPUE)) + geom_histogram() + face
 ggplot(subset(xvog, SYEAR==2019),aes(x=BHP)) + geom_histogram() + facet_wrap(~LFA, scales='free_y')
 
 ggplot(subset(xvog, SYEAR==2019),aes(x=WEIGHT_KG)) + geom_histogram() + facet_wrap(~LFA, scales='free_y')
+ggplot(subset(xvog, SYEAR==2019),aes(x=LOA)) + geom_histogram() + facet_wrap(~LFA, scales='free_y')
 
 ggplot(subset(xvog, SYEAR==2019),aes(x=ageBoat)) + geom_histogram() + facet_wrap(~LFA, scales='free_y')
 
@@ -85,6 +86,7 @@ ggplot(subset(xvog, SYEAR==2019& GRID_NUM<10),aes(x=GRID_NUM)) + geom_histogram(
 (aggregate(log10(WEIGHT_KG)~LFA, data=subset(xvog,SYEAR==2019),FUN=function(x) c(mean(x),sd(x),length(x))))
 (aggregate(P~LFA, data=subset(xvog,SYEAR==2019),FUN=function(x) c(mean(x),sd(x),length(x))))
 (aggregate(ageBoat~LFA, data=subset(xvog,SYEAR==2019),FUN=function(x) c(mean(x),sd(x),length(x))))
+(aggregate(GROSS_TONNAGE~LFA, data=subset(xvog,SYEAR==2019),FUN=function(x) c(mean(x),sd(x),length(x))))
 
 ##gini index for evenness of catch using effort as well
 
