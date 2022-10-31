@@ -137,6 +137,7 @@ ggplot(subset(gsf,W %in% 0:26)) +
 savePlot('wtWeek600k.png') 
 
 
+saveRDS(list(data=survey,grid=bspde,model=fit),file='AllwtTw600kOct282022.rds')
 
 
 
