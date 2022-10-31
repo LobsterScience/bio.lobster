@@ -231,7 +231,7 @@ compileAbundPresAbs <- function(redo=F,size=T){
             trapsNoSize$LATITUDE[i] = trapsNoSize$Y[i]
             
             trapsNoSize$X = trapsNoSize$Y = trapsNoSize$EID = trapsNoSize$id = NULL
-            trapsNoSize  = subset(trapsNoSize,Legal>=0)
+            trapsNoSize  = subset(trapsNoSize,WEIGHT_KG>=0)
             trapSize  = subset(trapSize,Legal>=0)
             
               saveRDS(trapSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesSize.rds')) 
@@ -261,9 +261,12 @@ compileAbundPresAbs <- function(redo=F,size=T){
             combinedNoSize = plyr::rbind.fill(trapsNoSize,wwNoSize)
             combinedNoSize$X = combinedNoSize$Y = combinedNoSize$EID = combinedNoSize$id = NULL
             
+            
             combinedSize = plyr::rbind.fill(trapSize,ww)
+          combinedNoSize = subset(combinedNoSize,OFFSET>0)
+          combinedSize = subset(combinedSize,OFFSET>0)
           
-            saveRDS(combinedSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesSize.rds')) 
+          saveRDS(combinedSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesSize.rds')) 
             saveRDS(combinedNoSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesNoSize.rds')) 
 } else {
  if(size) return(readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesSize.rds')) )
