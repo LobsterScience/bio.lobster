@@ -61,15 +61,19 @@ ou = rbind(gg,kk)
 ou = subset(ou,SYEAR>2000 & SYEAR<2022, select=c(SYEAR, Landings,LFA))
 
 ooo=merge(o,ou)
+o = aggregate(cbind(NUM_OF_TRAPS, WEIGHT_KG)~SYEAR+LFA,data=x,FUN=sum)
+o$meanCPUE = o$WEIGHT_KG / o$NUM_OF_TRAPS
 
-
+ooo = merge(ooo,o)
 
 ggplot(subset(ooo,LFA==33),aes(x=SYEAR,y=gini)) + geom_point()+facet_wrap(~LFA)+geom_smooth(se=F)
 ggplot(subset(ooo,LFA==33),aes(x=Landings,y=gini)) + geom_point()+facet_wrap(~LFA,scales='free')+geom_smooth(se=F)
+ggplot(subset(ooo,LFA==33),aes(x=meanCPUE,y=gini)) + geom_point()+facet_wrap(~LFA,scales='free')+geom_smooth(se=F)
 
 
 ggplot(subset(ooo,LFA==30),aes(x=SYEAR,y=gini)) + geom_point()+facet_wrap(~LFA)+geom_smooth(se=F)
 ggplot(subset(ooo,LFA==30),aes(x=Landings,y=gini)) + geom_point()+facet_wrap(~LFA,scales='free')+geom_smooth(se=F)
+ggplot(subset(ooo,LFA==30),aes(x=meanCPUE,y=gini)) + geom_point()+facet_wrap(~LFA,scales='free')+geom_smooth(se=F)
 
 
 
@@ -77,10 +81,10 @@ load_all('C:/Users/Cooka/Documents/git/bio.growth/')
 
 x = subset(ooo,LFA==30)
 
-meanBreakPointRegression(x=x$Landings,y=x$gini,weighted=F,sd.x=NULL,sd.y=NULL)
- meanSegmented(x$Landings,x$gini,weighted=F,breaks=500,title="",xl='Landings',yl='Gini')
+meanBreakPointRegression(x=x$meanCPUE,y=x$gini,weighted=F,sd.x=NULL,sd.y=NULL)
+ meanSegmented(x$meanCPUE,x$gini,weighted=F,breaks=2,title="",xl='CPUE',yl='Gini')
 
 x = subset(ooo,LFA==33)
 
-meanBreakPointRegression(x=x$Landings,y=x$gini,weighted=F,sd.x=NULL,sd.y=NULL)
- meanSegmented(x$Landings,x$gini,weighted=F,breaks=8000,title="",xl='Landings',yl='Gini',add_conf = F)
+meanBreakPointRegression(x=x$meanCPUE,y=x$gini,weighted=F,sd.x=NULL,sd.y=NULL)
+ meanSegmented(x$meanCPUE,x$gini,weighted=F,breaks=1,title="",xl='CPUE',yl='Gini',add_conf = F)
