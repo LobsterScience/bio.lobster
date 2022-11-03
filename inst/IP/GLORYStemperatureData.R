@@ -3,7 +3,7 @@ require(bio.lobster)
 require(satin)
 require(tidyr)
 require(PBSmapping)
-setwd(file.path(project.datadirectory('bio.lobster'),'data','GLORYS'))
+setwd(file.path(project.datadirectory('bio.lobster'),'Temperature Data','GLORYS'))
 
 y1 = read.cmems('GLORYS1993')
 a = y1$bottomT
@@ -13,7 +13,7 @@ load(file='/SpinDr/backup/bio_data/bio.lobster/data/maps/LFA27-33100mIsobath.rda
 
 
 fil = dir()
-fil = fil[grep('GLO',fil)]
+fil = fil[grep('Glo',fil)]
 
 for(i in 1:length(fil)){
 		g = glorysSubset(glorysfile=fil[i], polygon=Isob100)
@@ -34,3 +34,13 @@ for(i in 1:length(fil)){
 		g = glorysSubset(glorysfile=fil[i], polygon=L)
 		saveRDS(g,file = file.path('SummaryFiles',paste(fil[i],'LFA36.rds',sep="_")))
 	}
+
+
+#glorys reshape to r Object
+
+for(i in 1:length(fil)){
+		g = glorysReshape(glorysfile=fil[i])
+		saveRDS(g,file = file.path('SummaryFiles',paste(fil[i],'ShelfBoF.rds',sep="_")))
+		print(fil[i])
+	}
+

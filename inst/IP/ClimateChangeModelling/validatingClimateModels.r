@@ -5,6 +5,8 @@ require(bio.utilites)
 require(sf)
 require(lubridate)
 require(dplyr)
+
+setwd(file.path(bio.datadirectory,'bio.lobster','analysis','ClimateModelling'))
 	g = lobster.db('temperature.data')
 	g$yr = year(g$T_DATE)
 	g$W = ceiling(yday(g$T_DATE)/366*25)
@@ -96,10 +98,49 @@ ggplot(subset(xx,yr==2016)) +
   ) +
   coord_sf()
 
-saveRDS(xx,file='ModelsToObserved.rds')
 
-
+###glorys
  
+s = file.path(project.datadirectory('bio.lobster'),'Temperature Data','GLORYS','SummaryFiles')
+k = dir(s,full.names=T)
+k = k[grep('ShelfBoF',k)]
+k= k[23:27]
+
+ol = list()
+m=0
+for(i in 1:length(k)){
+			h = readRDS(k[i])
+			h$Date = as.Date(h$Date)
+			y = unique(year(h$Date))
+			h$W  = ceiling(yday(h$Date)/366*25)
+			h = aggregate(bottomT~W+X+Y,data=h,FUN=median)
+			h = st_as_sf(h,coords =c('X',"Y"),crs=4326)
+			h = h %>% st_as_sf(coords=c('X','Y'),crs=4326) %>% st_transform(32620)
+			st_geometry(h) = st_geometry(h)/1000
+			st_crs(h) = 32620
+
+			x1 = subset(xx,yr == y)
+			uW = unique(x1$W)
+					for(j in 1:length(uW)){
+				m=m+1
+			
+						nn = subset(x1,W==uW[j])
+						hh = subset(h,W==uW[j])
+						ou = st_nearest_feature(nn,hh)
+       	 ds = st_distance(nn,hh[ou,],by_element=T)
+       	 st_geometry(hh) = NULL
+       	 nn$GlT = hh$bottomT[ou]
+       	 nn$GlD = as.numeric(ds)
+			ol[[m]] = nn       	
+
+			}
+}
+
+xx = st_as_sf(do.call(rbind,ol))
+
+xx=subset(xx,GlD<quantile(GlD,0.9,na.rm=T))
+
+xx$Gldiff = xx$GlT - xx$TEMP
 
 ggplot(xx,aes(Haddiff)) + geom_density(aes(y=..density..))+ geom_density(data=aes(y=..density..))
 
@@ -107,8 +148,13 @@ ggplot(xx,aes(Candiff)) + geom_histogram(aes(y=..density..)) + facet_wrap(~yr)
 
 ggplot(xx,aes(MPIdiff)) + geom_histogram(aes(y=..density..)) + facet_wrap(~yr)	
 
-aggregate(cbind(Haddiff,Candiff,MPIdiff)~yr,data=xx,FUN=summary)
+ggplot(xx,aes(Gldiff)) + geom_histogram(aes(y=..density..)) + facet_wrap(~yr)	
 
+
+aggregate(cbind(Haddiff,Candiff,MPIdiff,Gldiff)~yr,data=xx,FUN=summary)
+
+saveRDS(xx,file='ModelsToObserved.rds')
+xx = readRDS('ModelsToObserved.rds')
 
 ##bnam
 s = bnamR(redo=F)
@@ -141,6 +187,8 @@ xx=do.call(rbind,out)
 xx = subset(xx,distBN<4)
 xx$bnamdiff = xx$bnamt - xx$TEMP
 
+
+
  mad(xx$Haddiff)
  1.605878
  mad(xx$Candiff)
@@ -149,15 +197,16 @@ xx$bnamdiff = xx$bnamt - xx$TEMP
  2.043772
  mad(xx$bnamdiff)
  2.293498
+ mad(xx$Gldiff)
+ 0.9342395
 
-
-plot(density(xx$Candiff),xlab='Model - Measured',main="",xlim=c(-8,8))
- lines(density(xx$Haddiff),col='red')
-	lines(density(xx$MPIdiff),col='blue')
-	lines(density(xx$bnamdiff),col='orange')
-	
-	abline(v=0,lwd=2)
-	legend('topleft',c('Can','MPI','Had','BNAM'),lty=c(1,1,1,1),col=c('black','blue','red','orange'),bty='n')
+plot(density(xx$Candiff),xlab='Model - Measured',main="",xlim=c(-8,8),lwd=2)
+# lines(density(xx$Haddiff),col='red')
+#	lines(density(xx$MPIdiff),col='blue')
+	lines(density(xx$bnamdiff),col='orange',lwd=2)
+	lines(density(xx$Gldiff),col='purple',lwd=2)	
+	abline(v=0,lwd=2,lty=3)
+	legend('topleft',c('Can','BNAM','Glorys'),lty=c(1,1,1),col=c('black','orange','purple'),bty='n')
 
 savePlot('Temp2Modelcomparisons.png')
 xx$Z = round(xx$CanZ/5)*5

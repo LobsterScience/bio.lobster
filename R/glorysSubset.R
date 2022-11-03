@@ -1,6 +1,6 @@
 #' @export
 glorysSubset <- function(glorysfile=file.path(project.datadirectory('bio.lobster'),'data','GLORYS','GLORYS1993'),
-	polygon=Isob100,redo=F){
+	polygon=NULL,redo=F){
 				require(satin) 
 				require(PBSmapping)
 				y1 = read.cmems(glorysfile)
@@ -16,7 +16,7 @@ glorysSubset <- function(glorysfile=file.path(project.datadirectory('bio.lobster
 				g$latI = rep(1:nlats,each=nlons)
 				ds = x1@period[[1]]
 				nds = length(ds)
-				g = g[findPolys(g,polygon)$EID,] #this gets us the locs to use for all other elements 
+				if(!is.null(polygon))g = g[findPolys(g,polygon)$EID,] #this gets us the locs to use for all other elements 
 				a1 = list()
 		for(i in 1:nL){
 				out = list()

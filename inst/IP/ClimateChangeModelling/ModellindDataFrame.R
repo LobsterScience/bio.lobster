@@ -24,7 +24,7 @@ survey <- aT %>%
 st_geometry(survey) = st_geometry(survey)/1000
 st_crs(survey) = 32620
 
-survey = subset(survey, YEAR %in% 2017:2022)
+survey = subset(survey, YEAR %in% 2000:2022)
 survey$W = ceiling(yday(survey$DATE)/366*25)
 
 #envt data
@@ -32,6 +32,15 @@ d = dir(file.path(bio.datadirectory,'bio.lobster','Temperature Data/QuinnBT-2022
 dd = d[grep('Can',d)]
 ee = d[grep('Had',d)]
 gg = d[grep('MPI',d)]
+
+
+s = bnamR(redo=F)
+loc = st_as_sf(s[[1]],coords=c('X','Y'),crs=4326)
+loc = st_transform(loc,32620)
+st_geometry(loc) = st_geometry(loc)/1000
+st_crs(loc) = 32620
+bt = s[[2]][,-1]
+t = s[[3]]
 
 
 crs_utm20 <- 32620
@@ -60,6 +69,10 @@ for(i in 1:length(yy)){
 		st_geometry(de) = st_geometry(de)/1000
 		st_crs(de) = 32620
 print(yy[i])
+
+		#bnam
+			l = grep(as.character(yy[i]),t)
+
 
 		ll = unique(k$W)
 	for(l in 1:length(ll)){
@@ -90,7 +103,17 @@ print(yy[i])
        	 st_geometry(pp) = NULL
        	 kk$MPIZ = pp$MPIZ[ou]
        	 kk$MPIBT = pp$MPIBT[ou]
-       	 
+
+				#bnam
+				kk$bnamt =NA
+				kk$distBN=NA
+if(length(l)>0){
+			j = st_nearest_feature(kk,loc)
+			tt = ceiling(ll[l]*25/50)
+			tt = ifelse(tt==13,12,tt)
+			kk$bnamt = bt[j,l[tt]]
+			kk$distBN = as.numeric(st_distance(kk,loc[j,],by_element=T))
+    		 } 
        	 oo[[m]] = kk
 		}
 	}
