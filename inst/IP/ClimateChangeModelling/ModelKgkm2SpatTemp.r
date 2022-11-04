@@ -15,8 +15,41 @@ la()
 fd=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling')
 dir.create(fd,showWarnings=F)
 setwd(fd)
-aT = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
+survey = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
 sf_use_s2(FALSE) #needed for cropping
+
+# Project our survey data coordinates:
+
+survey$lZ = log(survey$z)
+survey = subset(survey,!is.na(lZ))
+
+#what is the right offset for gear
+#km2 for tows is estimated from sensors
+#km2 for traps from Watson et al 2009 NJZ MFR 43 1 -- home radius of 17m, bait radius of 11m == 28m 'attraction zone'
+# pi*(.014^2) # assuming traps are independent
+survey$W = ceiling(yday(survey$DATE)/366*25)
+
+
+mi= readRDS(file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))
+
+
+mi = mi[,c('temp','res')]
+names(mi) = c('GlT','OFFSETcorr')
+mi$GlT = round(mi$GlT,1)
+mi = aggregate(OFFSETcorr~GlT,data=mi,FUN=mean)
+survey$GlT = round(survey$GlT,1)
+survey = dplyr::full_join(survey,mi)
+survey$OFFSETcorr[which(survey$GlT< -.7)] <- 0
+survey$OFFSETcorr[which(survey$GlT> 17)] <- 1
+
+i = which(survey$OFFSET_METRIC == 'Number of traps')
+survey$OFFSET[i] = survey$OFFSET[i] * pi*(.014^2) * survey$OFFSETcorr[i]
+
+##need to fix this 
+
+survey$LO = log(survey$OFFSET)
+survey = subset(survey,OFFSET>0.00001 & OFFSET< 0.12)
+survey$BT = survey$GlT
 
 ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
 st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
@@ -30,8 +63,7 @@ ns_coast <- st_transform(ns_coast, crs_utm20)
 st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
 crs_utm20 <- 32620
 
-# Project our survey data coordinates:
-survey <- aT %>%   
+survey <- survey %>%   
   st_as_sf()
     
 surv_utm_coords <- st_coordinates(survey)
@@ -40,7 +72,7 @@ survey$X1000 <- surv_utm_coords[,1]
 survey$Y1000 <- surv_utm_coords[,2] 
 
 spde <- make_mesh(as_tibble(survey), xy_cols = c("X1000", "Y1000"),
-                   n_knots=600,type = "cutoff_search")
+                   n_knots=300,type = "cutoff_search")
 plot(spde)
 
 # Add on the barrier mesh component:
@@ -50,23 +82,13 @@ bspde <- add_barrier_mesh(
 )
 
 
-survey$lZ = log(survey$CanZ)
 
-#what is the right offset for gear
-#km2 for tows is estimated from sensors
-#km2 for traps from Watson et al 2009 NJZ MFR 43 1 -- home radius of 17m, bait radius of 11m == 28m 'attraction zone'
-# pi*(.014^2) # assuming traps are independent
-survey$W = ceiling(yday(survey$DATE)/366*25)
 
-i = which(survey$OFFSET_METRIC == 'Number of traps')
-survey$OFFSET[i] = survey$OFFSET[i] * pi*(.014^2)
-survey$LO = log(survey$OFFSET)
-survey$BT = survey$HadBT
 fit = sdmTMB(WEIGHT_KG~
-               s(lZ,k=5)+s(BT),
+               s(lZ,k=4)+s(BT,k=4),
              data=as_tibble(survey),
             offset = 'LO',
-             time='W', 
+             time='YEAR', 
              mesh=bspde,
              family=tweedie(link='log'),
              spatial='on',

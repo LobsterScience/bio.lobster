@@ -15,6 +15,9 @@ load(file='/SpinDr/backup/bio_data/bio.lobster/data/maps/LFA27-33100mIsobath.rda
 fil = dir()
 fil = fil[grep('Glo',fil)]
 
+#just projections
+fil = fil[grep('fc',fil)]
+
 for(i in 1:length(fil)){
 		g = glorysSubset(glorysfile=fil[i], polygon=Isob100)
 		saveRDS(g,file = file.path('SummaryFiles',paste(fil[i],'Isobath100.rds',sep="_")))
