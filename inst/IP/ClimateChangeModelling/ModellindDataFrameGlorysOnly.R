@@ -74,9 +74,8 @@ for(i in 1:length(k)){
 		}
 
 crs_utm20 <- 32620
-
-da = do.call(rbind,ol)
+da = dplyr::bind_rows(ol)	
 da = st_as_sf(da)
-da = subset(da,CanDist<4)
+da = subset(da,GlD<6) #remove ~5% outliers 
 
 saveRDS(da,file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))

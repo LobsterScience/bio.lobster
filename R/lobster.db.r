@@ -1261,6 +1261,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
           fsrs$julian = round(as.numeric(julian(fsrs$DATE)))
 
            mls = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
+           if(any(names(mls)=='X')) mls$X = NULL
            lfa = rep(unlist(lapply(strsplit(names(mls)[2:ncol(mls)],"LFA"),'[[',2)),each=nrow(mls))
            mls = reshape(mls,idvar='Year',varying=list(2:14),v.names=c('MLS'),direction='long')
            mls$lfa = lfa
