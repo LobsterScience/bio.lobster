@@ -33,3 +33,14 @@ dF2$Year = round(dF2$Year)
 LFA38Data = merge(merge(dF,dF1,all=T),dF2,all=T)
 
 write.csv(LFA38Data,file='~/Documents/Adam/Lobster/LFA38/Jan2020/CampbellandDugganFigureData.csv')
+
+
+
+ca = ReadAndCal('C:/users/COoka/Downloads/Palheimo1963.png') #click xlow, xhigh, ylow, yhigh and calibratin is now ca
+dp = DigitData(col = 'red') #right click when done
+Calibrate(dp,ca,0,12,0,5)
+
+
+ca = ReadAndCal('C:/users/COoka/Downloads/walking.png') #click xlow, xhigh, ylow, yhigh and calibratin is now ca
+dp = DigitData(col = 'red') #right click when done
+Calibrate(dp,ca,0,25,0,25)
