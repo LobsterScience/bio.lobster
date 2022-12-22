@@ -14,10 +14,11 @@ sC$wts = apply(sC[,c('EST_KEPT_WT','EST_DISCARD_WT')],1,sum, na.rm=T)
 stations = aggregate(cbind(X,Y)~TRIP_ID+FISHSET_ID+BOARD_DATE+YEAR+month,data=sC,FUN=mean)
 pollock = aggregate(cbind(X,Y)~TRIP_ID+FISHSET_ID+BOARD_DATE+YEAR+month+wts,data=subset(sC,SPECCD_ID==16),FUN=mean)
 haddock = aggregate(cbind(X,Y)~TRIP_ID+FISHSET_ID+BOARD_DATE+YEAR+month+wts,data=subset(sC,SPECCD_ID==11),FUN=mean)
-
+cod = aggregate(cbind(X,Y)~TRIP_ID+FISHSET_ID+BOARD_DATE+YEAR+month+wts,data=subset(sC,SPECCD_ID==10),FUN=mean)
 sCf <- stations %>%   st_as_sf(crs = 4326, coords = c("X", "Y"))
 sCP <- pollock %>%   st_as_sf(crs = 4326, coords = c("X", "Y"))
 sCH <- haddock %>%   st_as_sf(crs = 4326, coords = c("X", "Y"))
+sCC <- cod %>%   st_as_sf(crs = 4326, coords = c("X", "Y"))
 
 s = ggLobsterMap('34-38',addGrids = F,return.object = T)
 s+geom_sf(data=subset(sCf,YEAR<2007),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCP,YEAR<2007 ),col='red')
@@ -26,6 +27,10 @@ s+geom_sf(data=subset(sCf,YEAR>2006 &YEAR<2022),col='black')+facet_wrap(~YEAR)+g
 s = ggLobsterMap('34-38',addGrids = F,return.object = T)
 s+geom_sf(data=subset(sCf,YEAR<2007),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCH,YEAR<2007 ),col='red')
 s+geom_sf(data=subset(sCf,YEAR>2006 &YEAR<2022),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCH,YEAR>2006 &YEAR<2022),col='red')
+
+s = ggLobsterMap('34-38',addGrids = F,return.object = T)
+s+geom_sf(data=subset(sCf,YEAR<2007),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCC,YEAR<2007 ),col='red')
+s+geom_sf(data=subset(sCf,YEAR>2006 &YEAR<2022),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCC,YEAR>2006 &YEAR<2022),col='red')
 
 
 #lenght freqs
@@ -46,7 +51,17 @@ w = aggregate(NUM_AT_LENGTH~FISH_LENGTH+TRIP_ID+SET_NO+BOARD_DATE,data=xx,FUN=ma
 w$YEAR = year(w$BOARD_DATE)
 ww = aggregate(NUM_AT_LENGTH~FISH_LENGTH+YEAR,data=w,FUN=sum)
 
-ggplot(subset(ww,YEAR %in% 2019:2020),aes(x=FISH_LENGTH,y=NUM_AT_LENGTH))+geom_bar(stat='identity')+facet_wrap('YEAR',scales='free_y')
+ggplot(subset(ww),aes(x=FISH_LENGTH,y=NUM_AT_LENGTH))+geom_bar(stat='identity')+facet_wrap('YEAR',scales='free_y')
+
+
+x=subset(fishMeasurements,SPECCD_ID==10)
+xx = merge(x,sC[,c('TRIP_ID','SET_NO','BOARD_DATE')],all.x=T,by=c('TRIP_ID','SET_NO'))
+
+w = aggregate(NUM_AT_LENGTH~FISH_LENGTH+TRIP_ID+SET_NO+BOARD_DATE,data=xx,FUN=max)
+w$YEAR = year(w$BOARD_DATE)
+ww = aggregate(NUM_AT_LENGTH~FISH_LENGTH+YEAR,data=w,FUN=sum)
+
+ggplot(subset(ww),aes(x=FISH_LENGTH,y=NUM_AT_LENGTH))+geom_bar(stat='identity')+facet_wrap('YEAR',scales='free_y')
 
 
 # catches

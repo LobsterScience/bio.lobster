@@ -6,7 +6,7 @@ require(mgcv)
 require(devtools)
 require(sf)
 require(dplyr)
-
+xx
 	lobster.db('ccir')
 	ccir_data$Ref = ifelse(ccir_data$Size==ccir_data$MLS_FSRS &ccir_data$Short==1 | ccir_data$Size==(ccir_data$MLS_FSRS-1),1,0)
 	ccir_data$UID = paste(ccir_data$Vessel.Code,ccir_data$DATE,ccir_data$Trap.Number)		
@@ -53,15 +53,19 @@ go = gam(Ref~LFA+YEAR+s(Temperature,k=4),data=a,offset=(log(UID)),family='nb')
 
 require(ggeffects)
 
-mydf <- ggpredict(go, terms = c("Temperature",'LFA','YEAR'))
+mydf <- ggpredict(go, terms = c("Temperature",'LFA'))
 
-ggplot(mydf, aes(x = x, y = predicted, colour = facet)) +
+ggplot(mydf, aes(x = x, y = predicted)) +
   geom_line() +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)+
   facet_wrap(~group)
 
 
 myf <- ggpredict(go, terms = c("Temperature"))
-
+ggplot(myf, aes(x = x, y = predicted)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)
+  
   pre = data.frame(temp=myf$x,pred = myf$predicted)
 
 saveRDS(pre,file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))

@@ -827,12 +827,12 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             atSea2 = connect.command(con, "select * from cooka.lobster_bycatch_assoc")
  
             atSea2$PORT = NA
-            atSea2$PORTNAME = NA
+            atSea2$PORTNAME= atSea2$PORT_NAME
             atSea2$SAMCODE = NA
             atSea2$DESCRIPTION = atSea2$OWNER_GROUP
-            atSea2$GRIDNO = NA
+            atSea2$GRIDNO = atSea2$STRATUM_ID
             atSea2$SPECIESCODE = atSea2$SPECCD_ID
-            atSea2$CULL = NA
+            atSea2$CULL = atSea2$MISSING_CLAWS
             #atSea2$CALWT=NA  #BZ Remoed and replaced with line below. Sept 2021
             atSea2$CALWT = atSea2$CALWT_G
             atSea2$STARTDATE = as.Date(NA)
@@ -845,6 +845,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             atSea2$STARTDATE[atSea2$datechar<10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar<10],"%d-%b-%y")
             atSea2$STARTDATE[atSea2$datechar==10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar==10])
 
+            atSea3 = atSea2
 
             names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO", 
                      "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO",'NUM_HOOK_HAUL', "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH", 
@@ -852,14 +853,18 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
       #BZ. Sept2021- Added "DISEASE", "CONDITION_CD", "CLUTCH" to above list to include these variables and match fields from atSea dataset
             
-            atSea2 = subset(atSea2,select=names2)
+            atSea2= subset(atSea2,select=names2)
             atSea2$COMAREA_ID = substr(atSea2$COMAREA_ID,2,nchar(atSea2$COMAREA_ID))
             atSea2$LATDDMM = convert.dd.dddd(atSea2$LATDDMM)
             atSea2$LONGDDMM = convert.dd.dddd(atSea2$LONGDDMM) * -1
 
             names(atSea2) = names(atSea)
+atSea$TRIPNO = as.character(atSea$TRIPNO)
+atSea2$LICENCE_ID = as.character(atSea2$LICENCE_ID)
+atSea2$TRAPNO = as.character(atSea2$TRAPNO)
+atSea2$STRINGNO = as.character(atSea2$STRINGNO)
 
-            atSea = rbind(atSea,atSea2)
+            atSea = dplyr::bind_rows(list(atSea,atSea2))
 
             save( atSea, file=file.path( fnODBC, "atSea.rdata"), compress=T)
             gc()  # garbage collection

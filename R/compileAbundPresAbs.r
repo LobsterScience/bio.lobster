@@ -170,6 +170,8 @@ compileAbundPresAbs <- function(redo=F,size=T){
             fsrsSize  = nwlp
             fsrsPrune$Gear = 'Recruitment'
             fsrsSize$Gear = 'Recruitment'
+            
+            
   #FSRS commercial samples
             lobster.db('fsrs.commercial.samples')
             fsrs.comm$LONGITUDE=fsrs.comm$X
@@ -221,7 +223,14 @@ compileAbundPresAbs <- function(redo=F,size=T){
             fsrsCommPrune$Gear = 'Commercial'
             ##merging all trap data
             ddSize$NonLobster = NULL
+            
+            ddSize$Date = as.Date(ddSize$DATE)
+            fsrsSize$Date = as.Date(fsrsSize$DATE)
+            fsrsCommSize$Date = as.Date(fsrsCommSize$DATE)
+            
             trapSize = plyr::rbind.fill(fsrsCommSize, fsrsSize,ddSize)
+            trapSize$DATE = trapSize$Date
+            trapSize$Date = NULL
             trapSize = na.zero(trapSize)
             
             trapsNoSize = plyr::rbind.fill(fsrsPrune,fsrsCommPrune,ddPrune,off41_LOGS)
@@ -247,7 +256,7 @@ compileAbundPresAbs <- function(redo=F,size=T){
             rv = RV_sets()
             rv$mission = rv$setno = NULL
             
-    #NWFSC Surveys
+    #NEFSC Surveys
             
             ne = NEFSC_sets()
             ne$MISSION = ne$SETNO = NULL
@@ -261,11 +270,15 @@ compileAbundPresAbs <- function(redo=F,size=T){
             combinedNoSize = plyr::rbind.fill(trapsNoSize,wwNoSize)
             combinedNoSize$X = combinedNoSize$Y = combinedNoSize$EID = combinedNoSize$id = NULL
             
+            ww$DATE = as.Date(ww$DATE)
             
             combinedSize = plyr::rbind.fill(trapSize,ww)
-          combinedNoSize = subset(combinedNoSize,OFFSET>0)
+            combinedNoSize = subset(combinedNoSize,OFFSET>0)
           combinedSize = subset(combinedSize,OFFSET>0)
-          
+          combinedSize$YEAR = year(combinedSize$DATE)
+          combinedNoSize$YEAR = year(combinedNoSize$DATE)
+          i = which(combinedNoSize$SOURCE=='Snow crab survey')
+          combinedNoSize$Berried[i] = 0
           saveRDS(combinedSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesSize.rds')) 
             saveRDS(combinedNoSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesNoSize.rds')) 
 } else {

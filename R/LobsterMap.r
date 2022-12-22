@@ -124,15 +124,12 @@ if(save) {
 	
 #groundfish survey summer strata	
 	if(addSummerStrata) {
-			  require('bio.polygons')
-			  #a = find.bio.gis('summer_strata_labels',return.one.match=F)
 			  a = file.path( project.datadirectory("bio.lobster"), "data","maps","summer_strata_labels.csv")
 			  a = read.csv(a,header=T)
 			  names(a)[4] <- 'label'
-			  #b = find.bio.gis('strat.gf',return.one.match=F)
 			  b = file.path( project.datadirectory("bio.lobster"), "data","maps","summerstrata.csv")
 			  b = read.csv(b)
-			  names(b) <- c('X','Y','PID')
+			  names(b) <- c('PID','X','Y')
 			  
 		if(!is.null(subsetSummerStrata)) {
 			  b = b[which(b$PID %in% c(subsetSummerStrata)),]
