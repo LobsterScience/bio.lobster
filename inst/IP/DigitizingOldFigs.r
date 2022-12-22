@@ -44,3 +44,9 @@ Calibrate(dp,ca,0,12,0,5)
 ca = ReadAndCal('C:/users/COoka/Downloads/walking.png') #click xlow, xhigh, ylow, yhigh and calibratin is now ca
 dp = DigitData(col = 'red') #right click when done
 Calibrate(dp,ca,0,25,0,25)
+
+require(digitize)
+ca = ReadAndCal('C:/users/COoka/Downloads/shrimpcorrFactors.png') #click xlow, xhigh, ylow, yhigh and calibratin is now ca
+dp = DigitData(col = 'red') #right click when done
+Calibrate(dp,ca,0,700,0,450)
+

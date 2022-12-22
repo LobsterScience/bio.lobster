@@ -20,7 +20,7 @@ load_all('~/git/bio.survey/')
 	attr(LFA34,'projection') <- 'LL'
 
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:2018)
+      p$years.to.estimate = c(1969:2022)
       p$length.based = T
       p$size.class = c(50,300)
       p$by.sex = F
