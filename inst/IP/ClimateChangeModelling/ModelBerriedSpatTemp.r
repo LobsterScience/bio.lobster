@@ -15,9 +15,42 @@ la()
 fd=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling')
 dir.create(fd,showWarnings=F)
 setwd(fd)
-aT = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
+survey = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
 sf_use_s2(FALSE) #needed for cropping
 
+# Project our survey data coordinates:
+
+survey$lZ = log(survey$z)
+survey = subset(survey,!is.na(lZ))
+
+#what is the right offset for gear
+#km2 for tows is estimated from sensors
+#km2 for traps from Watson et al 2009 NJZ MFR 43 1 -- home radius of 17m, bait radius of 11m == 28m 'attraction zone'
+# pi*(.014^2) # assuming traps are independent
+survey$W = ceiling(yday(survey$DATE)/366*25)
+
+
+mi= readRDS(file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))
+
+
+mi = mi[,c('temp','res')]
+names(mi) = c('GlT','OFFSETcorr')
+mi$GlT = round(mi$GlT,1)
+mi = aggregate(OFFSETcorr~GlT,data=mi,FUN=mean)
+survey$GlT = round(survey$GlT,1)
+survey = dplyr::full_join(survey,mi)
+survey$OFFSETcorr[which(survey$GlT< -.7)] <- 0
+survey$OFFSETcorr[which(survey$GlT> 17)] <- 1
+
+i = which(survey$OFFSET_METRIC == 'Number of traps')
+survey$OFFSET[i] = survey$OFFSET[i] * pi*(.014^2) * survey$OFFSETcorr[i]
+
+survey$LO = log(survey$OFFSET)
+survey = subset(survey,OFFSET>0.00001 & OFFSET< 0.12)
+survey$BT = survey$GlT
+survey = subset(survey,!is.na(BT))
+survey$pa = ifelse(survey$Berried>0,1,0)
+survey = subset(survey, !is.na(Berried))
 ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
 st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
 crs_utm20 <- 32620
@@ -30,15 +63,13 @@ ns_coast <- st_transform(ns_coast, crs_utm20)
 st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
 crs_utm20 <- 32620
 
-# Project our survey data coordinates:
-survey <- aT %>%   
+survey <- survey %>%   
   st_as_sf()
-survey = subset(survey,SOURCE!='NEFSC_RV')
     
 surv_utm_coords <- st_coordinates(survey)
 
-survey$X1000 <- surv_utm_coords[,1] / 1000
-survey$Y1000 <- surv_utm_coords[,2] / 1000
+survey$X1000 <- surv_utm_coords[,1] 
+survey$Y1000 <- surv_utm_coords[,2] 
 
 spde <- make_mesh(as_tibble(survey), xy_cols = c("X1000", "Y1000"),
                    n_knots=600,type = "cutoff_search")
@@ -51,64 +82,78 @@ bspde <- add_barrier_mesh(
 )
 
 
-survey$lZ = log(survey$z)
-survey$W = round(survey$DYEAR*365 / 14) # 2 week intervals
+#issues with fitting on a biweekly moving to quarters
+survey$m = month(survey$DATE) 
+survey$Q = ifelse(survey$m %in% c(10,11,12),1,ifelse(survey$m %in% c(1,2,3),2,ifelse(survey$m %in% c(4,5,6),3,4)))
+survey$Time = survey$YEAR+survey$Q/4
 
-#what is the right offset for gear
-#km2 for tows is estimated from sensors
-#km2 for traps from Watson et al 2009 NJZ MFR 43 1 -- home radius of 17m, bait radius of 11m == 28m 'attraction zone'
-# pi*(.014^2) # assuming traps are independent
 
-i = which(survey$OFFSET_METRIC == 'Number of traps')
-survey$OFFSET[i] = survey$OFFSET[i] * pi*(.014^2)
-survey$LO = log(survey$OFFSET)
-fit = sdmTMB(Berried~
-               s(lZ,k=5)+s(BT),
+fitpa = sdmTMB(pa~
+               s(lZ,k=3)+s(BT,k=4)+Q,
              data=as_tibble(survey),
             offset = 'LO',
-             time='W', 
+             time='YEAR', 
              mesh=bspde,
-             extra_time = 17,
-             family=tweedie(link='log'),
+             family=binomial(link='logit'),
              spatial='on',
              spatiotemporal='ar1')
+# AIC(fitpa)
+#674281.8
 
-go =predict(fit) 
-go$pred = fit$family$linkinv(go$est)
+fitpaNT = sdmTMB(pa~
+               s(lZ,k=3)+Q,
+             data=as_tibble(survey),
+            offset = 'LO',
+             time='YEAR', 
+             mesh=bspde,
+             family=binomial(link='logit'),
+             spatial='on',
+             spatiotemporal='ar1')
+#AIC(fitpaNT)
+#679159.5
 
 
 
-d = dir(file.path(bio.datadirectory,'bio.lobster','Temperature Data/QuinnBT-2022/'),full.names = T)
-d = d[grep('Can',d)]
-x = read.table(d[7],header=T)
-x$Date = as.Date(as.character(x$DateYYYYMMDD), format='%Y%m%d')
-x = subset(x,Depth_m<400,select=c(Date,Time,Longitude,Latitude,BottomTemp,Depth_m))
- 
-x = subset(x,Time==1) 
-x = subset(x,Depth_m<400)
-x = x %>% st_as_sf(coords = c("Longitude",'Latitude'),crs=4326) %>% st_transform(crs_utm20)
+fitpaNS = sdmTMB(pa~
+               s(lZ,k=3)+s(BT,k=3)+Q,
+             data=as_tibble(survey),
+            offset = 'LO',
+            mesh=bspde,
+             family=binomial(link='logit'),
+             spatial='off',
+             )
 
-x_utm_coords <- st_coordinates(x)
+saveRDS(list(data=survey,grid=bspde,model=fitpa),file='sdmTMBBerriedpabyQFinal.rds')
 
-x$X1000 <- x_utm_coords[,1] / 1000
-x$Y1000 <- x_utm_coords[,2] / 1000
+x=readRDS(file='sdmTMBBerriedpabyQFinal.rds')
 
-x = bio.utilities::rename.df(x,c('BottomTemp','Depth_m'),c('BT','z'))
+fitpa = x$model
+bspde = x$grid
+survey= x$data
+Glsur = readRDS('GlorysPredictSurface.rds')
+x = Glsur
+
+
+plot_smooth(fitpa,select=1)
+
+
+x = bio.utilities::rename.df(x,c('bottomT','yr'),c('BT','YEAR'))
+x = subset(x,z>0)
 x$lZ = log(x$z)
+x$X1000 = st_coordinates(x)[,1]
+x$Y1000 = st_coordinates(x)[,2]
+x = subset(x,exp(lZ)<400)
 
-x = as_tibble(subset(x,select=c(BT,X1000,Y1000,lZ)))
+x = as_tibble(subset(x,select=c(Q,YEAR,BT,X1000,Y1000,lZ)))
 x$geometry=NULL
-be = as.data.frame(sapply(x,rep.int,27))
-be$W = rep(0:26,each=dim(x)[1])
 
-be= as_tibble(be)
+g = predict(fitpa,newdata=x)
 
-g = predict(fit,newdata=(be))
-
-  g$pred = fit$family$linkinv(g$est)
+  g$pred = fitpa$family$linkinv(g$est)
 
   gsf = st_as_sf(g,coords = c("X1000","Y1000"),crs=32620,remove=F)
 
+
 rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
 rL = st_as_sf(rL)
 st_crs(rL) <- 4326
@@ -117,16 +162,17 @@ st_geometry(rL) <- st_geometry(st_as_sf(rL$geometry/1000))
 st_crs(rL) <- 32620
 
 
-
+ff = st_join(gsf,rL,join=st_within)
+gsf = subset(ff,!is.na(LFA))
 
 #Maps
 mm = c(0.001,max(gsf$pred))
-ggplot(subset(gsf,W %in% 0:26)) +
+ggplot(subset(gsf,Q==3 &YEAR %in% 2012:2022)) +
   geom_sf(aes(fill=pred,color=pred)) + 
-  scale_fill_viridis_c(trans='log',limits=mm) +
-  scale_color_viridis_c(trans='log',limits=mm) +
-  facet_wrap(~W) +
-  geom_sf(data=rL,size=1,colour='black',fill=NA)+
+  scale_fill_viridis_c() +
+  scale_color_viridis_c() +
+  facet_wrap(~YEAR) +
+ # geom_sf(data=rL,size=1,colour='black',fill=NA)+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
@@ -135,73 +181,20 @@ ggplot(subset(gsf,W %in% 0:26)) +
          axis.title.y = element_blank()
   ) +
   coord_sf()
-savePlot('wtWeek600k.png') 
+savePlot('BerriedPAQ32012-2022.png') 
 
 
+with(gsf,plot(BT,pred))
+gsfYR = gsf
+##################################################################
+###projections
 
-
-
-
-
-
-
-saveRDS(list(data=survey,grid=bspde,preds=gsf,model=fit),file='AllwtTw600k.rds')
-
-a=readRDS('AllwtTw600k.rds')
-survey=a[[1]]
-bspde=a[[2]]
-gsf=st_as_sf(a[[3]])
-fit=a[[4]]
-
-gsf$X = gsf$X1000*1000
-gsf$Y = gsf$Y1000*1000
-st_geometry(gsf) <-NULL
-gsf = st_as_sf(gsf,coords=c('X','Y'))
-st_crs(gsf) <- 32620
-
-rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
-st_crs(rL) <- 4326
-rL <- st_transform(rL, 32620)
-rl = st_coordinates(rL)
-rl[,1] = rl[,1]/1000
-rl[,2] = rl[,2]/1000
-
-rl = st_as_sf(rl,)
-
-i = st_intersects(gsf,rL,sparse=F)
-    gsf$i = unlist(apply(i,1,function(x) ifelse(any(x), which(x),NA))) #this generates the index for LFAs, without this points outside LFAs dont get counted and make a mess
-gsf$LFA = rL$LFA[gsf$i]
-gsf1 = gsf
-
-st_geometry(gsf) <-NULL
-
-ggplot(subset(gsf,!is.na(LFA)),aes(log(pred)))+
-  geom_histogram(aes(y=..density..),position='identity')+
-  facet_wrap(~LFA)+
-  geom_vline(xintercept=0)
-  savePlot('DistributionOfPredictedDensity.png') 
-
-
-###predictions
-Can = readRDS('CanProjectionSurfaces.rds')
-  x = bio.utilities::rename.df(Can,c('BottomTemp'),c('BT'))
-
-x= as_tibble(x)
-x1 = subset(x,W==1)
-x2 = subset(x,W==25)
-x1$W=0
-x2$W=26
-x = rbind(x,x1)
-x = rbind(x,x2)
-
-#####2035
-xr = subset(x,rYR==2032)
-
-g = predict(fit,newdata=(xr))
-
-  g$pred = fit$family$linkinv(g$est)
-
-  gsf35 = st_as_sf(g,coords = c("X1000","Y1000"),crs=32620,remove=F)
+ glo = readRDS(file='ClimatologyAndProjections.rds')
+ glo$X1000 = st_coordinates(glo)[,1]
+ glo$Y1000 = st_coordinates(glo)[,2]
+ glo$lZ = log(glo$z)
+glo = subset(glo,z<400)
+ glo = subset(glo,!is.na(lZ))
 
 rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
 rL = st_as_sf(rL)
@@ -211,25 +204,38 @@ st_geometry(rL) <- st_geometry(st_as_sf(rL$geometry/1000))
 st_crs(rL) <- 32620
 
 
-i = st_intersects(gsf35,rL,sparse=F)
-    gsf35$i = unlist(apply(i,1,function(x) ifelse(any(x), which(x),NA))) #this generates the index for LFAs, without this points outside LFAs dont get counted and make a mess
-gsf35$LFA = rL$LFA[gsf35$i]
-gsf35a = gsf35
-st_geometry(gsf35) <-NULL
+glo = st_join(glo,rL,join=st_within)
 
-ggplot(subset(gsf35,!is.na(LFA)),aes(log(pred)))+
-  geom_histogram(aes(y=..density..),position='identity')+
-  facet_wrap(~LFA)+
-  geom_vline(xintercept=0)
-  savePlot('DistributionOfPredictedDensity35Y.png') 
+glo = subset(glo,!is.na(LFA))
 
-mm = c(0.001,max(gsf35$pred))
-ggplot(subset(gsf35a)) +
+
+#current
+y = unique(survey$YEAR)
+cdata = subset(glo,select=c(X1000,Y1000,lZ,Clim0.5,Q))
+cdata = subset(cdata,exp(lZ)<400)
+st_geometry(cdata) <- NULL
+
+cdy = as.data.frame(sapply(cdata,rep.int,length(y)))
+cdy$YEAR = rep(y,each=dim(cdata)[1])
+cdy$BT = cdy$Clim0.5
+g = predict(fitpa,newdata=cdy)
+g$pred = fitpa$family$linkinv(g$est)
+
+#average over 2000-2022
+ga = aggregate(pred~X1000+Y1000+Q+BT+lZ,data=g,FUN=mean)
+
+  gsf = st_as_sf(ga,coords = c("X1000","Y1000"),crs=32620,remove=F)
+
+
+
+
+
+ggplot(subset(gsf)) +
   geom_sf(aes(fill=pred,color=pred)) + 
-  scale_fill_viridis_c(trans='log',limits=mm) +
-  scale_color_viridis_c(trans='log',limits=mm) +
-  facet_wrap(~W) +
-  #geom_sf(data=rL,size=1,colour='black',fill=NA)+
+  scale_fill_viridis_c() +
+  scale_color_viridis_c() +
+  facet_wrap(~Q) +
+ # geom_sf(data=rL,size=1,colour='black',fill=NA)+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
@@ -238,83 +244,49 @@ ggplot(subset(gsf35a)) +
          axis.title.y = element_blank()
   ) +
   coord_sf()
-savePlot('wt600k2032.png') 
 
-oo = list()
-w = unique(gsf1$W)
-for(i in 1:length(w)){
-oo[[i]] = st_join(subset(gsf1,W==w[i]),subset(gsf35a,W=w[i],select=pred),join=st_nearest_feature,left=TRUE)
-}
+savePlot('ClimatologyBerriedPreds.png')
 
-gg = do.call(rbind,oo)
-gg$diff = gg$pred.y - gg$pred.x
-gg$negative = abs(gg$diff)
-gg$positive = gg$diff
-mm = c(0.01,max(gg$positive))
-require(ggnewscale)
-ggplot(subset(gg,W %in% seq(0,26,4) & diff>0)) +
-  geom_sf(aes(fill=positive,color=positive)) + 
-  scale_fill_gradient(low = "white", high = "red", na.value = NA,trans='log',limits=mm)+
-  scale_color_gradient(trans='log',low = "white", high = "red", na.value = NA,limits=mm) +
-new_scale_color()+
-new_scale_fill()+
-  geom_sf(data=subset(gg,W %in% seq(0,26,4) & diff<0))+
-  aes(fill=negative,color=negative) + 
-  scale_fill_gradient(low = "white", high = "blue", na.value = NA,trans='log',limits=mm)+
-  scale_color_gradient(trans='log',low = "white", high = "blue", na.value = NA,limits=mm) +
-  facet_wrap(~W) +
-  
-  #geom_sf(data=rL,size=1,colour='black',fill=NA)+
-  theme( axis.ticks.x = element_blank(),
-         axis.text.x = element_blank(),
-         axis.title.x = element_blank(),
-         axis.ticks.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.title.y = element_blank()
-  ) +
-  coord_sf()
-savePlot('wt600kdiff2032-2022.png') 
+ ga$X = ga$X1000*1000
+ ga$Y = ga$Y1000*1000
 
+ga2 = st_as_sf(ga,coords = c("X","Y"),crs=32620,remove=F)
+gs2 = ga2 %>% st_transform(4326)
+gs2$X = st_coordinates(gs2)[,1]
+gs2$Y = st_coordinates(gs2)[,2]
+gs2 = subset(gs2,select=c(X,Y,pred,Q))
+gs2 = as_tibble(gs2)
+saveRDS(gs2,file='CurrentClimatologyBerriedBinomialOutput.rds')
+write.csv(gs2,file='CurrentClimatologyBerriedBinomialOutput.csv')
+################
+#Bnam 2055
 
-########2055
+y = unique(survey$YEAR)
+cdata = subset(glo,select=c(X1000,Y1000,lZ,Clim0.5,BNAM8.5.55,Q))
+st_geometry(cdata) <- NULL
+
+cdy = as.data.frame(sapply(cdata,rep.int,length(y)))
+cdy$YEAR = rep(y,each=dim(cdata)[1])
+cdy$BT = cdy$Clim0.5+cdy$BNAM8.5.55
+g = predict(fitpa,newdata=cdy)
+g$pred = fitpa$family$linkinv(g$est)
+
+#average over spatial domains for years 2000-2022
+gBNAM55 = aggregate(pred~X1000+Y1000+Q,data=g,FUN=mean)
+
+  gsfBNAM55 = st_as_sf(gBNAM55,coords = c("X1000","Y1000"),crs=32620,remove=F)
 
 
 
-xr = subset(x,rYR==2052)
-
-g = predict(fit,newdata=(xr))
-
-  g$pred = fit$family$linkinv(g$est)
-
-  gsf55 = st_as_sf(g,coords = c("X1000","Y1000"),crs=32620,remove=F)
-
-rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
-rL = st_as_sf(rL)
-st_crs(rL) <- 4326
-rL = st_transform(rL,32620) 
-st_geometry(rL) <- st_geometry(st_as_sf(rL$geometry/1000)) 
-st_crs(rL) <- 32620
 
 
-i = st_intersects(gsf55,rL,sparse=F)
-    gsf55$i = unlist(apply(i,1,function(x) ifelse(any(x), which(x),NA))) #this generates the index for LFAs, without this points outside LFAs dont get counted and make a mess
-gsf55$LFA = rL$LFA[gsf55$i]
-gsf55a = gsf55
-st_geometry(gsf55) <-NULL
-
-ggplot(subset(gsf55,!is.na(LFA)),aes(log(pred)))+
-  geom_histogram(aes(y=..density..),position='identity')+
-  facet_wrap(~LFA)+
-  geom_vline(xintercept=0)
-  savePlot('DistributionOfPredictedDensity55Y.png') 
-
-mm = c(0.001,max(gsf55$pred))
-ggplot(subset(gsf55a)) +
+mm = c(0.001,max(gsfBNAM55$pred))
+ggplot(subset(gsfBNAM55)) +
   geom_sf(aes(fill=pred,color=pred)) + 
-  scale_fill_viridis_c(trans='log',limits=mm) +
-  scale_color_viridis_c(trans='log',limits=mm) +
-  facet_wrap(~W) +
-  #geom_sf(data=rL,size=1,colour='black',fill=NA)+
+  scale_fill_viridis_c() +
+  scale_color_viridis_c() +
+  facet_wrap(~Q) +
+ # geom_sf(data=rL,size=1,colour='black',fill=NA)+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
@@ -323,83 +295,35 @@ ggplot(subset(gsf55a)) +
          axis.title.y = element_blank()
   ) +
   coord_sf()
-savePlot('wt600k2052.png') 
+################
+#Bnam 2075
 
-oo = list()
-w = unique(gsf1$W)
-for(i in 1:length(w)){
-oo[[i]] = st_join(subset(gsf1,W==w[i]),subset(gsf55a,W=w[i],select=pred),join=st_nearest_feature,left=TRUE)
-}
+y = unique(survey$YEAR)
+cdata = subset(glo,select=c(X1000,Y1000,lZ,Clim0.5,BNAM8.5.75,Q))
+st_geometry(cdata) <- NULL
 
-gg = do.call(rbind,oo)
-gg$diff = gg$pred.y - gg$pred.x
-gg$negative = abs(gg$diff)
-gg$positive = gg$diff
-mm = c(0.01,max(gg$positive))
-require(ggnewscale)
-ggplot(subset(gg,W %in% seq(0,26,4) & diff>0)) +
-  geom_sf(aes(fill=positive,color=positive)) + 
-  scale_fill_gradient(low = "white", high = "red", na.value = NA,trans='log',limits=mm)+
-  scale_color_gradient(trans='log',low = "white", high = "red", na.value = NA,limits=mm) +
-new_scale_color()+
-new_scale_fill()+
-  geom_sf(data=subset(gg,W %in% seq(0,26,4) & diff<0))+
-  aes(fill=negative,color=negative) + 
-  scale_fill_gradient(low = "white", high = "blue", na.value = NA,trans='log',limits=mm)+
-  scale_color_gradient(trans='log',low = "white", high = "blue", na.value = NA,limits=mm) +
-  facet_wrap(~W) +
-  
-  #geom_sf(data=rL,size=1,colour='black',fill=NA)+
-  theme( axis.ticks.x = element_blank(),
-         axis.text.x = element_blank(),
-         axis.title.x = element_blank(),
-         axis.ticks.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.title.y = element_blank()
-  ) +
-  coord_sf()
-savePlot('wt600kdiff2052-2022.png') 
+cdy = as.data.frame(sapply(cdata,rep.int,length(y)))
+cdy$YEAR = rep(y,each=dim(cdata)[1])
+cdy$BT = cdy$Clim0.5+cdy$BNAM8.5.75
+g = predict(fitpa,newdata=cdy)
+g$pred = fitpa$family$linkinv(g$est)
 
+#average over spatial domains for years 2000-2022
+gBNAM75 = aggregate(pred~X1000+Y1000+Q,data=g,FUN=mean)
 
-#2097
+  gsfBNAM75 = st_as_sf(gBNAM75,coords = c("X1000","Y1000"),crs=32620,remove=F)
 
 
 
-xr = subset(x,rYR==2097)
-
-g = predict(fit,newdata=(xr))
-
-  g$pred = fit$family$linkinv(g$est)
-
-  gsf97 = st_as_sf(g,coords = c("X1000","Y1000"),crs=32620,remove=F)
-
-rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
-rL = st_as_sf(rL)
-st_crs(rL) <- 4326
-rL = st_transform(rL,32620) 
-st_geometry(rL) <- st_geometry(st_as_sf(rL$geometry/1000)) 
-st_crs(rL) <- 32620
 
 
-i = st_intersects(gsf97,rL,sparse=F)
-    gsf97$i = unlist(apply(i,1,function(x) ifelse(any(x), which(x),NA))) #this generates the index for LFAs, without this points outside LFAs dont get counted and make a mess
-gsf97$LFA = rL$LFA[gsf97$i]
-gsf97a = gsf97
-st_geometry(gsf97) <-NULL
-
-ggplot(subset(gsf97,!is.na(LFA)),aes(log(pred)))+
-  geom_histogram(aes(y=..density..),position='identity')+
-  facet_wrap(~LFA)+
-  geom_vline(xintercept=0)
-  savePlot('DistributionOfPredictedDensity97Y.png') 
-
-mm = c(0.001,max(gsf97$pred))
-ggplot(subset(gsf97a)) +
+mm = c(0.001,max(gsfBNAM75$pred))
+ggplot(subset(gsfBNAM75)) +
   geom_sf(aes(fill=pred,color=pred)) + 
-  scale_fill_viridis_c(trans='log',limits=mm) +
-  scale_color_viridis_c(trans='log',limits=mm) +
-  facet_wrap(~W) +
-  #geom_sf(data=rL,size=1,colour='black',fill=NA)+
+  scale_fill_viridis_c() +
+  scale_color_viridis_c() +
+  facet_wrap(~Q) +
+ # geom_sf(data=rL,size=1,colour='black',fill=NA)+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
@@ -408,33 +332,44 @@ ggplot(subset(gsf97a)) +
          axis.title.y = element_blank()
   ) +
   coord_sf()
-savePlot('wt600k2097.png') 
 
-oo = list()
-w = unique(gsf1$W)
-for(i in 1:length(w)){
-oo[[i]] = st_join(subset(gsf1,W==w[i]),subset(gsf97a,W=w[i],select=pred),join=st_nearest_feature,left=TRUE)
-}
 
-gg97 = do.call(rbind,oo)
-gg97$diff = gg97$pred.y - gg97$pred.x
-gg97$negative = abs(gg97$diff)
-gg97$positive = gg97$diff
-mm = c(0.01,max(gg97$positive))
-require(ggnewscale)
-ggplot(subset(gg97,W %in% seq(0,26,4) & diff>0)) +
-  geom_sf(aes(fill=positive,color=positive)) + 
-  scale_fill_gradient(low = "white", high = "red", na.value = NA,trans='log',limits=mm)+
-  scale_color_gradient(trans='log',low = "white", high = "red", na.value = NA,limits=mm) +
-new_scale_color()+
-new_scale_fill()+
-  geom_sf(data=subset(gg97,W %in% seq(0,26,4) & diff<0))+
-  aes(fill=negative,color=negative) + 
-  scale_fill_gradient(low = "white", high = "blue", na.value = NA,trans='log',limits=mm)+
-  scale_color_gradient(trans='log',low = "white", high = "blue", na.value = NA,limits=mm) +
-  facet_wrap(~W) +
-  
-  #geom_sf(data=rL,size=1,colour='black',fill=NA)+
+####################################
+###Had
+
+
+y = unique(survey$YEAR)
+cdata = subset(glo,select=c(X1000,Y1000,lZ,Clim0.5,HAD90,Q))
+st_geometry(cdata) <- NULL
+
+cdy = as.data.frame(sapply(cdata,rep.int,length(y)))
+cdy$YEAR = rep(y,each=dim(cdata)[1])
+cdy$BT = cdy$Clim0.5+cdy$HAD90
+g = predict(fitpa,newdata=cdy)
+g$pred = fitpa$family$linkinv(g$est)
+
+#average over spatial domains for years 2000-2022
+gHAD90 = aggregate(pred~X1000+Y1000+Q+BT+HAD90,data=g,FUN=mean)
+
+  gsfHAD90 = st_as_sf(gHAD90,coords = c("X1000","Y1000"),crs=32620,remove=F)
+
+
+###merging back
+
+gsfHAD90 = rename.df(gsfHAD90,c('pred',"BT"),c('predHad90',"BThad90"))
+
+gcc2 = merge(as_tibble(gsfHAD90),as_tibble(gsf),by=c('X1000','Y1000','Q'))
+gcc2$geometry.x = NULL
+gcc2$geometry = gcc2$geometry.y
+gcc2 = st_as_sf(gcc2)
+
+mm = c(0.001,max(gsfHAD50$pred))
+ggplot(subset(gcc2)) +
+  geom_sf(aes(fill=pred,color=pred)) + 
+  scale_fill_viridis_c() +
+  scale_color_viridis_c() +
+  facet_wrap(~Q) +
+ # geom_sf(data=rL,size=1,colour='black',fill=NA)+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
@@ -443,17 +378,20 @@ new_scale_fill()+
          axis.title.y = element_blank()
   ) +
   coord_sf()
-savePlot('wt600kdiff2097-2022.png') 
 
 
 
-oo = list()
-w = unique(gsf1$W)
-for(i in 1:length(w)){
-oo[[i]] = st_join(subset(gsf55a,W==w[i]),subset(gsf97a,W=w[i],select=pred),join=st_nearest_feature,left=TRUE)
-}
-
-gg5597 = do.call(rbind,oo)
-gg5597$diff = gg5597$pred.y - gg5597$pred.x
-gg5597$negative = abs(gg5597$diff)
-gg97$positive = gg97$diff
+ggplot(subset(gsfHAD50)) +
+  geom_sf(aes(fill=HAD50,color=HAD50)) + 
+  scale_fill_viridis_c() +
+  scale_color_viridis_c() +
+  facet_wrap(~Q) +
+ # geom_sf(data=rL,size=1,colour='black',fill=NA)+
+  theme( axis.ticks.x = element_blank(),
+         axis.text.x = element_blank(),
+         axis.title.x = element_blank(),
+         axis.ticks.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.title.y = element_blank()
+  ) +
+  coord_sf()

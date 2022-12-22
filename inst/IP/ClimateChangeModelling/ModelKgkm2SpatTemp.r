@@ -45,8 +45,6 @@ survey$OFFSETcorr[which(survey$GlT> 17)] <- 1
 i = which(survey$OFFSET_METRIC == 'Number of traps')
 survey$OFFSET[i] = survey$OFFSET[i] * pi*(.014^2) * survey$OFFSETcorr[i]
 
-##need to fix this 
-
 survey$LO = log(survey$OFFSET)
 survey = subset(survey,OFFSET>0.00001 & OFFSET< 0.12)
 survey$BT = survey$GlT
@@ -72,7 +70,7 @@ survey$X1000 <- surv_utm_coords[,1]
 survey$Y1000 <- surv_utm_coords[,2] 
 
 spde <- make_mesh(as_tibble(survey), xy_cols = c("X1000", "Y1000"),
-                   n_knots=300,type = "cutoff_search")
+                   n_knots=400,type = "cutoff_search")
 plot(spde)
 
 # Add on the barrier mesh component:
@@ -82,10 +80,14 @@ bspde <- add_barrier_mesh(
 )
 
 
-
+survey$pa = ifelse(survey$WEIGHT_KG>0,1,0)
+#issues with fitting on a biweekly moving to quarters
+survey$m = month(survey$DATE) 
+survey$Q = ifelse(survey$m %in% c(10,11,12),1,ifelse(survey$m %in% c(1,2,3),2,ifelse(survey$m %in% c(4,5,6),3,4)))
+survey$Time = survey$YEAR+survey$Q/4
 
 fit = sdmTMB(WEIGHT_KG~
-               s(lZ,k=4)+s(BT,k=4),
+               s(lZ,k=4)+s(BT,k=4)+Q,
              data=as_tibble(survey),
             offset = 'LO',
              time='YEAR', 
@@ -94,41 +96,45 @@ fit = sdmTMB(WEIGHT_KG~
              spatial='on',
              spatiotemporal='ar1')
 
-go =predict(fit) 
-go$pred = fit$family$linkinv(go$est)
 
 
+fitpa = sdmTMB(pa~
+               s(lZ,k=3)+s(BT,k=4)+(Q),
+             data=as_tibble(survey),
+            offset = 'LO',
+             time='YEAR', 
+             mesh=bspde,
+             family=binomial(link='logit'),
+             spatial='on',
+             spatiotemporal='ar1')
 
-d = dir(file.path(bio.datadirectory,'bio.lobster','Temperature Data/QuinnBT-2022/'),full.names = T)
-d = d[grep('Can',d)]
-x = read.table(d[7],header=T)
-x$Date = as.Date(as.character(x$DateYYYYMMDD), format='%Y%m%d')
-x = subset(x,Depth_m<400,select=c(Date,Time,Longitude,Latitude,BottomTemp,Depth_m))
- 
-x = subset(x,Time==1) 
-x = subset(x,Depth_m<400)
-x = x %>% st_as_sf(coords = c("Longitude",'Latitude'),crs=4326) %>% st_transform(crs_utm20)
+saveRDS(fitpa,'sdmTMBpabyQ.rds')
 
-x_utm_coords <- st_coordinates(x)
 
-x$X1000 <- x_utm_coords[,1] / 1000
-x$Y1000 <- x_utm_coords[,2] / 1000
+fitpa = readRDS('sdmTMBpabyQ.rds')
+Glsur = readRDS('GlorysPredictSurface.rds')
+x = Glsur
 
-x = bio.utilities::rename.df(x,c('BottomTemp','Depth_m'),c('BT','z'))
+
+plot_smooth(fitpa,select=2)
+
+
+x = bio.utilities::rename.df(x,c('bottomT','yr'),c('BT','YEAR'))
+x = subset(x,z>0)
 x$lZ = log(x$z)
+x$X1000 = st_coordinates(x)[,1]
+x$Y1000 = st_coordinates(x)[,2]
+x = subset(x,exp(lZ)<400)
 
-x = as_tibble(subset(x,select=c(BT,X1000,Y1000,lZ)))
+x = as_tibble(subset(x,select=c(Q,YEAR,BT,X1000,Y1000,lZ)))
 x$geometry=NULL
-be = as.data.frame(sapply(x,rep.int,27))
-be$W = rep(0:26,each=dim(x)[1])
 
-be= as_tibble(be)
+g = predict(fitpa,newdata=x)
 
-g = predict(fit,newdata=(be))
-
-  g$pred = fit$family$linkinv(g$est)
+  g$pred = fitpa$family$linkinv(g$est)
 
   gsf = st_as_sf(g,coords = c("X1000","Y1000"),crs=32620,remove=F)
+
 
 rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
 rL = st_as_sf(rL)
@@ -138,15 +144,16 @@ st_geometry(rL) <- st_geometry(st_as_sf(rL$geometry/1000))
 st_crs(rL) <- 32620
 
 
-
+ff = st_join(gsf,rL,join=st_within)
+gsf = subset(ff,!is.na(LFA))
 
 #Maps
 mm = c(0.001,max(gsf$pred))
-ggplot(subset(gsf,W %in% 0:26)) +
+ggplot(subset(ggg,Q==3 & YEAR == 2002)) +
   geom_sf(aes(fill=pred,color=pred)) + 
-  scale_fill_viridis_c(trans='log',limits=mm) +
-  scale_color_viridis_c(trans='log',limits=mm) +
-  facet_wrap(~W) +
+  scale_fill_viridis_c(trans='log') +
+  scale_color_viridis_c(trans='log') +
+  facet_wrap(~YEAR) +
   geom_sf(data=rL,size=1,colour='black',fill=NA)+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
@@ -159,7 +166,7 @@ ggplot(subset(gsf,W %in% 0:26)) +
 savePlot('wtWeek600k.png') 
 
 
-saveRDS(list(data=survey,grid=bspde,model=fit),file='AllwtTw600kOct282022.rds')
+saveRDS(list(data=survey,grid=bspde,model=fitpa),file='PAwtw600kNov102022.rds')
 
 
 

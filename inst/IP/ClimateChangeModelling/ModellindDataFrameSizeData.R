@@ -16,17 +16,16 @@ fd=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling')
 dir.create(fd,showWarnings=F)
 setwd(fd)
 
-aT = compileAbundPresAbs(redo=F,size=F)
-
+aT = compileAbundPresAbs(redo=F,size=T)
+aT$Rec = aT$P.68+aT$P.73+aT$P.78
 survey <- aT %>%   
   st_as_sf(coords=c('LONGITUDE',"LATITUDE"),crs=4326) %>% st_transform(32620)
 
 st_geometry(survey) = st_geometry(survey)/1000
 st_crs(survey) = 32620
-
-survey = subset(survey, YEAR %in% 2000:2022)
 survey$W = ceiling(yday(survey$DATE)/366*25)
 
+survey = subset(survey, YEAR %in% 2000:2022)
 ba = readRDS('~/git/bio.lobster.data/mapping_data/bathymetrySF.rds')
 ba = ba %>% st_as_sf() 
 st_geometry(ba) = st_geometry(ba)/1000
@@ -45,6 +44,7 @@ k = k[grep('ShelfBoF',k)]
 k = k[-grep('2020_',k)]
 k = k[-grep('199',k)]
 
+ol = list()
 ol = list()
 m=0
 for(i in 1:length(k)){
@@ -73,52 +73,10 @@ for(i in 1:length(k)){
 			}
 		}
 
+		
 crs_utm20 <- 32620
 da = dplyr::bind_rows(ol)	
 da = st_as_sf(da)
 da = subset(da,GlD<6) #remove ~5% outliers 
 
-saveRDS(da,file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
-
-
-#prediction grids from glorys
-s = file.path(project.datadirectory('bio.lobster'),'Temperature Data','GLORYS','SummaryFiles')
-k = dir(s,full.names=T)
-k = k[grep('ShelfBoF',k)]
-k = k[-grep('2020_',k)]
-k = k[-grep('199',k)]
-
-ol = list()
-m=0
-for(i in 1:length(k)){
-			h = readRDS(k[i])
-			h$Date = as.Date(h$Date)
-			h$m = month(h$Date)
-			h$yr = unique(year(h$Date))
-			h$Q = ifelse(h$m %in% c(10,11,12),1,ifelse(h$m %in% c(1,2,3),2,ifelse(h$m %in% c(4,5,6),3,4)))
-			h = aggregate(bottomT~Q+X+Y+yr,data=h,FUN=median)
-			h = h %>% st_as_sf(coords=c('X','Y'),crs=4326) %>% st_transform(32620)
-			st_geometry(h) = st_geometry(h)/1000
-			st_crs(h) = 32620
-			m=m+1
-		ol[[m]] = h       	
-			}
-		
-
-crs_utm20 <- 32620
-da = dplyr::bind_rows(ol)	
-da = st_as_sf(da)
-
-
-ba = readRDS('~/git/bio.lobster.data/mapping_data/bathymetrySF.rds')
-ba = ba %>% st_as_sf() 
-st_geometry(ba) = st_geometry(ba)/1000
-st_crs(ba) = 32620
-
-				 ss = st_nearest_feature(da,ba)
-       	 ds = st_distance(da,ba[ss,],by_element=T)
-       	 st_geometry(ba) = NULL
-       	 da$z = ba$z[ss]
-       	 da$z_dist = as.numeric(ds)
-       	
-saveRDS(da,'GlorysPredictSurface.rds')
+saveRDS(da,file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModelSize.rds'))
