@@ -6,7 +6,7 @@ require(mgcv)
 require(devtools)
 require(sf)
 require(dplyr)
-xx
+
 	lobster.db('ccir')
 	ccir_data$Ref = ifelse(ccir_data$Size==ccir_data$MLS_FSRS &ccir_data$Short==1 | ccir_data$Size==(ccir_data$MLS_FSRS-1),1,0)
 	ccir_data$UID = paste(ccir_data$Vessel.Code,ccir_data$DATE,ccir_data$Trap.Number)		
