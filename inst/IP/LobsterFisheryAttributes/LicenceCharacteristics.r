@@ -18,14 +18,14 @@ v = lobster.db('port_location')
 #Demographics on Lic
 o = read.csv(file.path(project.datadirectory('bio.lobster'),'data','LicenceHolder','LicenceHolderInfo2022a.csv'))
 i = grep('X',names(o))
-o
+
 o = subset(o,Years_Licence_Held<100)
 o$LFA = do.call(rbind, strsplit(o$Desc_Eng," - "))[,2]
 o$LicStartDate = as.Date(o$Licence_Participant_Start_Date,'%b %d, %Y')
 o$BDate = as.Date(o$Birthdate,'%b %d, %Y')
 o = subset(o,select=c(Licence_Id, Name_Last_First, BDate, LicStartDate, LFA, Years_Licence_Held, Age))
 
-ggplot(o,aes(x=Age)) + geom_histogram(bins=10) + facet_wrap(~LFA,scales='free_y') 
+ggplot(subset(o,LFA !=28),aes(x=Age)) + geom_histogram(bins=10, aes(y=..density..)) + facet_wrap(~LFA,scales='free_y') 
 aggregate(Age~LFA,data=o,FUN=function(x) quantile(x,probs=c(0.1,.5,.9)))
 
 
@@ -67,7 +67,7 @@ xgg = aggregate(GRID_NUM~SYEAR+VR_NUMBER+LICENCE_ID+LFA,data=subset(xg,GRID_NUM>
 xvog = merge(xvo, xgg, by.x=c('SYEAR','LICENCE_ID','LFA', 'VR_NUMBER'),by.y=c('SYEAR','LICENCE_ID','LFA', 'VR_NUMBER'),all.x=T)
 xvog$ageBoat = xvog$SYEAR - xvog$YEAR_BUILT
 
-ggplot(subset(xvog, SYEAR==2019 & CPUE<8),aes(x=CPUE)) + geom_histogram() + facet_wrap(~LFA, scales='free_y')
+ggplot(subset(xvog, SYEAR==2019 & CPUE<8 & LFA != 28),aes(x=CPUE)) + geom_histogram(aes(y=..density..)) + facet_wrap(~LFA, scales='free_y')
 
 ggplot(subset(xvog, SYEAR==2019),aes(x=BHP)) + geom_histogram() + facet_wrap(~LFA, scales='free_y')
 

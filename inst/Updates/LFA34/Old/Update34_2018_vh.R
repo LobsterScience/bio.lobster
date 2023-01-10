@@ -31,7 +31,7 @@ redo.data=T
 	annual.landings     = lobster.db('annual.landings') #annual.landings
 	seasonal.landings   = lobster.db('seasonal.landings')
 	
-	#historical.landings = lobster.db('historical.landings')
+	historical.landings = lobster.db('historical.landings')
 	historical.landings<-read.delim(file.path(project.datadirectory('bio.lobster'),"data","Commercial","LFA34_Landings_1892-2004.txt"))
 	names(historical.landings)[1] = 'YR'	
 

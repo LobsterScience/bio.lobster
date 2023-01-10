@@ -5,10 +5,7 @@ require(lubridate)
 #la()
 
 #assessment.year = p$current.assessment.year 
-p$current.assessment.year = p$current.assessment.year - 1 
-
-figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32",p$current.assessment.year))
-#figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32","2022"))
+y#figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32","2022"))
 
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 
@@ -67,7 +64,7 @@ crplot= function(x, French=F){
   par(mar=c(3.0,5.0,2.0,2.0))	
   
   ylab='CPUE (kg/TH)'
-  if (French){ylab='CPUE (kg/casier levé)'}
+  if (French){ylab='CPUE (kg/casier lev?)'}
   plot(crd[,1],crd[,2],xlab=' ',ylab=ylab,type='p',pch=16, xlim=xlim, ylim=c(lrp-.1,1.05*(max(crd$CPUE, na.rm = TRUE)) ))
   running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
   crd=merge(crd,running.median,all=T)
@@ -162,7 +159,7 @@ attr(out.binomial,'model') <- 'binomial'
 for(i in 1:length(dat)) { #Change to restart a broken run based on iteration number (count files in summary folder...run from there)
   ds = dat[[i]]
   ds$method = 'binomial'
-  x = ccir_stan_run(dat = ds,save=F)
+  x = ccir_stan_run_binomial(dat = ds,save=F)
   out.binomial[[i]] <- ccir_stan_summarize(x)
 }
 
@@ -307,8 +304,8 @@ xlim<-c(1982,p$current.assessment.year)
 French=F #change to T to create landings figures with French Labels
 #French=T
 if (French){
-  ylab= 'Débarquements (t)'  
-  efftext= "Effort (x 1000 casiers levés)"   
+  ylab= 'D?barquements (t)'  
+  efftext= "Effort (x 1000 casiers lev?s)"   
 }else  {
 ylab= 'Landings (t)'  
 efftext= "Effort ('000s Trap Hauls)" 
