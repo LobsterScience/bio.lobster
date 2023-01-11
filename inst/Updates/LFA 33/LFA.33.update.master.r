@@ -39,24 +39,7 @@
 
 # CPUE ###############
 
-	# 	logs=lobster.db("process.logs")
-	# 	CPUE.data<-CPUEModelData(p,redo=F)
-	# 	cpueData = CPUEplot(CPUE.data,lfa= p$lfas,yrs=1982:2020,graphic='R', plot=F)$annual.data
-	# 	crd = subset(cpueData,LFA==33,c("YEAR","CPUE"))
-	#
-	# #	mu = with(subset(cpueData,YEAR<2017&YEAR>1989),tapply(CPUE,LFA,median))
-	# 	mu=median(crd$CPUE[crd$YEAR %in% c(1990:2016)])
-	# 	usr = mu * 0.8
-	# 	lrp = mu * 0.4
-	#
-	# 	crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
-	#
-	# 	crd = subset(cpueData,LFA==33,c("YEAR","CPUE"))
-	# 	mu=median(crd$CPUE[crd$YEAR %in% c(1990:2016)])
-	# 	usr = mu * 0.8
-	# 	lrp = mu * 0.4
-	#
-	# 	crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
+
 	#
 		logs=lobster.db("process.logs")
 
@@ -71,7 +54,7 @@
 		lrp = mu * 0.4
 
 
-		write.csv(crd,file.path(figdir,file='CatchRateRefs33.csv'))
+	
 
 		png(filename=file.path(figdir, "CPUE_only.png"),width=8, height=5.5, units = "in", res = 800)
     		par(mar=c(2.0,5.5,2.0,3.0))
@@ -91,6 +74,8 @@
         abline(h=usr,col='green',lwd=2,lty=2)
         abline(h=lrp,col='red',lwd=2,lty=3)
     dev.off()
+   
+    write.csv(crd,file.path(figdir,file='CatchRateRefs33.csv'))
     
     #French Version of Figure:
     png(filename=file.path(figdir, "CPUE_LFA33.French.png"),width=8, height=5.5, units = "in", res = 800)
@@ -130,7 +115,9 @@
 		require(bio.ccir)
 		require(rstan)
 		#load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
-		ccir_data = subset(ccir_data,YEAR<=2021)
+		
+		#make sure to index year below as appropriate
+		ccir_data = subset(ccir_data,YEAR<=2022) 
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 		out.binomial = list()
@@ -175,7 +162,7 @@
 
 		save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
 		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
-		RR75 = max(oo$ERf75[oo$Yr<2021])#0.8343305
+		RR75 = max(oo$ERf75[oo$Yr<2022])#0.8339632
 #########Linux to here
 
 #oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))
@@ -325,9 +312,11 @@ dev.off()
 	  
 	  x=x[x$YEAR %in% unique(y$Yr),]
 	  
-	  RR75 = 0.8343305
-	  usr = 0.2840067
-	  lrp = 0.1420034
+	  
+	  #Ensure these numbers are correct before producing phase plots
+	  RR75 = 0.8339632
+	  usr = 0.2776314
+	  lrp = 0.1388157
 	  
 	  png(filename=file.path(figdir, "PhasePlot_LFA33.png"),width=8, height=8, units = "in", res = 800)
 	  hcrPlot(B=x$running.median[x$YEAR>2005],mF=y$running.median,USR=usr,LRP=lrp,RR=RR75,yrs=2006:max(x$YEAR),ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T)
