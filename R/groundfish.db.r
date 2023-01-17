@@ -672,7 +672,9 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
                                   max(case when key= 'Spermatophore Presence' then value else NULL END) Sperm_Plug,
                                   max(case when key= 'Abdominal Width' then value else NULL END) Ab_width,
                                   max(case when key= 'Egg Stage' then value else NULL END) Egg_St,
-                                  max(case when key= 'Clutch Fullness Rate' then value else NULL END) Clutch_Full
+                                  max(case when key= 'Clutch Fullness Rate' then value else NULL END) Clutch_Full,
+                                  max(case when key= 'Shell Disease Index' then value else NULL END) Shell_disease_index
+                                  
                                   from
                                       (select mission, setno, spec, size_class, specimen_id, flen, fwt, fsex, fmat, fshno, agmat, remarks, age, clen from groundfish.gsdet) G,
                                       (select mission, spec, specimen_id, lv1_observation key, data_value value  from groundfish.gs_lv1_observations
@@ -683,7 +685,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
                                         G.specimen_id = FC.specimen_id (+)
                                           group by G.MISSION,G.SETNO,G.SPEC,G.SIZE_CLASS,G.SPECIMEN_ID,G.FLEN,G.FWT, G.FSEX,  G.CLEN", as.is=T)
                                 #odbcClose(connect)
-                                set = toNums(set,2:13)
+                                set = bio.utilities::toNums(set,2:14)
                                 save ( set, file=fn, compress=F )
       }
     }
