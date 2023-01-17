@@ -34,8 +34,15 @@ hcrPlot <- function(B,mF,USR,LRP,RR=NULL,TRP=null, yrs,ylims=NULL,xlims=NULL,lab
           
           if(!is.null('RR')) {
                     arrows(x0 = USR, x1 = USR*1000, length=0,y0 = RR, lty="solid", col="black", lwd=2 )
+<<<<<<< HEAD
                     text( xlims[2]*0.75, RR+RR*0.1, labels[3], lwd=2 )
            if(RRdec) arrows(x0 = LRP, x1 = USR, length=0,y1 = RR,y0=0, lty="dashed", col="black", lwd=2 )
+=======
+                    text( xlims[2]*0.75, RR+RR*0.03, labels[3], lwd=2 )
+           if(RRdec) arrows(x0 = LRP, x1 = USR, length=0,y1 = RR,y0=0, lty="dashed", col="black", lwd=2 )
+           if(RRdec) text( xlims[2]*0.75, RR+RR*0.05, labels[3], lwd=2 )
+           #if(!RRdec) arrows(x0 = 0, x1 = USR*1000, length=0,y0 = RR, lty="solid", col="black", lwd=2 )
+>>>>>>> develop
                     abline (v=USR, lty="dotted")
                     abline (v=LRP, lty="dotted")
           
@@ -59,7 +66,13 @@ hcrPlot <- function(B,mF,USR,LRP,RR=NULL,TRP=null, yrs,ylims=NULL,xlims=NULL,lab
           if(!example){
             lines( B, mF,  col="darkblue", cex=0.8, lwd=2, xlab="", ylab="", pch=20 ,lty=1,type='b')
           if(!yr.ends) text( B, mF,  labels=yrs, pos=3, cex= 0.8 )
+<<<<<<< HEAD
 	        if(big.final) points( B[length(B)], mF[length(B)],  pch=18, col="blue",  cex= 1.7)
 	        if(yr.ends) text( B[c(1,length(B))], mF[c(1,length(B))],  labels=yrs[c(1,length(B))], pos=3, cex= 0.8 )
           }
             }
+=======
+	        if(big.final) points( B[length(B)], mF[length(B)],  pch=18, col="blue",  cex= 2.0)
+	        if(yr.ends) text( B[c(1,length(B))], mF[c(1,length(B))],  labels=yrs[c(1,length(B))], pos=3, cex= 1.2 )
+	        }
+>>>>>>> develop

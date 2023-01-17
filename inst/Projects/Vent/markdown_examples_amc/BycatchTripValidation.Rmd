@@ -1,0 +1,415 @@
+  
+---
+title: "Bycatch Data Submission"
+author: "Lobster Group, Science Branch "
+output: tint::tintPdf
+---
+
+
+**1. Data was collected**
+```{r echo =FALSE, message =FALSE, error = FALSE, warning = FALSE, results='asis' , fig-main, fig.width=10, fig.height=12,  cache=TRUE,}
+
+    dat$Y<- convert.dd.dddd(dat$LATDDMM, format="dec.deg")
+    dat$X<- convert.dd.dddd(dat$LONGDDMM, format="dec.deg")*-1
+    dat$EID<- 1:nrow(dat)
+
+    xlim = c(min(dat$X)-0.5, max(dat$X)+0.5)
+    ylim = c(min(dat$Y)-0.5, max(dat$Y)+0.5)
+
+    x11(10,10)
+    LobsterMap(ylim=ylim ,xlim=xlim, labels = 'lfa')
+    attr(dat,"projection") <- "LL"
+    addPoints(dat, pch = 21, cex=1.5, bg='red')
+
+    ll<-unique(dat$COMAREA_ID)
+    lll<-ifelse(nchar(ll)==3,3,4)
+    ll<-substr(ll,2,lll)
+    title(paste0("LFA", ll))
+```
+  
+**2. What group entered the data and the name of the data file that was imported**
+```{r echo=FALSE, results='asis'}
+    cat(paste("<br> <ul>", unique(dat$OWNER_GROUP),unique(dat$TRIP),"</br> </ul>"))  
+    if(!grepl(unique(dat$TRIP),nm)){
+          print(paste("<br><ul> \textcolor{red}{Trip File Name does not match TRIP column in Data Sheet. Check ",Fi[i],"} </br></ul>",sep=" "))
+      }
+      
+``` 
+
+
+ **3. Do the coordinates match the Grids and LFA?**
+```{r  echo=FALSE, results = 'asis'}
+    dat$COMAREA_ID[which(dat$COMAREA_ID =="L31A")]<-311
+    dat$COMAREA_ID[which(dat$COMAREA_ID =="L31B")]<-312
+
+    ll=unique(dat$COMAREA_ID)
+
+    if(!unique(dat$COMAREA_ID) %in% c(311,312)){
+        ll<-unique(dat$COMAREA_ID)
+        lll<-ifelse(nchar(ll)==3,3,4)
+        ll<-substr(ll,2,lll)
+    }
+
+    LFAs<-subset(LFAS, PID ==ll )
+   LFAgrid<-subset(LFAGrid, PID == ll)
+
+
+    #Convert to Decimal Degrees
+    dat$Y<-convert.dd.dddd(dat$LATDDMM, format="dec.deg")
+    dat$X<-(convert.dd.dddd(dat$LONGDDMM, format="dec.deg")*-1)
+     
+    dat$EID = 1:nrow(dat)
+
+    #Check LFA Locations
+    locCheck<-findPolys(dat, LFAs)
+    if(is.null(locCheck)){
+        cat(paste0("<br> <ul> \textcolor{red}{ERROR:Wrong LFA identified} </br> </ul>"))
+          }else{      
+        missingLoc<-merge(dat, locCheck, all.x = T, by = "EID")
+        missedLoc<-subset(missingLoc, is.na(PID))
+
+        if(nrow(missedLoc)>0){ 
+            print(paste0("<br> <ul> \textcolor{red}{ERROR:LFA locations missing or incorrect. Check line(s)",paste(as.numeric(row.names(missedLoc))+1, collapse=" , "),"}", sep=" ", "</br> </ul>"))
+          } else {print("<br> <ul> <center> All locations match LFA </br> </ul> </center>")
+        }
+    #Check Grid Locations
+    glocCheck<-findPolys(dat, LFAgrid)
+
+    #Find missing grid locations - or locations that don't pair with corresponding grids
+        missingGLoc<-merge(dat, glocCheck, all.x = T, by = "EID")
+        missedGLoc<-subset(missingGLoc, is.na(PID))
+
+    if(nrow(missedGLoc)>0){ 
+          print(paste0("<br> <ul> \textcolor{red}{ERROR: Grid locations missing or incorrect. Check line(s) ", paste(as.numeric(row.names(missedGLoc))+1,collapse=","), "}", sep=" ", "</br> </ul>"))
+        } else {cat("<br> <ul> All locations match grids </br> </ul>")
+      }
+    }
+      
+```
+ 
+**4. Are males berried or notched?**
+```{r echo=FALSE, results = 'asis'}
+    dat$SEXCHECK<-NA
+    dat$SEXCHECK<- ifelse(dat$SPECCD_ID ==2550 & dat$SEXCD_ID == 1 & !is.na(dat$VNOTCH) , 1, dat$SEXCHECK)
+      
+    notchcheck<-any(dat$SEXCHECK == 1, na.rm = T)
+    notchmales<-which(dat$SEXCHECK == 1)
+
+
+    if(notchcheck == T){
+      print(paste0("<br> <ul> \textcolor{red}{ERROR:Check SEX and NOTCH. Errors on line(s) ",paste(notchmales+1, collapse=" , "), "}", sep=" ", "</br> </ul>"))
+      }else {cat("<br> <ul> No Males are V-notched </br> </ul>")
+      }
+    dat$SEXCHECK <- NULL
+```
+
+**5. Is the length between a reasonable size 30-250mm?**
+```{r echo=FALSE, results = 'asis'}
+
+    dat$CLCHECK<-NA
+    dat$CLCHECK<- ifelse(dat$SPECCD_ID == 2550 & (dat$FISH_LENGTH <=30 | dat$FISH_LENGTH >=250), 1, dat$CLCHECK)
+
+    sizecheck<-any(dat$CLCHECK ==1, na.rm=T)
+    wrongsize<-which(dat$CLCHECK==1)
+
+    if(sizecheck == T){
+      print(paste0("<br> <ul> \textcolor{red}{ERROR: Sizes are not reasonable. Check for errors on line(s) ", paste(wrongsize+1, collapse=" , "), "}", sep= " ", "</br> </ul>"))
+    }else{cat("<br> <ul> Carapace sizes reasonable </br> </ul>")}
+
+    dat$CLCHECK <- NULL 
+      
+```
+
+
+**6. Is Length, Shell, Disease, Sex and Condition recorded for all Lobster?** 
+```{r echo=FALSE, results = 'asis'}
+
+    dat$LENGTHDAT<-NA
+    dat$LENGTHDAT<-ifelse(dat$SPECCD_ID == 2550 & is.na(dat$FISH_LENGTH), 1, dat$LENGTHDAT)
+    lengthcheck<-any(dat$LENGTHDAT == 1, na.rm=T)
+    nolength<-which(dat$LENGTHDAT==1)
+    if(lengthcheck == T){
+      print(paste0("<br> <ul> \textcolor{red}{ERROR: Missing information for carapace length. Check line(s) ", paste(nolength+1, collapse=" , "), "}", sep=" ",  "</br> </ul>"))
+    }else{ cat("<br> <ul> Carapace lengths recorded </br> </ul> ")
+    }
+
+    dat$SHELLDAT<-NA
+    dat$SHELLDAT<-ifelse(dat$SPECCD_ID == 2550 & is.na(dat$SHELL), 1, dat$SHELLDAT)
+    shellcheck<-any(dat$SHELLDAT == 1, na.rm=T)
+    noshell<-which(dat$SHELLDAT==1)
+    if(shellcheck == T){
+      print(paste0("<br> <ul> \textcolor{red}{ERROR: Missing information for shell hardness. Check line(s) ", paste(noshell+1, collapse=" , "),"}", sep = " ", "</br> </ul>"))
+    }else{ cat("<br> <ul> Shell hardness recorded </br> </ul>")
+    }
+
+    dat$SICDAT<-NA
+    dat$SICDAT<-ifelse(dat$SPECCD_ID == 2550 & is.na(dat$DISEASE), 1, dat$SICDAT)
+    siccheck<-any(dat$SICDAT == 1, na.rm=T)
+    nosic<-which(dat$SICDAT==1)
+    if(siccheck == T){
+      print(paste0("<br> <ul> \textcolor{red}{ERROR: Missing information for disease. Check line(s) ", paste(nosic+1, collapse=" , "), "}", sep = " ", "</br> </ul>"))
+    }else{ cat("<br> <ul> Disease status recorded </br> </ul>")
+    }
+
+
+    dat$SEXDAT<-NA
+    dat$SEXDAT<-ifelse(dat$SPECCD_ID == 2550 & is.na(dat$SEXCD_ID), 1, dat$SEXDAT)
+    sexcheck<-any(dat$SEXDAT == 1, na.rm=T)
+    nosex<-which(dat$SEXDAT==1)
+    if(sexcheck == T){
+      print(paste0("<br> <ul> \textcolor{red}{ERROR: Missing information for sex. Check line(s) ", paste(nosex+1, collapse=" , "), "}",sep=" ", "</br> </ul>"))
+    }else{ cat("<br> <ul> Sex recorded </br> </ul>")
+    }
+
+    dat$CONDAT<-NA
+    dat$CONDAT<-ifelse(dat$SPECCD_ID == 2550 & is.na(dat$CONDITION_CD), 1, dat$CONDAT)
+    concheck<-any(dat$CONDAT == 1, na.rm=T)
+    nocon<-which(dat$CONDAT==1)
+    if(concheck == T){
+      print(paste0("<br> <ul> \textcolor{red}{ERROR: Missing information for condition. Check line(s) ", paste(nocon+1, collapse=" , "), "}", sep=" ", "</br> </ul>"))
+    }else{ cat("<br> <ul> Condition recorded </br> </ul>")
+    }
+      
+```
+
+
+**7. Is the depth less than a maximum fishing depth ?**
+```{r echo=FALSE, results = 'asis'}
+      dat$DEPTHCHECK<-NA
+      dat$DEPTHCHECK<-ifelse(dat$DEPTH <= 300,0,1)
+
+      deepcheck<-any(dat$DEPTHCHECK ==1,na.rm=T)
+      baddepth<-which(dat$DEPTHCHECK==1)
+
+      if(deepcheck==T){
+        print(paste0("<br> <ul> \textcolor{red}{ERROR: Depths exceed a maximum fishing depth. Check line(s) ", paste(baddepth+1, collapse=" , "), "}", sep = " ", "</br> </ul>"))
+      }else{cat("<br> <ul> Depths within reasonable range </br> </ul>")}
+
+      dat$DEPTHCHECK <- NULL
+        
+```
+
+
+**8. Were any lobster kept below the MLS for the given LFA?**
+      ```{r echo= FALSE, results = 'asis'}
+      MLS=82.5
+      dat$smallretained <-0
+
+      if(unique(dat$COMAREA_ID) %in% c("L28","L29")){
+        MLS=84 }
+
+      dat$smallretained[which(dat$SPECCD_ID ==2550 & dat$FISH_LENGTH < MLS & dat$KEPT == 1)]<-1
+
+      if(any(dat$smallretained ==1) ){
+        ij<-which(dat$smallretained==1)
+        print(paste0("<br> <ul> \textcolor{red}{ERROR:Lobsters kept below MLS. Check line(s) ", paste(ij+1, collapse=" , "), "}",sep = " ", "</br> </ul>"))
+      }else{cat("<br> <ul> No small lobsters retained </br> </ul>")}
+
+      dat$smallretained = NULL
+  
+```
+
+
+**9. Were female between 114-124mm kept in LFA 31a?**
+```{r echo = FALSE, results = 'asis'}
+        dat$window<- 0
+        dat$window<- ifelse(dat$COMAREA_ID %in% c(311) & dat$SEXCD_ID %in% c(2,3) & dat$SPECCD_ID == 2550  & dat$FISH_LENGTH %in% c(114:124) & dat$KEPT %in% c(1), 1, 0) 
+        if(any(dat$window == 1)){
+              ko<-which(dat$window ==1)
+              print(paste0("<br> <ul> \textcolor{red}{ERROR:Lobsters kept between 114-124mm in 31a. Check line(s)", paste(ko+1, collapse=" , "), "}", sep = " ", "</br> </ul>"))
+            } else {
+              cat("<br> <ul> No window restricted lobsters were kept </br> </ul>")
+      }
+       dat$window = NULL
+```
+
+
+**10. Were v-notched lobster retained in prohibited LFAs?**
+```{r echo = FALSE, results = 'asis'}
+            dat$keepnotch<-0
+       if(any(is.na(dat$KEPT))) dat$KEPT[which(is.na(dat$KEPT))] <- 0
+              dat$keepnotch<- ifelse(dat$COMAREA_ID %ni% c("L27","L31A") & !is.na(dat$VNOTCH) & dat$KEPT == 1,1,0)
+       if(any(dat$keepnotch ==1)){
+              pl<- which(dat$keepnotch==1)
+              print(paste0("<br> <ul> \textcolor{red}{ERROR:V-notched lobsters retained in prohibited LFA. Check line(s) ", paste(pl+1, collapse=" , "), "}", sep = " ", "</br> </ul>"))
+          }else{
+              cat("<br> <ul> No vnotched lobster retained in prohibited area </br> </ul>")
+          }
+        dat$keepnotch =NULL
+```
+
+
+**11. Is abundance greater than 1 for anything other than whelks, starfish, urchins?**
+```{r echo = FALSE, results = 'asis'}
+          dat$AMOUNT<-NA
+          dat$AMOUNT<- ifelse((dat$SPECSCD_ID <= 1000 | dat$SPECCD_ID %in% c(2550,2513,2511,2531,2520,2526)) & (dat$ABUNDANCE > 1), 1, 0)
+
+          amountcheck<- any(dat$AMOUNT ==1, na.rm=T)
+          wrongamount<-which(dat$AMOUNT==1)
+        if(amountcheck ==T){ 
+              print(paste0("<br> <ul> \textcolor{red}{ERROR:Check Abundance. Error on line(s)", paste(wrongamount+1, collapse=" , "), "}", sep = " ", "</br> </ul>"))
+            } else {
+              cat("<br> <ul> Abundance is correct </br> </ul>") 
+            }
+        dat$AMOUNT<-NULL
+```
+ 
+ 
+**12. If species is not a berried lobster does it have clutch and egg categories filled out?**
+```{r echo = FALSE, results = 'asis'}
+          dat$BERRIED<-NA
+          dat$BERRIED<- ifelse(dat$SPECCD_ID ==2550 & dat$SEXCD_ID %in% c(1,2) & c(!is.na(dat$CLUTCH) | !is.na(dat$EGG_STAGE)),1,0)
+          notberried<- any(dat$BERRIED == 1, na.rm=T)
+          noberries<-which(dat$BERRIED==1)
+  if(notberried ==T){
+          print(paste0("<br> <ul> \textcolor{red}{ERROR:Check SEX, CLUTCH, an/or EGG STAGE. Error on line(s) ", paste(noberries+1, collapse=" , "), "}", sep = " ", "</br> </ul>"))
+          } else {
+            cat("<br> <ul> Only berried females have egg and clutch information  </br> </ul>")
+          }
+    dat$BERRIED<-NULL
+```
+
+
+**13. If a lobster is berried is egg stage and clutch size recorded?**
+```{r echo = FALSE, results = 'asis'}
+          dat$BERRIES<-NA
+          dat$BERRIES<- ifelse(dat$SPECCD_ID ==2550 & dat$SEXCD_ID== 3 & c(is.na(dat$CLUTCH) | is.na(dat$EGG_STAGE)),1,0)
+          berried<- any(dat$BERRIES == 1, na.rm=T)
+          noberried<-which(dat$BERRIES==1)
+    if(berried ==T){
+            print(paste0("<br> <ul> \textcolor{red}{ERROR:Check CLUTCH and/or EGG STAGE. Error on line(s) ", paste(noberried+1, collapse=" , "), "}", sep= " ", "</br> </ul>"))
+          } else {
+          cat("<br> <ul> Berried females have egg and clutch information </br> </ul>")
+        }
+dat$BERRIES<-NULL
+```
+
+
+**14. Do all crab species entries have length, sex and condition recorded?**
+```{r echo = FALSE, results = 'asis'}
+          dat$CRABBIE<-NA
+          dat$CRABBIE<- ifelse(dat$SPECCD_ID %in% c(2513,2511,2531,2520,2526) & (dat$FISH_LENGTH < 1 | is.na(dat$FISH_LENGTH)) & (!dat$SEXCD_ID %in% c(1,2,3) | is.na(dat$SEXCD_ID)), 1, 0)
+          crabinfo<- any(dat$CRABBIE ==1, na.rm=T)
+          nocrab<- which(dat$CRABBIE ==1)
+    if(crabinfo ==T){
+                print(paste0("<br> <ul> <center> \textcolor{red}{ERROR:Check SEX and/or FISH LENGTH. Error on line(s) ", paste(nocrab+1, collapse=" , "), "}", sep= " ", "</br> </ul> </center>"))
+          } else {
+            cat("<br> <ul> All crabs have length and sex recorded </br> </ul>")
+          }
+      dat$CRABBIE<- NULL 
+
+      dat$CCONDAT<-NA
+      dat$CCONDAT<-ifelse(dat$SPECCD_ID %in% c(2513,2511,2531,2520,2526)  & is.na(dat$CONDITION_CD), 1, dat$CCONDAT)
+      cconcheck<-any(dat$CCONDAT == 1, na.rm=T)
+      noccon<-which(dat$CCONDAT==1)
+    if(cconcheck == T){
+              print(paste0("<br> <ul> \textcolor{red}{ERROR: Missing information for condition. Check line(s) ", paste(nocon+1, collapse=" , "), "}", sep= " ","</br> </ul>"))
+      } else { 
+        cat("<br> <ul> Condition recorded </br> </ul>")
+    }
+    dat$CCONDAT <- NULL
+```
+
+
+**15. Does anything other than a lobster have the notch category filled out?**
+```{r echo = FALSE, results = 'asis'}
+        dat$NOTCHED<- NA
+        dat$NOTCHED<- ifelse(!dat$SPECCD_ID==2550 & !is.na(dat$VNOTCH),1,0)
+        nonotch<- any(dat$NOTCHED==1, na.rm=T)
+        notchless<- which(dat$NOTCHED ==1)
+    if(nonotch ==T){
+              print(paste0("<br> <ul> \textcolor{red}{ERROR:Check NOTCH on line(s) ", paste(notchless+1, collapse=" , "),"}", sep= " ", "</br> </ul>"))
+        } else {
+          cat("<br> <ul> Only lobster have notches </br> </ul>")
+        }
+    dat$NOTCHED<-NULL
+```
+
+
+**16. Do all Fish species entries have length, condition recorded?**
+```{r echo = FALSE, results = 'asis'}
+      dat$FISHY<-NA
+      dat$FISHY<- ifelse(dat$SPECCD_ID <1000 & c(dat$FISH_LENGTH < 1 | is.na(dat$FISH_LENGTH)), 1, 0)
+      fishinfo<- any(dat$FISHY ==1, na.rm=T)
+        nofish<- which(dat$FISHY ==1)
+  if(fishinfo ==T){
+        print(paste0("<br> <ul> \textcolor{red}{ERROR: Check FISH LENGTH on line(s) ", paste(nofish+1, collapse=" , "),"}", "</br> </ul>",sep=" "))
+      } else {
+      cat("<br> <ul> All fish have length recorded </br> </ul>")
+    }
+    dat$FISHY<- NULL 
+
+      dat$CCONDAT<-NA
+      dat$CCONDAT<-ifelse(dat$SPECCD_ID %in% c(1:1000,2513,2511,2531,2520,2526)  & is.na(dat$CONDITION_CD), 1, dat$CCONDAT)
+      cconcheck<-any(dat$CCONDAT == 1, na.rm=T)
+      noccon<-which(dat$CCONDAT==1)
+    if(cconcheck == T){
+        cat(paste0(" \textcolor{red}{ERROR: Missing information for CONDITION. Check line(s) ", paste(noccon+1, collapse=" , "),"}", sep=" "))
+        } else {
+         cat("<br> <ul> All fish have condition recorded </br> </ul>")
+      }
+      dat$CCONDAT <- NULL
+  
+```
+
+**17. What is the trap sampling frequency per string?**
+```{r echo = FALSE, results = 'asis'}
+trapnum<-as.data.frame(unique(cbind(dat$SET_NO,dat$TRAP_NO)))
+trapnum<-trapnum[order(trapnum$V1,trapnum$V2),]
+trapfreq<-aggregate(V2~V1, data=trapnum,FUN = function(x) mean(diff(x)))
+trapfreq$test<-round(trapfreq$V2,0)
+names(trapfreq)[1:2]<-c("String", "Frequency")
+irrfreq<-which(trapfreq$Frequency != trapfreq$test)
+trapfreq$test <-NULL
+if(length(irrfreq)> 0){
+  print(paste0("<br> <ul> \textcolor{red}{ERROR:Irregular trap sampling frequencies in string(s) ", trapfreq[irrfreq,"String"], "}", sep=" ", "</br> </ul>" ))
+}
+if(length(irrfreq)<nrow(trapfreq)){
+  cat("<br> <ul> Trap sampling frequencies by string </br> </ul>")
+  if(length(irrfreq)>=0)cat(paste0("<ul> One in ",  unique(trapfreq[-irrfreq,'Frequency']), " traps sampled per string </ul>"))
+  }
+  
+```
+
+
+**18. What is the total number of traps sampled and total traps hauled**
+```{r echo= FALSE, results = 'asis'}
+
+sampled<-length(unique(paste(dat$TRAP_NO,dat$SET_NO,sep="-")))
+
+if(length(sampled)>0){
+  cat(paste0("<br> <ul> Total number of traps sampled: ", sampled, "</br> </ul>"))
+}
+
+totaltrap<-as.data.frame(unique(cbind(dat$SET_NO, dat$NUM_HOOK_HAUL)))
+
+if(sum(totaltrap$V2, na.rm = T)< sampled){
+  print("<br> <ul> \textcolor{red}{ERROR: Check SET NO and NUM HOOK HAUL numbers do not add up to total traps sampled.}, </br> </ul>")
+} else {cat(paste0("<br> <ul> Total number of traps hauled: ", sum(totaltrap$V2),"</br> </ul>"))
+}
+  
+```
+
+
+**19. What was the total number of lobsters and other species sampled?**
+```{r echo=FALSE, results = 'asis'}
+numlob<-length(which(dat$SPECCD_ID==2550))
+
+if(length(numlob>0)){
+  cat(paste0("<br> <ul> Total number of lobsters sampled: ", numlob, "</br> </ul>"))
+      
+}
+
+numother<-length(which(dat$SPECCD_ID != 2550))
+
+if(length(numother>0)){
+  cat(paste0("<br> <ul> Total number of non lobsters sampled: ", numother, "</br> </ul>"))
+}
+
+
+numother<-length(unique(dat$SPECCD_ID))
+
+if(length(numother>0)){
+  cat(paste0("<br> <ul> Total number of species: ", numother, "</br> </ul>"))
+  }
+``` 

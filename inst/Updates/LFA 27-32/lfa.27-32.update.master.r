@@ -18,7 +18,8 @@ if(NewDataPull){
   lobster.db('fsrs.redo')
   lobster.db('logs.redo')
   lobster.db('annual.landings.redo')
-  #lobster.db('vlog') #These are static now, no need to update
+  #lobster.db('vlog.redo') #These are static now, no need to update
+  logs=lobster.db('season.dates.redo') #updates season dates as required
   logs=lobster.db('process.logs.redo')
 }
 
@@ -37,7 +38,7 @@ logs=lobster.db("process.logs")
 #CPUE.data<-CPUEModelData(p,redo=T, TempSkip=T) #Reruns cpue model
 CPUE.data<-CPUEModelData(p,redo=F, TempSkip=T) #Defaults to not rerunning model
 
-cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2021, graphic='R')$annual.data
+cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2022, graphic='R')$annual.data #index end year
 
 #add lrp and USR
 
@@ -126,8 +127,8 @@ for (l in p$lfas){
 
 ## Continuous Change In Ratio (CCIR)
 
-#lobster.db('ccir.redo') #Must 'redo' to bring in new data
-lobster.db('ccir')
+lobster.db('ccir.redo') #Must 'redo' to bring in new data
+#lobster.db('ccir')
 
  inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
  load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
@@ -139,7 +140,11 @@ require(bio.ccir)
 require(rstan)
 
 load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
-dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
+#start.year=p$current.assessment.year-4 #to run on last four years
+start.year=2000 #to run on entire data set
+
+#dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5, start.yr = start.year) #sexs 1.5 means no sex defn
+dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5)
 
 #Code to check CCIR Data
 # d = dat[c(57)] "adjust for area in question"
@@ -156,16 +161,24 @@ dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:
 
 out.binomial = list()
 attr(out.binomial,'model') <- 'binomial'
-for(i in 1:length(dat)) { #Change to restart a broken run based on iteration number (count files in summary folder...run from there)
+for(i in 104:length(dat)) { #Change to restart a broken run based on iteration number (count files in summary folder...run from there)
   ds = dat[[i]]
+<<<<<<< HEAD
   ds$method = 'binomial'
+=======
+  #ds$method = 'binomial'
+>>>>>>> develop
   x = ccir_stan_run_binomial(dat = ds,save=F)
   out.binomial[[i]] <- ccir_stan_summarize(x)
 }
 
+#Need to move the new files into the proper folder to combine historic and current data
+#Take all 27-32 files from "C:\bio.data\bio.lobster\outputs\ccir\summary" and move them to 
+#C:\bio.data\bio.lobster\outputs\ccir\summary\LFA27.32
+
 #load statement below combines ccir summaries if broken runs
 #ensure folder has only model run summaries
-da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary') #modify as required
+da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary', 'LFA27.32') #modify as required
 
 d = list.files(da,full.names=T)
 out.binomial = list()
@@ -289,6 +302,7 @@ dir.create( land.dir, recursive = TRUE, showWarnings = TRUE )
 land = lobster.db('annual.landings')
 logs=lobster.db("process.logs")
 CPUE.data<-CPUEModelData(p,redo=F)
+cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2022, graphic='R')$annual.data #index end year
 land =land[order(land$YR),]
 
 write.csv(land[c(1:9)], file=paste0(land.dir, "/landings.27-32.csv"), row.names=F )
@@ -429,10 +443,11 @@ for(i in c("27", "29", "30", "31A", "31B", "32")){
   
   save(list=c("shorts","legals","recruit"),file=file.path(project.datadirectory("bio.lobster"),"outputs",paste0("fsrsModelIndicators",i,".rdata")))
   
-  
+  i=recruit$Area[1]
   # plot
   #x11(width=8,height=7)
   png(filename=file.path(fsrs.dir, paste('FSRSRecruitCatchRate',i,'png', sep='.')),width=8, height=6.5, units = "in", res = 800)
+  i=recruit$Area[1]
   FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],
                     lfa = i,fd=figdir,title=i, save=F, rm=F, French=F) #Change French=T for french labels in figure
   dev.off()
@@ -450,8 +465,8 @@ load(file=file.path(project.datadirectory("bio.lobster"),"outputs",paste0("fsrsM
 }
 
 #All in one figure for document
-#Could not determine how to output FSRSCatchRatePlot into panels (mfrow)
-#Used online converter to merge png's
+#Combine online using https://products.aspose.app/pdf/merger/png-to-png 
+
 
 # Phase plots for conclusions and advice
 
@@ -464,11 +479,10 @@ load(file=paste0(figdir, "/cpue/cpueData.Rdata") )
 
 
 lfas2 = c("27", "29", "30", "31A", "31B", "32")
+
+#Individual Phase plots
 for(i in 1:length(lfas2)){
-  
-  #x11(width=8,height=7)
-  
-  x = subset(cpueData,LFA==lfas2[i])
+   x = subset(cpueData,LFA==lfas2[i])
   y = read.csv(file.path(figdir,"ccir",paste0("ExploitationRefs",lfas2[i],".csv")))
   y=y[y$Yr>2004,]
   
@@ -479,22 +493,7 @@ for(i in 1:length(lfas2)){
   running.median = with(rmed(x[,2],x[,6]),data.frame(YEAR=yr,running.median=x))
   x=merge(x,running.median,all=T)
   
- 
-  
-# French=F #change to T here and in HCR plot call for French labels
-#   if (French){
-#   labs= c('PRS','PRL','NER')
-#   xlab=  'CPUE'
-#   ylab= 'Exploitation'
-#   ltext='ZPH'
-#      }else{
-#     labs=c('USR','LRP','RR')  
-#     xlab=  'CPUE'
-#    ylab= 'Exploitation'
-#    ltext='LFA'
-#  }
-  
-  png(file=file.path(hcr.dir,paste0('PhasePlot',lfas2[i],'.png')))
+   png(file=file.path(hcr.dir,paste0('PhasePlot',lfas2[i],'.png')))
      hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,big.final=T, 
      yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR') ,
      RRdec=F,  ylab = 'Exploitation', xlab = 'CPUE', yr.ends=T, main=paste0("LFA ",lfas2[i]), cex.main=1.6 )
@@ -505,10 +504,53 @@ for(i in 1:length(lfas2)){
           yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR') ,
           RRdec=F,  ylab = 'Exploitation', xlab = 'CPUE', yr.ends=T, main=paste0("ZPH ",lfas2[i]) , cex.main=1.6, FrenchCPUE=T) 
   dev.off()
-  
 }
 
-### Bycatch
+#Panel Plot with all areas for HCR
+
+#English
+png(file=file.path(hcr.dir,paste0('LFAs27-32.PhasePlot.png')),,width=9, height=11, units = "in", res = 400)
+  par(mfrow=c(3,2))		
+
+    for(i in 1:length(lfas2)){
+      x = subset(cpueData,LFA==lfas2[i])
+      y = read.csv(file.path(figdir,"ccir",paste0("ExploitationRefs",lfas2[i],".csv")))
+      y=y[y$Yr>2004,]
+      usr=x$usr[1]
+      lrp=x$lrp[1]
+      RR=RR75$ERf75[RR75$LFA==lfas2[i]]
+      running.median = with(rmed(x[,2],x[,6]),data.frame(YEAR=yr,running.median=x))
+      x=merge(x,running.median,all=T)
+      
+      hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,big.final=T, 
+              yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR') ,
+              RRdec=F,  ylab = 'Exploitation', xlab = 'CPUE', yr.ends=T, main=paste0("LFA ",lfas2[i]), cex.main=1.6 )
+}
+dev.off()
+
+
+#French
+png(file=file.path(hcr.dir,paste0('LFAs27-32.PhasePlot.French.png')),width=9, height=11, units = "in", res = 800)
+  par(mfrow=c(3,2))		
+  
+      for(i in 1:length(lfas2)){
+        x = subset(cpueData,LFA==lfas2[i])
+        y = read.csv(file.path(figdir,"ccir",paste0("ExploitationRefs",lfas2[i],".csv")))
+        y=y[y$Yr>2004,]
+        usr=x$usr[1]
+        lrp=x$lrp[1]
+        RR=RR75$ERf75[RR75$LFA==lfas2[i]]
+        running.median = with(rmed(x[,2],x[,6]),data.frame(YEAR=yr,running.median=x))
+        x=merge(x,running.median,all=T)
+        
+        hcrPlot(B=x$running.median[x$YEAR>=min(y$Yr)],mF=y$running.median,USR=usr,LRP=lrp,RR=RR,big.final=T, 
+                yrs=min(y$Yr):p$current.assessment.year,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR') ,
+                RRdec=F,  ylab = 'Exploitation', xlab = 'CPUE', yr.ends=T, main=paste0("ZPH ",lfas2[i]) , cex.main=1.6, FrenchCPUE=T) 
+      }
+dev.off()
+ 
+
+### Bycatch### - NOT USED SINCE 2020
 
 #Bycatch estimates are calculated using effort from logbook data for LFAs 31A and 31B
 #To estimate LFA 27 bycatch, gulf landings need to be added to logs. 
