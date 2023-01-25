@@ -4,7 +4,7 @@
 \alias{db.setup}
 \title{db.setup}
 \usage{
-db.setup(RODBC = F)
+db.setup(RODBC = F, un = oracle.username, pw = oracle.password)
 }
 \value{
 "con" which defines details of the Oracle connection. Structured differently for RODBC and ROracle.
