@@ -10,7 +10,9 @@ bnamR(
   bnam_location = "~/Downloads/BNAM_Tbtm_1990_2018.mat",
   outfile = file.path(project.datadirectory("bio.lobster"), "data", "BNAM",
     "bnams.reshape.rds"),
-  standard = T
+  standard = T,
+  projections = F,
+  yr = 2055
 )
 }
 \arguments{
