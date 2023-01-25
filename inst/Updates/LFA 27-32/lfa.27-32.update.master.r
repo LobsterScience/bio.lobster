@@ -5,7 +5,7 @@ require(lubridate)
 #la()
 
 #assessment.year = p$current.assessment.year 
-y#figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32","2022"))
+#figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32","2022"))
 
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 

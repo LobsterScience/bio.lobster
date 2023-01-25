@@ -263,6 +263,11 @@ compileAbundPresAbs <- function(redo=F,size=T){
     #Snow crab
             sn = snowcrab_sets()
             sn$TRIP_ID = sn$SET_NO = NULL
+      
+    #scallop surveys
+            
+            
+            
             
             ww = plyr::rbind.fill(ilts,rv,ne,sn)
             ww = rename.df(ww,c('EMPTY'),c('Empty'))
