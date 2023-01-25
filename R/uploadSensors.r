@@ -1,10 +1,10 @@
 #' @export
-uploadSenors <- function(datafile,tablenm, appendIt=F){
+uploadSensors <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisntit'){
         Sys.setenv(TZ = "GMT")
         Sys.setenv(ORA_SDTZ = "GMT")   
    if(any(grepl('.csv',datafile))) datafile = read.csv(datafile,header=T)
       if(dim(datafile)[2]!=19) stop('The number of columns in the datafile do not match the number required (19)')  
-      bio.lobster::db.setup()  
+      bio.lobster::db.setup(un=UID,pw=PWD)  
       datafile$GPSDATE = as.Date(datafile$GPSDATE)
       if(appendIt==F & ROracle::dbExistsTable(con, tablenm)) stop('table already exists in the space. You need to either use a new name or use appendIT=T')
       if(appendIt==F & !ROracle::dbExistsTable(con, tablenm)){    
