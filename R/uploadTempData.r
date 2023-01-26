@@ -1,5 +1,5 @@
 #' @export
-uploadTempData <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisntit',tripid=NULL,source=NULL,idSets=NULL){
+uploadTempData <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisntit',year=2022, tripid=NULL,source=NULL,idSets=NULL){
         Sys.setenv(TZ = "GMT")
         Sys.setenv(ORA_SDTZ = "GMT")   
         bio.lobster::db.setup(un=UID,pw=PWD)  
@@ -29,7 +29,7 @@ uploadTempData <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisn
                       from isdb.istrips a, isdb.isfishsets b, isdb.issetprofile c
                       where a.trip_id = b.trip_id
                       and b.fishset_id = c.FISHSET_ID
-                      and to_char(a.board_date,'yyyy') = 2022 and a.tripcd_id = 7065and b.haulccd_id = 1)group by trip_id, set_no
+                      and to_char(a.board_date,'yyyy') = ",year," and a.tripcd_id = 7065and b.haulccd_id = 1)group by trip_id, set_no
                       order by trip_id, setdate, set_no",sep=" ")
                   )
         se$STARTDIFF <- format(as.POSIXct(se$STARTTIME, format="%H:%M:%S", tz="UTC") - as.difftime(10, units="mins"),"%H:%M:%S")
@@ -42,6 +42,7 @@ uploadTempData <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisn
                     sePP = seP[i,]
                     ii = which(datafile$STDTIME>sePP$STARTDIFF &datafile$STDTIME<sePP$ENDDIFF)
                     datafile$SET_NO[ii] = sePP$SET_NO
+                    datafile$TRIP_ID[ii] = sePP$TRIP_ID
                   }
         }
         datafile = subset(datafile, !is.na(SET_NO))
