@@ -22,9 +22,9 @@ NEFSC_sets <- function(){
   bb = na.zero(bb)
   
   ca = merge(dS,bb)
-  sc = merge(set[,c('MISSION','SETNO','BEGIN_GMT_TOWDATE','DIST','X','Y')],ca,all.x=T)
+  sc = merge(set[,c('MISSION','SETNO','BEGIN_GMT_TOWDATE','DIST','X','Y','BOTTEMP')],ca,all.x=T)
   sc = na.zero(sc)
-  sc = rename.df(sc,c('BEGIN_GMT_TOWDATE',"X","Y"),c('DATE','LONGITUDE','LATITUDE'))
+  sc = rename.df(sc,c('BEGIN_GMT_TOWDATE',"X","Y",'BOTTEMP'),c('DATE','LONGITUDE','LATITUDE','TEMP'))
   sc$ID = NULL
   
   sc$DIST = sc$DIST * 1.852

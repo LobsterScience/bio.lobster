@@ -650,3 +650,24 @@ for(i in 1:length(q)){
  glo4 = do.call(rbind,gll)
 
  saveRDS(glo4,file='ClimatologyAndProjections.rds')
+ 
+ 
+ #read 
+ glo4 = readRDS(file='ClimatologyAndProjections.rds')
+ g = st_as_sf(glo4)
+ 
+ ggplot(data=g) + 
+   geom_sf(aes(fill=HAD90,color=HAD90),size=1.7) + 
+   scale_fill_viridis_c(limits=c(-.5,10)) +
+   scale_color_viridis_c(limits=c(-.5,10)) +
+   facet_wrap(~Q) +
+   #  geom_sf(data=rL,size=1,colour='black',fill=NA)+
+   theme( axis.ticks.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.title.x = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.title.y = element_blank()
+   ) +
+   coord_sf()
+ 

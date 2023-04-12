@@ -121,7 +121,7 @@ names(b)[1:2]=c('YR','SlipLand')
 d = lobster.db('annual.landings')
 d = subset(d,YR>2004, select=c(YR,LFA27,LFA28,LFA29,LFA30,LFA31A,LFA31B,LFA32))
 d = reshape(d,idvar='YR', varying=list(2:8),direction='long')
-d$LFA=rep(c(27,28,29,30,'31A','31B',32),each=17)
+d$LFA=rep(c(27,28,29,30,'31A','31B',32),each=18)
 d$time <- NULL
 names(d)[1:2]=c('YR','SlipLand')
 bd = rbind(d,b)

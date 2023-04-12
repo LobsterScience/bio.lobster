@@ -75,7 +75,7 @@ RV_sets <- function(){
   d4$UID = paste(d4$mission, d4$setno,sep='_')
   d4 = subset(d4, UID %ni% unique(ddd$UID))
   sw = plyr::rbind.fill(ddd,d4)
-  com = merge(sw,set[,c('mission','setno','X','Y','DIST','WingSpread','gear','sdate')],all.y=T)
+  com = merge(sw,set[,c('mission','setno','X','Y','DIST','WingSpread','gear','sdate','bottom_temperature')],all.y=T)
   io = which(is.na(com$UID))
   com$Lobster[io] = com$WEIGHT_KG[io] = 0
   com$YEAR = year(com$sdate)
