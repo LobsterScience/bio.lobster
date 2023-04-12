@@ -1,4 +1,5 @@
 # getting prediction surfaces from temp
+#run GLORYStemperatureData. R first
 require(bio.lobster)
 require(bio.utilities)
 require(lubridate)
@@ -9,7 +10,134 @@ fd=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling')
 dir.create(fd,showWarnings=F)
 setwd(fd)
 
+#GlorysCliamtologies 1993-2019
+s = file.path(project.datadirectory('bio.lobster'),'Temperature Data','GLORYS','SummaryFiles')
+k = dir(s,full.names=T)
+k = k[grep('ShelfBoF',k)]
+k = k[-grep('2022',k)]
 
+for(i in 1:length(k)){
+  a=Sys.time()
+      h = readRDS(k[i])
+      print(k[i])
+      if(i==1){
+       hdim =dim(h)
+        h$Date = as.Date(h$Date)
+        h$doy = lubridate::yday(h$Date)
+        h1 = aggregate(bottomT~doy+X+Y,data=h,FUN=mean)
+        names(h1)[4]=paste("BT",unique(year(h$Date)),sep=".")
+        out = h1
+        h1 = st_as_sf(h1,coords =c('X',"Y"),crs=4326)
+        h1 = h1 %>% st_transform(32620)
+        st_geometry(h1) = st_geometry(h1)/1000
+        st_crs(h1) = 32620
+          rm(h)
+      } else {
+        y = paste("BT",unique(year(h$Date)),sep=".")
+        h$Date = as.Date(h$Date)
+        h$doy = lubridate::yday(h$Date)
+        h2 = aggregate(bottomT~doy+X+Y,data=h,FUN=mean)
+        names(h2)[4]= y
+     
+        o = list()
+        for(j in 1:365){
+        h4 = subset(h2,doy==j)
+        h5 = subset(h1,doy==j)
+        h3 = st_as_sf(h4,coords =c('X',"Y"),crs=4326)
+        h3 = h3 %>% st_transform(32620)
+        st_geometry(h3) = st_geometry(h3)/1000
+        st_crs(h3) = 32620
+        ou = st_nearest_feature(h5,h3)
+        o[[j]] = h4[ou,]
+        } 
+        h2 = as.data.frame(do.call(rbind,o))
+        if((dim(out)[1] != dim(h2)[1])) browser()
+        out = merge(out,h2,all.x=T)
+        rm(h3)
+       }
+       print(Sys.time()-a)
+}
+
+g = grep('BT',names(out))
+
+  combineClims = function(x,cols,ind){
+      x1 = do.call(cbind,x[,cols])
+      apply(x1[,seq(ind,ncol(x1),by=7)],1,mean)
+    }
+
+#current Climatology
+gcur = c(grep('200',names(out)),grep('201',names(out)))
+out$Clim0.01  = combineClims(out,g,1)
+out$Clim0.025 = combineClims(out,g,2)
+out$Clim0.25  = combineClims(out,g,3)
+out$Clim0.5   = combineClims(out,g,4)
+out$Clim0.75  = combineClims(out,g,5)
+out$Clim0.975 = combineClims(out,g,6)
+out$Clim0.99  = combineClims(out,g,7)
+
+
+out1 = out %>% st_as_sf(coords=c('X','Y'),crs=4326) %>% st_transform(32620)
+      st_geometry(out1) = st_geometry(out1)/1000
+      st_crs(out1) = 32620
+
+
+#adding bathy
+ba = readRDS('~/git/bio.lobster.data/mapping_data/bathymetrySF.rds')
+ba = ba %>% st_as_sf() 
+st_geometry(ba) = st_geometry(ba)/1000
+st_crs(ba) = 32620
+
+         ss = st_nearest_feature(out1,ba)
+         summary(st_distance(out1,ba[ss,],by_element=T)) #any weird dists?
+         st_geometry(ba) = NULL
+         out1$z = ba$z[ss]
+
+saveRDS(list(out,out1),file='GlorysClimatologies1993-2021byDOY.rds')
+
+
+##updating for just the fc years
+s = file.path(project.datadirectory('bio.lobster'),'Temperature Data','GLORYS','SummaryFiles')
+k = dir(s,full.names=T)
+k = k[grep('ShelfBoF',k)]
+k = k[grep('fc',k)]
+
+    out1=readRDS(file='GlorysClimatologies1993-2021byDOY.rds')[[2]]
+    out12 = subset(out1,select=c(-BT.2021,-BT.2020))
+    
+for(i in 1:length(k)){
+  a=Sys.time()
+      h = readRDS(k[i])
+        y = paste("BT",unique(year(h$Date)),sep=".")
+        h$Date = as.Date(h$Date)
+        h$doy = lubridate::yday(h$Date)
+        h2 = aggregate(bottomT~doy+X+Y,data=h,FUN=mean)
+        h2 = subset(h2,doy<366)
+        names(h2)[4]= y
+     
+        o = list()
+        for(j in 1:365){
+        h4 = subset(h2,doy==j)
+        h5 = subset(out12,doy==j)
+        xx = dim(h5)[2]
+        h3 = st_as_sf(h4,coords =c('X',"Y"),crs=4326)
+        h3 = h3 %>% st_transform(32620)
+        st_geometry(h3) = st_geometry(h3)/1000
+        st_crs(h3) = 32620
+        ou = st_nearest_feature(h5,h3)
+        o[[j]] = cbind(h5,h4[ou,y])
+         } 
+        h2 = bind_rows(o)
+        out12 = st_as_sf(h2)
+        names(out12)[ncol(out12)-1]= y
+     
+        rm(h3)
+       }
+       print(Sys.time()-a)
+}
+
+   saveRDS(out12, file='GlorysClimatologies1993-2022byDOY.rds')
+
+########################################################################################
 #Glorys Climatologies 2000-2019
 s = file.path(project.datadirectory('bio.lobster'),'Temperature Data','GLORYS','SummaryFiles')
 k = dir(s,full.names=T)

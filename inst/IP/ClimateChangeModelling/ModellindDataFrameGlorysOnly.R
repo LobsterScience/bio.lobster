@@ -24,7 +24,7 @@ survey <- aT %>%
 st_geometry(survey) = st_geometry(survey)/1000
 st_crs(survey) = 32620
 
-survey = subset(survey, YEAR %in% 2000:2022)
+#survey = subset(survey, YEAR %in% 1991:2022)
 survey$W = ceiling(yday(survey$DATE)/366*25)
 
 ba = readRDS('~/git/bio.lobster.data/mapping_data/bathymetrySF.rds')
@@ -43,7 +43,8 @@ s = file.path(project.datadirectory('bio.lobster'),'Temperature Data','GLORYS','
 k = dir(s,full.names=T)
 k = k[grep('ShelfBoF',k)]
 k = k[-grep('2020_',k)]
-k = k[-grep('199',k)]
+#k = k[-grep('199',k)]
+survey = subset(survey,YEAR>1992)
 
 ol = list()
 m=0
@@ -77,7 +78,22 @@ crs_utm20 <- 32620
 da = dplyr::bind_rows(ol)	
 da = st_as_sf(da)
 da = subset(da,GlD<6) #remove ~5% outliers 
+i = which(da$TEMP>30)
+da$TEMP[i]=NA
+i = which(da$TEMP==0)
+da$TEMP[i]=NA
+i = which(da$TEMP== -99)
+da$TEMP[i]=NA
 
+i = which(da$GlT<3 & da$TEMP>12)
+da$TEMP[i]=NA
+da$Tdiff = da$GlT - da$TEMP
+hist(da$Tdiff)
+table(subset(da,abs(Tdiff)>3)$SOURCE)
+table(subset(da,(Tdiff)>3)$SOURCE)
+###>70% of temp data was within 3C, and of those sets that were under predicted (-Tdiff), >95% had lobster suggesting, if anything PA, temperature relationships are biased low
+
+#redo jan 31 2022
 saveRDS(da,file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
 
 
@@ -86,7 +102,6 @@ s = file.path(project.datadirectory('bio.lobster'),'Temperature Data','GLORYS','
 k = dir(s,full.names=T)
 k = k[grep('ShelfBoF',k)]
 k = k[-grep('2020_',k)]
-k = k[-grep('199',k)]
 
 ol = list()
 m=0
@@ -96,7 +111,7 @@ for(i in 1:length(k)){
 			h$m = month(h$Date)
 			h$yr = unique(year(h$Date))
 			h$Q = ifelse(h$m %in% c(10,11,12),1,ifelse(h$m %in% c(1,2,3),2,ifelse(h$m %in% c(4,5,6),3,4)))
-			h = aggregate(bottomT~Q+X+Y+yr,data=h,FUN=median)
+			h = aggregate(bottomT~Q+X+Y+yr,data=h,FUN=mean)
 			h = h %>% st_as_sf(coords=c('X','Y'),crs=4326) %>% st_transform(32620)
 			st_geometry(h) = st_geometry(h)/1000
 			st_crs(h) = 32620
