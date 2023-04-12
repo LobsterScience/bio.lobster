@@ -16,16 +16,10 @@ fd=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling')
 dir.create(fd,showWarnings=F)
 setwd(fd)
 
-aT = compileAbundPresAbs(redo=F,size=F)
-
-survey <- aT %>%   
-  st_as_sf(coords=c('LONGITUDE',"LATITUDE"),crs=4326) %>% st_transform(32620)
-
-st_geometry(survey) = st_geometry(survey)/1000
-st_crs(survey) = 32620
-
-survey = subset(survey, YEAR %in% 2000:2022)
-survey$W = ceiling(yday(survey$DATE)/366*25)
+#start with the glorys data frame 
+survey = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
+survey = st_as_sf(survey)
+survey$Time = round(survey$DYEAR*25)
 
 #envt data
 d = dir(file.path(bio.datadirectory,'bio.lobster','Temperature Data/QuinnBT-2022/'),full.names = T)
@@ -45,10 +39,10 @@ t = s[[3]]
 
 crs_utm20 <- 32620
 
-yy = unique(survey$YEAR) 
-oo = list()
-m = 0
-
+	#yy = unique(survey$YEAR) 
+	oo = list()
+	m = 0
+ yy = 2000:2022
 for(i in 1:length(yy)){
 		k = subset(survey,YEAR==yy[i])
 		ddd = dd[grep(paste(yy[i],"_",sep=""),dd)]
@@ -73,11 +67,13 @@ print(yy[i])
 		#bnam
 			l = grep(as.character(yy[i]),t)
 
+			ll = unique(k$Date)
 
-		ll = unique(k$W)
+		ll = unique(k$Time)
+		if(any(ll==0)) ll = ll[ll>0]
 	for(l in 1:length(ll)){
 		m = m+1
-			kk = subset(k,W ==ll[l])
+			kk = subset(k,Time ==ll[l])
 			tt = subset(te,Time==ll[l],select=c(Depth_m,BottomTemp))
 			tt = bio.utilities::rename.df(tt,c('Depth_m','BottomTemp'),c('CanZ','CanBT'))
      		
@@ -120,6 +116,6 @@ if(length(l)>0){
 
 da = do.call(rbind,oo)
 da = st_as_sf(da)
-da = subset(da,CanDist<4)
+da = subset(da,CanDist<5)
 
-saveRDS(da,file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
+saveRDS(da,file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModelAllTemps.rds'))

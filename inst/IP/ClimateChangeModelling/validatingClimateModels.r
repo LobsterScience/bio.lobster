@@ -201,12 +201,12 @@ xx$bnamdiff = xx$bnamt - xx$TEMP
  0.9342395
 
 plot(density(xx$Candiff),xlab='Model - Measured',main="",xlim=c(-8,8),lwd=2)
-# lines(density(xx$Haddiff),col='red')
-#	lines(density(xx$MPIdiff),col='blue')
+ lines(density(xx$Haddiff),col='red')
+	lines(density(xx$MPIdiff),col='blue')
 	lines(density(xx$bnamdiff),col='orange',lwd=2)
 	lines(density(xx$Gldiff),col='purple',lwd=2)	
 	abline(v=0,lwd=2,lty=3)
-	legend('topleft',c('Can','BNAM','Glorys'),lty=c(1,1,1),col=c('black','orange','purple'),bty='n')
+	legend('topleft',c('Can','Had','MPI','BNAM','Glorys'),lty=c(1,1,1,1,1),col=c('black','red','blue','orange','purple'),bty='n')
 
 savePlot('Temp2Modelcomparisons.png')
 xx$Z = round(xx$CanZ/5)*5

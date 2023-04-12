@@ -22,8 +22,8 @@ sf_use_s2(FALSE) #needed for cropping
 
 survey$lZ = log(survey$z)
 survey = subset(survey,!is.na(lZ))
-survey = subset(survey,!is.na(Lobster))
-
+survey$BT = survey$TEMP
+survey = subset(survey, !is.na(BT))
 #what is the right offset for gear
 #km2 for tows is estimated from sensors
 #km2 for traps from Watson et al 2009 NJZ MFR 43 1 -- home radius of 17m, bait radius of 11m == 28m 'attraction zone'
@@ -35,20 +35,20 @@ mi= readRDS(file=file.path(project.datadirectory('bio.lobster'),'analysis','Clim
 
 
 mi = mi[,c('temp','res')]
-names(mi) = c('GlT','OFFSETcorr')
-mi$GlT = round(mi$GlT,1)
-mi = aggregate(OFFSETcorr~GlT,data=mi,FUN=mean)
-survey$GlT = round(survey$GlT,1)
+names(mi) = c('BT','OFFSETcorr')
+mi$BT = round(mi$BT,1)
+mi = aggregate(OFFSETcorr~BT,data=mi,FUN=mean)
+survey$BT = round(survey$BT,1)
 survey = dplyr::full_join(survey,mi)
-survey$OFFSETcorr[which(survey$GlT< -.7)] <- 0
-survey$OFFSETcorr[which(survey$GlT> 17)] <- 1
+survey$OFFSETcorr[which(survey$BT< -.7)] <- 0
+survey$OFFSETcorr[which(survey$BT> 17)] <- 1
 
 i = which(survey$OFFSET_METRIC == 'Number of traps')
 survey$OFFSET[i] = survey$OFFSET[i] * pi*(.014^2) * survey$OFFSETcorr[i]
 
 survey$LO = log(survey$OFFSET)
 survey = subset(survey,OFFSET>0.00001 & OFFSET< 0.12)
-survey$BT = survey$GlT
+
 
 ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
 st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
@@ -65,14 +65,14 @@ crs_utm20 <- 32620
 survey <- survey %>%   
   st_as_sf()
     
-survey = subset(survey, !is.na(BT) & survey$z<400)
+survey = subset(survey, !is.na(BT) & survey$z<300)
 surv_utm_coords <- st_coordinates(survey)
 
 survey$X1000 <- surv_utm_coords[,1] 
 survey$Y1000 <- surv_utm_coords[,2] 
 
 spde <- make_mesh(as_tibble(survey), xy_cols = c("X1000", "Y1000"),
-                   n_knots=500,type = "cutoff_search")
+                   n_knots=400,type = "cutoff_search")
 plot(spde)
 
 # Add on the barrier mesh component:
@@ -82,13 +82,12 @@ bspde <- add_barrier_mesh(
 )
 
 
-survey$pa = ifelse(survey$WEIGHT_KG>0 | survey$Lobster>0,1,0)
+survey$pa = ifelse(survey$WEIGHT_KG>0,1,0)
 #issues with fitting on a biweekly moving to quarters
 survey$m = month(survey$DATE) 
 survey$Q = ifelse(survey$m %in% c(10,11,12),1,ifelse(survey$m %in% c(1,2,3),2,ifelse(survey$m %in% c(4,5,6),3,4)))
 survey$Time = survey$YEAR+survey$Q/4
-#rerun feb4 2023
-fit = sdmTMB(Lobster~
+fit = sdmTMB(WEIGHT_KG~
                s(lZ,k=4)+s(BT,k=4)+Q,
              data=as_tibble(survey),
             offset = 'LO',
@@ -99,7 +98,7 @@ fit = sdmTMB(Lobster~
              spatiotemporal='ar1')
 
 
-#rerun jan 29
+#rerun jan 31
 fitpa = sdmTMB(pa~
                s(lZ,k=3)+s(BT,k=4)+(Q),
              data=as_tibble(survey),
@@ -110,11 +109,10 @@ fitpa = sdmTMB(pa~
              spatial='on',
              spatiotemporal='ar1')
 
-saveRDS(fitpa,'sdmTMBpabyQFeb22023.rds')
-fitpa<-readRDS('sdmTMBpabyQFeb22023.rds')
+saveRDS(fitpa,'sdmTMBpabyQobservedTemps.rds')
 
 
-fitpa = readRDS('sdmTMBpabyQ.rds')
+fitpa = readRDS('sdmTMBpabyQobservedTemps.rds')
 Glsur = readRDS('GlorysPredictSurface.rds')
 x = Glsur
 
@@ -129,16 +127,15 @@ x$X1000 = st_coordinates(x)[,1]
 x$Y1000 = st_coordinates(x)[,2]
 x = subset(x,exp(lZ)<400)
 
-  x = as_tibble(subset(x,select=c(Q,YEAR,BT,X1000,Y1000,lZ)))
-  x$geometry=NULL
+x = as_tibble(subset(x,select=c(Q,YEAR,BT,X1000,Y1000,lZ)))
+x$geometry=NULL
 
-  g = predict(fitpa,newdata=x)
+g = predict(fitpa,newdata=x)
 
   g$pred = fitpa$family$linkinv(g$est)
 
   gsf = st_as_sf(g,coords = c("X1000","Y1000"),crs=32620,remove=F)
 
-saveRDS(list(fitpa,gsf),'preds_sdmTMBpabyQFeb22023.rds')
 
 rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
 rL = st_as_sf(rL)
@@ -153,12 +150,12 @@ gsf = subset(ff,!is.na(LFA))
 
 #Maps
 mm = c(0.001,max(gsf$pred))
-ggplot(subset(gsf,Q==3 & YEAR == 2010)) +
+ggplot(subset(ggg,Q==3 & YEAR == 2002)) +
   geom_sf(aes(fill=pred,color=pred)) + 
-  scale_fill_viridis_c() +
-  scale_color_viridis_c() +
+  scale_fill_viridis_c(trans='log') +
+  scale_color_viridis_c(trans='log') +
   facet_wrap(~YEAR) +
-  #geom_sf(data=rL,size=1,colour='black',fill=NA)+
+  geom_sf(data=rL,size=1,colour='black',fill=NA)+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
