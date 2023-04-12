@@ -1,13 +1,13 @@
 #' @export
-moltModel = function(p,redo.dd=T){
-
+moltModel = function(p,redo.dd=T, redo=F,outdir =file.path(project.datadirectory('bio.lobster'),'analysis','Tagging') ){
+if(redo){
     require(rstanarm)
-	tagging.data = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'))
+	tagging.data = read.csv(file.path(outdir,'tagging.csv'))
 	tagging.data$TagDate = as.Date(tagging.data$TagDate)
 	tagging.data$CapDate = as.Date(tagging.data$CapDate)
 	tagging.data$TagQ = quarter(tagging.data$TagDate)
 	tagging.data$CapQ = quarter(tagging.data$CapDate)
-	
+
 	if(redo.dd){
 
 		if(!"TempModel"%in%names(p)) {
@@ -26,12 +26,13 @@ moltModel = function(p,redo.dd=T){
 
 		tagging.data$degreedays = degreedays
 
-		write.csv(tagging.data,file.path(project.datadirectory('bio.lobster'),'data','inputs','Tagging','tagging.csv'),row.names=F)
+		write.csv(tagging.data,file.path(outdir,'tagging.csv'),row.names=F)
 
 	}
 	tagging.data$CL = tagging.data$TagCL
-
+  tagging.data$days = tagging.data$CapDate - tagging.data$TagDate
 	moltPrModel = glm(Molted ~ degreedays + CL , data = tagging.data, family = binomial(link = "logit"))
+
 	print(summary(moltPrModel))
 
 	tagging.data$MoltProb = moltPrModel$fitted.values
@@ -43,9 +44,11 @@ moltModel = function(p,redo.dd=T){
 	femaleMoltIncrModel = stan_glm(log(SizeDiff) ~ CL , data = femalemoltincr.data, family=gaussian(link='identity'),iter=20000)
  	print(summary(maleMoltIncrModel))
  	print(summary(femaleMoltIncrModel))
+ 	ou = list(moltPrModel=moltPrModel,maleMoltIncrModel=maleMoltIncrModel,femaleMoltIncrModel=femaleMoltIncrModel,tagging.data=tagging.data,malemoltincr.data=malemoltincr.data,femalemoltincr.data=femalemoltincr.data)
+  saveRDS(ou, file=file.path(outdir,'moltModel_moltIncre.rds'))
 
+}
+  ou = readRDS(file=file.path(outdir,'moltModel_moltIncre.rds'))
 
-
-
-	return(list(moltPrModel=moltPrModel,maleMoltIncrModel=maleMoltIncrModel,femaleMoltIncrModel=femaleMoltIncrModel,tagging.data=tagging.data,malemoltincr.data=malemoltincr.data,femalemoltincr.data=femalemoltincr.data))
+	return(ou)
 }

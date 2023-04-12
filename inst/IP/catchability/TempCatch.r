@@ -58,7 +58,9 @@ mydf <- ggpredict(go, terms = c("Temperature",'LFA'))
 ggplot(mydf, aes(x = x, y = predicted)) +
   geom_line() +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)+
-  facet_wrap(~group)
+  facet_wrap(~group)+
+  xlab('Temperature')+
+  ylab('Marginal Catchability')
 
 
 myf <- ggpredict(go, terms = c("Temperature"))
