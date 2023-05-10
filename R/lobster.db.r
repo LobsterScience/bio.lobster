@@ -51,6 +51,14 @@ lobster.db = function( DS="complete.redo",p=p) {
         
         }
 
+    if(DS %in% c('licence_categories')){
+      
+      #from https://www.in2013dollars.com/Canada-inflation
+      infl = read.csv(file.path(project.datadirectory('bio.lobster'),'data','LicenceHolder','Lobster_Licences_1999-2022.xls'))
+      return(infl)
+    }
+    
+    
     
     if(DS %in% c('inflation')){
       

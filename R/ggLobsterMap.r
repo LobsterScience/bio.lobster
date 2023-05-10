@@ -2,7 +2,7 @@
 
 ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
                          attrData=NULL,attrColumn='Z', addGrids=T,bathy=T,fw=NULL,legLab="",
-                         addLFALabels=F,scaleTrans='identity',brks=NULL,return.object=F,
+                         addLFALabels=F, addGridLabels=F, scaleTrans='identity',brks=NULL,return.object=F,
                          layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"), ...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
@@ -42,6 +42,7 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
     sf_use_s2(FALSE) #needed for cropping
   ns_coast =readRDS(file.path( layerDir,"CoastSF.rds"))
   r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
+  
   rL = readRDS(file.path(layerDir,"LFAPolysSF.rds"))
   
   st_crs(r) <- 4326
@@ -59,7 +60,7 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   b = suppressWarnings(suppressMessages(st_crop(b,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
   l = suppressWarnings(suppressMessages(st_crop(l,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
   cents = readRDS(file.path( layerDir,"LFALabelsSF.rds"))
-  
+  gridCent = st_centroid(r)
       p =  ggplot(data=l) + 
           geom_sf(size=1.25) + 
           geom_sf(data=ns_coast,fill='grey') +
@@ -81,6 +82,7 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
               m = (grep('GRID',toupper(names(g))))
               names(g)[m] = 'GRID_NO'
               rL <- r
+              
               r1 = st_as_sf(merge(g,rL,by.x=c('LFA','GRID_NO'),by.y=c('LFA','GRID_NO')))
             } else {
               r1 = st_as_sf(merge(g,rL,by.x=c('LFA'),by.y=c('LFA')))
@@ -105,6 +107,9 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   }
       if(addLFALabels){
         p = p + geom_sf_text(data=cents, aes(label=label),family='sans')+coord_sf(xlim=xlim,ylim=ylim)
+      }
+      if(addGridLabels){
+        p = p + geom_sf_text(data=gridCent, aes(label=GRID_NO),family='sans') +coord_sf(xlim=xlim,ylim=ylim)
       }
       
       

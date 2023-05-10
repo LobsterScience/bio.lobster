@@ -145,7 +145,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	CLF = merge(CLF,data.frame(SET_ID=rep(sids,length(bins)-1),BIN=sort(rep(bins[-1],length(sids)))),all=T)
 	CLF = reshape(CLF[order(CLF$BIN),],idvar='SET_ID',timevar='BIN',direction='wide',sep='')
 	CLF[is.na(CLF)] = 0
-
+	
 	surveyLobsters=merge(surveyLobsters,CLF,all.x=T)
 	# subset by time and area
 	surveyLobsters=subset(surveyLobsters,LFA%in%lfa&HAULCCD_ID==1&YEAR%in%yrs&MONTH%in%mths)
@@ -157,6 +157,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	surveyLobsters$LobDenNotCorrected=surveyLobsters$NUM_CAUGHT/surveyLobsters$AREA_SWEPT
 	surveyLobsters$LobDen=surveyLobsters$LobDenCorrected
 	surveyLobsters$pLC=surveyLobsters$LobDenCorrected/surveyLobsters$LobDenNotCorrected
+	
 	x=aggregate(pLC~YEAR,surveyLobsters,median,na.rm=T)
 	names(x)[2]='mpLC'
 	ompLC = median(surveyLobsters$pLC,na.rm=T)
