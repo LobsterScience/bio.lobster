@@ -134,7 +134,7 @@ Glsur = readRDS('GlorysPredictSurface.rds')
 x = Glsur
 
 
-plot_smooth(fitpa,select=1)
+plot_smooth(fitpa,select=2)
 
 
 x = bio.utilities::rename.df(x,c('bottomT','yr'),c('BT','YEAR'))
@@ -147,7 +147,7 @@ x = subset(x,exp(lZ)<400)
 x = as_tibble(subset(x,select=c(Q,YEAR,BT,X1000,Y1000,lZ)))
 x$geometry=NULL
 
-g = predict(fitpa,newdata=x)
+g = predict(fitpa,newdata=subset(x,YEAR>1999))
 
   g$pred = fitpa$family$linkinv(g$est)
 
@@ -259,29 +259,29 @@ gs2 = as_tibble(gs2)
 saveRDS(gs2,file='CurrentClimatologyBerriedBinomialOutput.rds')
 write.csv(gs2,file='CurrentClimatologyBerriedBinomialOutput.csv')
 ################
-#Bnam 2055
+#MPI30
 
 y = unique(survey$YEAR)
-cdata = subset(glo,select=c(X1000,Y1000,lZ,Clim0.5,BNAM8.5.55,Q))
+cdata = subset(glo,select=c(X1000,Y1000,lZ,Clim0.5,MPI30,Q))
 st_geometry(cdata) <- NULL
 
 cdy = as.data.frame(sapply(cdata,rep.int,length(y)))
 cdy$YEAR = rep(y,each=dim(cdata)[1])
-cdy$BT = cdy$Clim0.5+cdy$BNAM8.5.55
+cdy$BT = cdy$Clim0.5+cdy$MPI30
 g = predict(fitpa,newdata=cdy)
+
 g$pred = fitpa$family$linkinv(g$est)
 
 #average over spatial domains for years 2000-2022
-gBNAM55 = aggregate(pred~X1000+Y1000+Q,data=g,FUN=mean)
+gMPI30 = aggregate(pred~X1000+Y1000+Q+BT,data=g,FUN=mean)
 
-  gsfBNAM55 = st_as_sf(gBNAM55,coords = c("X1000","Y1000"),crs=32620,remove=F)
-
-
+  gMPI30 = st_as_sf(gMPI30,coords = c("X1000","Y1000"),crs=32620,remove=F)
 
 
 
-mm = c(0.001,max(gsfBNAM55$pred))
-ggplot(subset(gsfBNAM55)) +
+
+
+ggplot(subset(gMPI30)) +
   geom_sf(aes(fill=pred,color=pred)) + 
   scale_fill_viridis_c() +
   scale_color_viridis_c() +
@@ -295,6 +295,21 @@ ggplot(subset(gsfBNAM55)) +
          axis.title.y = element_blank()
   ) +
   coord_sf()
+  gMPI30 = bio.utilities::rename.df(gMPI30,c('BT','pred'),c('MPI30BT','predMPI30'))
+
+se = 1:4
+  comb = list()
+
+  for(i in 1:4){
+
+    g1 = subset(gsf,Q==i,select=c(X1000,Y1000,Q,BT,lZ,pred))
+    gm = subset(gMPI30,Q==i,select=c(MPI30BT,predMPI30))
+    comb[[i]] = st_join(g1, gm, join = st_nearest_feature, left = T)
+  }
+
+  x1 = dplyr::bind_rows(comb)
+
+  
 ################
 #Bnam 2075
 
