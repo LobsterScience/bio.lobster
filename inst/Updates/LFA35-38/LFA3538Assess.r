@@ -42,7 +42,7 @@ figdir = file.path("LFA35_Update")
 	require('bio.utilities')
 		logs=lobster.db("process.logs")
 		TempModelling = TempModel( annual.by.area=F, redo.data=F)
-			CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
+			CPUE.data<-CPUEModelData(p,redo=F,TempModelling)
 
 			## Commercial CPUE MOdels
 			mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)

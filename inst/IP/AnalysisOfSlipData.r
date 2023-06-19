@@ -42,6 +42,9 @@ si$SYEAR = si$YR
 i = which(si$LFA %in% c('33','34','35','36','38') & si$mn %in% 10,11,12)
 si$SYEAR[i] = si$SYEAR[i]+1
 ss = aggregate(cbind(Value,ValueCorr,SLIP_WEIGHT_LBS)~SYEAR+LFA+LICENCE_ID,data=si,FUN=sum)
+ssp = aggregate(PriceCorr~SYEAR+LFA+LICENCE_ID,data=si,FUN=mean)
+sspp = aggregate(PriceCorr~SYEAR+LFA,data=ssp,FUN=summary)
+ggplot(subset(sspp,SYEAR>2006 & SYEAR<2022),aes(x=SYEAR,y=PriceCorr[,4]))+geom_line()+facet_wrap(~LFA)
 
 ssa = aggregate(cbind(Value,ValueCorr,SLIP_WEIGHT_LBS)~SYEAR+LFA,data=ss,FUN=function(x) summary(x))
 

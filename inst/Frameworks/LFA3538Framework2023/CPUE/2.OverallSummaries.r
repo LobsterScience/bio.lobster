@@ -5,7 +5,7 @@ require(bio.utilities)
 require(dplyr)
 require(devtools)
 require(sf)
-require(ggplot)
+require(ggplot2)
 fd = file.path(project.datadirectory('bio.lobster'),'analysis','CPUE')
 setwd(fd)
 
@@ -18,7 +18,7 @@ st_crs(gr) <- 32620
 #need the temperature - catch relationship using IP/catchability/TempCatch.r output
 
 preT = readRDS(file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))
-preT$temp = round(preT$temp,2)
+preT$temp = round(preT$Temperature,2)
 preT = aggregate(pred~temp,data=preT,FUN=mean)
 
 aT = readRDS('CPUETempDepth.rds')
@@ -28,25 +28,90 @@ aT = subset(aT,SYEAR>2005 & SYEAR<2023)
 
 aa = split(aT,f=list(aT$LFA,aT$SYEAR))
 cpue.lst<-list()
-
+cpue.ann<- list()
 for(i in 1:length(aa)){
   tmp<-aa[[i]]
   if(nrow(tmp)==0) next
-  tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
-  names(tmp)<-c('time','catch','effort')
+  tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS','temp')]
+  names(tmp)<-c('time','catch','effort','temp')
   tmp$date<-as.Date(tmp$time)
   first.day<-min(tmp$date)
   tmp$time<-julian(tmp$date,origin=first.day-1)
   g<-as.data.frame(biasCorrCPUE(tmp,by.time=T))
   g$lfa=unique(aa[[i]]$LFA)
   g$yr = unique(aa[[i]]$SYEAR)
+  te = aggregate(temp~time, data=tmp,FUN=mean)
+  g = merge(g,te,by.x='t',by.y='time')
+  gl = aggregate(effort~time, data=tmp, FUN=sum)
+  g = merge(g,gl,by.x='t',by.y='time')
   cpue.lst[[i]] <- g
+  
+  g<-as.data.frame(biasCorrCPUE(tmp,by.time=F))[2,]
+  g=c(g,as.numeric(unique(aa[[i]]$LFA)),as.numeric(unique(aa[[i]]$SYEAR)),as.numeric(aggregate(temp~1, data=tmp,FUN=mean)))
+  cpue.ann[[i]]=g
 }
 
 cc =as.data.frame(do.call(rbind,cpue.lst))
+cc$dyear = cc$yr+cc$t/365
+cc$temp = round(cc$temp,1)
+cc = merge(cc,preT)
+
+dd = as.data.frame(do.call(rbind,cpue.ann))
+names(dd) = c('unBCPUE','lfa','yr','temp')
+dd$temp = round(dd$temp,1)
+dd = merge(dd,preT)
+dd$unBCPUE_tcorr = dd$unBCPUE / dd$pred
+dd = dd[order(dd$yr),]
+##overall
+#lfa 38
+with(subset(dd,lfa==38),plot(yr+.5,unBCPUE,pch=16,cex=.5,type='b',col='red',lwd=3))
+par(new=T)
+with(subset(dd,lfa==38),plot(yr+.5,unBCPUE_tcorr,pch=16,cex=.5,type='b',col='blue',lwd=3))
+
+##daily
+cc$unBCPUE_tcorr = cc$unBCPUE / cc$pred
+cc = cc[order(cc$dyear),]
+
+with(subset(cc,lfa==38),plot(dyear,unBCPUE,pch=16,cex=.5,type='p',col='red',lwd=3))
+par(new=T)
+with(subset(cc,lfa==38),plot(dyear,unBCPUE_tcorr,pch=16,cex=.5,type='p',col='blue'))
+
+with(subset(cc,lfa==38),plot(t,unBCPUE_tcorr))
+
+cc$fYear = as.factor(cc$yr)
+l38 = gam(unBCPUE~s(t),data=subset(cc,lfa==38),family = 'nb')
+l38a = gam(unBCPUE~s(t)+s(temp),data=subset(cc,lfa==38),family = 'nb')
+l38b = gam(unBCPUE~s(t)+s(temp)+s(t,by=fYear),data=subset(cc,lfa==38),family = 'nb')
+l38c = gam(unBCPUE~fYear+s(t)+s(temp)+s(t,by=fYear),data=subset(cc,lfa==38),family = 'nb')
+l38d = gam(unBCPUE~fYear+s(t)+s(temp),data=subset(cc,lfa==38),family = 'nb')
+
+
+require(ggeffects)
+
+mydf <- ggpredict(l38a, terms = c('t'))
+plot(mydf)
+
+mydf <- ggpredict(l38a, terms = c('temp'))
+plot(mydf)
+
+
+
+mydf <- ggpredict(l38c, terms = c('t','fYear'))
+plot(mydf,color='bw', ci=F)
+ggplot(mydf, aes(x = x, y = predicted)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)+
+  facet_wrap(~group)+
+  xlab('Day of Season')+
+  ylab('CPUE')
+
+
+################################################################
 
 
 ###
+
+##
 
 
 aa = subset(aT,SYEAR>2005 & SYEAR<2023)
