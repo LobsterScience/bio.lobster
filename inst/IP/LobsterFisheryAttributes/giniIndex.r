@@ -75,6 +75,14 @@ ggplot(subset(ooo,LFA==30),aes(x=SYEAR,y=gini)) + geom_point()+facet_wrap(~LFA)+
 ggplot(subset(ooo,LFA==30),aes(x=Landings,y=gini)) + geom_point()+facet_wrap(~LFA,scales='free')+geom_smooth(se=F)
 ggplot(subset(ooo,LFA==30),aes(x=meanCPUE,y=gini)) + geom_point()+facet_wrap(~LFA,scales='free')+geom_smooth(se=F)
 
+ggplot(subset(ooo,LFA==36),aes(x=SYEAR,y=gini)) + geom_point()+facet_wrap(~LFA)+geom_smooth(se=F)
+ggplot(subset(ooo,LFA==36),aes(x=Landings,y=gini)) + geom_point()+facet_wrap(~LFA,scales='free')+geom_smooth(se=F)
+ggplot(subset(ooo,LFA==36),aes(x=meanCPUE,y=gini)) + geom_point()+facet_wrap(~LFA,scales='free')+geom_smooth(se=F)
+
+
+ggplot(subset(ooo,LFA==38),aes(x=SYEAR,y=gini)) + geom_point()+facet_wrap(~LFA)+geom_smooth(se=F)
+ggplot(subset(ooo,LFA==38),aes(x=Landings,y=gini)) + geom_point()+facet_wrap(~LFA,scales='free')+geom_smooth(se=F)
+ggplot(subset(ooo,LFA==38),aes(x=meanCPUE,y=gini)) + geom_point()+facet_wrap(~LFA,scales='free')+geom_smooth(se=F)
 
 
 load_all('C:/Users/Cooka/Documents/git/bio.growth/')

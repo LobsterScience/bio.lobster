@@ -13,14 +13,15 @@ scallop_sets <- function(){
     x$SOURCE = 'Scallop survey'
     x$OFFSET_METRIC = 'dist x spread km2'
     x$DATE = as.Date(x$TOW_DATE)
-    x$YEAR = year(x$DATE)
+    x$YEAR = lubridate::year(x$DATE)
     x$DYEAR = lubridate::yday(x$DATE)/365
     x$Lobster = x$TOTAL_LOBSTERS
     x$Berried = x$TOTAL_BERRIED
     x$Legal = x$WEIGHT_KG=NA
     bigO = quantile(x$OFFSET,0.99)
     littleO = quantile(x$OFFSET,0.01)
+    x$TEMP = x$BOTTOM_TEMP
     
-    x = subset(x,littleO<OFFSET & OFFSET<bigO,select=c(DATE, YEAR, LONGITUDE, LATITUDE,WEIGHT_KG, OFFSET, SOURCE, OFFSET_METRIC,DYEAR,Lobster, Berried,Legal))
+    x = subset(x,littleO<OFFSET & OFFSET<bigO,select=c(DATE, YEAR, LONGITUDE, LATITUDE,WEIGHT_KG, OFFSET, TEMP,SOURCE, OFFSET_METRIC,DYEAR,Lobster, Berried,Legal))
   return(x)
     }

@@ -1,6 +1,6 @@
 require(bio.lobster)
 la()
-g = lobster.db('vessel.by.port.redo')
+g = lobster.db('vessels.by.port.redo')
 
 loa = aggregate(YEAR_BUILT~LFA+YR_FISHED,data=g,FUN=function(x) quantile(x,c(.025,.25,.5,.75,.975)))
 

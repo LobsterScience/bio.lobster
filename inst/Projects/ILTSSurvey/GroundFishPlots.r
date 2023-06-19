@@ -15,11 +15,12 @@ stations = aggregate(cbind(X,Y)~TRIP_ID+FISHSET_ID+BOARD_DATE+YEAR+month,data=sC
 pollock = aggregate(cbind(X,Y)~TRIP_ID+FISHSET_ID+BOARD_DATE+YEAR+month+wts,data=subset(sC,SPECCD_ID==16),FUN=mean)
 haddock = aggregate(cbind(X,Y)~TRIP_ID+FISHSET_ID+BOARD_DATE+YEAR+month+wts,data=subset(sC,SPECCD_ID==11),FUN=mean)
 cod = aggregate(cbind(X,Y)~TRIP_ID+FISHSET_ID+BOARD_DATE+YEAR+month+wts,data=subset(sC,SPECCD_ID==10),FUN=mean)
+shake = aggregate(cbind(X,Y)~TRIP_ID+FISHSET_ID+BOARD_DATE+YEAR+month+wts,data=subset(sC,SPECCD_ID==14),FUN=mean)
 sCf <- stations %>%   st_as_sf(crs = 4326, coords = c("X", "Y"))
 sCP <- pollock %>%   st_as_sf(crs = 4326, coords = c("X", "Y"))
 sCH <- haddock %>%   st_as_sf(crs = 4326, coords = c("X", "Y"))
 sCC <- cod %>%   st_as_sf(crs = 4326, coords = c("X", "Y"))
-
+sCS <- shake %>%   st_as_sf(crs = 4326, coords = c("X", "Y"))
 s = ggLobsterMap('34-38',addGrids = F,return.object = T)
 s+geom_sf(data=subset(sCf,YEAR<2007),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCP,YEAR<2007 ),col='red')
 s+geom_sf(data=subset(sCf,YEAR>2006 &YEAR<2022),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCP,YEAR>2006 &YEAR<2022),col='red')
@@ -32,6 +33,15 @@ s = ggLobsterMap('34-38',addGrids = F,return.object = T)
 s+geom_sf(data=subset(sCf,YEAR<2007),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCC,YEAR<2007 ),col='red')
 s+geom_sf(data=subset(sCf,YEAR>2006 &YEAR<2022),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCC,YEAR>2006 &YEAR<2022),col='red')
 
+
+s = ggLobsterMap('34-38',addGrids = F,return.object = T)
+s+geom_sf(data=subset(sCf,YEAR<2001),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCS,YEAR<2001 ),col='red')
+s+geom_sf(data=subset(sCf,YEAR>2000 &YEAR<2007),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCS,YEAR>2000 &YEAR<2007),col='red')
+s+geom_sf(data=subset(sCf,YEAR>2006 &YEAR<2013),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCS,YEAR>2006 &YEAR<2013),col='red')
+s+geom_sf(data=subset(sCf,YEAR>2012 &YEAR<2019),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCS,YEAR>2012 &YEAR<2019),col='red')
+s+geom_sf(data=subset(sCf,YEAR>2018 ),col='black')+facet_wrap(~YEAR)+geom_sf(data=subset(sCS,YEAR>2018),col='red')
+
+s+geom_sf(data=subset(sCf),col='black',size=.2)+facet_wrap(~YEAR)+geom_sf(data=subset(sCS),col='red',size=.2)
 
 #lenght freqs
 
@@ -63,6 +73,14 @@ ww = aggregate(NUM_AT_LENGTH~FISH_LENGTH+YEAR,data=w,FUN=sum)
 
 ggplot(subset(ww),aes(x=FISH_LENGTH,y=NUM_AT_LENGTH))+geom_bar(stat='identity')+facet_wrap('YEAR',scales='free_y')
 
+x=subset(fishMeasurements,SPECCD_ID==14)
+xx = merge(x,sC[,c('TRIP_ID','SET_NO','BOARD_DATE')],all.x=T,by=c('TRIP_ID','SET_NO'))
+
+w = aggregate(NUM_AT_LENGTH~FISH_LENGTH+TRIP_ID+SET_NO+BOARD_DATE,data=xx,FUN=max)
+w$YEAR = year(w$BOARD_DATE)
+ww = aggregate(NUM_AT_LENGTH~FISH_LENGTH+YEAR,data=w,FUN=sum)
+
+ggplot(subset(ww),aes(x=FISH_LENGTH,y=NUM_AT_LENGTH))+geom_bar(stat='identity')+facet_wrap('YEAR',scales='free_y')
 
 # catches
 haddock$lwt = log(haddock$wts)
@@ -81,6 +99,14 @@ pollock$N_Sets = 1
 ha = aggregate(N_Sets~YEAR+TotWgt,data=pollock,FUN=sum)
 ggplot(ha,aes(x=TotWgt,y=N_Sets))+geom_bar(stat='identity')+facet_wrap('YEAR',scales='free_y')
 
+
+# catches
+
+sc1=seq(0.01,100,by=10)
+shake$TotWgt = sc1[cut(shake$wts,sc1,labels=F)]
+shake$N_Sets = 1
+ha = aggregate(N_Sets~YEAR+TotWgt,data=shake,FUN=sum)
+ggplot(ha,aes(x=TotWgt,y=N_Sets))+geom_bar(stat='identity')+facet_wrap('YEAR',scales='free_y')
 
 
 

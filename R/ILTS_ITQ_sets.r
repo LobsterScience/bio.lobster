@@ -8,7 +8,7 @@ ILTS_ITQ_sets <-function(x){
 	lon2 = surveyCatch$HAUL_LONG
 	surveyCatch$TowL = 6371.3*acos(cos(CircStats::rad(90-lat1))*cos(CircStats::rad(90-lat2))+sin(CircStats::rad(90-lat1))*sin(CircStats::rad(90-lat2))*cos(CircStats::rad(lon1-lon2))) #dist in km
   ii = which(is.na(surveyCatch$NUM_CAUGHT) & !is.na(surveyCatch$EST_KEPT_WT) | !is.na(surveyCatch$EST_DISCARD_WT))
-	surveyCatch$NUM_CAUGHT[ii] = sum(c(surveyCatch$EST_KEPT_WT[ii],surveyCatch$EST_DISCARD_WT[ii]),na.rm=T)
+	surveyCatch$NUM_CAUGHT[ii] = ifelse(is.na(surveyCatch$EST_KEPT_WT[ii]),0,surveyCatch$EST_KEPT_WT[ii])+ifelse(is.na(surveyCatch$EST_DISCARD_WT[ii]),0,surveyCatch$EST_DISCARD_WT[ii])
 	surveyCatch$WEIGHT_KG = ifelse(is.na(surveyCatch$EST_DISCARD_WT),0,surveyCatch$EST_DISCARD_WT) + ifelse(is.na(surveyCatch$EST_KEPT_WT),0,surveyCatch$EST_KEPT_WT)
 	sC = surveyCatch[, c('TRIP_ID','LFA','HAULCCD_ID','SET_NO','GEAR','FISHSET_ID','SPECCD_ID','NUM_CAUGHT','SET_LAT','SET_LONG','SET_DATE','HAUL_LAT','HAUL_LONG','HAUL_DATE','SET_ID','YEAR','TowL','WEIGHT_KG')]
 	sC$TowW = ifelse(sC$GEAR=='280 BALLOON', 20,13)/1000
@@ -16,7 +16,9 @@ ILTS_ITQ_sets <-function(x){
 	sCa = aggregate(NUM_CAUGHT~TRIP_ID+FISHSET_ID+GEAR+SET_LAT+SET_LONG+SET_DATE+YEAR+TowL+TowW,data=sC,FUN=sum)
   sCa$NUM_CAUGHT = NULL
   
-  sCL = aggregate(cbind(NUM_CAUGHT,WEIGHT_KG)~TRIP_ID+FISHSET_ID+GEAR+SET_LAT+SET_LONG+SET_DATE+YEAR+TowL+TowW,data=subset(sC,SPECCD_ID==2550),FUN=sum)
+  temp = aggregate(TEMPC~TRIP_ID+SET_NO,data=ILTSTemp, FUN=median)
+  sC = merge(sC,temp,all.x=T)
+  sCL = aggregate(cbind(NUM_CAUGHT,WEIGHT_KG)~TRIP_ID+FISHSET_ID+GEAR+SET_LAT+SET_LONG+SET_DATE+YEAR+TowL+TowW+TEMPC,data=subset(sC,SPECCD_ID==2550),FUN=sum)
   
   sCT = merge(sCa,sCL,all.x=T)
   sCT = na.zero(sCT)
@@ -39,7 +41,7 @@ ILTS_ITQ_sets <-function(x){
   
   iltstot = merge(sCT,sMB,all.x=T)
   iltstot$UID = NULL
-  iltstot = bio.utilities::rename.df(iltstot,c('SET_LAT','SET_LONG','SET_DATE','NUM_CAUGHT','GEAR'),c('LATITUDE','LONGITUDE','DATE','Lobster','Gear'))
+  iltstot = bio.utilities::rename.df(iltstot,c('SET_LAT','SET_LONG','SET_DATE','NUM_CAUGHT','GEAR','TEMPC'),c('LATITUDE','LONGITUDE','DATE','Lobster','Gear','TEMP'))
 	iltstot$OFFSET = iltstot$TowL * iltstot$TowW
   iltstot$OFFSET_METRIC = 'TowedDist x wing spread km2'
   iltstot$SOURCE = 'ILTS_ITQ'
@@ -52,6 +54,6 @@ ILTS_ITQ_sets <-function(x){
   iltstot$TowL = iltstot$TowW = iltstot$timestamp = NULL
   i=which(iltstot$YEAR>2012)
   iltstot[i,] = na.zero(iltstot[i,])
-  
+  iltstot$TEMP = ifelse(iltstot$TEMP==0,NA,iltstot$TEMP)
   return(iltstot)
 	}

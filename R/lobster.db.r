@@ -51,6 +51,14 @@ lobster.db = function( DS="complete.redo",p=p) {
         
         }
 
+    if(DS %in% c('licence_categories')){
+      
+      #from https://www.in2013dollars.com/Canada-inflation
+      infl = read.csv(file.path(project.datadirectory('bio.lobster'),'data','LicenceHolder','Lobster_Licences_1999-2022.xls'))
+      return(infl)
+    }
+    
+    
     
     if(DS %in% c('inflation')){
       
@@ -1435,8 +1443,16 @@ if(DS %in% c('rv.survey.samples.redo','rv.survey.samples.samples')) {
 
       load(file=file.path( fnODBC, "rv.survey.samples.rdata"),.GlobalEnv)
 
-    }
-
-
+}
+    
+    if(DS %in% c('species_codes.redo','species_codes')) {
+      if (DS=="species_codes.redo") {
+        spp = connect.command(con, "select * from groundfish.gsspecies_andes")
+        saveRDS( spp, file=file.path( fnODBC, "species_codes.rds"), compress=T)
+      }
+      
+      readRDS(file=file.path( fnODBC, "species_codes.rds"))
+      
+      }
   }
 

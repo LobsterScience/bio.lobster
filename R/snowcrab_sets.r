@@ -16,7 +16,7 @@ snowcrab_sets <- function(){
   sc = sc[which(sc$dist0<800 | sc$dist>100),]
   sc = subset(sc,GEARCD_ID==12 )
   
-  tots = merge(subset(sc,select=c(TRIP_ID,SET_NO,dist0,ID,BOARD_DATE,START_LONG,START_LAT)),subset(sb,select=c(ID,EST_NUM_CAUGHT,EST_DISCARD_WT)),all.x=T)
+  tots = merge(subset(sc,select=c(TRIP_ID,SET_NO,dist0,ID,BOARD_DATE,START_LONG,START_LAT,BOTTOM_TEMPERATURE)),subset(sb,select=c(ID,EST_NUM_CAUGHT,EST_DISCARD_WT)),all.x=T)
   tots$OFFSET = tots$dist0/1000*(10/1000)
   tots$SOURCE = 'Snow crab survey'
   tots$OFFSET_METRIC = 'TowedDist x wing spread km2'
@@ -26,7 +26,8 @@ snowcrab_sets <- function(){
   tots$LATITUDE = tots$START_LAT
   tots$LONGITUDE = tots$START_LONG
   tots$DATE = tots$BOARD_DATE
-  tots$ID = tots$dist0 = tots$EST_DISCARD_WT = tots$EST_NUM_CAUGHT = tots$START_LAT = tots$START_LONG = tots$BOARD_DATE = NULL
+  tots$TEMP = tots$BOTTOM_TEMPERATURE
+  tots$BOTTOM_TEMPERATURE = tots$ID = tots$dist0 = tots$EST_DISCARD_WT = tots$EST_NUM_CAUGHT = tots$START_LAT = tots$START_LONG = tots$BOARD_DATE = NULL
   tots$timestamp = as.POSIXct(tots$DATE,tz='America/Halifax',origin=lubridate::origin)
   tots$timestamp = with_tz(tots$timestamp,"UTC")
   tots$DYEAR = lubridate::decimal_date(tots$timestamp)- lubridate::year(tots$timestamp)
