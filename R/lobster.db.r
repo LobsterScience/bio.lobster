@@ -685,7 +685,7 @@ if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
                 #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
 
                 # logs from LFA 41 Cheryl's query for adjusted catch and assigning subareas
-               query41 = "select * from marfissci.lobster_md_log where mon_doc_defn_id=19"
+               query41 = "select * from lobster.logs41"
                db.setup(un=oracle.lobster.user, pw = oracle.lobster.password)
 
                 slipquery41 = "select  * from lobster.slips41"

@@ -262,9 +262,13 @@ ggplot(pr4, aes(x = x, y = predicted)) +
   xlab('Day of Season')+
   ylab('CPUE')
 saveRDS(l36rL,file='LFA36RLicJune2023.rds')
+l36rL=readRDS(file='LFA36RLicJune2023.rds')
+
 ###
-
-
+##using this with ASFMC 65%% criteria
+f = ASMFC_triggers(x=f1r$fitted,yrs=f1r$fYear)
+ plot(f$yrs,f$index,xlab='Year',ylab='Scaled CPUE', type='b')
+ abline(h=.65,lty=2)
 ##
 
 
