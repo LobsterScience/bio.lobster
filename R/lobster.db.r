@@ -23,8 +23,19 @@ lobster.db = function( DS="complete.redo",p=p) {
 if(DS %in% c('licence_categories')){
 
       #from https://www.in2013dollars.com/Canada-inflation
-      infl = read.csv(file.path(project.datadirectory('bio.lobster'),'data','LicenceHolder','Lobster_Licences_1999-2022.xls'))
-      return(infl)
+      
+      cats = readxl::excel_sheets(file.path(project.datadirectory('bio.lobster'),'data','LicenceHolder','Lobster_Licences_1999-2022.xlsx'))
+      ou=list()
+      for(i in 1:length(cats)){
+      ou[[i]] = readxl::read_excel(file.path(project.datadirectory('bio.lobster'),'data','LicenceHolder','Lobster_Licences_1999-2022.xlsx'),sheet=i)
+      }
+      ca = dplyr::bind_rows(ou)
+      ca$LFA1 = substr(ca$LFA,24,100)
+      i = grep('GREY',ca$LFA)
+      ca$LFA1[i] = '38B'
+      ca$LFA = ca$LFA1
+      ca$LFA1 = NULL
+      return(ca)
     }
 
 if(DS %in% c('licence_characteristics', 'licence_characteristics_redo')){
@@ -686,6 +697,7 @@ if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
 
                 # logs from LFA 41 Cheryl's query for adjusted catch and assigning subareas
                query41 = "select * from lobster.logs41"
+               print('need to refresh lobster.logs41 materialized view')
                db.setup(un=oracle.lobster.user, pw = oracle.lobster.password)
 
                 slipquery41 = "select  * from lobster.slips41"
@@ -1354,19 +1366,22 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
     if (DS %in% c("scallop.redo", "scallop") ) {
 
      if (DS=="scallop.redo") {
-        require(RODBC)
-        #con = odbcConnect(oracle.server , uid=oracle.scallop.user, pwd=oracle.scallop.password, believeNRows=F) # believeNRows=F required for oracle db's
-
-        # scallop
-        scallop.catch = connect.command(con, "select * from SCALLSUR.SCBYCATCHES")
-        save( scallop.catch, file=file.path( fnODBC, "scallopCatch.rdata"), compress=T)
         scallop.tows = connect.command(con, "select * from SCALLSUR.SCTOWS")
         save( scallop.tows, file=file.path( fnODBC, "scallopTows.rdata"), compress=T)
-        gc()  # garbage collection
+       
+        scallopSurv = connect.command(con, "select * from SCALLSUR.SCBYCATCH_STD where speccd_id='2550'")
+        save( scallopSurv, file=file.path( fnODBC, "scallopSurv.rdata"), compress=T)
+       
+        scallopStratDefs = connect.command(con, "select * from SCALLSUR.scstratadefs")
+        save( scallopStratDefs, file=file.path( fnODBC, "scallopSurvdefs.rdata"), compress=T)
+        
+       
+       gc()  # garbage collection
         #odbcClose(con)
       }
-      load(file.path( fnODBC, "scallopCatch.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "scallopTows.rdata"), .GlobalEnv)
+      load(file=file.path( fnODBC, "scallopSurvdefs.rdata"),.GlobalEnv)
+      load(file.path( fnODBC, "scallopSurv.rdata"), .GlobalEnv)
     }
 
 ### lobster survey

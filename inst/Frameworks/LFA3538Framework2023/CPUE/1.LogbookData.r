@@ -21,7 +21,6 @@ gr = readRDS('C:/Users/Cooka/Documents/git/bio.lobster.data/mapping_data/GridPol
 gr = st_transform(gr,32620) 
 st_geometry(gr) <- st_geometry(st_as_sf(gr$geometry/1000)) 
 st_crs(gr) <- 32620
-
   
 te = readRDS(file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','GlorysClimatologies1993-2022byDOYWithLFA.rds'))
 te = st_as_sf(te)
@@ -78,7 +77,7 @@ d = na.zero(d)
 d1 = aggregate(cbind(GROSS_TONNAGE, BHP, LOA, BREADTH, DEPTH,YEAR_BUILT)~VR_NUMBER+LFA+YR_FISHED,data=d,FUN=min)
 d = na.zero(d1,rev=T)
 w = lobster.db('port')
-v = lobster.db('port_location.redo')
+v = lobster.db('port_location')
 
 #Demographics on Lic
 o = read.csv(file.path(project.datadirectory('bio.lobster'),'data','LicenceHolder','LicenceHolderInfo2022a.csv'))

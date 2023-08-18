@@ -1,16 +1,25 @@
 ##run 1.LogbookData.r
 
+require(bio.lobster)
+require(bio.utilities)
+require(dplyr)
+require(devtools)
+require(sf)
+require(ggplot)
+fd = file.path(project.datadirectory('bio.lobster'),'analysis','CPUE')
+dir.create(fd); setwd(fd)
+
+aL = readRDS('CPUETempDepth.rds')
 
 
 ##by licence
-
-aL = a
-#aL = subset(aL,GRID_NUM>0 & !is.na(temp))
 
 ##LFA 38
 a8 = subset(aL, LFA==38)
 m = which(is.na(a8$GRID_NUM))
 a8$GRID_NUM[m] = -99
+v = lobster.db('port_location')
+tps = aggregate(temp~DATE_FISHED+GRID_NUM,data=a8,FUN=mean)
 a8 = merge(a8,v,by.x=c('LFA','COMMUNITY_CODE'),by.y=c('LFA','PORT_CODE'))
 os = subset(o,LFA==38)
 id = unique(a8$LICENCE_ID)
@@ -33,8 +42,14 @@ for(i in 1:length(sa8)){
     }
     outa[[oo]] = va
   }
-  out[[y]] = do.call(rbind,outa)
-}
+  b = do.call(rbind,outa)
+  b = merge(b,tps,all.x=T)
+  b =b[order(b$DATE_FISHED),]
+  b$CPUE = b$WEIGHT_KG / b$NUM_OF_TRAPS
+  ggplot(b,aes(x=DOS, y=CPUE, colour=as.factor(GRID_NUM)))+geom_point()+facet_wrap(~SYEAR)
+  ug = aggregate(DATE_FISHED~SUBMITTER_NAME+GRID_NUM+SYEAR,data=b,FUN=function (x) length(unique(x)))
+  out[[y]] = b
+  }
 
 
 #compiling by licence
