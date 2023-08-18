@@ -62,7 +62,6 @@ if(c_sys == "UTM19") c_sys <- "+init=epsg:32619"
 # if you want utm_20 you can enter "+init=epsg:32620" which will use utm zone 20 which is best for BoF and SS 
 if(c_sys == "UTM20") c_sys <- "+init=epsg:32620"
 # if you know your shit you can just directly use the datum that your data is right away, but needs set up in this CRS friendly format ("+init=epsg:####)
-
 # now in case the data has repeated PID's in it we need to do this slightly clumsily...
 tmp <- NULL
 dat.sdf <- NULL

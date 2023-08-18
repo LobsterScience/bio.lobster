@@ -58,9 +58,10 @@ CPUEModelData = function(p,redo=T,TempModelling, TempSkip=F){
 
 
 	    newdata = with(cpue.data,data.frame(y=y, cos.y=cos(2*pi*y), sin.y=sin(2*pi*y), DEPTH=DEPTH, area=subarea))
-
+    
 	  cpue.data$TEMP = predict(TempModelling$Model, newdata, type='response')
-
+    #cpue.data = subset(cpue.data,LFA==35)
+	  #cpue.data$area=35
 	  w = max(TempModelling$Data$y)
 	  cw = max(cpue.data$y)
 	  cpue.data$yy = cpue.data$y
@@ -100,11 +101,14 @@ CPUEModelData = function(p,redo=T,TempModelling, TempSkip=F){
 	              ts2 = aggregate(TEMP~index,data=sc,FUN=mean)
 	            }
 	          }
-	      
-	    }
+	    	    }
 	    ts = rbind(ts,ts2)
+	    #newd=subset(newdata,area==35 & y<2023)
+	    cpue.data = subset(cpue.data, LFA==35 & y<2023)
+	    cpue.data$TEMP = predict(TempModelling$Model, newd, type='response')
+	    
 	    cpue.data.f = merge(cpue.data.f,ts,all.x=T,by='index')
-	   cpue.data = rbind(cpue.data.red,cpue.data.f) 
+	   cpue.data = rbind(cpue.data,cpue.data.f) 
 	   }
 	  
 	  

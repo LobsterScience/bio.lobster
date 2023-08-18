@@ -3,7 +3,7 @@
 ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
                          attrData=NULL,attrColumn='Z', addGrids=T,bathy=T,fw=NULL,legLab="",
                          addLFALabels=F, addGridLabels=F, scaleTrans='identity',brks=NULL,return.object=F,
-                         layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"), ...){
+                         layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),LFA_label_size=8,colourLFA=T, ...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
   if(area=='27-38')	{ ylim=c(42.5,48); 		xlim=c(-67.4,-57.8)	}
@@ -59,10 +59,11 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   st_crs(l) <- 4326
   b = suppressWarnings(suppressMessages(st_crop(b,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
   l = suppressWarnings(suppressMessages(st_crop(l,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
-  cents = readRDS(file.path( layerDir,"LFALabelsSF.rds"))
+
+    cents = readRDS(file.path( layerDir,"LFALabelsSF.rds"))
   gridCent = st_centroid(r)
       p =  ggplot(data=l) + 
-          geom_sf(size=1.25) + 
+          geom_sf(lwd=1.35) + 
           geom_sf(data=ns_coast,fill='grey') +
           xlab("Longitude") +
           ylab("Latitude")
@@ -73,7 +74,13 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
       if(addGrids){
           p = p + geom_sf(data=r,fill=NA) + geom_sf(data=ns_coast,fill='grey') 
         }
-  
+  if(colourLFA){
+    
+    p =  p+  
+      geom_sf(data=subset(l,LFA==area),lwd=1.35,fill='lightblue')  
+      
+    
+  }
   if(!is.null(attrData)) {
         g = attrData
         if(!any(names(g)== 'Z')) g$Z = g[,attrColumn]
@@ -106,7 +113,7 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
             }
   }
       if(addLFALabels){
-        p = p + geom_sf_text(data=cents, aes(label=label),family='sans')+coord_sf(xlim=xlim,ylim=ylim)
+        p = p + geom_sf_text(data=cents, aes(label=label),family='sans',size=LFA_label_size)+coord_sf(xlim=xlim,ylim=ylim)
       }
       if(addGridLabels){
         p = p + geom_sf_text(data=gridCent, aes(label=GRID_NO),family='sans') +coord_sf(xlim=xlim,ylim=ylim)
@@ -117,11 +124,12 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   p + theme_bw()+
     theme( panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),        
           axis.text.x=element_text(angle=90,hjust=1)) +
     scale_x_continuous(breaks=round(seq(xlim[1],xlim[2],length.out = 4),2)) +
-    scale_y_continuous(breaks=round(seq(ylim[1],ylim[2],length.out = 4))) 
-  
-          }
+    scale_y_continuous(breaks=round(seq(ylim[1],ylim[2],length.out = 4)))
+              }
       
 
   

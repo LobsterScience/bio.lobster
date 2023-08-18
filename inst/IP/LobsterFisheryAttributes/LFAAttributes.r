@@ -100,3 +100,14 @@ g = g[,c(-13)]
 g$t = apply(g[,2:ncol(g)],1,sum, na.rm=T)
 ggplot(subset(g,YR %in% 1990:2021),aes(x=YR,y=t))+geom_line(size=2)+labs(
 x="Year", y = "Landings (t)")
+
+a=  lobster.db('annual.landings')
+a = subset(a,YR<2023)
+a = a[,c(-8,-15)]
+a = subset(a,YR>1980)
+a = a[order(a$YR),]
+a = a %>% tidyr::pivot_longer(cols=starts_with('LFA'),values_to = 'Landings')
+
+require(ggplot2)
+ggplot(a, aes(x = YR, y = Landings, fill = name)) +
+  geom_bar(stat = "identity")
