@@ -26,7 +26,8 @@ scallopSurveyIndex<-function(redo=F,	size_range=c(70,82),sex=0:3, lfa,layerDir=f
 	lf = subset(rdef,LFA==lfa)
 	v = st_intersection(sdef,lf)
 	v$total_area_r = st_area(v) #area within LFA
-	
+	j = which(v$STRATA_ID ==49)
+	if(length(j)>0) v$total_area_r[j] = v$total_area[j] = 239000000
 	#
 	scallop.tows$Y = convert.dd.dddd(scallop.tows$START_LAT)
 	scallop.tows$X = convert.dd.dddd(scallop.tows$START_LONG)

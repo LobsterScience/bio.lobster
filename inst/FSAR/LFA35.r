@@ -8,8 +8,9 @@ a=lobster.db('seasonal.landings')
 a$yr= as.numeric(substr(a$SYEAR,6,9))
 aaa = a
 #raw cpue
-            b = lobster.db('process.logs')
-            b = subset(a,SYEAR %in% 2004:2023 & LFA =='35') 
+lobster.db('logs.redo')    
+        b = lobster.db('process.logs')
+            b = subset(b,SYEAR %in% 2005:2023 & LFA =='35') 
             
             aa = split(b,f=list(b$LFA,b$SYEAR))
             cpue.lst<-list()
@@ -36,11 +37,12 @@ aaa = a
 #effort
       ef = merge(cc,aaa)
       ef$Effort = ef$LFA35/(ef$CPUE)
+
 #standardized cpue
       lobster.db('logs.redo')
       lobster.db('process.logs.redo')
       lobster.db('temperature.data.redo')
-      TempModelData(redo=T)
+      v = TempModelData(redo=F)
       TempModelling = TempModel(areas='lfa', annual.by.area=F, redo.data=F)
       saveRDS(TempModelling,file=file.path(project.datadirectory('bio.lobster'),'tempmodelling.rds'))
       
@@ -136,7 +138,8 @@ aaa = a
 
 #scallop survey reworked in 2023
   lobster.db('scallop.redo')
-  sc = scallopSurveyIndex(redo=T,size_range = c(70,82), lfa=35)[[1]]
+    sc = scallopSurveyIndex(redo=T,size_range = c(70,82), lfa=35)
+    sc = sc[[1]]
   
 #plotting as per csasdown 4 panel plot
 #add in the theme_csas
@@ -175,12 +178,13 @@ efp = ef[nrow(ef),]
 ef = ef[-nrow(ef),]
 ymax=5000
 scaleright = max(ef$Effort)/ymax
-g1 <- ggplot(data = aaa, aes(x = yr,y=LFA35)) +
+g1 <- ggplot(data = subset(aaa,yr>1990), aes(x = yr,y=LFA35)) +
   geom_bar(stat='identity',fill='black') +
   geom_bar(data=aap,aes(x=yr,y=LFA35),stat='identity',fill='gray66') +
   geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='grey66',shape=17,size=3)+
-  geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=2)+
-    scale_y_continuous(name='Catch (t)', sec.axis= sec_axis(~.*scaleright, name= 'Effort',breaks = seq(0,2000,by=250)))+
+  geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1.2,linetype='dashed')+
+  geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=3)+
+  scale_y_continuous(name='Catch (t)', sec.axis= sec_axis(~.*scaleright, name= 'Effort',breaks = seq(0,2000,by=250)))+
   labs(x = "Year") +
 theme_csas()
 
@@ -198,7 +202,7 @@ g3 <- ggplot(data = outs, aes(x = YEAR)) +
   geom_point(aes(y = mu),size=0,colour='white') +
   labs(x = "Year", y = "Fishing Mortality") +
   theme_csas() +
-  theme(axis.text.y = element_blank(),axis.title.y = ggtext::element_markdown())
+  theme(axis.text.y = element_blank(),axis.text.x = element_blank(),axis.title.y = ggtext::element_markdown())
 
 #g3 = ggplot() +                      # Draw ggplot2 plot with text only
 #  annotate("text",
@@ -216,10 +220,14 @@ g4 <- ggplot(data = recout, aes(x = yr)) +
   theme(axis.title.y = ggtext::element_markdown())
 cowplot::plot_grid(g1, g2, g3, g4, ncol = 2, labels = "AUTO", align = "hv")
 
+
 #second plot
 # cpue
-g1a <- ggplot(data = cc, aes(x = yr,y = CPUE)) +
+ccp = cc[nrow(cc),]
+ccf = cc[-nrow(cc),]
+g1a <- ggplot(data = ccf, aes(x = yr,y = CPUE)) +
   geom_point(size=2)+
+  geom_point(data=ccp,aes(x=yr,y=CPUE),colour='grey66',shape=17,size=3)+
   geom_line(data=cp,aes(x=yr,y=x),colour='gray45',lwd=1.25)+
   labs(x = "Year", y = "Raw CPUE") +
   theme_csas()
@@ -251,3 +259,4 @@ g4a <- ggplot(data = df, aes(x = yr)) +
 
 cowplot::plot_grid(g1a, g2a, g3a, g4a, ncol = 2, labels = "AUTO", align = "hv")
 
+saveRDS(list(aaa,aap,ef,efp,outs,recout,cc,sc,df),file=file.path(project.datadirectory('bio.lobster'),'data','LFA35FSARindices.rds'))

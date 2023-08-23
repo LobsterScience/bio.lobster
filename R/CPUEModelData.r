@@ -57,16 +57,15 @@ CPUEModelData = function(p,redo=T,TempModelling, TempSkip=F){
 		#	}else load(file.path( project.datadirectory('bio.lobster'), "data","products","TempModelling.rdata"))
 
 
-	    newdata = with(cpue.data,data.frame(y=y, cos.y=cos(2*pi*y), sin.y=sin(2*pi*y), DEPTH=DEPTH, area=subarea))
-    
-	  cpue.data$TEMP = predict(TempModelling$Model, newdata, type='response')
-    #cpue.data = subset(cpue.data,LFA==35)
-	  #cpue.data$area=35
+	    newdata = with(subset(cpue.data,LFA==35),data.frame(y=y, cos.y=cos(2*pi*y), sin.y=sin(2*pi*y), DEPTH=DEPTH, area='35'))
+	   cpue.data = subset(cpue.data,LFA==35)
+	   cpue.data$TEMP = predict(TempModelling$Model, newdata, type='response')
+    #cpue.data$area=35
 	  w = max(TempModelling$Data$y)
 	  cw = max(cpue.data$y)
 	  cpue.data$yy = cpue.data$y
 	  #dealing with predictions for years with no data -- taking the mean of the previous 3 years model predictions AMC Sept 2022
-	  if(cw-w>1){
+	  if(cw-w>.5){
 	    print(paste('Missing raw temperature years, predictions using the last year of raw data==',floor(w)))
 	    if((cw-w>=3)){stop('Too many missing years')}
 	    cpue.data$index=1:nrow(cpue.data)
@@ -85,7 +84,7 @@ CPUEModelData = function(p,redo=T,TempModelling, TempSkip=F){
 	                  sc2$y = sc2$y-2
 	                  sc3$y = sc3$y-3
 	               sc = plyr::rbind.fill(sc1, sc2, sc3)   
-	               nd = with(sc,data.frame(y=y, cos.y=cos(2*pi*y), sin.y=sin(2*pi*y), DEPTH=DEPTH, area=subarea))
+	               nd = with(sc,data.frame(y=y, cos.y=cos(2*pi*y), sin.y=sin(2*pi*y), DEPTH=DEPTH, area='35'))
 	               sc$TEMP = predict(TempModelling$Model, nd, type='response')
 	               ts = aggregate(TEMP~index,data=sc,FUN=mean)
 	              }

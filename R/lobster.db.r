@@ -1367,12 +1367,17 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
 
      if (DS=="scallop.redo") {
         scallop.tows = connect.command(con, "select * from SCALLSUR.SCTOWS")
+        scallop.tows = subset(scallop.tows,TOW_TYPE_ID %in% c(1,5) & STRATA_ID %ni% c(51,55))
         save( scallop.tows, file=file.path( fnODBC, "scallopTows.rdata"), compress=T)
        
         scallopSurv = connect.command(con, "select * from SCALLSUR.SCBYCATCH_STD where speccd_id='2550'")
+        scallopSurv = subset(scallopSurv,TOW_TYPE_ID %in% c(1,5) & STRATA_ID %ni% c(51,55))
+        
         save( scallopSurv, file=file.path( fnODBC, "scallopSurv.rdata"), compress=T)
        
         scallopStratDefs = connect.command(con, "select * from SCALLSUR.scstratadefs")
+        scallopStratDefs = subset(scallopStratDefs,STRATA_ID %ni% c(51,55))
+        
         save( scallopStratDefs, file=file.path( fnODBC, "scallopSurvdefs.rdata"), compress=T)
         
        
