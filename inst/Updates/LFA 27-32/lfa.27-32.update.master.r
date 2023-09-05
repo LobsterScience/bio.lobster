@@ -4,16 +4,11 @@ require(lubridate)
 
 #la()
 
-<<<<<<< HEAD
-#assessment.year = p$current.assessment.year
-#figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32","2022"))
-=======
 #Choose one
-assessment.year = p$current.assessment.year 
+#assessment.year = p$current.assessment.year 
 #assessment.year = p$current.assessment.year-1 
 
 figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32",assessment.year))
->>>>>>> develop
 
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 
@@ -172,13 +167,10 @@ out.binomial = list()
 attr(out.binomial,'model') <- 'binomial'
 for(i in 104:length(dat)) { #Change to restart a broken run based on iteration number (count files in summary folder...run from there)
   ds = dat[[i]]
-<<<<<<< HEAD
-  ds$method = 'binomial'
-  #ds$method = 'binomial'
-=======
+
+#line underneath likely redundant. Should default to binomial
   #ds$method = 'binomial'
 
->>>>>>> develop
   x = ccir_stan_run_binomial(dat = ds,save=F)
   out.binomial[[i]] <- ccir_stan_summarize(x)
 }
@@ -329,13 +321,10 @@ xlim<-c(1982,p$current.assessment.year)
 French=F #change to T to create landings figures with French Labels
 #French=T
 if (French){
-<<<<<<< HEAD
-  ylab= 'D?barquements (t)'
-  efftext= "Effort (x 1000 casiers lev?s)"
-=======
-  ylab= 'Débarquements (t)'  
-  efftext= "Effort (x 1000 casiers levés)"   
->>>>>>> develop
+
+  ylab= 'Debarquements (t)'  
+  efftext= "Effort (x 1000 casiers leves)"   
+
 }else  {
 ylab= 'Landings (t)'
 efftext= "Effort ('000s Trap Hauls)"
