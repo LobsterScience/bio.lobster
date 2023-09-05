@@ -4,8 +4,11 @@ require(lubridate)
 
 #la()
 
-#assessment.year = p$current.assessment.year 
-y#figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32","2022"))
+#Choose one
+assessment.year = p$current.assessment.year 
+#assessment.year = p$current.assessment.year-1 
+
+figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32",assessment.year))
 
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 
@@ -65,7 +68,7 @@ crplot= function(x, French=F){
   par(mar=c(3.0,5.0,2.0,2.0))	
   
   ylab='CPUE (kg/TH)'
-  if (French){ylab='CPUE (kg/casier lev?)'}
+  if (French){ylab='CPUE (kg/casier levé)'}
   plot(crd[,1],crd[,2],xlab=' ',ylab=ylab,type='p',pch=16, xlim=xlim, ylim=c(lrp-.1,1.05*(max(crd$CPUE, na.rm = TRUE)) ))
   running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
   crd=merge(crd,running.median,all=T)
@@ -111,7 +114,7 @@ dev.off()
 png(filename=file.path(cpue.dir, "CPUE_LFA31A-32.French.png"),width=8, height=5.5, units = "in", res = 800)
 par(mfrow=c(2,2))		
 for (l in ls2) {
-  crplot(French=F) #Change to crplot(French=T) to produce French axis labels
+  crplot(French=T) #Change to crplot(French=T) to produce French axis labels
 }
 dev.off()
 
@@ -127,8 +130,9 @@ for (l in p$lfas){
 
 ## Continuous Change In Ratio (CCIR)
 
-lobster.db('ccir.redo') #Must 'redo' to bring in new data
 #lobster.db('ccir')
+lobster.db('ccir.redo') #Must 'redo' to bring in new data
+
 
  inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
  load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
@@ -163,11 +167,8 @@ out.binomial = list()
 attr(out.binomial,'model') <- 'binomial'
 for(i in 104:length(dat)) { #Change to restart a broken run based on iteration number (count files in summary folder...run from there)
   ds = dat[[i]]
-<<<<<<< HEAD
-  ds$method = 'binomial'
-=======
   #ds$method = 'binomial'
->>>>>>> develop
+
   x = ccir_stan_run_binomial(dat = ds,save=F)
   out.binomial[[i]] <- ccir_stan_summarize(x)
 }
@@ -318,8 +319,8 @@ xlim<-c(1982,p$current.assessment.year)
 French=F #change to T to create landings figures with French Labels
 #French=T
 if (French){
-  ylab= 'D?barquements (t)'  
-  efftext= "Effort (x 1000 casiers lev?s)"   
+  ylab= 'Débarquements (t)'  
+  efftext= "Effort (x 1000 casiers levés)"   
 }else  {
 ylab= 'Landings (t)'  
 efftext= "Effort ('000s Trap Hauls)" 
@@ -341,7 +342,7 @@ data$EFFORT2=fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
 par(mar=c(3,5,2.0,4.5))
 plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
 lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
-text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
+text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.5)
 
 par(new=T)
 
@@ -372,7 +373,7 @@ for (i in 1:length(lst)) {
   par(mar=c(3,5,2.0,4.5))
   plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
   lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
-  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
+  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.5)
   
   par(new=T)
   
@@ -402,7 +403,7 @@ png(filename=file.path(land.dir, paste0("Landings_LFA",lst[i],".png")),width=8, 
   par(mar=c(3,5,2.0,4.5))
   plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
   lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
-  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
+  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.5)
   
   par(new=T)
   

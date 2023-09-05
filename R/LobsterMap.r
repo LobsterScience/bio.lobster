@@ -39,6 +39,7 @@ options(stringsAsFactors=F)
 	if(area=='27-38')	{ ylim=c(42.5,48); 		xlim=c(-67.4,-57.8)	}
 	if(area=='27-33')	{ ylim=c(42.5,48); 		xlim=c(-66.6,-57.8)	}
 	if(area=='27-32')	{ ylim=c(43.5,48); 		xlim=c(-63.6,-57.8)	}
+  if(area=='27-32.Crop')	{ ylim=c(44,47.6); 		xlim=c(-63.6,-58.5)	}
 	if(area=='34-38')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-63.5)	}
 	if(area=='35-36')	{ ylim=c(44.5,46);	 	xlim=c(-67.2,-63.2)	}
 	if(area=='west')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-64)	}
@@ -47,9 +48,13 @@ options(stringsAsFactors=F)
 	if(area=='28')		{ ylim=c(45.3,46);	 	xlim=c(-61.6,-60.3)	}
 	if(area=='29')		{ ylim=c(45.3,46); 		xlim=c(-61.6,-60.3)	}
 	if(area=='30')		{ ylim=c(44.6,45.9); 	xlim=c(-60.8,-59.6)	}
+  if(area=='30.Crop')		{ ylim=c(45.2,46); 	xlim=c(-61,-59.7)	}
 	if(area=='31A')		{ ylim=c(44.4,45.7); 	xlim=c(-61.8,-60)	}
-	if(area=='31B')		{ ylim=c(44.1,45.3); 	xlim=c(-62.2,-60.5)	}
+  if(area=='31A.Crop')		{ ylim=c(44.8,45.8); 	xlim=c(-61.6,-60.2)	}
+  if(area=='31B')		{ ylim=c(44.1,45.3); 	xlim=c(-62.2,-60.5)	}
+  if(area=='31B.Crop')		{ ylim=c(44.6,45.6); 	xlim=c(-62.35,-60.5)	}
 	if(area=='32')		{ ylim=c(43.8,45);	 	xlim=c(-63.5,-61.5)	}
+  if(area=='32.Crop')		{ ylim=c(44.2,45.2);	 	xlim=c(-63.5,-61.5)	}
 	if(area=='33')		{ ylim=c(42.5,44.8); 	xlim=c(-65.8,-62.2)	}
 	if(area=='34')		{ ylim=c(42.5,45);	 	xlim=c(-67.8,-65)	}
 	if(area=='35')		{ ylim=c(44.5,46);	 	xlim=c(-66,-63.2)	}

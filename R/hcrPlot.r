@@ -1,4 +1,4 @@
-hcrPlot <- function(B,mF,USR,LRP,RR=NULL,TRP=null, yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F,big.final=F, area.cols=c('lightgreen','lightgoldenrod','darksalmon'),French=F,FrenchCPUE=F,example=T,RRdecTRP=F,noTicks=F,...) {
+hcrPlot <- function(B,mF,USR,LRP,RR=NULL,TRP=NULL, yrs,ylims=NULL,xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Fishing mortality', xlab = 'Fishable biomass',yr.ends=F,big.final=F, area.cols=c('lightgreen','lightgoldenrod','darksalmon'),French=F,FrenchCPUE=F,example=F,RRdecTRP=F,noTicks=F,...) {
   
   if (French) {
     labels=c("PRS","PRL","Taux d'exploitation de reference")    
@@ -14,7 +14,8 @@ hcrPlot <- function(B,mF,USR,LRP,RR=NULL,TRP=null, yrs,ylims=NULL,xlims=NULL,lab
   if(is.null(ylims)) ylims = c(0, (max(na.omit(mF),RR)*1.05))
   if(is.null(xlims)) xlims = c(0, (max(na.omit(B),USR)*1.05))
   if(noTicks==F){  plot( B, mF,  type="b", xlim=xlims, ylim=ylims, col="darkorange", cex=0.8, lwd=2, xlab="", ylab="", pch=20,yaxs='i',xaxs='i',... ); box()}
-  if(noTicks==T) {plot( B, mF,  type="b", xlim=xlims, ylim=ylims, col="darkorange", cex=0.8, lwd=2, xlab="", ylab="", pch=20,yaxs='i',axes=F,... ); axis(side=1,labels=NA);axis(side=2,labels=NA);box()          }
+  if(noTicks==T) {plot( B, mF,  type="b", xlim=xlims, ylim=ylims, col="darkorange", cex=0.8, lwd=2, xlab="", ylab="", pch=20,yaxs='i',axes=F,... ); axis(side=1,labels=NA);axis(side=2,labels=NA);box()}
+  
   title( xlab=xlab ) 
   title( ylab=ylab ) 
   if(is.null(TRP) ) {
@@ -30,9 +31,10 @@ hcrPlot <- function(B,mF,USR,LRP,RR=NULL,TRP=null, yrs,ylims=NULL,xlims=NULL,lab
   }
   
   
+  
   if(!is.null('RR')) {
     arrows(x0 = USR, x1 = USR*1000, length=0,y0 = RR, lty="solid", col="black", lwd=2 )
-    text( xlims[2]*0.75, RR+RR*0.1, labels[3], lwd=2 )
+    text( xlims[2]*0.75, RR+RR*0.04, labels[3], lwd=2 )
     if(RRdec) arrows(x0 = LRP, x1 = USR, length=0,y1 = RR,y0=0, lty="dashed", col="black", lwd=2 )
     abline (v=USR, lty="dotted")
     abline (v=LRP, lty="dotted")
