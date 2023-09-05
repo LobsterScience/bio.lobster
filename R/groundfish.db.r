@@ -8,7 +8,7 @@
 
 groundfish.db = function(  DS="gscat.odbc.redo", p=NULL, taxa="all", datayrs=NULL  ) {
 
-  loc = file.path( project.datadirectory("bio.lobster"), "data","rvsurvey" )
+  loc = file.path( project.datadirectory("bio.lobster"), "data","rvsurvey","trawl" )
 
   dir.create( path=loc, recursive=T, showWarnings=F )
 
@@ -330,16 +330,16 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
       # fix some time values that have lost the zeros due to numeric conversion
     gsinf$time = as.character(gsinf$time)
 
-    tz.odbc = "America/Halifax"  ## need to verify if this is correct
-    tz.groundfish = "UTC"
+ #   tz.odbc = "America/Halifax"  ## need to verify if this is correct
+#    tz.groundfish = "UTC"
 
     # by default it should be the correct timezone ("localtime") , but just in case
-    tz( gsinf$sdate) = tz.odbc
-    gsinf$sdate = with_tz( gsinf$sdate, tz.groundfish )
+ #   tz( gsinf$sdate) = tz.odbc
+  #  gsinf$sdate = with_tz( gsinf$sdate, tz.groundfish )
 
     gsinf$edate = gsinf$etime
-    tz( gsinf$edate) = tz.odbc
-    gsinf$edate = with_tz( gsinf$edate, tz.groundfish )
+   # tz( gsinf$edate) = tz.odbc
+  #  gsinf$edate = with_tz( gsinf$edate, tz.groundfish )
 
 
     # fix sdate - edate inconsistencies .. assuming sdate is correct
@@ -388,7 +388,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
     gsinf$strat[ which(gsinf$strat=="") ] = "NA"
     gsinf$id = paste(gsinf$mission, gsinf$setno, sep=".")
     d = which(duplicated(gsinf$id))
-    if (!is.null(d)) write("error: duplicates found in gsinf")
+  #  if (!is.null(d)) write("error: duplicates found in gsinf")
 
     gsinf$lat = gsinf$slat/100
     gsinf$lon = gsinf$slong/100
@@ -434,9 +434,9 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
     gsinf$bottom_depth = rowMeans( gsinf[, c("dmax", "depth" )], na.rm = TRUE )  * 1.8288  # convert from fathoms to meters
     ii = which( gsinf$bottom_depth < 10 | !is.finite(gsinf$bottom_depth)  )  # error
     gsinf$bottom_depth[ii] = NA
-		gsinf = gsinf[, c("id", "yr", "sdate", "edate", "time", "strat", "area", "speed", "dist_km", "dist_pos",
-                      "cftow", "sakm2", "settype", "gear", "geardesc", "lon", "lat", "lon.end", "lat.end",
-                      "surface_temperature","bottom_temperature","bottom_salinity", "bottom_depth")]
+	#	gsinf = gsinf[, c("id", "yr", "sdate", "edate", "time", "strat", "area", "speed", "dist_km", "dist_pos",
+ #                     "cftow", "sakm2", "settype", "gear", "geardesc", "lon", "lat", "lon.end", "lat.end",
+#                      "surface_temperature","bottom_temperature","bottom_salinity", "bottom_depth")]
 
     save(gsinf, file=fn, compress=T)
     return(fn)

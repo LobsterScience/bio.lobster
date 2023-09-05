@@ -20,6 +20,16 @@ lobster.db = function( DS="complete.redo",p=p) {
     dir.create( fnODBC, recursive = TRUE, showWarnings = FALSE )
     dir.create( fnProducts, recursive = TRUE, showWarnings = FALSE )
 
+if(DS %in% c('percent_reporting')){
+      print('This requires ODBC connection as it is refreshed everytime you run it; please note in oracle this is a materialized view, requiring refresh')  
+      db.setup()
+      vsP = connect.command(con,"select * from lobster.percent_reporting")
+      
+      
+      return(vsP)
+    }
+    
+    
 if(DS %in% c('licence_categories')){
 
       #from https://www.in2013dollars.com/Canada-inflation
