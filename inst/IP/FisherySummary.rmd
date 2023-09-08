@@ -1,0 +1,159 @@
+---
+title: "Maritimes Region Lobster Fishery Statistics"
+author: "Lobster Ecology and Assessment Team (PED)"
+output: pdf_document
+#classoption: landscape  
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+The data in this document is current as of:
+```{r,echo=FALSE}
+format(Sys.Date(),"%Y-%m-%d")
+
+```
+
+
+## Missing Logs
+
+```{r, include=FALSE, echo=FALSE, warning=FALSE, message=FALSE, comment = FALSE, error = FALSE, }
+  
+require(bio.lobster)
+require(bio.utilities)
+require(ggplot2)
+require(devtools)
+require(dplyr)
+require(tidyr)
+
+la()
+
+lobster.db('annual.landings.redo')
+lobster.db('seasonal.landings.redo')
+#lobster.db('logs.redo')
+
+
+
+v = lobster.db('percent_reporting')
+vv = v %>% gather(key='Cat',value='PercMissing',-YEARMTH)
+i = grep('PERC',vv$Cat)
+vv = vv[i,]
+vv$yr = as.numeric(substr(vv$YEARMTH,1,4))
+vv$mn = as.numeric(substr(vv$YEARMTH,5,6))
+vv$yrmn = paste(month.abb[vv$mn],vv$yr,sep="-")
+vv$lfa = gsub("PERCENT","",vv$Cat)
+vr = c(paste('Oct',max(vv$yr)-1,sep="-"),
+       paste('Nov',max(vv$yr)-1,sep="-"),
+       paste('Dec',max(vv$yr)-1,sep="-"),
+       paste('Jan',max(vv$yr),sep="-"),
+       paste('Feb',max(vv$yr),sep="-"),
+       paste('Mar',max(vv$yr),sep="-"),
+       paste('Apr',max(vv$yr),sep="-"),
+       paste('May',max(vv$yr),sep="-"),
+       paste('Jun',max(vv$yr),sep="-"),
+       paste('Jul',max(vv$yr),sep="-"))
+       
+       
+vv = subset(vv,yrmn %in% vr)
+vv$Cats = factor(vv$yrmn,levels=vr)
+```
+
+```{r, echo=FALSE, fig.cap='Percent missing commercial fishing logs for each LFA in the Maritmes Region'}
+g = ggplot(vv,aes(x=Cats,y=PercMissing))+geom_bar(stat='identity')+facet_wrap(~lfa)+
+  theme(axis.text.x = element_text(angle = 90, hjust= 0,vjust=0.5))+ xlab("")+ylab('Percent Missing Logs (%)')
+print(g)
+```
+\newpage
+
+## Seasonal Landings
+
+```{r, echo=FALSE,include=FALSE}
+
+  a = lobster.db('seasonal.landings')
+      a$SYEAR = as.numeric(substring(a$SYEAR,6,9))
+      a = subset(a,!is.na(SYEAR)& SYEAR>1995)
+      sa = a %>% gather(key='LFA',value='Landings',-SYEAR)
+      gg = ggplot(sa,aes(x=SYEAR,y=Landings/1000,fill=factor(SYEAR)))+geom_bar(stat='identity')+
+        facet_wrap(~LFA, scales='free_y' )+xlab('Season Year Ending')+ylab('Landings (kt)')
+        last_bar_color <- "black"  # Change this to the color you want for the last bar
+      bar_colors <- ifelse(sa$SYEAR <max(sa$SYEAR), last_bar_color, "orange")
+      
+```
+
+```{r, echo=FALSE,fig.cap='Slip reported landings (‘000s tons) from LFA 33-38B. Orange coloured bars represent incomplete season’s worth of data (Fig 1). All orange bars represent under estimates of landings.'}
+
+gg+scale_fill_manual(values = bar_colors)+guides(fill=FALSE)
+
+```
+\newpage
+
+## Annual Landings
+
+```{r, echo=FALSE,include=FALSE}
+     a = lobster.db('annual.landings')
+      a = subset(a,!is.na(YR)& YR>1995)
+      sa = a %>% gather(key='LFA',value='Landings',-YR)
+      sa = subset(sa,LFA<'LFA33')
+      sa = subset(sa,LFA %ni% 'LFA31')
+      sa = sa[order(sa$LFA,sa$YR),]
+      gg = ggplot(sa,aes(x=YR,y=Landings/1000,fill=factor(YR)))+geom_bar(stat='identity')+
+        facet_wrap(~LFA, scales='free_y' )+xlab('Season')+ylab('Landings (kt)')
+      last_bar_color <- "black"  # Change this to the color you want for the last bar
+      bar_colors <- ifelse(sa$YR <max(sa$YR), last_bar_color, "orange")
+      
+
+```
+
+```{r, echo=FALSE,fig.cap='Slip landings for spring fisheries in the Maritimes LFAs. Orange bars represent incomplete log entries which constitute significant amounts of missing information for most LFAs (Figure 1), all orange bars are underestimates of landings. '}
+
+gg+scale_fill_manual(values = bar_colors)+guides(fill=FALSE)
+
+```
+\newpage
+
+## CPUE
+
+```{r, echo=FALSE,include=FALSE}
+       a = lobster.db('process.logs')
+      a = subset(a,SYEAR %in% 2004:2023) 
+      
+      aa = split(a,f=list(a$LFA,a$SYEAR))
+      cpue.lst<-list()
+      m=0
+      #by time
+      for(i in 1:length(aa)){
+        tmp<-aa[[i]]
+        tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+        names(tmp)<-c('time','catch','effort')
+        tmp$date<-as.Date(tmp$time)
+        first.day<-min(tmp$date)
+        tmp$time<-julian(tmp$date,origin=first.day-1)
+        tmp$time = ceiling(tmp$time/7) #convert to week of season
+        if(nrow(tmp)>5){
+          m=m+1
+        g<-as.data.frame(biasCorrCPUE(tmp,by.time=F))
+        g$lfa=unique(aa[[i]]$LFA)
+        g$yr = unique(aa[[i]]$SYEAR)
+        g = t(g)[,2]
+        cpue.lst[[m]] <- g
+      }
+      }
+      cc =as.data.frame(do.call(rbind,cpue.lst))
+      cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
+      cc = cc[order(cc$lfa,cc$yr),]
+      cc$yr = as.numeric(cc$yr)
+      cc$fyr = as.factor(cc$yr)
+      point_colors <- ifelse(cc$yr <max(cc$yr), last_bar_color, "orange")
+      cc1 = cc
+     
+
+```
+
+```{r, echo=FALSE,fig.cap='Unstandardized Commercial CPUE by Maritimes regions LFA and year. For LFAs with season’s covering two calendar years (i.e. October – July), year refers to the terminal year of the season. Orange points for 2023 indicate incomplete logbook information and may be biased either low or high (Table 1)'}
+
+  ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+
+        geom_smooth(se=FALSE)+geom_point(data=cc1,aes(x=yr,y=CPUE,colour=fyr))+facet_wrap(~lfa,scales='free_y')+
+      scale_colour_manual(values = point_colors)+theme(legend.position = 'none')
+    
+```

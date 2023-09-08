@@ -1,5 +1,6 @@
 #SMB
 require(bio.lobster)
+la()
 g = lobster.db('process.logs.unfiltered')
 g = subset(g, LFA==34)
 gG = unique(g$GRID_NUM)

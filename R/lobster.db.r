@@ -24,8 +24,6 @@ if(DS %in% c('percent_reporting')){
       print('This requires ODBC connection as it is refreshed everytime you run it; please note in oracle this is a materialized view, requiring refresh')  
       db.setup()
       vsP = connect.command(con,"select * from lobster.percent_reporting")
-      
-      
       return(vsP)
     }
     
@@ -424,11 +422,6 @@ if(DS %in% c('season.dates','season.dates.redo')) {
                     Fish.Date = season.dates = connect.command(con,'select * from LOBSTER.FISHING_SEASONS')
                     print('Lobster.Fishing_Seasons needs to be updated in SQL if you want to use this season dates script--these dates come from FAM.')
                     season.dates = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
-
-
-
-
-
                   save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
             }
 
