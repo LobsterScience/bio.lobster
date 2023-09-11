@@ -59,11 +59,15 @@ vv = subset(vv,yrmn %in% vr)
 vv$Cats = factor(vv$yrmn,levels=vr)
 ```
 
+
+
 ```{r, echo=FALSE, fig.cap='Percent missing commercial fishing logs for each LFA in the Maritmes Region'}
 g = ggplot(vv,aes(x=Cats,y=PercMissing))+geom_bar(stat='identity')+facet_wrap(~lfa)+
   theme(axis.text.x = element_text(angle = 90, hjust= 0,vjust=0.5))+ xlab("")+ylab('Percent Missing Logs (%)')
 print(g)
 ```
+
+
 \newpage
 
 ## Seasonal Landings
@@ -73,19 +77,23 @@ print(g)
   a = lobster.db('seasonal.landings')
       a$SYEAR = as.numeric(substring(a$SYEAR,6,9))
       a = subset(a,!is.na(SYEAR)& SYEAR>1995)
-      sa = a %>% gather(key='LFA',value='Landings',-SYEAR)
-      gg = ggplot(sa,aes(x=SYEAR,y=Landings/1000,fill=factor(SYEAR)))+geom_bar(stat='identity')+
+      sa1 = a %>% gather(key='LFA',value='Landings',-SYEAR)
+      gg = ggplot(sa1,aes(x=SYEAR,y=Landings/1000,fill=factor(SYEAR)))+geom_bar(stat='identity')+
         facet_wrap(~LFA, scales='free_y' )+xlab('Season Year Ending')+ylab('Landings (kt)')
         last_bar_color <- "black"  # Change this to the color you want for the last bar
-      bar_colors <- ifelse(sa$SYEAR <max(sa$SYEAR), last_bar_color, "orange")
+      bar_colors <- ifelse(sa1$SYEAR <max(sa1$SYEAR), last_bar_color, "orange")
       
 ```
+
+
 
 ```{r, echo=FALSE,fig.cap='Slip reported landings (‘000s tons) from LFA 33-38B. Orange coloured bars represent incomplete season’s worth of data (Fig 1). All orange bars represent under estimates of landings.'}
 
 gg+scale_fill_manual(values = bar_colors)+guides(fill=FALSE)
 
 ```
+
+
 \newpage
 
 ## Annual Landings
@@ -105,11 +113,15 @@ gg+scale_fill_manual(values = bar_colors)+guides(fill=FALSE)
 
 ```
 
+
+
 ```{r, echo=FALSE,fig.cap='Slip landings for spring fisheries in the Maritimes LFAs. Orange bars represent incomplete log entries which constitute significant amounts of missing information for most LFAs (Figure 1), all orange bars are underestimates of landings. '}
 
 gg+scale_fill_manual(values = bar_colors)+guides(fill=FALSE)
 
 ```
+
+
 \newpage
 
 ## CPUE
@@ -150,10 +162,59 @@ gg+scale_fill_manual(values = bar_colors)+guides(fill=FALSE)
 
 ```
 
+
 ```{r, echo=FALSE,fig.cap='Unstandardized Commercial CPUE by Maritimes regions LFA and year. For LFAs with season’s covering two calendar years (i.e. October – July), year refers to the terminal year of the season. Orange points for 2023 indicate incomplete logbook information and may be biased either low or high (Table 1)'}
 
   ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+
         geom_smooth(se=FALSE)+geom_point(data=cc1,aes(x=yr,y=CPUE,colour=fyr))+facet_wrap(~lfa,scales='free_y')+
       scale_colour_manual(values = point_colors)+theme(legend.position = 'none')
     
+```
+
+
+\newpage
+
+```{r, echo=FALSE}
+  wv = subset(vv,select=c(Cats,Cat,PercMissing)) %>% pivot_wider(names_from = Cat, values_from = PercMissing)
+names(wv)[2:ncol(wv)]=sub("PERCENT","",names(wv)[2:ncol(wv)]) 
+names(wv)[1] = 'MnYr' 
+wv = wv[order(wv$MnYr),]
+options(knitr.kable.NA = "--")
+  wv %>% 
+  knitr::kable(format='pipe',caption='Percent of Missing logbooks') 
+  
+```
+\newpage
+```{r, echo=FALSE}
+require(kableExtra)
+sa = sa %>% pivot_wider(names_from = LFA, values_from = Landings)
+options(knitr.kable.NA = "--")
+  sa %>% 
+  knitr::kable(format='latex',booktabs=T, caption='Annual Commercial Landings. The last row is preliminary (indicated in orange)') %>%
+  row_spec(nrow(sa),color='orange')
+  
+```
+
+
+\newpage
+```{r, echo=FALSE}
+sa1 = sa1 %>% pivot_wider(names_from = LFA, values_from = Landings)
+
+  sa1 %>% 
+  knitr::kable(format='latex',booktabs=T, caption='Seasonal Commercial Landings. The last row is preliminary (indicated in orange') %>%
+  row_spec(nrow(sa1),color='orange')
+  
+```
+
+
+\newpage
+```{r, echo=FALSE}
+cc$CPUE = round(cc$CPUE,2)
+cc = subset(cc,select=c(lfa,yr,CPUE)) %>% pivot_wider(names_from = lfa, values_from = CPUE)
+
+
+  cc %>% 
+  knitr::kable(format='latex',booktabs=T, caption='Raw Commercial Catch Per Unit Effort by Year and LFA. The last row is preliminary (indicated in orange') %>%
+  row_spec(nrow(cc),color='orange')
+  
 ```
