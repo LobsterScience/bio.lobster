@@ -42,8 +42,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
       fl = list.files( path=fn.root, pattern="*.rdata", full.names=T )
 				for ( fny in fl ) {
 				load (fny)
-        print(fny)
-				out = rbind( out, gscat )
+        out = rbind( out, gscat )
 			}
 			return (out)
     }
