@@ -434,7 +434,7 @@ if (DS %in% c("logs.redo", "logs") ) {
            if (DS=="logs.redo") {
               require(RODBC)
              #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-
+              if (is.null(p$yr)){
               # logs
                logs = connect.command(con, "select * from marfissci.lobster_sd_log")
               save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
@@ -452,7 +452,27 @@ if (DS %in% c("logs.redo", "logs") ) {
               gc()  # garbage collection
               #odbcClose(con)
               }
-            }
+              }
+             if(!is.null(p$yr)){
+               
+               load (file.path( fnODBC, "slip.rdata"), .GlobalEnv)
+               load (file.path( fnODBC, "logs.rdata"), .GlobalEnv)
+                yrs = c(p$yr-1,p$yr)
+              print(paste('this is just updating ',paste(yrs,collapse=',')))
+              logs = subset(logs,lubridate::year(DATE_FISHED) %ni% yrs )
+              slips = subset(slips,lubridate::year(DATE_LANDED) %ni% yrs )
+           
+              logss = connect.command(con, paste("select * from marfissci.lobster_sd_log where to_char(date_fished,'yyyy') IN (",paste(yrs,collapse=','),")",sep=""))
+              logs = as.data.frame(rbind(logs,logss))
+              save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
+             
+              slipss = connect.command(con, paste("select * from marfissci.lobster_sd_slip where to_char(date_landed,'yyyy') IN (",paste(yrs,collapse=','),")",sep=""))
+              slips = as.data.frame(rbind(slips,slipss))
+              save( slips, file=file.path( fnODBC, "slip.rdata"), compress=T)
+              gc()  # garbage collection
+              }
+           }
+    
             load (file.path( fnODBC, "slip.rdata"), .GlobalEnv)
             load (file.path( fnODBC, "logs.rdata"), .GlobalEnv)
             load (file.path( fnODBC, "oldlogs34.rdata"), .GlobalEnv)

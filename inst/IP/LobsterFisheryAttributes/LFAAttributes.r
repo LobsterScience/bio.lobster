@@ -30,6 +30,16 @@ la()
   LobsterMap('27-38',poly.lst=xx,polylstend=T,labcex=.8)
   legend('bottomright',legend=c(xx$lvls),fill=xx$col,bty='n',cex=.8)
   
+  #At Sea Sampling
+  x = data.frame(LFA=c(27,28,29,30,'31A',"31B",32,33,34,35,36,38),
+                 Z = c('Annual','Historic','Annual-NA','Historic','Annual-NA','Annual-NA','Annual','Annual',"Annual","Annual",'Historic','Historic'))
+  xx = lobLFAAttr(Data=x)  
+  LobsterMap('27-38',poly.lst=xx,polylstend=T,labcex=.8)
+  legend('bottomright',legend=c(xx$lvls),fill=xx$col,bty='n',cex=.8)
+  
+  LobsterMap('27-38',polylstend=T,labcex=.8)
+  
+  
   #Year May Indicator
   #rate of chance since indicator
   ###CPUE 
