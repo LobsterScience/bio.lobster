@@ -6,7 +6,7 @@ require(lubridate)
 
 #Choose one
 #assessment.year = p$current.assessment.year 
-#assessment.year = p$current.assessment.year-1 
+assessment.year = p$current.assessment.year-1 
 
 figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32",assessment.year))
 
@@ -25,6 +25,11 @@ if(NewDataPull){
   logs=lobster.db('season.dates.redo') #updates season dates as required
   logs=lobster.db('process.logs.redo')
 }
+
+#Run a report of missing vs received logs and save a csv copy
+per.rec= lobster.db("percent_reporting")
+fl.name=paste("percent_logs_reported", Sys.Date(),"csv", sep=".")
+write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
 png(filename=file.path(figdir, "MapLFA27-32.png") ,width=6.5, height=6.5, units = "in", res = 800)
 LobsterMap('27-32', labels=c('lfa','grid'), grid.labcex=0.6)
