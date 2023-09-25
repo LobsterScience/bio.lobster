@@ -69,7 +69,7 @@ nm =  grep('Temp',dimnames(gp)[[2]])
 
 require(ggeffects)
 
-mydf <- ggpredict(go, terms = c('Temperature'))
+mydf <- ggpredict(go5, terms = c('Temperature'))
 plot(mydf)
 
 mydf <- ggpredict(go3, terms = c('Temperature'))
