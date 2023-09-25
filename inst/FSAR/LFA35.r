@@ -10,7 +10,7 @@ aaa = a
 #raw cpue
 lobster.db('logs.redo')    
         b = lobster.db('process.logs')
-            b = subset(b,SYEAR %in% 2005:2023 & LFA =='35') 
+            b = subset(b,SYEAR %in% 2005:2023 & LFA =='36') 
             
             aa = split(b,f=list(b$LFA,b$SYEAR))
             cpue.lst<-list()
@@ -36,7 +36,7 @@ lobster.db('logs.redo')
             cp = as.data.frame(do.call(cbind,rmed(cc$yr,cc$CPUE)))
 #effort
       ef = merge(cc,aaa)
-      ef$Effort = ef$LFA35/(ef$CPUE)
+      ef$Effort = ef$LFA36/(ef$CPUE)
 
 #standardized cpue
       lobster.db('logs.redo')
@@ -138,7 +138,7 @@ lobster.db('logs.redo')
 
 #scallop survey reworked in 2023
   lobster.db('scallop.redo')
-    sc = scallopSurveyIndex(redo=T,size_range = c(70,82), lfa=35)
+    sc = scallopSurveyIndex(redo=T,size_range = c(70,82), lfa=38)
     sc = sc[[1]]
   
 #plotting as per csasdown 4 panel plot
@@ -178,9 +178,9 @@ efp = ef[nrow(ef),]
 ef = ef[-nrow(ef),]
 ymax=5000
 scaleright = max(ef$Effort)/ymax
-g1 <- ggplot(data = subset(aaa,yr>1990), aes(x = yr,y=LFA35)) +
+g1 <- ggplot(data = subset(aaa,yr>1990), aes(x = yr,y=LFA36)) +
   geom_bar(stat='identity',fill='black') +
-  geom_bar(data=aap,aes(x=yr,y=LFA35),stat='identity',fill='gray66') +
+  geom_bar(data=aap,aes(x=yr,y=LFA36),stat='identity',fill='gray66') +
   geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='grey66',shape=17,size=3)+
   geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1.2,linetype='dashed')+
   geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=3)+

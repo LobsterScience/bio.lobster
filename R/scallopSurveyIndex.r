@@ -1,7 +1,7 @@
 #' @export
 scallopSurveyIndex<-function(redo=F,	size_range=c(70,82),sex=0:3, lfa,layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),outDir=file.path(project.datadirectory('bio.lobster'),'data')){
-  if(redo){	
-
+if(redo){	
+  require(sf)
 	# import bycatch data from scallop survey
 	lobster.db('scallop')
 	scallopStratDefs$X = scallopStratDefs$LONGITUDE
