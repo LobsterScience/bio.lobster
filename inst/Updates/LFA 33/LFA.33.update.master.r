@@ -1,6 +1,8 @@
 # LFA 33 Update Script
 
 	p = bio.lobster::load.environment()
+	p$yrs <- NULL #ensuring empty variable
+	
 	la()
 
 
@@ -10,6 +12,7 @@
 	    dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 	    p$lfas = c("33") # specify lfas for data summary
 	    p$subareas = c("33W", "33E") # specify lfas for data summary
+	    
 	   
 	    #If you only want to update logs for the last two years, run this:
 	    #p$yr=p$current.assessment.year
