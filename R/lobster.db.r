@@ -434,7 +434,6 @@ if (DS %in% c("logs.redo", "logs") ) {
            if (DS=="logs.redo") {
               require(RODBC)
              #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-             browser()
              if (is.null(pH$yr)){
               # logs
                logs = connect.command(con, "select * from marfissci.lobster_sd_log")
