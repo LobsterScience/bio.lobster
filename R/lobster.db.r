@@ -7,7 +7,7 @@
 #' lobster.db('fsrs') #loads the object fsrs
 #' @export
 
-lobster.db = function( DS="complete.redo",p1=p) {
+lobster.db = function( DS="complete.redo",pH=p) {
     options(stringsAsFactors=F)
 
   require(lubridate)
@@ -434,8 +434,8 @@ if (DS %in% c("logs.redo", "logs") ) {
            if (DS=="logs.redo") {
               require(RODBC)
              #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-             
-             if (is.null(p1$yr)){
+             browser()
+             if (is.null(pH$yr)){
               # logs
                logs = connect.command(con, "select * from marfissci.lobster_sd_log")
               save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
@@ -454,11 +454,11 @@ if (DS %in% c("logs.redo", "logs") ) {
               #odbcClose(con)
               }
               }
-             if(!is.null(p1$yr)){
+             if(!is.null(pH$yr)){
                
                load (file.path( fnODBC, "slip.rdata"), .GlobalEnv)
                load (file.path( fnODBC, "logs.rdata"), .GlobalEnv)
-                yrs = c(p1$yr-1,p1$yr)
+                yrs = c(pH$yr-1,pH$yr)
               print(paste('this is just updating ',paste(yrs,collapse=',')))
               logs = subset(logs,lubridate::year(DATE_FISHED) %ni% yrs )
               slips = subset(slips,lubridate::year(DATE_LANDED) %ni% yrs )
@@ -781,9 +781,9 @@ if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
             a41 = rbind(off41,ziff41,logs41)
             a41$fishingYear = sapply(a41$DATE_FISHED,offFishingYear)
 
-            a41 = lonlat2planar(a41,input_names = c('DDLON','DDLAT'),proj.type = p1$internal.projection)
-            a41$plon = grid.internal(a41$plon,p1$plons)
-            a41$plat = grid.internal(a41$plat,p1$plats)
+            a41 = lonlat2planar(a41,input_names = c('DDLON','DDLAT'),proj.type = pH$internal.projection)
+            a41$plon = grid.internal(a41$plon,pH$plons)
+            a41$plat = grid.internal(a41$plat,pH$plats)
             a41$z = NA
             a41$depth = NULL
 
