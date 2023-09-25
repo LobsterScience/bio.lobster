@@ -10,6 +10,9 @@
 	    dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 	    p$lfas = c("33") # specify lfas for data summary
 	    p$subareas = c("33W", "33E") # specify lfas for data summary
+	   
+	    #If you only want to update logs for the last two years, run this:
+	    #p$yr=p$current.assessment.year
 
 	    # update data through ROracle
 	    NewDataPull =F
@@ -122,7 +125,11 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		#load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
 		
 		#make sure to index year below as appropriate
-		ccir_data = subset(ccir_data,YEAR<=2023) 
+		ccir_data = subset(ccir_data,YEAR<=p$current.assessment.year) 
+		
+		#to only run last three years:
+		#ccir_data = subset(ccir_data,YEAR=c((p$current.assessment.year-2):(p$current.assessment.year)))
+		
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 		out.binomial = list()

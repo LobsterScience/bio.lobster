@@ -8,6 +8,9 @@ require(lubridate)
 #assessment.year = p$current.assessment.year 
 assessment.year = p$current.assessment.year-1 
 
+#If you only want to update logs and CCIR for the last two years, run this:
+#p$yr=p$current.assessment.year
+
 figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32",assessment.year))
 
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
