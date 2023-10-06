@@ -1,5 +1,5 @@
 #' @export
-uploadOlexData <- function(fn='C:/Users/CookA/Downloads/ILTS2023_LEG_1_track.txt',tablenm, appendIt=F,UID='cooka',PWD='thisisntit',year=2022, tripid=NULL,source=NULL,idSets=NULL){
+uploadOlexData <- function(fn='C:/Users/CookA/Downloads/ILTS2023_LEG_1_track.txt',tablenm='ILTS2023OLEXTRACKS', appendIt=F,UID='cooka',PWD='thisisntit',year=2022, tripid=NULL,source=NULL,idSets=NULL){
         Sys.setenv(TZ = "GMT")
         Sys.setenv(ORA_SDTZ = "GMT")   
         bio.lobster::db.setup(un=UID,pw=PWD)  
@@ -97,7 +97,7 @@ uploadOlexData <- function(fn='C:/Users/CookA/Downloads/ILTS2023_LEG_1_track.txt
                         dbSendQuery(conn=con, statement = paste("create table ",tablenm,"(",
                                               " Y NUMBER(10,0),
                                                 X NUMBER(10,0),
-                                                STDDATE DATE, 
+                                                STDDATE VARCHAR2, 
                                               STDTIME VARCHAR2(26 BYTE),
                                                 SET_NO NUMBER(4,0),
                                                 TRIP_ID NUMBER(10,0)
