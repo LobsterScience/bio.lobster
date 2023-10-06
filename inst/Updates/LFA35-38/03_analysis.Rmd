@@ -18,7 +18,7 @@ require(PBSmapping)
  
 	p = bio.lobster::load.environment()
 	la()
-	assessment.year = 2020 ##Check Year
+	assessment.year = 2023 ##Check Year
 	p$syr = 1989
   p$yrs = p$syr:assessment.year
 

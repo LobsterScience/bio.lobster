@@ -1,5 +1,5 @@
 # generate index of CPUE based on percent of missing logs by month
-lfa = '35'
+lfa = '38'
 syear = 2023
 
 
@@ -35,6 +35,8 @@ for(i in 1:length(aa)){
     ju = tmp2[[j]]  
     mn = unique(ju$mn)
     prop = fyProp$Prop[which(fyProp$mn==mn)]
+    if(length(prop)<1) prop = 0
+    if(prop>1) prop=1
     id= unique(ju$LICENCE_ID)
     ii = length(id)
     idS = sample(id,round(ii*prop))
@@ -73,5 +75,5 @@ g = t(g)[,1]
 out<-rbind(out,rep(g,ncol(out)))
 
 matplot(out,type='l',col='grey',ylab='Logbook reporting Scaled CPUE',xaxt='n')
-points(19,g,pch=16)
+points(nrow(out),g,pch=16)
 axis(side=1,at=c(1,6,11,16),labels=c(2005,2010,2015,2020))

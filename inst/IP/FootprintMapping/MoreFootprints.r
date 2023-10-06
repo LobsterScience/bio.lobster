@@ -1,4 +1,5 @@
 #fisheries footprint mapping and analyses of spatial fisheries data
+wd = ('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\CanUsCollabEffortMapping')
 
 ef = readRDS('DiscretizedData/TrapHaulsWithinGridandWeek.rds')
 eL = split(ef,f=list(ef$LFA,ef$WOS,ef$SYEAR))
