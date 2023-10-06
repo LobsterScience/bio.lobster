@@ -1416,6 +1416,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
     if (DS %in% c("survey.redo", "survey") ) {
 
       if (DS=="survey.redo") {
+        Sys.setenv(TZ = "America/Halifax")
         # survey
         ILTS2016TowDepth = connect.command(con, "select * from FRAILC.MARPORT_DEPTH")
         ILTS2016TowSpread = connect.command(con, "select * from FRAILC.MARPORT_SPREAD")
