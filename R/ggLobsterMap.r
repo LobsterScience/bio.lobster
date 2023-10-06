@@ -1,18 +1,19 @@
 #' @export
 
-ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
+ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(-74,-47),
                          attrData=NULL,attrColumn='Z', addGrids=T,bathy=T,fw=NULL,legLab="",
                          addLFALabels=F, addGridLabels=F, scaleTrans='identity',brks=NULL,return.object=F,
                          layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),LFA_label_size=8,colourLFA=T, ...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
+  if(area=='inshore')		{ ylim=c(42.1,48); 		xlim=c(-67.8,-57.8)	}
   if(area=='27-38')	{ ylim=c(42.5,48); 		xlim=c(-67.4,-57.8)	}
   if(area=='27-33')	{ ylim=c(42.5,48); 		xlim=c(-66.6,-57.8)	}
   if(area=='27-32')	{ ylim=c(43.5,48); 		xlim=c(-63.6,-57.8)	}
   if(area=='ENS')	  { ylim=c(44.0,45.7); 	xlim=c(-62.2,-59.8)	}
   if(area=='34-38')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-63.5)	}
   if(area=='35-36')	{ ylim=c(44.5,46);	 	xlim=c(-67.2,-63.2)	}
-  if(area=='west')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-64)	}
+  if(area=='west')	{ ylim=c(41.1,46); 		xlim=c(-67.8,-64)	}
   if(area=='27')		{ ylim=c(44.9,47.9); 	xlim=c(-61,-57.8)	}
   if(area=='27.Crop')		{ ylim=c(45.4,47.6); 	xlim=c(-61.1,-58.8)	}
   if(area=='28')		{ ylim=c(45.3,46);	 	xlim=c(-61.6,-60.3)	}
@@ -64,7 +65,7 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
   gridCent = st_centroid(r)
       p =  ggplot(data=l) + 
           geom_sf(lwd=1.35) + 
-          geom_sf(data=ns_coast,fill='grey') +
+          geom_sf(data=ns_coast,fill=fill.colours) +
           xlab("Longitude") +
           ylab("Latitude")
       
@@ -72,7 +73,7 @@ ggLobsterMap <- function(area='custom',ylim=c(40,52),xlim=c(-74,-47),
             p = p + geom_sf(data=subset(b,Z %in% c(60,100)),colour=alpha("#2C77BF", .3))
         }
       if(addGrids){
-          p = p + geom_sf(data=r,fill=NA) + geom_sf(data=ns_coast,fill='grey') 
+          p = p + geom_sf(data=r,fill=NA) + geom_sf(data=ns_coast,fill=fill.colours) 
         }
   if(colourLFA){
     
