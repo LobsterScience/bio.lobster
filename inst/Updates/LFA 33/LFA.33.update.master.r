@@ -1,6 +1,8 @@
 # LFA 33 Update Script
 
 	p = bio.lobster::load.environment()
+	p$yrs <- NULL #ensuring empty variable
+	
 	la()
 
 
@@ -10,6 +12,10 @@
 	    dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 	    p$lfas = c("33") # specify lfas for data summary
 	    p$subareas = c("33W", "33E") # specify lfas for data summary
+	    
+	   
+	    #If you only want to update logs for the last two years, run this:
+	    #p$yr=p$current.assessment.year
 
 	    # update data through ROracle
 	    NewDataPull =F
@@ -22,8 +28,13 @@
 	      lobster.db('seasonal.landings.redo')
 	      #lobster.db('vlog.redo')
 	      logs=lobster.db('process.logs.redo')
+	      per.rec= lobster.db("percent_reporting")
 	    }
 
+#Run a report of missing vs received logs and save a csv copy
+	    
+fl.name=paste("percent_logs_reported", Sys.Date(),"csv", sep=".")
+write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
 # Map ################
 
@@ -81,7 +92,7 @@
     png(filename=file.path(figdir, "CPUE_LFA33.French.png"),width=8, height=5.5, units = "in", res = 800)
     par(mar=c(2.0,5.5,2.0,3.0))
     xlim=c(1990,max(crd$YEAR))
-    plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/casier levé)',type='p',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
+    plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/casier lev?)',type='p',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
     points(max(crd$YEAR), crd$CPUE[which(crd$YEAR==max(crd$YEAR))], pch=17, col='red', cex=1.2)
     running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
     crd=merge(crd,running.median,all=T)
@@ -117,18 +128,23 @@
 		#load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
 		
 		#make sure to index year below as appropriate
-		ccir_data = subset(ccir_data,YEAR<=2022) 
+		ccir_data = subset(ccir_data,YEAR<=p$current.assessment.year) 
+		
+		#to only run last three years:
+		#ccir_data = subset(ccir_data,YEAR=c((p$current.assessment.year-2):(p$current.assessment.year)))
+		
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 		out.binomial = list()
 		attr(out.binomial,'model') <- 'binomial'
 		for(i in 1:length(dat)) { #if run breaks, update 1:length(dat) to reflect run# ie.e 16:length(dat)
 			ds = dat[[i]]
-			ds$method = 'binomial'
-			x = ccir_stan_run(dat = ds,save=T)
+			#ds$method = 'binomial'
+			x = ccir_stan_run_binomial(dat = ds,save=T)
 			out.binomial[[i]] <- ccir_stan_summarize(x)
 		}
 
+	
 		#load statement below combines ccir summaries if broken runs
 		#ensure folder has only model run summaries
 		da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary') #modify as required
@@ -185,7 +201,7 @@ dev.off()
 
 		FSRSvesday<-FSRSModelData()
 
-		mdata = subset(FSRSvesday,LFA==33&SYEAR<2022)
+		mdata = subset(FSRSvesday,LFA==33&SYEAR<2024)
 
 		FSRSModelResultsLegal=FSRSmodel(mdata,lfa=33, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
 		FSRSModelShortsRecruit=FSRSmodel(mdata,lfa=33, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
@@ -261,14 +277,14 @@ dev.off()
 	  png(filename=file.path(figdir, "Landings_Effort_LFA33_French.png"),width=8, height=5, units = "in", res = 800)
 	  #FisheryPlot <- function(data,lfa=NULL,fd=file.path(project.figuredirectory('bio.lobster','ReferencePoints')),title = paste('LFA',lfa),fn=paste0('FisheryPlot',lfa),preliminary=NULL,units='t',...) {
 	  par(mar=c(5.1, 4.1, 4.1, 5.1),las=1)
-	  plot(fishData$YEAR,fishData$LANDINGS,xlab='Année',ylab='Débarquements (t)',type='h',main="LFA 33",ylim=c(0,max(fishData$LANDINGS)*1.2),pch=15,col='grey',lwd=10,lend=3)
+	  plot(fishData$YEAR,fishData$LANDINGS,xlab='Ann?e',ylab='D?barquements (t)',type='h',main="LFA 33",ylim=c(0,max(fishData$LANDINGS)*1.2),pch=15,col='grey',lwd=10,lend=3)
 	  lines(max(fishData$YEAR),fishData$LANDINGS[length(fishData$LANDINGS)],type='h',pch=21,col=rgb(1,0.6,0),lwd=10,lend=3)
 	  
 	  par(new=T)
 	  plot(fishData$YEAR,fishData$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,ylim=c(0,max(fishData$EFFORT2/1000,na.rm=T)))
 	  points(max(fishData$YEAR),fishData$EFFORT2[length(fishData$EFFORT2)]/1000, type='b', pch=21,bg=rgb(1,0.6,0))
 	  axis(4)
-	  mtext("Effort (x 1000 casiers levés)", 4, 3.5, outer = F,las=0)
+	  mtext("Effort (x 1000 casiers lev?s)", 4, 3.5, outer = F,las=0)
 	  dev.off()
 
 
@@ -277,6 +293,7 @@ dev.off()
 	  # to compare weekly fishing effort year to year (include in AC presentation if desired)
 	  logs33=logs[logs$LFA=="33",]
 	  logs33$unique_days=paste(logs33$VR_NUMBER, logs33$DATE_FISHED, sep=':')
+	  
 
 
 	  #To Double Check Number of Fishing Days in each week of season
@@ -302,6 +319,18 @@ dev.off()
     	  text(paste(days.y1$SYEAR[1]), x=26, y=800, col="blue", cex=1.5)
 	  dev.off()
 
+	  # to plot weekly fishing CPUE year to year (include in AC presentation if desired)
+	  png(filename=file.path(figdir, "Weekly_Comparison.cpue.png"),width=8, height=5.5, units = "in", res = 1200)
+	  days=aggregate(CPUE~WOS+SYEAR, data=logs33, median)
+	  days.y0=days[days$SYEAR==max(days$SYEAR),]
+	  days.y1=days[days$SYEAR==(max(days$SYEAR)-1),]
+	  plot(x=days$WOS,y=days$CPUE, type='n', main= "Median CPUE by Week", xlab="Week of Season", ylab="CPUE (kg/trap)", xlim=c(2,27), xaxt='n')
+	  axis(side=1, at=seq(1,25,by=4.4), lab=c('Dec','Jan', 'Feb', "Mar", 'Apr', 'May'))
+	  lines(days.y0$WOS, days.y0$CPUE, col="red")
+	  text(paste(days.y0$SYEAR[1]), x=26, y=300, col="red", cex=1.5)
+	  lines(days.y1$WOS, days.y1$CPUE, col="blue")
+	  text(paste(days.y1$SYEAR[1]), x=26, y=800, col="blue", cex=1.5)
+	  dev.off()
 	  
 	  # Phase plot for conclusions and advice
 	  

@@ -40,10 +40,11 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
 		out = NULL
     if ( is.null(DS) | DS=="gscat.odbc" ) {
       fl = list.files( path=fn.root, pattern="*.rdata", full.names=T )
-				for ( fny in fl ) {
-				load (fny)
-        print(fny)
-				out = rbind( out, gscat )
+				for ( i in 1:length(fl) ) {
+				load (fl[i])
+				  if(i>1) out = subset(out,select=names(gscat))
+				  
+        out = rbind( out, gscat )
 			}
 			return (out)
     }
@@ -196,9 +197,10 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
 		out = NULL
     if ( DS=="gsdet.odbc" ) {
       fl = list.files( path=fn.root, pattern="*.rdata", full.names=T  )
-				for ( fny in fl ) {
-				load (fny)
-				out = rbind( out, gsdet )
+      for ( i in 1:length(fl) ) {
+        load (fl[i])
+        if(i>1) out = subset(out,select=names(gsdet))
+          out = rbind( out, gsdet )
 			}
 			return (out)
     }
@@ -279,8 +281,10 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
 		out = NULL
     if ( is.null(DS) | DS=="gsinf.odbc" ) {
       fl = list.files( path=fn.root, pattern="*.rdata", full.names=T  )
-				for ( fny in fl ) {
-        load (fny)
+      for ( i in 1:length(fl) ) {
+        load (fl[i])
+        gsinf$year <- NULL
+        if(i>1) out = subset(out,select=names(gsinf))
         out = rbind( out, gsinf )
 			}
 			return (out)

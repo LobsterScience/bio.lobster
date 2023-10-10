@@ -101,8 +101,7 @@ boxplot(gloDiff~mon,data=subset(glo,LFA %in% c(35,36,38) & yr %in% 1993:2019))
 boxplot(gloDiff~mon,data=subset(glo,LFA %in% c(35,36,38) & yr %in% 2020:2022))
 #under predicting
 
-boxplot(Gldiff~mon,data=subset(glo,LFA %in% c(34) & yr %in% 2015:2019))
-boxplot(Gldiff~mon,data=subset(glo,LFA %in% c(34) & yr %in% 2020:2022))
+saveRDS(glo,'GlorysToObserved.rds')
 
 #bias correction surface BoF GOM
 sf_use_s2(FALSE) #needed for cropping
