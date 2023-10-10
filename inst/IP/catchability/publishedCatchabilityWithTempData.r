@@ -21,11 +21,11 @@ pre = readRDS(file=file.path(project.datadirectory('bio.lobster'),'analysis','Cl
 pre$preds = rescale0_1(pre$pred)
 
 
-plot(pre$temp,pre$pred,xlim=c(0,23),type='l',col='black',lwd=3,ylab='Temperature Catchability',xlab='Temperature')
+plot(pre$Temperature,pre$pred,xlim=c(0,23),type='l',col='black',lwd=3,ylab='Temperature Catchability',xlab='Temperature')
 par(new=T)
 #plot(temp,catchability,xlim=c(0,23),yaxt='n',col='red',xlab="",ylab="",pch=16)
-#par(new=T)
+par(new=T)
 plot(temp3,walk,xlim=c(0,23),yaxt='n',col='blue',xlab="",ylab="",pch=16)
-abline(reg,col='blue')
+#abline(reg,col='blue')
 #par(new=T)
-#plot(temp2,ca2,xlim=c(0,23),yaxt='n',col='green',xlab="",ylab="",pch=16)
+#plot(temp2,ca2,xlim=c(-5,22),yaxt='n',col='green',xlab="",ylab="",pch=16)
