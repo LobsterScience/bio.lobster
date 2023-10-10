@@ -1,5 +1,6 @@
 #' @export
-uploadOlexData <- function(fn='C:/Users/CookA/Downloads/ILTS2023_LEG_1_track.txt',tablenm='ILTS2023OLEXTRACKS', appendIt=F,UID='cooka',PWD='thisisntit',year=2022, tripid=NULL,source=NULL,idSets=NULL){
+uploadOlexData <- function(fn='C:/Users/CookA/Downloads/ILTS2023_LEG_1_track.txt',tablenm='ILTS2023OLEXTRACKS', appendIt=F,UID='cooka',PWD='thisisntit',year=2022, tripid=NULL,
+                           source=NULL,idSets=NULL){
         Sys.setenv(TZ = "GMT")
         Sys.setenv(ORA_SDTZ = "GMT")   
         bio.lobster::db.setup(un=UID,pw=PWD)  
@@ -54,7 +55,7 @@ uploadOlexData <- function(fn='C:/Users/CookA/Downloads/ILTS2023_LEG_1_track.txt
             
             
             
-      if(!is.null(idSets)){
+      
         bio.lobster::db.setup()
         se = dbGetQuery(conn=con, statement = paste("select trip_id, set_no, min(starttime) starttime, min(endtime) endtime, min(setdate) setdate
                       from (select a.trip_id, b.set_no,case when c.pntcd_id = 2 then to_char(to_date(settime, 'hh24miss'),'hh24:mi:ss')else null end starttime,case when c.pntcd_id = 3 then to_char(to_date(settime, 'hh24miss'),'hh24:mi:ss')else null end endtime,case when pntcd_id = 2 then setdate
