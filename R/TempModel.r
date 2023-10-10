@@ -9,7 +9,7 @@ TempModel = function(areas = 'subarea', annual.by.area=F, redo.data=F){
  	#TempData$subarea[TempData$subarea==312] = "31B"
  	#write.csv(TempData,file.path( project.datadirectory("bio.lobster"),"Temperature Data","TempData.csv"),row.names=F)
   
-  TempData = TempModelData(redo=redo.data)
+  TempData = TempModelData(redo=F)
   
 	# create time and harmonic variables
 	TempData$y = decimal_date(as.Date(TempData$DATE))

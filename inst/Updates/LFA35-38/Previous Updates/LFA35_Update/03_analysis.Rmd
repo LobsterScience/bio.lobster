@@ -1,0 +1,602 @@
+
+```{r,include=FALSE, echo=FALSE, warning=FALSE, message=FALSE, comment = FALSE, error = FALSE}
+setwd("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA35-38/LFA35_Update")
+
+require(rgdal)
+require(devtools)
+require(roxygen2)
+require(geosphere)
+require(SpatialHub)
+require(lubridate)
+require(bio.utilities)
+require(bio.lobster)
+require(rstanarm)
+require(rlang)
+require(glue)
+require(PBSmapping)
+
+ 
+	p = bio.lobster::load.environment()
+	la()
+	assessment.year = 2023 ##Check Year
+	p$syr = 1989
+  p$yrs = p$syr:assessment.year
+
+
+
+figdir = file.path("LFA35_Update")
+    
+	    p$lfas = c("35") # specify lfa
+
+	   
+
+## from Oracle
+#lobster.db('logs.redo') 
+#lobster.db('temperature.data.redo')
+lobster.db('temperature.data')
+#groundfish.db('odbc.redo',datayrs = 1970:2022)
+#logs=lobster.db('process.logs.redo')
+logs=lobster.db("process.logs")
+#land = lobster.db('annual.landings.redo')
+land =lobster.db("annual.landings")
+#Sland=lobster.db('seasonal.landings.redo')
+Sland = lobster.db('seasonal.landings')
+
+
+```
+# Analysis and Response
+
+## Indicators of Stock Status
+
+The stock status of the Lobster in LFA 35 is assessed using primary, secondary, and contextual
+indicators. This update includes the primary indicator that is used to define stock status in
+relation to reference points defined in Cook et al. (In press.1) and secondary indicators that
+display time-series trends but do not have reference points. The data sources available for
+establishing indicators for LFA 35 come from both fishery-dependent and fishery-independent
+data sources. Fishery-dependent data consist of commercial logbooks that report information on
+date, location (grid), effort, and estimated catch. The fishery-independent data sources are from
+the DFO Maritimes Region Summer Research Vessel Survey (herein RV survey), and the Scallop Survey. 
+Indicators from surveys updated where possible.
+
+
+# Primary Indicator
+
+In LFA 35, there is one primary indicator for stock status that describes the time-series trends
+relative to reference points. The primary indicator for describing stock status is standardized
+commercial Catch Per Unit Effort (CPUE). There is currently no primary indicator of fishing
+pressure or exploitation.
+
+
+## Catch Per Unit Effort
+
+Commercial catch rates are a preferred indicator over landings, as they are standardized to
+account for the level of fishing effort. This is especially important in effort-controlled fisheries.
+The commercial fishing data used in the estimation of catch rates were obtained from mandatory logbooks that were put in place in the mid-2000s.
+It has been well documented that trap-based catch rates vary throughout a fishing season due to factors other than available
+biomass. These factors include fishing behavior, localized depletion, and environmental
+conditions (Drinkwater et al. 2006). In an effort to account for these factors, CPUE data were
+standardized through generalized linear modelling with explanatory variables of Year, Day of
+Season, Temperature, and the interaction between Day of Season and Temperature. Year was
+treated as a factor rather than a continuous variable to reduce any constraints from inter-annual
+variability.
+
+Model predictions were made for day 1 of the fishing season at the median day 1 temperature
+across all years. The available time series covers the current high-productivity period and a
+lower-productivity period from 2006–2010 (Figure \@ref(fig:CPUE35)). The median of the high-productivity period
+(2011–2018) was used as the proxy for the biomass at carrying capacity (K). Following the
+recommendations of DFO (2009), the Upper Stock Reference (USR) and Limit Reference Point
+(LRP) were set to 40% and 20% of the K proxy. A 3-year running median is used to compare
+the standardized CPUE to the USR and LRP. This value will dampen the impact of any
+anomalous years that may occur due to factors outside of changes in abundance.
+
+```{r CPUE35, echo=FALSE, results=FALSE, fig.cap="Time series of standardized commercial catch rates (kg/trap haul; black dots) for LFA 35, along with the 3-year running median (solid blue line). The horizontal lines represent the Upper Stock Reference (dashed green line) and Limit Reference Point (dotted red line). The data for 2021-2022 fishing season are incomplete (blue triangle)."}
+
+	logs=lobster.db("process.logs")
+	TempModelling = TempModel( annual.by.area=F, redo.data=F)
+			CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
+
+			## Commercial CPUE MOdels
+			mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)
+
+			CPUE.data<- CPUEModelData(p,redo=F)
+			t=with(subset(CPUE.data,DOS==1),tapply(TEMP,LFA,mean))
+		
+			pData=list()
+
+			CPUEModelResults = list()
+
+			for(i in 1:length( p$lfas)){
+
+				mdata = subset(CPUE.data,LFA==p$lfas[i]&SYEAR%in%p$yrs)
+				if(nrow(mdata)>10){
+				CPUEModelResults[[i]] = CPUEmodel(mf1,mdata,t=t[i],d=1)
+				pData[[i]]=CPUEModelResults[[i]]$pData
+				pData[[i]]$LFA=p$lfas[i]
+			}
+			}
+
+			names(CPUEModelResults) = p$lfas
+
+			CPUEindex=do.call("rbind",pData)
+
+
+	# plot
+
+	#tiff("C:/Users/Howsevj/Documents/3638_Update/36plotcpue.tiff", width=7,height=6, units="in",res=300)
+
+	tiff("R:/Shared/CSA_Office/2022 CSAS Processes/LFA 35 Update/Completed Edits and FR Fig/36plotcpue.tiff", width=7,height=6, units="in",res=300)
+	l35 = subset(CPUEindex,LFA==35,c("YEAR","mu"))
+	k = median(l35$mu[which(l35$YEAR %in% 2011:2018)])
+	usr = .4*k
+	lrp = .2*k
+	
+
+plot(l35$YEAR,l35$mu,xlab='Année',ylab='CPUE Standardisé (kg/casier levé)',type='p',pch=16,ylim=c(0,6),xlim=c(2005,2022))
+	running.median = with(rmed(l35$YEAR,l35$mu),data.frame(YEAR=yr,running.median=x))
+	l35=merge(l35,running.median,all=T)
+	lines(l35$YEAR,l35$running.median,col='blue',lty=1,lwd=3)
+	points(l35$YEAR[nrow(l35)],l35$mu[nrow(l35)], type='b', pch=24,bg='blue')
+	abline(h=usr,col='green',lwd=2,lty=2)
+	abline(h=lrp,col='red',lwd=2,lty=3)
+	
+dev.off()
+```
+
+
+```{r RAWCPUE35, echo=FALSE, results=FALSE, fig.cap="Time series of raw commercial catch rates (kg/trap haul; black dots) for LFA 35. The data for 2021-2022 fishing season are incomplete (blue triangle)."}
+
+### USING RAW UNPROCESSED LOGS
+
+a = lobster.db('process.logs')
+a = subset(a,LFA==35)
+b=aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR,data=a,FUN=sum)
+b$CPUE=b$WEIGHT_KG/b$NUM_OF_TRAPS
+
+tiff("R:/Shared/CSA_Office/2022 CSAS Processes/LFA 35 Update/Completed Edits and FR Fig/36plotcpueraw.tiff", width=7,height=6, units="in",res=300)
+## Raw CPUE
+plot(b$SYEAR, b$CPUE, xlab="Année", ylab="CPUE (kg/casier levé)", type='p', pch=16, ylim=c(0,2.5))
+	points(b$SYEAR[nrow(b)],b$CPUE[nrow(b)], type='b', pch=24,cex = 1.5, bg='blue')
+			running.median = with(rmed(b$SYEAR,b$CPUE),data.frame(SYEAR=yr,running.median=x))
+	b=merge(b,running.median,all=T)
+	lines(b$SYEAR,b$running.median,col='blue',lty=1,lwd=3)
+dev.off()
+```
+
+
+The trend in the standardized CPUE indicates that an increase in stock biomass occurred between 2005 and
+2012 ( Figure \@ref(fig:CPUE35) ). Standardized CPUE has remained high (more than twice the USR) since 2011. The
+3-year running median for CPUE for the 2022 season is 4.72 kg per Trap Haul (kg/TH), which is
+above the USR (1.94 kg/TH) and LRP (0.97 kg/TH). The Standardized CPUE value for 2022 is preliminary due to outstanding logs; as of August 23rd the monthly reporting rate was between 44% to 88% by month. Temperature data incorporated into the standardized CPUE estimates was limited for 2022 at the time of the update so the model CPUE model only includes 2021 temperature data. Raw CPUE, calculated from unprocessed logs was included to highlight the variability in fishing activity and catch over the time series ( Figure \@ref(fig:RAWCPUE35) ).
+
+
+
+# Secondary Indicators
+
+Secondary indicators represent time-series trends that are tracked individually, without defined
+reference points. The secondary indicators for LFAs 35 include the LFA-specific
+landings and total effort, recruit abundance, commercial biomass, and relative fishing mortality
+estimates from the DFO RV survey Bay of Fundy region (strata 484, 490–495). Additionally, recruit
+abundance from the Scallop survey will be included in this update for the first time since the assessment (DFO 2021). 
+
+## Landings and Effort
+
+Commercial landings are related to population biomass, as fishery controls are input- (effort
+controls) rather than output-based (total allowable catch). There are many factors that can affect
+this relationship, including changes in fishing effort, catchability (including the effects of
+environment, gear efficiency), Lobster size distribution, and the spatial overlap between
+distribution of Lobster and effort.
+
+Fishing effort, recorded as the number of Trap Hauls (THs), in the Lobster fishery is controlled
+by fishing season length, trap limits, and limited number of fishing licences. Consequently, there
+is a maximum fishing effort that can be deployed; however, this maximum is never met because
+factors such as weather conditions, seasonally variable catch rates, and fishing partnerships
+limit the total number of THs. Total fishing effort is calculated from mandatory logbooks.
+
+```{r landeffort,echo=FALSE, results=FALSE, fig.cap="Time series of landings (bars), and effort (sold line with points) for LFA 35. The data for 2021-2022 fishing season is incomplete (blue bar for landings, black triangle for effort))."}
+
+a=lobster.db('process.logs')
+a = subset(a,LFA==35)
+b=aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR,data=a,FUN=sum)
+b$CPUE=b$WEIGHT_KG/b$NUM_OF_TRAPS
+h=lobster.db('seasonal.landings.redo')
+h=lobster.db('seasonal.landings')
+h
+h=h[,c('SYEAR','LFA35')]
+h
+h$SYEAR=1976:2023
+merge(b,h)
+g=merge(b,h)
+g$EFF = g$LFA35/g$CPUE
+
+tiff("R:/Shared/CSA_Office/2022 CSAS Processes/LFA 35 Update/Completed Edits and FR Fig/36plotlandeff.tiff", width=7,height=6, units="in",res=300)
+par(mar=c(5.1, 4.1, 4.1, 5.1),las=1)
+
+plot(g$SYEAR,g$LFA35,xlab='Année',ylab='Débarquements (t)',type='h',ylim=c(0,max(g$LFA35)*1.2),pch=15,col='grey',lwd=10,lend=3)
+lines(g$SYEAR[nrow(g)],g$LFA35[nrow(g)],type='h',pch=21,col='steelblue4',lwd=10,lend=3)
+par(new=T)
+
+plot(g$SYEAR,g$EFF,ylab='',xlab='', type='b', pch=16, axes=F,ylim=c(0,max(g$EFF,na.rm=T)))
+points(g$SYEAR[nrow(g)],g$EFF[nrow(g)], type='b', pch=24,bg='black')
+axis(4)
+mtext("Effort (milliers de casiers levés)", 4, 3.5, outer = F,las=0)	
+
+dev.off()		
+
+
+subsamp<-g[g$SYEAR >2009 & g$SYEAR <2023,]
+range(subsamp$LFA35)
+median(subsamp$LFA35)
+
+```
+
+Historical landings in LFA 35 between 1947 and 1984 had a median of 134 t with a range of
+75–184 t, increasing slightly between 1984 and 1994 to a median of 250.5 t (range 226–330 t).
+In the more recent years, LFA 35 landings have increased substantially with a median from
+2010–2022 of 3,072 t (range 1,829 to 3,941 t). Landings have decreased in recent years from the 3631 t reported in 2018.
+Landings for the 2021–2022 season are currently 1829 t but do not represent the total for the season due to the outstanding logs previously
+mentioned ( Figure \@ref(fig:landeffort) ). 
+
+## Scallop Survey Recruit Abundance
+
+Annual surveys for Sea Scallops have been conducted since the early 1980s to assess
+abundance (Sameoto et al. 2012, Smith et al. 2012). These surveys started in the Bay of Fundy
+in 1981 and were extended into the area off southwest Nova Scotia in 1991. Lobster are caught as a bycatch in a subset of
+the stations and are measured prior to being returned to the ocean.Scallops are typically found on gravel sea bottoms, a habitat not favored by Lobster (Tremblay et al. 2009), but the two species do overlap in some areas. The surveys are primarily conducted in July for the Bay of Fundy (LFAs 35 and 36) and August around Grand Manan Island (LFA
+38), which, in some years, overlaps the Lobster moulting period. Scallop dredges tend to
+capture Lobster that are under the legal size and are useful as indicators of recruitment.
+
+The abundance of Lobster recruits (70–82 mm carapace length) from DFO Scallop Survey tows within LFA 35 had been
+increasing after 2008, however in the most recent years have shown a decline (2019 and 2021), the scallop survey was not completed in 2020 due to the COVID-19
+global pandemic (Figure \@ref(fig:Scalrecruit)) , and data from the 2022 survey was not yet available at the time of this update. 
+
+```{r Scalrecruit,echo=FALSE, results=FALSE, fig.cap="Time series of recruit abundance from the DFO Scallop Survey in LFA 35.The red line represents the 3-year running median."}
+p = bio.lobster::load.environment()
+la()
+
+assessment.year = 2021 ########### check the year ############### !!!!!!!!!!!
+
+p$syr = 1989
+p$yrs = p$syr:assessment.year
+
+
+
+# define place for figures to go
+#figdir = file.path("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA35-38")
+
+p$lfas = c("35") # specify lfa
+p$subareas = c("35") # specify subareas for data summary
+
+# update data through RODBC
+
+#lobster.db('scallop.redo')
+lobster.db('scallop')
+
+scalSurv<-ScallopSurveyProcess(size.range=c(70,82.5),bin.size=2.5)
+scalSurv<-scalSurv[scalSurv$YEAR <2022,] # 2022 data not complete yet
+
+R1.ab.35=with(subset(scalSurv,LFA==35&YEAR>1998),tapply(LobDen,YEAR,mean,na.rm=T))
+R1.ab.35_19=with(subset(scalSurv,LFA==35&YEAR>1998&YEAR<2020),tapply(LobDen,YEAR,mean,na.rm=T))
+
+
+
+require(dplyr)
+RA35<-as.data.frame(R1.ab.35)
+RA35<-data.frame(cbind(rownames(RA35), data.frame(RA35, row.names = NULL)))
+RA35<-RA35 %>%
+  rename(Year = rownames.RA35., 
+          Recruit_Abundance = R1.ab.35)
+
+tiff("R:/Shared/CSA_Office/2022 CSAS Processes/LFA 35 Update/Completed Edits and FR Fig/35plotrecruit.tiff", width=7,height=6, units="in",res=300)
+plot(RA35$Year, RA35$Recruit_Abundance, pch=16,xlab='Année',ylab = 'Abondance des recrues')
+lines(1999:2019,runmed(R1.ab.35_19,3),lwd=2, col='salmon')
+dev.off()
+
+```
+
+
+
+
+
+
+```{r Stratified Analysis Commercial, eval=FALSE, echo=FALSE, results=FALSE,fig.cap="Time Series of RV survey trends for LFA 35-38 commercial biomass. Values prior to 1999 (open circles) were derived using the mean proportion of commercial to total biomass between 1999 and 2018 (0.746), error bars are 95% bootstrapping confidence intervals. The red line represents the 3-year running median" }
+require(bio.survey)
+require(bio.lobster)
+
+p = bio.lobster::load.environment()
+p$libs = NULL
+ff = "LFA35-38Assessment"
+fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
+fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+dir.create(fpf1,showWarnings=F)
+dir.create(fp1,showWarnings=F)
+
+p$yrs = 1970:2022
+p1 = p
+
+
+stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
+    p$series =c('summer')# p$series =c('georges');p$series =c('fall')
+    p$years.to.estimate = p$yrs
+    p$length.based = T
+    p$by.sex = T
+    p$size.class = c(83,300)
+    p$sex = c(1,2)
+    p$bootstrapped.ci=T
+    p$strata.files.return=F
+    p$vessel.correction.fixed=1.2
+    p$strat = NULL
+    p$clusters = c( rep( "localhost", 7) )
+    p$strata.efficiencies = F
+    p = make.list(list(yrs=p$years.to.estimate),Y=p)
+    p$define.by.polygons = T
+    p$lobster.subunits=F
+    p$area = lfa
+    p$reweight.strata = T #this subsets 
+
+    aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+    write.csv(aout,file=file.path(fpf, paste(lfa,'DFOCommB.csv')))
+
+      p$add.reference.lines = F
+    p$time.series.start.year = p$years.to.estimate[1]
+    p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+    p$metric = 'weights' #weights
+    p$measure = 'stratified.total' #'stratified.total'
+    p$figure.title = ""
+    p$reference.measure = 'median' # mean, geomean
+    p$file.name =  file.path(f,paste(lfa,'DFOrestratifiedtotalweightscommercial.png',sep=""))
+
+    p$y.maximum = NULL # NULL # if ymax is too high for one year
+    p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure
+
+    p$legend = FALSE
+    p$running.median = T
+    p$running.length = 3
+    p$running.mean = F #can only have rmedian or rmean
+     p$error.polygon=F
+    p$error.bars=T
+    require(bio.lobster)
+     p$ylim2 = NULL
+    xx = aggregate(ObsLobs~yr,data=aout,FUN=sum)
+    names(xx) =c('x','y')
+     p$ylim=NULL
+     ref.out= figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
+     return(aout)
+  }
+
+
+
+aout = stratifiedAnalysesCommercial(survey='DFO',lfa='LFA35-38')
+write.csv(aout,file.path(fp1,'LFA3538CommercialB.csv'))
+```
+
+
+```{r Stratified Analysis,  eval=FALSE, echo=FALSE, results=FALSE,fig.cap="  "}
+require(bio.survey)
+require(bio.lobster)
+require(lubridate)
+require(devtools)
+require(bio.utilities)
+require(PBSmapping)
+la()
+p = bio.lobster::load.environment()
+p$libs = NULL
+ff = "LFA35-38Assessment"
+fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
+fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+dir.create(fpf1,showWarnings=F)
+dir.create(fp1,showWarnings=F)
+p1 = p
+p1$yrs = 1970:2022
+
+stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
+                p$series =c('summer')
+                p$define.by.polygons = T
+                p$lobster.subunits=F
+                p$area = lfa
+                p$years.to.estimate = p$yrs[-1]
+                p$length.based = F
+                p$by.sex = F
+                p$bootstrapped.ci=T
+                p$strata.files.return=F
+                p$vessel.correction.fixed=1.2
+                p$strat = NULL
+                p$clusters = c( rep( "localhost", 7) )
+                p$strata.efficiencies = F
+                p = make.list(list(yrs=p$years.to.estimate),Y=p)
+                p$reweight.strata = T #this subsets 
+            
+
+      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+      write.csv(aout,file=file.path(fpf, paste(lfa,'DFOtotalabund.csv')))
+
+
+                              p$add.reference.lines = F
+                              p$time.series.start.year = p$years.to.estimate[1]
+                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+                              p$metric = 'numbers' #weights
+                              p$measure = 'stratified.mean' #'stratified.total'
+                              p$figure.title = ""
+                              p$reference.measure = 'median' # mean, geomean
+                              p$file.name = file.path(f,paste(lfa,'DFOrestratifiednumbers.png',sep=""))
+
+                          p$y.maximum = NULL # NULL # if ymax is too high for one year
+                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+
+                                p$legend = FALSE
+                                p$running.median = T
+                                p$running.length = 3
+                                p$running.mean = F #can only have rmedian or rmean
+                               p$error.polygon=F
+                              p$error.bars=T
+
+                               p$ylim=NULL
+                      if(lfa == 'LFA35-38') p$ylim=c(0,150)
+                       p$box=T
+                       p$file.name = file.path(f,paste(lfa,'DFOrestratifiednumbersNOY.png', sep=""))
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
+
+                       p$box=T
+                        p$ylim=NULL
+                       p$metric = 'weights'
+                       p$file.name = file.path(f,paste(lfa,'DFOrestratifiedweightsNOY.png',sep=""))
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
+
+                       p$box=NULL
+                       p$ylim=NULL
+                       p$file.name = file.path(f,paste(lfa,'DFOrestratifiedDWAO.png',sep=""))
+                       p$metric = 'dwao'
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
+                       
+                       p$file.name = file.path(f,paste(lfa,'DFOrestratifiedgini.png',sep=""))
+                       p$metric = 'gini'
+                       p$ylim =c(0,1)
+                       ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
+                       p$ylim = NULL
+                       return(aout)
+        }
+
+    
+a = stratifiedAnalyses(survey='DFO',lfa='LFA35-38')
+
+```
+
+
+```{r Stratified Analysis Recruits, eval=FALSE, echo=FALSE, results=FALSE,fig.cap="  "}
+require(bio.survey)
+require(bio.lobster)
+require(lubridate)
+require(devtools)
+require(bio.utilities)
+require(PBSmapping)
+la()
+p = bio.lobster::load.environment()
+p$libs = NULL
+ff = "LFA35-38Assessment"
+fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
+fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+dir.create(fpf1,showWarnings=F)
+dir.create(fp1,showWarnings=F)
+p1 = p
+p1$yrs = 1970:2022
+
+stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
+      p$series =c('summer')# p$series =c('georges');p$series =c('fall')
+      p$area = lfa
+      p$years.to.estimate = p$yrs
+      p$length.based = T
+      p$by.sex = T
+      p$size.class = c(70,82)
+      p$sex = c(1,2)
+      p$bootstrapped.ci=T
+      p$strata.files.return=F
+      p$vessel.correction.fixed=1.2
+      p$strat = NULL
+      p$clusters = c( rep( "localhost", 7) )
+      p$strata.efficiencies = F
+      p = make.list(list(yrs=p$years.to.estimate),Y=p)
+      p$define.by.polygons = T
+      p$lobster.subunits=F
+      p$reweight.strata = T #this subsets 
+  
+    aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+     write.csv(aout,file=file.path(fpf, paste(lfa,'DFOrecruits.csv')))
+
+                        p$add.reference.lines = F
+                              p$time.series.start.year = p$years.to.estimate[1]
+                              p$time.series.end.year = p$years.to.estimate[length(p$years.to.estimate)]
+                              p$metric = 'numbers' #numbers
+                              p$measure = 'stratified.mean' #'stratified.total'
+                              p$figure.title = ""
+                              p$reference.measure = 'median' # mean, geomean
+                              p$file.name =  file.path(f,paste(lfa,'DFOrestratifiednumbersrecruits.png',sep=""))
+                          p$y.maximum = NULL # NULL # if ymax is too high for one year
+                        p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
+                                p$legend = FALSE
+                                p$running.median = T
+                                p$running.length = 3
+                                p$running.mean = F #can only have rmedian or rmean
+                               p$error.polygon=F
+                              p$error.bars=T
+                      if(lfa == 'LFA35-38') p$ylim = c(0,80)
+                      p$file.name =  file.path(f,paste(lfa,'NOYDFOrestratifiednumbersrecruits.png',sep=""))
+                      ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
+            }
+
+stratifiedAnalysesRecruits(survey='DFO',lfa='LFA35-38')
+
+
+
+```
+
+
+```{r Landings Survey Relative F,  eval=FALSE, echo=FALSE, results=FALSE,fig.cap="  "}
+
+require(bio.lobster)
+require(PBSmapping)
+
+a = lobster.db('annual.landings')
+b = lobster.db('seasonal.landings')
+ff = "LFA35-38Assessment"
+ 
+b$YR = substr(b$SYEAR,6,9)
+a = subset(a,YR<1976)
+b = subset(b,YR>1975 & YR<=2022)
+fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
+
+LFA = c('LFA35','LFA36','LFA38')
+for(i in LFA){
+		aa = a[,c('YR',i)]
+		bb = b[,c('YR',i)]
+		aa = (rbind(aa,bb))
+		aa = aa[order(aa$YR),]
+		file.name = paste('Landings',i,'.png',sep="")
+		png(file=file.path(fpf1,'LandingsL3538.png'),units='in',width=15,height=12,pointsize=18, res=300,type='cairo')
+		plot(aa$YR,aa[,i],type='h',lwd=4,col='black',xlab='Year',ylab='Landings (t)')
+		lines(aa$YR,runmed(aa[,i],3),col='salmon',lwd=3)
+		dev.off()
+		}
+
+
+###lfa 35-38
+
+df2 = read.csv(file.path(fpf1,'LFA35-38 DFOCommB.csv'))
+df =  read.csv(file.path(fpf1,'LFA35-38 DFOtotalabund.csv'))
+df = subset(df,yr<1999)
+df2 = subset(df2,yr>1998)
+df = as.data.frame(rbind(df,df2))
+df = df[,c('yr','w.Yst','w.ci.Yst.l','w.ci.Yst.u')] #proportion of total weight that is commercial
+df$w.Yst[which(df$yr<1999)] <- df$w.Yst[which(df$yr<1999)]*0.746
+df$w.ci.Yst.l[which(df$yr<1999)] <- df$w.ci.Yst.l[which(df$yr<1999)]*0.746
+df$w.ci.Yst.u[which(df$yr<1999)] <- df$w.ci.Yst.u[which(df$yr<1999)]*0.746
+
+
+
+ 	 #png(file=file.path(fpf1,'LFA35-38CommBDFOextended.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
+ 	 with(df,plot(yr,w.Yst,pch=1,xlab='Year',ylab='Commerical Biomass (t)',ylim=c(0,9500)))
+	 with(df,arrows(yr,y0=w.ci.Yst.u,y1=w.ci.Yst.l, length=0))
+	 with(subset(df,yr>1998),points(yr,w.Yst,pch=16))
+	 xx = rmed(df$yr,df$w.Yst)
+	 xx = as.data.frame(do.call(cbind,xx))
+	 with(subset(xx,yr<1999),lines(yr,x,col='salmon',lwd=1))
+	 with(subset(xx,yr>1998),lines(yr,x,col='salmon',lwd=3))
+	 dev.off()
+	 
+a$L3538 = rowSums(a[,12:14])
+b$L3538 = rowSums(b[,4:6])
+c358 = as.data.frame(rbind(a[,c('YR','L3538')],b[,c('YR','L3538')]))
+names(c358)[1] = 'yr'
+df  =merge(df,c358)
+df$rL = df$L3538/(df$w.ci.Yst.l+df$L3538)
+df$rU =df$L3538/ (df$w.ci.Yst.u+df$L3538)
+df$rM = df$L3538/(df$w.Yst+df$L3538)
+
+
+ 	 png(file=file.path(fpf1,'LFA3538RelFDFO.png'),units='in',width=10,height=8,pointsize=18, res=300,type='cairo')
+		plot(df$yr,df$rM,type='p',pch=16,col='black',xlab='Year',ylab='Relative F')
+		arrows(df$yr,y0 = df$rL,y1 = df$rU,length=0)
+		with(rmed(df$yr,df$rM),lines(yr,x,col='salmon',lwd=3))
+dev.off()
+
+```
+

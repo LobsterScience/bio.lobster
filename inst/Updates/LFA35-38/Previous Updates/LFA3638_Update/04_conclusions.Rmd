@@ -1,0 +1,7 @@
+# Conclusions
+
+The primary indicator of stock status, CPUE, remains well above the USR in both LFAs 36 and
+38. Given the reporting rate for landings is currently between 44% to 88% by month for LFA 36 and between 67% to 88% by month for LFA 39, annual landings appear to be on track with recent years. This update did not include total, commercial and recruit abundance from the DFO RV survey due to incomplete surveys, unavailable trawl calibration coefficients and unavailable data. The most up to date figures on commercial biomass, recruit abundance and relative fishing mortality can be found in the previous Science Response for LFA 36-38, updated to 2020 (DFO 2022).
+
+
+In LFA 36 CPUE shows a steady decline since 2019, and recruit abundance from the scallop survey shows high but unstable estimates for recent years (2020 data not collected and 2022 not yet available). The LFA 36 stock remains in the Healthy Zone. In LFA 38 CPUE remains high with a small decline in 2021 and 2022, and recruit abundance from the scallop survey shows higly variable estimates in recent years with a low in 2021 (2020 data not collected and 2022 not yet available). The LFA 38 stock remains in the Healthy Zone.

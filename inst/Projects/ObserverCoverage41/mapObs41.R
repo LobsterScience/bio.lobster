@@ -46,6 +46,7 @@ L41log$MONTH = month(L41log$dates)
 L41log$SYEAR= year(L41log$dates)
 L41log$DAY=day(L41log$dates)
 
+L41log$DDLON<-L41log$DDLON*-1
 
 
 ##Make Label position df-- need to shift them
@@ -56,9 +57,8 @@ Offarealab$Y<-c(43.0, 41.5,42.2,42.35, 42.6)
 Offarealab$Area<-c("CROWELL","GBANK","GBASIN","SE.Browns", "SW.Browns")
 
 
-##add points of Observer Coverage on top or side by side heatmap of the observer coverage?- each year by SYEAR
 Obs41<-observer41
-Obs41$LONGITUDE<-Obs41$LONGITUDE*-1
+
 
 ##Need SYear -- pull it out of date
 Obs41$dates<-as.POSIXct(Obs41$STARTDATE, format='%Y-%m-%d %H:%M:%S')
@@ -78,3 +78,51 @@ sort(unique(Obs41$dates))
 # "2023-03-16"
 
 
+
+###################################### 2021 ###################################
+off21<-L41log[L41log$MONTH == 3 & L41log$SYEAR == 2021,]
+off21<-subset(off21, select=c(DDLAT, DDLON, NUM_OF_TRAPS,EST_WEIGHT_LOG_LBS, ADJCATCH, OFFAREA, MONTH,SYEAR,DAY))
+
+
+Ob21<-Obs41[Obs41$MONTH == 3 & Obs41$SYEAR ==2021,]
+Ob21<-subset(Ob21, select=c(LATITUDE,LONGITUDE,PORTNAME, MONTH,SYEAR,DAY))
+
+LobsterMap(ylim=c(40.7,44),xlim=c(-68,-63.5),boundaries='LFAs', mapRes="UR", addGrids = F)
+addPolys(Offarea41)
+addLabels(Offarealab, cex = 0.75)
+with(off21,points(x=DDLON,y=DDLAT,pch = 19, cex=0.75, col='black'))
+with(Ob21, points(x=LONGITUDE,y=LATITUDE,pch=8,cex=0.75,col='red'))
+title(main="Mar 2021")
+
+
+###################################### 2022 ###################################
+off22<-L41log[L41log$MONTH == 12 & L41log$SYEAR == 2022,]
+off22<-subset(off22, select=c(DDLAT, DDLON, NUM_OF_TRAPS,EST_WEIGHT_LOG_LBS, ADJCATCH, OFFAREA, MONTH,SYEAR,DAY))
+
+
+Ob22<-Obs41[Obs41$MONTH == 12 & Obs41$SYEAR ==2022,]
+Ob22<-subset(Ob22, select=c(LATITUDE,LONGITUDE,PORTNAME, MONTH,SYEAR,DAY))
+
+LobsterMap(ylim=c(40.7,44),xlim=c(-68,-63.5),boundaries='LFAs', mapRes="UR", addGrids = F)
+addPolys(Offarea41)
+addLabels(Offarealab, cex = 0.75)
+with(off22,points(x=DDLON,y=DDLAT,pch = 19, cex=0.75, col='black'))
+with(Ob22, points(x=LONGITUDE,y=LATITUDE,pch=8,cex=0.75,col='red'))
+title(main="Dec 2022")
+
+
+
+###################################### 2023###################################
+off23<-L41log[L41log$MONTH == 6 & L41log$SYEAR == 2023,]
+off23<-subset(off23, select=c(DDLAT, DDLON, NUM_OF_TRAPS,EST_WEIGHT_LOG_LBS, ADJCATCH, OFFAREA, MONTH,SYEAR,DAY))
+
+
+Ob23<-Obs41[Obs41$MONTH == 6 & Obs41$SYEAR ==2023,]
+Ob23<-subset(Ob23, select=c(LATITUDE,LONGITUDE,PORTNAME, MONTH,SYEAR,DAY))
+
+LobsterMap(ylim=c(40.7,44),xlim=c(-68,-63.5),boundaries='LFAs', mapRes="UR", addGrids = F)
+addPolys(Offarea41)
+addLabels(Offarealab, cex = 0.75)
+with(off23,points(x=DDLON,y=DDLAT,pch = 19, cex=0.75, col='black'))
+with(Ob23, points(x=LONGITUDE,y=LATITUDE,pch=8,cex=0.75,col='red'))
+title(main="June 2023")

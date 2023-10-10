@@ -1,0 +1,409 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Maritimes Region Lobster Fishery Statistics},
+  pdfauthor={Lobster Ecology and Assessment Team (PED)},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Maritimes Region Lobster Fishery Statistics}
+\author{Lobster Ecology and Assessment Team (PED)}
+\date{}
+
+\begin{document}
+\maketitle
+
+The data in this document is current as of:
+
+\begin{verbatim}
+## [1] "2023-09-11"
+\end{verbatim}
+
+\hypertarget{missing-logs}{%
+\subsection{Missing Logs}\label{missing-logs}}
+
+\begin{verbatim}
+## Warning: Removed 65 rows containing missing values (position_stack).
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{FisherySummary_files/figure-latex/unnamed-chunk-3-1.pdf}
+\caption{Percent missing commercial fishing logs for each LFA in the
+Maritmes Region}
+\end{figure}
+
+\newpage
+
+\hypertarget{seasonal-landings}{%
+\subsection{Seasonal Landings}\label{seasonal-landings}}
+
+\begin{verbatim}
+## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> = "none")` instead.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 10 rows containing missing values (position_stack).
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{FisherySummary_files/figure-latex/unnamed-chunk-5-1.pdf}
+\caption{Slip reported landings ('000s tons) from LFA 33-38B. Orange
+coloured bars represent incomplete season's worth of data (Fig 1). All
+orange bars represent under estimates of landings.}
+\end{figure}
+
+\newpage
+
+\hypertarget{annual-landings}{%
+\subsection{Annual Landings}\label{annual-landings}}
+
+\begin{verbatim}
+## Warning: `guides(<scale> = FALSE)` is deprecated. Please use `guides(<scale> = "none")` instead.
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{FisherySummary_files/figure-latex/unnamed-chunk-7-1.pdf}
+\caption{Slip landings for spring fisheries in the Maritimes LFAs.
+Orange bars represent incomplete log entries which constitute
+significant amounts of missing information for most LFAs (Figure 1), all
+orange bars are underestimates of landings.}
+\end{figure}
+
+\newpage
+
+\hypertarget{cpue}{%
+\subsection{CPUE}\label{cpue}}
+
+\begin{verbatim}
+## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+\end{verbatim}
+
+\begin{figure}
+\centering
+\includegraphics{FisherySummary_files/figure-latex/unnamed-chunk-9-1.pdf}
+\caption{Unstandardized Commercial CPUE by Maritimes regions LFA and
+year. For LFAs with season's covering two calendar years (i.e.~October
+-- July), year refers to the terminal year of the season. Orange points
+for 2023 indicate incomplete logbook information and may be biased
+either low or high (Table 1)}
+\end{figure}
+
+\newpage
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.1525}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0678}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0678}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0678}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0678}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0847}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0847}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0678}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0678}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0678}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0678}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0678}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0678}}@{}}
+\caption{Percent of Missing logbooks}\tabularnewline
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+MnYr
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L27
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L28
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L29
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L30
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L31A
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L31B
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L32
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L33
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L34
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L35
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L36
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L38
+\end{minipage} \\
+\midrule()
+\endfirsthead
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+MnYr
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L27
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L28
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L29
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L30
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L31A
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L31B
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L32
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L33
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L34
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L35
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L36
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+L38
+\end{minipage} \\
+\midrule()
+\endhead
+Oct-2022 & -- & -- & -- & -- & -- & -- & -- & -- & -- & 13 & -- & -- \\
+Nov-2022 & -- & -- & -- & -- & -- & -- & -- & -- & -- & 16 & 23 & 10 \\
+Dec-2022 & -- & -- & -- & -- & -- & -- & -- & 11 & 11 & 9 & 24 & 11 \\
+Jan-2023 & -- & -- & -- & -- & -- & -- & -- & 10 & 11 & -- & 31 & 13 \\
+Feb-2023 & -- & -- & -- & -- & -- & -- & -- & 12 & 11 & -- & -- & 14 \\
+Mar-2023 & -- & -- & -- & -- & -- & -- & -- & 12 & 13 & 17 & -- & 18 \\
+Apr-2023 & -- & 88 & 64 & -- & 15 & 12 & 22 & 13 & 15 & 18 & 37 & 13 \\
+May-2023 & 43 & 50 & 34 & 40 & 21 & 14 & 25 & 15 & 17 & 16 & 37 & 19 \\
+Jun-2023 & 48 & 50 & 34 & 45 & 22 & 16 & 26 & -- & -- & 23 & 36 & 28 \\
+Jul-2023 & 50 & -- & -- & 50 & -- & -- & -- & -- & -- & 29 & -- & -- \\
+\bottomrule()
+\end{longtable}
+
+\newpage
+
+\begin{verbatim}
+## Loading required package: kableExtra
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'kableExtra'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     group_rows
+\end{verbatim}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-11}Annual Commercial Landings. The last row is preliminary (indicated in orange)}
+\centering
+\begin{tabular}[t]{rrrrrrrr}
+\toprule
+YR & LFA27 & LFA28 & LFA29 & LFA30 & LFA31A & LFA31B & LFA32\\
+\midrule
+1996 & 1616 & 14 & 61 & 90 & 71 & 105 & 225\\
+1997 & 1398 & 12 & 40 & 80 & 50 & 98 & 247\\
+1998 & 1347 & 12 & 52 & 70 & 72 & 128 & 309\\
+1999 & 1425 & 5 & 50 & 70 & 78 & 139 & 316\\
+2000 & 1505 & 5 & 54 & 54 & 87 & 212 & 448\\
+\addlinespace
+2001 & 1820 & 5 & 66 & 98 & 100 & 204 & 433\\
+2002 & 1395 & 8 & 57 & 79 & 103 & 210 & 358\\
+2003 & 1659 & 13 & 125 & 73 & 152 & 279 & 389\\
+2004 & 1850 & 8 & 190 & 84 & 213 & 305 & 289\\
+2005 & 2036 & 9 & 402 & 112 & 426 & 498 & 403\\
+\addlinespace
+2006 & 1966 & 11 & 658 & 187 & 672 & 825 & 602\\
+2007 & 2024 & 9 & 792 & 216 & 827 & 1061 & 632\\
+2008 & 2849 & 13 & 1076 & 413 & 962 & 1031 & 704\\
+2009 & 2176 & 14 & 1088 & 452 & 956 & 1270 & 829\\
+2010 & 2570 & 12 & 914 & 371 & 911 & 1001 & 657\\
+\addlinespace
+2011 & 2691 & 7 & 727 & 383 & 757 & 925 & 758\\
+2012 & 2751 & 11 & 729 & 416 & 807 & 1080 & 922\\
+2013 & 3800 & 12 & 607 & 461 & 671 & 740 & 862\\
+2014 & 3844 & 16 & 768 & 455 & 806 & 1148 & 1239\\
+2015 & 3807 & 16 & 722 & 424 & 754 & 1036 & 1087\\
+\addlinespace
+2016 & 3875 & 9 & 791 & 417 & 724 & 1069 & 1290\\
+2017 & 5454 & 10 & 874 & 587 & 841 & 1214 & 1239\\
+2018 & 6057 & 15 & 1160 & 633 & 916 & 1182 & 1120\\
+2019 & 6146 & 27 & 1176 & 630 & 1010 & 1386 & 1234\\
+2020 & 5510 & 29 & 1023 & 535 & 912 & 1081 & 996\\
+\addlinespace
+2021 & 5877 & 34 & 1038 & 563 & 952 & 1112 & 1086\\
+2022 & 7025 & 34 & 1071 & 577 & 1007 & 1217 & 1267\\
+\textcolor{orange}{2023} & \textcolor{orange}{2864} & \textcolor{orange}{19} & \textcolor{orange}{624} & \textcolor{orange}{251} & \textcolor{orange}{685} & \textcolor{orange}{1050} & \textcolor{orange}{987}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-12}Seasonal Commercial Landings. The last row is preliminary (indicated in orange}
+\centering
+\begin{tabular}[t]{rrrrrrr}
+\toprule
+SYEAR & LFA33 & LFA34 & LFA35 & LFA36 & LFA38 & LFA38B\\
+\midrule
+1996 & 1829 & 10339 & 546 & 427 & 600 & --\\
+1997 & 1785 & 10646 & 738 & 680 & 551 & --\\
+1998 & 2103 & 12064 & 837 & 788 & 701 & --\\
+1999 & 2129 & 13074 & 923 & 826 & 809 & --\\
+2000 & 2243 & 13444 & 910 & 879 & 826 & --\\
+\addlinespace
+2001 & 2460 & 16198 & 1074 & 1032 & 984 & --\\
+2002 & 2764 & 19058 & 1219 & 1261 & 1145 & --\\
+2003 & 2320 & 17613 & 1234 & 1155 & 1073 & --\\
+2004 & 1955 & 17801 & 1337 & 1169 & 1133 & --\\
+2005 & 2519 & 17250 & 1172 & 1143 & 1363 & --\\
+\addlinespace
+2006 & 2556 & 17009 & 1235 & 1295 & 1595 & 23\\
+2007 & 3033 & 16583 & 1191 & 1138 & 1413 & 84\\
+2008 & 2599 & 17145 & 1488 & 1477 & 1855 & 117\\
+2009 & 3402 & 17262 & 1617 & 1596 & 1638 & 78\\
+2010 & 3377 & 19749 & 1898 & 1594 & 2035 & 83\\
+\addlinespace
+2011 & 3905 & 20401 & 2546 & 1916 & 2352 & 162\\
+2012 & 5127 & 23317 & 3247 & 2488 & 2741 & 226\\
+2013 & 5345 & 22770 & 3168 & 2739 & 2682 & 251\\
+2014 & 5839 & 25427 & 3941 & 3325 & 4196 & 579\\
+2015 & 7071 & 24150 & 3723 & 3524 & 5045 & 802\\
+\addlinespace
+2016 & 10024 & 29131 & 3482 & 3681 & 5711 & 704\\
+2017 & 8030 & 22684 & 3072 & 3382 & 4915 & 933\\
+2018 & 8433 & 23958 & 3631 & 4073 & 4442 & 948\\
+2019 & 8584 & 20443 & 3047 & 3526 & 4231 & 826\\
+2020 & 6352 & 20927 & 2645 & 3094 & 3882 & 542\\
+\addlinespace
+2021 & 7272 & 21210 & 2513 & 3205 & 3563 & 456\\
+2022 & 7302 & 19594 & 2395 & 2786 & 3420 & 709\\
+\textcolor{orange}{2023} & \textcolor{orange}{7102} & \textcolor{orange}{14804} & \textcolor{orange}{2173} & \textcolor{orange}{2031} & \textcolor{orange}{2648} & \textcolor{orange}{844}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newpage
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-13}Raw Commercial Catch Per Unit Effort by Year and LFA. The last row is preliminary (indicated in orange}
+\centering
+\begin{tabular}[t]{rrrrrrrrrrrrr}
+\toprule
+yr & 27 & 28 & 29 & 30 & 31A & 31B & 32 & 33 & 34 & 35 & 36 & 38\\
+\midrule
+2004 & 0.33 & -- & -- & -- & -- & -- & -- & -- & 0.90 & -- & 1.66 & --\\
+2005 & 0.35 & -- & 0.66 & -- & 0.71 & 0.54 & 0.29 & 0.28 & 0.74 & 0.78 & 0.88 & 0.82\\
+2006 & 0.43 & -- & 1.18 & 0.75 & 0.89 & 0.97 & 0.40 & 0.37 & 0.78 & 0.97 & 1.12 & 1.03\\
+2007 & 0.44 & -- & 1.33 & 1.24 & 1.07 & 1.09 & 0.39 & 0.44 & 0.82 & 1.20 & 1.10 & 1.08\\
+2008 & 0.48 & 0.31 & 1.35 & 1.79 & 1.11 & 1.09 & 0.44 & 0.35 & 0.77 & 1.30 & 1.10 & 1.05\\
+\addlinespace
+2009 & 0.40 & 0.30 & 1.37 & 1.97 & 1.14 & 1.25 & 0.49 & 0.45 & 0.82 & 1.41 & 1.29 & 1.04\\
+2010 & 0.47 & 0.31 & 1.25 & 1.65 & 1.03 & 1.02 & 0.42 & 0.47 & 0.93 & 1.64 & 1.21 & 1.15\\
+2011 & 0.48 & 0.30 & 1.06 & 1.64 & 0.96 & 1.00 & 0.51 & 0.56 & 1.02 & 2.10 & 1.32 & 1.37\\
+2012 & 0.48 & 0.31 & 0.97 & 1.69 & 0.90 & 1.05 & 0.57 & 0.59 & 1.10 & 2.41 & 1.58 & 1.41\\
+2013 & 0.76 & 0.46 & 0.90 & 1.95 & 0.84 & 0.85 & 0.61 & 0.70 & 1.22 & 2.24 & 1.76 & 1.46\\
+\addlinespace
+2014 & 0.70 & 0.47 & 1.02 & 2.07 & 0.93 & 1.21 & 0.73 & 0.69 & 1.28 & 2.52 & 2.09 & 2.13\\
+2015 & 0.67 & 0.45 & 0.96 & 1.78 & 0.85 & 1.04 & 0.65 & 0.89 & 1.32 & 2.62 & 1.91 & 2.44\\
+2016 & 0.67 & 0.31 & 1.08 & 1.81 & 0.86 & 1.12 & 0.80 & 1.09 & 1.42 & 2.24 & 1.93 & 2.63\\
+2017 & 0.94 & 0.35 & 1.32 & 2.34 & 1.08 & 1.27 & 0.80 & 0.97 & 1.25 & 2.13 & 1.76 & 2.39\\
+2018 & 1.07 & 0.45 & 1.57 & 2.86 & 1.19 & 1.24 & 0.77 & 1.04 & 1.32 & 2.38 & 2.03 & 2.29\\
+\addlinespace
+2019 & 1.07 & 0.70 & 1.65 & 2.64 & 1.27 & 1.43 & 0.79 & 0.98 & 1.07 & 2.20 & 1.75 & 1.96\\
+2020 & 1.04 & 0.66 & 1.56 & 2.28 & 1.21 & 1.21 & 0.70 & 0.94 & 1.27 & 2.05 & 1.69 & 1.96\\
+2021 & 1.06 & 0.72 & 1.39 & 2.34 & 1.25 & 1.29 & 0.80 & 0.86 & 1.10 & 1.89 & 1.43 & 1.56\\
+2022 & 1.26 & 0.72 & 1.46 & 2.40 & 1.27 & 1.28 & 0.84 & 0.91 & 1.09 & 1.91 & 1.29 & 1.77\\
+\textcolor{orange}{2023} & \textcolor{orange}{0.98} & \textcolor{orange}{0.64} & \textcolor{orange}{1.30} & \textcolor{orange}{1.87} & \textcolor{orange}{1.15} & \textcolor{orange}{1.31} & \textcolor{orange}{0.82} & \textcolor{orange}{0.97} & \textcolor{orange}{1.01} & \textcolor{orange}{2.12} & \textcolor{orange}{1.49} & \textcolor{orange}{1.66}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

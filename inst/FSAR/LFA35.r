@@ -8,7 +8,7 @@ a=lobster.db('seasonal.landings')
 a$yr= as.numeric(substr(a$SYEAR,6,9))
 aaa = a
 #raw cpue
-lobster.db('logs.redo')    
+#lobster.db('logs.redo')    
         b = lobster.db('process.logs')
             b = subset(b,SYEAR %in% 2005:2023 & LFA =='35') 
             
@@ -47,9 +47,11 @@ lobster.db('logs.redo')
       saveRDS(TempModelling,file=file.path(project.datadirectory('bio.lobster'),'tempmodelling.rds'))
       
       # step through this function CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
+      
       mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)
       
-      CPUE.data<- cpue.data
+     
+     CPUE.data<- cpue.data
       t=with(subset(CPUE.data,DOS==1),tapply(TEMP,LFA,mean))
       
           CPUE.data$fYEAR=as.factor(CPUE.data$SYEAR)
