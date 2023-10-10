@@ -258,10 +258,11 @@ uni = uu[which(uu %ni% pl$PORT_CODE )]
   
  ok = ggLobsterMap('custom',xlim=c(-60.8,-59.6),ylim=c(45.55,47.1),return.object = T,colourLFA = F,fill.colours = 'white')
  
- br = as.numeric(with(subset(PL,FishingYear>2018 & LFA==27 & PrivacyScreen==1),round(quantile(NLics,seq(0,1,length.out=6)))))
- labs = paste(br[-length(br)],'-',br[-1],sep='')
- PL$breaks = cut(PL$NLics,breaks=br,labels=labs)
- mp<- colorRampPalette("YlOrRd")(5)
+ br = c(0,as.numeric(with(subset(PL,FishingYear>2018 & LFA==27 & PrivacyScreen==1),round(quantile(NLics,seq(0,1,length.out=6))))))
+ labs = c(paste(br[-length(br)],'-',br[-1],sep=''),paste(br[length(br)],'+',sep=''))
+ mp<- brewer.pal(7,"YlOrRd")
+ PL$breaks = cut(PL$NLics,breaks=br,labels=labs,include.lowest=T,right=T)
+ 
  
  ok1 = ok+geom_sf(data=subset(PL,FishingYear>2018 & LFA==27), aes(color = breaks),size=2)+
    scale_color_manual(values=mp) +
