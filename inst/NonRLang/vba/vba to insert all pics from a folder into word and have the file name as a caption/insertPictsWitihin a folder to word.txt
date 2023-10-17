@@ -1,0 +1,28 @@
+Sub PicturesWithCaption()
+    Dim xFileDialog As FileDialog
+    Dim xPath, xFile As Variant
+    On Error Resume Next
+    Set xFileDialog = Application.FileDialog(msoFileDialogFolderPicker)
+    If xFileDialog.Show = -1 Then
+        xPath = xFileDialog.SelectedItems.Item(1)
+        If xPath <> "" Then
+            xFile = Dir(xPath & "\*.*")
+            Do While xFile <> ""
+                If UCase(Right(xFile, 3)) = "PNG" Or _
+                    UCase(Right(xFile, 3)) = "TIF" Or _
+                    UCase(Right(xFile, 3)) = "JPG" Or _
+                    UCase(Right(xFile, 3)) = "GIF" Or _
+                    UCase(Right(xFile, 3)) = "BMP" Then
+                    With Selection
+                        .InlineShapes.AddPicture xPath & "\" & xFile, False, True
+                        .InsertAfter vbCrLf
+                        .MoveDown wdLine
+                        .Text = xFile & Chr(10)
+                        .MoveDown wdLine
+                    End With
+                End If
+                xFile = Dir()
+            Loop
+        End If
+    End If
+End Sub
