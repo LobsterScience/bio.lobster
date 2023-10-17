@@ -13,10 +13,17 @@ require(SpatialHub)
 require(sf)
 la()
 fd=file.path(project.datadirectory('bio.lobster'),'analysis','CombiningSurveys')
+fdc=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling')
+
 dir.create(fd,showWarnings=F)
 setwd(fd)
 survey = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
 sf_use_s2(FALSE) #needed for cropping
+survey <- suppressWarnings(suppressMessages(
+  st_crop(survey,
+          c(xmin = -82, ymin = 4539, xmax = 383, ymax = 5200))))
+
+survey=subset(survey,SOURCE %in% c('DFO_RV','ILTS_ITQ') &month(survey$DATE) %in% c(6,7,8) )
 
 # Project our survey data coordinates:
 
@@ -24,45 +31,22 @@ survey$lZ = log(survey$z)
 survey = subset(survey,!is.na(lZ))
 survey = subset(survey,!is.na(Lobster))
 
-#what is the right offset for gear
-#km2 for tows is estimated from sensors
-#km2 for traps from Watson et al 2009 NJZ MFR 43 1 -- home radius of 17m, bait radius of 11m == 28m 'attraction zone'
-# pi*(.014^2) # assuming traps are independent
-survey$W = ceiling(yday(survey$DATE)/366*25)
-
-
-mi= readRDS(file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))
-
-
-mi = mi[,c('temp','res')]
-names(mi) = c('GlT','OFFSETcorr')
-mi$GlT = round(mi$GlT,1)
-mi = aggregate(OFFSETcorr~GlT,data=mi,FUN=mean)
-survey$GlT = round(survey$GlT,1)
-survey = dplyr::full_join(survey,mi)
-survey$OFFSETcorr[which(survey$GlT< -.7)] <- 0
-survey$OFFSETcorr[which(survey$GlT> 17)] <- 1
-
-i = which(survey$OFFSET_METRIC == 'Number of traps')
-survey$OFFSET[i] = survey$OFFSET[i] * pi*(.014^2) * survey$OFFSETcorr[i]
-
 survey$LO = log(survey$OFFSET)
-survey = subset(survey,OFFSET>0.00001 & OFFSET< 0.12)
+survey = subset(survey,OFFSET>quantile(survey$OFFSET,0.01) & OFFSET< quantile(survey$OFFSET,0.99))
 survey$BT = survey$GlT
-i = which(survey$Lobster>50 & survey$SOURCE =='AT_SEA_SAMPLES')
-survey = survey[-i,]
-i = which(survey$Lobster>5000)
+
+
 
 ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
 st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
 crs_utm20 <- 32620
 ns_coast <- suppressWarnings(suppressMessages(
   st_crop(ns_coast,
-          c(xmin = -68, ymin = 41, xmax = -56.5, ymax = 47.5))))
+          c(xmin = -68, ymin = 41, xmax = -64, ymax = 47.5))))
 
 ns_coast <- st_transform(ns_coast, crs_utm20)
 
-st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
+st_crs(ns_coast) <- 32620 # 'WGS84'; necessary on some installs
 crs_utm20 <- 32620
 
 survey <- survey %>%   
@@ -73,9 +57,10 @@ surv_utm_coords <- st_coordinates(survey)
 
 survey$X1000 <- surv_utm_coords[,1] 
 survey$Y1000 <- surv_utm_coords[,2] 
+survey = subset(survey,!is.na(Legal))
 
 spde <- make_mesh(as_tibble(survey), xy_cols = c("X1000", "Y1000"),
-                   n_knots=500,type = "cutoff_search")
+                   n_knots=300,type = "cutoff_search")
 plot(spde)
 
 # Add on the barrier mesh component:
@@ -92,56 +77,57 @@ bspde <- add_barrier_mesh(
        coord_sf()
   
 
-survey$m = month(survey$DATE) 
-survey$Q = ifelse(survey$m %in% c(10,11,12),1,ifelse(survey$m %in% c(1,2,3),2,ifelse(survey$m %in% c(4,5,6),3,4)))
-survey$Time = survey$YEAR+survey$Q/4
 
-#rerun feb4 2023
-survey$pa = ifelse(survey$Lobster>0,1,0)
+#run oct 16 2023
 ss = as_tibble(survey)
-fit = sdmTMB(pa~
-               s(lZ,k=4)+s(BT,k=3)+Q,
+fit = sdmTMB(Legal~
+               s(lZ,k=4)+
+               s(BT,k=3)+
+               SOURCE,
              data=ss,
-            offset = 'LO',
+            offset = ss$LO,
              time='YEAR', 
              mesh=bspde,
-             family=binomial(link='logit'),
+             family=tweedie(link='log'),
              spatial='on',
-             spatiotemporal='ar1')
+            spatiotemporal = 'ar1'
+             )
 
-
-saveRDS(fit,'sdmTMBbyQBin0May22023.rds')
+stripDLLs()
+saveRDS(fit,'sdmTMBbyQtw0Oct2023.rds')
 fit<-readRDS('sdmTMBbyQBin0May22023.rds')
 
 x = predict(fit)
 x$preds = fit$family$linkinv(x$est)
 x$rawRes = x$Lobster - x$preds
 
-Glsur = readRDS('GlorysPredictSurface.rds')
+Glsur = readRDS(file.path(fdc,'GlorysPredictSurface.rds'))
 x = Glsur
 
-
 #plot_smooth(fit,select=2)
-
-
 x = bio.utilities::rename.df(x,c('bottomT','yr'),c('BT','YEAR'))
+
+x=subset(x,YEAR>1998)
 x = subset(x,z>0)
 x$lZ = log(x$z)
+x <- suppressWarnings(suppressMessages(
+  st_crop(x,
+          c(xmin = -82, ymin = 4539, xmax = 383, ymax = 5200))))
+
 x$X1000 = st_coordinates(x)[,1]
 x$Y1000 = st_coordinates(x)[,2]
-x = subset(x,exp(lZ)<400)
-
-  x = as_tibble(subset(x,select=c(Q,YEAR,BT,X1000,Y1000,lZ)))
+x = subset(x,exp(lZ)<400 & x$Q==3)
+x = as_tibble(subset(x,select=c(YEAR,BT,X1000,Y1000,lZ)))
   x$geometry=NULL
-
+x$SOURCE = 'ILTS_ITQ'
   g = predict(fit,newdata=x)
 
   g$preds = fit$family$linkinv(g$est)
 
-
-  gsf = st_as_sf(g,coords = c("X1000","Y1000"),crs=32620,remove=F)
-
-
+  g$X = g$X1000*1000
+  g$Y = g$Y1000*1000
+  gsf = st_as_sf(g,coords = c("X","Y"),crs=32620,remove=F)
+  
 rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
 rL = st_as_sf(rL)
 st_crs(rL) <- 4326
@@ -158,14 +144,21 @@ xx=readRDS('preds_sdmTMBbyQbinoMay32023.rds')
 fit=xx[[1]]
 gsf=xx[[2]]
 
+coa = st_as_sf(readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastlineSF_NY_NL.rds")))
+coa = st_transform(coa,crs=crs_utm20)
+c_utm_coords <- st_coordinates(coa)
+
+
 #Maps
-mm = c(0.0000001,max(quantile(gsf$pred,0.9999)))
-ggplot(subset(gsf,Q==3 & YEAR %in% 2004:2022)) +
+
+mm = c(0.0000001,max(quantile(gsf$preds,0.999)))
+ggplot(subset(gsf, YEAR %in% 2018:2022)) +
   geom_sf(aes(fill=preds,color=preds)) + 
-  scale_fill_viridis_c(limits=mm) +
-  scale_color_viridis_c(limits=mm) +
+  scale_fill_viridis_c(trans='sqrt',limits=mm) +
+  scale_color_viridis_c(trans='sqrt',limits=mm) +
   facet_wrap(~YEAR) +
-  #geom_sf(data=rL,size=1,colour='black',fill=NA)+
+  geom_sf(data=rL,size=2,colour='white',fill=NA)+
+  geom_sf(data=ns_coast,fill='wheat')+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
@@ -173,7 +166,9 @@ ggplot(subset(gsf,Q==3 & YEAR %in% 2004:2022)) +
          axis.text.y = element_blank(),
          axis.title.y = element_blank()
   ) +
-  coord_sf()
+  coord_sf(xlim = c(st_bbox(ns_coast)$xmin,st_bbox(gsf)$xmax),
+            ylim = c(st_bbox(gsf)$ymin,st_bbox(gsf)$ymax),
+            expand = FALSE)
 
 
 savePlot('wtQ600.png') 
