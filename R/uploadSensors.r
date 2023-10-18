@@ -3,7 +3,8 @@ uploadSensors <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisnt
         Sys.setenv(TZ = "GMT")
         Sys.setenv(ORA_SDTZ = "GMT")   
    if(any(grepl('.csv',datafile))) datafile = read.csv(datafile,header=T)
-      if(dim(datafile)[2]!=19) stop('The number of columns in the datafile do not match the number required (19)')  
+      if(dim(datafile)[2]!=19) stop('The number of columns in the datafile do not match the number required (19)') 
+        datafile$FLAG=NA
       bio.lobster::db.setup(un=UID,pw=PWD)  
       datafile$GPSDATE = as.Date(datafile$GPSDATE)
       if(appendIt==F & ROracle::dbExistsTable(con, tablenm)) stop('table already exists in the space. You need to either use a new name or use appendIT=T')
@@ -27,7 +28,8 @@ uploadSensors <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisnt
                                                DDLAT NUMBER(10,0),
                                                DDLON NUMBER(10,0),
                                                SOURCE VARCHAR2(20BYTE),
-                                               SIGNALSTRENGTH NUMBER)",SEP=" ")
+                                               SIGNALSTRENGTH NUMBER,
+                                                FLAG NUMBER)",SEP=" ")
                         )
         print(paste('Table ',tablenm,' has been created',sep=""))
         appendIt=T

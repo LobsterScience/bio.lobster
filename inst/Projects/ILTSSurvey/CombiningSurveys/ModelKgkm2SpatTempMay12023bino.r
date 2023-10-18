@@ -95,7 +95,7 @@ fit = sdmTMB(Legal~
 
 stripDLLs()
 saveRDS(fit,'sdmTMBbyQtw0Oct2023.rds')
-fit<-readRDS('sdmTMBbyQBin0May22023.rds')
+fit<-readRDS('sdmTMBbyQtw0Oct2023.rds')
 
 x = predict(fit)
 x$preds = fit$family$linkinv(x$est)
@@ -120,9 +120,24 @@ x = subset(x,exp(lZ)<400 & x$Q==3)
 x = as_tibble(subset(x,select=c(YEAR,BT,X1000,Y1000,lZ)))
   x$geometry=NULL
 x$SOURCE = 'ILTS_ITQ'
-  g = predict(fit,newdata=x)
+  g = predict(fit,newdata=x,return_tmb_object = T)
+ ind = get_index(g,bias_correct = T)
+ cg = get_cog(g,bias_correct = F)
+ cg1 = subset(cg,coord=='X')
+ cg2 = subset(cg,coord=='Y')
+ names(cg2)[2:ncol(cg2)]= paste(names(cg2)[2:ncol(cg2)],'y',sep=".")
+ 
+ cg1 = merge(cg1,cg2) 
+ cg1$est1000 = cg1$est*1000
+ cg1$est.y1000 = cg1$est.y*1000
+ 
+ cg1 = st_as_sf(cg1,coords=c('est1000','est.y1000'),crs=crs_utm20)
+ b = ggLobsterMap('west')
+ b+geom_sf(data=cg1)
 
-  g$preds = fit$family$linkinv(g$est)
+ g = predict(fit,newdata=x)
+ 
+   g$preds = fit$family$linkinv(g$est)
 
   g$X = g$X1000*1000
   g$Y = g$Y1000*1000

@@ -53,6 +53,8 @@ deps75 = aggregate(Depth~LFA,data=idf,FUN=function(x)round(quantile(x,0.75)))
 deps$Depth[which(deps$LFA==29)] = round(1.8288*40)
 deps$Depth[which(deps$LFA==30)] = round(1.8288*25)
 
+#expert opinion from Advisory Oct 17, 2023
+deps$Depth[which(deps$LFA==32)] = round(1.8288*40)
 
 #just prune the polys
 
@@ -94,7 +96,7 @@ for(i in io){
   }
 }
 
-LobsterMap('27')
+LobsterMap('32')
 addPolys(out,col='red')
 coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs","shorelineHR.csv"))
 #stmpa = read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","StAnnsMPA.csv"))
