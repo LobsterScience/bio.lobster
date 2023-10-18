@@ -1,10 +1,10 @@
 #' @export
 
-uploadOlexData <- function(fn='C:/LOCAL WORKING FOLDER/ILTS/Olex Tracks/ILTS_2022_leg_2_track.txt',tablenm='ILTS_OLEXTRACKS', appendIt=F,UID='frailc',PWD='notit'){
+uploadOlexData <- function(fn='C:/LOCAL WORKING FOLDER/ILTS/Olex Tracks/ILTS_2022_leg_2_track.txt',months=c(5,6,7), tablenm='ILTS_OLEXTRACKS', appendIt=F,UID='frailc',PWD='notit',year=2022){
   Sys.setenv(TZ = "GMT")
   Sys.setenv(ORA_SDTZ = "GMT")   
   bio.lobster::db.setup(un=UID,pw=PWD)  
-  
+  options(digits=10)
   lines <- readLines(fn)
   nheadLines = 18
   lines <- lines[(nheadLines):length(lines)]
@@ -14,7 +14,6 @@ uploadOlexData <- function(fn='C:/LOCAL WORKING FOLDER/ILTS/Olex Tracks/ILTS_202
     if (length(x) < max_length) c(x, rep(NA, max_length - length(x)))
     else x
   })
-  
   df <- as.data.frame(do.call(rbind, elements))
   df1 = strsplit(as.character(df$V1),split= " ")
   df1 = as.data.frame(do.call(rbind,df1))
@@ -28,7 +27,7 @@ uploadOlexData <- function(fn='C:/LOCAL WORKING FOLDER/ILTS/Olex Tracks/ILTS_202
   
   if(grepl('<b0>',df1$V2[1])){
     remove_deg <- function(x) {
-      gsub("<b0>", "", x)
+      gsub("<b0>","", x)
     }
   } 
   
@@ -59,22 +58,22 @@ uploadOlexData <- function(fn='C:/LOCAL WORKING FOLDER/ILTS/Olex Tracks/ILTS_202
   df1$StdDATE = (strptime(df1$dau,format='%Y-%m-%d'))
   df1$StdTIME = as.character(format(df1$dau,format='%H:%M:%S'))
   
-  
-  
-  
   bio.lobster::db.setup()
   se = dbGetQuery(conn=con, statement = paste("select trip_id, set_no, min(starttime) starttime, min(endtime) endtime, min(setdate) setdate
-                      from (select a.trip_id, b.set_no,case when c.pntcd_id = 2 then to_char(to_date(settime, 'hh24miss'),'hh24:mi:ss')else null end starttime,case when c.pntcd_id = 3 then to_char(to_date(settime, 'hh24miss'),'hh24:mi:ss')else null end endtime,case when pntcd_id = 2 then setdate
+                      from (select a.trip_id, b.set_no,case when c.pntcd_id = 2 then to_char(to_date(settime, 'hh24miss'),'hh24:mi:ss')else null end starttime,
+                      case when c.pntcd_id = 3 then to_char(to_date(settime, 'hh24miss'),'hh24:mi:ss')else null end endtime,case when pntcd_id = 2 then setdate
                       else null end setdate
                       from isdb.istrips a, isdb.isfishsets b, isdb.issetprofile c
                       where a.trip_id = b.trip_id
                       and b.fishset_id = c.FISHSET_ID
-                      and to_char(a.board_date,'yyyy') = ",year," and a.tripcd_id = 7065and b.haulccd_id = 1)group by trip_id, set_no
+                      and to_char(a.board_date,'yyyy') = ",year," and a.tripcd_id = 7065 and b.haulccd_id = 1)group by trip_id, set_no
                       order by trip_id, setdate, set_no",sep=" ")
   )
   se$STARTDIFF <- format(as.POSIXct(se$STARTTIME, format="%H:%M:%S", tz="UTC") - as.difftime(10, units="mins"),"%H:%M:%S")
   se$ENDDIFF <- format(as.POSIXct(se$ENDTIME, format="%H:%M:%S", tz="UTC") + as.difftime(10, units="mins"),"%H:%M:%S")
+  se = subset(se,month(se$SETDATE) %in% months)
   k = unique(se$SETDATE)
+  
   df1$Date = as.POSIXct((df1$StdDATE))
   df1$TRIP_ID = df1$SET_NO = NA
   oo = list()
@@ -82,18 +81,18 @@ uploadOlexData <- function(fn='C:/LOCAL WORKING FOLDER/ILTS/Olex Tracks/ILTS_202
   for(i in 1:length(k)){
     seP = subset(se, SETDATE==k[i])
     df1P = subset(df1,Date==k[i])
+    m=m+1
     if(nrow(df1P)>5){
       for(b in 1:nrow(seP)){
         sePP = seP[b,]
         ii = which(df1P$StdTIME>sePP$STARTDIFF & df1P$StdTIME<sePP$ENDDIFF)
         if(length(ii)>2){
-          m=m+1
           df1P$SET_NO[ii] = sePP$SET_NO
           df1P$TRIP_ID[ii] = sePP$TRIP_ID
-          oo[[m]] = df1P 
         }
       }
     }
+    oo[[m]] = df1P 
   }
   da = do.call(rbind,oo)
   datafile = subset(da, !is.na(SET_NO),select=c(Y,X,StdDATE,StdTIME,SET_NO,TRIP_ID))
