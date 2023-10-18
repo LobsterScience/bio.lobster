@@ -97,21 +97,18 @@ uploadOlexData <- function(fn='C:/LOCAL WORKING FOLDER/ILTS/Olex Tracks/ILTS_202
   da = do.call(rbind,oo)
   datafile = subset(da, !is.na(SET_NO),select=c(Y,X,StdDATE,StdTIME,SET_NO,TRIP_ID))
   
+  names(datafile) = toupper(names(datafile))
   
   if(appendIt==F & ROracle::dbExistsTable(con, tablenm)) stop('table already exists in the space. You need to either use a new name or use appendIT=T')
   if(appendIt==F & !ROracle::dbExistsTable(con, tablenm)){    
     dbSendQuery(conn=con, statement = paste("create table ",tablenm,
-                                            "( y         NUMBER(10, 6),
-                  x         NUMBER(10, 6),
-                  stddate   VARCHAR2 (1000),
-                  stdtime   VARCHAR2 (1000),
-                  set_no    NUMBER(4, 0),
-                  trip_id   NUMBER(10, 0))",SEP=" ")
-                
-                
-                
-                
-    )
+                                            "( Y         NUMBER(10, 6),
+                  X         NUMBER(10, 6),
+                  STDDATE   VARCHAR2 (1000),
+                  STDTIME   VARCHAR2 (1000),
+                  SET_NO    NUMBER(4, 0),
+                  TRIP_ID   NUMBER(10, 0))",SEP=" ")
+                  )
     print(paste('Table ',tablenm,' has been created',sep=""))
     appendIt=T
   }
