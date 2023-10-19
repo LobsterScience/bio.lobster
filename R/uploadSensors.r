@@ -7,6 +7,7 @@ uploadSensors <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisnt
         datafile$FLAG=NA
       bio.lobster::db.setup(un=UID,pw=PWD)  
       datafile$GPSDATE = as.Date(datafile$GPSDATE)
+      datafile$GPSTIME = sprintf("%06d",datafile$GPSTIME)
       if(appendIt==F & ROracle::dbExistsTable(con, tablenm)) stop('table already exists in the space. You need to either use a new name or use appendIT=T')
       if(appendIt==F & !ROracle::dbExistsTable(con, tablenm)){    
                         dbSendQuery(conn=con, statement = paste("create table ",tablenm,"(",
