@@ -66,6 +66,7 @@ uploadOlexData <- function(fn='C:/LOCAL WORKING FOLDER/ILTS/Olex Tracks/ILTS_202
                       from isdb.istrips a, isdb.isfishsets b, isdb.issetprofile c
                       where a.trip_id = b.trip_id
                       and b.fishset_id = c.FISHSET_ID
+                      and a.trip_id not in (100058328, 100058330)
                       and to_char(a.board_date,'yyyy') = ",year," and a.tripcd_id = 7065 and b.haulccd_id = 1)group by trip_id, set_no
                       order by trip_id, setdate, set_no",sep=" ")
   )
