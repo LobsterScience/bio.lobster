@@ -263,6 +263,8 @@ for(i in 1:length(gg)){
 ##Tester for Runs
           require(rstan))
           load('~/git/bio.ccir/inst/trial.data.rdata')
+          require(devtools)
+          load_all('~/git/bio.ccir/')
 
           Total = apply(SublegalLegal,1,sum)
           CumLegal <- cumsum(SublegalLegal[,2])

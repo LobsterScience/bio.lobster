@@ -104,7 +104,7 @@ uploadOlexData <- function(fn='C:/LOCAL WORKING FOLDER/ILTS/Olex Tracks/ILTS_202
     dbSendQuery(conn=con, statement = paste("create table ",tablenm,
                                             "( Y         NUMBER(10, 6),
                   X         NUMBER(10, 6),
-                  STDDATE   VARCHAR2 (1000),
+                  STDDATE   DATE (1000),
                   STDTIME   VARCHAR2 (1000),
                   SET_NO    NUMBER(4, 0),
                   TRIP_ID   NUMBER(10, 0))",SEP=" ")

@@ -1,15 +1,29 @@
+#' ILTS_ITQ_All_Data
+#'
+#' This function pulls out all the ILTS ITQ data for all sets and species either aggregated by length and/or sex or raw data.
+#' @param species Species codes from ISDB (2550 = lobster; 10 = Atlantic cod; etc)
+#' @param redo_base_data if TRUE redoes all the swept area calculations and data filtering / cleanup
+#' @param size specifies size range for your data; requires a two element vector c(min, max)
+#' @param sex specifies sex for data; only applicable to lobster and crabs. 0 = unid; 1= male; 2= female; 3=egg carrying
+#' @param aggregate if TRUE aggregates the data by trip and set based on above arguments. If no size or sex is specified its total abundance.
+#' @return Data objects that contain the data for use in further analyses.
+#' @examples ILTS_ITQ_All_Data(species=2550, size=c(1,200),sex=c(3),aggregate=T)
 #' @export
 
-ILTS_ITQ_sets <-function(x,species=2550){
-  lobster.db("survey")
+ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NULL,aggregate=F,return_tow_tracks=F){
+  outfile = file.path(project.datadirectory('bio.lobster'),'data','survey','ILTS_ITQ_all.data.rds')
+  sensorfile = file.path(project.datadirectory('bio.lobster'),'data','survey','ILTS_ITQ_sensorData.rds')
   
-  require(bio.lobster)
+  if(redo_base_data){
+    lobster.db("survey")
+    require(bio.lobster)
   require(bio.utilities)
   require(devtools)
   require(geosphere)
   
   ic = ILTSClick
   junk = list()
+  sensor_data = list()
   for(i in 1:nrow(ic)){
     if(i %in% round(seq(5,nrow(ic),length.out=100))) print(i)
     v = ic[i,]
@@ -17,12 +31,18 @@ ILTS_ITQ_sets <-function(x,species=2550){
     bds = c(5,ifelse(rv=='NEST',c(20),c(30)))
     v$gear = rv
     
-    v$st= strptime(sapply(strsplit(as.character(v$STARTDATETIME),split= " "), function(x) x[2]),"%H:%M:%S")
-    v$et= strptime(sapply(strsplit(as.character(v$ENDDATETIME),split= " "), function(x) x[2]),"%H:%M:%S")
-    if(yday(v$STARTDATETIME) != yday(v$ENDDATETIME))v$et$mday= v$et$mday +1 #if jumps over night
+    #issues with date time Nov 8, 2023
+    #v$st= strptime(sapply(strsplit(as.character(v$STARTDATETIME),split= " "), function(x) x[2]),"%H:%M:%S")
+    #v$et= strptime(sapply(strsplit(as.character(v$ENDDATETIME),split= " "), function(x) x[2]),"%H:%M:%S")
+    #if(yday(v$STARTDATETIME) != yday(v$ENDDATETIME))v$et$mday= v$et$mday +1 #if jumps over night
+    
+    v$st= strptime(v$STARTTIME, "%H%M%S")
+    v$et= strptime(v$ENDTIME, "%H%M%S")
+    
+    if(yday(v$STARTDATE) != yday(v$ENDDATE))v$et$mday= v$et$mday +1 #if jumps over night
     
     
-    v$yr = year(v$STARTDATETIME)
+    v$yr = year(v$STARTDATE)
     
     v$median_spread= v$sensor = v$sweptArea = v$distance = NA
     
@@ -32,12 +52,11 @@ ILTS_ITQ_sets <-function(x,species=2550){
       v$sensor = unique(se$SOURCE)
       
       if(v$sensor=='MARPORT' & v$yr>2016) se = subset(se, VALIDITY=='RAW')
-      if(v$sensor=='MARPORT' & v$yr==2016) se1 = subset(se, VALIDITY=='1000') #raw
+      if(v$sensor=='MARPORT' & v$yr==2016) se= subset(se, VALIDITY=='1000') #raw
       
       
       if(all(c(nrow(se)>5, length(unique(se$GPSTIME))>5) )){
         se$Time = strptime(se$GPSTIME,"%H%M%S")
-        
         if(v$QUALITY>0) se = subset(se,Time>=v$st & Time<=v$et) #click touch time   
         if(v$QUALITY==0) se = subset(se,FLAG==1)   #winch time
         
@@ -54,7 +73,8 @@ ILTS_ITQ_sets <-function(x,species=2550){
             distGeo(se[i - 1, c("X", "Y")], se[i, c("X", "Y")])
           }))/1000
           
-          if(v$distance>4 | v$distance<.5) browser()
+          sensor_data[[i]] = se
+          if(v$distance>4 | v$distance<.5) 
           
           # for future years, assume names are same as 2021, change this if needed:
           ##change dates to esonar and marport not year
@@ -87,7 +107,8 @@ ILTS_ITQ_sets <-function(x,species=2550){
     junk[[i]] = v
     rm(list=c('v','se','bds','rv'))
   }
-  
+  sed = do.call(rbind,sensor_data)
+  saveRDS(sed,sensorfile)
   j = do.call(rbind,junk)
   j$spread = j$sweptArea/j$distance*1000
   
@@ -140,7 +161,7 @@ ILTS_ITQ_sets <-function(x,species=2550){
   
   sC = surveyCatch
 	sC = subset(sC, HAULCCD_ID %in% c(1))
-	sC = subset(sC,select=c(TRIP_ID, SET_NO, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SPECCD_ID, NUM_CAUGHT, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTDATETIME, ENDDATETIME, DEPTHM, QUALITY, gear, distance, sweptArea, sensor, spread, WEIGHT_KG))
+	sC = subset(sC,select=c(TRIP_ID, SET_NO, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SPECCD_ID, NUM_CAUGHT, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, QUALITY, gear, distance, sweptArea, sensor, spread, WEIGHT_KG))
 	
   temp = aggregate(TEMPC~TRIP_ID+SET_NO,data=ILTSTemp, FUN=median)
   sC = merge(sC,temp,all.x=T)
@@ -180,18 +201,79 @@ ILTS_ITQ_sets <-function(x,species=2550){
     
     if(!any(is.na(sC$NUM_CAUGHT) & !is.na(sC$NUM_MEASURED))) {print('Survey measurements but not in catch table'); browser()}
     
-    xx = merge(sC,sFM,all.x=T) #full dataset
-    xx$ID = paste(xx$TRIP_ID,xx$SET_NO,sep="-")
-    xy = subset(xx,SPECCD_ID==species)
-    xS = subset(xx,unique(ID) %ni% unique(xy$ID))
+            xx = merge(sC,sFM,all.x=T) #full dataset
+            xx$FISH_LENGTH = round(xx$FISH_LENGTH)
+            xx$SEX[which(is.na(xx$SEX))]<- 0
+           xFinal = xx
+           xFinal$NUM_AT_LENGTH[which(is.na(xFinal$NUM_AT_LENGTH))] <- 0
+           xFinal$NUM_MEASURED[which(is.na(xFinal$NUM_MEASURED))] <- 0
+            xFinal$FISH_LENGTH[which(is.na(xFinal$FISH_LENGTH))] <- 0
+            xFinal$PRORATED_NUM_AT_LENGTH = xFinal$NUM_AT_LENGTH * xFinal$NUM_CAUGHT/xFinal$NUM_MEASURED 
+            xFinal$PRORATED_NUM_AT_LENGTH[which(is.na(xFinal$PRORATED_NUM_AT_LENGTH))] <- 0
+            xFinal$SA_CORRECTED_PRORATED_N = xFinal$PRORATED_NUM_AT_LENGTH / xFinal$sweptArea #n/km2
+            saveRDS(xFinal,file=outfile)
+  }
+    
+    x = readRDS(outfile)
+    x$ID = paste(x$TRIP_ID,x$SET_NO,sep="-")
+     if(is.null(size) & is.null(sex)) xy = subset(x,SPECCD_ID==species)
+   if(!is.null(size) & is.null(sex)) xy = subset(x,SPECCD_ID==species & FISH_LENGTH>=size[1] & FISH_LENGTH<=size[2])
+   if(!is.null(size) & !is.null(sex)) xy = subset(x,SPECCD_ID==species & FISH_LENGTH>=size[1] & FISH_LENGTH<=size[2] & SEX %in% sex)
+   
+    if(aggregate){
+      xy = aggregate(cbind(SA_CORRECTED_PRORATED_N,PRORATED_NUM_AT_LENGTH,NUM_AT_LENGTH)~ID,data=xy,FUN=sum) 
+      xS = subset(x,(ID) %in% unique(xy$ID))
+      xS = xS %>% dplyr::distinct(TRIP_ID,SET_NO,.keep_all = T)
+      xS$SPECCD_ID = species
+      xS$SA_CORRECTED_PRORATED_N = xS$PRORATED_NUM_AT_LENGTH= xS$SEX = xS$FISH_LENGTH = xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = NULL
+      xy = merge(xS,xy)
+    } 
+      xS = subset(x,ID %ni% unique(xy$ID))
     
     require(dplyr)
     xS = xS %>% dplyr::distinct(TRIP_ID,SET_NO,.keep_all = T)
-    xS$SPECCD_ID = 2550
-    xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = 0
-    xS$SEX = xS$FISH_LENGTH=NA
-  
+    xS$SPECCD_ID = species
+    xS$SA_CORRECTED_PRORATED_N = xS$PRORATED_NUM_AT_LENGTH= xS$SEX = xS$FISH_LENGTH = xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = 0
+   
+    if(aggregate){ xS$SEX = xS$FISH_LENGTH  = xS$NUM_CAUGHT = xS$WEIGHT_KG =  xS$NUM_MEASURED = NULL}
+    
+    if(!aggregate){
+        #need to make 0s for all sets that do not contain that length
+      xS = x %>% dplyr::distinct(TRIP_ID,SET_NO,.keep_all = T)
+      xS$SPECCD_ID = species
+      xS$SA_CORRECTED_PRORATED_N = xS$PRORATED_NUM_AT_LENGTH= xS$SEX = xS$FISH_LENGTH = xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = NULL
+      ss = aggregate(TRIP_ID~FISH_LENGTH,data=subset(xy,SEX<3 | is.na(SEX)),FUN=length)
+      v = unique(xy$SEX[which(xy$SEX<3)])
+      s1 = seq(min(ss$FISH_LENGTH),max(ss$FISH_LENGTH),1)
+      s1 = expand.grid(v,s1)
+      if(any(unique(xy$SEX)==3)){
+        #shorter vector for berried
+        ss = aggregate(TRIP_ID~FISH_LENGTH,data=subset(xy,SEX==3),FUN=length)
+        s2 = seq(min(ss$FISH_LENGTH),max(ss$FISH_LENGTH),1)
+        v=3
+        s2 = expand.grid(v,s2)
+        s1 = as.data.frame(rbind(s1,s2))
+      }
+      names(s1)=c('SEX','FISH_LENGTH')
+      oo = list()
+      for(i in 1:nrow(s1)){
+          o = xS
+          o$SEX = s1[i,'SEX']
+          o$FISH_LENGTH = s1[i,'FISH_LENGTH']
+          oo[[i]] = o
+      }
+      xS = bind_rows(oo)
+      xS$FID = paste(xS$FISHSET_ID,xS$FISH_LENGTH,xS$SEX)
+      xy$FID = paste(xy$FISHSET_ID,xy$FISH_LENGTH,xy$SEX)
+      xS = subset(xS,FID %ni% unique(xy$FID)) 
+      xy$FID = xS$FID = NULL
+    }
+    
+     
     xy$ID = xS$ID = NULL
-    xFinal = rbind(xS,xy)
+    xFinal = bind_rows(xS,xy)
+    xFinal[,28:33] = bio.utilities::na.zero(xFinal[,28:33])
+    xFinal = rename.df(xFinal,c('WEIGHT_KG','NUM_CAUGHT','NUM_MEASURED'),c('SET_LEVEL_WEIGHT_KG','SET_LEVEL_NUM_CAUGHT','SET_LEVEL_NUM_MEASURED'))
+    if(return_tow_tracks) return(readRDS(sensorfile))
     return(xFinal)
- 	}
+    }
