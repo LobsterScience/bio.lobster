@@ -1418,14 +1418,14 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       if (DS=="survey.redo") {
         Sys.setenv(TZ = "America/Halifax")
         # survey
-        ILTS2016TowDepth = connect.command(con, "select * from FRAILC.MARPORT_DEPTH")
-        ILTS2016TowSpread = connect.command(con, "select * from FRAILC.MARPORT_SPREAD")
-        ILTS2016Tracks = connect.command(con, "select * from FRAILC.MARPORT_TRACKS")
+        #ILTS2016TowDepth = connect.command(con, "select * from FRAILC.MARPORT_DEPTH")
+        #ILTS2016TowSpread = connect.command(con, "select * from FRAILC.MARPORT_SPREAD")
+        #ILTS2016Tracks = connect.command(con, "select * from FRAILC.MARPORT_TRACKS")
         #ILTSTemp = connect.command(con, "select * from FRAILC.MINILOG_TEMP")
         ILTSTemp = connect.command(con, "select * from lobster.ILTS_TEMPERATURE")
         ILTSSensor = connect.command(con, "select * from lobster.ILTS_SENSORS")
         ILTSClick =  connect.command(con, "select * from lobster.ILTS_CLICKTOUCH")
-        ILTS2016Tracks = ILTS2016Tracks[order(ILTS2016Tracks$TTIME),]
+        #ILTS2016Tracks = ILTS2016Tracks[order(ILTS2016Tracks$TTIME),]
         #NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
         #netMensuration = merge( NM1,ILTS2016Tracks)#merge net mensuration into one file
         #netMensuration$TTIME = NULL #remove load date from merged file

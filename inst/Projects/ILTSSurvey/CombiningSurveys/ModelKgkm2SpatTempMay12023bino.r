@@ -12,12 +12,12 @@ require(PBSmapping)
 require(SpatialHub)
 require(sf)
 la()
-fd=file.path(project.datadirectory('bio.lobster'),'analysis','CombiningSurveys')
+fd=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling')
+
 dir.create(fd,showWarnings=F)
 setwd(fd)
 survey = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
 sf_use_s2(FALSE) #needed for cropping
-
 # Project our survey data coordinates:
 
 survey$lZ = log(survey$z)
@@ -52,6 +52,10 @@ survey$BT = survey$GlT
 i = which(survey$Lobster>50 & survey$SOURCE =='AT_SEA_SAMPLES')
 survey = survey[-i,]
 i = which(survey$Lobster>5000)
+survey$LO = log(survey$OFFSET)
+survey = subset(survey,OFFSET>quantile(survey$OFFSET,0.01) & OFFSET< quantile(survey$OFFSET,0.99))
+survey$BT = survey$GlT
+
 
 ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
 st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
@@ -112,7 +116,6 @@ fit = sdmTMB(pa~
 
 saveRDS(fit,'sdmTMBbyQBin0May22023.rds')
 fit<-readRDS('sdmTMBbyQBin0May22023.rds')
-
 x = predict(fit)
 x$preds = fit$family$linkinv(x$est)
 x$rawRes = x$Lobster - x$preds
@@ -123,25 +126,44 @@ x = Glsur
 
 #plot_smooth(fit,select=2)
 
-
 x = bio.utilities::rename.df(x,c('bottomT','yr'),c('BT','YEAR'))
+
+x=subset(x,YEAR>1998)
 x = subset(x,z>0)
 x$lZ = log(x$z)
+x <- suppressWarnings(suppressMessages(
+  st_crop(x,
+          c(xmin = -82, ymin = 4539, xmax = 383, ymax = 5200))))
+
 x$X1000 = st_coordinates(x)[,1]
 x$Y1000 = st_coordinates(x)[,2]
-x = subset(x,exp(lZ)<400)
-
-  x = as_tibble(subset(x,select=c(Q,YEAR,BT,X1000,Y1000,lZ)))
+x = subset(x,exp(lZ)<400 & x$Q==3)
+x = as_tibble(subset(x,select=c(YEAR,BT,X1000,Y1000,lZ)))
   x$geometry=NULL
+x$SOURCE = 'ILTS_ITQ'
+  g = predict(fit,newdata=x,return_tmb_object = T)
+ ind = get_index(g,bias_correct = T)
+ cg = get_cog(g,bias_correct = F)
+ cg1 = subset(cg,coord=='X')
+ cg2 = subset(cg,coord=='Y')
+ names(cg2)[2:ncol(cg2)]= paste(names(cg2)[2:ncol(cg2)],'y',sep=".")
+ 
+ cg1 = merge(cg1,cg2) 
+ cg1$est1000 = cg1$est*1000
+ cg1$est.y1000 = cg1$est.y*1000
+ 
+ cg1 = st_as_sf(cg1,coords=c('est1000','est.y1000'),crs=crs_utm20)
+ b = ggLobsterMap('west')
+ b+geom_sf(data=cg1)
 
-  g = predict(fit,newdata=x)
+ g = predict(fit,newdata=x)
+ 
+   g$preds = fit$family$linkinv(g$est)
 
-  g$preds = fit$family$linkinv(g$est)
-
-
-  gsf = st_as_sf(g,coords = c("X1000","Y1000"),crs=32620,remove=F)
-
-
+  g$X = g$X1000*1000
+  g$Y = g$Y1000*1000
+  gsf = st_as_sf(g,coords = c("X","Y"),crs=32620,remove=F)
+  
 rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
 rL = st_as_sf(rL)
 st_crs(rL) <- 4326
@@ -158,14 +180,20 @@ xx=readRDS('preds_sdmTMBbyQbinoMay32023.rds')
 fit=xx[[1]]
 gsf=xx[[2]]
 
+coa = st_transform(coa,crs=crs_utm20)
+c_utm_coords <- st_coordinates(coa)
+
+
 #Maps
-mm = c(0.0000001,max(quantile(gsf$pred,0.9999)))
-ggplot(subset(gsf,Q==3 & YEAR %in% 2004:2022)) +
+
+mm = c(0.0000001,max(quantile(gsf$preds,0.999)))
+ggplot(subset(gsf, YEAR %in% 2018:2022)) +
   geom_sf(aes(fill=preds,color=preds)) + 
-  scale_fill_viridis_c(limits=mm) +
-  scale_color_viridis_c(limits=mm) +
+  scale_fill_viridis_c(trans='sqrt',limits=mm) +
+  scale_color_viridis_c(trans='sqrt',limits=mm) +
   facet_wrap(~YEAR) +
-  #geom_sf(data=rL,size=1,colour='black',fill=NA)+
+  geom_sf(data=rL,size=2,colour='white',fill=NA)+
+  geom_sf(data=ns_coast,fill='wheat')+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
@@ -173,9 +201,9 @@ ggplot(subset(gsf,Q==3 & YEAR %in% 2004:2022)) +
          axis.text.y = element_blank(),
          axis.title.y = element_blank()
   ) +
-  coord_sf()
-
-
+  coord_sf(xlim = c(st_bbox(ns_coast)$xmin,st_bbox(gsf)$xmax),
+            ylim = c(st_bbox(gsf)$ymin,st_bbox(gsf)$ymax),
+            expand = FALSE)
 savePlot('wtQ600.png') 
 
 

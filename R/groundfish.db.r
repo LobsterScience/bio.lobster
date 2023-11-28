@@ -691,7 +691,33 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
                                 #odbcClose(connect)
                                 set = bio.utilities::toNums(set,2:14)
                                 save ( set, file=fn, compress=F )
-      }
     }
+  if(DS %in% c('polygons', 'polygons.redo')){
+    fn = file.path( loc, "gspolygons.rdata")
+    if(grepl('redo',DS)){
+            set =  connect.command(con, " select * from 
+                                        groundfish.z_poly_areas"
+                                   )
+            set$LONGITUDE = set$LONGITUDE*-1
+            set$label = set$STRATUM
+            set$X = set$LONGITUDE
+            set$Y = set$LATITUDE
+            ID = unique(set$STRATUM)
+            ID = data.frame(PID = 1:length(ID),STRATUM=ID)
+            set = merge(set,ID)
+            set$POS = set$ORDINAL
+            set = set[order(set$label, set$POS),]
+            r = pbs.2.gis(set,make.sf = T,env.object = T,type='polygon',spdf = F)
+            r = bio.utilities::list.names.to.columns(r)
+            names(r)[1]='STRATUM'
+            r = subset(r,STRATUM>439)
+            save ( r, file=fn, compress=F )
+    }
+    load(file = fn)
+    return(r)
+              
+            }
+        }
+  
 
 

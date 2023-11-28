@@ -1,5 +1,5 @@
 #' @export
-scallopSurveyIndex<-function(redo=F,	size_range=c(70,82),sex=0:3, lfa,layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),outDir=file.path(project.datadirectory('bio.lobster'),'data')){
+scallopSurveyIndex<-function(redo=F,	size_range=c(70,82),sex=0:3, lfa,layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),outDir=file.path(project.datadirectory('bio.lobster'),'data'),return_sets_object=F){
 if(redo){	
   require(sf)
 	# import bycatch data from scallop survey
@@ -61,7 +61,7 @@ if(redo){
   sa = aggregate(cbind(ABUNDANCE_STD_PRU)~TOW_SEQ+STRATA_ID+TOW_DATE+X+Y+BOTTOM_TEMP+YEAR,data=s,FUN=sum)
   
 	totS = st_as_sf(sa,coords = c('X','Y'),crs=st_crs(4326))
-	
+	if(return_sets_object) {return(totS); stop()}
 	ss = st_join(totS,v, join=st_within)
 	xx = subset(ss,LFA==lfa)
 	xx$STRATA_ID = xx$STRATA_ID.y 
