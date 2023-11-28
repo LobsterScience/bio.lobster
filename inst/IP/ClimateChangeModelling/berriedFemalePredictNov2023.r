@@ -111,169 +111,116 @@ hp = subset(hp , id %in% hpu$id)
 
 LL  = aggregate(LFA~id,data=hp,FUN=function(x)median(x,na.rm=T))
 names(LL)[1] = 'Location'
+hp$t2016 = round(hp$X.2016,1) 
+hp$t2035 = round(hp$X.2035,1) 
+hp$t2055 = round(hp$X.2055,1) 
+hp$t2099 = round(hp$X.2099,1) 
 
-#temperature range
-xx = aggregate(X.2016~Pred.2016+id,data=hp,FUN=function(x){z = quantile(x,c(0.025,0.975)); z[2] -z[1]})
-xx$yr=2016
-names(xx)[1:3] = c('BerriedProb','Location','Temperature_Range')
+#temp relationship extracted from the model
+  ff = plot_smooth(fitpa,select=2,return_data=T)
+  ff$Pred = fitpa$family$linkinv(ff$est)
+  ff = ff[,c('BT','Pred')]
+  ff$BT = as.integer(round(ff$BT,1)*10)/10
+  ts = data.frame(BT=seq(min(ff$BT),max(ff$BT),by=.1))
+  ts$BT = as.integer(round(ts$BT,1)*10)/10
+  ff1 = merge(ff,ts,all.y=T)
+  require(zoo)
+  ff1$Pred = na.approx(ff1$Pred)
+  ff1$PredS = ff1$Pred/max(ff1$Pred)
+  #rescale -1 to 1
+  ff1$ResP = 2*(ff1$Pred-min(ff1$Pred)) / (max(ff1$Pred)-min(ff1$Pred))-1
 
-xx2 = aggregate(X.2017~Pred.2017+id,data=hp,FUN=function(x){z = quantile(x,c(0.025,0.975)); z[2] -z[1]})
-xx2$yr = 2017
-names(xx2)[1:3] = c('BerriedProb','Location','Temperature_Range')
+ff1$diffs =  c(0,diff(ff1$Pred))
 
-xx3 = aggregate(X.2018~Pred.2018+id,data=hp,FUN=function(x){z = quantile(x,c(0.025,0.975)); z[2] -z[1]})
-xx3$yr = 2018
-names(xx3)[1:3] = c('BerriedProb','Location','Temperature_Range')
+diffMat = matrix(0,nrow=length(ff1$BT),ncol=length(ff1$BT))
+for(i in 1:nrow(ff1)){
+  for(j in 1:nrow(ff1)){
+      b = ff1$Pred[i:j]
+      cc = c(0,diff(b))
+      diffMat[i,j] = sum(cc)
+  }
 
-xx4 = aggregate(X.2019~Pred.2019+id,data=hp,FUN=function(x){z = quantile(x,c(0.025,0.975)); z[2] -z[1]})
-xx4$yr = 2019
-names(xx4)[1:3] = c('BerriedProb','Location','Temperature_Range')
+}
+rownames(diffMat) = colnames(diffMat) = ff1$BT
 
-xx5 = aggregate(X.2020~Pred.2020+id,data=hp,FUN=function(x){z = quantile(x,c(0.025,0.975)); z[2] -z[1]})
-xx5$yr = 2020
-names(xx5)[1:3] = c('BerriedProb','Location','Temperature_Range')
+#using this functional relationship and the current spatial model to predict where might they go which all live in hp
 
-xx6 = aggregate(X.2021~Pred.2021+id,data=hp,FUN=function(x){z = quantile(x,c(0.025,0.975)); z[2] -z[1]})
-xx6$yr = 2021
-names(xx6)[1:3] = c('BerriedProb','Location','Temperature_Range')
+hp1 = merge(hp,ff1[,c('BT','Pred')],by.x='t2016',by.y='BT',all=T)
+hp1 = rename.df(hp1,'Pred','Pred2016_T')
+hp2 = merge(hp1,ff1[,c('BT','Pred')],by.x='t2035',by.y='BT')
+hp2 = rename.df(hp2,'Pred','Pred2035_T')
+hp3 = merge(hp2,ff1[,c('BT','Pred')],by.x='t2055',by.y='BT')
+hp3 = rename.df(hp3,'Pred','Pred2055_T')
+hp4 = merge(hp3,ff1[,c('BT','Pred')],by.x='t2099',by.y='BT')
+hp4 = rename.df(hp4,'Pred','Pred2099_T')
 
-xx7 = dplyr::bind_rows(list(xx,xx2,xx3,xx4,xx5,xx6))
-names(xx7)[3] = 'Temp_range'
+hp$diff1635 = NA
+for(i in 1:nrow(hp)){
+  hpp = hp[i,]
+  st_geometry(hpp) <- NULL
+  t1=hpp[1,'t2016']
+  t2=hpp[1,'t2035']
+  hp$diff1635[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
+}
 
-xx7 = merge(xx7,LL)
-ggplot(subset(xx7,Temp_range>0.5),aes(x=Temp_range))+
-    geom_histogram(data=subset(xx7,Temp_range>0.5),fill = "blue", alpha = 0.2,position='identity',aes(y= ..density..))+
-    geom_histogram(data=subset(xx7,Temp_range>.5 & BerriedProb>0.90),fill = "red", alpha = 0.2,position='identity',aes(y= ..density..)) +
-    facet_wrap(~LFA)
+hp$diff1655 = NA
+for(i in 1:nrow(hp)){
+  hpp = hp[i,]
+  st_geometry(hpp) <- NULL
+  t1=hpp[1,'t2016']
+  t2=hpp[1,'t2055']
+  hp$diff1655[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
+}
 
-savePlot('TemperatureRangeBerriedLocation.png')
-#median temp
-xx = aggregate(X.2016~Pred.2016+id,data=hp,FUN=median)
-xx$yr=2016
-names(xx)[1:3] = c('BerriedProb','Location','Temperature Median')
 
-xx2 = aggregate(X.2017~Pred.2017+id,data=hp,FUN=median)
-xx2$yr = 2017
-names(xx2)[1:3] = c('BerriedProb','Location','Temperature Median')
+hp$diff1699 = NA
+for(i in 1:nrow(hp)){
+  hpp = hp[i,]
+  st_geometry(hpp) <- NULL
+  t1=hpp[1,'t2016']
+  t2=hpp[1,'t2099']
+  hp$diff1699[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
+}
 
-xx3 = aggregate(X.2018~Pred.2018+id,data=hp,FUN=median)
-xx3$yr = 2018
-names(xx3)[1:3] = c('BerriedProb','Location','Temperature Median')
 
-xx4 = aggregate(X.2019~Pred.2019+id,data=hp,FUN=median)
-xx4$yr = 2019
-names(xx4)[1:3] = c('BerriedProb','Location','Temperature Median')
+hp$diff3555 = NA
+for(i in 1:nrow(hp)){
+  hpp = hp[i,]
+  st_geometry(hpp) <- NULL
+  t1=hpp[1,'t2035']
+  t2=hpp[1,'t2055']
+  hp$diff3555[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
+}
 
-xx5 = aggregate(X.2020~Pred.2020+id,data=hp,FUN=median)
-xx5$yr = 2020
-names(xx5)[1:3] = c('BerriedProb','Location','Temperature Median')
 
-xx6 = aggregate(X.2021~Pred.2021+id,data=hp,FUN=median)
-xx6$yr = 2021
-names(xx6)[1:3] = c('BerriedProb','Location','Temperature Median')
+hp$diff3599 = NA
+for(i in 1:nrow(hp)){
+  hpp = hp[i,]
+  st_geometry(hpp) <- NULL
+  t1=hpp[1,'t2035']
+  t2=hpp[1,'t2099']
+  hp$diff3599[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
+}
 
-xx8 = dplyr::bind_rows(list(xx,xx2,xx3,xx4,xx5,xx6))
-xx8 = merge(xx8,LL)
-names(xx8)[3] = 'Temp_median'
-ggplot(subset(xx8),aes(x=Temp_median))+
-    geom_histogram(data=subset(xx8,Temp_median>0.5),fill = "blue", alpha = 0.2,position='identity',aes(y= ..density..))+
-    geom_histogram(data=subset(xx8,Temp_median>0.5 & BerriedProb>0.75),fill = "red", alpha = 0.2,position='identity',aes(y= ..density..)) +
-    facet_wrap(~LFA)
 
-savePlot('TemperatureMedianBerriedLocation_NOYEAR.png')
+hp$diff5599 = NA
+for(i in 1:nrow(hp)){
+  hpp = hp[i,]
+  st_geometry(hpp) <- NULL
+  t1=hpp[1,'t2055']
+  t2=hpp[1,'t2099']
+  hp$diff5599[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
+}
 
-xx9=merge(xx7,xx8)
-xx10 = merge(xx9,hpu,by.x='Location',by.y='id')
-xx11 = st_as_sf(xx10)
-ggplot(xx11) +
-  geom_sf(aes(fill=Temp_range,color=Temp_range)) + 
-  scale_fill_viridis_c() +
-  scale_color_viridis_c() +
-  facet_wrap(~yr) +
- # geom_sf(data=rL,size=1,colour='black',fill=NA)+
-  theme( axis.ticks.x = element_blank(),
-         axis.text.x = element_blank(),
-         axis.title.x = element_blank(),
-         axis.ticks.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.title.y = element_blank()
-  ) +
-  coord_sf()
-savePlot('TemperatureRangeLocation.png')
+saveRDS(list(hp,ff,diffMat),'berriedfemaleStepWiseNov242023.r')
 
-ggplot(xx11) +
-  geom_sf(aes(fill=Temp_median,color=Temp_median)) + 
-  scale_fill_viridis_c() +
-  scale_color_viridis_c() +
-  facet_wrap(~yr) +
- # geom_sf(data=rL,size=1,colour='black',fill=NA)+
-  theme( axis.ticks.x = element_blank(),
-         axis.text.x = element_blank(),
-         axis.title.x = element_blank(),
-         axis.ticks.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.title.y = element_blank()
-  ) +
-  coord_sf()
-savePlot('TemperatureMedianLocation.png')
 
-st_geometry(xx11) <- NULL
-xx11$Temp_range = round(xx11$Temp_range,2)
-xx11$Temp_median = round(xx11$Temp_median,2)
-
-ofi = readRDS(file.path(project.datadirectory('bio.lobster'),'data','OFI_lobster_covariates','ofi_pointData500m.rds'))
-ofi$X1000 = st_coordinates(ofi)[,1]/1000
-ofi$Y1000 = st_coordinates(ofi)[,2]/1000
-st_geometry(ofi) <-NULL
-ofi = st_as_sf(ofi,coords=c('X1000','Y1000'),crs=32620)
-hp_ofi = st_join(hp,ofi,join=st_nearest_feature,left=T)
-hp_ofi$depth = hp_ofi$depth*-1
-
-#depth
-xx = aggregate(Depth_m~Pred.2016+id,data=hp_ofi,FUN=median)
-xx$yr=2016
-names(xx)[1:3] = c('BerriedProb','Location','Depth')
-
-xx2 = aggregate(Depth_m~Pred.2017+id,data=hp,FUN=median)
-xx2$yr = 2017
-names(xx2)[1:3] = c('BerriedProb','Location','Depth')
-
-xx3 = aggregate(Depth_m~Pred.2018+id,data=hp,FUN=median)
-xx3$yr = 2018
-names(xx3)[1:3] = c('BerriedProb','Location','Depth')
-
-xx4 = aggregate(Depth_m~Pred.2019+id,data=hp,FUN=median)
-xx4$yr = 2019
-names(xx4)[1:3] = c('BerriedProb','Location','Depth')
-
-xx5 = aggregate(Depth_m~Pred.2020+id,data=hp,FUN=median)
-xx5$yr = 2020
-names(xx5)[1:3] = c('BerriedProb','Location','Depth')
-
-xx6 = aggregate(Depth_m~Pred.2021+id,data=hp,FUN=median)
-xx6$yr = 2021
-names(xx6)[1:3] = c('BerriedProb','Location','Depth')
-
-xx8 = dplyr::bind_rows(list(xx,xx2,xx3,xx4,xx5,xx6))
-names(xx8)[3] = 'Depth'
-xx8 = merge(xx8,LL)
-
-ggplot(subset(xx8,Depth<500),aes(x=Depth))+
-    geom_histogram(data=subset(xx8,Depth<500),fill = "blue", alpha = 0.2,position='identity',aes(y= ..density..))+
-    geom_histogram(data=subset(xx8,Depth < 500 & BerriedProb>0.90),fill = "red", alpha = 0.2,position='identity',aes(y= ..density..)) +
-    facet_wrap(~LFA)
-savePlot('DepthBerriedLocation.png')
-##apply these conditions to predictions from model to make sure we are still finding the right places
-
-hpu = subset(hp,select=c(id,geometry)) %>% distinct()
-
-hp$PredCond = ifelse(hp$Pred.2016>.75,1,0)
-ggplot(hp) +
-  geom_sf(aes(fill=Pred.2016,color=Pred.2016)) + 
+###everything
+ ggplot(hp) +
+  geom_sf(aes(fill=diff1655,color=diff1655)) + 
   scale_fill_viridis_c() +
   scale_color_viridis_c() +
   # geom_sf(data=rL,size=1,colour='black',fill=NA)+
-  #stat_contour(data=hp[cond,],aes(color=after_stat(level)),bin=0.75)+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
@@ -283,11 +230,12 @@ ggplot(hp) +
   ) +
   coord_sf()
 
-hp$PredCond = ifelse(hp$Pred.2017>.05,1,0)
-ggplot(hp) +
-  geom_sf(aes(fill=PredCond,color=PredCond)) + 
-geom_sf(data=rL,size=1,colour='black',fill=NA)+
- 
+###subset to only habitats that had berried females in the predicted model
+ ggplot(subset(hp,Pred.2016>.01) )+
+  geom_sf(aes(fill=diff1655,color=diff1655)) + 
+  scale_colour_distiller(palette='RdYlGn') +
+ scale_fill_distiller(palette='RdYlGn') + 
+  # geom_sf(data=rL,size=1,colour='black',fill=NA)+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
@@ -297,24 +245,7 @@ geom_sf(data=rL,size=1,colour='black',fill=NA)+
   ) +
   coord_sf()
 
-#convert to a raster then draw polys around locations of high prob berried
-require(stars)
-hps = st_rasterize(hp %>% dplyr::select(PredCond,geometry))
-  hpST = st_as_stars(hp)
-vv = st_contour(hps,contour_lines=F,breaks=.99)
-vvh = st_as_sf(vv)
-
-hpp = hp
-st_geometry(hpp) <-NULL
-hp$medPre = apply(hpp[,c('Pred.2016','Pred.2017','Pred.2018','Pred.2019','Pred.2020','Pred.2021')],1,mean)
-
-hpup = subset(hp,select=c(id,LFA,geometry,Pred.2016,Pred.2017,Pred.2018,Pred.2019,Pred.2020,Pred.2021)) %>% distinct()
-
-st_geometry(hpup) <-NULL
-
-hpup$medPred = apply(hpup[,c('Pred.2016','Pred.2017','Pred.2018','Pred.2019','Pred.2020','Pred.2021')],1,mean)
-
-
+##############################################################
 #temperature 
   xx = aggregate(cbind(X.2016,X.2035,X.2055,X.2099)~id+LFA,data=hp,FUN=function(x){z = quantile(x,c(0.025,0.975)); z[2] -z[1]})
   names(xx)[3:6] = c('Temp2016_range','Temp2035_range','Temp2055_range','Temp2099_range')
