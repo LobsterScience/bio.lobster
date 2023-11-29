@@ -1,37 +1,11 @@
 #' Plot a smooth term from an sdmTMB model
-#'
-#' @param object An [sdmTMB()] model.
-#' @param select The smoother term to plot.
-#' @param n The number of equally spaced points to evaluate the smoother along.
-#' @param level The confidence level.
-#' @param ggplot Logical: use the \pkg{ggplot2} package?
-#' @param rug Logical: add rug lines along the lower axis?
-#' @param return_data Logical: return the predicted data instead of making a plot?
 #' @export
 #'
-#' @details
-#' Note:
-#' * Any numeric predictor is set to its mean
-#' * Any factor predictor is set to its first-level value
-#' * The time element (if present) is set to its minimum value
-#' * The x and y coordinates are set to their mean values
-#'
-#' @examples
-#' if (inla_installed()) {
-#'   d <- subset(pcod, year >= 2000 & density > 0)
-#'   pcod_spde <- make_mesh(d, c("X", "Y"), cutoff = 30)
-#'   m <- sdmTMB(
-#'     data = d,
-#'     formula = log(density) ~ s(depth_scaled) + s(year, k = 5),
-#'     mesh = pcod_spde
-#'   )
-#'   plot_smooth(m)
-#' @export
 
 plot_smooth_sdmtmb <- function(object, select = 1, n = 100, level = 0.95,
                         ggplot = FALSE, rug = TRUE, return_data = FALSE) {
   se <- TRUE
-require(assertthat)
+  require(assertthat)
   assert_that(class(object) == "sdmTMB")
   assert_that(is.logical(ggplot))
   assert_that(is.logical(return_data))

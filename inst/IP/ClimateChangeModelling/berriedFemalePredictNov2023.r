@@ -214,7 +214,10 @@ for(i in 1:nrow(hp)){
 
 saveRDS(list(hp,ff,diffMat),'berriedfemaleStepWiseNov242023.r')
 
-
+g = readRDS('berriedfemaleStepWiseNov242023.r')
+hp=g[[1]]
+ff=g[[2]]
+diffMat = g[[3]]
 ###everything
  ggplot(hp) +
   geom_sf(aes(fill=diff1655,color=diff1655)) + 
@@ -232,7 +235,7 @@ saveRDS(list(hp,ff,diffMat),'berriedfemaleStepWiseNov242023.r')
 
 ###subset to only habitats that had berried females in the predicted model
  ggplot(subset(hp,Pred.2016>.01) )+
-  geom_sf(aes(fill=diff1655,color=diff1655)) + 
+  geom_sf(aes(fill=diff1699,color=diff1699)) + 
   scale_colour_distiller(palette='RdYlGn') +
  scale_fill_distiller(palette='RdYlGn') + 
   # geom_sf(data=rL,size=1,colour='black',fill=NA)+
