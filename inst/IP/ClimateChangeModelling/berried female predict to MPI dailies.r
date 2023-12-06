@@ -56,7 +56,7 @@ gsf = subset(ff,!is.na(LFA))
 
 saveRDS(gsf,'BerriedPredictionSurface.rds')
 gsf = readRDS('BerriedPredictionSurface.rds')
-had = readRDS(file='CanDailyTemps.rds')
+had = readRDS(file='MPIDailyTemps.rds')
 
 had = st_transform(had,32620)
 
@@ -142,7 +142,7 @@ for(i in 1:nrow(ff1)){
 
 }
 rownames(diffMat) = colnames(diffMat) = ff1$BT
-saveRDS(list(hp,ff,diffMat),'berriedfemaleCANStepWiseNov242023.rds')
+saveRDS(list(hp,ff,diffMat),'berriedfemaleMPIStepWiseNov242023.rds')
 
 #using this functional relationship and the current spatial model to predict where might they go which all live in hp
 
@@ -229,8 +229,8 @@ for(i in 1:nrow(hp)){
   hp$diff5599[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
 }
 
-saveRDS(list(hp,ff,diffMat),'berriedfemaleCANStepWiseNov242023.rds')
-v = load('berriedfemaleCANStepWiseNov242023.rds')
+saveRDS(list(hp,ff,diffMat),'berriedfemaleMPIStepWiseNov242023.rds')
+v = load('berriedfemaleMPIStepWiseNov242023.rds')
 hp = v[[1]]
 ff = v[[2]]
 diffMat = v[[3]]
