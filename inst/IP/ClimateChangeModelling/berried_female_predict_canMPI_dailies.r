@@ -56,7 +56,7 @@ gsf = subset(ff,!is.na(LFA))
 
 saveRDS(gsf,'BerriedPredictionSurface.rds')
 gsf = readRDS('BerriedPredictionSurface.rds')
-had = readRDS(file='HadDailyTemps.rds')
+had = readRDS(file='CanDailyTemps.rds')
 
 had = st_transform(had,32620)
 
@@ -142,6 +142,7 @@ for(i in 1:nrow(ff1)){
 
 }
 rownames(diffMat) = colnames(diffMat) = ff1$BT
+saveRDS(list(hp,ff,diffMat),'berriedfemaleCANStepWiseNov242023.rds')
 
 #using this functional relationship and the current spatial model to predict where might they go which all live in hp
 
@@ -160,6 +161,7 @@ for(i in 1:nrow(hp)){
   st_geometry(hpp) <- NULL
   t1=hpp[1,'t2016']
   t2=hpp[1,'t2035']
+  if(t2>max(as.numeric(rownames(diffMat)))) t2 = max(as.numeric(rownames(diffMat))) 
   hp$diff1635[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
 }
 
@@ -169,6 +171,8 @@ for(i in 1:nrow(hp)){
   st_geometry(hpp) <- NULL
   t1=hpp[1,'t2016']
   t2=hpp[1,'t2055']
+  if(t2>max(as.numeric(rownames(diffMat)))) t2 = max(as.numeric(rownames(diffMat))) 
+  
   hp$diff1655[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
 }
 
@@ -179,6 +183,8 @@ for(i in 1:nrow(hp)){
   st_geometry(hpp) <- NULL
   t1=hpp[1,'t2016']
   t2=hpp[1,'t2099']
+  if(t2>max(as.numeric(rownames(diffMat)))) t2 = max(as.numeric(rownames(diffMat))) 
+  
   hp$diff1699[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
 }
 
@@ -189,6 +195,9 @@ for(i in 1:nrow(hp)){
   st_geometry(hpp) <- NULL
   t1=hpp[1,'t2035']
   t2=hpp[1,'t2055']
+  if(t1>max(as.numeric(rownames(diffMat)))) t1 = max(as.numeric(rownames(diffMat))) 
+ if(t2>max(as.numeric(rownames(diffMat)))) t2 = max(as.numeric(rownames(diffMat))) 
+
   hp$diff3555[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
 }
 
@@ -199,6 +208,10 @@ for(i in 1:nrow(hp)){
   st_geometry(hpp) <- NULL
   t1=hpp[1,'t2035']
   t2=hpp[1,'t2099']
+  if(t1>max(as.numeric(rownames(diffMat)))) t1 = max(as.numeric(rownames(diffMat))) 
+
+  if(t2>max(as.numeric(rownames(diffMat)))) t2 = max(as.numeric(rownames(diffMat))) 
+
   hp$diff3599[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
 }
 
@@ -209,18 +222,22 @@ for(i in 1:nrow(hp)){
   st_geometry(hpp) <- NULL
   t1=hpp[1,'t2055']
   t2=hpp[1,'t2099']
+   if(t1>max(as.numeric(rownames(diffMat)))) t1 = max(as.numeric(rownames(diffMat))) 
+
+    if(t2>max(as.numeric(rownames(diffMat)))) t2 = max(as.numeric(rownames(diffMat))) 
+
   hp$diff5599[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
 }
 
-saveRDS(list(hp,ff,diffMat),'berriedfemaleStepWiseNov242023.r')
+saveRDS(list(hp,ff,diffMat),'berriedfemaleCANStepWiseNov242023.rds')
+v = load('berriedfemaleCANStepWiseNov242023.rds')
+hp = v[[1]]
+ff = v[[2]]
+diffMat = v[[3]]
 
-g = readRDS('berriedfemaleStepWiseNov242023.r')
-hp=g[[1]]
-ff=g[[2]]
-diffMat = g[[3]]
 ###everything
  ggplot(hp) +
-  geom_sf(aes(fill=diff1655,color=diff655)) + 
+  geom_sf(aes(fill=diff1655,color=diff1655)) + 
   scale_fill_viridis_c() +
   scale_color_viridis_c() +
   # geom_sf(data=rL,size=1,colour='black',fill=NA)+
@@ -235,7 +252,7 @@ diffMat = g[[3]]
 
 ###subset to only habitats that had berried females in the predicted model
  ggplot(subset(hp,Pred.2016>.01) )+
-  geom_sf(aes(fill=diff1699,color=diff1699)) + 
+  geom_sf(aes(fill=diff1655,color=diff1655)) + 
   scale_colour_distiller(palette='RdYlGn') +
  scale_fill_distiller(palette='RdYlGn') + 
   # geom_sf(data=rL,size=1,colour='black',fill=NA)+
@@ -247,143 +264,3 @@ diffMat = g[[3]]
          axis.title.y = element_blank()
   ) +
   coord_sf()
-
-##############################################################
-#temperature 
-  xx = aggregate(cbind(X.2016,X.2035,X.2055,X.2099)~id+LFA,data=hp,FUN=function(x){z = quantile(x,c(0.025,0.975)); z[2] -z[1]})
-  names(xx)[3:6] = c('Temp2016_range','Temp2035_range','Temp2055_range','Temp2099_range')
-
-  xxm = aggregate(cbind(X.2016,X.2035,X.2055,X.2099)~id+LFA,data=hp,FUN=function(x){mean(x)})
-  names(xxm)[3:6] = c('Temp2016_med','Temp2035_med','Temp2055_med','Temp2099_med')
-
-  xxd = aggregate(Depth_m~id,data=hp,FUN=function(x){mean(x)})
-
-  xxs = st_as_sf(merge(merge(merge(xxm,xxd),xx),hpu))
-  xxs = merge(xxs,hpup[,c('id','Pred.2016')])
-
-
-
-
-
-xx12 = xx11
-st_geometry(xx12) = NULL
-xx12$LFA.x=NULL
-xx12$LFA = xx12$LFA.y
-xx13 = merge(xx8[,c('Location','Depth')],xx12)
-
-
-require(mgcv)
-  gg = gam(BerriedProb~s(Depth)+s(Temp_range)+s(Temp_median)+ti(Temp_range,Temp_median,by=Depth)+as.factor(LFA),data=xx13,family=betar(link='logit'))
-
-#Depth Range
-
-DR = aggregate(Depth~LFA, data=subset(xx8,BerriedProb>0.75 & Depth <500),FUN=function(x) quantile(x,probs=c(0.25,0.75)))
-
-
-#Temp Range
-TRR = aggregate(Temp_range~LFA, data=subset(xx13,BerriedProb>0.75 & Depth <500),FUN=function(x) quantile(x,probs=c(0.25,0.75)))
-
-#Temp Med
-TM = aggregate(Temp_median~LFA, data=subset(xx13,BerriedProb>0.75 & Depth <500),FUN=function(x) quantile(x,probs=c(0.25,0.75)))
-
-saveRDS(list(DR,TRR,TM),file='HADberriedFemaleEnvCondition.rds')
-
-
-
-testR = function(x,depth=DR,tempr=TRR,tempm=TM,vars=c('t','tr','d')){
-  junk=list()
-       xl = unique(x$LFA)
-      for(i in 1:length(xl)){
-             xii = xi = subset(x,LFA==xl[i])
-      st_geometry(xi)<-NULL
-          d = xi[,1]
-          tr = xi[,2]
-          tm = xi[,3]
-          di = subset(depth,LFA==xl[i])$Depth
-          tri = subset(tempr,LFA==xl[i])$Temp_range
-          tmi = subset(tempm,LFA==xl[i])$Temp_median
-      v = which(dplyr::between(d, di[1],di[2]))
-      j = which(dplyr::between(tr, tri[1],tri[2]))
-      k = which(dplyr::between(tm, tmi[1],tmi[2]))
-     if(length(vars)==3) l = intersect(intersect(v,j),k)
-     if(all(length(vars)==2 & vars[1] %in%c('t','tr') & vars[2] %in%c('t','tr')))  l = intersect(j,k)
-     if(all(length(vars)==2 & vars[1] %in%c('t','d') & vars[2] %in%c('t','d')))  l = intersect(j,v)
-     
-      xii$TF = 0
-      xii$TF[l] = 1
-      junk[[i]] = xii
-    }
-    x = dplyr::bind_rows(junk)
-      return(x)
-}
-
-fbase = testR(xxs[,c('Depth_m','Temp2016_range','Temp2016_med','id','Pred.2016','LFA')],vars=c('t','d'))
-
-f35 = testR(xxs[,c('Depth_m','Temp2035_range','Temp2035_med','id','Pred.2016','LFA')])
-
-f55 = testR(xxs[,c('Depth_m','Temp2055_range','Temp2055_med','id','Pred.2016',"LFA")])
-
-
-f99 = testR(xxs[,c('Depth_m','Temp2099_range','Temp2099_med','id','Pred.2016',"LFA")])
-
-plbase = ggplot(fbase) +
-  geom_sf(aes(fill=TF,color=TF)) + 
-  scale_fill_viridis_c() +
-  scale_color_viridis_c() +
-  # geom_sf(data=rL,size=1,colour='black',fill=NA)+
-  theme( axis.ticks.x = element_blank(),
-         axis.text.x = element_blank(),
-         axis.title.x = element_blank(),
-         axis.ticks.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.title.y = element_blank()
-  ) +
-  coord_sf()
-
-
-
-pl35 = ggplot(f35) +
-  geom_sf(aes(fill=TF,color=TF)) + 
-  scale_fill_viridis_c() +
-  scale_color_viridis_c() +
-  # geom_sf(data=rL,size=1,colour='black',fill=NA)+
-  theme( axis.ticks.x = element_blank(),
-         axis.text.x = element_blank(),
-         axis.title.x = element_blank(),
-         axis.ticks.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.title.y = element_blank()
-  ) +
-  coord_sf()
-
-
-pl55 = ggplot(f55) +
-  geom_sf(aes(fill=TF,color=TF)) + 
-  scale_fill_viridis_c() +
-  scale_color_viridis_c() +
-  # geom_sf(data=rL,size=1,colour='black',fill=NA)+
-  theme( axis.ticks.x = element_blank(),
-         axis.text.x = element_blank(),
-         axis.title.x = element_blank(),
-         axis.ticks.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.title.y = element_blank()
-  ) +
-  coord_sf()
-
-pl99 = ggplot(f99) +
-  geom_sf(aes(fill=TF,color=TF)) + 
-  scale_fill_viridis_c() +
-  scale_color_viridis_c() +
-  # geom_sf(data=rL,size=1,colour='black',fill=NA)+
-  theme( axis.ticks.x = element_blank(),
-         axis.text.x = element_blank(),
-         axis.title.x = element_blank(),
-         axis.ticks.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.title.y = element_blank()
-  ) +
-  coord_sf()
-
-cowplot::plot_grid(plbase,pl35,pl55,pl99,ncol=2,labels=c(2016,2035,2055,2099))
-
