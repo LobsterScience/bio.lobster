@@ -1425,6 +1425,8 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         ILTSTemp = connect.command(con, "select * from lobster.ILTS_TEMPERATURE")
         ILTSSensor = connect.command(con, "select * from lobster.ILTS_SENSORS")
         ILTSClick =  connect.command(con, "select * from lobster.ILTS_CLICKTOUCH")
+        ILTSClickComp =  connect.command(con, "select * from lobster.ILTS_CLICKTOUCH_COMP")
+        ILTSOlextracks = connect.command(con, "select * from lobster.ILTS_OLEXTRACKS")
         #ILTS2016Tracks = ILTS2016Tracks[order(ILTS2016Tracks$TTIME),]
         #NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
         #netMensuration = merge( NM1,ILTS2016Tracks)#merge net mensuration into one file
@@ -1446,14 +1448,16 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
 
  #browser()
        # surveyStationID = connect.command(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
-        save(list=c("ILTS2016TowDepth","ILTS2016TowSpread","ILTS2016Tracks") , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
+      #  save(list=c("ILTS2016TowDepth","ILTS2016TowSpread","ILTS2016Tracks") , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)
         save(surveyMeasurements, file=file.path(fnODBC, "surveyMeasurements.rdata"), compress=T)
         save(fishMeasurements, file=file.path(fnODBC, "fishMeasurements.rdata"), compress=T)
         save(ILTSTemp, file=file.path(fnODBC, "ILTSTemp.rdata"), compress=T)
         save(ILTSSensor, file=file.path(fnODBC, "ILTSSensor.rdata"), compress=T)
         save(ILTSClick, file=file.path(fnODBC, "ILTSClick.rdata"), compress=T)
-
+        save(ILTSClickComp, file=file.path(fnODBC, "ILTSClickComp.rdata"), compress=T)
+        save(ILTSOlextracks, file=file.path(fnODBC, "ILTSOlextracks.rdata"), compress=T)
+        
         #   save(surveyStationID, file=file.path(fnODBC, "surveyStationID.rdata"), compress=T)
 
         gc()  # garbage collection
@@ -1465,6 +1469,9 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       load(file.path( fnODBC, "ILTSTemp.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "ILTSSensor.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "ILTSClick.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "ILTSClickComp.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "ILTSOlextracks.rdata"), .GlobalEnv)
+      
       load(file.path( fnODBC, "surveyStationID.rdata"), .GlobalEnv)
 
     }

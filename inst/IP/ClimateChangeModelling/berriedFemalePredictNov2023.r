@@ -218,9 +218,9 @@ g = readRDS('berriedfemaleStepWiseNov242023.r')
 hp=g[[1]]
 ff=g[[2]]
 diffMat = g[[3]]
-###everything
- ggplot(hp) +
-  geom_sf(aes(fill=diff1655,color=diff1655)) + 
+###2016Pred
+ggplot(subset(hp,Pred.2016>0.009)) +
+  geom_sf(aes(fill=Pred.2016,color=Pred.2016),size=2.5) + 
   scale_fill_viridis_c() +
   scale_color_viridis_c() +
   # geom_sf(data=rL,size=1,colour='black',fill=NA)+
@@ -233,12 +233,44 @@ diffMat = g[[3]]
   ) +
   coord_sf()
 
+
+
+ g1 = ggplot(subset(hp,Pred.2016>0.009)) +
+  geom_sf(aes(fill=diff1635,color=diff1635),size=2.5) + 
+   scale_colour_distiller(palette='RdYlGn') +
+   scale_fill_distiller(palette='RdYlGn') + 
+   # geom_sf(data=rL,size=1,colour='black',fill=NA)+
+  theme( axis.ticks.x = element_blank(),
+         axis.text.x = element_blank(),
+         axis.title.x = element_blank(),
+         axis.ticks.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.title.y = element_blank()
+  ) +
+  coord_sf()
+
+ 
+ g1 = ggplot(subset(hp,Pred.2016>0.009)) +
+   geom_sf(aes(fill=diff3555,color=diff3555),size=2.5) + 
+   scale_colour_distiller(palette='RdYlGn') +
+   scale_fill_distiller(palette='RdYlGn') + 
+   # geom_sf(data=rL,size=1,colour='black',fill=NA)+
+   theme( axis.ticks.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.title.x = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.title.y = element_blank()
+   ) +
+   coord_sf()
+ 
+ 
 ###subset to only habitats that had berried females in the predicted model
- ggplot(subset(hp,Pred.2016>.01) )+
-  geom_sf(aes(fill=diff1699,color=diff1699)) + 
-  scale_colour_distiller(palette='RdYlGn') +
- scale_fill_distiller(palette='RdYlGn') + 
-  # geom_sf(data=rL,size=1,colour='black',fill=NA)+
+ ggplot(subset(hp,Pred.2016>.009) )+
+  geom_sf(aes(fill=diff5599,color=diff5599),size=2.5) + 
+   scale_colour_distiller(palette='RdYlGn') +
+   scale_fill_distiller(palette='RdYlGn') + 
+      # geom_sf(data=rL,size=1,colour='black',fill=NA)+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),

@@ -10,7 +10,7 @@
 #' @examples ILTS_ITQ_All_Data(species=2550, size=c(1,200),sex=c(3),aggregate=T)
 #' @export
 
-ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NULL,aggregate=F,return_tow_tracks=F){
+ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NULL,aggregate=F,return_tow_tracks=F,comparativeOnly=F){
   outfile = file.path(project.datadirectory('bio.lobster'),'data','survey','ILTS_ITQ_all.data.rds')
   sensorfile = file.path(project.datadirectory('bio.lobster'),'data','survey','ILTS_ITQ_sensorData.rds')
   
@@ -20,98 +20,135 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
   require(bio.utilities)
   require(devtools)
   require(geosphere)
+    ic = ILTSClick
+  if(comparativeOnly) ic = ILTSClickComp
   
-  ic = ILTSClick
   junk = list()
-  sensor_data = list()
   for(i in 1:nrow(ic)){
     if(i %in% round(seq(5,nrow(ic),length.out=100))) print(i)
     v = ic[i,]
-    rv = unique(subset(surveyCatch,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)$GEAR)
+    sur = subset(surveyCatch,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)
+    rv = unique(sur$GEAR)
     bds = c(5,ifelse(rv=='NEST',c(20),c(30)))
     v$gear = rv
-    
-    #issues with date time Nov 8, 2023
-    #v$st= strptime(sapply(strsplit(as.character(v$STARTDATETIME),split= " "), function(x) x[2]),"%H:%M:%S")
-    #v$et= strptime(sapply(strsplit(as.character(v$ENDDATETIME),split= " "), function(x) x[2]),"%H:%M:%S")
-    #if(yday(v$STARTDATETIME) != yday(v$ENDDATETIME))v$et$mday= v$et$mday +1 #if jumps over night
-    
-    v$st= strptime(v$STARTTIME, "%H%M%S")
-    v$et= strptime(v$ENDTIME, "%H%M%S")
-    
-    if(yday(v$STARTDATE) != yday(v$ENDDATE))v$et$mday= v$et$mday +1 #if jumps over night
+    v$st = strptime(unique(sur$SET_TIME),"%H%M")
+    v$et = strptime(unique(sur$HAUL_TIME),"%H%M")
+    if(v$QUALITY_TOUCHDOWN==1) v$st= strptime(v$STARTTIME,"%H%M")
+    if(v$QUALITY_LIFTOFF==1) v$et= strptime(v$ENDTIME,"%H%M%S")
+    if(!is.na(v$STARTDATE) & !is.na(v$ENDDATE)) {if(yday(v$STARTDATE) != yday(v$ENDDATE))v$et$mday= v$et$mday +1} #if jumps over night
     
     
     v$yr = year(v$STARTDATE)
     
-    v$median_spread= v$sensor = v$sweptArea = v$distance = NA
+    v$nonweighted_spread = v$sensor = v$sweptArea = v$distance = NA
     
     #chagne to esorar and marport or netmind (esonar is same as netmind so use same call)
     se = subset(ILTSSensor,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)
+    se$Time = strptime(se$GPSTIME,"%H%M%S")
+    se = se[order(se$GPSTIME),]
+    
+        se = subset(se,Time>=v$st & Time <= v$et)
+    if(v$QUALITY_WINGSPREAD+v$QUALITY_TOUCHDOWN+v$QUALITY_LIFTOFF==0){
+      se$Time = strptime(se$GPSTIME,"%H%M%S")
+      se = subset(se,!is.na(se$LATITUDE))
+        if(nrow(se)>10){
+      se$Y = c(sapply(se$LATITUDE,fixSensorLatLon)  )
+      se$X = c(sapply(se$LONGITUDE,fixSensorLatLon)*-1  )
+      
+      se = se[order(se$GPSTIME),]
+      #distance
+      v$distance <- sum(sapply(2:nrow(se), function(i) {
+        distGeo(se[i - 1, c("X", "Y")], se[i, c("X", "Y")])
+      }))/1000
+      next
+        }
+      }
     if(nrow(se)>0){
       v$sensor = unique(se$SOURCE)
       
       if(v$sensor=='MARPORT' & v$yr>2016) se = subset(se, VALIDITY=='RAW')
-      if(v$sensor=='MARPORT' & v$yr==2016) se= subset(se, VALIDITY=='1000') #raw
+      if(v$sensor=='MARPORT' & v$yr==2016) se = subset(se, VALIDITY=='1000') #raw
       
       
       if(all(c(nrow(se)>5, length(unique(se$GPSTIME))>5) )){
-        se$Time = strptime(se$GPSTIME,"%H%M%S")
-        if(v$QUALITY>0) se = subset(se,Time>=v$st & Time<=v$et) #click touch time   
-        if(v$QUALITY==0) se = subset(se,FLAG==1)   #winch time
+        se = subset(se,!is.na(se$LATITUDE))
+        se$Y = c(sapply(se$LATITUDE,fixSensorLatLon)  )
+        se$X = c(sapply(se$LONGITUDE,fixSensorLatLon)*-1  )
         
-        if(all(c(nrow(se)>5) )){
-          #
-          options(digits=10)
-          
-          se$Y = c(sapply(se$LATITUDE,fixSensorLatLon)  )
-          se$X = c(sapply(se$LONGITUDE,fixSensorLatLon)*-1  )
-          
-          se = se[order(se$GPSTIME),]
-          #distance
-          v$distance <- sum(sapply(2:nrow(se), function(i) {
-            distGeo(se[i - 1, c("X", "Y")], se[i, c("X", "Y")])
-          }))/1000
-          
-          sensor_data[[i]] = se
-          if(v$distance>4 | v$distance<.5) 
-          
-          # for future years, assume names are same as 2021, change this if needed:
-          ##change dates to esonar and marport not year
-          if(v$sensor=='MARPORT'){
-            b = subset(se,TRANSDUCERNAME %in% c('PRP','WINGSPREAD') & SENSORNAME=='DISTANCE' & SENSORVALUE>=bds[1] & SENSORVALUE<=bds[2])
-            if(nrow(b)>5){
-              b$distSeg = c(0,sapply(2:nrow(b), function(i) {
-                distGeo(b[i - 1, c("X", "Y")], b[i, c("X", "Y")])
-              }))
-              b$RealDist = b$distSeg/sum(b$distSeg)*v$distance
-              v$sweptArea = sum(b$RealDist*b$SENSORVALUE/1000)
-              v$median_spread = median(b$SENSORVALUE,na.rm=T)
-            }
+        #distance
+        v$distance <- sum(sapply(2:nrow(se), function(i) {
+          distGeo(se[i - 1, c("X", "Y")], se[i, c("X", "Y")])
+        }))/1000
+        
+        
+        # for future years, assume names are same as 2021, change this if needed:
+        ##change dates to esonar and marport not year
+        if(v$sensor=='MARPORT'){
+          b = subset(se,TRANSDUCERNAME %in% c('PRP','WINGSPREAD') & SENSORNAME=='DISTANCE' & SENSORVALUE>=bds[1] & SENSORVALUE<=bds[2])
+          if(nrow(b)>5){
+            b$distSeg = c(0,sapply(2:nrow(b), function(i) {
+              distGeo(b[i - 1, c("X", "Y")], b[i, c("X", "Y")])
+            }))
+            b$RealDist = b$distSeg/sum(b$distSeg)*v$distance
+            v$sweptArea = sum(b$RealDist*b$SENSORVALUE/1000)
           }
-          if(v$sensor %in% c("ESONAR","NETMIND")){
-            b = subset(se,TRANSDUCERNAME=="DoorSpread" & SENSORNAME %in% c("STBDDoorMaster","DoorMaster") & SENSORVALUE>=bds[1] & SENSORVALUE<=bds[2])
-            if(nrow(b)>5){
-              b$distSeg = c(0,sapply(2:nrow(b), function(i) {
-                distGeo(b[i - 1, c("X", "Y")], b[i, c("X", "Y")])
-              }))
-              b$RealDist = b$distSeg/sum(b$distSeg)*v$distance
-              v$sweptArea = sum(b$RealDist*b$SENSORVALUE/1000)
-              v$median_spread = median(b$SENSORVALUE,na.rm=T)
-            }
-          }
-          
         }
+        if(v$sensor %in% c("ESONAR","NETMIND")){
+          b = subset(se,TRANSDUCERNAME=="DoorSpread" & SENSORNAME %in% c("STBDDoorMaster","DoorMaster") & SENSORVALUE>=bds[1] & SENSORVALUE<=bds[2])
+          if(nrow(b)>5){
+            b$distSeg = c(0,sapply(2:nrow(b), function(i) {
+              distGeo(b[i - 1, c("X", "Y")], b[i, c("X", "Y")])
+            }))
+            b$RealDist = b$distSeg/sum(b$distSeg)*v$distance
+            v$sweptArea = sum(b$RealDist*b$SENSORVALUE/1000)
+          }
+        }
+        
       }
-    }
+
+    
     junk[[i]] = v
     rm(list=c('v','se','bds','rv'))
+    }
   }
-  sed = do.call(rbind,sensor_data)
-  saveRDS(sed,sensorfile)
+  
   j = do.call(rbind,junk)
   j$spread = j$sweptArea/j$distance*1000
   
+  j$gearid = ifelse(j$gear=='NEST',16,21)
+  j$sensorid = ifelse(j$sensor=='MARPORT',1,2)
+  j$spread = ifelse(j$QUALITY_WINGSPREAD==1,j$spread,NA)
+  j$sweptArea = ifelse(j$QUALITY_WINGSPREAD==1,j$sweptArea,NA)
+  
+  #Calc dist from Olex tracks
+  uOL = ILTSOlextracks[!duplicated(ILTSOlextracks[,c('TRIP_ID','SET_NO')]),c('TRIP_ID','SET_NO')]
+  olex_dists = data.frame(uOL,Distance=NA,Source=NA)
+  for(i in 1:nrow(uOL)){
+      ji = subset(ic,TRIP_ID==uOL$TRIP_ID[i] & SET_NO==uOL$SET_NO[i])  
+      st = strptime(ji$STARTTIME,"%H%M%S")
+      et = strptime(ji$ENDTIME,"%H%M%S")
+      src = 'click'
+      if(nrow(ji)<1){
+               sur = subset(surveyCatch,TRIP_ID == uOL$TRIP_ID[i] & SET_NO==uOL$SET_NO[i])
+               st = strptime(unique(sur$SET_TIME),"%H%M")
+               et = strptime(unique(sur$HAUL_TIME),"%H%M")
+               src = 'winch'
+      }
+    
+    ol = subset(ILTSOlextracks,SET_NO==uOL$SET_NO[i] & TRIP_ID==uOL$TRIP_ID[i])   
+    ol$Time = strptime(ol$STDTIME,"%H:%M:%S")
+    olS = subset(ol,Time>=st & Time<=et)
+    if(nrow(olS)==0) {st = st-(3*60*60); et = et-(3*60*60); olS = subset(ol,Time>=st & Time<=et)}
+    
+    olex_dists$Distance[i] = sum(sapply(2:nrow(olS), function(i) {
+      distGeo(olS[i - 1, c("X", "Y")], olS[i, c("X", "Y")])
+    }))/1000
+    olex_dists$Source[i]=src
+  }
+  ggplot(olex_dists,aes(x=Distance,fill=Source))+
+  geom_histogram(aes(y=..density..),position = "dodge", bins = 30, color = "black", alpha = 0.7) +
+    labs(title = "Grouped Histogram", x = "Value", y = "Frequency") +
+    theme_minimal()
   surveyCatch = merge(surveyCatch,j, by.x=c('TRIP_ID','SET_NO','YEAR'),by.y=c('TRIP_ID','SET_NO','YEAR'),all.x=T)
   surveyCatch$WEIGHT_KG = ifelse(is.na(surveyCatch$EST_DISCARD_WT),0,surveyCatch$EST_DISCARD_WT) + ifelse(is.na(surveyCatch$EST_KEPT_WT),0,surveyCatch$EST_KEPT_WT)
  

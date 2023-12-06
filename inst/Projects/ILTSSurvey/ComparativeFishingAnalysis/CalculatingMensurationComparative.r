@@ -6,45 +6,55 @@ require(devtools)
 require(geosphere)
 la()
 
-lobster.db('survey.redo')
+lobster.db('survey')
 
-ic = ILTSClick
+ic = ILTSClickComp
 
 junk = list()
 for(i in 1:nrow(ic)){
     if(i %in% round(seq(5,nrow(ic),length.out=100))) print(i)
     v = ic[i,]
-    rv = unique(subset(surveyCatch,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)$GEAR)
+    sur = subset(surveyCatch,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)
+    rv = unique(sur$GEAR)
     bds = c(5,ifelse(rv=='NEST',c(20),c(30)))
     v$gear = rv
-    
-    v$st= strptime(sapply(strsplit(as.character(v$STARTDATETIME),split= " "), function(x) x[2]),"%H:%M:%S")
-    v$et= strptime(sapply(strsplit(as.character(v$ENDDATETIME),split= " "), function(x) x[2]),"%H:%M:%S")
-    if(yday(v$STARTDATETIME) != yday(v$ENDDATETIME))v$et$mday= v$et$mday +1 #if jumps over night
+    v$st = unique(sur$SET_TIME)
+    v$et = unique(sur$HAUL_TIME)
+    if(v$QUALITY_TOUCHDOWN==1) v$st= strptime(v$STARTTIME,"%H%M%S")
+    if(v$QUALITY_LIFTOFF==1) v$et= strptime(v$ENDTIME,"%H%M%S")
+    if(!is.na(v$STARTDATE) & !is.na(v$ENDDATE)) {if(yday(v$STARTDATE) != yday(v$ENDDATE))v$et$mday= v$et$mday +1} #if jumps over night
     
       
-    v$yr = year(v$STARTDATETIME)
+    v$yr = year(v$STARTDATE)
     
     v$nonweighted_spread = v$sensor = v$sweptArea = v$distance = NA
   
     #chagne to esorar and marport or netmind (esonar is same as netmind so use same call)
     se = subset(ILTSSensor,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)
+    if(v$QUALITY_WINGSPREAD+v$QUALITY_TOUCHDOWN+v$QUALITY_LIFTOFF==0){
+      se$Time = strptime(se$GPSTIME,"%H%M%S")
+      se = subset(se,!is.na(se$LATITUDE))
+      se$Y = c(sapply(se$LATITUDE,fixSensorLatLon)  )
+      se$X = c(sapply(se$LONGITUDE,fixSensorLatLon)*-1  )
+      
+      se = se[order(se$GPSTIME),]
+      #distance
+      v$distance <- sum(sapply(2:nrow(se), function(i) {
+        distGeo(se[i - 1, c("X", "Y")], se[i, c("X", "Y")])
+      }))/1000
+       next
+      
+    }
     if(nrow(se)>0){
     v$sensor = unique(se$SOURCE)
     
     if(v$sensor=='MARPORT' & v$yr>2016) se = subset(se, VALIDITY=='RAW')
-    if(v$sensor=='MARPORT' & v$yr==2016) se1 = subset(se, VALIDITY=='1000') #raw
+    if(v$sensor=='MARPORT' & v$yr==2016) se = subset(se, VALIDITY=='1000') #raw
       
     
   if(all(c(nrow(se)>5, length(unique(se$GPSTIME))>5) )){
     se$Time = strptime(se$GPSTIME,"%H%M%S")
-    
-    if(v$QUALITY>0) se = subset(se,Time>=v$st & Time<=v$et) #click touch time   
-    if(v$QUALITY==0) se = subset(se,FLAG==1)   #winch time
-    
-    if(all(c(nrow(se)>5) )){
-      #
-    
+    se = subset(se,!is.na(se$LATITUDE))
     se$Y = c(sapply(se$LATITUDE,fixSensorLatLon)  )
     se$X = c(sapply(se$LONGITUDE,fixSensorLatLon)*-1  )
     
@@ -80,7 +90,7 @@ for(i in 1:nrow(ic)){
    
       }
     }
-    }
+    
     junk[[i]] = v
     rm(list=c('v','se','bds','rv'))
 }
@@ -90,6 +100,9 @@ j$spread = j$sweptArea/j$distance*1000
 
 j$gearid = ifelse(j$gear=='NEST',16,21)
 j$sensorid = ifelse(j$sensor=='MARPORT',1,2)
+j$spread = ifelse(j$QUALITY_WINGSPREAD==1,j$spread,NA)
+j$sweptArea = ifelse(j$QUALITY_WINGSPREAD==1,j$sweptArea,NA)
 
-with(subset(j,distance<2),plot(distance,spread,pch=gearid,col=sensorid))
+
+with(subset(j),plot(distance,spread,pch=gearid,col=sensorid))
 
