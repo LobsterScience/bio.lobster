@@ -212,9 +212,9 @@ for(i in 1:nrow(hp)){
   hp$diff5599[i] = diffMat[which(rownames(diffMat)==t1),which(colnames(diffMat)==t2)]
 }
 
-saveRDS(list(hp,ff,diffMat),'berriedfemaleStepWiseNov242023.r')
+saveRDS(list(hp,ff,diffMat),'berriedfemaleStepWiseNov242023.rds')
 
-g = readRDS('berriedfemaleStepWiseNov242023.r')
+g = readRDS('berriedfemaleStepWiseNov242023.rds')
 hp=g[[1]]
 ff=g[[2]]
 diffMat = g[[3]]
