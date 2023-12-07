@@ -227,11 +227,15 @@ for(i in 1:nrow(hp)){
 }
 
 saveRDS(list(hp,ff,diffMat),'berriedfemaleCANStepWiseNov242023.rds')
-v = load('berriedfemaleCANStepWiseNov242023.rds')
+v = readRDS('berriedfemaleCANStepWiseNov242023.rds')
 hp = v[[1]]
 ff = v[[2]]
 diffMat = v[[3]]
 
+hpu = subset(hp,select=c(id,geometry)) %>% distinct()
+hh = aggregate(cbind(diff1635,diff3555,diff5599)~id,data=subset(hp,Pred.2016>0.009),FUN=median)
+hp1 = merge(hh,hpu)
+hps = st_as_sf(hp1,crs=32620)
 ###everything
  ggplot(hp) +
   geom_sf(aes(fill=diff1655,color=diff1655)) + 
@@ -248,7 +252,7 @@ diffMat = v[[3]]
   coord_sf()
 
 ###subset to only habitats that had berried females in the predicted model
- ggplot(subset(hp,Pred.2016>.009) )+
+ ggplot(subset(hp) )+
   geom_sf(aes(fill=diff1635,color=diff1635), size=2.5) + 
   scale_colour_distiller(palette='RdYlGn') +
  scale_fill_distiller(palette='RdYlGn') + 
@@ -277,7 +281,7 @@ diffMat = v[[3]]
    coord_sf()
  
  
- ggplot(subset(hp,Pred.2016>.009) )+
+ ggplot(subset(hp,Pred.2016>.009 & doy==150) )+
    geom_sf(aes(fill=diff5599,color=diff5599), size=2.5) + 
    scale_colour_distiller(palette='RdYlGn') +
    scale_fill_distiller(palette='RdYlGn') + 
@@ -290,4 +294,6 @@ diffMat = v[[3]]
           axis.title.y = element_blank()
    ) +
    coord_sf()
+ 
+ hpu = aggregate(diff5599~id,data=subset(hp,Pred.2016>.009),FUN=median)
  

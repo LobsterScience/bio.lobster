@@ -230,7 +230,7 @@ for(i in 1:nrow(hp)){
 }
 
 saveRDS(list(hp,ff,diffMat),'berriedfemaleMPIStepWiseNov242023.rds')
-v = load('berriedfemaleMPIStepWiseNov242023.rds')
+v = readRDS('berriedfemaleMPIStepWiseNov242023.rds')
 hp = v[[1]]
 ff = v[[2]]
 diffMat = v[[3]]
@@ -251,16 +251,46 @@ diffMat = v[[3]]
   coord_sf()
 
 ###subset to only habitats that had berried females in the predicted model
- ggplot(subset(hp,Pred.2016>.01) )+
-  geom_sf(aes(fill=diff1655,color=diff1655)) + 
-  scale_colour_distiller(palette='RdYlGn') +
- scale_fill_distiller(palette='RdYlGn') + 
-  # geom_sf(data=rL,size=1,colour='black',fill=NA)+
-  theme( axis.ticks.x = element_blank(),
-         axis.text.x = element_blank(),
-         axis.title.x = element_blank(),
-         axis.ticks.y = element_blank(),
-         axis.text.y = element_blank(),
-         axis.title.y = element_blank()
-  ) +
-  coord_sf()
+ ggplot(subset(hp,Pred.2016>.009) )+
+   geom_sf(aes(fill=diff1635,color=diff1635), size=2.5) + 
+   scale_colour_distiller(palette='RdYlGn') +
+   scale_fill_distiller(palette='RdYlGn') + 
+   # geom_sf(data=rL,size=1,colour='black',fill=NA)+
+   theme( axis.ticks.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.title.x = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.title.y = element_blank()
+   ) +
+   coord_sf()
+ 
+ ggplot(subset(hp,Pred.2016>.009) )+
+   geom_sf(aes(fill=diff3555,color=diff3555),size=2.5) + 
+   scale_colour_distiller(palette='RdYlGn') +
+   scale_fill_distiller(palette='RdYlGn') + 
+   # geom_sf(data=rL,size=1,colour='black',fill=NA)+
+   theme( axis.ticks.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.title.x = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.title.y = element_blank()
+   ) +
+   coord_sf()
+ 
+ 
+ ggplot(subset(hp,Pred.2016>.009) )+
+   geom_sf(aes(fill=diff5599,color=diff5599), size=2.5) + 
+   scale_colour_distiller(palette='RdYlGn') +
+   scale_fill_distiller(palette='RdYlGn') + 
+   # geom_sf(data=rL,size=1,colour='black',fill=NA)+
+   theme( axis.ticks.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.title.x = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.title.y = element_blank()
+   ) +
+   coord_sf()
+ 
