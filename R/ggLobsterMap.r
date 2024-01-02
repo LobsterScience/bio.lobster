@@ -1,8 +1,8 @@
 #' @export
 
 ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(-74,-47),
-                         attrData=NULL,attrColumn='Z', addGrids=T,bathy=T,fw=NULL,legLab="",
-                         addLFALabels=F, addGridLabels=F, scaleTrans='identity',brks=NULL,return.object=F,
+                         attrData=NULL,attrColumn='Z', addGrids=T,addNAFO=F,nafo='4X', bathy=T,fw=NULL,legLab="",
+                         addLFALabels=F, addGridLabels=F, addNAFOLabels=F,scaleTrans='identity',brks=NULL,return.object=F,
                          layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),LFA_label_size=8,colourLFA=T, ...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
@@ -45,8 +45,20 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
     sf_use_s2(FALSE) #needed for cropping
   ns_coast =readRDS(file.path( layerDir,"CoastSF.rds"))
   r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
-  
   rL = readRDS(file.path(layerDir,"LFAPolysSF.rds"))
+  
+  nf = readRDS(file.path(layerDir,"NAFO_sf.rds"))
+  nafo.sel<-subset(nf,NAFO_1%in%nafo)
+  o = list()
+  nn = unique(nafo)
+  for(i in 1:length(nn)){
+    b = subset(nafo.sel,NAFO_1==nn[i])
+    o[[i]] = st_as_sf(st_union(b))
+  }
+  o = bind_rows(o)
+  o$lab = nn
+  labs = st_centroid(o)
+  
   
   st_crs(r) <- 4326
   st_crs(rL) <- 4326
@@ -55,6 +67,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
   ns_coast = suppressWarnings(suppressMessages(st_crop(ns_coast,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
     r = suppressWarnings(suppressMessages(st_crop(r,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
   rL = suppressWarnings(suppressMessages(st_crop(rL,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
+  o =  suppressWarnings(suppressMessages(st_crop(o,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
   
   b = readRDS(file.path( layerDir,"bathy10-300SF.rds"))
   l = readRDS(file.path( layerDir,"LFAPolysSF.rds"))
@@ -81,9 +94,10 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
     
     p =  p+  
       geom_sf(data=subset(l,LFA==area),lwd=1.35,fill='lightblue')  
-      
-    
   }
+  if(addNAFO){
+        p = p + geom_sf(data=o,fill=NA,colour='orange',lwd=1.25) + geom_sf(data=ns_coast,fill=fill.colours) 
+      }
   if(!is.null(attrData)) {
         g = attrData
         if(!any(names(g)== 'Z')) g$Z = g[,attrColumn]
@@ -120,6 +134,9 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
       }
       if(addGridLabels){
         p = p + geom_sf_text(data=gridCent, aes(label=GRID_NO),family='sans') +coord_sf(xlim=xlim,ylim=ylim)
+      }
+      if(addNAFOLabels){
+        p = p + geom_sf_text(data=labs, aes(label=lab),family='sans') +coord_sf(xlim=xlim,ylim=ylim)
       }
       
       
