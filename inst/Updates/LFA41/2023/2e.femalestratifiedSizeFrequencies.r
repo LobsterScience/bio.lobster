@@ -16,7 +16,7 @@ load_all('~/git/bio.survey/')
       p$define.by.polygons = F
       p$lobster.subunits=F
       p$area = 'LFA41'
-      p$years.to.estimate = c(2016:2023)
+      p$years.to.estimate = c(1999:2015)
       p$length.based = F
       p$by.sex = T
       p$sex=c(2,3)
@@ -61,7 +61,7 @@ load_all('~/git/bio.survey/')
         p$lobster.subunits=F
         p$area = 'LFA41'
         p$reweight.strata = T #this subsets 
-        p$years.to.estimate = c(2016:2023)
+        p$years.to.estimate = c(1999:2015)
         p$length.based = T
         p$by.sex = T
         p$sex=c(2,3)
@@ -97,7 +97,7 @@ load_all('~/git/bio.survey/')
         p$lobster.subunits=F
         p$area = 'adjacentLFA41'
         p$reweight.strata = T #this subsets 
-        p$years.to.estimate = c(1999:2023)
+        p$years.to.estimate = c(1999:2015)
         p$length.based = T
         p$by.sex = T
         p$sex=c(2,3)
@@ -125,7 +125,7 @@ load_all('~/git/bio.survey/')
 
 
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:2023)
+      p$years.to.estimate = c(1969:2015)
       p$length.based = T
       p$size.class= c(50,300)
       p$by.sex = T
@@ -252,7 +252,7 @@ load_all('~/git/bio.survey/')
       p$series =c('georges')# p$series =c('georges');p$series =c('fall')
       p$define.by.polygons = F
       p$lobster.subunits=F
-      p$years.to.estimate = c(2007:2023)
+      p$years.to.estimate = c(2007:2015)
       p$length.based = T
       p$by.sex = T
       p$sex=c(2,3)

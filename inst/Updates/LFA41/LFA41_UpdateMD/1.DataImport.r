@@ -17,7 +17,7 @@ load_all('~/GitHub/bio.survey/')
 windows=T
         # run in windows environment
  if(windows){       
-      #  lobster.db( DS = "logs41.redo",  p=p)   # Offshore logs monitoring documents
+     lobster.db( DS = "logs41.redo",  p=p)   # Offshore logs monitoring documents
        # lobster.db( DS = "atSea.redo",   p=p)        # at Sea sampling from materialized view
         #lobster.db( DS = "cris.redo",    p=p)     # CRIS database
         lobster.db( DS = 'annual.landings.redo', p=p) #static annual landings tabke needs to be updated by CDenton
@@ -33,7 +33,7 @@ windows=T
         de = nefsc.db( DS = 'usdet.clean.redo',fn.root = NULL,p=p)
         ca = nefsc.db( DS = 'uscat.clean.redo',fn.root = NULL,p=p)
         
-        #lobster.db(DS = 'lfa41.observer.samples.redo') 
+        lobster.db(DS = 'lfa41.observer.samples.redo') 
       }
 
 

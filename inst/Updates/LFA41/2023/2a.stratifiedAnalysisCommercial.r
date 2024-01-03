@@ -3,11 +3,18 @@ require(bio.lobster)
 la()
 p = bio.lobster::load.environment()
 p$libs = NULL
-ff = "  "
-fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
+ff = "LFA41_2023"
+fp1 = file.path(project.datadirectory('bio.lobster'),"assessments","LFA41","2023",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 p1 = p
 p1$yrs = 1969:2023
+
+assessment.year = 2023##Check Year
+p$syr = 1989
+p$yrs = p$syr:assessment.year
+
+p$lfas = c("41")
+
 
 #NEFSC Setup
 stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=ht,wd=wd){
@@ -123,5 +130,5 @@ print(aout[1,])
 
 
 
-stratifiedAnalysesCommercial(survey='NEFSC',lfa='LFA34',ht=8,wd=10)
-stratifiedAnalysesCommercial(survey='DFO',lfa='LFA34',ht=8,wd=10)
+stratifiedAnalysesCommercial(survey='NEFSC',lfa='LFA41',ht=8,wd=10)
+stratifiedAnalysesCommercial(survey='DFO',lfa='LFA41',ht=8,wd=10)

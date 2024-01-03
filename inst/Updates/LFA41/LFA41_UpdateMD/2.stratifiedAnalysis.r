@@ -5,7 +5,7 @@ la()
 
 p = bio.lobster::load.environment()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"assessments",'LFA41','2022')
+fp = file.path(project.datadirectory('bio.lobster'),"assessments",'LFA41','2023')
 #load_all('~/git/bio.survey/')
 
 assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
@@ -112,7 +112,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
-      p$years.to.estimate = c(1969:(assessment.year-1)) # -1 because update is in the Fall
+      p$years.to.estimate = c(1969:(assessment.year)) # -1 because update is in the Fall
       p = make.list(list(yrs=p$years.to.estimate),Y=p)
      
    aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
@@ -180,7 +180,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
       p$define.by.polygons = F
       p$lobster.subunits=F
       p$area = 'LFA41'
-      p$years.to.estimate = c(1970:(assessment.year-1))
+      p$years.to.estimate = c(1970:(assessment.year))
       #p$years.to.estimate = c(assessment.year)
       
       p$length.based = F
@@ -284,7 +284,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
       p$area = 'Georges.Canada'
       p$reweight.strata = F #this subsets 
       
-      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p,save=T)
+      aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
       
 # 
 #          #Figure for assessments

@@ -4,8 +4,7 @@ require(bio.lobster)
 
 p = bio.lobster::load.environment()
 p$libs = NULL
-#fp = file.path(project.datadirectory('bio.lobster'),"assessments",'LFA41','2023')
-fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+fp = file.path(project.datadirectory('bio.lobster'),"assessments", "LFA41", "2023")
 la()
 
 load_all('~/GitHub/bio.survey/')
@@ -24,7 +23,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
         p$lobster.subunits=F
         p$area = 'LFA41'
         p$reweight.strata = T #this subsets 
-        p$years.to.estimate = c(1999:(assessment.year-1))
+        p$years.to.estimate = c(1999:(assessment.year))
         p$length.based = T
         p$by.sex = T
         p$sex=c(2,3)
@@ -145,3 +144,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
         aa = do.call(rbind,out)
         aa$FLEN = rep(a,each=length(p$years.to.estimate))
         save(aa,file=file.path(fp,'maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+       
+        
+        
+        ##Error in `$<-.data.frame`(`*tmp*`, FLEN, value = c(90, 90, 90, 90, 90,  : replacement has 1887 rows, data has 1665    AFTER LINE 145

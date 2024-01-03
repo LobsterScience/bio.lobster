@@ -18,7 +18,7 @@ require(PBSmapping)
  
 	p = bio.lobster::load.environment()
 	la()
-	assessment.year = 2022 ##Check Year
+	assessment.year = 2023 ##Check Year
 	p$syr = 1989
   p$yrs = p$syr:assessment.year
 
@@ -45,13 +45,13 @@ land = lobster.db('annual.landings')
 #land = lobster.db('seasonal.landings')
 #land=lobster.db('seasonal.landings.redo')
 	    
-#groundfish.db('gscat.odbc.redo')
-#groundfish.db('gsinf.odbc.redo')
-#groundfish.db('gsdet.odbc.redo')
+groundfish.db('gscat.odbc.redo')
+groundfish.db('gsinf.odbc.redo')
+groundfish.db('gsdet.odbc.redo')
 
 #check what's in there
-#a = groundfish.db('gsinf.odbc')
-#summary(a)
+a = groundfish.db('gsinf.odbc')
+summary(a)
 
 ```
 
@@ -169,7 +169,7 @@ source("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_U
 
 
 assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
-fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2022','indicators')
+fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2023','indicators')
 
 jpeg("biomass41_2022.jpeg", width = 9, height = 7, units = "in",res=600, bg = "white")
 par(mfrow = c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
