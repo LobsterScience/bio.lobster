@@ -174,12 +174,14 @@ gsf=xx[[2]]
 
 #Maps
 mm = c(0.0000001,max(quantile(gsf$pred,0.9999)))
-ggplot(subset(gsf,Q==2 & YEAR %in%2022)) +
-  geom_sf(aes(fill=preds,color=preds)) + 
+ggplot(subset(gsf,Q==3 & YEAR %in%2022)) +
+  geom_sf(aes(fill=pred,color=pred)) + 
   scale_fill_viridis_c(limits=mm) +
   scale_color_viridis_c(limits=mm) +
-  facet_wrap(~YEAR) +
-  geom_sf(data=rLL,size=1,colour='black',fill=NA)+
+ # facet_wrap(~YEAR) +
+#geom_sf(data=rLL,size=1,colour='black',fill=NA)+
+#  geom_sf(data=ns_coast,size=1,colour='black')+
+  
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
@@ -187,6 +189,7 @@ ggplot(subset(gsf,Q==2 & YEAR %in%2022)) +
          axis.text.y = element_blank(),
          axis.title.y = element_blank()
   ) +
+  
   coord_sf()
 
 

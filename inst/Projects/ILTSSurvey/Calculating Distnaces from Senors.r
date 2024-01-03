@@ -6,7 +6,7 @@ require(devtools)
 require(geosphere)
 la()
 
-lobster.db('survey')
+lobster.db('survey.redo')
 
 ic = ILTSClick
 
@@ -32,8 +32,9 @@ for(i in 1:nrow(ic)){
     if(nrow(se)>0){
     v$sensor = unique(se$SOURCE)
     
-    if(v$sensor=='MARPORT') se = subset(se, VALIDITY=='RAW')
-    
+    if(v$sensor=='MARPORT' & v$yr>2016) se = subset(se, VALIDITY=='RAW')
+    if(v$sensor=='MARPORT' & v$yr==2016) se1 = subset(se, VALIDITY=='1000') #raw
+      
     
   if(all(c(nrow(se)>5, length(unique(se$GPSTIME))>5) )){
     se$Time = strptime(se$GPSTIME,"%H%M%S")
@@ -57,7 +58,7 @@ for(i in 1:nrow(ic)){
     # for future years, assume names are same as 2021, change this if needed:
     ##change dates to esonar and marport not year
     if(v$sensor=='MARPORT'){
-         b = subset(se,TRANSDUCERNAME=='WINGSPREAD' & SENSORNAME=='DISTANCE' & SENSORVALUE>=bds[1] & SENSORVALUE<=bds[2])
+         b = subset(se,TRANSDUCERNAME %in% c('PRP','WINGSPREAD') & SENSORNAME=='DISTANCE' & SENSORVALUE>=bds[1] & SENSORVALUE<=bds[2])
         if(nrow(b)>5){
           b$distSeg = c(0,sapply(2:nrow(b), function(i) {
             distGeo(b[i - 1, c("X", "Y")], b[i, c("X", "Y")])

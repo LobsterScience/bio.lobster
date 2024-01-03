@@ -118,55 +118,26 @@ gg = aggregate(SD_LOG_ID~LFA+GRID_NUM+SYEAR,data = g,FUN=function(x) length(uniq
 saveRDS(gg,'DiscretizedData/SDLOGSWithinGrid.rds')
 
 #############merge
+icenses By Grid and Week
+
+g = lobster.db('process.logs')
+g = subset(g,SYEAR>2004 & SYEAR<2023)
+
+gKL = aggregate(LICENCE_ID~LFA+GRID_NUM+SYEAR,data = g,FUN=function(x) length(unique(x)))
+
+saveRDS(gKL,'DiscretizedData/LicencesWithinCommunity.rds')
+
+#############merge
 
 
-Tot = merge(merge(partEffort,partLandings),gg)
+Tot = merge(merge(merge(partEffort,partLandings),gg),gKL)
 
-Tot = subset(Tot,select=c(SYEAR,LFA,GRID_NUM,BTTH,BL,SD_LOG_ID))
-names(Tot)= c('FishingYear','LFA','Grid','TrapHauls','Landings','Trips')
-Tot$PrivacyScreen = ifelse(Tot$Trips>4,1,0)
+Tot = subset(Tot,select=c(SYEAR,LFA,GRID_NUM,BTTH,BL,SD_LOG_ID,LICENCE_ID))
+names(Tot)= c('FishingYear','LFA','Grid','TrapHauls','Landings','Trips','NLics')
+Tot$PrivacyScreen = ifelse(Tot$NLics>4,1,0)
 
  # we lose 149
 saveRDS(Tot,'DiscretizedData/PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
-
-#making plots of Tot
-
-eL = split(Tot,f=list(Tot$LFA,Tot$FishingYear))
-eL = rm.from.list(eL)
-eLm = aggregate(TrapHauls~LFA,data=Tot,FUN=function(x) quantile(x, seq(0.01,0.99,length.out = 7)))
-
-gr = list()
-
-for(i in 1:length(eL)){
-  u = unique(eL[[i]]$LFA)
-  k = subset(eLm,LFA==u)
-  lv = c(0,round(unlist(k[2:length(k)])/10)*10)
-  w = lobGridPlot(eL[[i]][,c('LFA','Grid','TrapHauls')],FUN=max,lvls=lv,cuts=T)$pdata
-  w$yR = unique(eL[[i]]$FishingYear)
-  gr[[i]] = w
-}
-
-o = do.call(rbind,gr)
-oi = unique(o$PID)
-
-for(i in 1:length(oi)){
-  k = which(o$PID==oi[i])
-  l = max(o$cuts[k])
-  o$cuts[intersect(which(o$cuts==l),k)] = max(o$Z[k])
-}
-
-names(o)[1:2] <- c('LFA','GRID_NO')
-
-x =  subset(o,LFA==27)
-ux = c(min(x$Z),max(x$Z))
-
-ggLobsterMap('27',bathy=T,attrData = subset(o,LFA==27&yR>2018),fw='yR',legLab='TrapHauls',addLFALabels = F,brks=ux)
-
-x =  subset(o,LFA==29)
-ux = c(min(x$Z),max(x$Z))
-ggLobsterMap('29',bathy=T,attrData = subset(o,LFA==29&yR>2018),fw='yR',legLab='TrapHauls',addLFALabels = F,brks=ux)
-
-
 
 
 ##############################################################################################
@@ -236,7 +207,7 @@ names(TotCC)= c('FishingYear','LFA','Community','TrapHauls','Landings','Trips','
 TotCC$PrivacyScreen = ifelse(TotCC$NLics>4,1,0)
 
 saveRDS(TotCC,'DiscretizedData/PrivacyScreened_TrapHauls_Landings_Trips_Comunity.rds')
-
+TotCC = readRDS('DiscretizedData/PrivacyScreened_TrapHauls_Landings_Trips_Comunity.rds')
 
 #maps with community code
 
