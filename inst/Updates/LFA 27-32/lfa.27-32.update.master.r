@@ -49,7 +49,7 @@ logs=lobster.db("process.logs")
 #CPUE.data<-CPUEModelData(p,redo=T, TempSkip=T) #Reruns cpue model
 CPUE.data<-CPUEModelData(p,redo=F, TempSkip=T) #Defaults to not rerunning model
 
-cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2022, graphic='R')$annual.data #index end year
+cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2023, graphic='R')$annual.data #index end year
 
 #add lrp and USR
 
@@ -385,13 +385,7 @@ for (i in 1:length(lst)) {
   par(mar=c(3,5,2.0,4.5))
   plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
   lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
-<<<<<<< HEAD
   text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
-
-=======
-  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.5)
-  
->>>>>>> develop
   par(new=T)
 
   plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))
