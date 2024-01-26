@@ -10,7 +10,7 @@ RV_sets <- function(){
   set$DIST = set$dist * 1.852 #nm to km
   #3 is yankee 36, 9 is western iia and 15 is NEST
   set = subset(set, gear %in% c(3,9,15))
-  set$WingSpread = ifelse(set$gear==3,10.97/1000,ifelse(set$gear==9,12.49/1000,ifelse(set$gear==15,13/100,NA))) #yankee 36
+  set$WingSpread = ifelse(set$gear==3,10.97/1000,ifelse(set$gear==9,12.49/1000,ifelse(set$gear==15,13/1000,NA))) #yankee 36
   
   ii = which(set$type %in% c(1,5))
   print('Both set types 1 and 5 are saved in data frame but only 1 is used for stratified')
@@ -30,7 +30,7 @@ RV_sets <- function(){
   
     caL = subset(cas,spec==2550)
   deL = subset(de,spec==2550)
-  
+  deL$fsex = ifelse(is.na(deL$fsex),0,deL$fsex)
   
     io = which(!is.finite(deL$fwt))
     fit = nls(fwt~a*flen^b,subset(deL,is.finite(fwt)),start=list(a=0.001,b=3.3))
@@ -39,35 +39,37 @@ RV_sets <- function(){
   
     deL$wts = deL$fwt * deL$clen
     deL$UID = paste(deL$mission,deL$setno, deL$size_class,sep="-")
-    dd = aggregate(cbind(wts,clen)~UID,data=deL,FUN=sum)
-    names(dd)[2:3] = c('sumwts','sumclen')
-    deL = merge(deL,dd)
-    
-    sc1=seq(13,253,by=5)
-    deL$SZ = sc1[cut(deL$flen,sc1,labels=F)]
     deL$Berried = ifelse(deL$fsex==3,deL$clen,0)
-    deL$Legal = ifelse(deL$flen>82 & deL$fsex <3,deL$clen,0)
+    deL$Legal = ifelse(deL$fsex<3 & deL$flen>82,deL$clen,0)
     
-    deL1 = aggregate(cbind(wts,clen,Legal, Berried)~UID+SZ+sumwts+sumclen,data=deL,FUN=sum)
+    sc1=seq(3,253,by=5)
+    deL$SZ = sc1[cut(deL$flen,sc1,labels=F)]
+    
+    deL1 = aggregate(cbind(wts,clen,Berried,Legal)~UID+SZ,data=deL,FUN=sum)
     caL$UID = paste(caL$mission, caL$setno, caL$size_class,sep="-")
     deL1 = merge(deL1, caL[,c('UID','sampwgt','totwgt','totno')],all.x=T)
     
     #correcting for subsampling
-    deL1$clenCorr = ceiling(ifelse(deL1$sampwgt == deL1$totwgt, deL1$clen, deL1$totno * (deL1$clen/deL1$sumclen)))
-    deL1$wtsCorr = ifelse(deL1$sampwgt == deL1$totwgt, deL1$wts/1000, deL1$totwgt * (deL1$wts/deL1$sumwts))
+    deL1$clen = round(ifelse(deL1$sampwgt == deL1$totwgt, deL1$clen, deL1$clen * (deL1$totwgt/deL1$sampwgt)))
+    deL1$wts = ifelse(deL1$sampwgt == deL1$totwgt, deL1$wts, deL1$wts * (deL1$totwgt/deL1$sampwgt))
+    
+    deL1$Berried = round(ifelse(deL1$sampwgt == deL1$totwgt, deL1$Berried, deL1$Berried * (deL1$totwgt/deL1$sampwgt)))
+    deL1$Legal = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Legal, deL1$Legal * (deL1$totwgt/deL1$sampwgt))
+    
+    
     d1 = as.data.frame(do.call(rbind,strsplit(deL1$UID,"-")))
     deL1 = cbind(deL1, d1)
     deL1 = rename.df(deL1, c('V1','V2','V3'),c('mission','setno','scla'))
-    deL2 = aggregate(cbind(clenCorr,wtsCorr,Legal,Berried)~mission+setno+SZ,data=deL1,FUN=sum)
+    deL2 = aggregate(cbind(clen,wts,Legal,Berried)~mission+setno+SZ,data=deL1,FUN=sum)
     deL2$UID = paste(deL2$mission, deL2$setno, sep="_")
-    deL3 = aggregate(cbind(clenCorr,wtsCorr,Legal,Berried)~mission+setno+UID,data=deL2,FUN=sum)
+    deL3 = aggregate(cbind(clen,wts,Legal,Berried)~mission+setno+UID,data=deL2,FUN=sum)
     
-  deL2$P=deL2$clenCorr
+  deL2$P=deL2$clen
   aa = aggregate(P~UID+SZ,data=deL2,FUN=sum)
   bb = reshape(aa[,c('UID','SZ','P')],idvar='UID',timevar='SZ', direction='wide')
   bb = na.zero(bb)
   ddd = merge(deL3,bb)
-  ddd = rename.df(ddd,c('clenCorr','wtsCorr'),c('Lobster','WEIGHT_KG'))
+  ddd = rename.df(ddd,c('clen','wts'),c('Lobster','WEIGHT_KG'))
   #
   #combine files
   d4 = aggregate(cbind(totwgt,totno)~mission+setno,data=caL,FUN=sum)

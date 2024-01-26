@@ -1,5 +1,5 @@
 #looping through sets to calculate swept areas
-
+require(devtools)
 require(bio.lobster)
 require(bio.utilities)
 require(devtools)

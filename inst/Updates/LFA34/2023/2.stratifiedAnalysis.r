@@ -4,7 +4,7 @@ require(bio.survey)
 require(bio.lobster)
 require(devtools)
 la()
-p = bio.lobster::load.environment()
+#p = bio.lobster::load.environment()
 p$libs = NULL
 ff = "LFA34Update"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
