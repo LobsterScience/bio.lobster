@@ -4,9 +4,10 @@ require(devtools)
 la()
 
 a = lobster.db('process.logs')
-a = subset(a,SYEAR %in% 2004:2023 & LFA =='35') 
+a = subset(a,SYEAR %in% 2007:2023& LFA %in% '34') 
 
 aa = split(a,f=list(a$LFA,a$SYEAR))
+aa = rm.from.list(aa)
 cpue.lst<-list()
 #by time
 for(i in 1:length(aa)){
@@ -16,17 +17,20 @@ for(i in 1:length(aa)){
   tmp$date<-as.Date(tmp$time)
   first.day<-min(tmp$date)
   tmp$time<-julian(tmp$date,origin=first.day-1)
-  tmp$time = ceiling(tmp$time/7) #convert to week of season
+  tmp = tmp[order(tmp$time),]
+#  tmp$time = ceiling(tmp$time/7) #convert to week of season
   g<-as.data.frame(biasCorrCPUE(tmp,by.time=T))
   g$lfa=unique(aa[[i]]$LFA)
   g$yr = unique(aa[[i]]$SYEAR)
-  #g = t(g)[,1]
+ # g = t(g)[,1]
   cpue.lst[[i]] <- g
 }
 
 cc =as.data.frame(do.call(rbind,cpue.lst))
 #cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
-plot(aggregate(CPUE~t,data=subset(cc,lfa==35),FUN=function(x) round(mean(x),2)))
+#plot(aggregate(CPUE~t,data=subset(cc,lfa==35),FUN=function(x) round(mean(x),2)))
+
+ggplot(cc,aes(x=t,y=unBCPUE))+geom_point()+geom_smooth()+facet_wrap(~yr)
 
 f = unique(cc$lfa)
 

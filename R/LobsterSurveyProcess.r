@@ -13,7 +13,7 @@
 LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,mths=c("May","Jun","Jul","Aug","Sep","Oct"),gear.type=NULL,sex=c(1:3,NA),bin.size=5,LFS=160,Net=NULL,comparative=F,biomass=F){
   
 	lobster.db("survey")
-	RLibrary("CircStats","PBSmapping","SpatialHub","spatstat")
+	RLibrary("CircStats","PBSmapping","spatstat")
 	if(missing(yrs))yrs=sort(unique(surveyCatch$YEAR))
 	LFAs=read.csv(file.path(project.datadirectory('bio.lobster'),"data",'maps','Polygons_LFA.csv'))
 	LFAs$LFA = paste("L",LFAs$LFA,sep="")
@@ -213,7 +213,7 @@ LobsterSurveyProcess=function(species = 2550, size.range=c(0,200),lfa='34',yrs,m
 	if(!is.null(gear.type)) {
 			surveyLobsters = subset(surveyLobsters, GEAR==gear.type)
 	}
-	surveyLobsters = subset(surveyLobsters, TRIP_ID !='100058328')
+#	surveyLobsters = subset(surveyLobsters, TRIP_ID !='100058328')
 	print('REMOVING A MISCODED TRIP Sept 2022, NEED TO REMOVE ONCE FIXED IN ISDB')
 	return(surveyLobsters)
 }
