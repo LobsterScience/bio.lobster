@@ -2,12 +2,13 @@
 #'
 #' This function is the main workhorse to pull data from databases and some initial filtering of data used in lobster stock assessments. Results are saved and can be reloaded using this function.
 #' @param DS is the main switch that selects which data source to load or operate. Options for DS include 'complete','annual.landings','logs','logs41','logs41jonah','observer41','atSea','cris','port','vlog','fsrs','scallop','survey','annual.landings'.  Any of these arguements called as listed return the data object. To make the data file from scratch would require a 'XXXX.redo', where XXXX is the option listed above.
+#' @param force_save is a logical that if TRUE will save Oracle data pulls and will overwrite your existing file. If FALSE, the maximum date from Oracle table/view will be compared the maximum date from your previously saved file, thus avoiding overwriting if no new data is in the database.
 #' @return Data objects that contain the data for use in further analyses.
 #' @examples lobster.db('fsrs.redo') # makes the data objects for the FSRS data.
 #' lobster.db('fsrs') #loads the object fsrs
 #' @export
 
-lobster.db = function( DS="complete.redo",pH=p) {
+lobster.db = function( DS="complete.redo",pH=p, force_save=F) {
     options(stringsAsFactors=F)
 
   require(lubridate)
@@ -1221,7 +1222,14 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
      if (DS=="fsrs.redo") {
         require(RODBC)
         #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-        fsrs = connect.command(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
+       if(!force_save){
+         md = connect.command(con, "select max(haul_date) mdate from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
+        load(file=file.path( fnODBC, "fsrs.rdata"))
+        f_md = max(fsrs$HAUL_DATE)
+        if(f_md>=as.POSIXct(md[,1])) stop('No new data to over write old file')
+       } 
+       fsrs = connect.command(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
+        
         print("FYI. Starting Fall 2019 (LFA 27-35) and spring 2018 (LFA 36)")
         print("New size groups used 1-27 (5mm bins), replacing 1-16 (10mm bins)")
         print("Users need to specify year and size to ensure you get the right coding")

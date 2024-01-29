@@ -64,7 +64,7 @@ go3a = gam(Ref~LFA+YEAR+(Temperature)+ti(Legal)+ti(Temperature,Legal),data=a,off
 go4 = gam(Ref~LFA+YEAR+ti(Temperature)+ti(wt)+ti(Temperature,wt),data=a,offset=(log(UID)),family='nb')
 go5 = gam(Ref~LFA+YEAR+(Temperature)+ti(wt)+ti(Temperature,wt),data=a,offset=(log(UID)),family='nb')
 
-gp = predict(go,type='lpmatrix')
+gp = predict(go3a,type='lpmatrix')
 nm =  grep('Temp',dimnames(gp)[[2]])
 
 require(ggeffects)
@@ -82,7 +82,7 @@ mydf <- ggpredict(go5, terms = c('Temperature'))
 plot(mydf)
 
 
-
+require(ggplot2)
 ggplot(mydf, aes(x = x, y = predicted)) +
   geom_line() +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)+
@@ -91,7 +91,7 @@ ggplot(mydf, aes(x = x, y = predicted)) +
   ylab('Marginal Catchability')
 
 newd = data.frame(Temperature=seq(0,23,.2),Legal=10,LFA=27,YEAR=as.factor(2021))
-myf <- ggpredict(go3, terms = c("Temperature"),newdata=newd,full.data=F)
+myf <- ggpredict(go3a, terms = c("Temperature"),newdata=newd,full.data=F)
 ggplot(myf, aes(x = x, y = predicted)) +
   geom_line() +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)
