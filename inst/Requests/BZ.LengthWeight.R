@@ -2,7 +2,7 @@
 require(tidyverse)
 
 p = bio.lobster::load.environment()
-la()
+#la()
 #Plot LW Regressions for Lobster by Sex
  
 savdir="C:/RSaves/" #Change as Appropriate

@@ -11,15 +11,24 @@ require(knitr)
 
 
 study.yr="2023"## Make sure to index
+
+#Create directory structure / references
 figdir = file.path(project.datadirectory("bio.lobster","requests","vent"))
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
-#fishdir= file.path(figdir,"fishers")
-#dir.create( fishdir, recursive = TRUE, showWarnings = FALSE )
+
 lfadir= file.path(figdir,"lfas")
 dir.create( lfadir, recursive = TRUE, showWarnings = FALSE )
+
 mlsdir= file.path(figdir,"mls")
 dir.create( mlsdir, recursive = TRUE, showWarnings = FALSE )
+
+yr.dir= file.path(figdir,study.yr)
+dir.create( yr.dir, recursive = TRUE, showWarnings = FALSE )
+
+fishdir= file.path(figdir,yr.dir, "fishers")
+dir.create( fishdir, recursive = TRUE, showWarnings = FALSE )
  
+#Import data
 vent=read.csv("C:/bio.data/bio.lobster/data/vent/Trap.csv")
 names(vent)=c("fisher", "license","lfa", "port","grid","depth.unit","trap.type", "trap.style","unique.trap", "date", "depth", "vent.sz", "vent.num", "trap.num","s14","s15","s16","s17a","s17b","s18","s19","s20")
 
@@ -376,7 +385,7 @@ for (y in yrs){
         #perc.short()
         
         #size.class.by.config()
-        png(filename=paste0(fishdir,"/",f, ".", y,".size.class.histogram.png"),width = 150, height = 150, units='mm', res = 300)
+        png(filename=paste0(fishdir,"/",f, ".", y,".size.class.histogram.png"),width = 170, height = 170, units='mm', res = 300)
         size.class.histogram()
         dev.off()
         #size.class.by.config()
@@ -488,7 +497,7 @@ config2=NA
               
              
               #size.class.by.config()
-              png(filename=paste0(lfadir,"/", ttl,".",i, ".size.class.histogram.png"),width = 150, height = 150, units='mm', res = 300)
+              png(filename=paste0(lfadir,"/", ttl,".",i, ".size.class.histogram.png"),width = 170, height = 170, units='mm', res = 300)
               ventf=a
               size.class.histogram(plot.t=ttl)
               dev.off()
@@ -503,9 +512,11 @@ config2=NA
 ml=c("82.5","84")
 
 vent=vent3 #bring in all years of data
+con.count=data.frame(matrix(NA, nrow = 2, ncol = 2)) #for use later in report generation
+names(con.count)=c("mls", "num.configs")
 
-for (mls in ml){
-    
+for (i in (1:length(ml))){
+    mls=ml[i]
     test=vent[vent$lfa !="29",]
     if (mls=="84"){l=29} else {l=unique(as.character(test$lfa))}
     rm(test)
@@ -526,6 +537,10 @@ for (mls in ml){
       c=all.fishers[all.fishers$lfa %in% l, ]
       print(l)
       print(unique(c$config.pair))
+      con.count[i,1]=mls
+      con.count[i,2]=length(unique(c$config.pair))
+      
+      
     
     # MLS Figures
      
@@ -533,7 +548,7 @@ for (mls in ml){
       ab$fish.year=with(ab, paste(fisher, yr, sep=":"))
       to.merge=all.fishers[,c("config.pair", "fish.year")]
       ab=merge(ab, to.merge, by="fish.year")
-      ab=ab[ab$vent.sz!="49",] #removes Dave Ferguson's few 49mm samplesin 2022
+      ab=ab[ab$vent.sz!="49",] #removes Dave Ferguson's few 49mm samples in 2022
       rm(to.merge)          
       ventc=unique(all.fishers$config.pair[all.fishers$lfa %in% l])
       
@@ -553,7 +568,7 @@ for (mls in ml){
         #Save Figures
         
         #size.class.by.config()
-        png(filename=paste0(mlsdir,"/", ttl,".",i, ".size.class.histogram.png"),width = 150, height = 150, units='mm', res = 300)
+        png(filename=paste0(mlsdir,"/", ttl,".",i, ".size.class.histogram.png"),width = 170, height = 170, units='mm', res = 300)
         ventf=a
         size.class.histogram(plot.t=ttl)
         dev.off()
@@ -579,18 +594,19 @@ cleanRmd <- function(RmdName = 'VentReport', RmdFolder = 'Markdown') {
 
 cleanRmd()
 
-fishers=as.character(unique(vent2$fisher))
-
+fishers=as.character(unique(vent2$fisher[vent2$yr==study.yr]))
+yr=y
 for(i in 1:length(fishers)) {
   f=fishers[i]
   lfai=as.character(vent2$lfa[vent2$fisher==f][1])
-  if (lfa %in% c("28", "29")){mlsi=84} else {mlsi=82.5}
+  if (lfai %in% c("28", "29")){mlsi=84} else {mlsi=82.5}
  
  
    if(!dir.exists(file.path(figdir,y,'reports'))) dir.create(file.path(figdir,y,'reports'))
-  rmarkdown::render('Markdown/VentReport.Rmd',quiet=T)
-  file.rename(from = file.path('Markdown','VentReport.pdf'), to = file.path('Reports',paste(f, "LFA", lfai, "pdf", sep=".")))
+  rmarkdown::render(file.path(figdir,y,'Markdown/VentReport.Rmd'),quiet=T)
+  file.rename(from = file.path(figdir,y,'Markdown','VentReport.pdf'), to = file.path(figdir,y,'reports',paste(f, "LFA", lfai, "pdf", sep=".")))
   cleanRmd()
+  print(f)
   #rm(dat
 }
 

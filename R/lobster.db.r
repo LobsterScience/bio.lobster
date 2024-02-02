@@ -1229,14 +1229,15 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         #print("If loading data manually use FSRS.load.from.text.r function")
         #Create csv through FSRS.load.from.text.r before running this step
         #
-        # if (file.exists(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv")))
-        # {
-        # non.db.fsrs=read.csv(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv"))
-        # non.db.fsrs=non.db.fsrs[names(fsrs)] #only retain Variables in 'fsrs'
-        # non.db.fsrs$RECAPTURED=as.integer(non.db.fsrs$RECAPTURED)
-        # non.db.fsrs$HAUL_DATE=as.POSIXct(non.db.fsrs$HAUL_DATE)
-        # fsrs= rbind(fsrs, non.db.fsrs[names(fsrs)])
-        # }
+        #if (file.exists(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv")))
+        #{
+       #non.db.fsrs=read.csv(file.path(project.datadirectory("bio.lobster"), "data","inputs","non.db.fsrs.csv"))
+        # non.db.fsrs$SIZE_GRP=non.db.fsrs$SIZE_CD
+         #non.db.fsrs=non.db.fsrs[names(fsrs)] #only retain Variables in 'fsrs'
+         #non.db.fsrs$RECAPTURED=as.integer(non.db.fsrs$RECAPTURED)
+         #non.db.fsrs$HAUL_DATE=as.POSIXct(non.db.fsrs$HAUL_DATE)
+         #fsrs= rbind(fsrs, non.db.fsrs[names(fsrs)])
+         #}
 
         fsrs$SIZE_CD=fsrs$SIZE_GRP
         fsrs=within(fsrs, rm(SIZE_GRP))

@@ -3,7 +3,7 @@
 	p = bio.lobster::load.environment()
 	p$yrs <- NULL #ensuring empty variable
 	
-	la()
+	#la()
 
 
 
@@ -59,7 +59,8 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		#CPUE.data<-CPUEModelData(p,redo=T,TempSkip=T)
 		#CPUE.data<-CPUEModelData(p,redo=F)
 		
-		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(CPUE.data$SYEAR),graphic='R')$annual.data
+		
+		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(p$current.assessment.year),graphic='R')$annual.data
 		crd = subset(cpueData,LFA==33,c("YEAR","CPUE"))
 		crd = crd[is.finite(crd$CPUE),]
 		mu = median(crd$CPUE[crd$YEAR %in% c(1990:2016)])
@@ -72,14 +73,14 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		png(filename=file.path(figdir, "CPUE_only.png"),width=8, height=5.5, units = "in", res = 800)
     		par(mar=c(2.0,5.5,2.0,3.0))
     		xlim=c(1990,max(crd$YEAR))
-    		plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/TH)',type='b',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
+    		plot(crd[,1],crd[,2],xlab='Year',ylab='CPUE (kg/TH)',type='b',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
     		points(max(crd$YEAR), crd$CPUE[which(crd$YEAR==max(crd$YEAR))], pch=17, col='red', cex=1.2)
 		dev.off()
 
     png(filename=file.path(figdir, "CPUE_LFA33.png"),width=8, height=5.5, units = "in", res = 800)
-        par(mar=c(2.0,5.5,2.0,3.0))
+        par(mar=c(4.0,5.5,2.0,3.0))
         xlim=c(1990,max(crd$YEAR))
-        plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/TH)',type='p',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
+        plot(crd[,1],crd[,2],xlab='Year',ylab='CPUE (kg/TH)',type='p',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
         points(max(crd$YEAR), crd$CPUE[which(crd$YEAR==max(crd$YEAR))], pch=17, col='red', cex=1.2)
         running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
         crd=merge(crd,running.median,all=T)
@@ -92,9 +93,9 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
     
     #French Version of Figure:
     png(filename=file.path(figdir, "CPUE_LFA33.French.png"),width=8, height=5.5, units = "in", res = 800)
-    par(mar=c(2.0,5.5,2.0,3.0))
+    par(mar=c(4.0,5.5,2.0,3.0))
     xlim=c(1990,max(crd$YEAR))
-    plot(crd[,1],crd[,2],xlab=' ',ylab='CPUE (kg/casier lev?)',type='p',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
+    plot(crd[,1],crd[,2],xlab='Annee',ylab='CPUE (kg/casier leve)',type='p',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
     points(max(crd$YEAR), crd$CPUE[which(crd$YEAR==max(crd$YEAR))], pch=17, col='red', cex=1.2)
     running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
     crd=merge(crd,running.median,all=T)
@@ -130,17 +131,18 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		#load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
 		
 		#make sure to index year below as appropriate
-		ccir_data = subset(ccir_data,YEAR<=p$current.assessment.year) 
+		#ccir_data = subset(ccir_data,YEAR<=p$current.assessment.year) 
 		
 		#to only run last three years:
-		#ccir_data = subset(ccir_data,YEAR=c((p$current.assessment.year-2):(p$current.assessment.year)))
+		ccir_data = subset(ccir_data,YEAR=c((p$current.assessment.year-2):(p$current.assessment.year))) #Don't know that this works
 		
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 		out.binomial = list()
 		attr(out.binomial,'model') <- 'binomial'
 		for(i in 1:length(dat)) { #if run breaks, update 1:length(dat) to reflect run# ie.e 16:length(dat)
-			ds = dat[[i]]
+			print(i)
+		  ds = dat[[i]]
 			#ds$method = 'binomial'
 			x = ccir_stan_run_binomial(dat = ds,save=T)
 			out.binomial[[i]] <- ccir_stan_summarize(x)
@@ -228,7 +230,7 @@ dev.off()
 	#x11(width=8,height=7)
  	png(filename=file.path(figdir, "FSRS.legals.recruits.png"),width=8, height=5, units = "in", res = 800)
 	FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],lfa = 33,fd=figdir,title='', save=F)
-dev.off()
+  dev.off()
 
 png(filename=file.path(figdir, "FSRS.legals.recruits.French.png"),width=8, height=5, units = "in", res = 800)
 FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],lfa = 33,fd=figdir,title='',French=T, save=F)
