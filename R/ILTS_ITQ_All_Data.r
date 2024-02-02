@@ -9,8 +9,7 @@
 #' @return Data objects that contain the data for use in further analyses.
 #' @examples ILTS_ITQ_All_Data(species=2550, size=c(1,200),sex=c(3),aggregate=T)
 #' @export
-
-ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NULL,aggregate=F,return_tow_tracks=F,comparativeOnly=F){
+ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NULL,aggregate=F,return_tow_tracks=F){
   outfile = file.path(project.datadirectory('bio.lobster'),'data','survey','ILTS_ITQ_all.data.rds')
   sensorfile = file.path(project.datadirectory('bio.lobster'),'data','survey','ILTS_ITQ_sensorData.rds')
   
@@ -21,8 +20,8 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
   require(devtools)
   require(geosphere)
     ic = ILTSClick
-  if(comparativeOnly) ic = ILTSClickComp
-  
+    ic$ID = paste(ic$TRIP_ID,ic$SET_NO,sep="_")
+    
   junk = list()
   for(i in 1:nrow(ic)){
     if(i %in% round(seq(5,nrow(ic),length.out=100))) print(i)
@@ -31,23 +30,28 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
     rv = unique(sur$GEAR)
     bds = c(5,ifelse(rv=='NEST',c(20),c(30)))
     v$gear = rv
-    v$st = strptime(unique(sur$SET_TIME),"%H%M")
-    v$et = strptime(unique(sur$HAUL_TIME),"%H%M")
-    if(v$QUALITY_TOUCHDOWN==1) v$st= strptime(v$STARTTIME,"%H%M")
+    
+    #use winch first and convert to GMT for matching with sensors
+    v$st = strptime(unique(sur$SET_TIME),"%H%M")+(3*60*60)
+    v$et = strptime(unique(sur$HAUL_TIME),"%H%M")+(3*60*60)
+    
+    #if touch down and lift off are good from click touch replace winch
+    if(v$QUALITY_TOUCHDOWN==1) v$st= strptime(v$STARTTIME,"%H%M%S")
     if(v$QUALITY_LIFTOFF==1) v$et= strptime(v$ENDTIME,"%H%M%S")
     if(!is.na(v$STARTDATE) & !is.na(v$ENDDATE)) {if(yday(v$STARTDATE) != yday(v$ENDDATE))v$et$mday= v$et$mday +1} #if jumps over night
-    
     
     v$yr = year(v$STARTDATE)
     
     v$nonweighted_spread = v$sensor = v$sweptArea = v$distance = NA
     
-    #chagne to esorar and marport or netmind (esonar is same as netmind so use same call)
+    #sensor data
     se = subset(ILTSSensor,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)
     se$Time = strptime(se$GPSTIME,"%H%M%S")
     se = se[order(se$GPSTIME),]
     
-        se = subset(se,Time>=v$st & Time <= v$et)
+    se = subset(se,Time>=v$st & Time <= v$et)
+    
+    #if we dont have click touch data for touchdown, lift off or spread
     if(v$QUALITY_WINGSPREAD+v$QUALITY_TOUCHDOWN+v$QUALITY_LIFTOFF==0){
       se$Time = strptime(se$GPSTIME,"%H%M%S")
       se = subset(se,!is.na(se$LATITUDE))
@@ -62,39 +66,43 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
       }))/1000
       next
         }
-      }
+    }
+    #if we have decent sensor data
     if(nrow(se)>0){
       v$sensor = unique(se$SOURCE)
-      
-      if(v$sensor=='MARPORT' & v$yr>2016) se = subset(se, VALIDITY=='RAW')
-      if(v$sensor=='MARPORT' & v$yr==2016) se = subset(se, VALIDITY=='1000') #raw
-      
       
       if(all(c(nrow(se)>5, length(unique(se$GPSTIME))>5) )){
         se = subset(se,!is.na(se$LATITUDE))
         se$Y = c(sapply(se$LATITUDE,fixSensorLatLon)  )
         se$X = c(sapply(se$LONGITUDE,fixSensorLatLon)*-1  )
-        
+      
+        #total distance from all GPS feed  
         #distance
         v$distance <- sum(sapply(2:nrow(se), function(i) {
           distGeo(se[i - 1, c("X", "Y")], se[i, c("X", "Y")])
         }))/1000
         
-        
-        # for future years, assume names are same as 2021, change this if needed:
-        ##change dates to esonar and marport not year
+        if(v$sensor=='MARPORT' & v$yr>2016) se = subset(se, VALIDITY=='RAW')
+        if(v$sensor=='MARPORT' & v$yr==2016) se = subset(se, VALIDITY=='1000') #raw
         if(v$sensor=='MARPORT'){
+          #this section reduces the data to just segments with wing spread then caculates the distance that wingspread represents over the entire tow
           b = subset(se,TRANSDUCERNAME %in% c('PRP','WINGSPREAD') & SENSORNAME=='DISTANCE' & SENSORVALUE>=bds[1] & SENSORVALUE<=bds[2])
+          b = b[order(b$GPSTIME),]
           if(nrow(b)>5){
             b$distSeg = c(0,sapply(2:nrow(b), function(i) {
               distGeo(b[i - 1, c("X", "Y")], b[i, c("X", "Y")])
             }))
-            b$RealDist = b$distSeg/sum(b$distSeg)*v$distance
+            b$RealDist = b$distSeg/sum(b$distSeg)*v$distance #bumped up to real towed distance
             v$sweptArea = sum(b$RealDist*b$SENSORVALUE/1000)
           }
         }
+        
         if(v$sensor %in% c("ESONAR","NETMIND")){
+          #this section reduces the data to just segments with wing spread then caculates the distance that wingspread represents over the entire tow
+          #even though called DoorSpread is really wing spread
           b = subset(se,TRANSDUCERNAME=="DoorSpread" & SENSORNAME %in% c("STBDDoorMaster","DoorMaster") & SENSORVALUE>=bds[1] & SENSORVALUE<=bds[2])
+          b = b[order(b$GPSTIME),]
+          
           if(nrow(b)>5){
             b$distSeg = c(0,sapply(2:nrow(b), function(i) {
               distGeo(b[i - 1, c("X", "Y")], b[i, c("X", "Y")])
@@ -106,52 +114,70 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
         
       }
 
-    
     junk[[i]] = v
     rm(list=c('v','se','bds','rv'))
     }
   }
   
   j = do.call(rbind,junk)
-  j$spread = j$sweptArea/j$distance*1000
+  j$spread = j$sweptArea/j$distance*1000 #weighted mean spread
   
   j$gearid = ifelse(j$gear=='NEST',16,21)
   j$sensorid = ifelse(j$sensor=='MARPORT',1,2)
   j$spread = ifelse(j$QUALITY_WINGSPREAD==1,j$spread,NA)
   j$sweptArea = ifelse(j$QUALITY_WINGSPREAD==1,j$sweptArea,NA)
+  j$distance = ifelse(j$distance< .4,NA,j$distance)
   
-  #Calc dist from Olex tracks
-  uOL = ILTSOlextracks[!duplicated(ILTSOlextracks[,c('TRIP_ID','SET_NO')]),c('TRIP_ID','SET_NO')]
-  olex_dists = data.frame(uOL,Distance=NA,Source=NA)
-  for(i in 1:nrow(uOL)){
-      ji = subset(ic,TRIP_ID==uOL$TRIP_ID[i] & SET_NO==uOL$SET_NO[i])  
-      st = strptime(ji$STARTTIME,"%H%M%S")
-      et = strptime(ji$ENDTIME,"%H%M%S")
-      src = 'click'
-      if(nrow(ji)<1){
-               sur = subset(surveyCatch,TRIP_ID == uOL$TRIP_ID[i] & SET_NO==uOL$SET_NO[i])
-               st = strptime(unique(sur$SET_TIME),"%H%M")
-               et = strptime(unique(sur$HAUL_TIME),"%H%M")
-               src = 'winch'
+  #Calc dist from Olex tracks on same set 
+  jOL = subset(j,is.na(distance))
+  olex_dists=data.frame(jOL[,c('TRIP_ID','SET_NO')],DistanceOlex=NA, Source=NA)
+  for(i in 1:nrow(jOL)){
+      sur = subset(surveyCatch,TRIP_ID == jOL$TRIP_ID[i] & SET_NO==jOL$SET_NO[i])
+      st = strptime(unique(sur$SET_TIME),"%H%M")
+      et = strptime(unique(sur$HAUL_TIME),"%H%M")
+      src='winch'
+      ji = jOL[i,]
+      if(nrow(ji)>0){
+        if(nrow(ji)>1) ji = ji[1,]
+      #if touch down and lift off are good from click touch replace winch
+        if(ji$QUALITY_TOUCHDOWN==1) st= ji$st-(3*60*60)
+        if(ji$QUALITY_LIFTOFF==1) et= ji$et-(3*60*60)
+        src='click'
       }
-    
-    ol = subset(ILTSOlextracks,SET_NO==uOL$SET_NO[i] & TRIP_ID==uOL$TRIP_ID[i])   
+      if(st==et){
+        st = strptime(unique(sur$SET_TIME),"%H%M") #+ (3*60*60)
+        et = strptime(unique(sur$HAUL_TIME),"%H%M")#+ (3*60*60)
+        src='winch'
+        }
+    ol = subset(ILTSOlextracks,SET_NO==jOL$SET_NO[i] & TRIP_ID==jOL$TRIP_ID[i])   
     ol$Time = strptime(ol$STDTIME,"%H:%M:%S")
     olS = subset(ol,Time>=st & Time<=et)
-    if(nrow(olS)==0) {st = st-(3*60*60); et = et-(3*60*60); olS = subset(ol,Time>=st & Time<=et)}
-    
-    olex_dists$Distance[i] = sum(sapply(2:nrow(olS), function(i) {
+    if(nrow(olS)>5){
+    olS = olS[order(olS$Time),]
+    olex_dists$DistanceOlex[i] = sum(sapply(2:nrow(olS), function(i) {
       distGeo(olS[i - 1, c("X", "Y")], olS[i, c("X", "Y")])
     }))/1000
     olex_dists$Source[i]=src
+    }
   }
-  ggplot(olex_dists,aes(x=Distance,fill=Source))+
-  geom_histogram(aes(y=..density..),position = "dodge", bins = 30, color = "black", alpha = 0.7) +
-    labs(title = "Grouped Histogram", x = "Value", y = "Frequency") +
-    theme_minimal()
+  
+  j1= merge(j,olex_dists,all.x=T)
+  j1$distance = ifelse(is.na(j1$distance) & !is.na(j1$DistanceOlex),j1$DistanceOlex,j1$distance)
+  
   surveyCatch = merge(surveyCatch,j, by.x=c('TRIP_ID','SET_NO','YEAR'),by.y=c('TRIP_ID','SET_NO','YEAR'),all.x=T)
   surveyCatch$WEIGHT_KG = ifelse(is.na(surveyCatch$EST_DISCARD_WT),0,surveyCatch$EST_DISCARD_WT) + ifelse(is.na(surveyCatch$EST_KEPT_WT),0,surveyCatch$EST_KEPT_WT)
  
+  surveyCatch$distanceWinch = sapply(1:nrow(surveyCatch), function(i) {
+    distGeo(surveyCatch[i, c("SET_LONG", "SET_LAT")], surveyCatch[i, c("HAUL_LONG", "HAUL_LAT")])
+  })/1000
+  surveyCatch$distBias=surveyCatch$distance-surveyCatch$distanceWinch
+
+#  plot(surveyCatch$DEPTHM, surveyCatch$distBias,ylim=c(-1.5,.5))
+#require(mgcv)
+#b = gam(distBias~s(DEPTHM,k=3),data=subset(surveyCatch, distBias> -1.5))
+#plot(b,rug=T)
+
+  
   ii = which(is.na(surveyCatch$distance))
   surveyCatch$distance[ii] = sapply(ii, function(i) {
     distGeo(surveyCatch[i, c("SET_LONG", "SET_LAT")], surveyCatch[i, c("HAUL_LONG", "HAUL_LAT")])
@@ -184,7 +210,7 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
   
   
   ##spread fillins #not enough data for years
-  ij = aggregate(spread~GEAR,data=subset(surveyCatch,!is.na(spread)),FUN=function(x) quantile(x,0.5))
+  ij = aggregate(spread~GEAR,data=subset(surveyCatch,!is.na(spread)),FUN=function(x) quantile(x,.5))
   ik = which(is.na(surveyCatch$spread))
   surveyCatch$sweptArea[ii] = NA
   
@@ -198,7 +224,7 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
   
   sC = surveyCatch
 	sC = subset(sC, HAULCCD_ID %in% c(1))
-	sC = subset(sC,select=c(TRIP_ID, SET_NO, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SPECCD_ID, NUM_CAUGHT, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, QUALITY, gear, distance, sweptArea, sensor, spread, WEIGHT_KG))
+	sC = subset(sC,select=c(TRIP_ID, SET_NO, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SPECCD_ID, NUM_CAUGHT, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, WEIGHT_KG))
 	
   temp = aggregate(TEMPC~TRIP_ID+SET_NO,data=ILTSTemp, FUN=median)
   sC = merge(sC,temp,all.x=T)
@@ -305,11 +331,10 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
       xS = subset(xS,FID %ni% unique(xy$FID)) 
       xy$FID = xS$FID = NULL
     }
-    
      
     xy$ID = xS$ID = NULL
     xFinal = bind_rows(xS,xy)
-    xFinal[,28:33] = bio.utilities::na.zero(xFinal[,28:33])
+    xFinal[,28:32] = bio.utilities::na.zero(xFinal[,28:32])
     xFinal = rename.df(xFinal,c('WEIGHT_KG','NUM_CAUGHT','NUM_MEASURED'),c('SET_LEVEL_WEIGHT_KG','SET_LEVEL_NUM_CAUGHT','SET_LEVEL_NUM_MEASURED'))
     if(return_tow_tracks) return(readRDS(sensorfile))
     return(xFinal)

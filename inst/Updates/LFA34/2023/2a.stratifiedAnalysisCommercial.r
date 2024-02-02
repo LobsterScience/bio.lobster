@@ -1,11 +1,13 @@
 require(bio.survey)
 require(bio.lobster)
+require(PBSmapping)
 la()
-p = bio.lobster::load.environment()
+p = list()
 p$libs = NULL
 ff = "LFA34Update"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
+dir.create(fpf1)
 p1 = p
 p1$yrs = 1969:2023
 
