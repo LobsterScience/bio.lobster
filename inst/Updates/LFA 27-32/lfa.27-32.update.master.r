@@ -49,7 +49,7 @@ logs=lobster.db("process.logs")
 #CPUE.data<-CPUEModelData(p,redo=T, TempSkip=T) #Reruns cpue model
 CPUE.data<-CPUEModelData(p,redo=F, TempSkip=T) #Defaults to not rerunning model
 
-cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2022, graphic='R')$annual.data #index end year
+cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:p$current.assessment.year, graphic='R')$annual.data #index end year
 
 #add lrp and USR
 
@@ -135,6 +135,12 @@ for (l in p$lfas){
   dev.off()
 }
 
+#Need to add this
+#Unbiased seasonal landings by LFA
+
+#bio.lobster/inst/IP/CPUEInfo/unbiasedCPUE.r
+# Will likely need to loop to produce one for each LFA, Shows in-season catch rate patterns well
+
 
 ## Continuous Change In Ratio (CCIR)
 
@@ -154,26 +160,20 @@ require(rstan)
 load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
 #start.year=p$current.assessment.year-4 #to run on last four years
 start.year=2000 #to run on entire data set
+        #From 33 assessment, better approach?:
+        #make sure to index year below as appropriate
+        #ccir_data = subset(ccir_data,YEAR<=p$current.assessment.year) 
+        
+        #to only run last three years:
+        #ccir_data = subset(ccir_data,YEAR=c((p$current.assessment.year-2):(p$current.assessment.year)))
 
 #dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5, start.yr = start.year) #sexs 1.5 means no sex defn
 dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5)
 
-#Code to check CCIR Data
-# d = dat[c(57)] "adjust for area in question"
-# i = length(d)
-# par(mfrow=c(2,2))
-# out = list()
-# for(g in 1:i){
-#   with(d[[g]], plot(Cuml,p,main=Yr,ylim=c(0,.8)))
-#   out[[g]] = with(d[[g]],c(mean(p[1:4]),mean(p[length(p):(length(p)-3)]),Nexp, Nrec))
-# }
-# ou = do.call(rbind,out)
-# names(ou)=c('Pstart','Pend','NExp','Nrec')
-
-
 out.binomial = list()
 attr(out.binomial,'model') <- 'binomial'
-for(i in 104:length(dat)) { #Change to restart a broken run based on iteration number (count files in summary folder...run from there)
+for(i in 1:length(dat)) { #Change to restart a broken run based on iteration number (count files in summary folder...run from there)
+  print(i)
   ds = dat[[i]]
 
 #line underneath likely redundant. Should default to binomial
@@ -385,13 +385,7 @@ for (i in 1:length(lst)) {
   par(mar=c(3,5,2.0,4.5))
   plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
   lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
-<<<<<<< HEAD
   text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
-
-=======
-  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.5)
-  
->>>>>>> develop
   par(new=T)
 
   plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))

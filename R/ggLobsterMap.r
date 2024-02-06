@@ -1,7 +1,7 @@
 #' @export
 
 ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(-74,-47),
-                         attrData=NULL,attrColumn='Z', addGrids=T,addNAFO=F,nafo='4X', bathy=T,fw=NULL,legLab="",
+                         attrData=NULL,attrColumn='Z', addGrids=T,addNAFO=F,nafo='4X', bathy=T,fw=NULL,legLab="",addLFAlines=T,
                          addLFALabels=F, addGridLabels=F, addNAFOLabels=F,scaleTrans='identity',brks=NULL,return.object=F,
                          layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),LFA_label_size=8,colourLFA=T, ...){
   
@@ -78,12 +78,18 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
 
     cents = readRDS(file.path( layerDir,"LFALabelsSF.rds"))
   gridCent = st_centroid(r)
-      p =  ggplot(data=l) + 
-          geom_sf(lwd=1.35) + 
-          geom_sf(data=ns_coast,fill=fill.colours) +
+  
+      p =  ggplot(data=ns_coast) +
+        geom_sf(fill=fill.colours)+
           xlab("Longitude") +
-          ylab("Latitude")
+          ylab("Latitude")+
+        scale_x_continuous(breaks=round(seq(xlim[1],xlim[2],length.out = 4),2)) +
+        scale_y_continuous(breaks=round(seq(ylim[1],ylim[2],length.out = 4)))
       
+      if(addLFAlines) {
+        p = p+ geom_sf(data=l,lwd=1.35) 
+          
+      }
         if(bathy){
             p = p + geom_sf(data=subset(b,Z %in% c(60,100)),colour=alpha("#2C77BF", .3))
         }

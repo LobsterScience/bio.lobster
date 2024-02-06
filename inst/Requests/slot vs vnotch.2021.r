@@ -91,7 +91,7 @@ lfas=c("31B", "32")
 #1.20 kg/animal
 
 land=lobster.db('annual.landings')
-land=land[land$YR>2016,]
+land=land[land$YR%in% c(2017:2022),]
 years=sort(as.numeric(unique(land$YR)))
           
 
@@ -112,14 +112,14 @@ for(l in lfas){
   d1$perc.back.wt=NA
   d1$perc.back.wt=wt.notch/d1$LANDINGS*100
   d1=d1[order(d1[,1]),]
-  #print(d1)
+  print(d1)
   
   png(filename=paste0(figdir,"/V-notch vs. Slot LFA",l,".png"))
   plot(d1$perc.back.wt, type='n', xlab="Year", ylab="% of catch (by wt)", main=paste0("V-Notched Returned LFA", l), ylim=c(0,3), xaxt='n')
-  axis(side = 1, at = c(1:5),labels = unique(d1$YEAR))
+  axis(side = 1, at = c(1:length(d1$YEAR)),labels = unique(d1$YEAR))
   points(d1$perc.back.wt, pch=16)
-  abline(h=avg.wt.ret, lty=2, col="red")
-  text(x=4, y=avg.wt.ret+.1, col="red", labels="115-124mm slot")
+  #abline(h=avg.wt.ret, lty=2, col="red")
+  #text(x=4, y=avg.wt.ret+.1, col="red", labels="115-124mm slot")
   dev.off()
 } 
 

@@ -16,17 +16,28 @@ dir.create(fpf1)
 ##Commercial
 	# Survey Data
 	surveyLobsters34index<-LobsterSurveyProcess(lfa="L34", yrs=1996:2023, mths=c("Aug","Jul","Jun"), bin.size=2.5, Net='NEST',size.range=c(82.5,200),biomass=T)
-	surveyLobsters34index = lonlat2planar(surveyLobsters34index,"utm20", input_names=c("SET_LONG", "SET_LAT"))
+	surveyLobsters34index$X = surveyLobsters34index$SET_LONG
+	surveyLobsters34index$Y = surveyLobsters34index$SET_LAT
+	attr(surveyLobsters34index,'projection') <- "LL"
+	#surveyLobsters34index = convUL(surveyLobsters34index)
+	surveyLobsters34index = lonlat2planar(surveyLobsters34index, input_names=c("SET_LONG", "SET_LAT"))
 	surveyLobsters34index$dyear = decimal_date(as.Date(surveyLobsters34index$SET_DATE))
 
+	surveyLobsters34index$plat = surveyLobsters34index$plat/1000
+	surveyLobsters34index$plon = surveyLobsters34index$plon/1000
+	
 	# Spatial temporal parameters
 	Years = 1996:2023
 	LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
-	LFAs = lonlat2planar(LFAs,"utm20", input_names=c("X", "Y"))
+	attr(LFAs,'projection')<- "LL" 
+	#LFAs = convUL(LFAs)
+	LFAs = lonlat2planar(LFAs,input_names=c("X", "Y"))
+	
 	LFAs = LFAs[,-which(names(LFAs)%in%c('X','Y'))]
 	LFAs = rename.df(LFAs,c('plon','plat'),c('X','Y'))
-
-
+  LFAs$X = LFAs$X/1000
+  LFAs$Y = LFAs$Y/1000
+  
 	surveyLobsters34index$Quant.by.year = NA
 	for(i in 1:length(Years)){
 		k = which(surveyLobsters34index$YEAR==Years[i])
