@@ -15,40 +15,51 @@ require(PBSmapping)
 require(bio.survey)
 require(bio.lobster)
 require(dplyr)
+require(ggplot2)
+require(ggpattern)
 
 p = bio.lobster::load.environment()
 la()
 assessment.year = 2023 ##Check Year
 p$syr = 1989
 p$yrs = p$syr:assessment.year
-
+p$current.assessment.year =2023
 figdir = file.path("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41Update_2022")
 
 p$lfas = c("41") # specify lfa
 
 ## from Oracle
-#lobster.db('logs.redo') 
+lobster.db('logs.redo') 
 
 #groundfish.db('odbc.redo',datayrs = 1970:2023)
 
 
 #Not Oracle		
-#logs=lobster.db('process.logs.redo')
+logs=lobster.db('process.logs.redo')
 logs=lobster.db("process.logs")
 
-#land=lobster.db('annual.landings.redo')
+land=lobster.db('annual.landings.redo')
 land = lobster.db('annual.landings')
 #land = lobster.db('seasonal.landings')
 #land=lobster.db('seasonal.landings.redo')
 
-#groundfish.db('gscat.odbc.redo')
-#groundfish.db('gsinf.odbc.redo')
-#groundfish.db('gsdet.odbc.redo')
+groundfish.db('gscat.odbc.redo')
+groundfish.db('gsinf.odbc.redo')
+groundfish.db('gsdet.odbc.redo')
 
 #check what's in there
 a = groundfish.db('gsinf.odbc')
 summary(a)
+## FOR NEFSC Survey
 
+inf = nefsc.db( DS = 'usinf.redo.odbc',fn.root = NULL,p=p)
+ca = nefsc.db( DS = 'uscat.redo.odbc',fn.root = NULL,p=p)
+de = nefsc.db( DS = 'usdet.redo.odbc',fn.root = NULL,p=p)
+
+inf = nefsc.db( DS = 'usinf.clean.redo',fn.root = NULL,p=p)
+de = nefsc.db( DS = 'usdet.clean.redo',fn.root = NULL,p=p)
+ca = nefsc.db( DS = 'uscat.clean.redo',fn.root = NULL,p=p)
+nefsc.db(DS = 'usstrata.area.redo') 
 
 
 ## map 
@@ -72,12 +83,29 @@ ll <- ll[order(ll$YR),]
 par(mar=c(3,5,3,3))
 cols<-c("steelblue4","steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4",
         "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4", "steelblue4","steelblue4","steelblue4","steelblue4","steelblue4","steelblue4", "firebrick3")
-bardens<-c(500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,30)
+bardens<-c(500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,500,30)
 
 lands<- barplot(ll$LFA41[ll$YR > 2001], ylim =c(0,1000), col = cols, density = bardens, names.arg = 2002:2023, cex.names= 0.8, space =c(0,0), ylab = "Landings (t)" )
 box()
 abline(h=720, col ='red', lwd = 2)
 
+
+
+landings<-ll[,c(1,15),]
+landings<-na.omit(landings)
+
+ggplot(data=landings,aes(x=YR, y =LFA41, fill = factor(YR))) + labs(y="Landings(t)",x="Year")+
+  geom_bar(stat="identity", color="black")+
+ geom_abline(slope=0, intercept =720, col ='red', lwd = 1)+
+  coord_cartesian(ylim=c(0,900))+
+  scale_fill_manual(values=c(rep("lightblue", 21), "navyblue"), guide = "none")+
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) 
 
 ####### 
 ##Landings Table 

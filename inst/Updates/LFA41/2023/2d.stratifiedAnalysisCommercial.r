@@ -11,7 +11,7 @@ load_all('~/GitHub/bio.survey/')
 load_all('~/GitHub/bio.lobster/')
 la()
 #NEFSC Setup
-
+p$current.assessment.year = 2023
 assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
 
 
@@ -109,7 +109,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
-      p$years.to.estimate = c(1969:(assessment.year-1)) # -1 because update is in the Fall
+      p$years.to.estimate = c(1969:(assessment.year)) # -1 because update is in the Fall
       p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
        aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)

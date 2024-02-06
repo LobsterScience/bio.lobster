@@ -8,12 +8,14 @@ p = bio.lobster::load.environment()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
+p$current.assessment.year =2023
+
 p$yrs = 1947:p$current.assessment.year
 
 
 
 p$lfas = c("41") # specify lfa
-
+p$current.assessment.year =2023
 
 
 
@@ -31,7 +33,8 @@ a = merge(all.out,out,by='yr')
 #median(a$w.Yst.y/a$w.Yst.x)    #0.876 proportion of total weight that comprises commercial animals....assuming constant over
 ao = all.out[,c('yr','w.Yst')]
 ao$w.Yst = ao$w.Yst * 0.876
-ao$w.Yst[ao$yr %in% out$yr] <- out$w.Yst[which(!is.na(out$yr))]
+ao$w.Yst[ao$yr %in% out$yr[which(!is.na(out$yr))]] <- out$w.Yst[which(!is.na(out$yr))]
+#ao$w.Yst[ao$yr %in% out$yr] <- out$w.Yst[which(!is.na(out$yr))]
 ao$w.Yst = ao$w.Yst/1000
 
 #ao is full time series of biomasses

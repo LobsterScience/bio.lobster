@@ -9,7 +9,7 @@ fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 p1 = p
 p1$yrs = 1969:2023
 
-assessment.year = 2023##Check Year
+p$current.assessment.year = 2023##Check Year
 p$syr = 1989
 p$yrs = p$syr:assessment.year
 

@@ -73,7 +73,8 @@ text(55, 0.8,bquote(paste('L'['50']*' = ','97.6')))
 
 
 
-
+m1 = formula(p~1/(1+(exp(a+(b*cl)))))
+nls(m1,data=ndata,start=list(a=10,b=-.1))
 
 ########### TO LOOK at Residuals ##################
 b$CL_residuals<-qresid(g)
@@ -100,9 +101,10 @@ ggplot(b, aes(x=Carapace_mm, y = CL_residuals, color = as.factor(Shell_hardness)
 
 b31 = subset(b,LFA=='31')
 pal =c("#75D7E8","#828289")
-ggplot()+
+LF31a<-ggplot()+
   geom_histogram(data=b31,aes(x=Carapace_mm, fill=as.character(Pleopod_mat), group=Pleopod_mat), alpha=0.6,position = 'identity', bins=50)+
   geom_vline(xintercept=82.5, colour="#F02C2C", lty=2)+
+  geom_vline(xintercept=77.5, colour="blue", lty=3,lwd=0.8)+
   xlab("Carapace Length (mm)")+
   ylab("Count")+
   scale_y_continuous(limits=c(0,90), expand = c(0, 0)) +
@@ -114,14 +116,15 @@ ggplot()+
         text=element_text(size=15),
         panel.grid.minor = element_blank(),
         panel.background = element_blank())
-
+LF31a<-LF31a+  geom_text()+ annotate("text", label="LFA 31A", x=55,y=78,size = 4, col="black")
 
 
 b32 = subset(b,LFA=='32')
 pal =c("#75D7E8","#828289")
-ggplot()+
+LF32<-ggplot()+
   geom_histogram(data=b32,aes(x=Carapace_mm, fill=as.character(Pleopod_mat), group=Pleopod_mat), alpha=0.6,position = 'identity',bins=50)+
   geom_vline(xintercept=82.5, colour="#F02C2C", lty=2)+
+  geom_vline(xintercept=92.2, colour="blue", lty=3,lwd=0.8)+
   xlab("Carapace Length (mm)")+
   ylab("Count")+
   scale_y_continuous(limits=c(0,60), expand = c(0, 0)) +
@@ -133,12 +136,14 @@ ggplot()+
         text=element_text(size=15),
         panel.grid.minor = element_blank(),
         panel.background = element_blank())
+LF32<-LF32+  geom_text()+ annotate("text", label="LFA 32", x=55,y=58,size = 4, col="black")
 
 b33= subset(b,LFA=='33')
 pal =c("#75D7E8","#828289")
-ggplot()+
+LF33<-ggplot()+
   geom_histogram(data=b33,aes(x=Carapace_mm, fill=as.character(Pleopod_mat), group=Pleopod_mat), alpha=0.6,position = 'identity',bins=50)+
   geom_vline(xintercept=82.5, colour="#F02C2C", lty=2)+
+  geom_vline(xintercept=97.6, colour="blue", lty=3,lwd=0.8)+
   xlab("Carapace Length (mm)")+
   ylab("Count")+
   scale_y_continuous(limits=c(0,80), expand = c(0, 0)) +
@@ -150,12 +155,15 @@ ggplot()+
         text=element_text(size=15),
         panel.grid.minor = element_blank(),
         panel.background = element_blank())
+LF33<-LF33+  geom_text()+ annotate("text", label="LFA 33", x=58,y=78,size = 4, col="black")
+
 
 b34= subset(b,LFA=='34')
 pal =c("#75D7E8","#828289")
-ggplot()+
+LF34<-ggplot()+
   geom_histogram(data=b34,aes(x=Carapace_mm, fill=as.character(Pleopod_mat), group=Pleopod_mat), alpha=0.6,position = 'identity',bins=60)+
   geom_vline(xintercept=82.5, colour="#F02C2C", lty=2)+
+  geom_vline(xintercept=102, colour="blue", lty=3,lwd=0.8)+
   xlab("Carapace Length (mm)")+
   ylab("Count")+
   scale_y_continuous(limits=c(0,200), expand = c(0, 0)) +
@@ -167,4 +175,5 @@ ggplot()+
         text=element_text(size=15),
         panel.grid.minor = element_blank(),
         panel.background = element_blank())
+LF34<-LF34+  geom_text()+ annotate("text", label="LFA 34", x=58,y=190,size = 4, col="black")
 

@@ -11,7 +11,7 @@ load_all('~/GitHub/bio.survey/')
 
 
 
-
+p$current.assessment.year = 2023
 
 #by length for histograms
 #
@@ -92,7 +92,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
-      p$years.to.estimate = c(1969:(assessment.year-1)) # -1 because update is in the Fall
+      p$years.to.estimate = c(1969:(assessment.year)) # -1 because update is in the Fall
       p = make.list(list(yrs=p$years.to.estimate),Y=p)
       
    	    a = seq(90,200,1)

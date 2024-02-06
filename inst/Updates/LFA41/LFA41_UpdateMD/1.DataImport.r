@@ -47,10 +47,10 @@ windows=T
 
      #American Trawl Survey Results
 
-     inf = nefsc.db( DS = 'usinf.clean.redo',fn.root = NULL,p=p)
-      ca = nefsc.db( DS = 'uscat.clean.redo',fn.root = NULL,p=p)
-      de = nefsc.db( DS = 'usdet.clean.redo',fn.root = NULL,p=p)
-         nefsc.db(DS = 'usstrata.area.redo')        
+     inf = nefsc.db( DS = 'usinf.clean',fn.root = NULL,p=p)
+      ca = nefsc.db( DS = 'uscat.clean',fn.root = NULL,p=p)
+      de = nefsc.db( DS = 'usdet.clean',fn.root = NULL,p=p)
+         nefsc.db(DS = 'usstrata.area')        
 
 
 #### Landings

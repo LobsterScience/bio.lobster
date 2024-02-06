@@ -6,6 +6,7 @@ require(ggplot2)
 require(tidyr)
 require(statmod)
 require(cowplot)
+require(dplyr)
 
 p = bio.lobster::load.environment()
 la()
@@ -18,7 +19,7 @@ b=a
 b = subset(b,LFA=='33')
 
 b= subset(b, Carapace_mm <120)
-g = glm(Pleopod_mat~Carapace_mm,data=b,family=binomial(link='logit')) ##CHECK what Months you're sampling
+g = glm(Pleopod_mat~Carapace_mm +fYear,data=b,family=binomial(link='logit')) ##CHECK what Months you're sampling
 
 plot(b$Carapace_mm, b$Pleopod_mat, pch = 16, xlab = "Carapace Length", ylab = "Proportion Mature")
 l = seq(min(b$Carapace_mm),max(b$Carapace_mm),by=.1)
@@ -75,54 +76,12 @@ ggplot(b, aes(x=Carapace_mm, y = CL_residuals, color = as.factor(Shell_hardness)
 #Confusion Matrix with the ovary samples
 #
 
-
-
-
-b36 = subset(b,LFA=='36')
-pal =c("#75D7E8","#828289")
-LF36<-ggplot()+
-  geom_histogram(data=b36,aes(x=Carapace_mm, fill=as.character(Pleopod_mat), group=Pleopod_mat), alpha=0.6,position = 'identity', bins=60)+
-  geom_vline(xintercept=82.5, colour="#F02C2C", lty=2)+
-  xlab("Carapace Length (mm)")+
-  ylab("Count")+
-  scale_y_continuous(limits=c(0,100), expand = c(0, 0)) +
-  #scale_x_continuous(limits=c(40,160), expand = c(0, 0))+
-  scale_fill_manual(values=pal, labels = c("Immature", "Mature"), aes(fill ="Maturity Status"))+
-  facet_wrap(~year)+
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
-        text=element_text(size=15),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank())
-
-
-
-b38 = subset(b,LFA=='38')
-pal =c("#75D7E8","#828289")
-LF38<-ggplot()+
-  geom_histogram(data=b38,aes(x=Carapace_mm, fill=as.character(Pleopod_mat), group=Pleopod_mat), alpha=0.6,position = 'identity',bins=60)+
-  geom_vline(xintercept=82.5, colour="#F02C2C", lty=3)+
-  xlab("Carapace Length (mm)")+
-  ylab("Count")+
-  scale_y_continuous(limits=c(0,100), expand = c(0, 0)) +
- # scale_x_continuous(limits=c(0,170),expand = c(0, 0))+
-  scale_fill_manual(values=pal, labels = c("Immature", "Mature"), aes(fill ="Maturity Status"))+
-  facet_wrap(~year)+
-  theme_bw() +
-  theme(axis.line = element_line(colour = "black"),
-        text=element_text(size=15),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank())
-
-plot_grid(LF36, LF38, labels = c("36","38"), ncol=1)
-
-
-
 b33 = subset(b,LFA=='33')
 pal =c("#75D7E8","#828289")
 LF33<-ggplot()+
   geom_histogram(data=b33,aes(x=Carapace_mm, fill=as.character(Pleopod_mat), group=Pleopod_mat), alpha=0.6,position = 'identity',bins=70)+
-  geom_vline(xintercept=82.5, colour="#F02C2C", lty=3)+
+  geom_vline(xintercept=82.5, colour="#F02C2C", lty=2,lwd=0.8)+
+  geom_vline(xintercept=90.3, colour="blue", lty=3, lwd=0.8)+
   xlab("Carapace Length (mm)")+
   ylab("Count")+
   scale_y_continuous(limits=c(0,50), expand = c(0, 0)) +
@@ -136,6 +95,52 @@ LF33<-ggplot()+
         panel.background = element_blank())
 
 plot_grid(LF36, LF38, labels = c("33"), ncol=1)
+LF33+  geom_text()+ annotate("text", label="LFA 33", x=55,y=45,size = 4, col="black")
+
+
+b36 = subset(b,LFA=='36')
+pal =c("#75D7E8","#828289")
+LF36<-ggplot()+
+  geom_histogram(data=b36,aes(x=Carapace_mm, fill=as.character(Pleopod_mat), group=Pleopod_mat), alpha=0.6,position = 'identity', bins=60)+
+  geom_vline(xintercept=82.5, colour="#F02C2C", lty=2,lwd=0.8)+
+  geom_vline(xintercept=88.8, colour="blue", lty=3,lwd=0.8)+
+  xlab("Carapace Length (mm)")+
+  ylab("Count")+
+  scale_y_continuous(limits=c(0,100), expand = c(0, 0)) +
+  #scale_x_continuous(limits=c(40,160), expand = c(0, 0))+
+  scale_fill_manual(values=pal, labels = c("Immature", "Mature"), aes(fill ="Maturity Status"))+
+  facet_wrap(~year)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        text=element_text(size=15),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+LF36<-LF36+  geom_text()+ annotate("text", label="LFA 36", x=55,y=95,size = 4, col="black")
+
+
+b38 = subset(b,LFA=='38')
+pal =c("#75D7E8","#828289")
+LF38<-ggplot()+
+  geom_histogram(data=b38,aes(x=Carapace_mm, fill=as.character(Pleopod_mat), group=Pleopod_mat), alpha=0.6,position = 'identity',bins=60)+
+  geom_vline(xintercept=82.5, colour="#F02C2C", lty=2,lwd=0.8)+
+  geom_vline(xintercept=88.5, colour="blue", lty=3,lwd=0.8)+
+  xlab("Carapace Length (mm)")+
+  ylab("Count")+
+  scale_y_continuous(limits=c(0,100), expand = c(0, 0)) +
+ # scale_x_continuous(limits=c(0,170),expand = c(0, 0))+
+  scale_fill_manual(values=pal, labels = c("Immature", "Mature"), aes(fill ="Maturity Status"))+
+  facet_wrap(~year)+
+  theme_bw() +
+  theme(axis.line = element_line(colour = "black"),
+        text=element_text(size=15),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+LF38<-LF38+  geom_text()+ annotate("text", label="LFA 38", x=55,y=95,size = 4, col="black")
+
+plot_grid(LF36, LF38,ncol=1,nrow=2)
+
+
+
 
 
 
@@ -210,8 +215,8 @@ L38_22<-b[b$LFA== 38 & b$year ==2022, ]
 L38_22 = st_as_sf(L38_22,coords=c('X','Y'),crs=4326)
 
 
-b1 = st_as_sf(b,coords=c('X','Y'),crs=4326)
-g=ggLobsterMap(ylim=c(44,45.5),xlim=c(-67.25,-65))
+b1 = st_as_sf(L33_22,coords=c('X','Y'),crs=4326)
+g<-ggLobsterMap( ylim=c(42.5,44.8),xlim=c(-65.8,-62.2))
 g<-g+geom_sf(data=b1)
 g
 #g<-g +geom_sf(data=bsubset of each dataframe) ## add each layer with own aes()
@@ -226,11 +231,11 @@ points <- st_sfc(st_point(cbind(runif(10), runif(10))))
 point_data <- st_sf(geometry = points)
 
 # Create a convex hull around the point data
-convex_hull <- st_convex_hull(st_union(L36_23))
+convex_hull <- st_convex_hull(st_union(L33_22))
 
 # Plot the points and the convex hull
 ggplot() +
-  geom_sf(data = L36_23, color = "red") +
+  geom_sf(data =L33_22, color = "red") +
   geom_sf(data = convex_hull, fill = "transparent", color = "blue") +
   labs(title = "Convex Hull around Point Data")
 
