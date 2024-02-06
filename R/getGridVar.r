@@ -46,7 +46,8 @@ getGridVar = function(variable="DEPTH",source = c("atSea","FSRS"),grids){
 	    if(variable=="DEPTH"){
 
 			p = spatial_parameters( type = "canada.east" ) 
-			grids.dat = lonlat2planar(grids.dat, input_names=c("X", "Y"),proj.type = p$internal.projection)
+			#grids.dat = lonlat2planar(grids.dat, input_names=c("X", "Y"),proj.type = p$internal.projection)
+			grids.dat = lonlat2planar(grids.dat, input_names=c("X", "Y"))
 			load(file.path(project.datadirectory("bio.lobster"),"bathymetry","bathymetry.complete.canada.east.rdata"))
 			Complete = Z
 			# identify locations of data relative to baseline for envionmental data
