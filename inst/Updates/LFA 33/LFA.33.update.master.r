@@ -61,6 +61,7 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		
 		
 		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(p$current.assessment.year),graphic='R')$annual.data
+	
 		crd = subset(cpueData,LFA==33,c("YEAR","CPUE"))
 		crd = crd[is.finite(crd$CPUE),]
 		mu = median(crd$CPUE[crd$YEAR %in% c(1990:2016)])

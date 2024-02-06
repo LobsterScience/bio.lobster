@@ -34,7 +34,8 @@ spatial_parameters = function( p=NULL, type=NULL ) {
     p$nlons = ceiling( diff(range(c(p$lon0,p$lon1)))/p$dres) + 1
     p$nlats = ceiling( diff(range(c(p$lat0,p$lat1)))/p$dres) + 1
     p$corners = data.frame(lon=c(p$lon0,p$lon1), lat=c(p$lat0,p$lat1))
-    p$corners = lonlat2planar( p$corners, proj.type=p$internal.projection )
+    #p$corners = lonlat2planar( p$corners, proj.type=p$internal.projection )
+    p$corners = lonlat2planar( p$corners)
     p$corners$plon = round( p$corners$plon, p$psignif)  # this matches the p$pres value of x km resolution
     p$corners$plat = round( p$corners$plat, p$psignif)  # this matches the p$pres value of x km resolution
     plons = seq(min(p$corners$plon), max(p$corners$plon), by=p$pres)
