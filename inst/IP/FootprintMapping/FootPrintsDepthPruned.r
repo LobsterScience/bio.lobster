@@ -288,6 +288,7 @@ makeNewFootPrints(x='38',data=gTot)
 makeNewFootPrints(x='311',data=gTot)
 makeNewFootPrints(x='312',data=gTot)
 
+### this is for Ben's Fiona Wind
 r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
 
 b=subset(r,LFA %in% c(27,28,29,30,311,312,32))
@@ -303,7 +304,6 @@ ggplot(b)+
        
 
 
-###
 gTot$CPUE = gTot$Landings/gTot$TrapHauls
 g27p = subset(gTot, FishingYear%in%2022:2023)
 
