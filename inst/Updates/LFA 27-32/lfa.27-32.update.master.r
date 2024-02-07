@@ -1,7 +1,7 @@
-p = bio.lobster::load.environment()
+require(bio.lobster)
 require(SpatialHub)
 require(lubridate)
-
+p = bio.lobster::load.environment()
 #la()
 
 #Choose one
