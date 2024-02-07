@@ -9,23 +9,24 @@ cS1 = rescale0_1(catchability)
 temp3 = c(1.94,5.01,7.97,10,15,20,22,25)
 walk = c(7.1,9.5,13.75,16.4,17.7,16.45,21.9,23.5)
 
-reg = rlm(walk~temp3)
+reg = MASS::rlm(walk~temp3)
 
 #palheimo 1963--- used McLeese and Wilder data
-#temp2 = c(3.90,3.39,3.77,6.63,8.18,7.58,9.36,11.29,11.56)
-#ca2 = c(0.12,0.46,0.87,2.94,3.03,3.56,5.01,5.03,4.47)
-#cS2 = rescale0_1(ca2)
+temp2 = c(3.90,3.39,3.77,6.63,8.18,7.58,9.36,11.29,11.56)
+ca2 = c(0.12,0.46,0.87,2.94,3.03,3.56,5.01,5.03,4.47)
+cS2 = rescale0_1(ca2)
 
 
 pre = readRDS(file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))
 pre$preds = rescale0_1(pre$pred)
 
 
-plot(pre$Temperature,pre$pred,xlim=c(0,23),type='l',col='black',lwd=3,ylab='Temperature Catchability',xlab='Temperature')
+plot(pre$Temperature,pre$preds,xlim=c(0,23),type='l',col='black',lwd=3,ylab='Temperature Catchability',xlab='Temperature')
 par(new=T)
 #plot(temp,catchability,xlim=c(0,23),yaxt='n',col='red',xlab="",ylab="",pch=16)
 par(new=T)
 plot(temp3,walk,xlim=c(0,23),yaxt='n',col='blue',xlab="",ylab="",pch=16)
 #abline(reg,col='blue')
+legend('topleft',c('Marginal temperature effects','Walking Rate'),pch=c(-1,16),lwd=c(2,-1),col=c('black',"blue"))
 #par(new=T)
-#plot(temp2,ca2,xlim=c(-5,22),yaxt='n',col='green',xlab="",ylab="",pch=16)
+#plot(temp2,cS2,xlim=c(0,23),yaxt='n',col='green',xlab="",ylab="",pch=16)
