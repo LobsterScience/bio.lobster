@@ -11,27 +11,28 @@ wd = ('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\CanUsCollabEffortMapping')
 setwd(wd)
 
 
+
 layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps")
 r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
 r = st_as_sf(r)
 
 a =  lobster.db('process.logs')
-a = subset(a,SYEAR>2004 & SYEAR<2023)
+a = subset(a,SYEAR>2004 & SYEAR<2024)
 b = lobster.db('seasonal.landings')
 b = subset(b,!is.na(SYEAR))
-b$SYEAR = 1976:2023
+b$SYEAR = 1976:2024
 b$LFA38B <- NULL
-b = subset(b,SYEAR>2004 & SYEAR<2023)
+b = subset(b,SYEAR>2004 & SYEAR<2024)
 b = reshape(b,idvar='SYEAR', varying=list(2:6),direction='long')
-b$LFA=rep(c(33,34,35,36,38),each=18)
+b$LFA=rep(c(33,34,35,36,38),each=19)
 b$time <- NULL
 names(b)[1:2]=c('YR','SlipLand')
 
 
 d = lobster.db('annual.landings')
-d = subset(d,YR>2004 & YR<2023, select=c(YR,LFA27,LFA28,LFA29,LFA30,LFA31A,LFA31B,LFA32))
+d = subset(d,YR>2004 & YR<2024, select=c(YR,LFA27,LFA28,LFA29,LFA30,LFA31A,LFA31B,LFA32))
 d = reshape(d,idvar='YR', varying=list(2:8),direction='long')
-d$LFA=rep(c(27,28,29,30,'31A','31B',32),each=18)
+d$LFA=rep(c(27,28,29,30,'31A','31B',32),each=19)
 d$time <- NULL
 names(d)[1:2]=c('YR','SlipLand')
 bd = rbind(d,b)
@@ -111,7 +112,7 @@ saveRDS(partLandings,'DiscretizedData/LandingsWithinGridandWeek.rds')
 ##Licenses By Grid and Week
 
 g = lobster.db('process.logs')
-g = subset(g,SYEAR>2004 & SYEAR<2023)
+g = subset(g,SYEAR>2004 & SYEAR<2024)
 
 gg = aggregate(SD_LOG_ID~LFA+WOS+GRID_NUM+SYEAR,data = g,FUN=function(x) length(unique(x)))
 
@@ -135,7 +136,13 @@ Tot2 =aggregate(cbind(TrapHauls,Landings,Trips)~FishingYear+LFA+Grid+W2,data=Tot
 sTot = subset(Tot2,Trips>4)
 saveRDS(sTot,'DiscretizedData/PrivacyScreened_TrapHauls_Landings_Trips_GridandTwoWeekIntervals.rds')
 
+##annual
 
+ann = aggregate(cbind(TrapHauls,Landings,Trips)~LFA+FishingYear,data=Tot,FUN=sum)
+ann = subset(ann,LFA %ni% 28)
+saveRDS(ann,file='TrapHauls_Landings_Trips_annual.rds')
+g = lobster.db('licence_categories')
+g = subset(g,LFA %ni% c('38B',41))
 ##############################################################################################
 #by Port#
 

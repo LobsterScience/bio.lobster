@@ -64,40 +64,84 @@ go3a = gam(Ref~LFA+YEAR+(Temperature)+ti(Legal)+ti(Temperature,Legal),data=a,off
 go4 = gam(Ref~LFA+YEAR+ti(Temperature)+ti(wt)+ti(Temperature,wt),data=a,offset=(log(UID)),family='nb')
 go5 = gam(Ref~LFA+YEAR+(Temperature)+ti(wt)+ti(Temperature,wt),data=a,offset=(log(UID)),family='nb')
 
-gp = predict(go3a,type='lpmatrix')
+gp = predict(go3,type='lpmatrix')
 nm =  grep('Temp',dimnames(gp)[[2]])
 
 require(ggeffects)
-
-mydf <- ggpredict(go5, terms = c('Temperature'))
-plot(mydf)
-
+#these are conditional effects of temp -- all others held at some variable
 mydf <- ggpredict(go3, terms = c('Temperature'))
 plot(mydf)
-
-mydf <- ggpredict(go4, terms = c('wt'))
+mydf <- ggpredict(go3, terms = c('Legal'))
 plot(mydf)
 
-mydf <- ggpredict(go5, terms = c('Temperature'))
+
+#these are marginal effects of temp all others held at the mean
+mydf <- ggemmeans(go3, terms = c('Temperature [0:19 by=.5]'))
 plot(mydf)
+
+mydfL <- ggemmeans(go3, terms = c('Legal'))
+ plot(mydfL)
 
 
 require(ggplot2)
 ggplot(mydf, aes(x = x, y = predicted)) +
   geom_line() +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)+
-  facet_wrap(~group)+
   xlab('Temperature')+
   ylab('Marginal Catchability')
 
-newd = data.frame(Temperature=seq(0,23,.2),Legal=10,LFA=27,YEAR=as.factor(2021))
-myf <- ggpredict(go3a, terms = c("Temperature"),newdata=newd,full.data=F)
-ggplot(myf, aes(x = x, y = predicted)) +
-  geom_line() +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)
-
-newd = data.frame(Temperature=seq(0,23,.1),Legal=10,LFA=33,YEAR=as.factor(2021))
-newd$pred = predict(go3,type='response',newdata = newd)
-  pre = subset(newd,select=c(Temperature, pred))
-
+pre =  as.data.frame(mydf)
+names(pre)[1] = 'Temperature'
+pre$group = NULL
 saveRDS(pre,file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))
+pre = readRDS(file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))
+
+
+##application for LFA 31A
+
+#applying temp corrections
+
+g = lobster.db('process.logs')
+g = subset(g,LFA=='31A')
+
+cc= subset(cd,LFA %in% c('31a'))
+ga = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~DATE_FISHED+DOS,data=g,FUN=sum)
+ca = aggregate(Temperature~DATE,data=cc,FUN=mean)
+
+cam = merge(ga,ca,by.x='DATE_FISHED',by.y='DATE')
+
+caam = aggregate(Temperature~DOS,data=cam,FUN=mean)
+names(caam)[2] = 'C_temp'
+
+cama = merge(caam,cam)
+cama$C_temp = round(cama$C_temp*2)/2
+cama$Temperature = round(cama$Temperature*2)/2
+
+camT = merge(cama, pre[,c('Temperature','predicted')],by.x='C_temp',by.y='Temperature')
+names(camT)[ncol(camT)]='C_predicted'
+
+camT = merge(camT, pre[,c('Temperature','predicted')],by.x='Temperature',by.y='Temperature')
+names(camT)[ncol(camT)]='predicted'
+
+percent_diff <- function(row) {
+  abs_diff <- (row[1] - row[2])
+  mean_val <- mean(row)
+  percent_diff <- (abs_diff / mean_val) * 100
+  return(percent_diff)
+}
+
+camT$percD = apply(camT[,c('predicted','C_predicted')],1,percent_diff)
+
+camT$CPUE = camT$WEIGHT_KG/camT$NUM_OF_TRAPS
+camT$YR = year(camT$DATE_FISHED)
+camT$t_CPUE = camT$CPUE+(camT$CPUE*camT$percD/100)
+require(ggplot2)
+
+ggplot(camT,aes(x=DOS,y=CPUE))+geom_point()+geom_smooth()+facet_wrap(~YR)
+ggplot(camT,aes(x=DOS,y=CPUE))+
+  geom_point()+
+  geom_smooth()+
+  geom_smooth(data=camT,aes(x=DOS,y=t_CPUE),colour='red')+
+  facet_wrap(~YR)
+
+
