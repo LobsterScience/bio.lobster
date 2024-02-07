@@ -109,7 +109,7 @@ WHERE
 if(DS %in% c('inflation')){
 
       #from https://www.in2013dollars.com/Canada-inflation
-      infl = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inflation_data2022.csv'))
+      infl = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inflation_data.csv'))
       return(infl)
     }
 

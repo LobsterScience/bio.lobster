@@ -12,6 +12,7 @@ setwd(wd)
 
 layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps")
 
+##from inst/IP/FootprintMapping/1.EstimatingTrapHaulsFromSlipsandSplit2Grids.r
 
 Tot = readRDS('DiscretizedData/PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
 Tot$LFA = ifelse(Tot$LFA=='31B',312,Tot$LFA)
@@ -302,3 +303,53 @@ ggplot(b)+
        
 
 
+###
+gTot$CPUE = gTot$Landings/gTot$TrapHauls
+g27p = subset(gTot, FishingYear%in%2022:2023)
+
+ok1 = ggplot(g27p,aes(fill=CPUE))+
+    geom_sf() +
+  scale_fill_distiller(trans='identity',palette='Spectral') +
+  facet_wrap(~FishingYear)+
+#  geom_sf(data=g27n,fill='white')+  
+  geom_sf(data=coa,fill='grey')+
+  geom_sf(data=GrMap,fill=NA)+
+  coord_sf(xlim = c(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax),
+           ylim = c(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax),
+           expand = FALSE)+
+  scale_x_continuous(breaks = c(round(seq(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax,length.out=2),2)))+
+  scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))
+
+gp = subset(g27p,FishingYear==2022)
+gl = subset(g27p,FishingYear==2023)
+
+gl$geometry<- NULL
+
+gg = merge(gp,gl[,c('LFA','GRID_NO','CPUE')],by=c('LFA','GRID_NO'))
+
+
+percent_diff <- function(row) {
+  row$geometry<- NULL
+  
+  abs_diff <- (as.numeric(row[1]) - as.numeric(row[2]))
+  mean_val <- mean(as.numeric(row))
+  percent_diff <- (abs_diff / mean_val) * 100
+  return(percent_diff)
+}
+
+gg$percentChange =  apply(gg[,c('CPUE.y','CPUE.x')],1,percent_diff)
+
+
+require(colorspace)
+ ggplot(subset(gg,PrivacyScreen==1),aes(fill=percentChange))+
+  geom_sf() +
+  scale_fill_continuous_diverging(palette='Purple-Green') +
+  #facet_wrap(~FishingYear)+
+  #  geom_sf(data=g27n,fill='white')+  
+  geom_sf(data=coa,fill='grey')+
+  geom_sf(data=GrMap,fill=NA)+
+  coord_sf(xlim = c(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax),
+           ylim = c(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax),
+           expand = FALSE)+
+  scale_x_continuous(breaks = c(round(seq(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax,length.out=2),2)))+
+  scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))
