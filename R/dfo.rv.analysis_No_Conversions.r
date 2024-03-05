@@ -1,4 +1,4 @@
-#' @title dfo.rv.analysis
+#' @title dfo.rv.analysis_No_Conversions
 #' @description Stratified analysis of DFO lobster data with bootstrapped resampling and set-up the data for sensitivity analysis
 #' @param \code{DS} :the selection of analysis, options include \code{stratified.estimates}
 #' @param \code{out.dir} : specify the location of data saves, default is null and uses the project.datadirectory function as default
@@ -13,7 +13,7 @@
 
 
 
-dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,save=T) {
+dfo.rv.analysis_No_Conversions <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,save=T) {
     loc = file.path( project.datadirectory(out.dir), "analysis" )
 
     dir.create( path=loc, recursive=T, showWarnings=F )
@@ -95,21 +95,31 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
              return(out)
              }
 
-        o = groundfish.db('gs_trawl_conversions')
-        set = o$gsinf
-        cas = o$gscat
+  
+        set = groundfish.db(DS='gsinf.odbc')
+        cas = groundfish.db(DS='gscat.odbc')
         stra = groundfish.db(DS='gsstratum')
-        de = o$gsdet
-        
+        de = groundfish.db(DS='gsdet.odbc')
+        de = bio.utilities::toNums(de,2:10)
+        cas = bio.utilities::toNums(cas,2:8)
         set$X = convert.dd.dddd(set$slong) *-1
         set$Y = convert.dd.dddd(set$slat)
-
-        stra$NH = as.numeric(stra$area)*3.4299 #square NM to square km
-        ii = which(months(set$sdate) %in% mns & set$strat %in% strat & set$type %in% c(1,5) & set$gear %in% c(3,9,15))
+  
+    
+        
+        stra$NH = as.numeric(stra$area)/0.011801
+        ii = which(months(set$sdate) %in% mns & set$strat %in% strat & set$type %in% c(1,5) & set$gear %in% c(3,9))
+        print('Both set types 1 and 5 are saved in data frame but only 1 is used for stratified')
         set = set[ii,]
 
-        cas = subset(cas,spec==2550)
-    strata.files = list()
+        io = which(is.na(cas$totwgt) | cas$totwgt==0 & cas$totno>0)
+        cas[io,'totwgt'] <- 1
+        io = which(is.na(cas$totno) & !is.na(cas$totwgt))
+        cas[io,'totno'] = cas[io,'totwgt']/0.806 #mean weight of individual per tow taken from 1999 to 2015
+
+        io = which(is.na(cas$sampwgt) & !is.na(cas$totwgt))
+        cas[io,'sampwgt'] <- cas[io,'totwgt']
+        strata.files = list()
     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA,gini = NA,gini.lo =NA, gini.hi=NA,df.yst=NA)
   big.out = matrix(NA,nrow=p$nruns,ncol=length(seq(0.01,0.99,0.01))+1)
    
@@ -123,7 +133,7 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
             mp = mp+1
             yr = p$runs[iip,"yrs"]
             print ( p$runs[iip,] )
-            iy = which(lubridate::year(set$sdate) %in% yr)
+            iy = which(year(set$sdate) %in% yr)
             iv = which(cas$spec==2550)
 pi='base'
 
@@ -135,12 +145,12 @@ pi='base'
                        l = l41[which(l41$OFFAREA == p$area),]
                     } else {
                           print('All LFA41 subsetted by LFA Area')
-                          l41 = PBSmapping::joinPolys(as.PolySet(l41),operation='UNION')
+                          l41 = joinPolys(as.PolySet(l41),operation='UNION')
                         attr(l41,'projection') <- 'LL'
                         l41 = subset(l41, SID==1)
                     }
                         set$EID = 1:nrow(set)
-                        a = PBSmapping::findPolys(set,l)
+                        a = findPolys(set,l)
                        iz = which(set$EID %in% a$EID)
                        if(p$area=='adjacentLFA41') { 
                                   iz = which(set$EID %ni% a$EID)
@@ -153,7 +163,7 @@ pi='base'
                       l = l41 = subset(LFAs,PID==40)
                      attr(l41,'projection') <- 'LL'
                      set$EID = 1:nrow(set)
-                     a = PBSmapping::findPolys(set,l)
+                     a = findPolys(set,l)
                        iz = which(set$EID %in% a$EID)
                     }
           if(p$area %in% c('LFA34','LFA35','LFA36','LFA38','LFA35-38')) {
@@ -164,7 +174,7 @@ pi='base'
                         l = subset(LFAs,SID==1)
                         attr(l,'projection') <- "LL"
                         set$EID = 1:nrow(set)
-                        a = PBSmapping::findPolys(set,l)
+                        a = findPolys(set,l)
                        iz = which(set$EID %in% a$EID)
                     }} else {
                               iz = which(set$strat %in% c(strat))
@@ -183,6 +193,7 @@ pi='base'
         if(!p$lb) { vars.2.keep =c('mission','setno','totwgt','totno','size_class','spec')
                     ca = ca[,vars.2.keep]
                 }
+#browser()
 
         if(p$length.based){
                   dp = de[which(de$spec %in% 2550),]
@@ -192,19 +203,14 @@ pi='base'
                   flf = p$size.class[1]:p$size.class[2]
                   dp$clen2 = ifelse(dp$flen %in% flf,dp$clen,0)
 
-              if(p$by.sex){
-                iii  = which(is.na(dp$fsex) )
-                dp$fsex[iii] = 0
-               dp$clen2 = ifelse(dp$fsex %in% p$sex, dp$clen2, 0)
-              }
+              if(p$by.sex) dp$clen2 = ifelse(dp$fsex %in% p$sex, dp$clen2, 0)
+
               if(any(!is.finite(dp$fwt))) {
                   io = which(!is.finite(dp$fwt))
-                  lobLW1 <- function(row) {
-                    lobLW(CL=row[1],sex=row[2])
+                  fit = nls(fwt~a*flen^b,de[which(de$spec==2550 & is.finite(de$fwt)),],start=list(a=0.001,b=3.3))
+                  ab = coef(fit)
+                  dp$fwt[io] = ab[1]*dp$flen[io]^ab[2]
                   }
-                  dp$fwt[io] = apply(dp[io,c('flen','fsex')],1,lobLW1) 
-              }
-                  
                   dp$pb = dp$fwt * dp$clen
                   dp$pb1 = dp$fwt * dp$clen2
 
@@ -220,13 +226,30 @@ pi='base'
                   ca1$totno = ca1$totno * ca1$pn
                   vars.2.keep =c('mission','setno','totwgt','totno','size_class','spec')
                   ca = ca1[,vars.2.keep]
-            
-                }
+              }
+                      if(p$vessel.correction) {
+                            ca$id = ca$mission
+                  if(!exists('vessel.correction.fixed',p)) {
+                            ca = correct.vessel(ca)
+                            ca$totwgt = ca$totwgt * ca$cfvessel
+                            ca$totno = ca$totno * ca$cfvessel
+                            print('Totno and Totwgt are adjusted by Fannings Conversion Factors')
+				}
+                   if(exists('vessel.correction.fixed',p) & yr %in% 1970:1981) {
+                              ca$totwgt = ca$totwgt * p$vessel.correction.fixed
+                              ca$totno = ca$totno * p$vessel.correction.fixed
+                              print(paste('Totno and Totwgt are adjusted by Conversion Factor of',p$vessel.correction.fixed))
+                           } else {
+                             print('Into Needler Years No Need for Vessel Correction')
+                           }
+                           }
              
                            if(nrow(ca)>=1) {
-                          ca = aggregate(cbind(totwgt,totno)~mission+setno,data=ca,FUN=sum)
+		                      ca = aggregate(cbind(totwgt,totno)~mission+setno,data=ca,FUN=sum)
                           sc = merge(se,ca,by=c('mission','setno'),all.x=T)
-                          sc[,c('totwgt','totno')] = bio.utilities::na.zero(sc[,c('totwgt','totno')])
+                          sc[,c('totwgt','totno')] = na.zero(sc[,c('totwgt','totno')])
+                          sc$totno = sc$totno * 1.75 / sc$dist
+                          sc$totwgt = sc$totwgt * 1.75 / sc$dist
                           io = which(stra$strat %in% unique(sc$strat))
                           st = stra[io,c('strat','NH')]
                           st = st[order(st$strat),]
@@ -239,12 +262,9 @@ pi='base'
                           if(nrow(sc)>0){
                           st = Prepare.strata.file(st)
                           sc1= sc
-                          if(yr>2019) sc = sc[which(sc$type %in% 1:5),]
-                          if(yr<=2019) sc = sc[which(sc$type %in% 1),]
-                          
+                          sc = sc[which(sc$type==1),]
                           sc = Prepare.strata.data(sc)
                           strata.files[[mp]]  = list(st,sc1)
-                          
                   sW = Stratify(sc,st,sc$totwgt)
                   sN = Stratify(sc,st,sc$totno)
                   ssW = summary(sW)

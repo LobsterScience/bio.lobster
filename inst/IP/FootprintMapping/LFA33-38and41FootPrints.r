@@ -52,7 +52,7 @@ ggplot(b)+
 
 
 gTot$CPUE = gTot$Landings/gTot$TrapHauls
-g27p = subset(gTot, LFA%in% 33:38 & FishingYear%in%2022:2023)
+g27p = subset(gTot, LFA%in% 33:38 & FishingYear%in%2016:2023)
 
 ok1 = ggplot(g27p,aes(fill=CPUE))+
   geom_sf() +
@@ -67,7 +67,7 @@ ok1 = ggplot(g27p,aes(fill=CPUE))+
   scale_x_continuous(breaks = c(round(seq(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax,length.out=2),2)))+
   scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))
 
-gl = subset(g27p,FishingYear==2022)
+gl = subset(g27p,FishingYear==2016)
 gp = subset(g27p,FishingYear==2023)
 
 gl$geometry<- NULL

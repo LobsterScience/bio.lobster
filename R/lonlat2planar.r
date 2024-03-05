@@ -5,10 +5,10 @@
     #\\ output scale is defined in the +units=km (default for bio) or +units=m (default for proj)
 
     # first try an internal conversion /lookup for CRS  
-    proj4.params = try(CRS("+init=epsg:32620"), silent=TRUE )
+    proj4.params = try(sp::CRS("+init=epsg:32620"), silent=TRUE )
     
     
-    crsX = CRSargs( proj4.params)
+    crsX = rgdal::CRSargs( proj4.params)
     if ( ! grepl("units", crsX) ) {
       print (crsX)
       stop( "The proj4 CRS requires an explicit +units=km ")

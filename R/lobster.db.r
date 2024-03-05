@@ -1425,19 +1425,13 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       if (DS=="survey.redo") {
         Sys.setenv(TZ = "America/Halifax")
         # survey
-        #ILTS2016TowDepth = connect.command(con, "select * from FRAILC.MARPORT_DEPTH")
-        #ILTS2016TowSpread = connect.command(con, "select * from FRAILC.MARPORT_SPREAD")
-        #ILTS2016Tracks = connect.command(con, "select * from FRAILC.MARPORT_TRACKS")
-        #ILTSTemp = connect.command(con, "select * from FRAILC.MINILOG_TEMP")
-        ILTSTemp = connect.command(con, "select * from lobster.ILTS_TEMPERATURE")
+        
+         ILTSTemp = connect.command(con, "select * from lobster.ILTS_TEMPERATURE")
         ILTSSensor = connect.command(con, "select * from lobster.ILTS_SENSORS")
         ILTSClick =  connect.command(con, "select * from lobster.ILTS_CLICKTOUCH")
         ILTSClickComp =  connect.command(con, "select * from lobster.ILTS_CLICKTOUCH_COMP")
         ILTSOlextracks = connect.command(con, "select * from lobster.ILTS_OLEXTRACKS")
-        #ILTS2016Tracks = ILTS2016Tracks[order(ILTS2016Tracks$TTIME),]
-        #NM1 = merge(ILTSTowDepth,ILTSTowSpread) #merge net mensuration into one file
-        #netMensuration = merge( NM1,ILTS2016Tracks)#merge net mensuration into one file
-        #netMensuration$TTIME = NULL #remove load date from merged file
+        ILTSOlex = connect.command(con, "select * from lobster.ILTS_OLEX")
         surveyCatch = connect.command(con, "select * from lobster.ILTSSETS_MV")
         surveyMeasurements = connect.command(con, "select * from lobster.ILTSDETAILS_MV")
         fishMeasurements = connect.command(con, "select * from lobster.ILTSFISHLENGTHS_MV")
@@ -1464,12 +1458,12 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         save(ILTSClick, file=file.path(fnODBC, "ILTSClick.rdata"), compress=T)
         save(ILTSClickComp, file=file.path(fnODBC, "ILTSClickComp.rdata"), compress=T)
         save(ILTSOlextracks, file=file.path(fnODBC, "ILTSOlextracks.rdata"), compress=T)
+        save(ILTSOlex, file=file.path(fnODBC, "ILTSOlex.rdata"), compress=T)
         
         #   save(surveyStationID, file=file.path(fnODBC, "surveyStationID.rdata"), compress=T)
 
         gc()  # garbage collection
       }
-      load(file.path( fnODBC, "MarPort2016.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyCatch.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "surveyMeasurements.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "fishMeasurements.rdata"), .GlobalEnv)
@@ -1478,6 +1472,8 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
       load(file.path( fnODBC, "ILTSClick.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "ILTSClickComp.rdata"), .GlobalEnv)
       load(file.path( fnODBC, "ILTSOlextracks.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "ILTSOlex.rdata"), .GlobalEnv)
+      load(file.path( fnODBC, "MarPort2016.rdata"), .GlobalEnv)
       
       load(file.path( fnODBC, "surveyStationID.rdata"), .GlobalEnv)
 

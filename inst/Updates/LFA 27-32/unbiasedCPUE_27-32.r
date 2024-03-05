@@ -48,6 +48,7 @@ ggplot(cc2,aes(x=yr,y=CPUE))+geom_point()+
   geom_line(aes(x=yr,y=mCPUE),colour='red',size=1.1)+facet_wrap(~lfa,scales='free_y')+geom_point(data=subset(cc2,yr==2023),aes(x=yr,y=CPUE),colour='orange',shape=16,size=2)
 
 ##by week
+a = subset(a,SYEAR>2007)
 aa = split(a,f=list(a$LFA,a$SYEAR))
 cpue.lst<-list()
 m=0
@@ -59,14 +60,22 @@ cpue.lst<-list()
 #by time
 for(i in 1:length(aa)){
   tmp<-aa[[i]]
+ # if(unique(tmp$LFA)=='27' & unique(tmp$SYEAR==2021)) browser()
+  
   tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
   names(tmp)<-c('time','catch','effort')
   tmp$date<-as.Date(tmp$time)
   first.day<-min(tmp$date)
   tmp$time<-julian(tmp$date,origin=first.day-1)
   tmp = tmp[order(tmp$time),]
-  tmp$time = ceiling(tmp$time/7) #convert to week of season
-  g<-as.data.frame(biasCorrCPUE(tmp,by.time=T,min.sample.size = 5))
+  #tmp$time = ceiling(tmp$time/7) #convert to week of season
+  
+  if(nrow(subset(tmp,time==1))<5){
+    l = which(tmp$time==1)
+    tmp$time[l]=2
+    tmp$time = tmp$time-1
+  }
+  g<-as.data.frame(biasCorrCPUE(tmp,by.time=T,min.sample.size = 1))
   g$lfa=unique(aa[[i]]$LFA)
   g$yr = unique(aa[[i]]$SYEAR)
   # g = t(g)[,1]
