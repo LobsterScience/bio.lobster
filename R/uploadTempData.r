@@ -21,6 +21,8 @@ uploadTempData <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisn
             datafile$SOURCE = ifelse(!is.null(source),source, NA)
             datafile$UTCDATE = as.Date(datafile$UTCDATE)
             datafile$SET_NO = NA
+            datafile$UTCTIME =  gsub(":","",datafile$UTCTIME)
+            datafile$STDTIME =  gsub(":","",datafile$STDTIME)
         }
       if(!is.null(idSets)){
         se = dbGetQuery(conn=con, statement = paste("select trip_id, set_no, min(starttime) starttime, min(endtime) endtime, min(setdate) setdate

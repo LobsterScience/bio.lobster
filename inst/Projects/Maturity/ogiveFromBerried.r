@@ -178,7 +178,8 @@ for(i in 1:length(so)){
 somR = as.data.frame(do.call(rbind,oi))
 
 write.csv(som,file.path(project.datadirectory('bio.lobster'),'data','SoMFromBerried_Mar2024.csv'))
+som = read.csv(file.path(project.datadirectory('bio.lobster'),'data','SoMFromBerried_Mar2024.csv'))
 
 require(ggplot2)
-ggplot(somR,aes(x=SYR,y=minBerr)) +geom_point() + geom_line()+facet_wrap(~LFA,scales='free_y')+ylim(c(40,100))
+ggplot(somR,aes(x=SYR,y=Som50)) +geom_point() + geom_line()+facet_wrap(~LFA,scales='free_y')+ylim(c(40,105))
 

@@ -228,9 +228,27 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
   sC = surveyCatch
 	sC = subset(sC, HAULCCD_ID %in% c(1))
 	sC = subset(sC,select=c(TRIP_ID, SET_NO, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SPECCD_ID, NUM_CAUGHT, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, WEIGHT_KG))
+	browser()
+	sC$ID = paste(sC$TRIP_ID,sC$SET_NO,sep="_")
+	ILTSTemp$ID = paste(ILTSTemp$TRIP_ID,ILTSTemp$SET_NO,sep="_")
 	
-  temp = aggregate(TEMPC~TRIP_ID+SET_NO,data=ILTSTemp, FUN=median)
-  sC = merge(sC,temp,all.x=T)
+	sCa = as.data.frame(unique(subset(sC,!is.na(STARTTIME) | !is.na(ENDTIME), select=c(ID,STARTTIME,ENDTIME))))
+	ot = list()
+	for(i in 1:nrow(sCa)){
+	  tt = subset(ILTSTemp,ID==sCa$ID[i])
+	  ww = sCa[i,]
+	  if(nrow(tt)<5) next
+	  tt$st = strptime((tt$UTCTIME),"%H%M%S")
+	  ww$st = strptime(sCa$STARTTIME[i],"%H%M%S")
+	  ww$et = strptime(sCa$ENDTIME[i],"%H%M%S")
+	  
+	  tt1 = subset(tt,st>=ww$st & st<=ww$et)
+	  ww$temp = median(tt1$TEMPC,na.rm=T)
+	  ot[[i]] = ww
+	}
+	temp = as.data.frame(do.call(rbind,ot))
+	sC = merge(sC,temp[,c('ID','temp')],all.x=T)
+  sC$ID = NULL
   
   #fill in number caught with avg weight_kg and abundance
   ii = which(is.na(sC$NUM_CAUGHT) & !is.na(sC$SPECCD_ID))
@@ -289,8 +307,9 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
               }
     
     x = readRDS(outfile)
+    
     x$ID = paste(x$TRIP_ID,x$SET_NO,sep="-")
-     if(is.null(size) & is.null(sex)) xy = subset(x,SPECCD_ID==species)
+   if(is.null(size) & is.null(sex)) xy = subset(x,SPECCD_ID==species)
    if(!is.null(size) & is.null(sex)) xy = subset(x,SPECCD_ID==species & FISH_LENGTH>=size[1] & FISH_LENGTH<=size[2])
    if(!is.null(size) & !is.null(sex)) xy = subset(x,SPECCD_ID==species & FISH_LENGTH>=size[1] & FISH_LENGTH<=size[2] & SEX %in% sex)
    
@@ -311,7 +330,29 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
       ivs$SA_CORRECTED_PRORATED_N = ivs$SA_CORRECTED_PRORATED_N * ivs$flat_Median
       ivs = subset(ivs, select=c(-flat_Median,-Depth))
       xy = bind_rows(ivi,ivs)
-      }
+      
+      ##need to find the proportion of total catch within size range this calculates totals without filtering to sex and size
+        
+        xy2 = subset(x,SPECCD_ID==species & ID %in% unique(xy$ID) ) #same sets
+      
+        iv = subset(xy2, GEAR=='280 BALLOON')
+        ivi = subset(xy2, GEAR!='280 BALLOON')
+        
+        sou = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall_2023.rds'))
+        
+        ivs = merge(iv,sou[,c('Length','Depth','flat_Median')], by.x=c('FISH_LENGTH'),by.y=c('Length'),all.x=T)
+        #non length correct conv (predict(fit)[1]/(1-predict(fit)[1])) = 2.282
+        ivs$flat_Median = ifelse(ivs$FISH_LENGTH==0,2.282,ivs$flat_Median)
+        fl = distinct(subset(ivs,is.na(flat_Median)),FISH_LENGTH)[,1]
+        i = max(subset(ivs,!is.na(flat_Median))$FISH_LENGTH)
+        fl = max(ivs$flat_Median[which(ivs$FISH_LENGTH==i)])
+        ivs$flat_Median[which(ivs$FISH_LENGTH>i & is.na(ivs$flat_Median))] <- fl
+        ivs$SA_CORRECTED_PRORATED_N = ivs$SA_CORRECTED_PRORATED_N * ivs$flat_Median
+        ivs = subset(ivs, select=c(-flat_Median,-Depth))
+        xy2 = bind_rows(ivi,ivs)
+        }
+    
+    
     
    if(aggregate){
      if(biomass){
@@ -319,15 +360,39 @@ ILTS_ITQ_All_Data <-function(x,species=2550,redo_base_data=F,size = NULL, sex=NU
        xy$wt = lobLW(xy$FISH_LENGTH, sex= xy$SEX)/1000
        xy$SA_CORRECTED_PRORATED_N =xy$SA_CORRECTED_PRORATED_N* xy$wt 
        xy$wt <- NULL
-     } 
+       xy2$wt = lobLW(xy2$FISH_LENGTH, sex= xy2$SEX)/1000
+       xy2$SA_CORRECTED_PRORATED_N =xy2$SA_CORRECTED_PRORATED_N* xy2$wt 
+       xy2$wt <- NULL
+     }
+     
      xy = aggregate(cbind(NUM_AT_LENGTH,PRORATED_NUM_AT_LENGTH,SA_CORRECTED_PRORATED_N)~ID,data=xy,FUN=sum) 
       xS = subset(x,(ID) %in% unique(xy$ID))
       xS = xS %>% dplyr::distinct(TRIP_ID,SET_NO,.keep_all = T)
       xS$SPECCD_ID = species
       xS$SA_CORRECTED_PRORATED_N = xS$PRORATED_NUM_AT_LENGTH= xS$SEX = xS$FISH_LENGTH = xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = NULL
       xy = merge(xS,xy)
-    } 
+    
+      browser()
+      xy2 = aggregate(cbind(NUM_AT_LENGTH,PRORATED_NUM_AT_LENGTH,SA_CORRECTED_PRORATED_N)~ID,data=xy2,FUN=sum) 
+      xS2 = subset(x,(ID) %in% unique(xy2$ID))
+      xS2 = xS2 %>% dplyr::distinct(TRIP_ID,SET_NO,.keep_all = T)
+      xS2$SPECCD_ID = species
+      xS2$SA_CORRECTED_PRORATED_N = xS2$PRORATED_NUM_AT_LENGTH= xS2$SEX = xS2$FISH_LENGTH = xS2$NUM_CAUGHT = xS2$NUM_AT_LENGTH = xS2$NUM_MEASURED = xS2$WEIGHT_KG = NULL
+      xy2 = merge(xS2,xy2)
+      xy2 = bio.utilities::rename.df(xy2,'SA_CORRECTED_PRORATED_N','tot')
+      
+      xy = merge(xy,xy2[,c('ID','tot')])
+      xy$prop = xy$SA_CORRECTED_PRORATED_N/xy$tot
+      
+      #locations for proportion of samples --- NEED TO FINISH THIS (Mar82024)
+      require(ggplot2)
+      require(sf)
+      xx = st_as_sf(xy,coords=c('SET_LONG','SET_LAT'),crs=4326)
+      ggplot(subset(xx,YEAR==2022))+geom_sf(aes(size=prop))+scale_size_continuous(name = "Size", range = c(0, 4)) 
+      
+   } 
    
+    
     #bring in the zeros
     xS = subset(x,ID %ni% unique(xy$ID))
     xS = xS %>% dplyr::distinct(TRIP_ID,SET_NO,.keep_all = T)
