@@ -3,7 +3,7 @@ uploadTempData <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisn
         Sys.setenv(TZ = "GMT")
         Sys.setenv(ORA_SDTZ = "GMT")   
         bio.lobster::db.setup(un=UID,pw=PWD)  
-      if(any(grepl('.csv',datafile,ignore.case = T))){
+      if(any(grepl('.csv',tolower(datafile),ignore.case = T))){
      
             datafile = read.table(datafile,sep = ";")
             datafile = datafile[-1,]
@@ -21,8 +21,6 @@ uploadTempData <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisn
             datafile$SOURCE = ifelse(!is.null(source),source, NA)
             datafile$UTCDATE = as.Date(datafile$UTCDATE)
             datafile$SET_NO = NA
-            datafile$UTCTIME =  gsub(":","",datafile$UTCTIME)
-            datafile$STDTIME =  gsub(":","",datafile$STDTIME)
         }
       if(!is.null(idSets)){
         se = dbGetQuery(conn=con, statement = paste("select trip_id, set_no, min(starttime) starttime, min(endtime) endtime, min(setdate) setdate
@@ -51,7 +49,9 @@ uploadTempData <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisn
         
       }
         datafile = subset(datafile,select=c(TEMPC, DEPTHM, UTCDATE, UTCTIME,STDDATE, STDTIME, SET_NO,TRIP_ID, SOURCE ))
-        if(dim(datafile)[2]!=9) stop('The number of columns in the datafile do not match the number required (9)')  
+        datafile$UTCTIME =  gsub(":","",datafile$UTCTIME)
+        datafile$STDTIME =  gsub(":","",datafile$STDTIME)
+          if(dim(datafile)[2]!=9) stop('The number of columns in the datafile do not match the number required (9)')  
       if(appendIt==F & ROracle::dbExistsTable(con, tablenm)) stop('table already exists in the space. You need to either use a new name or use appendIT=T')
       if(appendIt==F & !ROracle::dbExistsTable(con, tablenm)){    
                         dbSendQuery(conn=con, statement = paste("create table ",tablenm,"(",
@@ -72,3 +72,4 @@ uploadTempData <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisn
     print('fileUploaded')
 
 }
+
