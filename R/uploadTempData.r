@@ -50,7 +50,6 @@ uploadTempData <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisn
       }
         datafile = subset(datafile,select=c(TEMPC, DEPTHM, UTCDATE, UTCTIME,STDDATE, STDTIME, SET_NO,TRIP_ID, SOURCE ))
         datafile$UTCTIME =  gsub(":","",datafile$UTCTIME)
-        datafile$STDTIME =  gsub(":","",datafile$STDTIME)
           if(dim(datafile)[2]!=9) stop('The number of columns in the datafile do not match the number required (9)')  
       if(appendIt==F & ROracle::dbExistsTable(con, tablenm)) stop('table already exists in the space. You need to either use a new name or use appendIT=T')
       if(appendIt==F & !ROracle::dbExistsTable(con, tablenm)){    
