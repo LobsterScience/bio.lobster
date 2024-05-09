@@ -135,7 +135,7 @@ bb34 = dplyr::bind_rows(list(aV34,aL34))
 
 b34 = as.data.frame(rbind(rbind(H34,V34),L34))
 
-plot(bb34$SYEAR,bb34$CPUE)
+plot(bb34$SYEAR,bb34$CPUE,xlab='Year',ylab='CPUE')
 
 ##CPUE and landings
 
@@ -153,6 +153,33 @@ ss = rename.df(ss,c('w.Yst'),c('DFO_RV'))
 ss = merge(ss,Fa[,c('yr','w.Yst')],by.x=c('SYEAR'),by.y='yr',all.x=T)
 ss = rename.df(ss,c('w.Yst'),c('NEFSC_Fa'))
 
+
+ve1 = ss$CPUE[ss$SYEAR<2005]
+ve2 = ss$CPUE[ss$SYEAR<2005]
+
+plot(bb34$SYEAR,bb34$CPUE,xlab='Year',ylab='CPUE')
+v = rmed(bb34$SYEAR,bb34$CPUE)
+lines(v$yr,v$x)
+
+lines(v$yr[8:17],v$x[8:17],col='red',lwd=2)
+lines(v$yr[1:12],v$x[1:12]-.01,col='blue',lwd=2)
+
+legend('topleft',c('Cautious zone ILTS','Cautious Zone RV'),lty=1,lwd=2,bty='n',col=c('red','blue'))
+
+p = fitdistr((bb34$CPUE[1:17]),densfun='normal')
+x = seq(min(bb34$CPUE[1:17]),max(bb34$CPUE[1:17]),by=.005)
+xx = dnorm(x,p$estimate['mean'],p$estimate['sd'])
+
+plot(x,xx/max(xx),type='l',xlab='CPUE',ylab='Density',col='red',lwd=2)
+
+p1 = fitdistr((bb34$CPUE[1:10]),densfun='normal')
+x1 = seq(min(bb34$CPUE[1:10]),max(bb34$CPUE[1:10]),by=.005)
+xx1 = dnorm(x1,p1$estimate['mean'],p1$estimate['sd'])
+
+lines(x1,xx1/max(xx1),type='l',col='blue',lwd=2)
+legend('topleft',c('Cautious zone ILTS','Cautious Zone RV'),lty=1,lwd=2,bty='n',col=c('red','blue'))
+
+mean(v$x[1:12]) *2.204626*375 * 60
 
 ###DFA
 require(MARSS)

@@ -52,7 +52,7 @@ ggplot(b)+
 
 
 gTot$CPUE = gTot$Landings/gTot$TrapHauls
-g27p = subset(gTot, LFA%in% 33:38 & FishingYear%in%2022:2023)
+g27p = subset(gTot, LFA%in% 33:38 & FishingYear%in%2016:2023)
 
 ok1 = ggplot(g27p,aes(fill=CPUE))+
   geom_sf() +
@@ -67,7 +67,7 @@ ok1 = ggplot(g27p,aes(fill=CPUE))+
   scale_x_continuous(breaks = c(round(seq(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax,length.out=2),2)))+
   scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))
 
-gl = subset(g27p,FishingYear==2022)
+gl = subset(g27p,FishingYear==2016)
 gp = subset(g27p,FishingYear==2023)
 
 gl$geometry<- NULL
@@ -134,7 +134,7 @@ j23 = subset(jja,yr==2023)
 
 names(j23)[1:4]=c('GRID_NO','FishingYear','TrapHauls','Landings')
 
-
+j23$CPUE = j23$Landings/j23$TrapHauls
 
 #####
 ggplot(subset(gg),aes(fill=Landings))+
@@ -150,4 +150,29 @@ ggplot(subset(gg),aes(fill=Landings))+
            ylim = c(st_bbox(j23)$ymin,st_bbox(gg)$ymax),
            expand = FALSE)+ggtitle('Landings Inshore 2022-2023 FY; Offshore 2023 Calendar Year')
   
+ggplot(subset(gg),aes(fill=TrapHauls))+
+  geom_sf() +
+  geom_sf(data=j23,aes(fill=TrapHauls))+
+  scale_fill_continuous_diverging(palette='Purple-Green') +
+  #facet_wrap(~FishingYear)+
+  #  geom_sf(data=g27n,fill='white')+  
+  geom_sf(data=coa,fill='grey')+
+  geom_sf(data=GrMap,fill=NA)+
+  geom_sf(data=grid_in_polygon,fill=NA)+
+  coord_sf(xlim = c(st_bbox(gg)$xmin,st_bbox(gg)$xmax),
+           ylim = c(st_bbox(j23)$ymin,st_bbox(gg)$ymax),
+           expand = FALSE)+ggtitle('Traphauls Inshore 2022-2023 FY; Offshore 2023 Calendar Year')
+
+ggplot(subset(gg),aes(fill=CPUE.x))+
+  geom_sf() +
+  geom_sf(data=j23,aes(fill=CPUE))+
+  scale_fill_continuous_diverging(palette='Purple-Green') +
+  #facet_wrap(~FishingYear)+
+  #  geom_sf(data=g27n,fill='white')+  
+  geom_sf(data=coa,fill='grey')+
+  geom_sf(data=GrMap,fill=NA)+
+  geom_sf(data=grid_in_polygon,fill=NA)+
+  coord_sf(xlim = c(st_bbox(gg)$xmin,st_bbox(gg)$xmax),
+           ylim = c(st_bbox(j23)$ymin,st_bbox(gg)$ymax),
+           expand = FALSE)+ggtitle('CPUE Inshore 2022-2023 FY; Offshore 2023 Calendar Year')
 

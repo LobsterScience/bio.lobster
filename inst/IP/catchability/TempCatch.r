@@ -72,7 +72,7 @@ require(ggeffects)
 mydf <- ggpredict(go3, terms = c('Temperature'))
 plot(mydf)
 mydf <- ggpredict(go3, terms = c('Legal'))
-plot(mydf)
+plot(mydf)+theme_test()
 
 
 #these are marginal effects of temp all others held at the mean
@@ -88,7 +88,7 @@ ggplot(mydf, aes(x = x, y = predicted)) +
   geom_line() +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)+
   xlab('Temperature')+
-  ylab('Marginal Catchability')
+  ylab('Marginal Catchability')+theme_test()
 
 pre =  as.data.frame(mydf)
 names(pre)[1] = 'Temperature'

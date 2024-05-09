@@ -1,7 +1,6 @@
 require(bio.lobster)
 require(bio.utilities)
 require(gamlss)
-
 require(tidyr)
 require(devtools)
 require(geosphere)
@@ -9,7 +8,7 @@ la()
 options(stringsAsFactors=F)
 
 fpa = file.path(project.datadirectory('bio.lobster'),'analysis','ILTSSurvey')
-v = ILTS_ITQ_All_Data(species=2550,redo_base_data = F)
+v = ILTS_ITQ_All_Data(species=2550,redo_base_data =F)
 cs = read.csv(file.path(project.datadirectory('bio.lobster'),'data','survey','comparativeStations.csv'))
 cs$ID = paste(cs$YEAR,cs$STATION)
 
@@ -28,156 +27,155 @@ v$SID = paste(v$TRIP_ID,v$SET_NO)
 va = aggregate(SA_CORRECTED_PRORATED_N~STATION+GEAR+VESSEL_NAME+YEAR+SID+SET_DEPTH+SET_LONG+SET_LAT+sweptArea+spread+SET_DATE+SET_TIME,data=v,FUN=sum)
 names(va)[13]='N'
 
-#2022 vessel 
+#2022 vessel #### not necessary
 
-vaL = aggregate(SA_CORRECTED_PRORATED_N~STATION+GEAR+VESSEL_NAME+YEAR+rFL,data=subset(v,YEAR==2022),FUN=sum)
-names(vaL)[6]='N'
-
-
-vaLw = pivot_wider(vaL,id_cols=c(STATION, YEAR, rFL),names_from=VESSEL_NAME,values_from=N)
-names(vaLw)[4:5] = c('JL','JP')
-
-#only lengths with data
-ex = aggregate(cbind(JL,JP)~rFL,data=vaLw,FUN=sum)
-ex = subset(ex,JL+JP>0)
-ex$C = ex$JL/ex$JP
-valwR = subset(vaLw,rFL %in% ex$rFL)
-
-valwRR = subset(valwR, !is.na(JL))
-valwRR$JL = round(valwRR$JL)
-valwRR$JP= round(valwRR$JP)
-
-dat = subset(valwRR,JL+JP>0)
-
-dat = merge(dat,outputs,by.x='STATION',by.y='V1')
-dat$meanZ = round(as.numeric(dat$meanZ),)
-
-
-exp_JL =data.frame(len= rep(dat$rFL,times=dat$JL))
-exp_JP = data.frame(len = rep(dat$rFL,times=dat$JP))
-xlabs = 'Length'
-xlabs = 'Carapace Length'
-ggplot(exp_JL,aes(x=len))+
-  geom_histogram() +
-  labs(x=xlabs,y=expression(paste("JL: Number per km",.^2)))+
-  coord_cartesian(xlim = c(min(dat$rFL),max(dat$rFL))) +
-  theme_bw()
-
-
-ggplot(exp_JP,aes(x=len))+
-  geom_histogram() +
-  labs(x=xlabs,y=expression(paste("JP: Number per km",.^2)))+
-  coord_cartesian(xlim = c(min(dat$rFL),max(dat$rFL))) +
-  theme_bw()
-
-
-fit= out = gamlss(cbind(JL,JP)~1,data=dat,family=BB())
-fit1 = out1 = gamlss(cbind(JL,JP)~cs(rFL,df=3),data=dat,family=BB())
-fit2 = out2 = gamlss(cbind(JL,JP)~cs(rFL,df=3),sigma.formula=~cs(rFL,df=3),data=dat,family=BB())
-fitz= outz = gamlss(cbind(JL,JP)~cs(meanZ,df=3),data=dat,family=BB())
-fit1z = out1z = gamlss(cbind(JL,JP)~cs(rFL,df=3)+cs(meanZ,df=3),data=dat,family=BB())
-fit2z = out2z = gamlss(cbind(JL,JP)~cs(rFL,df=3)+cs(meanZ,df=3),sigma.formula=~cs(rFL,df=3)+cs(meanZ,df=3),data=dat,family=BB())
-
-i = 0
-model.output = data.frame(
-  Mod = c('intercept','length.mu','length.mu.sigma','z','length.mu.z','length.mu.sigma.z'),
-  AIC=c(AIC(fit),AIC(fit1),AIC(fit2),AIC(fitz),AIC(fit1z),AIC(fit2z)),
-  intercept=c(coef(fit)[1],coef(fit1)[1],coef(fit2)[1],coef(fitz)[1],coef(fit1z)[1],coef(fit2z)[1]),
-  length.coef=c(NA,coef(fit1)[2],coef(fit2)[2],NA,coef(fit1z)[2],coef(fit2z)[2]),
-  depth.coef=c(NA,NA,NA,coef(fit1z)[2],coef(fit1z)[3],coef(fit2z)[3]))
-i = which.min(model.output$AIC)
-if(i==2) out = fit1
-if(i==3) out = fit2
-if(i==4) out = fitz
-if(i==5) out = fit1z
-if(i==6) out = fit2z
-
-
-d = cbind(dat,out$residuals) #Dunn and Smyth 1996
-names(d)[ncol(d)]='Randomized_Quantile_Residuals'
-
-ggplot(data=d,aes(x=STATION,y=Randomized_Quantile_Residuals))+
-  geom_boxplot(width = 0.6, position = position_dodge(width = 0.75))+
-  geom_hline(yintercept = 0,color='red')+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
-ggplot(data=d,aes(x=as.factor(rFL),y=Randomized_Quantile_Residuals))+
-  geom_boxplot(width = 0.6, position = position_dodge(width = 0.75))+
-  geom_hline(yintercept = 0,color='red')+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
-  labs(x=xlabs)
-
-ggplot(data=d,aes(x=meanZ,y=Randomized_Quantile_Residuals))+
-  geom_point()+
-  geom_hline(yintercept = 0,color='red')+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
-  labs(x="Depth")
-#bootstrapping across stations- assuming that the sampling unit is the station and that each unit is a sample of the population
-
-st = unique(dat$STATION)
-niter=length(st)
-
-newd = expand.grid(rFL=seq(min(dat$rFL),max(dat$rFL),by=1),meanZ=seq(min(dat$meanZ),max(dat$meanZ),by=1))
-
-ou = matrix(NA,nrow=length(newd[,1]),ncol=niter,byrow=F)
-for(i in 1:niter){
-  stt = sample(st,length(st),replace=T)
-  d1 = list()
-  for(j in 1:length(stt)) {
-    d1[[j]] = subset(dat,STATION== stt[j])
-  }
-  d1 = as.data.frame(do.call(rbind,d1))
-  out = gamlss(cbind(JL,JP)~cs(rFL,df=3)+cs(meanZ,df=3),sigma.formula =~cs(rFL,df=3)+cs(meanZ,df=3) ,data=d1,family=BB())
-  mu = predict(out,what='mu',type='response',newdata = newd)
-  rho = mu / (1-mu)
-  ou[,i] = rho
-}
-
-
-sou = as.data.frame(cbind(newd[,1:2],t(apply(ou,1,quantile,c(0.5,.0275,.975))),(apply(ou,1,mean)),(apply(ou,1,sd))))
-names(sou) = c('Length','Depth','Median','L95','U95','Mean','SD')
-sou$CV = sou$SD / sou$Mean
-
-souL = aggregate(cbind(Median,L95,U95)~Length,data=sou,FUN=median)
-souD = aggregate(cbind(Median,L95,U95)~Depth,data=sou,FUN=median)
-
-ggplot(data=souL, aes(x=Length, y=Median)) + geom_line()+
-  geom_ribbon(aes(ymin=L95, ymax=U95), linetype=2, alpha=0.1)+
-  #  geom_point(data=ov,aes(x=rFL,y=C))+
-  labs(x=xlabs,y='Relative Catch Efficiency [Joseph Lorenzo I/Josies Pride]')+
-  geom_hline(yintercept = 1,colour='red')+
-  theme_bw()
-
-ggplot(data=souD, aes(x=Depth, y=Median)) + geom_line()+
-  geom_ribbon(aes(ymin=L95, ymax=U95), linetype=2, alpha=0.1)+
-  #  geom_point(data=ov,aes(x=rFL,y=C))+
-  labs(x='Depth',y='Relative Catch Efficiency [Joseph Lorenzo I/Josies Pride]')+
-  geom_hline(yintercept = 1,colour='red')+
-  theme_bw()
-
-
-
-ggplot(sou,aes(Length,Depth,z=Median))+geom_contour_filled()
-
-ggplot(sou,aes(Length,Depth,z=CV))+geom_contour_filled()
-
-
-
-##aggregate
-vaw22 = pivot_wider(subset(va,YEAR==2022),id_cols=c(STATION, YEAR),names_from=VESSEL_NAME,values_from=N)
-vaw22$SampRatio = vaw22$`JOSEPH LORENZO I`/(vaw22$`JOSEPH LORENZO I`+vaw22$`JOSIE'S PRIDE`)
-plot(vaw22$`JOSIE'S PRIDE`,vaw22$`JOSEPH LORENZO I`)
-abline(a=0,b=1)
-
-vaw22$JP = round(vaw22$`JOSIE'S PRIDE`)
-vaw22$JL = round(vaw22$`JOSEPH LORENZO I`)
-
-
-#####################################################################################################################
-#need to include effects of Jlo to SS for 2023
+# vaL = aggregate(SA_CORRECTED_PRORATED_N~STATION+GEAR+VESSEL_NAME+YEAR+rFL,data=subset(v,YEAR==2022),FUN=sum)
+# names(vaL)[6]='N'
+# 
+# 
+# vaLw = pivot_wider(vaL,id_cols=c(STATION, YEAR, rFL),names_from=VESSEL_NAME,values_from=N)
+# names(vaLw)[4:5] = c('JL','JP')
+# 
+# #only lengths with data
+# ex = aggregate(cbind(JL,JP)~rFL,data=vaLw,FUN=sum)
+# ex = subset(ex,JL+JP>0)
+# ex$C = ex$JL/ex$JP
+# valwR = subset(vaLw,rFL %in% ex$rFL)
+# 
+# valwRR = subset(valwR, !is.na(JL))
+# valwRR$JL = round(valwRR$JL)
+# valwRR$JP= round(valwRR$JP)
+# 
+# dat = subset(valwRR,JL+JP>0)
+# 
+# dat = merge(dat,outputs,by.x='STATION',by.y='V1')
+# dat$meanZ = round(as.numeric(dat$meanZ),)
+# 
+# 
+# exp_JL =data.frame(len= rep(dat$rFL,times=dat$JL))
+# exp_JP = data.frame(len = rep(dat$rFL,times=dat$JP))
+# xlabs = 'Length'
+# xlabs = 'Carapace Length'
+# ggplot(exp_JL,aes(x=len))+
+#   geom_histogram() +
+#   labs(x=xlabs,y=expression(paste("JL: Number per km",.^2)))+
+#   coord_cartesian(xlim = c(min(dat$rFL),max(dat$rFL))) +
+#   theme_bw()
+# 
+# 
+# ggplot(exp_JP,aes(x=len))+
+#   geom_histogram() +
+#   labs(x=xlabs,y=expression(paste("JP: Number per km",.^2)))+
+#   coord_cartesian(xlim = c(min(dat$rFL),max(dat$rFL))) +
+#   theme_bw()
+# 
+# 
+# fit= out = gamlss(cbind(JL,JP)~1,data=dat,family=BB())
+# fit1 = out1 = gamlss(cbind(JL,JP)~cs(rFL,df=3),data=dat,family=BB())
+# fit2 = out2 = gamlss(cbind(JL,JP)~cs(rFL,df=3),sigma.formula=~cs(rFL,df=3),data=dat,family=BB())
+# fitz= outz = gamlss(cbind(JL,JP)~cs(meanZ,df=3),data=dat,family=BB())
+# fit1z = out1z = gamlss(cbind(JL,JP)~cs(rFL,df=3)+cs(meanZ,df=3),data=dat,family=BB())
+# fit2z = out2z = gamlss(cbind(JL,JP)~cs(rFL,df=3)+cs(meanZ,df=3),sigma.formula=~cs(rFL,df=3)+cs(meanZ,df=3),data=dat,family=BB())
+# 
+# i = 0
+# model.output = data.frame(
+#   Mod = c('intercept','length.mu','length.mu.sigma','z','length.mu.z','length.mu.sigma.z'),
+#   AIC=c(AIC(fit),AIC(fit1),AIC(fit2),AIC(fitz),AIC(fit1z),AIC(fit2z)),
+#   intercept=c(coef(fit)[1],coef(fit1)[1],coef(fit2)[1],coef(fitz)[1],coef(fit1z)[1],coef(fit2z)[1]),
+#   length.coef=c(NA,coef(fit1)[2],coef(fit2)[2],NA,coef(fit1z)[2],coef(fit2z)[2]),
+#   depth.coef=c(NA,NA,NA,coef(fit1z)[2],coef(fit1z)[3],coef(fit2z)[3]))
+# i = which.min(model.output$AIC)
+# if(i==2) out = fit1
+# if(i==3) out = fit2
+# if(i==4) out = fitz
+# if(i==5) out = fit1z
+# if(i==6) out = fit2z
+# 
+# 
+# d = cbind(dat,out$residuals) #Dunn and Smyth 1996
+# names(d)[ncol(d)]='Randomized_Quantile_Residuals'
+# 
+# ggplot(data=d,aes(x=STATION,y=Randomized_Quantile_Residuals))+
+#   geom_boxplot(width = 0.6, position = position_dodge(width = 0.75))+
+#   geom_hline(yintercept = 0,color='red')+
+#   theme_bw()+
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+# 
+# ggplot(data=d,aes(x=as.factor(rFL),y=Randomized_Quantile_Residuals))+
+#   geom_boxplot(width = 0.6, position = position_dodge(width = 0.75))+
+#   geom_hline(yintercept = 0,color='red')+
+#   theme_bw()+
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+#   labs(x=xlabs)
+# 
+# ggplot(data=d,aes(x=meanZ,y=Randomized_Quantile_Residuals))+
+#   geom_point()+
+#   geom_hline(yintercept = 0,color='red')+
+#   theme_bw()+
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+#   labs(x="Depth")
+# #bootstrapping across stations- assuming that the sampling unit is the station and that each unit is a sample of the population
+# 
+# st = unique(dat$STATION)
+# niter=length(st)
+# 
+# newd = expand.grid(rFL=seq(min(dat$rFL),max(dat$rFL),by=1),meanZ=seq(min(dat$meanZ),max(dat$meanZ),by=1))
+# 
+# ou = matrix(NA,nrow=length(newd[,1]),ncol=niter,byrow=F)
+# for(i in 1:niter){
+#   stt = sample(st,length(st),replace=T)
+#   d1 = list()
+#   for(j in 1:length(stt)) {
+#     d1[[j]] = subset(dat,STATION== stt[j])
+#   }
+#   d1 = as.data.frame(do.call(rbind,d1))
+#   out = gamlss(cbind(JL,JP)~cs(rFL,df=3)+cs(meanZ,df=3),sigma.formula =~cs(rFL,df=3)+cs(meanZ,df=3) ,data=d1,family=BB())
+#   mu = predict(out,what='mu',type='response',newdata = newd)
+#   rho = mu / (1-mu)
+#   ou[,i] = rho
+# }
+# 
+# 
+# sou = as.data.frame(cbind(newd[,1:2],t(apply(ou,1,quantile,c(0.5,.0275,.975))),(apply(ou,1,mean)),(apply(ou,1,sd))))
+# names(sou) = c('Length','Depth','Median','L95','U95','Mean','SD')
+# sou$CV = sou$SD / sou$Mean
+# 
+# souL = aggregate(cbind(Median,L95,U95)~Length,data=sou,FUN=median)
+# souD = aggregate(cbind(Median,L95,U95)~Depth,data=sou,FUN=median)
+# 
+# ggplot(data=souL, aes(x=Length, y=Median)) + geom_line()+
+#   geom_ribbon(aes(ymin=L95, ymax=U95), linetype=2, alpha=0.1)+
+#   #  geom_point(data=ov,aes(x=rFL,y=C))+
+#   labs(x=xlabs,y='Relative Catch Efficiency [Joseph Lorenzo I/Josies Pride]')+
+#   geom_hline(yintercept = 1,colour='red')+
+#   theme_bw()
+# 
+# ggplot(data=souD, aes(x=Depth, y=Median)) + geom_line()+
+#   geom_ribbon(aes(ymin=L95, ymax=U95), linetype=2, alpha=0.1)+
+#   #  geom_point(data=ov,aes(x=rFL,y=C))+
+#   labs(x='Depth',y='Relative Catch Efficiency [Joseph Lorenzo I/Josies Pride]')+
+#   geom_hline(yintercept = 1,colour='red')+
+#   theme_bw()
+# 
+# 
+# 
+# ggplot(sou,aes(Length,Depth,z=Median))+geom_contour_filled()
+# 
+# ggplot(sou,aes(Length,Depth,z=CV))+geom_contour_filled()
+# 
+# 
+# 
+# ##aggregate
+# vaw22 = pivot_wider(subset(va,YEAR==2022),id_cols=c(STATION, YEAR),names_from=VESSEL_NAME,values_from=N)
+# vaw22$SampRatio = vaw22$`JOSEPH LORENZO I`/(vaw22$`JOSEPH LORENZO I`+vaw22$`JOSIE'S PRIDE`)
+# plot(vaw22$`JOSIE'S PRIDE`,vaw22$`JOSEPH LORENZO I`)
+# abline(a=0,b=1)
+# 
+# vaw22$JP = round(vaw22$`JOSIE'S PRIDE`)
+# vaw22$JL = round(vaw22$`JOSEPH LORENZO I`)
+# 
+# 
+# #####################################################################################################################
 
 
 
@@ -186,7 +184,6 @@ vaw22$JL = round(vaw22$`JOSEPH LORENZO I`)
 
 tt = ILTS_ITQ_All_Data(species=2550,redo_base_data = F,return_tow_tracks = T)
 tt$SID = paste(tt$TRIP_ID,tt$SET_NO)
-
 tt1 = subset(tt, SID %in% unique(v$SID))
 
 tm = merge(va,tt1,by='SID',all=T)
@@ -245,7 +242,6 @@ names(va)[5]='N'
 
 vaw = pivot_wider(va,id_cols=c(STATION, YEAR,VESSEL_NAME),names_from=GEAR,values_from=N)
 
-#just the 2022 vessel effect
 
 
 #by length
@@ -255,6 +251,7 @@ names(vaL)[6]='N'
 
 vaLw = pivot_wider(vaL,id_cols=c(STATION, YEAR,VESSEL_NAME, rFL),names_from=GEAR,values_from=N)
 names(vaLw)[5] = 'BALLOON'
+vaLw = na.zero(vaLw)
 
 #only lengths with data
 ex = aggregate(cbind(BALLOON,NEST)~rFL,data=vaLw,FUN=sum)
@@ -296,8 +293,13 @@ ov = aggregate(cbind(NEST,BALLOON)~rFL,data=dat,FUN=sum)
 ov$C = ov$NEST / ov$BALLOON
 dat$C = dat$NEST / dat$BALLOON
 
-dat = merge(dat,outputs,by.x='STATION',by.y='V1')
-dat$meanZ = round(as.numeric(dat$meanZ),)
+vd = aggregate(SET_DEPTH~STATION,data=v,FUN=median)
+
+dat = merge(dat,vd)
+dat$meanZ = round(dat$SET_DEPTH)
+
+dat = subset(dat,YEAR<2020)
+
 fit= out = gamlss(cbind(NEST,BALLOON)~1,data=dat,family=BB())
 fit1 = out1 = gamlss(cbind(NEST,BALLOON)~cs(rFL,df=3),data=dat,family=BB())
 fit2 = out2 = gamlss(cbind(NEST,BALLOON)~cs(rFL,df=3),sigma.formula=~cs(rFL,df=3),data=dat,family=BB())
@@ -308,16 +310,20 @@ fit2z = out2z = gamlss(cbind(NEST,BALLOON)~cs(rFL,df=3)+cs(meanZ,df=3),sigma.for
 dat$FVessel = as.factor(dat$VESSEL_NAME)
 fit3z = out3z = gamlss(cbind(NEST,BALLOON)~cs(rFL,df=3)+cs(meanZ,df=3)+FVessel,sigma.formula=~cs(rFL,df=3)+cs(meanZ,df=3),data=dat,family=BB())
 fit4z = out4z = gamlss(cbind(NEST,BALLOON)~cs(rFL,df=3)+cs(meanZ,df=3)+FVessel,sigma.formula=~cs(rFL,df=3)+cs(meanZ,df=3)+FVessel,data=dat,family=BB())
+fit5z = out5z = gamlss(cbind(NEST,BALLOON)~cs(rFL,df=3)+cs(meanZ,df=3),sigma.formula=~cs(rFL,df=3)+cs(meanZ,df=3)+FVessel,data=dat,family=BB())
+fit2v = out2 = gamlss(cbind(NEST,BALLOON)~cs(rFL,df=3),sigma.formula=~cs(rFL,df=3)+FVessel,data=dat,family=BB())
 
 
 i = 0
 model.output = data.frame(
-    Mod = c('intercept','length.mu','length.mu.sigma','z','length.mu.z','length.mu.sigma.z','length.mu.sigma.z.mu.vess','length.mu.sigma.z.sig.vess'),
-    AIC=c(AIC(fit),AIC(fit1),AIC(fit2),AIC(fitz),AIC(fit1z),AIC(fit2z),AIC(fit4z),AIC(fit4z)),
-    intercept=c(coef(fit)[1],coef(fit1)[1],coef(fit2)[1],coef(fitz)[1],coef(fit1z)[1],coef(fit2z)[1],coef(fit4z)[1],coef(fit4z)[1]),
-    length.coef=c(NA,coef(fit1)[2],coef(fit2)[2],NA,coef(fit1z)[2],coef(fit2z)[2],coef(fit3z)[2],coef(fit4z)[2]),
-    depth.coef=c(NA,NA,NA,coef(fit1z)[2],coef(fit1z)[3],coef(fit2z)[3],coef(fit3z)[3],coef(fit4z)[3]))
-i = which.min(model.output$AIC)
+    Mod = c('intercept','length.mu','length.mu.sigma','z','length.mu.z','length.mu.sigma.z','length.mu.sigma.z.mu.vess','length.mu.vess.sigma.z.sig.vess','length.mu.sigma.z.sig.vess','length.mu.sig.vess.sig'),
+    AIC=c(AIC(fit),AIC(fit1),AIC(fit2),AIC(fitz),AIC(fit1z),AIC(fit2z),AIC(fit3z),AIC(fit4z),AIC(fit5z),AIC(fit2v)),
+    BIC=c(BIC(fit),BIC(fit1),BIC(fit2),BIC(fitz),BIC(fit1z),BIC(fit2z),BIC(fit3z),BIC(fit4z),BIC(fit5z),BIC(fit2v)),
+    intercept=c(coef(fit)[1],coef(fit1)[1],coef(fit2)[1],coef(fitz)[1],coef(fit1z)[1],coef(fit2z)[1],coef(fit3z)[1],coef(fit4z)[1],coef(fit5z)[1],coef(fit2v)[1]),
+    length.coef=c(NA,coef(fit1)[2],coef(fit2)[2],NA,coef(fit1z)[2],coef(fit2z)[2],coef(fit3z)[2],coef(fit4z)[2],coef(fit5z)[2],coef(fit2v)[2]),
+    depth.coef=c(NA,NA,NA,coef(fitz)[2],coef(fit1z)[3],coef(fit2z)[3],coef(fit3z)[3],coef(fit4z)[3],coef(fit5z)[3],NA))
+#i = which.min(model.output$AIC)
+#remove depth and go with i10
 if(i==2) out = fit1
 if(i==3) out = fit2
 if(i==4) out = fitz
@@ -325,6 +331,8 @@ if(i==5) out = fit1z
 if(i==6) out = fit2z
 if(i==7) out = fit3z
 if(i==8) out = fit4z
+if(i==9) out = fit5z
+if(i==10) out = fit2v
 
 #newd = data.frame(rFL=seq(min(dat$rFL),max(dat$rFL),by=1))
 #yl=c(0,max(fit$mu.fv/(1-fit$mu.fv))*2)
@@ -363,8 +371,8 @@ ggplot(data=d,aes(x=meanZ,y=Randomized_Quantile_Residuals))+
 st = unique(dat$STATION)
 niter=length(st)
 
-newd = expand.grid(rFL=seq(min(dat$rFL),max(dat$rFL),by=1),meanZ=seq(min(dat$meanZ),max(dat$meanZ),by=1),FVessel="Josie's Pride")
-
+#newd = expand.grid(rFL=seq(min(dat$rFL),max(dat$rFL),by=1),meanZ=seq(min(dat$meanZ),max(dat$meanZ),by=1),FVessel="Josie's Pride")
+newd = expand.grid(rFL=seq(min(dat$rFL),max(dat$rFL),by=1),FVessel="Josie's Pride")
 ou = matrix(NA,nrow=length(newd[,1]),ncol=niter,byrow=F)
 for(i in 1:niter){
 		stt = sample(st,length(st),replace=T)
@@ -373,7 +381,7 @@ for(i in 1:niter){
 				d1[[j]] = subset(dat,STATION== stt[j])
 			}
 			d1 = as.data.frame(do.call(rbind,d1))
-			out = gamlss(cbind(NEST,BALLOON)~cs(rFL,df=3)+cs(meanZ,df=3),sigma.formula =~cs(rFL,df=3)+cs(meanZ,df=3) ,data=d1,family=BB())
+			out = gamlss(cbind(NEST,BALLOON)~cs(rFL,df=3),sigma.formula =~cs(rFL,df=3)+FVessel ,data=d1,family=BB())
 			mu = predict(out,what='mu',type='response',newdata = newd)
 			rho = mu / (1-mu)
 			ou[,i] = rho
@@ -385,9 +393,9 @@ names(sou) = c('Length','Depth','Median','L95','U95','Mean','SD')
 sou$CV = sou$SD / sou$Mean
 
 souL = aggregate(cbind(Median,L95,U95)~Length,data=sou,FUN=median)
-souD = aggregate(cbind(Median,L95,U95)~Depth,data=sou,FUN=median)
+#souD = aggregate(cbind(Median,L95,U95)~Depth,data=sou,FUN=median)
 
-ggplot(data=souL, aes(x=Length, y=Median)) + geom_line()+
+ggplot(data=subset(souL,Length>50), aes(x=Length, y=Median)) + geom_line()+
   geom_ribbon(aes(ymin=L95, ymax=U95), linetype=2, alpha=0.1)+
   #  geom_point(data=ov,aes(x=rFL,y=C))+
   labs(x=xlabs,y='Relative Catch Efficiency [NEST/BALLOON]')+
@@ -397,11 +405,9 @@ ggplot(data=souL, aes(x=Length, y=Median)) + geom_line()+
 ggplot(data=souD, aes(x=Depth, y=Median)) + geom_line()+
   geom_ribbon(aes(ymin=L95, ymax=U95), linetype=2, alpha=0.1)+
   #  geom_point(data=ov,aes(x=rFL,y=C))+
-  labs(x=Depth,y='Relative Catch Efficiency [NEST/BALLOON]')+
+  labs(x='Depth',y='Relative Catch Efficiency [NEST/BALLOON]')+
   geom_hline(yintercept = 1,colour='red')+
   theme_bw()
-
-
 
 ggplot(sou,aes(Length,Depth,z=Median))+geom_contour_filled()
 
@@ -416,8 +422,6 @@ geom_ribbon(aes(ymin=L95, ymax=U95), linetype=2, alpha=0.1)+
   theme_bw()
 
 
-
-saveRDS(sou,file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall_2023.rds'))
 
 png(file=file.path(project.datadirectory('bio.lobster'),'data','survey','ConvNestBall_2023.png'),type='png')
 with(sou,{
@@ -434,6 +438,43 @@ png(file=file.path(project.datadirectory('bio.lobster'),'data','survey','CVConvN
 plot(sou$Length,sou$CV,type='l',xlab = 'Carapace Length',ylab = expression(paste('CV of ',rho)),lwd=1.5)
 dev.off()
 ####end gamlss
+
+#flattening ends CV >.3
+saveRDS(sou,file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall_2023.rds'))
+
+sou = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall_2023.rds'))
+
+sou$flat_Median = NA
+#if depth included
+# ud = unique(sou$Depth)
+# for(i in 1:length(ud)){
+#  #fill in all cvs>.3
+#    ii = which(sou$Depth==ud[i])
+#   j = which(sou$CV[ii]<= 0.3)
+#   if(length(j)==0) {
+#     iii = which(sou$Depth==ud[i-1])
+#     sou$flat_Median[ii] = sou$flat_Median[iii]
+#     next
+#   }
+#   sou$flat_Median[ii[j]] = sou$Median[ii[j]]
+#   k = which(!is.na(sou$flat_Median[ii]))
+#   ik = 1:(k[1]-1)
+#   sou$flat_Median[ii[ik]] =sou$flat_Median[ii[k[1]]] 
+#   ik = (k[length(k)]+1):length(ii)
+#   sou$flat_Median[ii[ik]] =sou$flat_Median[ii[k[length(k)]]] 
+# }
+
+#flattening out high cvs from length only model
+sou$flat_Median = NA
+   j = which(sou$CV<= 0.3)
+   sou$flat_Median[j] = sou$Median[j]
+   k = which(!is.na(sou$flat_Median[ii]))
+   ik = 1:(k[1]-1)
+  sou$flat_Median[ik] =sou$flat_Median[k[1]]
+   ik = (k[length(k)]+1):length(ii)
+   sou$flat_Median[ik] =sou$flat_Median[k[length(k)]]
+# 
+saveRDS(sou,file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall_2023.rds'))
 
 
 vv = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall.rds'))

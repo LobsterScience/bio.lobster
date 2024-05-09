@@ -1,0 +1,15 @@
+2550	Homarus americanus	american lobster
+
+
+BB5 is selected for lowest AIC (BI1 has lowest BIC but was rejected) and better fit to the tails of small/large sizes.
+
+
+# load results
+load("lobster/results/2550 model fit/BB5.rda")
+# this is the result data frame
+str(res$main)
+
+# lenseq is the length bin: you can set a cut-off length range to apply flat conversion outside, recommended range based on proportion of data is 39-173mm, historical max-min length range in RV surveys is 4-220mm
+# est_tho is the estimated conversion (ratio between cartier/cabot and teleost)
+# est_log_rho is the estimated log conversion for each length bin
+# estimated std of log_rho, sd_log_rho, can be used to calculate CIs

@@ -64,9 +64,9 @@ vv$Cats = factor(vv$yrmn,levels=vr)
 
 
 ```{r, echo=FALSE, fig.cap='Percent missing commercial fishing logs for each LFA in the Maritmes Region'}
-#g = ggplot(vv,aes(x=Cats,y=PercMissing))+geom_bar(stat='identity')+facet_wrap(~lfa)+
-#  theme(axis.text.x = element_text(angle = 90, hjust= 0,vjust=0.5))+ xlab("")+ylab('Percent Missing Logs (%)')
-#print(g)
+g = ggplot(vv,aes(x=Cats,y=PercMissing))+geom_bar(stat='identity')+facet_wrap(~lfa)+
+  theme(axis.text.x = element_text(angle = 90, hjust= 0,vjust=0.5))+ xlab("")+ylab('Percent Missing Logs (%)')
+print(g)
 ```
 
 

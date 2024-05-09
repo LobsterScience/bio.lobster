@@ -38,15 +38,16 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
 		dir.create( fn.root, recursive = TRUE, showWarnings = FALSE  )
 
 		out = NULL
-    if ( is.null(DS) | DS=="gscat.odbc" ) {
+    if (  DS=="gscat.odbc" ) {
       fl = list.files( path=fn.root, pattern="*.rdata", full.names=T )
 				for ( i in 1:length(fl) ) {
 				load (fl[i])
 				  if(i>1) out = subset(out,select=names(gscat))
 				  
         out = rbind( out, gscat )
-			}
-			return (out)
+				}
+   
+   	return (out)
     }
 
     #require(RODBC)
@@ -715,9 +716,138 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
     }
     load(file = fn)
     return(r)
-              
-            }
-        }
+  }
+  
+  if(DS %in% c('gs_trawl_conversions','gs_trawl_conversions_redo')){
+    
+    fn.root =  file.path( project.datadirectory("bio.lobster"), "data","rvsurvey" ,"trawl" )
+    gi = file.path(fn.root,'gsinf.rds')
+    di = file.path(fn.root,'gsdet_conv.rds')
+    ci = file.path(fn.root,'gscat_conv.rds')
+    
+      if(grepl('redo',DS)){
+        de = groundfish.db('gsdet.odbc')
+        inf =groundfish.db('gsinf.odbc')
+        ca = groundfish.db('gscat.odbc')
+        
+        inf = subset(inf, type %in% c(1,5))
+        
+        inf$WingSpread = ifelse(inf$gear==3,10.97/1000,ifelse(inf$gear==9,12.49/1000,ifelse(inf$gear==15,13/1000,NA))) #yankee 36
+        inf = subset(inf,!is.na(inf$WingSpread)) #remove strange gear
+        
+        #use the median dist per mission and gear to fill in NAs
+        dis = aggregate(dist~mission+gear,data=subset(inf,type %in% c(1,5)),FUN=median)
+        dis = bio.utilities::rename.df(dis,'dist','aggDist')
+        inf = merge(inf,dis,all.x=T)
+        inf$dist = ifelse(is.na(inf$dist),inf$aggDist,inf$dist)
+        
+        #using lats and lons to check estimated dist
+        
+        inf$sweptArea = inf$WingSpread * (inf$dist*1.852) #km2
+        de$id = paste(de$mission,de$setno,sep="-")
+        inf$id = paste(inf$mission,inf$setno,sep="-")
+        ca$id = paste(ca$mission,ca$setno,sep="-")
+        
+        de = merge(de,inf[,c('id','sweptArea')])
+        ca = merge(ca,inf[,c('id','sweptArea')])
+        
+        #turn all catches into density per km2
+        de$clen = de$clen/de$sweptArea
+        ca$sampwgt = ca$sampwgt/ca$sweptArea
+        ca$totwgt = ca$totwgt/ca$sweptArea
+        ca$totno = ca$totno/ca$sweptArea
+        
+        d = de
+        catt = ca
+        de = subset(de,spec==2550)
+        d = subset(d,spec !=2550)
+        
+        ca = subset(ca,spec==2550)
+        catt = subset(catt,spec!=2550)
+       
+         #load in calibrations #from yin, benoit and martin 2024
+        load(file.path(project.datadirectory('bio.lobster'),'GroundfishConversions/2550_model_fit/BB5.rda')) 
+        vc = res$main[,c('lenseq','est_rho')]
+        vc = subset(vc,lenseq>38 & lenseq<174) #recommendations from paper
+        vc$cor = vc$est_rho #to go from WIIA to NEST you divide all WIIA after you apply the swept area correction (#/km2)
+        
+        cM = subset(vc,lenseq==39,select=cor)[,1]
+        cMa = subset(vc,lenseq==173,select=cor)[,1]
+        
+        infS = subset(inf,gear %in% c(3,9),select=id)[,1] #select only yankee and WIIA
+        
+        de1 = subset(de, id %in% infS)
+        de2 = subset(de, id %ni% infS)
+        ca1 = subset(ca, id %in% infS)
+        ca2 = subset(ca, id %ni% infS)
+        
+        ca1$totwgt[which(is.na(ca1$totwgt))] <- 1/ca1$sweptArea[which(is.na(ca1$totwgt))]
+        ca1$sampwgt[which(is.na(ca1$sampwgt))] <- ca1$totwgt[which(is.na(ca1$sampwgt))]
+        ca1$sampwgt[which(ca1$sampwgt==0)] <- ca1$totwgt[which(ca1$sampwgt==0)]
+        
+      
+        mwperI = sum(ca1$totwgt,na.rm=T)/sum(ca1$totno,na.rm=T) #mean weight per individual for filling in missing totwgt or totno
+        ca1$totno[which(is.na(ca1$totno))] <- ca1$totwgt[which(is.na(ca1$totno))]/mwperI
+        
+        ca1$sampwgt[which(ca1$sampwgt==0 & ca1$totwgt==0 & ca1$totno>0)] <- ca1$totno[which(ca1$sampwgt==0 & ca1$totwgt==0 & ca1$totno>0)]*mwperI 
+        ca1$totno <- round(ca1$totno)
+        ca1$totwgt[which(ca1$sampwgt>0 & ca1$totwgt==0)] <- ca1$sampwgt[which(ca1$sampwgt>0 & ca1$totwgt==0 )] 
+        ca1$totno[which(ca1$totno==0)] <- ca1$totwgt[which(ca1$totno==0)]/mwperI
+        ca1$totwgt[which(ca1$totwgt==0)] <- ca1$sampwgt[which(ca1$totwgt==0)]
+        
+        
+        de1m = merge(de1, vc[,c('lenseq','cor')],by.x='flen',by.y='lenseq',all.x=T)
+        de1m$cor[which(de1m$flen<39)] <- cM
+        de1m$cor[which(de1m$flen>173)] <- cMa
+        de1m$clen = de1m$clen / de1m$cor #correction factor, n
+        de1m$fsex[which(is.na(de1m$fsex))] <- 0
+        
+        
+        #need to add in weights for subsampling
+        ii = which(is.na(de1m$fwt))
+        lobLW1 <- function(row) {
+          lobLW(CL=row[1],sex=row[2])
+          }
+        de1m$fwt[ii] =  apply(de1m[ii,c('flen','fsex')],1,lobLW1)
+        
+        #catch weighted corr for all years with no size data
+       ad = aggregate(cbind(clen,fwt)~cor+flen,data=de1m,FUN=sum)
+       combCorrN =  with(ad,sum(cor*clen)/sum(clen))
+       combCorrW =  with(ad,sum(cor*fwt)/sum(fwt))
+        
+        caD = aggregate(cbind(clen,clen*fwt)~id+size_class,data=de1m,FUN=sum)
+        names(caD)[3:4] = c('c_totno','c_sampwgt')
+        
+       ca12 = merge(ca1, caD,all=T) 
+       ca12$rat = ca12$sampwgt/ca12$totwgt
+       
+       ca12$sampwgt[!is.na(ca12$c_sampwgt)] = ca12$c_sampwgt[!is.na(ca12$c_sampwgt)] /1000 
+       ca12$totwgt[!is.na(ca12$c_sampwgt)] = ca12$c_sampwgt[!is.na(ca12$c_sampwgt)] /1000 /ca12$rat[!is.na(ca12$c_sampwgt)]
+       ca12$totno[!is.na(ca12$c_sampwgt)] = round(ca12$c_totno[!is.na(ca12$c_sampwgt)] /ca12$rat[!is.na(ca12$c_sampwgt)]) 
+       
+       ca12$sampwgt[is.na(ca12$c_sampwgt)] = ca12$sampwgt[is.na(ca12$c_sampwgt)]*combCorrW
+       ca12$totwgt[is.na(ca12$c_sampwgt)] = ca12$totwgt[is.na(ca12$c_sampwgt)]*combCorrW
+       ca12$totno[is.na(ca12$c_sampwgt)] = round(ca12$totno[is.na(ca12$c_sampwgt)]*combCorrN)
+       ca12 = subset(ca12,select=c(-c_totno,-c_sampwgt,-rat,-sweptArea))
+       caF = dplyr::bind_rows(ca12,ca2,catt)
+       
+       caF = subset(caF,select=c(-sweptArea))
+       
+       de1m = subset(de1m,select=-cor)
+       de = dplyr::bind_rows(de1m,d,de2)
+       de = subset(de,select=c(-sweptArea))
+       de$clen = round(de$clen)
+      saveRDS(caF,file=ci)
+      saveRDS(de,file=di)
+      saveRDS(inf,file=gi)
+      }  
+    de = readRDS(file=di)
+    ca = readRDS(file=ci)
+    inf = readRDS(file=gi)
+print('Adjusted to NEST following Yin, Benoit and Martin 2024. Only lobster catch has been adjusted.All estimates of wt and n are in per km2')
+        return(list(gsinf=inf,gscat=ca,gsdet=de))
+      }
+    }
   
 
 

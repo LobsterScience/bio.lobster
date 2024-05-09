@@ -155,7 +155,7 @@ if(survey == 'DFO'){
                 p$strat = NULL
                 p$clusters = c( rep( "localhost", 7) )
                 p$strata.efficiencies = F
-                p = bio.utilities::make.list(list(yrs=p$years.to.estimate),Y=p)
+                p = make.list(list(yrs=p$years.to.estimate),Y=p)
                 p$reweight.strata = T #this subsets 
             
 
