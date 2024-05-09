@@ -19,7 +19,7 @@ b=a
 b = subset(b,LFA=='33')
 
 b= subset(b, Carapace_mm <120)
-g = glm(Pleopod_mat~Carapace_mm +fYear,data=b,family=binomial(link='logit')) ##CHECK what Months you're sampling
+g = glm(Pleopod_mat~Carapace_mm,data=b,family=binomial(link='logit')) ##CHECK what Months you're sampling
 
 plot(b$Carapace_mm, b$Pleopod_mat, pch = 16, xlab = "Carapace Length", ylab = "Proportion Mature")
 l = seq(min(b$Carapace_mm),max(b$Carapace_mm),by=.1)

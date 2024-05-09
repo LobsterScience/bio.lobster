@@ -6,6 +6,7 @@ require(ggplot2)
 require(dplyr)
 require(statmod)
 require(cowplot)
+require(tidyr)
 
 p = bio.lobster::load.environment()
 la()
@@ -44,7 +45,7 @@ text(75, 0.75,bquote(paste('L'['50']*' = ','90.3')))
 
 #pull out data 
 b33<- b33%>%
-  select(Carapace_mm,Pleopod_mat)
+  dplyr::select(Carapace_mm,Pleopod_mat)
 
 ## to get a and b from nls binned data
 b33$rcl=round(b33$Carapace_mm/3)*3+1

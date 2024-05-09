@@ -33,16 +33,16 @@ p$lfas = c("35") # specify lfa
 
 ###################### LOAD DATA ########################
 
-#lobster.db('logs.redo') 
+lobster.db('logs.redo') 
 lobster.db('logs')
 
-#lobster.db('process.logs.redo')
+lobster.db('process.logs.redo')
 logs=lobster.db("process.logs")
 
-#lobster.db('annual.landings.redo')
+lobster.db('annual.landings.redo')
 land =lobster.db("annual.landings")
 
-#lobster.db('seasonal.landings.redo')
+lobster.db('seasonal.landings.redo')
 Sland = lobster.db('seasonal.landings')
 
 ######################### MODELLED CPUE ############################
@@ -94,7 +94,7 @@ abline(h=lrp,col='red',lwd=2,lty=3)
 dev.off()
 
 ######## FRENCH PLOT ###########
-plot(l35$YEAR,l35$mu,xlab='Année',ylab='CPUE Standardisé (kg/casier levé)',type='p',pch=16,ylim=c(0,6),xlim=c(2005,2023))
+plot(l35$YEAR,l35$mu,xlab='Ann?e',ylab='CPUE Standardis? (kg/casier lev?)',type='p',pch=16,ylim=c(0,6),xlim=c(2005,2023))
 running.median = with(rmed(l35$YEAR,l35$mu),data.frame(YEAR=yr,running.median=x))
 l35=merge(l35,running.median,all=T)
 lines(l35$YEAR,l35$running.median,col='blue',lty=1,lwd=3)
@@ -119,9 +119,8 @@ b=merge(b,running.median,all=T)
 lines(b$SYEAR,b$running.median,col='blue',lty=1,lwd=3)
 dev.off()
 
-
 ######### ENGLISH PLOT ###############
-plot(b$SYEAR, b$CPUE, xlab="Année", ylab="CPUE (kg/casier levé)", type='p', pch=16, ylim=c(0,2.5))
+plot(b$SYEAR, b$CPUE, xlab="Ann?e", ylab="CPUE (kg/casier lev?)", type='p', pch=16, ylim=c(0,2.5))
 points(b$SYEAR[nrow(b)],b$CPUE[nrow(b)], type='b', pch=24,cex = 1.5, bg='blue')
 running.median = with(rmed(b$SYEAR,b$CPUE),data.frame(SYEAR=yr,running.median=x))
 b=merge(b,running.median,all=T)
@@ -171,14 +170,14 @@ median(subsamp$LFA35)
 ################## FRENCH PLOT #######################
 par(mar=c(5.1, 4.1, 4.1, 5.1),las=1)
 
-plot(g$SYEAR,g$LFA35,xlab='Année',ylab='Débarquements (t)',type='h',ylim=c(0,max(g$LFA35)*1.2),pch=15,col='grey',lwd=10,lend=3)
+plot(g$SYEAR,g$LFA35,xlab='Ann?e',ylab='D?barquements (t)',type='h',ylim=c(0,max(g$LFA35)*1.2),pch=15,col='grey',lwd=10,lend=3)
 lines(g$SYEAR[nrow(g)],g$LFA35[nrow(g)],type='h',pch=21,col='steelblue4',lwd=10,lend=3)
 par(new=T)
 
 plot(g$SYEAR,g$EFF,ylab='',xlab='', type='b', pch=16, axes=F,ylim=c(0,max(g$EFF,na.rm=T)))
 points(g$SYEAR[nrow(g)],g$EFF[nrow(g)], type='b', pch=24,bg='black')
 axis(4)
-mtext("Effort (milliers de casiers levés)", 4, 3.5, outer = F,las=0)	
+mtext("Effort (milliers de?casiers lev?s)", 4, 3.5, outer = F,las=0)	
 
 dev.off()		
 

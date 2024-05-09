@@ -20,11 +20,11 @@ require(ggpattern)
 
 p = bio.lobster::load.environment()
 la()
-assessment.year = 2023 ##Check Year
+assessment.year = 2024 ##Check Year
 p$syr = 1989
 p$yrs = p$syr:assessment.year
-p$current.assessment.year =2023
-figdir = file.path("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41Update_2022")
+p$current.assessment.year =2024
+figdir = file.path("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_2024")
 
 p$lfas = c("41") # specify lfa
 
@@ -131,7 +131,7 @@ ll
 #  where lfa = '41'
 #  and startdate > '2018-10-15')
 
-Obstraps<-read.csv("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/lobster_atsea_v_2.csv")
+Obstraps<-read.csv("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41//LFA41_2024/lobster_atsea_v_2.csv")
 
 ##Calculate the number of unique observed Trips each year
 
@@ -139,7 +139,7 @@ Obstraps<-read.csv("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/L
 #make unique ID with Trap and Trip
 Obstraps$obstrapID<-paste(Obstraps$TRIPNO, Obstraps$TRAPNO)
 num_obtrap<-aggregate(obstrapID ~ YR, data=Obstraps, function(x) length(unique(x)))
-
+colnames(num_obtrap)<-c("YEAR","OBSTOTALTRAPS")
 
 
 ##Calculate the number of unique Fishing Trips Each Year 
@@ -169,6 +169,17 @@ lobster.db('logs.redo')
 
 
 #loginfo is the number of traps  = effort - total fished traps
-loginfo<-read.csv("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/Lobster_Md_log_2.csv")
+loginfo<-read.csv("C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_2024/Lobster_Md_log_2.csv")
 loginfo<-loginfo[loginfo$YR>2017,]
 colnames(loginfo)<-c("YEAR","TOTALTRAPS")
+
+
+
+loginfo<-loginfo[loginfo$YEAR<2024,]
+loginfo<-na.omit(loginfo)
+
+percentObs_traps<-merge(loginfo,num_obtrap, by="YEAR")
+percentObs_traps$PerObserved<-(percentObs_traps$OBSTOTALTRAPS)/(percentObs_traps$TOTALTRAPS)
+percentObs_traps$PerObserved<-(percentObs_traps$PerObserved*100)
+
+write.csv(percentObs_traps,"C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_2024/PercentTrapsObs.csv")

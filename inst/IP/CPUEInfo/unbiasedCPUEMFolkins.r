@@ -28,6 +28,8 @@ aggregate(CPUE~lfa+t,data=subset(cc,lfa==35),FUN=function(x) round(mean(x),2))
 
 f = unique(cc$lfa)
 
+f="35"
+
 for(i in 1:length(f)){
     u = subset(cc,lfa==f[i])
     y = 2019:2022
@@ -46,3 +48,5 @@ for(i in 1:length(f)){
 }
 b = subset(cc,select=c(t,unBCPUE,yr))
 names(b) = c('Week of Season','CPUE','Year')
+
+

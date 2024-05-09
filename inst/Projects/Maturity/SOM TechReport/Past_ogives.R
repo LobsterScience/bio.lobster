@@ -31,11 +31,11 @@ a$LFA <-ifelse(a$Location == "Lobster Bay", 34, a$LFA)
 a$LFA <-ifelse(a$Location == "Harrigan Cove" | a$Location == "Tangier"| a$Location == "Mushaboom", 32, a$LFA)
 a$LFA <-ifelse(a$Location == "Port Mouton", 33,a$LFA)
 a$LFA <-ifelse(a$Location == "Canso", 31, a$LFA)
-a = subset(a,Carapace_mm <120)
+#a = subset(a,Carapace_mm <120)
 
 
 b=a
-par(mfrow=c(2,2),oma=c(2,2,0,0),mar=c(4,4,0.5,1))
+par(mfrow=c(2,1),oma=c(2,2,0,0),mar=c(4,4,0.5,1))
 
 ############### LFA 31A ##################
 b31 = subset(b,LFA == 31)
@@ -64,7 +64,7 @@ text(55, 0.75,bquote(paste('L'['50']*' = ','77.5')))
 
 #pull out data 
 b31<- b31%>%
-  select(Carapace_mm,Pleopod_mat)
+  dplyr::select(Carapace_mm,Pleopod_mat)
 
 ## to get a and b from nls binned data
 b31$rcl=round(b31$Carapace_mm/3)*3+1
@@ -97,7 +97,7 @@ l = seq(min(b32$Carapace_mm),max(b32$Carapace_mm),by=.1)
 ndata32 <- list(Carapace_mm=l)
 ndata32 = glmCIs(g32,ndata32)
 
-plot(b32$Carapace_mm, b32$Pleopod_mat, pch = 16, xlab = " ", ylab = " ",xlim=c(50,120))
+plot(b32$Carapace_mm, b32$Pleopod_mat, pch = 16, xlab = "Carapace Length (mm) ", ylab = "Proportion Mature ",xlim=c(50,120))
 lines(ndata32$Carapace_mm, ndata32$fit_resp)
 lines(ndata32$Carapace_mm, ndata32$upr, lty=2) 
 lines(ndata32$Carapace_mm, ndata32$lwr,lty=2)
@@ -115,7 +115,7 @@ text(55, 0.75,bquote(paste('L'['50']*' = ','92.2')))
 
 #pull out data 
 b32<- b32%>%
-  select(Carapace_mm,Pleopod_mat)
+  dplyr::select(Carapace_mm,Pleopod_mat)
 
 ## to get a and b from nls binned data
 b32$rcl=round(b32$Carapace_mm/3)*3+1
@@ -163,7 +163,7 @@ text(55, 0.85, paste("LFA 33"))
 text(55, 0.75,bquote(paste('L'['50']*' = ','97.6')))
 
 #pull out data 
-b33<- b33%>% select(Carapace_mm,Pleopod_mat)
+b33<- b33%>% dplyr::select(Carapace_mm,Pleopod_mat)
 
 ## to get a and b from nls binned data
 b33$rcl=round(b33$Carapace_mm/3)*3+1
