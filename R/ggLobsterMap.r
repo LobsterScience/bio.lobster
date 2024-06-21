@@ -2,7 +2,7 @@
 
 ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(-74,-47),
                          attrData=NULL,attrColumn='Z', addGrids=T,addNAFO=F,nafo='4X', bathy=T,fw=NULL,legLab="",addLFAlines=T,
-                         addLFALabels=F, addGridLabels=F, addNAFOLabels=F,scaleTrans='identity',brks=NULL,return.object=F,
+                         addLFALabels=F, addGridLabels=F,addPoints=F,pts, addNAFOLabels=F,scaleTrans='identity',brks=NULL,return.object=F,
                          layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),LFA_label_size=8,colourLFA=T, ...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
@@ -144,7 +144,15 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
       if(addNAFOLabels){
         p = p + geom_sf_text(data=labs, aes(label=lab),family='sans') +coord_sf(xlim=xlim,ylim=ylim)
       }
-      
+      if(addPoints){
+        p = p + geom_sf(data=pts) +coord_sf(xlim=xlim,ylim=ylim)
+        if(any(names(pts) %in% 'group')){
+          xy = as.data.frame(st_coordinates(pts))
+          xy$group = pts$group
+          p = p + geom_point(data=xy,aes(x=X,y=Y,colour=group)) +coord_sf(xlim=xlim,ylim=ylim)
+          
+        }
+      }
       
       if(return.object) return(p)
   p + theme_bw()+

@@ -53,11 +53,8 @@ deps75 = aggregate(Depth~LFA,data=idf,FUN=function(x)round(quantile(x,0.75)))
 deps$Depth[which(deps$LFA==29)] = round(1.8288*40)
 deps$Depth[which(deps$LFA==30)] = round(1.8288*25)
 
-<<<<<<< HEAD
-=======
 #expert opinion from Advisory Oct 17, 2023
 deps$Depth[which(deps$LFA==32)] = round(1.8288*40)
->>>>>>> 04dd5a441334e4a09c0e3bf900f283aedffb8b58
 
 #just prune the polys
 

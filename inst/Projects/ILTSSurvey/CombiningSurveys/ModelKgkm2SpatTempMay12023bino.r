@@ -17,7 +17,22 @@ fd=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling')
 dir.create(fd,showWarnings=F)
 setwd(fd)
 survey = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','BaseDataForClimateModel.rds'))
-sf_use_s2(FALSE) #needed for cropping
+
+
+ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
+st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
+ns_coast <- suppressWarnings(suppressMessages(
+  st_crop(ns_coast,
+          c(xmin = -68, ymin = 41, xmax = -57, ymax = 47.5))))
+
+ns_coast <- st_transform(ns_coast, crs_utm20)
+st_geometry(ns_coast) = st_geometry(ns_coast)/1000
+st_crs(ns_coast) <- crs_utm20
+
+
+ggplot(subset(s, SOURCE %in% c('DFO_RV','NEFSC_RV')))+geom_sf()+#geom_sf(data=subset(s,Berried>0),colour='red')+
+  geom_sf(data=ns_coast,fill='wheat')+theme_void()
+sf_use_s2(FALSE) #needed for croppings
 # Project our survey data coordinates:
 
 survey$lZ = log(survey$z)

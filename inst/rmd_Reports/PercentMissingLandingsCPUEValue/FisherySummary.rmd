@@ -281,6 +281,7 @@ options(knitr.kable.NA = "--")
 \newpage
 ```{r, echo=FALSE}
 sa1 = sa1 %>% pivot_wider(names_from = LFA, values_from = Landings)
+sa1 = sa1[order(sa1$SYEAR),]
 
   sa1 %>% 
   knitr::kable(format='latex',booktabs=T, caption='Seasonal Commercial Landings. The last row is preliminary (indicated in orange') %>%
