@@ -549,7 +549,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
      
     xy$ID = xS$ID = NULL
     xFinal = bind_rows(xS,xy)
-    xFinal = na.zero(xFinal,cols=27:34)
+    if(!aggregate) xFinal = na.zero(xFinal,cols=27:34)
     
     return(xFinal)
     }

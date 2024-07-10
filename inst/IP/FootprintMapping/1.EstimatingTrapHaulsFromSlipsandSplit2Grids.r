@@ -119,7 +119,7 @@ gg = aggregate(SD_LOG_ID~LFA+GRID_NUM+SYEAR,data = g,FUN=function(x) length(uniq
 saveRDS(gg,'DiscretizedData/SDLOGSWithinGrid.rds')
 
 #############merge
-icenses By Grid and Week
+#Licenses By Grid and Week
 
 g = lobster.db('process.logs')
 g = subset(g,SYEAR>2004 & SYEAR<2024)

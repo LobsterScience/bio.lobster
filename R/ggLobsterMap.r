@@ -1,6 +1,6 @@
 #' @export
 
-ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(-74,-47),
+ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(-74,-47),LFAfill='white',
                          attrData=NULL,attrColumn='Z', addGrids=T,addNAFO=F,nafo='4X', bathy=T,fw=NULL,legLab="",addLFAlines=T,
                          addLFALabels=F, addGridLabels=F,addPoints=F,pts, addNAFOLabels=F,scaleTrans='identity',brks=NULL,return.object=F,
                          layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),LFA_label_size=8,colourLFA=T, ...){
@@ -87,7 +87,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
         scale_y_continuous(breaks=round(seq(ylim[1],ylim[2],length.out = 4)))
       
       if(addLFAlines) {
-        p = p+ geom_sf(data=l,lwd=1.35) 
+        p = p+ geom_sf(data=l,fill=LFAfill) 
           
       }
         if(bathy){
