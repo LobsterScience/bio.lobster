@@ -104,10 +104,10 @@ ggplot(subset(gg,PrivacyScreen==1),aes(fill=percentChange))+
 
 
 ##LFA 41
-lobster.db('logs41')
-logs41$DDLON = logs41$DDLON*-1
-logs41 = subset(logs41, !is.na(DDLON) )
-lo41 = st_as_sf(logs41,coords = c('DDLON','DDLAT'),crs=4326)
+lobster.db('process.logs41')
+logs41p$DDLON = logs41p$DDLON*-1
+logs41p = subset(logs41p, !is.na(DDLON) )
+lo41 = st_as_sf(logs41p,coords = c('DDLON','DDLAT'),crs=4326)
 
 l4 = readRDS(file.path(project.datadirectory('bio.lobster'),'data','maps','LFAPolysSF.rds'))
 l4 = subset(l4,LFA==41, select=LFA)
@@ -125,7 +125,8 @@ ggplot(l4)+geom_sf()+geom_sf(data=grid_in_polygon,col='red')
 
 jj = st_join(lo41,grid_in_polygon)
 jj$yr = year(jj$FV_FISHED_DATETIME)
-jja = aggregate(cbind(NUM_OF_TRAPS,ADJCATCH)~ID+yr,data=jj,FUN=sum)
+
+jja = aggregate(cbind(NUM_OF_TRAPS,ADJCATCH_KG)~ID+yr,data=jj,FUN=sum)
 jja = merge(jja,grid_in_polygon)
 
 jja = st_as_sf(jja)

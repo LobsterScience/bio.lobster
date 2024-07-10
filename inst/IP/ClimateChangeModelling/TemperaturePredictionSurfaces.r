@@ -38,3 +38,36 @@ st_geometry(cb) <- NULL
 cb = as_tibble(cb)
 cbr = aggregate(BottomTemp~X1000+Y1000+rYR+lZ+W,data=cb,FUN=mean)
 saveRDS(cbr,'CanProjectionSurfaces.rds')
+
+g=readRDS('CanProjectionSurfaces.rds')
+g = st_as_sf(g,coords = c('X1000','Y1000'),crs=32620)
+st_crs(g) <- 32620
+
+
+rL = readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
+rL = st_as_sf(rL)
+st_crs(rL) <- 4326
+rL = st_transform(rL,32620) 
+st_geometry(rL) <- st_geometry(st_as_sf(rL$geometry/1000)) 
+st_crs(rL) <- 32620
+
+rL1 = subset(rL,LFA<41)
+
+
+
+ggplot(subset(g,W==20 &rYR ==2032)) +
+  geom_sf(aes(fill=BottomTemp,color=BottomTemp),size=2) + 
+  scale_fill_viridis_c() +
+  scale_color_viridis_c() +
+   geom_sf(data=rL1,linewidth=1.32,colour='black',fill=NA)+
+  theme( axis.ticks.x = element_blank(),
+         axis.text.x = element_blank(),
+         axis.title.x = element_blank(),
+         axis.ticks.y = element_blank(),
+         axis.text.y = element_blank(),
+         axis.title.y = element_blank()
+  ) +
+  coord_sf()+
+  theme_void()
+
+
