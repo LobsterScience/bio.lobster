@@ -106,8 +106,49 @@ matSamp$OvaryMaturity<-ifelse(matSamp$OvaryFac_mat == 1 & matSamp$OvaryCol_mat =
 
 
 
+
+##########------------------ Data Input ------------------##########
+matSamp24= read.csv(file.path(project.datadirectory('bio.lobster'),'data','Maturity','Maturity2024.csv'))
+
+matSamp24$Y = matSamp24$Lat
+matSamp24$X =matSamp24$Long
+
+matSamp24$Date = as.Date(matSamp24$Date,"%d-%m-%Y")
+matSamp24$mon = month(matSamp24$Date)
+matSamp24$year = year(matSamp24$Date)
+
+#matSamp24=subset(matSamp24, Sex == 2) #Remove Berried Females
+
+#matSamp24 <- matSamp24[,colSums(is.na(matSamp24))<nrow(matSamp24)]
+#### set up data for each Maturity indicator --- Check for justification of each Mature (1) or Not (0)
+#Pleopod Staging
+matSamp24$Pleopod_mat <-ifelse(matSamp24$Cement_gland_stage<2,0,1)
+
+#Ovary Factor
+matSamp24$OvaryFac_mat<-ifelse(matSamp24$Ovary_factor<200,0,1)
+#Ovary Colour
+matSamp24$OvaryCol_mat<-ifelse(matSamp24$Ovary_colour %in% c("dark green","medium green","Medium green"),1,0) 
+#Oocyte Size
+matSamp24$Oocyte_size_mat<-ifelse(matSamp24$Oocyte_average_mm<0.8,0,1)
+
+
+##Ovary Status
+matSamp24$OvaryMaturity<-ifelse(matSamp24$OvaryFac_mat == 1 & matSamp24$OvaryCol_mat == 1 & matSamp24$Oocyte_size_mat ==1,1,0)
+
+
+
+
+
+#Create columns to match previous data sets
+matSamp24$Pleopod_mat <- 0
+matSamp24$OvaryFac_mat <- 0
+matSamp24$OvaryCol_mat <- 0
+matSamp24$Oocyte_size_mat <- 0
+matSamp24$OvaryMaturity <- 0
+
+################DATA REVIEWING #################
 ####look at sizes
-lenfreq1 <- ggplot(data=matSamp,aes(x=Carapace_mm)) +
+lenfreq1 <- ggplot(data=matSamp24,aes(x=Carapace_mm)) +
   geom_histogram(binwidth=5,boundary=0,closed="left",color="black") +
   scale_y_continuous(name="Number of Lobster", limits = c(0,600), expand=c(0,0)) +
   scale_x_continuous(name="Carapace Length (mm)") +
@@ -116,18 +157,15 @@ lenfreq1 <- ggplot(data=matSamp,aes(x=Carapace_mm)) +
  
 ##Look at locations ##
 LobsterMap(ylim=c(42.5,46.5),xlim=c(-67.8,-59))
-addPoints(na.omit(matClean[,c('X','Y','EID')]),col='red')
+addPoints(na.omit(matClean[,c('X','Y', "EID")]),col='red')
+
+
 
 
 ##Combine Data and Export
-matClean<-rbind(matSamp, matSamp33)
+matClean<-rbind(matSamp, matSamp33,matSamp24)
 
 matClean$EID = 1:nrow(matClean)
 
 write.csv(matClean, file.path(project.datadirectory('bio.lobster'),'data','Maturity','matClean.csv'))
 
-
-#Summary Stats
- 
-check<- subset(matSamp,LFA=='36')
-check<-subset(check, year==2023)

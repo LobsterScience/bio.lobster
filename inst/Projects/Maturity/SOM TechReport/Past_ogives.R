@@ -31,7 +31,8 @@ a$LFA <-ifelse(a$Location == "Lobster Bay", 34, a$LFA)
 a$LFA <-ifelse(a$Location == "Harrigan Cove" | a$Location == "Tangier"| a$Location == "Mushaboom", 32, a$LFA)
 a$LFA <-ifelse(a$Location == "Port Mouton", 33,a$LFA)
 a$LFA <-ifelse(a$Location == "Canso", 31, a$LFA)
-#a = subset(a,Carapace_mm <120)
+
+a = subset(a,Carapace_mm <121)
 
 
 b=a
@@ -61,30 +62,30 @@ text(55, 0.85, paste("LFA 31A"))
 text(55, 0.75,bquote(paste('L'['50']*' = ','77.5')))
 
 
-
-#pull out data 
-b31<- b31%>%
-  dplyr::select(Carapace_mm,Pleopod_mat)
-
-## to get a and b from nls binned data
-b31$rcl=round(b31$Carapace_mm/3)*3+1
-b31$co = 1
-b31im = aggregate(co~rcl,data=subset(b31,Pleopod_mat==0),FUN=sum)
-names(b31im)[2] = 'n_imm'
-b31mm = aggregate(co~rcl,data=subset(b31,Pleopod_mat==1),FUN=sum)
-names(b31mm)[2] = 'n_mat'
-
-b31p=merge(b31mm, b31im, all=T)
-b31p = bio.utilities::na.zero(b31p)
-b31p$n=(b31p$n_mat+b31p$n_imm)
-
-b31p$p = b31p$n_mat/(b31p$n_mat+b31p$n_imm)
-m1 = formula(p~1/(1+(exp(a+(b*rcl)))))
-b31nlsp<-nls(m1,data=b31p,start=list(a=0.8,b=-.05), weights=b31p$n)
-Propmatp<-predict(b31nlsp,newdata=seq(1,9,1))
-
-plot(b31p$rcl,b31p$p)
-lines(b31p$rcl,Propmatp)
+# 
+# #pull out data 
+# b31<- b31%>%
+#   dplyr::select(Carapace_mm,Pleopod_mat)
+# 
+# ## to get a and b from nls binned data
+# b31$rcl=round(b31$Carapace_mm/3)*3+1
+# b31$co = 1
+# b31im = aggregate(co~rcl,data=subset(b31,Pleopod_mat==0),FUN=sum)
+# names(b31im)[2] = 'n_imm'
+# b31mm = aggregate(co~rcl,data=subset(b31,Pleopod_mat==1),FUN=sum)
+# names(b31mm)[2] = 'n_mat'
+# 
+# b31p=merge(b31mm, b31im, all=T)
+# b31p = bio.utilities::na.zero(b31p)
+# b31p$n=(b31p$n_mat+b31p$n_imm)
+# 
+# b31p$p = b31p$n_mat/(b31p$n_mat+b31p$n_imm)
+# m1 = formula(p~1/(1+(exp(a+(b*rcl)))))
+# b31nlsp<-nls(m1,data=b31p,start=list(a=0.8,b=-.05), weights=b31p$n)
+# Propmatp<-predict(b31nlsp,newdata=seq(1,9,1))
+# 
+# plot(b31p$rcl,b31p$p)
+# lines(b31p$rcl,Propmatp)
 
 
 
@@ -111,31 +112,31 @@ with(ndata32,{
 text(55, 0.85, paste("LFA 32"))
 text(55, 0.75,bquote(paste('L'['50']*' = ','92.2')))
 
-
-
-#pull out data 
-b32<- b32%>%
-  dplyr::select(Carapace_mm,Pleopod_mat)
-
-## to get a and b from nls binned data
-b32$rcl=round(b32$Carapace_mm/3)*3+1
-b32$co = 1
-b32im = aggregate(co~rcl,data=subset(b32,Pleopod_mat==0),FUN=sum)
-names(b32im)[2] = 'n_imm'
-b32mm = aggregate(co~rcl,data=subset(b32,Pleopod_mat==1),FUN=sum)
-names(b32mm)[2] = 'n_mat'
-
-b32p=merge(b32mm, b32im, all=T)
-b32p = bio.utilities::na.zero(b32p)
-b32p$n=(b32p$n_mat+b32p$n_imm)
-
-b32p$p = b32p$n_mat/(b32p$n_mat+b32p$n_imm)
-m1 = formula(p~1/(1+(exp(a+(b*rcl)))))
-b32nlsp<-nls(m1,data=b32p,start=list(a=2,b=-.05), weights=b32p$n)
-Propmatp<-predict(b32nlsp,newdata=seq(1,9,1))
-
-plot(b32p$rcl,b32p$p)
-lines(b32p$rcl,Propmatp)
+# 
+# 
+# #pull out data 
+# b32<- b32%>%
+#   dplyr::select(Carapace_mm,Pleopod_mat)
+# 
+# ## to get a and b from nls binned data
+# b32$rcl=round(b32$Carapace_mm/3)*3+1
+# b32$co = 1
+# b32im = aggregate(co~rcl,data=subset(b32,Pleopod_mat==0),FUN=sum)
+# names(b32im)[2] = 'n_imm'
+# b32mm = aggregate(co~rcl,data=subset(b32,Pleopod_mat==1),FUN=sum)
+# names(b32mm)[2] = 'n_mat'
+# 
+# b32p=merge(b32mm, b32im, all=T)
+# b32p = bio.utilities::na.zero(b32p)
+# b32p$n=(b32p$n_mat+b32p$n_imm)
+# 
+# b32p$p = b32p$n_mat/(b32p$n_mat+b32p$n_imm)
+# m1 = formula(p~1/(1+(exp(a+(b*rcl)))))
+# b32nlsp<-nls(m1,data=b32p,start=list(a=2,b=-.05), weights=b32p$n)
+# Propmatp<-predict(b32nlsp,newdata=seq(1,9,1))
+# 
+# plot(b32p$rcl,b32p$p)
+# lines(b32p$rcl,Propmatp)
 
 
 
