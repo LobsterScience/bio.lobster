@@ -1,10 +1,10 @@
 require(readxl)
 #the xls file needs to be ONLY the sheets that contain data to be loaded
-ns<-length(excel_sheets(file.path("C:/Users/cooka/Downloads/L02072024 2.xlsx")))
+ns<-length(excel_sheets(file.path("C:/Users/cooka/Downloads/L03072024.xlsx")))
 
 fi = list()
 for(i in 1:ns){
-  fi[[i]]<-read_excel(file.path("C:/Users/cooka/Downloads/L02072024 2.xlsx"),sheet=i)
+  fi[[i]]<-as.data.frame(read_excel(file.path("C:/Users/cooka/Downloads/L03072024.xlsx"),sheet=i))
 }
 
 lt1 = read.csv('~/git/bio.lobster/data/loaderTypes.csv') #this has the line types, names of fields (ie column names) and the number of chars
