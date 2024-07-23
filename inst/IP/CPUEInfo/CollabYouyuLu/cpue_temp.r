@@ -279,8 +279,9 @@ re1 = lmer(SlopeCPUE ~ SlopeTemp + (1+SlopeTemp|GridGrouping),data=oo)
 re2 = lmer(SlopeCPUE ~ startTemp + SlopeTemp + (1|GridGrouping),data=oo) #random intercept
 re3 = lmer(SlopeCPUE ~ meanTemp + SlopeTemp + (1+SlopeTemp|GridGrouping),data=oo)
 re4 = lmer(SlopeCPUE ~ SlopeTemp + (1|GridGrouping),data=oo)
+re5 = lmer(SlopeCPUE ~ medTemp + (1|GridGrouping),data=oo)
 
-compare_performance(re,re1,re2,re3,re4)
+compare_performance(re,re1,re2,re3,re4,re5)
 
 plot_model(re4,type='est')
 check_model(re4)
@@ -377,6 +378,8 @@ gas$fm = ifelse(gas$mn %in% c(1:5,12),1,0)
 gas$diff = gas$TEMP - gas$GL
 
 gas = subset(gas,dist<5000)
+
+saveRDS(gas,'obstemps2GL_filtered.rds')
 
 ggplot(subset(gas,fm==1),aes(x=diff))+geom_histogram()+facet_wrap(~GRIDNO)
 ggplot(subset(gas,fm==1),aes(x=diff,after_stat(density)))+geom_histogram()+geom_vline(aes(xintercept=0),col='red') +facet_wrap(~GRIDNO,scales = 'free_y')

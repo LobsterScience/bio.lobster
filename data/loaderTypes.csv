@@ -36,7 +36,7 @@ LineType,Data_Field,Length,Position
 6,Station,30,(33:62)
 6,Stratum_Id,6,(63:68)
 6,HydCd_Id,2,(69:70)
-6,Est_Catch,10,(71:82)
+6,Est_Catch,12,(71:82)
 6,ComArea_Id,5,(83:87)
 6,ResArea_Id,3,(88:90)
 6,EEZArea_Id,6,(91:96)

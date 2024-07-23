@@ -21,24 +21,28 @@ x = RV_sets()
       cr = sum(x$Legal_wt,na.rm=T)/sum(x$WEIGHT_KG,na.rm=T)
       i = which(is.na(x$Legal))
       x$Legal_wt[i] = x$WEIGHT_KG[i] * cr
-      x = subset(x,month(DATE) %in% 6:10)
+      x = subset(x,month(DATE) %in% 6:8)
       x = subset(x,select=c(mission,setno,LONGITUDE,LATITUDE,DATE,Legal_wt))
       x$Survey = 'RV'
       
-y = ILTS_ITQ_All_Data(redo_base_data = F,size = 'commercial',biomass = T)
+y = ILTS_ITQ_All_Data(redo_base_data = F,size=c(82,300),aggregate=T,species=2550,biomass = T)
 y = subset(y,select=c(TRIP_ID,SET_NO, SET_LONG,SET_LAT,SET_DATE,SA_CORRECTED_PRORATED_N))    
 y$Survey='ILTS'
 names(y) = names(x)
 
 survey = rbind(x,y)
-survey = subset(survey, month(DATE) %in% c(6:10))
+survey = subset(survey, month(DATE) %in% c(6:8))
 survey$YEAR = year(survey$DATE)
 survey = st_as_sf(survey,coords = c('LONGITUDE','LATITUDE'),crs=4326)
+
+ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
+st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
+
+saveRDS(survey,'Commercial_Biomass_Summer.rds')
 
 s23 = subset(survey,YEAR==2023)
 s23$group = s23$Survey
 v = ggLobsterMap('west',addPoints=T,pts=s23)
-
 
 survey = st_transform(survey,crs_utm20)
 
@@ -57,8 +61,6 @@ survey <- suppressWarnings(suppressMessages(
 # Project our survey data coordinates:
 
 
-ns_coast =readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastSF.rds"))
-st_crs(ns_coast) <- 4326 # 'WGS84'; necessary on some installs
 ns_coast <- suppressWarnings(suppressMessages(
   st_crop(ns_coast,
           c(xmin = -68, ymin = 41, xmax = -64, ymax = 47.5))))
@@ -126,7 +128,7 @@ fit = sdmTMB(Legal_wt~s(z)+year_scaled+SOURCE,
              )
 
 stripDLLs()
-saveRDS(fit,'sdmTMBMay2024_spatvarYear.rds')
+saveRDS(fit,'sdmTMBJuly2024_spatvarYear.rds')
 fit = readRDS('sdmTMBMay2024_spatvarYear.rds')
 
 #add in bathy 
@@ -147,6 +149,11 @@ st_crs(rL) <- 4326
 rL = st_transform(rL,32620) 
 st_geometry(rL) <- st_geometry(st_as_sf(rL$geometry/1000)) 
 st_crs(rL) <- 32620
+
+bathy= ba
+LFApolys = rL
+saveRDS(list(survey,ns_coast,bathy,LFApolys),file='full_package_survey_coast_bathy_LFApolys.rds')
+
 
 #survey cvs
 surs = st_join(survey,rL,join=st_within)
@@ -255,17 +262,18 @@ st_crs(ns_coast) <- 32620
 h = st_as_sf(g$data)
 
 #spatially varying coefficient of random field for this case random slope across time
-ggplot(subset(h,YEAR==2022 )) +
+ggplot(subset(h,YEAR==2016 )) +
   geom_sf(aes(fill=zeta_s_year_scaled ,color=zeta_s_year_scaled ),size=2.1) +
   scale_fill_viridis_c() +
   scale_color_viridis_c() +
   geom_sf(data=ns_coast,fill='black')
 
 #spatial random field  
-ggplot(subset(h,YEAR==2022), aes(X1000, Y1000,)) +
+ggplot(subset(h,YEAR==2022)) +
   geom_sf(aes(fill=omega_s ,color=omega_s ),size=2.1) +
   scale_fill_viridis_c() +
-  scale_color_viridis_c() 
+  scale_color_viridis_c()+
+  geom_sf(data=ns_coast,fill='black')
 
 
 h$pred = fit$family$linkinv(h$est)
@@ -278,7 +286,7 @@ gsf$predM = ifelse(gsf$pred>mm[2],mm[2],gsf$pred)
   scale_fill_viridis_c(trans='sqrt',limits=mm) +
   scale_color_viridis_c(trans='sqrt',limits=mm) +
   facet_wrap(~YEAR) +
-geom_sf(data=ns_coast,fill='wheat')+
+geom_sf(data=ns_coast,fill='black')+
   theme( axis.ticks.x = element_blank(),
          axis.text.x = element_blank(),
          axis.title.x = element_blank(),
