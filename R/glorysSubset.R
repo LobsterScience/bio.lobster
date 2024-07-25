@@ -6,7 +6,7 @@ glorysSubset <- function(glorysfile=file.path(project.datadirectory('bio.lobster
 				y1 = read.cmems(glorysfile)
 				nL = length(y1)	
 
-				x1 = y1[[1]]
+				x1 = y1[[2]]
 				nlats = length(x1@lat)
 				nlons = length(x1@lon)
 				g = expand.grid(x1@lon,x1@lat)
@@ -50,7 +50,6 @@ glorysSubset <- function(glorysfile=file.path(project.datadirectory('bio.lobster
 				r = gather(a2, day, na, X1:X365)
 					
 				}
-				
 				names(r)[7] = na
 				r$date = rep(ds,each=nrow(g))
 			}

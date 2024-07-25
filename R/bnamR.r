@@ -9,7 +9,7 @@
 #' @export
 
 bnamR = function(redo=F , bnam_location = '~/Downloads/BNAM_Tbtm_1990_2018.mat', 
-	outfile = file.path(project.datadirectory('bio.lobster'),'data','BNAM','bnams.reshape.rds'),	standard=T,projections=F,yr=2055){
+	outfile = file.path(project.datadirectory('bio.lobster'),'Temperature Data','BNAM','bnams.reshape.rds'),	standard=T,projections=F,yr=2055){
 	if(standard){
 	if(redo){
 		require(R.matlab)
