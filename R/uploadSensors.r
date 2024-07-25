@@ -32,7 +32,7 @@ uploadSensors <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisnt
         }
       }
       datafile = subset(datafile, !is.na(SET_NO))
-      browser()
+
             if(appendIt==F & ROracle::dbExistsTable(con, tablenm)) stop('table already exists in the space. You need to either use a new name or use appendIT=T')
       if(appendIt==F & !ROracle::dbExistsTable(con, tablenm)){    
                         dbSendQuery(conn=con, statement = paste("create table ",tablenm,"(",
