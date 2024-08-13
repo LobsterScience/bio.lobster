@@ -12,23 +12,24 @@ require(rstanarm)
 require(rlang)
 require(glue)
 require(PBSmapping)
+require(dplyr)
 
 p = bio.lobster::load.environment()
 la()
-assessment.year = 2023 ##Check Year
+assessment.year = 2024 ##Check Year
 p$syr = 1989
 p$yrs = p$syr:assessment.year
 
 figdir = file.path("2023 Updates")
 p$lfas = c("35") # specify lfa
 
+p=list(); p$yr=2024
 
 x11(width=5, height=5)
 LobsterMap(ylim=c(43.3,46),	xlim=c(-67.8,-63.2))
 
 
 
-p$lfas = c("35") # specify lfa
 
 
 ###################### LOAD DATA ########################
@@ -46,7 +47,7 @@ lobster.db('seasonal.landings.redo')
 Sland = lobster.db('seasonal.landings')
 
 ######################### MODELLED CPUE ############################
-#TempModelling = TempModel( annual.by.area=F, redo.data=T)
+TempModelling = TempModel( annual.by.area=F, redo.data=T)
 CPUE.data<-CPUEModelData(p,redo=F,TempModelling2023)
 ## Commercial CPUE MOdels
 mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)
@@ -133,12 +134,13 @@ a=lobster.db('process.logs')
 a = subset(a,LFA==35)
 b=aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR,data=a,FUN=sum)
 b$CPUE=b$WEIGHT_KG/b$NUM_OF_TRAPS
-#h=lobster.db('seasonal.landings.redo')
+h=lobster.db('seasonal.landings.redo')
 h=lobster.db('seasonal.landings')
 h
 h=h[,c('SYEAR','LFA35')]
 h
-h$SYEAR=1976:2023
+h <- h %>% filter(row_number() <= n()-1)
+h$SYEAR=1976:2024
 merge(b,h)
 g=merge(b,h)
 g$EFF = g$LFA35/g$CPUE

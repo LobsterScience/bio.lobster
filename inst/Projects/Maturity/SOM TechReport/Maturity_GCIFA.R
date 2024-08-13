@@ -10,15 +10,14 @@ require(cowplot)
 require(tidyr)
 require(measurements)
 
-p = bio.lobster::load.environment()
-la()
+
 ##########------------------ Data Input ------------------##########
 a = read.csv(file.path(project.datadirectory('bio.lobster'),'data','Maturity','Maturity_GCIFA.csv'))
 ##########-----------------------------------------------##########
 b=a
 
 b= subset(b, Carapace_mm <121)
-par(mfrow=c(2,1),oma=c(2,2,0,0),mar=c(4,4,0.5,1))
+
 
 #### Clean and convert ####
 b$Date = as.Date(b$Date,"%d-%b-%y")
@@ -43,8 +42,9 @@ b <- b %>%
   rename(Y = Latitude_DD, X = Longitude_DD)
 
 ##Subset and determine SOM for LFA 31A
-
+par(mfrow=c(2,1),oma=c(2,2,0,0),mar=c(4,4,0.5,1))
 b31a=subset(b, LFA == "31A")
+
 
 g31a= glm(Pleopod_mat~Carapace_mm,data=b31a,family=binomial(link='logit')) ##CHECK what Months you're sampling
 
@@ -65,7 +65,7 @@ with(ndata31a,{
 })	
 text(55, 0.85, paste("LFA 31A"))
 #text(55, 0.79, paste("n=348"))
-text(55, 0.73,bquote(paste('L'['50']*' = ','74.4')))
+text(55, 0.73,bquote(paste('L'['50']*' = ','73.0')))
 
 
 

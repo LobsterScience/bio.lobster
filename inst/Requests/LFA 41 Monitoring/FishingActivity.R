@@ -4,28 +4,21 @@ require(devtools)
 require(PBSmapping)
 require(lubridate)
 require(ggplot2)
-require(dplyr)
+require(ROracle)
 require(RODBC)
-require(rgdal)
+require(dplyr)
+require(sf)
 
-
-p = bio.lobster::load.environment()
-p$libs = NULL
-la()
-assessment.year = 2024
-p$yrs = 1947:p$current.assessment.year
-p$lfas = c("41") # specify lfa
-
-la()
 wd = ('E:/Nova Scotia/Lobster Job/Stock Assessment/LFA 41/LFA 41 Evaluation/Fishing Activity')
 setwd(wd)
 
-
-#lobster.db( DS="observer41.redo")
+###################  DATA IMPORT ############
+lobster.db( DS="observer41.redo")
 lobster.db( DS="observer41")
 
-#lobster.db( DS = 'logs41.redo', p=p) 
-lobster.db( DS = 'logs41', p=p)
+lobster.db( DS = 'logs41.redo') 
+lobster.db( DS = 'logs41')
+
 
 
 
@@ -155,8 +148,7 @@ write.csv(CheckSoak, 'E:/Nova Scotia/Lobster Job/Stock Assessment/LFA 41/LFA 41 
 ####CHECK ACTIVITY IN LFA 40
 require(bio.survey)
 require(bio.lobster)
-p = bio.lobster::load.environment()
-p$libs = NULL
+
 
 require(bio.lobster)
 require(bio.utilities)

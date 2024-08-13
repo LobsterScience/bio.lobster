@@ -8,8 +8,7 @@ require(statmod)
 library(patchwork)
 library(cowplot)
 library(dplyr)
-p = bio.lobster::load.environment()
-la()
+
 ##########------------------ Data Input ------------------##########
 a = read.csv(file.path(project.datadirectory('bio.lobster'),'data','Maturity','Maturity_GCIFA.csv'))
 ##########-----------------------------------------------##########
@@ -38,7 +37,12 @@ b$Longitude_DD <- sapply(b$Longitude, convert_to_decimal_degrees)
 
 b <- b %>%
   rename(Y = Latitude_DD, X = Longitude_DD)
+
+
+b$X[is.na(b$Y)] <- b$Latitude[is.na(b$Y)]
+b$Y[is.na(b$X)] <- b$Longitude[is.na(b$X)]
 b$X = b$X*-1
+
 
 ##### Map Samples
 
@@ -58,11 +62,11 @@ pal <- c("#75D7E8", "#828289")
 
 # Create individual plots without legends and y-axis labels
 LF31A <- ggplot() +
-  geom_histogram(data = b31A, aes(x = Carapace_mm, fill = Pleopod_mat, group = Pleopod_mat), alpha = 0.6, position = 'identity', bins = 70) +
+  geom_histogram(data = b31A, aes(x = Carapace_mm, fill = Pleopod_mat, group = Pleopod_mat), alpha = 0.6, position = 'identity', bins = 80) +
   geom_vline(xintercept = 82.5, colour = "#F02C2C", lty = 2, lwd = 0.8) +
   geom_vline(xintercept = 74.4, colour = "blue", lty = 3, lwd = 0.8) +
   xlab("Carapace Length (mm)") +
-   scale_y_continuous(limits = c(0, 50), expand = c(0, 0)) +
+   scale_y_continuous(limits = c(0, 70), expand = c(0, 0)) +
   scale_fill_manual(values = pal, labels = c("Immature", "Mature"), name = "Maturity Status") +
   facet_wrap(~year) +
   theme_bw() +
@@ -73,7 +77,7 @@ LF31A <- ggplot() +
         legend.position = "none",
         axis.title.y = element_blank(),
         axis.title.x = element_blank()) +
-  annotate("text", label = "LFA 31A", x = 50, y = 45, size = 4, col = "black")
+  annotate("text", label = "LFA 31A", x = 56, y = 65, size = 4, col = "black")
 
 LF31B <- ggplot() +
   geom_histogram(data = b31B, aes(x = Carapace_mm, fill = Pleopod_mat, group = Pleopod_mat), alpha = 0.6, position = 'identity', bins = 70) +
@@ -90,7 +94,7 @@ LF31B <- ggplot() +
         panel.background = element_blank(),
         legend.position = "none",
         axis.title.y = element_blank()) +
-  annotate("text", label = "LFA 31B", x = 48, y = 45, size = 4, col = "black")
+  annotate("text", label = "LFA 31B", x =50, y = 45, size = 4, col = "black")
 
 # Combine the plots without individual legends and y-axis labels
 combined_plots <- plot_grid(LF31A, LF31B, ncol = 1)

@@ -80,7 +80,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
   gridCent = st_centroid(r)
   
       p =  ggplot(data=ns_coast) +
-        geom_sf(fill=fill.colours)+
+        geom_sf(fill=fill.colours, lwd=0.4)+
           xlab("Longitude") +
           ylab("Latitude")+
         scale_x_continuous(breaks=round(seq(xlim[1],xlim[2],length.out = 4),2)) +

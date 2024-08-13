@@ -5,10 +5,21 @@ require(lubridate)
 require(tidyr)
 require(dplyr)
 require(dbscan)
-setwd('C:/Users/cooka/Downloads/')
+setwd('C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/Maturity')
 x = read.csv('LobsterMaturityDatabase.csv')
 v = read.csv('matClean.csv')
 b = read.csv('Maturity_GCIFA.csv')
+
+
+## Add LFAs
+x$LFA <- ""
+x$LFA <-ifelse(x$Location == "Lobster Bay", 34, x$LFA)
+x$LFA <-ifelse(x$Location == "Harrigan Cove" | x$Location == "Tangier"| x$Location == "Mushaboom", 32, x$LFA)
+x$LFA <-ifelse(x$Location == "Port Mouton", 33,x$LFA)
+x$LFA <-ifelse(x$Location == "Canso", "31A", x$LFA)
+
+x=subset(x, LFA != "31A")
+
 
 x = subset(x,select=c(Date,Lat, Long))
 x$Proj = 'DFO_AS'
@@ -73,9 +84,8 @@ cp = merge(cp,data.frame(ID=names(col),Col = col))
 
 cents = readRDS(file.path(project.datadirectory("bio.lobster"), "data","maps","LFALabelsSF.rds"))
 
-p = ggLobsterMap('inshore',addGrids = F,addLFALabels = T,LFA_label_size = 4,fill.colours = 'white',bathy=F,return.object = T)
+p = ggLobsterMap('inshore',addGrids = F,addLFALabels = T,LFA_label_size = 4,fill.colours = 'white',bathy=F,return.object = T,lwd=10)
 p+geom_sf(data=cp,fill=cp$Col)+geom_sf_text(data=cents, aes(label=label),family='sans',size=4)
-
 
 
 
