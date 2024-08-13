@@ -9,3 +9,5 @@ LFA41figures.pdf
 *.docx
 *.Rhistory
 *.Rproj
+
+!loaderTypes.csv
