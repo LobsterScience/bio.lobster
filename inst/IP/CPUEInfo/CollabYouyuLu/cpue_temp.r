@@ -1,3 +1,4 @@
+require(ggplot2)
 require(bio.lobster)
 require(bio.utilities)
 require(devtools)
@@ -115,6 +116,66 @@ xl = xl %>% mutate(GridGrouping = case_when(
 xl$date = xl$date+1
 
 gx = merge(subset(ga,LFA==33),xl,by.x=c('DATE_FISHED','GridGrouping'),by.y=c('date','GridGrouping'))
+
+#simple CPUE standardization with temperature
+
+xx = subset(gx,LFA==33)
+require(mgcv)
+require(ggeffects)
+require(ggforce)
+xx$fYear = as.factor(xx$SYEAR)
+sy = unique(xx$SYEAR)
+o =list()
+for(i in 1:length(sy)){
+  tmp = subset(xx,SYEAR==sy[[i]])
+  tmp$date<-as.Date(tmp$DATE_FISHED)
+  first.day<-min(tmp$date)
+  tmp$time<-julian(tmp$date,origin=first.day-1)
+  o[[i]] = tmp
+}
+
+xx = do.call(rbind,o)
+xx$leffort=log(xx$NUM_OF_TRAPS)
+
+ti = 10
+l33 = gam(WEIGHT_KG~fYear+s(time)+offset(leffort),data=xx,family = 'nb') #best by AIC
+pr3 = ggpredict(l33,terms=c('fYear'),condition = c(leffort=0,time=ti))
+summary(l33)
+AIC(l33)
+pr3 = data.frame(x=pr3$x,predicted=pr3$predicted,Model='No Temperature (CM)',conf.low=pr3$conf.low,conf.high=pr3$conf.high)
+
+l33t = gam(WEIGHT_KG~fYear+s(time)+s(BT)+offset(leffort),data=xx,family = 'nb') #best by AIC
+
+#catch weighted temperature
+tt = aggregate(BT~1,data=subset(xx,time==ti),FUN=mean)#
+xxtl = aggregate(WEIGHT_KG~SYEAR+time,data=xx,FUN=sum)
+names(xxtl)[3]='sum'
+xx = merge(xx,xxtl)
+xx$wBT = (xx$BT*xx$WEIGHT_KG)/(xx$sum)
+vv = aggregate(wBT~SYEAR,data=subset(xx,time==ti),FUN=sum)
+tt = mean(vv$wBT)
+
+pr3t = ggpredict(l33t,terms=c('fYear'),condition = c(leffort=0,BT=tt,time=ti)) # predicted at mean temp across all years at day 25
+pr3t = data.frame(x=pr3t$x,predicted=pr3t$predicted,Model='Temperature (CMT)',conf.low=pr3t$conf.low,conf.high=pr3t$conf.high)
+
+pp = rbind(pr3,pr3t)
+pp$x = as.numeric(as.character(pp$x))
+
+summary(l33t)
+AIC(l33t)
+
+ggplot(pp, aes(x = x, y = predicted,colour=Model,fill=Model)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)+
+  #scale_color_discrete(begin = 0, end = 1, option = 'viridis')+
+  xlab('Year')+
+  ylab('Standardized CPUE')+
+  theme_test(base_size = 14)
+
+
+
+
+
 
 #simple correlations, obv positive, full year
 gx$logCPUE = log(gx$CPUE)
@@ -380,14 +441,14 @@ gas$diff = gas$TEMP - gas$GL
 gas = subset(gas,dist<5000)
 
 saveRDS(gas,'obstemps2GL_filtered.rds')
-
+gas = readRDS('obstemps2GL_filtered.rds')
 ggplot(subset(gas,fm==1),aes(x=diff))+geom_histogram()+facet_wrap(~GRIDNO)
 ggplot(subset(gas,fm==1),aes(x=diff,after_stat(density)))+geom_histogram()+geom_vline(aes(xintercept=0),col='red') +facet_wrap(~GRIDNO,scales = 'free_y')
 gas$Gr=as.factor(as.character(paste('Gr',gas$GRIDNO,sep="")))
 
 ggplot(subset(gas,fm==1),aes(x=factor(GRIDNO,levels=c('1','2','3','4','5','6','7','8','9','10')),y=diff))+
   geom_violin(width=1)+geom_boxplot(width=.1, color="grey", alpha=0.5)+geom_hline(aes(yintercept=0),col='red')+
-  theme_bw()+xlab('Grid')+ylab('(Observed Temperature - GLORYSv12)')
+  theme_test(base_size = 18)+xlab('Subregion')+ylab('(Observed Temperature - GLORYSv12)')
 
 
 gas = st_as_sf(gas)
