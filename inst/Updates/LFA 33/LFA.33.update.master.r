@@ -1,10 +1,13 @@
 # LFA 33 Update Script
 
 	p = bio.lobster::load.environment()
+	require(bio.utilities)
+	la()
 	p$yrs <- NULL #ensuring empty variable
 	
 	#la()
-
+#If running script after the fishery year, run this line
+#p$current.assessment.year=p$current.assessment.year-1
 
 
 	    # define place for figures to go
@@ -56,8 +59,8 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		logs=lobster.db("process.logs")
 
 		#Choose one to redo or not Add TempSkip=T to not model CPUE with Temps
-		#CPUE.data<-CPUEModelData(p,redo=T,TempSkip=T)
-		#CPUE.data<-CPUEModelData(p,redo=F)
+		CPUE.data<-CPUEModelData2(p,redo=T)
+		#CPUE.data<-CPUEModelData2(p,redo=F)
 		
 		
 		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(p$current.assessment.year),graphic='R')$annual.data
@@ -109,6 +112,149 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
     #x11(width=8,height=5)
     CatchRatePlot(data = crd ,usr = usr,lrp=lrp,lfa = 33,fd=figdir, save=F)
 
+    # Plots unbiased annual CPUE for all LFAs in Maritimes region
+    # Good for context in presentations at AC
+    
+    a = lobster.db('process.logs')
+    a = subset(a,SYEAR %in% 2004:p$current.assessment.year) 
+    
+    aa = split(a,f=list(a$LFA,a$SYEAR))
+    cpue.lst<-list()
+    m=0
+    #by time
+    for(i in 1:length(aa)){
+      tmp<-aa[[i]]
+      tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+      names(tmp)<-c('time','catch','effort')
+      tmp$date<-as.Date(tmp$time)
+      first.day<-min(tmp$date)
+      tmp$time<-julian(tmp$date,origin=first.day-1)
+      tmp$time = ceiling(tmp$time/7) #convert to week of season
+      if(nrow(tmp)>5){
+        m=m+1
+        g<-as.data.frame(biasCorrCPUE(tmp,by.time=F))
+        g$lfa=unique(aa[[i]]$LFA)
+        g$yr = unique(aa[[i]]$SYEAR)
+        g = t(g)[,2]
+        cpue.lst[[m]] <- g
+      }
+    }
+    cc =as.data.frame(do.call(rbind,cpue.lst))
+    cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
+    cc = cc[order(cc$lfa,cc$yr),]
+    cc$yr = as.numeric(cc$yr)
+    cc$fyr = as.factor(cc$yr)
+    last_bar_color="black"
+      point_colors <- ifelse(cc$yr <max(cc$yr), last_bar_color, "orange")
+      cc1 = cc
+      
+      png(filename=file.path(cpue.dir, "all_lfas_cpue.png"),width=8, height=5.5, units = "in", res = 800)
+      ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+
+        geom_smooth(se=FALSE)+geom_point(data=cc1,aes(x=yr,y=CPUE,colour=fyr))+facet_wrap(~lfa,scales='free_y')+
+        scale_colour_manual(values = point_colors)+theme(legend.position = 'none')+
+        labs(y= "CPUE", x = "Year")
+      dev.off()
+      
+      
+      #Unbiased cpue patterns by week of season
+      #Added in winter 2024 afetre inclusion in 27-32. Not yet tested.
+      #Will need to modify AC presentation to include these contextual CPUE figures
+      #-----------------------------------------
+      
+      a = lobster.db('process.logs')
+      a = subset(a,SYEAR %in% 2004:2004:p$current.assessment.year & LFA %in% p$lfas) 
+      
+      aa = split(a,f=list(a$LFA,a$SYEAR))
+      aa = rm.from.list(aa)
+      cpue.lst<-list()
+      
+      
+      aa = split(a,f=list(a$LFA,a$SYEAR))
+      cpue.lst<-list()
+      m=0
+      #annual
+      for(i in 1:length(aa)){
+        tmp<-aa[[i]]
+        tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+        names(tmp)<-c('time','catch','effort')
+        tmp$date<-as.Date(tmp$time)
+        first.day<-min(tmp$date)
+        tmp$time<-julian(tmp$date,origin=first.day-1)
+        tmp$time = ceiling(tmp$time/7) #convert to week of season
+        if(nrow(tmp)>5){
+          m=m+1
+          g<-as.data.frame(biasCorrCPUE(tmp,by.time=F))
+          g$lfa=unique(aa[[i]]$LFA)
+          g$yr = unique(aa[[i]]$SYEAR)
+          g = t(g)[,2]
+          cpue.lst[[m]] <- g
+        }
+      }
+      cc =as.data.frame(do.call(rbind,cpue.lst))
+      cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
+      cc = cc[order(cc$lfa,cc$yr),]
+      cc$yr = as.numeric(cc$yr)
+      cc$fyr = as.factor(cc$yr)
+      
+      cc1 = split(cc,f=cc$lfa)
+      
+      for(i in 1:length(cc1)){
+        cc1[[i]]$mCPUE = as.numeric(with(cc1[[i]],rmed(yr,CPUE))$x)
+      }
+      
+      cc2 = do.call(rbind,cc1)
+      
+      #ggplot(cc2,aes(x=yr,y=CPUE))+geom_point()+
+      #  geom_line(aes(x=yr,y=mCPUE),colour='red',size=1.1)+facet_wrap(~lfa,scales='free_y')+geom_point(data=subset(cc2,yr==2023),aes(x=yr,y=CPUE),colour='orange',shape=16,size=2)
+      
+      ##by week
+      aa = split(a,f=list(a$LFA,a$SYEAR))
+      cpue.lst<-list()
+      m=0
+      
+      aa = split(a,f=list(a$LFA,a$SYEAR))
+      aa = rm.from.list(aa)
+      cpue.lst<-list()
+      
+      #by time
+      for(i in 1:length(aa)){
+        tmp<-aa[[i]]
+        tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+        names(tmp)<-c('time','catch','effort')
+        tmp$date<-as.Date(tmp$time)
+        first.day<-min(tmp$date)
+        tmp$time<-julian(tmp$date,origin=first.day-1)
+        tmp = tmp[order(tmp$time),]
+        tmp$time = ceiling(tmp$time/7) #convert to week of season
+        g<-as.data.frame(biasCorrCPUE(tmp,by.time=T,min.sample.size = 5))
+        g$lfa=unique(aa[[i]]$LFA)
+        g$yr = unique(aa[[i]]$SYEAR)
+        # g = t(g)[,1]
+        cpue.lst[[i]] <- g
+      }
+      
+      cc =as.data.frame(do.call(rbind,cpue.lst))
+      
+      mean= aggregate(cc, CPUE~yr+lfa,mean )
+      
+      
+     l=p$lfas
+        png(filename=file.path(cpue.dir, paste0("weekly_cpue_",l,".png")),width=8, height=5.5, units = "in", res = 800)
+        print(
+          ggplot(subset(cc,lfa==l),aes(x=t,y=CPUE))+geom_point()+
+            geom_smooth(se=F)+facet_wrap(~yr)+
+            labs(title =paste0("LFA ",l))+
+            labs(y= "CPUE (kg/th)", x = "Week of Season") +
+            theme(plot.title = element_text(hjust = 0.5))+
+            # stat_summary(fun='mean', geom="line")
+            geom_hline(data=mean[mean$lfa==l,], aes(yintercept= CPUE), color='red', linewidth=0.6)
+          
+        )
+        dev.off()
+    
+      
+      
+      #######-----------------------------------------
 
 
 # CCIR ###############
@@ -149,14 +295,19 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 			out.binomial[[i]] <- ccir_stan_summarize(x)
 		}
 
+### If the folder C:\bio.data\bio.lobster\outputs\ccir\summary contains other model runs for different areas (i.e.27-32)
+### move these to the appropriate folder within the summary folder (aka hide them)
 	
 		#load statement below combines ccir summaries if broken runs
 		#ensure folder has only model run summaries
 		da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary') #modify as required
 
 		d = list.files(da,full.names=T)
+		d=d[!file.info(d)$isdir]
+		#d=setdiff(list.files(da, full.names=T), list.dirs(recursive = FALSE, full.names = FALSE))
 		out.binomial = list()
-
+		#ensure folder has only model run summaries!!!!!
+		
 		for( i in 1:length(d)){
 		  load(d[i])
 		  out.binomial[[i]] <- out
@@ -181,8 +332,8 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		names(o)[1] = 'Yr'
 		oo <- ccir_timeseries_exploitation_plots(ouBin,combined.LFA=T,landings=o)
 
-		save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
-		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR33.rdata'))
+		save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','lfa33','compiledExploitationCCIR33.rdata'))
+		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','lfa33','compiledExploitationCCIR33.rdata'))
 		RR75 = max(oo$ERf75[oo$Yr<p$current.assessment.year])#index year if needed
 
 #oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))

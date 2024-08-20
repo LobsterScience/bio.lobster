@@ -10,10 +10,10 @@ savdir="C:/RSaves/" #Change as Appropriate
 #Plot Seperately
 
 sexes=c(1:3)
-
+max.cw=140 #change as appropriate
 for (s in sexes){
   
-  L=50:155
+  L=50:max.cw
   B = lobLW(L, sex=s)
   MLW<-cbind(L,B)
   MLW<-as.data.frame(MLW)
@@ -56,7 +56,7 @@ dev.off()
   b.MLW$Weight_lbs<-b.MLW$b/453.6
   
   
-  titl="Lobster Weights at Length"
+  titl="Lobster Weights at Length mls change"
   png(filename=paste0(savdir,titl,".png"),width=8, height=6.5, units = "in", res = 800)
   plot(m.MLW$L, m.MLW$Weight_lbs,xlab="Carapace Length (mm)", ylab= "Weight (lbs)", main= titl, type="n", col="black")
   lines(f.MLW$L, f.MLW$Weight_lbs, col="red")
@@ -64,5 +64,8 @@ dev.off()
   lines(m.MLW$L, m.MLW$Weight_lbs, col="blue")
   text(x=130, y=1.85, col="red", "Female (No Eggs)", pos=4)
   text(x=130, y=1.5, col="darkgreen", "Female (Berried)", pos=4)
-  text(x=130, y=1.15, col="blue", "Female (Male)", pos=4)
+  text(x=130, y=1.15, col="blue", "Male", pos=4)
+  #abline(v = 82.5, col = 'black', lwd = 2, lty = 'dashed')
+  #abline(v = 86, col = 'black', lwd = 2, lty = 'dashed')
+  rect(xleft = 82.5, xright = 86, ybottom = 0, ytop = 1.35, col="darkred", density=30, angle=-30, lwd=1)
   dev.off()
