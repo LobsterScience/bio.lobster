@@ -1,8 +1,13 @@
 require(bio.lobster)
 require(SpatialHub)
 require(lubridate)
+require(bio.utilities)
+require(ggplot2)
+
 p = bio.lobster::load.environment()
-#la()
+
+
+la()
 
 #Choose one
 #assessment.year = p$current.assessment.year 
@@ -43,11 +48,20 @@ dev.off()
 #LobsterMap('32', labels=c('lfa','grid'), grid.labcex=0.6)
 #dev.off()
 
+#######-----------------------------------------
+# Primary Indicator- Commercial CPUE
+#######-----------------------------------------
+
+cpue.dir=file.path(figdir, "cpue")
+dir.create( cpue.dir, recursive = TRUE, showWarnings = TRUE )
+
+
 logs=lobster.db("process.logs")
 
 #Choose One:
-#CPUE.data<-CPUEModelData(p,redo=T, TempSkip=T) #Reruns cpue model
-CPUE.data<-CPUEModelData(p,redo=F, TempSkip=T) #Defaults to not rerunning model
+
+CPUE.data<-CPUEModelData2(p,redo=T) #Reruns cpue model. Onlt takes a couple minutes now.
+#CPUE.data<-CPUEModelData2(p,redo=F) Doesn't rerun model. Just takes last run version.
 
 cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:p$current.assessment.year, graphic='R')$annual.data #index end year
 
@@ -57,7 +71,7 @@ cpueData$usr=NA
 cpueData$lrp=NA
 
 for (l in p$lfas){
-mu=median(cpueData$CPUE[cpueData$YEAR %in% c(1985:2009) & cpueData$LFA==l])
+mu=median(cpueData$CPUE[cpueData$YEAR %in% c(1990:2016) & cpueData$LFA==l])
 cpueData$usr[cpueData$LFA==l]=0.8*mu
 cpueData$lrp[cpueData$LFA==l]=0.4*mu
 }
@@ -68,7 +82,7 @@ xlim=c(1985,p$current.assessment.year)
 
 crplot= function(x, French=F){
   crd = subset(cpueData,LFA==l,c("YEAR","CPUE"))
-  mu = median(crd$CPUE[crd$YEAR %in% c(1985:2009)])
+  mu = median(crd$CPUE[crd$YEAR %in% c(1990:2016)])
   usr = mu * 0.8
   lrp = mu * 0.4
   crd  = merge(data.frame(YEAR=min(crd$YEAR):max(crd$YEAR)),crd,all.x=T)
@@ -85,9 +99,6 @@ crplot= function(x, French=F){
   abline(h=lrp,col='red',lwd=2,lty=3)
   text(x=1988, y= max(crd$CPUE, na.rm = TRUE), l, cex=2)
 }
-
-cpue.dir=file.path(figdir, "cpue")
-dir.create( cpue.dir, recursive = TRUE, showWarnings = TRUE )
 
 write.csv(cpueData, file=paste0(cpue.dir, "/fishery.stats.27-32.csv"), row.names=F )
 save(cpueData, file=paste0(cpue.dir, "/cpueData.Rdata") )
@@ -135,13 +146,152 @@ for (l in p$lfas){
   dev.off()
 }
 
-#Need to add this
-#Unbiased seasonal landings by LFA
+# Plots unbiased annual CPUE for all LFAs in Maritimes region
+# Good for context in presentations at AC
 
-#bio.lobster/inst/IP/CPUEInfo/unbiasedCPUE.r
-# Will likely need to loop to produce one for each LFA, Shows in-season catch rate patterns well
+a = lobster.db('process.logs')
+a = subset(a,SYEAR %in% 2004:2023) 
+
+aa = split(a,f=list(a$LFA,a$SYEAR))
+cpue.lst<-list()
+m=0
+#by time
+for(i in 1:length(aa)){
+  tmp<-aa[[i]]
+  tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+  names(tmp)<-c('time','catch','effort')
+  tmp$date<-as.Date(tmp$time)
+  first.day<-min(tmp$date)
+  tmp$time<-julian(tmp$date,origin=first.day-1)
+  tmp$time = ceiling(tmp$time/7) #convert to week of season
+  if(nrow(tmp)>5){
+    m=m+1
+    g<-as.data.frame(biasCorrCPUE(tmp,by.time=F))
+    g$lfa=unique(aa[[i]]$LFA)
+    g$yr = unique(aa[[i]]$SYEAR)
+    g = t(g)[,2]
+    cpue.lst[[m]] <- g
+  }
+}
+cc =as.data.frame(do.call(rbind,cpue.lst))
+cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
+cc = cc[order(cc$lfa,cc$yr),]
+cc$yr = as.numeric(cc$yr)
+cc$fyr = as.factor(cc$yr)
+last_bar_color="black"
+point_colors <- ifelse(cc$yr <max(cc$yr), last_bar_color, "orange")
+cc1 = cc
+
+png(filename=file.path(cpue.dir, "all_lfas_cpue.png"),width=8, height=5.5, units = "in", res = 800)
+ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+
+  geom_smooth(se=FALSE)+geom_point(data=cc1,aes(x=yr,y=CPUE,colour=fyr))+facet_wrap(~lfa,scales='free_y')+
+  scale_colour_manual(values = point_colors)+theme(legend.position = 'none')+
+  labs(y= "CPUE", x = "Year")
+dev.off()
 
 
+#Unbiased cpue patterns by week of season
+#-----------------------------------------
+
+a = lobster.db('process.logs')
+a = subset(a,SYEAR %in% 2004:2023 & LFA %in% p$lfas) 
+
+#quick cludge to remove a couple bad date entries for 2021 in LFA 27+
+a=a[a$SD_LOG_ID %ni% c("2904147","2904341"),]
+
+aa = split(a,f=list(a$LFA,a$SYEAR))
+aa = rm.from.list(aa)
+cpue.lst<-list()
+
+
+aa = split(a,f=list(a$LFA,a$SYEAR))
+cpue.lst<-list()
+m=0
+#annual
+for(i in 1:length(aa)){
+  tmp<-aa[[i]]
+  tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+  names(tmp)<-c('time','catch','effort')
+  tmp$date<-as.Date(tmp$time)
+  first.day<-min(tmp$date)
+  tmp$time<-julian(tmp$date,origin=first.day-1)
+  tmp$time = ceiling(tmp$time/7) #convert to week of season
+  if(nrow(tmp)>5){
+    m=m+1
+    g<-as.data.frame(biasCorrCPUE(tmp,by.time=F))
+    g$lfa=unique(aa[[i]]$LFA)
+    g$yr = unique(aa[[i]]$SYEAR)
+    g = t(g)[,2]
+    cpue.lst[[m]] <- g
+  }
+}
+cc =as.data.frame(do.call(rbind,cpue.lst))
+cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
+cc = cc[order(cc$lfa,cc$yr),]
+cc$yr = as.numeric(cc$yr)
+cc$fyr = as.factor(cc$yr)
+
+cc1 = split(cc,f=cc$lfa)
+
+for(i in 1:length(cc1)){
+  cc1[[i]]$mCPUE = as.numeric(with(cc1[[i]],rmed(yr,CPUE))$x)
+}
+
+cc2 = do.call(rbind,cc1)
+
+#ggplot(cc2,aes(x=yr,y=CPUE))+geom_point()+
+#  geom_line(aes(x=yr,y=mCPUE),colour='red',size=1.1)+facet_wrap(~lfa,scales='free_y')+geom_point(data=subset(cc2,yr==2023),aes(x=yr,y=CPUE),colour='orange',shape=16,size=2)
+
+##by week
+aa = split(a,f=list(a$LFA,a$SYEAR))
+cpue.lst<-list()
+m=0
+
+aa = split(a,f=list(a$LFA,a$SYEAR))
+aa = rm.from.list(aa)
+cpue.lst<-list()
+
+#by time
+for(i in 1:length(aa)){
+  tmp<-aa[[i]]
+  tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+  names(tmp)<-c('time','catch','effort')
+  tmp$date<-as.Date(tmp$time)
+  first.day<-min(tmp$date)
+  tmp$time<-julian(tmp$date,origin=first.day-1)
+  tmp = tmp[order(tmp$time),]
+  tmp$time = ceiling(tmp$time/7) #convert to week of season
+  g<-as.data.frame(biasCorrCPUE(tmp,by.time=T,min.sample.size = 5))
+  g$lfa=unique(aa[[i]]$LFA)
+  g$yr = unique(aa[[i]]$SYEAR)
+  # g = t(g)[,1]
+  cpue.lst[[i]] <- g
+}
+
+cc =as.data.frame(do.call(rbind,cpue.lst))
+
+mean= aggregate(cc, CPUE~yr+lfa,mean )
+
+
+for (l in p$lfas){
+png(filename=file.path(cpue.dir, paste0("weekly_cpue_",l,".png")),width=8, height=5.5, units = "in", res = 800)
+  print(
+    ggplot(subset(cc,lfa==l),aes(x=t,y=CPUE))+geom_point()+
+    geom_smooth(se=F)+facet_wrap(~yr)+
+    labs(title =paste0("LFA ",l))+
+    labs(y= "CPUE (kg/th)", x = "Week of Season") +
+    theme(plot.title = element_text(hjust = 0.5))+
+     # stat_summary(fun='mean', geom="line")
+    geom_hline(data=mean[mean$lfa==l,], aes(yintercept= CPUE), color='red', linewidth=0.6)
+    
+  )
+    dev.off()
+}
+
+
+#######-----------------------------------------
+# Primary Indicator- Continuous Change In Ratio (CCIR)
+#######-----------------------------------------
 ## Continuous Change In Ratio (CCIR)
 
 #lobster.db('ccir')
@@ -159,16 +309,10 @@ require(rstan)
 
 load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
 #start.year=p$current.assessment.year-4 #to run on last four years
-start.year=2000 #to run on entire data set
-        #From 33 assessment, better approach?:
-        #make sure to index year below as appropriate
-        #ccir_data = subset(ccir_data,YEAR<=p$current.assessment.year) 
-        
-        #to only run last three years:
-        #ccir_data = subset(ccir_data,YEAR=c((p$current.assessment.year-2):(p$current.assessment.year)))
+#start.year=2000 #to run on entire data set
+start.year=assessment.year-3 #run last three years, past data shouldn't change
 
-#dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5, start.yr = start.year) #sexs 1.5 means no sex defn
-dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5)
+dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5, start.yr = start.year) #sexs 1.5 means no sex defn
 
 out.binomial = list()
 attr(out.binomial,'model') <- 'binomial'
@@ -183,20 +327,25 @@ for(i in 1:length(dat)) { #Change to restart a broken run based on iteration num
   out.binomial[[i]] <- ccir_stan_summarize(x)
 }
 
+### If the folder C:\bio.data\bio.lobster\outputs\ccir\summary contains other model runs for different areas (i.e.27-32)
+### move these to the appropriate folder within the summary folder (aka hide them)
+
 #Need to move the new files into the proper folder to combine historic and current data
 #Take all 27-32 files from "C:\bio.data\bio.lobster\outputs\ccir\summary" and move them to
-#C:\bio.data\bio.lobster\outputs\ccir\summary\LFA27.32
+#C:\bio.data\bio.lobster\outputs\ccir\summary\LFA27.32 
+# then drop a copy of all summary files for all years back in "C:\bio.data\bio.lobster\outputs\ccir\summary"
 
 #load statement below combines ccir summaries if broken runs
 #ensure folder has only model run summaries
-da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary', 'LFA27.32') #modify as required
+da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary') #modify as required
 
 d = list.files(da,full.names=T)
+d=d[!file.info(d)$isdir] #ensures only files are listed not directories
 out.binomial = list()
-
+#ensure folder has only model run summaries!!!!!
 for( i in 1:length(d)){
   load(d[i])
-  out.binomial[[i]] <- out
+  out.binomial[[i]] = out
 }
 
 #if(grepl(351,x$Grid[1])) Main = 'LFA 27 South'
@@ -313,7 +462,7 @@ dir.create( land.dir, recursive = TRUE, showWarnings = TRUE )
 land = lobster.db('annual.landings')
 logs=lobster.db("process.logs")
 CPUE.data<-CPUEModelData(p,redo=F)
-cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2022, graphic='R')$annual.data #index end year
+cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:2023, graphic='R')$annual.data #index end year
 land =land[order(land$YR),]
 
 write.csv(land[c(1:9)], file=paste0(land.dir, "/landings.27-32.csv"), row.names=F )
@@ -414,13 +563,8 @@ png(filename=file.path(land.dir, paste0("Landings_LFA",lst[i],".png")),width=8, 
   par(mar=c(3,5,2.0,4.5))
   plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS)*1.2),pch=15,col='gray73',lwd=4,lend=3)
   lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='steelblue4',lwd=4, lend=3)
-<<<<<<< HEAD
   text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.7)
 
-=======
-  text(x=(xlim[1]+2), y= 1.15*max(d1$LANDINGS, na.rm = TRUE), lst[i], cex=1.5)
-  
->>>>>>> develop
   par(new=T)
 
   plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, axes=F,xlim=xlim,ylim=c(0,max(data$EFFORT2/1000,na.rm=T)))

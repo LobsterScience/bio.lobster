@@ -140,7 +140,7 @@ aaa = a
 
 #scallop survey reworked in 2023
   lobster.db('scallop.redo')
-    sc = scallopSurveyIndex(redo=T,size_range = c(70,82), lfa=38)
+    sc = scallopSurveyIndex(redo=T,size_range = c(70,82), lfa=35)
     sc = sc[[1]]
   
 #plotting as per csasdown 4 panel plot
