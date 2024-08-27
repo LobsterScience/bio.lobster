@@ -14,8 +14,10 @@ require(glue)
 require(PBSmapping)
 require(dplyr)
 
-p = bio.lobster::load.environment()
-la()
+p=list()
+p$yr=2024
+#p = bio.lobster::load.environment()
+#la()
 assessment.year = 2024 ##Check Year
 p$syr = 1989
 p$yrs = p$syr:assessment.year
@@ -23,7 +25,7 @@ p$yrs = p$syr:assessment.year
 figdir = file.path("2023 Updates")
 p$lfas = c("35") # specify lfa
 
-p=list(); p$yr=2024
+
 
 x11(width=5, height=5)
 LobsterMap(ylim=c(43.3,46),	xlim=c(-67.8,-63.2))
@@ -47,8 +49,10 @@ lobster.db('seasonal.landings.redo')
 Sland = lobster.db('seasonal.landings')
 
 ######################### MODELLED CPUE ############################
-TempModelling = TempModel( annual.by.area=F, redo.data=T)
-CPUE.data<-CPUEModelData(p,redo=F,TempModelling2023)
+TempModelling = TempModel( annual.by.area=T, redo.data=T)
+#CPUE.data<-CPUEModelData(p,redo=F,TempModelling2023)
+CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
+
 ## Commercial CPUE MOdels
 mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)
 
@@ -84,7 +88,7 @@ usr = .4*k
 lrp = .2*k
 
 ######## ENGLISH PLOT ###########
-plot(l35$YEAR,l35$mu,xlab='Year',ylab=' Standardized CPUE (kg/TH)',type='p',pch=16,ylim=c(0,8),xlim=c(2005,2023))
+plot(l35$YEAR,l35$mu,xlab='Year',ylab=' Standardized CPUE (kg/TH)',type='p',pch=16,ylim=c(0,8),xlim=c(2005,2024))
 running.median = with(rmed(l35$YEAR,l35$mu),data.frame(YEAR=yr,running.median=x))
 l35=merge(l35,running.median,all=T)
 lines(l35$YEAR,l35$running.median,col='blue',lty=1,lwd=3)
@@ -153,8 +157,8 @@ tiff("R:/Shared/CSA_Office/2022 CSAS Processes/LFA 35 Update/Completed Edits and
 
 ################## ENGLISH PLOT #######################
 par(mar=c(5.1, 4.1, 4.1, 5.1),las=1)
-plot(g$SYEAR,g$LFA35,xlab='Year',ylab='Landings (t)',type='h',ylim=c(0,max(g$LFA35)*1.2),pch=15,col='grey',lwd=10,lend=3)
-lines(g$SYEAR[nrow(g)],g$LFA35[nrow(g)],type='h',pch=21,col='steelblue4',lwd=10,lend=3)
+plot(g$SYEAR,g$LFA35,xlab='Year',ylab='Landings (t)',type='h',ylim=c(0,max(g$LFA35)*1.2),pch=15,col='grey',lwd=18,lend=3)
+lines(g$SYEAR[nrow(g)],g$LFA35[nrow(g)],type='h',pch=21,col='steelblue4',lwd=18,lend=3)
 par(new=T)
 
 plot(g$SYEAR,g$EFF,ylab='',xlab='', type='b', pch=16, axes=F,ylim=c(0,max(g$EFF,na.rm=T)))

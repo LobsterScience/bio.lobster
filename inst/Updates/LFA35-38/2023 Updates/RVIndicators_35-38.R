@@ -4,7 +4,11 @@
 require(bio.survey)
 require(bio.lobster)
 
-p = bio.lobster::load.environment()
+p=list()
+assessment.year = 2024 ##Check Year
+p$syr = 1970:2023
+p$yrs = p$syr:assessment.year
+
 p$libs = NULL
 ff = "LFA35-38Assessment"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
@@ -12,7 +16,7 @@ fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 dir.create(fpf1,showWarnings=F)
 dir.create(fp1,showWarnings=F)
 
-p$yrs = 1970:2023
+p$yrs 
 p1 = p
 
 
@@ -80,8 +84,8 @@ require(lubridate)
 require(devtools)
 require(bio.utilities)
 require(PBSmapping)
-la()
-p = bio.lobster::load.environment()
+#la()
+#p = bio.lobster::load.environment()
 p$libs = NULL
 ff = "LFA35-38Assessment"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
@@ -89,7 +93,7 @@ fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 dir.create(fpf1,showWarnings=F)
 dir.create(fp1,showWarnings=F)
 p1 = p
-p1$yrs = 1970:2023
+p1$yrs = 1970:2024
 
 stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
   p$series =c('summer')
@@ -172,7 +176,7 @@ ff = "LFA35-38Assessment"
 
 b$YR = substr(b$SYEAR,6,9)
 a = subset(a,YR<1976)
-b = subset(b,YR>1975 & YR<=2024)
+b = subset(b,YR>1975 & YR <=2025)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 
@@ -239,8 +243,8 @@ require(lubridate)
 require(devtools)
 require(bio.utilities)
 require(PBSmapping)
-la()
-p = bio.lobster::load.environment()
+#la()
+#p = bio.lobster::load.environment()
 p$libs = NULL
 ff = "LFA35-38Assessment"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
@@ -248,7 +252,7 @@ fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 dir.create(fpf1,showWarnings=F)
 dir.create(fp1,showWarnings=F)
 p1 = p
-p1$yrs = 1970:2023
+p1$yrs = 1970:2024
 
 stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,wd=10,ht=8){
   p$series =c('summer')# p$series =c('georges');p$series =c('fall')
@@ -288,7 +292,7 @@ stratifiedAnalysesRecruits = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=f
   p$running.mean = F #can only have rmedian or rmean
   p$error.polygon=F
   p$error.bars=T
-  if(lfa == 'LFA35-38') p$ylim = c(0,80)
+  if(lfa == 'LFA35-38') p$ylim = c(0,1200)
   p$file.name =  file.path(f,paste(lfa,'NOYDFOrestratifiednumbersrecruits.png',sep=""))
   ref.out=   figure.stratified.analysis(x=aout,out.dir = 'bio.lobster', p=p,wd=wd,ht=ht)
 }

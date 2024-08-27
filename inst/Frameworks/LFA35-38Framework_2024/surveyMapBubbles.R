@@ -2,6 +2,7 @@
 require(bio.survey)
 require(bio.lobster)
 require(bio.utilities)
+fp = file.path("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures")
 
 p=list()
 ######### RV Survey ######### 
@@ -40,10 +41,14 @@ yLm = yLL %% YG
 yLr = yLL %/% YG
 yw = y[which(y %in% y[1:yLm])] #add the early years to the first histogram and keep the rest at 5 years
 
+
+### Define the group to only run the recent years * Group 10= 2018-2024
+
 yLw = c(rep(1,yLm),rep(1:yLr,each = YG),yLr+1)
 grps = data.frame(yr = y,ry = yLw)
-if(defined groups ){
-  grps = data.frame(yr = y)
+defined.groups=T
+if(defined.groups){
+ grps = data.frame(yr = y)
   grps$ry = ifelse(grps$yr %in% 1969:1980,1,
                    ifelse(grps$yr %in% 1981:1990,2,
                           ifelse(grps$yr %in% 1991:1998,3,
@@ -53,11 +58,12 @@ if(defined groups ){
 aa = merge(aa,grps,by='yr',all.x=T)
 
 h = split(aa,f=aa$ry)
+hnew <- h[10:11]
 
-for(i in 1:length(h)) {
-  j = h[[i]]
+for(i in 1:length(hnew)) {
+  j = hnew[[i]]
   pdf(file.path(fp,paste('surveyBubblesDFOSummer',min(j$yr),max(j$yr),'pdf',sep=".")))
-  LobsterMap('34-38',boundaries='LFAs',addSummerStrata=T,save=F,labcex =0.8,labels=F)
+  LobsterMap('35-38',boundaries='LFAs',addSummerStrata=T,save=F,labcex =0.8,labels=F)
   j = makePBS(j,polygon=F)
   j$Z =j$totno
   addPolys(LFA34,border='red')
@@ -67,5 +73,25 @@ for(i in 1:length(h)) {
 }
 
 
+############## Just do 2019-2024  #####################
+for(i in 1:length(h)) {
+  j = h[[i]]
+  pdf(file.path(fp,paste('surveyBubblesDFOSummer',min(j$yr),max(j$yr),'pdf',sep=".")))
+  ggLobsterMap('35-38',boundaries='LFAs',save=F,labcex =0.8,labels=F)
+  j = makePBS(j,polygon=F)
+  j$Z =j$totno
+  addPolys(LFA34,border='red')
+  addBubbles(j,legend.pos='bottomright',legend.type='horiz',legend.cex=0.8,symbol.zero=".",max.size=0.8,z.max=1000,type='surface',symbol.bg = rgb(1,0,0,.6))
+  legend('bottomleft',bty='n',pch="", legend=paste(min(j$yr),max(j$yr),sep="-"),cex=1.5)
+  dev.off()	
+}
 
-###Lobster Survey
+
+#g = ggLobsterMap(return.object=T)
+#ggplots g+geom_sf(survey_points)
+
+
+## Makes Tables 4-6.... Summary of survey information for LFA 35, 36, 38 from RV, Scallop and Lobster
+## Then make the plots of survey locations
+## Then plot lobster abundance on maps
+
