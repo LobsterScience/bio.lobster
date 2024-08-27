@@ -15,7 +15,7 @@
 
 dfo.rv.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,save=T) {
     loc = file.path( project.datadirectory(out.dir), "analysis" )
-
+  print('since spring 2024 all means will now be in x/km2 not x/tow as previous....y axis scales will be different')
     dir.create( path=loc, recursive=T, showWarnings=F )
           props = 1 
          if(p$series=='summer')  {mns = c('June','July','August')     ;     strat = c(440:495)}

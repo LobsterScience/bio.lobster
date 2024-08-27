@@ -3,26 +3,35 @@ scallopSurveyIndex<-function(redo=F,	size_range=c(70,82),sex=0:3, lfa,layerDir=f
 if(redo){	
   require(sf)
 	# import bycatch data from scallop survey
-	lobster.db('scallop')
-	scallopStratDefs$X = scallopStratDefs$LONGITUDE
-	scallopStratDefs$Y = scallopStratDefs$LATITUDE
-	scallopStratDefs$label=as.character(scallopStratDefs$STRATA_ID)
-	scallopStratDefs$PID=scallopStratDefs$STRATA_ID
-  scallopStratDefs$POS=scallopStratDefs$ORDINAL
-	sdef = bio.lobster::pbs.2.gis(scallopStratDefs,make.sf = T,env.object = T,type='polygon',spdf = F)
-	sdef = bio.utilities::list.names.to.columns(sdef)
-	names(sdef)[1]='STRATA_ID'
+	x = lobster.db('scallop')
+	scallopStratDefs = x[[1]]
+	scallop.tows = x[[2]]
+	scallopSurv = x[[3]]
+	#scallop strata are now SF object not needed section
+	#scallopStratDefs$X = scallopStratDefs$LONGITUDE
+	#scallopStratDefs$Y = scallopStratDefs$LATITUDE
+	#scallopStratDefs$label=as.character(scallopStratDefs$STRATA_ID)
+	#scallopStratDefs$PID=scallopStratDefs$STRATA_ID
+  #scallopStratDefs$POS=scallopStratDefs$ORDINAL
+#  packageurl = "https://cran.r-project.org/src/contrib/Archive/rgeos/rgeos_0.6-4.tar.gz"
+#  install.packages(packageurl, repos=NULL, type="source")
+#	sdef = bio.lobster::pbs.2.gis(scallopStratDefs,make.sf = T,env.object = T,type='polygon',spdf = F)
+#	sdef = bio.utilities::list.names.to.columns(sdef)
+#names(sdef)[1]='STRATA_ID'
+
+	sdef = st_as_sf(scallopStratDefs)
+		
 	sdef$total_area = st_area(sdef) #total area of strata
 	
-	#polygons LFA
-	rL = read.csv(file.path(layerDir,"Polygons_LFA.csv"))
-	rL$label=rL$LFA
-	rdef = bio.lobster::pbs.2.gis(rL,make.sf = T,env.object = T,type='polygon',spdf = F)
-	rdef = bio.utilities::list.names.to.columns(rdef)
-	names(rdef)[1]='LFA'
-	
+	#polygons LFA now as SF
+	rL = readRDS(file.path(layerDir,"Polygons_LFA.rds"))
+	#rL$label=rL$LFA
+	#rdef = bio.lobster::pbs.2.gis(rL,make.sf = T,env.object = T,type='polygon',spdf = F)
+	#rdef = bio.utilities::list.names.to.columns(rdef)
+	#names(rdef)[1]='LFA'
+	#saveRDS(rdef,file.path(layerDir,'Polygons_LFA.rds'))
 	#intersect LFA and strata
-	
+	rdef = st_as_sf(rL)
 	lf = subset(rdef,LFA==lfa)
 	v = st_intersection(sdef,lf)
 	v$total_area_r = st_area(v) #area within LFA
