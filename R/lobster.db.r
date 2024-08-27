@@ -1827,19 +1827,21 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         scallopSurv = subset(scallopSurv,TOW_TYPE_ID %in% c(1,5) & STRATA_ID %ni% c(51,55))
         
         save( scallopSurv, file=file.path( fnODBC, "scallopSurv.rdata"), compress=T)
-       
-        scallopStratDefs = connect.command(con, "select * from SCALLSUR.scstratadefs")
-        scallopStratDefs = subset(scallopStratDefs,STRATA_ID %ni% c(51,55))
-        
-        save( scallopStratDefs, file=file.path( fnODBC, "scallopSurvdefs.rdata"), compress=T)
+
+        #these are now saved as a sf object       
+        #scallopStratDefs = connect.command(con, "select * from SCALLSUR.scstratadefs")
+        #scallopStratDefs = subset(scallopStratDefs,STRATA_ID %ni% c(51,55))
+        #saveRDS( sdef, file=file.path( fnODBC, "scallopStratDefs.rds"), compress=T)
         
        
        gc()  # garbage collection
         #odbcClose(con)
-      }
-      load(file.path( fnODBC, "scallopTows.rdata"), .GlobalEnv)
-      load(file=file.path( fnODBC, "scallopSurvdefs.rdata"),.GlobalEnv)
-      load(file.path( fnODBC, "scallopSurv.rdata"), .GlobalEnv)
+     }
+      scallopStratDefs = readRDS(file=file.path( fnODBC, "scallopStratDefs.rds"))
+      load(file.path( fnODBC, "scallopTows.rdata"))
+      load(file.path( fnODBC, "scallopSurv.rdata"))
+      
+      return(list(scallopStratDefs,scallop.tows,scallopSurv))
     }
 
 ### lobster survey
