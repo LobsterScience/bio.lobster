@@ -18,7 +18,7 @@ fillSubstrate <- function(x) {
       id2 = which(is.na(x2sp$substrate_1))
       if(length(id2)==0) break
     }
-    repeat{
+    repeat{###THIS IS WHERE IT BREAKS
       id = which(is.na(x2sp$substrate_2))
       x2sp$substrate_2[id] = x2sp$substrate_2[id-1]
       id2 = which(is.na(x2sp$substrate_2))

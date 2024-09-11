@@ -6,31 +6,24 @@ git.repo <- "c:/Users/HowseVJ/Documents/GitHub"
 require(bio.lobster)
 require(bio.utilities)
 require(devtools)
-require(PBSmapping)
 require(lubridate)
 require(ggplot2)
-require(plyr)
 require(dplyr)
-require(tidyr)
 require(wesanderson)
 require(viridis)
-require(RODBC)
-require(rgdal)
 require(viridis)
 
 
-p = bio.lobster::load.environment()
-p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"analysis")
-la()
-assessment.year = 2023
-p$yrs = 1947:p$current.assessment.year
+p=list()
+assessment.year = 2024 ##Check Year
+p$syr = 1989
+p$yrs = p$syr:assessment.year
 p$lfas = c("41") # specify lfa
 
 
 figdir = file.path("C:/Users/HowseVJ/Documents/Scripts")
 
-#lobster.db( DS="observer41.redo")
+lobster.db( DS="observer41.redo")
 lobster.db( DS="observer41")
 #lobster.db( DS = 'logs41.redo', p=p) 
 lobster.db( DS = 'logs41', p=p)

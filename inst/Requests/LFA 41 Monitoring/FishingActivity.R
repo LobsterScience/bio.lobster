@@ -12,6 +12,11 @@ require(sf)
 wd = ('E:/Nova Scotia/Lobster Job/Stock Assessment/LFA 41/LFA 41 Evaluation/Fishing Activity')
 setwd(wd)
 
+p=list()
+assessment.year = 2024 ##Check Year
+p$syr = 1989
+p$yrs = p$syr:assessment.year
+
 ###################  DATA IMPORT ############
 lobster.db( DS="observer41.redo")
 lobster.db( DS="observer41")
@@ -185,4 +190,7 @@ checkClosure<-checkClosure[!is.na(checkClosure$ADJCATCH),]
 checkClosure<-checkClosure[checkClosure$fishingYear>2017,]
 
 write.csv(checkClosure, 'E:/Nova Scotia/Lobster Job/Stock Assessment/LFA 41/LFA 41 Evaluation/Fishing Activity/CheckClosure.csv')
+
+
+####################  Check Observer Coverage  ####################
 

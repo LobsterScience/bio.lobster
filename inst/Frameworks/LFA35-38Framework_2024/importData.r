@@ -33,4 +33,7 @@ p$yrs = 1947:2024
       groundfish.db('gs_trawl_conversions_redo')
   
 
-	    
+      
+## Outstanding Logs
+      percentReport=lobster.db('percent_reporting')
+      

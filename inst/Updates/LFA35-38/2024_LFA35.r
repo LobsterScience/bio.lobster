@@ -5,6 +5,13 @@ require(devtools)
 require(ggplot2)
 require(ggtext)
 
+p=list()
+assessment.year = 2024 ##Check Year
+p$syr = 1989
+p$yrs = p$syr:assessment.year
+
+#### Do redos on landings and logs where necessary
+
 #landings
 a=lobster.db('seasonal.landings')
 a$yr= as.numeric(substr(a$SYEAR,6,9))
@@ -12,7 +19,7 @@ aaa = a
 #raw cpue
 #lobster.db('logs.redo')    
         b = lobster.db('process.logs')
-            b = subset(b,SYEAR %in% 2005:2024 & LFA =='35') 
+            b = subset(b,SYEAR %in% 2004:2024 & LFA =='35') ### CHECK LFA
             
             aa = split(b,f=list(b$LFA,b$SYEAR))
             cpue.lst<-list()
@@ -38,29 +45,8 @@ aaa = a
             cp = as.data.frame(do.call(cbind,rmed(cc$yr,cc$CPUE)))
 #effort
       ef = merge(cc,aaa)
-      ef$Effort = ef$LFA36/(ef$CPUE)
+      ef$Effort = ef$LFA35/(ef$CPUE) ###CHECK LFA
 
-#standardized cpue
-      lobster.db('logs.redo')
-      lobster.db('process.logs.redo')
-      lobster.db('temperature.data.redo')
-      v = TempModelData(redo=F)
-      TempModelling = TempModel(areas='lfa', annual.by.area=F, redo.data=F)
-      saveRDS(TempModelling,file=file.path(project.datadirectory('bio.lobster'),'tempmodelling.rds'))
-      
-      # step through this function CPUE.data<-CPUEModelData(p,redo=T,TempModelling)
-      
-      mf1 = formula(logWEIGHT ~ fYEAR + DOS + TEMP + DOS * TEMP)
-      
-     
-     CPUE.data<- cpue.data
-      t=with(subset(CPUE.data,DOS==1),tapply(TEMP,LFA,mean))
-      
-          CPUE.data$fYEAR=as.factor(CPUE.data$SYEAR)
-         CPUEModelResults = CPUEmodel(mf1,CPUE.data,t=t,d=1)
-          outs =CPUEModelResults$pData
-          oo = as.data.frame(do.call(cbind,rmed(outs$YEAR,outs$mu)))
-      
 #commB
           require(bio.survey)
           require(bio.lobster)
@@ -167,36 +153,24 @@ aaa = a
           }
 
 
-
 # Catch and eff
-
+aaa<-aaa%>% filter(!is.na(yr))
 aap = aaa[nrow(aaa),]
-aaa = aaa[1:(nrow(aaa)-1),]
+aae = aaa[1:(nrow(aaa)-1),]
 
 efp = ef[nrow(ef),]
 ef = ef[-nrow(ef),]
 ymax=5000
 scaleright = max(ef$Effort)/ymax
-g1 <- ggplot(data = subset(aaa,yr>1990), aes(x = yr,y=LFA36)) +
-  geom_bar(stat='identity',fill='black') +
-  geom_bar(data=aap,aes(x=yr,y=LFA36),stat='identity',fill='steelblue4') +
-  geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='steelblue4',shape=17,size=3)+
-  geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1.2,linetype='dashed')+
-  geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=3)+
-  scale_y_continuous(name='Catch (t)', sec.axis= sec_axis(~.*scaleright, name= 'Effort',breaks = seq(0,2000,by=250)))+
+g1 <- ggplot(data = subset(aae,yr>2004), aes(x = yr,y=LFA35)) + #CHECK LFA
+  geom_bar(stat='identity',fill='black', width=0.75) +
+   geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=2.5)+
+  geom_bar(data=aap,aes(x=yr,y=LFA35),stat='identity',fill='steelblue3', width=0.75) + #CHECK LFA
+  geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='steelblue3',shape=17,size=2.5)+
+  geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1,linetype='dashed')+
+  scale_y_continuous(name='Catch (t)', sec.axis= sec_axis(~.*scaleright, name= "Effort ('000s Trap Hauls)", breaks = seq(0,2000,by=250)))+
   labs(x = "Year") +
 theme_csas()
-
-# standarzized cpue
-
-g2 <- ggplot(data = outs, aes(x = YEAR)) +
-  geom_point(aes(y = mu),size=2) +
-  geom_line(data=oo,aes(x=yr,y=x),colour='grey45',lwd=1.25)+
-  labs(x = "Year", y = "Standardized CPUE") +
-  geom_hline(yintercept=mean(outs$mu[7:14]) * .4,colour='grey',lwd=1.25,linetype='dashed')+
-  geom_hline(yintercept=mean(outs$mu[7:14]) * .2,colour='grey',lwd=1.25,linetype='dotted')+
-  theme_csas() +
-  theme(axis.title.y = ggtext::element_markdown())
 
 
 ### RV Survey recruit abundance
@@ -237,4 +211,14 @@ g4a <- ggplot(data = df, aes(x = yr)) +
   labs(x = "Year", y = "Commercial Biomass Index") +
   theme_csas() +
   theme(axis.title.y = ggtext::element_markdown())
+
+
+
+###OUTSTANDING LOGS
+percentReport=lobster.db('percent_reporting')
+
+
+PR_2024 <- percentReport[grepl("^2024", percentReport$YEARMTH), ]
+PR_2024<-PR_2024[order(PR_2024$YEARMTH), ]
+PR_2024<-PR_2024[c("YEARMTH", "L35PERCENT")]
 
