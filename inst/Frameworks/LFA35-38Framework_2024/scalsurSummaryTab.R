@@ -4,14 +4,14 @@
 require(bio.lobster)
 require(devtools)
 require(bio.utilities)
-
+require(dplyr)
 spcd<- 2550
 sp<- "LOBSTER"
 # List of packages for session
 .packages = c("dplyr",
               "lubridate",
               "sf",
-              "tidyr",
+             "tidyr",
               "flextable",
               "data.table",
               "ggplot2",
@@ -217,6 +217,10 @@ decade_2019_2024 <- sumSmap[sumSmap$Decade == "2019-2024", ]
 ggLobsterMap('custom',xlim=c(-68,-63),ylim=c(43.75,46),addGrids = F,addPoints = T,pts=subset(decade_1999_2009),fw='~year')+
   theme_test(base_size=14)
 
+
+ggLobsterMap(area='BoF',addGrids = F,addPoints = T,pts=subset(decade_1999_2009),fw='~year')+
+  theme_test(base_size=14)
+
 ggLobsterMap('custom',ylim=c(43.75,46),xlim=c(-68,-63),addGrids = F,addPoints = T,pts=decade_2010_2018,fw='~year')+
   theme_test(base_size=14)
 
@@ -241,3 +245,14 @@ plot_2019_2024 <- ggplot(data = decade_2019_2024) +
   facet_wrap(~ year) +
   theme_minimal() +
   labs(title = "2019-2024", color = "TOW_SEQ")
+
+
+
+###### Length Frequencies for Scal Survey 
+
+xle = z %>% pivot_longer(starts_with('P'))
+xle$Length = as.numeric(substr(xle$name,3,8))
+#xle= na.zero(xle,cols='value')
+xxa = aggregate(value~Length+Year,data=xle,FUN=mean)
+ggplot(subset(xxa),aes(x=Length,y=value))+geom_bar(stat='identity')+facet_wrap(~Year,scales = 'free_y')+xlab('Carapace Length')+ylab('Density') +theme_test(base_size = 14)+geom_vline(xintercept = 82.5,color='red')
+
