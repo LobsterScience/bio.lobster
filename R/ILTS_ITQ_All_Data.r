@@ -267,56 +267,18 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
               }
           }
         
-          
-          if(adjust_autumn_sizes){
-            ss = subset(surveyMeasurements,SPECCD_ID==2550)
-            ss$mn = lubridate::month(ss$SET_DATE)
-            ss$yr = lubridate::year(ss$SET_DATE)
-            ss$doy = lubridate::yday(ss$SET_DATE)
-            ss$seas = ifelse(ss$mn %in% 6:8,1,2)
-            ss = st_as_sf(ss,coords = c('SET_LON','SET_LAT'),crs=4326)
-            ss = subset(ss,seas==1 & yr>2015)
-            
-            rr = RV_sets()
-            rr = subset(rr,YEAR>1998 & month(rr$DATE) %in% c(6,7))
-            rr = st_as_sf(rr,coords = c('LONGITUDE','LATITUDE'),crs=4326)
-            rL = readRDS(file.path(project.datadirectory("bio.lobster"), "data","maps","LFAPolysSF.rds"))
-            rr = st_join(rr,rL) #place within polygons
-            rr = subset(rr,LFA %in% 35:36 & YEAR>2015)
-            rr$id = paste(rr$mission,rr$setno,sep="_")
-            re = groundfish.db('special.lobster.sampling')
-            re$id = paste(re$mission,re$setno,sep="_")
-            re = subset(re,id %in% unique(rr$id))
-            fa = prop.table(table(re$molt_stage,re$mission,re$fsex),2)
-            fad = as.data.frame(fa)
-            fad = toNums(fad,1)
-             fad$M = ifelse(fad$Var1 %in% 1:4 & fad$Var3 %in% c(1,2),'Moulted, need to shrink',ifelse(fad$Var1==7,'Imminent Moult- length is fine',ifelse(fad$Var3==3,'berried, length is fine','Intermoult- ?')))
-            fada = aggregate(Freq~M+Var2,data=fad,FUN=sum)
-            ggplot(fada,aes(x=Var2,y=Freq,fill=M))+geom_col()
-            
-            barplot(fa)
-            
-            fad = as.data.frame(fa)
-            ggplot(fad,aes(x=Var2,y=Freq,fill=Var1))+geom_col()
-            
-            rr$doy = lubridate::yday(rr$DATE)
-            ggplot(subset(ss),aes(x=FISH_LENGTH))+geom_density(alpha=0.5)+geom_density(data=re,aes(x=flen),col='red')
-            
-          }
-          
-            
           sM = subset(surveyMeasurements,select=c(TRIP_ID,SET_NO,FISH_ID,SPECCD_ID,FISH_LENGTH,SEX))
           sM = aggregate(FISH_ID~TRIP_ID+SET_NO+FISH_ID+SPECCD_ID+FISH_LENGTH+SEX,data=sM,FUN=function(x) length(unique(x)))
           names(sM)[ncol(sM)] = 'NUM_AT_LENGTH'
           
         sF = fishMeasurements
-        names(sF)[4] = 'SEX'
+        names(sF)[5] = 'SEX'
         
           sM$ID = paste(sM$TRIP_ID,sM$SET_NO,sM$SPECCD_ID,sM$FISH_LENGTH,sep="-")
           sF$ID = paste(sF$TRIP_ID,sF$SET_NO,sF$SPECCD_ID,sM$FISH_LENGTH,sep="-")
           
           sF = subset(sF,ID %ni% unique(sM$ID)) #remove the duplicates from sF
-          
+          if(any(names(sF)=='TRIP')) sF$TRIP = NULL
           sFM = rbind(sF,sM)
           sFM$ID <- NULL
         
@@ -467,41 +429,33 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
       
       #develop the model to predict proportion of animals in a size class for filling in years with just abundance or biomass
       if(extend_ts){
-              require(ggplot2)
-              require(sf)
-          #  xx = st_as_sf(xy,coords=c('SET_LONG','SET_LAT'),crs=4326)
-          #  xx$season = ifelse(lubridate::month(xx$SET_DATE) <8,'Premoult','PostMoult')
+        require(sf)
+        u=0
+        if(all(size==c(70,82))) {ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_recruit_Proportions_34-38.rds'));u=1}
+        if(all(size==c(82,300))){ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_commercial_Proportions_34-38.rds'));u=1}
+        if(all(size==c(70,300))){ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_commercial_and_recruit_Proportions_34-38.rds'));u=1}
+        if(all(size==c(82,300))&biomass){ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_commercial_Proportions_wt_34-38.rds'));u=1; biomass=F}
         
-            #ggplot(subset(xx,lubridate::month(xx$SET_DATE) <8))+geom_sf(aes(size=prop))+scale_size_continuous(name = "Size", range = c(0, 2)) +facet_wrap(~YEAR)
-            #xx$season = ifelse(lubridate::month(xx$SET_DATE) <8,'Premoult','PostMoult')
-            #ggplot(xx,aes(x=SET_DEPTH,y=prop))+geom_point() +facet_wrap(~season)
-            #ggplot(xx,aes(x=SET_DEPTH,y=prop))+geom_point() +facet_wrap(~season)
-            require(sdmTMB)
-            require(sdmTMBextra)
-            xy$lZ = log(xy$SET_DEPTH)
-            xy$season = ifelse(lubridate::month(xy$SET_DATE) <8,'Premoult','PostMoult')
-            xy$prop  = ifelse(xy$prop==1,0.99,xy$prop)
-            spde <- make_mesh(data=xy,xy_cols=c('SET_LONG','SET_LAT'),n_knots = 75, type = "kmeans")
-            
-            fit = sdmTMB(prop~
-                           lZ+season,
-                         data=xy,
-                         mesh=spde, 
-                         family=Beta(link='logit'),
-                         spatial='on'
-                         )
-          
+        if(u==0) {
+          print('models need to be developed for this size range')
+          break
+        }
+            ou = st_as_sf(ou)
+      
           xP = subset(x,SPECCD_ID==2550 & ID %ni% unique(xy$ID) & FISH_LENGTH==0) # this is just for sets with no length data
-          xP$lZ = log(xP$SET_DEPTH)
-          xP$season = ifelse(lubridate::month(xP$SET_DATE) <8,'Premoult','PostMoult')
-          g = predict(fit)
-          xy$prop_pred = fit$family$linkinv(g$est)
-          g = predict(fit,newdata = xP)
-          xP$prop = fit$family$linkinv(g$est)
-         if(biomass)   xP$SA_CORRECTED_PRORATED_N = xP$SA_CORRECTED_TOTAL_WT* xP$prop
+          xPs = st_as_sf(xP,coords = c('SET_LONG','SET_LAT'),crs=4326)
+          ss = st_nearest_feature(xPs,ou)
+          ds = st_distance(xPs,ou[ss,],by_element=T)
+          st_geometry(ou) = NULL
+          xPs$prop = ou$Modelled_Proportion[ss]
+          xPs$SET_LONG = st_coordinates(xPs)[,1]
+          xPs$SET_LAT = st_coordinates(xPs)[,2]
+          st_geometry(xPs) <- NULL
+          xP = as_tibble(xPs)
+           if(biomass){print('extending time series only works on numbers'); stop()}
           if(!biomass) xP$SA_CORRECTED_PRORATED_N = xP$SA_CORRECTED_TOTAL_N* xP$prop
-          xP=subset(xP,select=c(-prop,-season,-lZ,-PRORATED_NUM_AT_LENGTH,-NUM_CAUGHT,-NUM_AT_LENGTH,-SA_CORRECTED_TOTAL_WT,-WEIGHT_KG,-NUM_MEASURED,-SA_CORRECTED_TOTAL_N,-FISH_LENGTH,-SEX))
-          xy=subset(xy,select=c(-prop_pred,-prop,-season,-lZ,-tot, -PRORATED_NUM_AT_LENGTH,-NUM_AT_LENGTH,-SA_CORRECTED_TOTAL_WT,-SA_CORRECTED_TOTAL_N))
+          xP=subset(xP,select=c(-prop,-PRORATED_NUM_AT_LENGTH,-NUM_CAUGHT,-NUM_AT_LENGTH,-SA_CORRECTED_TOTAL_WT,-WEIGHT_KG,-NUM_MEASURED,-SA_CORRECTED_TOTAL_N,-FISH_LENGTH,-SEX))
+          xy=subset(xy,select=c(-prop,-tot, -PRORATED_NUM_AT_LENGTH,-NUM_AT_LENGTH,-SA_CORRECTED_TOTAL_WT,-SA_CORRECTED_TOTAL_N))
           if(any(unique(xP$ID) %in% unique(xy$ID))) browser() #there is an issues with sets
           xy = rbind(xP,xy)
           }
@@ -515,39 +469,41 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
     xS$SA_CORRECTED_TOTAL_N = xS$SA_CORRECTED_TOTAL_WT = xS$SA_CORRECTED_PRORATED_N = xS$PRORATED_NUM_AT_LENGTH= xS$SEX = xS$FISH_LENGTH = xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = 0
    
     if(aggregate){ xS$SEX = xS$FISH_LENGTH  = xS$NUM_CAUGHT = xS$WEIGHT_KG =  xS$NUM_MEASURED = xS$NUM_AT_LENGTH = xS$PRORATED_NUM_AT_LENGTH = xS$SA_CORRECTED_TOTAL_N = xS$SA_CORRECTED_TOTAL_WT= NULL}
-    
-    if(!aggregate){ ###this needs to be checked based on all the work above May22024
-      xS = x %>% dplyr::distinct(TRIP_ID,SET_NO,.keep_all = T)
-      xS$SPECCD_ID = species
-      xS$SA_CORRECTED_TOTAL_N = xS$SA_CORRECTED_TOTAL_WT = xS$SA_CORRECTED_PRORATED_N = xS$PRORATED_NUM_AT_LENGTH= xS$SEX = xS$FISH_LENGTH = xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = NULL
-      ss = aggregate(TRIP_ID~FISH_LENGTH,data=subset(xy,SEX<3 | is.na(SEX)),FUN=length)
-      v = unique(xy$SEX[which(xy$SEX<3)])
-      s1 = seq(min(ss$FISH_LENGTH),max(ss$FISH_LENGTH),1)
-      s1 = expand.grid(v,s1)
-      if(any(unique(xy$SEX)==3)){
-        #shorter vector for berried
-        ss = aggregate(TRIP_ID~FISH_LENGTH,data=subset(xy,SEX==3),FUN=length)
-        s2 = seq(min(ss$FISH_LENGTH),max(ss$FISH_LENGTH),1)
-        v=3
-        s2 = expand.grid(v,s2)
-        s1 = as.data.frame(rbind(s1,s2))
-      }
-      names(s1)=c('SEX','FISH_LENGTH')
-      oo = list()
-      for(i in 1:nrow(s1)){
-          o = xS
-          o$SEX = s1[i,'SEX']
-          o$FISH_LENGTH = s1[i,'FISH_LENGTH']
-          oo[[i]] = o
-      }
-      xS = bind_rows(oo)
-      xS$FID = paste(xS$FISHSET_ID,xS$FISH_LENGTH,xS$SEX)
-      xy$FID = paste(xy$FISHSET_ID,xy$FISH_LENGTH,xy$SEX)
-      xS = subset(xS,FID %ni% unique(xy$FID)) 
-      xy$FID = xS$FID = NULL
-      }
-     
+    if(!aggregate){stop('not complete')}
+    # if(!aggregate){ ###this needs to be checked based on all the work above May22024
+    #   xS = x %>% dplyr::distinct(TRIP_ID,SET_NO,.keep_all = T)
+    #   xS$SPECCD_ID = species
+    #   xS$SA_CORRECTED_TOTAL_N = xS$SA_CORRECTED_TOTAL_WT = xS$SA_CORRECTED_PRORATED_N = xS$PRORATED_NUM_AT_LENGTH= xS$SEX = xS$FISH_LENGTH = xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = NULL
+    #   ss = aggregate(TRIP_ID~FISH_LENGTH,data=subset(xy,SEX<3 | is.na(SEX)),FUN=length)
+    #   v = unique(xy$SEX[which(xy$SEX<3)])
+    #   s1 = seq(min(ss$FISH_LENGTH),max(ss$FISH_LENGTH),1)
+    #   s1 = expand.grid(v,s1)
+    #   if(any(unique(xy$SEX)==3)){
+    #     #shorter vector for berried
+    #     ss = aggregate(TRIP_ID~FISH_LENGTH,data=subset(xy,SEX==3),FUN=length)
+    #     s2 = seq(min(ss$FISH_LENGTH),max(ss$FISH_LENGTH),1)
+    #     v=3
+    #     s2 = expand.grid(v,s2)
+    #     s1 = as.data.frame(rbind(s1,s2))
+    #   }
+    #   names(s1)=c('SEX','FISH_LENGTH')
+    #   oo = list()
+    #   for(i in 1:nrow(s1)){
+    #       o = xS
+    #       o$SEX = s1[i,'SEX']
+    #       o$FISH_LENGTH = s1[i,'FISH_LENGTH']
+    #       oo[[i]] = o
+    #   }
+    #   xS = bind_rows(oo)
+    #   xS$FID = paste(xS$FISHSET_ID,xS$FISH_LENGTH,xS$SEX)
+    #   xy$FID = paste(xy$FISHSET_ID,xy$FISH_LENGTH,xy$SEX)
+    #   xS = subset(xS,FID %ni% unique(xy$FID)) 
+    #   xy$FID = xS$FID = NULL
+    #   }
+    #  
     xy$ID = xS$ID = NULL
+
+      xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N))
     xFinal = bind_rows(xS,xy)
     if(!aggregate) xFinal = na.zero(xFinal,cols=27:34)
     

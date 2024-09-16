@@ -6,14 +6,15 @@ NEFSC_sets <- function(){
   cas =  nefsc.db(DS='uscat.clean')
   de =   nefsc.db(DS='usdet.clean')
   
-  sc1=seq(13,253,by=5)
+  sc1=seq(13,253,by=1)
   de$SZ = sc1[cut(de$FLEN,sc1,labels=F)]
   de$Berried = ifelse(de$FSEX==3,de$CLEN,0)
   de$Legal = ifelse(de$FSEX<3 & de$FLEN>82,de$CLEN,0)
   de$WEIGHT_KG = de$CLEN * de$FWT/1000
+  de$Legal_wt = de$Legal * de$FWT/1000
   
   dA = aggregate(CLEN~SZ+FSEX+MISSION+SETNO+ID,data=de,FUN=sum)
-  dS = aggregate(cbind(Berried,Legal,CLEN,WEIGHT_KG)~MISSION+SETNO+ID,data=de,FUN=sum)
+  dS = aggregate(cbind(Berried,Legal,CLEN,WEIGHT_KG,Legal_wt)~MISSION+SETNO+ID,data=de,FUN=sum)
   dS$Lobster = dS$CLEN
   dS$CLEN = NULL
   dA$P = dA$CLEN

@@ -307,21 +307,17 @@ if(DS %in% c('usstrata.area','usstrata.area.redo')) {
   }
   
   #strata.area = sqlQuery(channel,paste("select * from groundfish.gsstratum where strat like '01%' ;"))
-  a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
-  attr(a,'projection') <- "LL"
-  l = attributes(a)$PolyData[,c('PID','STRATA')]
-  a = calcArea(a)
-  strata.area = merge(a,l,by='PID',all.x=T)
-  strata.area = aggregate(area~STRATA,data = strata.area,FUN=sum)
-  strata.area = strata.area[which(strata.area$STRATA>0),]
-  #this is in km2
+  a = sf::read_sf(find.bio.gis('BTS_Strata')) 
+  st_crs(a) <- 4326
+  a$area = st_area(a)/1000000
   TUNITS = T #converting km to trawlable units
   if(TUNITS) {
-    strata.area$area = strata.area$area*0.291553 # to square nm
-    strata.area$area = strata.area$area / 0.00701944 # 13m net towed 1nm = 0.00701944*1 
-           }
-
-          save(strata.area, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
+    a$area = a$area*0.291553 # to square nm
+    a$area = a$area / 0.00701944 # 13m net towed 1nm = 0.00701944*1 
+  }
+  
+  st_geometry(a) <- NULL
+  save(a, file = file.path(fnODBC, 'usnefsc.strata.area.rdata'))
       
         }
 }

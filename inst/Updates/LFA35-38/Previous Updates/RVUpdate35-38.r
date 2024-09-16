@@ -23,12 +23,14 @@ if(get.odbc.data){
 #DFO RV Setup
 
       p$series =c('summer')# p$series =c('georges');p$series =c('fall')
-      p$define.by.polygons = F
+      p$define.by.polygons = T
       p$lobster.subunits=F
-      p$area = 'custom'
-      p$years.to.estimate = c(1970:2021)
-      p$length.based = F
+      p$area = 'LFA38'
+      p$years.to.estimate = c(1970:2023)
+      p$size.class=c(65,82)
+      p$length.based = T
       p$by.sex = F
+      p$l
       p$bootstrapped.ci=F
       p$strata.files.return=F
       p$vessel.correction.fixed=1.2
@@ -39,8 +41,12 @@ if(get.odbc.data){
       p$reweight.strata = F #this subsets 
       
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-      
-
+      aout$decade=substr(aout$yr,3,3)
+      rvLobs <-aout %>%
+        mutate(Decade = cut(yr, 
+                            breaks = c(1970, 1981, 1991, 1999, 2010, 2025), 
+                            right = FALSE, 
+                            labels = c("1970-1980", "1981-1990", "1991-1998", "1999-2009", "2010-2024")))
          #Figure
                               p$add.reference.lines = T
                               p$time.series.start.year = p$years.to.estimate[1]

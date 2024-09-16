@@ -46,7 +46,6 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
   ns_coast =readRDS(file.path( layerDir,"CoastSF.rds"))
   r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
   rL = readRDS(file.path(layerDir,"LFAPolysSF.rds"))
-  
   nf = readRDS(file.path(layerDir,"NAFO_sf.rds"))
   nafo.sel<-subset(nf,NAFO_1%in%nafo)
   o = list()
@@ -87,7 +86,8 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
         scale_y_continuous(breaks=round(seq(ylim[1],ylim[2],length.out = 4)))
       
       if(addLFAlines) {
-        p = p+ geom_sf(data=l,fill=LFAfill) 
+      
+        p = p+ geom_sf(data=l,colour='black',linewidth=1.3,fill=NA) 
           
       }
         if(bathy){
@@ -145,13 +145,15 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
         p = p + geom_sf_text(data=labs, aes(label=lab),family='sans') +coord_sf(xlim=xlim,ylim=ylim)
       }
       if(addPoints){
-        p = p + geom_sf(data=pts) +coord_sf(xlim=xlim,ylim=ylim)
+        if(is.null(fw)) p = p + geom_sf(data=pts) +coord_sf(xlim=xlim,ylim=ylim)
         if(any(names(pts) %in% 'group')){
           xy = as.data.frame(st_coordinates(pts))
           xy$group = pts$group
           p = p + geom_point(data=xy,aes(x=X,y=Y,colour=group)) +coord_sf(xlim=xlim,ylim=ylim)
           
         }
+        if(!is.null(fw)) p = p + geom_sf(data=pts,color='red') +facet_wrap(fw)+ coord_sf(xlim=xlim,ylim=ylim)
+        
       }
       
       if(return.object) return(p)
