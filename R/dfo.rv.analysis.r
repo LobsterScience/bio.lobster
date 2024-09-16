@@ -161,10 +161,11 @@ pi='base'
                         ppp = as.numeric(strsplit(p$area,"LFA")[[c(1,2)]])
                   if(p$area =='LFA35-38') ppp = c(35,36,38)
                         lll = subset(LFAs,PID %in% ppp)
-                        l = subset(LFAs,SID==1)
-                        attr(l,'projection') <- "LL"
+                        #l = subset(LFAs,SID==1) ###issue not using right subset sept 9 2024
+                        
+                        attr(lll,'projection') <- "LL"
                         set$EID = 1:nrow(set)
-                        a = PBSmapping::findPolys(set,l)
+                        a = PBSmapping::findPolys(set,lll)
                        iz = which(set$EID %in% a$EID)
                     }} else {
                               iz = which(set$strat %in% c(strat))

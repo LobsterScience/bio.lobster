@@ -102,6 +102,43 @@ WHERE
       return(readRDS(fn))
     }
 
+if(DS %in% c('licence_ages','licence_ages.redo')){
+      if(grepl('redo',DS)) { 
+      oo = connect.command(con,"
+    SELECT
+    l.licence_id,
+    a.area lfa,
+    lp.fin,
+    p.surname,
+    p.firstname,
+    p.birthdate,
+    lp.START_DATE,
+    lp.END_DATE,
+    lst.desc_eng lic_subtype 
+    FROM
+    marfissci.participants           p,
+    marfissci.licences               l,
+    marfissci.licence_participants   lp,
+    marfissci.licence_areas          la,
+    marfissci.areas                  a,
+    marfissci.licence_subtypes       lst
+    WHERE
+    l.licence_id = lp.licence_id
+    AND l.licence_id = la.licence_id
+    AND la.area_id = a.area_id
+    AND lp.fin = p.fin
+    and lst.licence_subtype_id = l.licence_subtype_id
+    AND l.species_code = 700
+    and a.area in ('27','28','29','30','31A','31B','32','33','34','35','36','37','38')")
+      save(oo, file=file.path(fnODBC,'licence_ages.rdata'))
+      return(oo)
+    }
+    
+    load(file=file.path(fnODBC,'licence_ages.rdata'))
+    return(oo)
+    
+}
+
 
 if(DS %in% c('inflation')){
 
@@ -898,6 +935,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     Fish.Date = lobster.db('season.dates')
                     Fish.Date = backFillSeasonDates(Fish.Date,eyr=year(Sys.time()))
                     lfa  =  sort(unique(Fish.Date$LFA))
+                
 
                           #lfa "27"  "28"  "29"  "30"  "31A" "31B" "32"  "33"  "34"  "35"  "36"  "38"
 
@@ -1448,8 +1486,103 @@ atSea2$STRINGNO = as.character(atSea2$STRINGNO)
           }
      }
 
-
-
+###DMR
+    if (DS %in% c("DMR.redo", "DMR") ) {
+      fname = 'Compiled_data.rds'
+      fd = file.path(project.datadirectory('bio.lobster'),'data','MaineDMRSurvey')
+      print('this is just for Region 5 in Fall and is in per km2')
+      if(grepl('redo',DS)){
+        print('Data obtained from https://mainedmr.shinyapps.io/MaineDMR_Trawl_Survey_Portal/')
+        x = dir(fd,full.names = T)
+        x = x[grep('csv',x)]
+        ou = list()
+        for(i in 1:length(x)){
+          ou[[i]] = read.csv(x[i])
+        }
+        
+        tow = grep('Tow',x)
+        se = ou[[tow]]
+        
+        len = grep('Length',x)
+        de = ou[[len]]
+        
+        catc = grep('Catch',x)
+        ca = ou[[catc]]
+        
+        se = subset(se,Season=='Fall')
+        se$id = paste(se$Survey,se$Tow_Number,sep="-")
+        se$X = (se$Start_Longitude+se$End_Longitude)/2
+        se$Y = (se$Start_Latitude+se$End_Latitude)/2
+        se$z = ((se$Start_Depth_fathoms+se$End_Depth_fathoms)/2)*1.8288
+        se$dist = se$Tow_LengthNM * 1.852
+        se = subset(se,Region==5 & id != 'FL15-73',select=c(id,Start_Date,X,Y,z,dist,Region,Depth_Stratum,Tow_Time))
+        se$spread = 11 #57 ft rope length; 11m from ASMFC benchmark 2020
+        
+        se$Dur_m=NA
+        
+        # Split the time string into minutes and seconds
+        for(i in 1:nrow(se)){
+          time_parts <- strsplit(se[i,'Tow_Time'], ":")[[1]]
+          se[i,'Dur_m'] <- as.numeric(time_parts[2])
+        }
+        
+        
+        de$id = paste(de$survey,de$Tow_Number,sep="-")
+        de = subset(de,Season=='Fall' & Region==5 & id !='FL15-73')
+        de = subset(de,select=c(id,Length,Frequency,Sex))
+        
+        de = merge(de,se[,c('id','Dur_m','spread','dist')])
+        de$Frequency = de$Frequency*(de$Dur_m /20) #back to raw
+        de$Frequency = de$Frequency/(de$spread/1000 * de$dist)
+        de = subset(de,select = c(id,Length,Frequency, Sex))
+        
+        sc1=seq(3,253,by=1)
+        de$SZ = sc1[cut(de$Length,sc1,right=FALSE,labels=F)]
+        de$UID = de$ID
+        de1 = aggregate(Frequency~id+SZ,data=de,FUN=sum)
+        de1$P=de1$Frequency
+        bb = reshape(de1[,c('id','SZ','P')],idvar='id',timevar='SZ', direction='wide')
+        bb = na.zero(bb)
+        
+        sp = unique(ca$Common_Name)
+        lo = sp[grep('Lobster',sp)]
+        ca = subset(ca,Season=='Fall' & Common_Name==lo)
+        ca$id = paste(ca$Survey,ca$Tow_Number,sep="-")
+        
+        ca = subset(ca,ca$id %in% unique(se$id),select=c(id,Year,Date,Expanded_Catch,Expanded_Weight_kg,Number_Caught,Weight_kg,Subsample_Weight_kg))
+        ca = na.zero(ca)
+        ca = aggregate(cbind(Expanded_Catch,Expanded_Weight_kg,Number_Caught,Weight_kg,Subsample_Weight_kg)~id,data=ca,FUN=sum)
+        
+        
+        de$Rec=ifelse(de$Length<82 &de$Length>=70,de$Frequency,0)
+        de$Rec=ifelse(de$Length==82,de$Frequency/2,de$Rec)
+        
+        de$Comm=ifelse(de$Length>82,de$Frequency,0)
+        de$Comm=ifelse(de$Length==82,de$Frequency/2,de$Comm)
+        de$sex = ifelse(de$Sex=='Female',2,ifelse(de$Sex=='Male',1,3))
+        de$Comm=ifelse(de$sex==3,0,de$Comm)
+        
+        lobLW1 <- function(row) {
+          lobLW(CL=row[1],sex=row[2])
+        }
+        de$fwt =  apply(de[,c('Length','sex')],1,lobLW1)
+        
+        de$Commwt = de$Comm*de$fwt
+        
+        dea = aggregate(cbind(Comm,Rec,Commwt)~id,data=de,FUN=sum)
+        dea = subset(dea,id %in% unique(se$id))
+        dea = merge(dea,bb)
+        cde = merge(ca,dea)
+        scde = merge(se,cde,all.x=T)
+        scde = bio.utilities::na.zero(scde)
+        aa = st_as_sf(scde,coords = c('X','Y'),crs=4326)
+        aa$Date = as.POSIXct(aa$Start_Date, format="%Y-%m-%dT%H:%M:%SZ", tz="UTC")
+        aa$Year = lubridate::year(aa$Date)
+        
+       saveRDS(aa,file=file.path(fd,fname)) 
+      }
+      return(readRDS(aa,file=file.path(fd,fname)) )
+}
 ### port sampling
     if (DS %in% c("port.sampling.redo", "port.sampling") ) {
 
