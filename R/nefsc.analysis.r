@@ -49,248 +49,248 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
     if (is.null(ip)) ip = 1:p$nruns
     
     if(DS %in% c('species.set.data')) {
-        a = dir(loc)
-        a = a[grep('strata.files',a)]
-        a = a[grep(p$area,a)]
-        a = a[grep(p$season,a)]
-        if(p$length.based) {
-            a = a[grep(p$size.class[1],a)]
-            a = a[grep(p$size.class[2],a)]
-        }
-        if(p$by.sex) {
-            k = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
-            if(length(k)>1) k = paste(k[1],k[2],sep='&')
-            a = a[grep(k,a)]
-        }
-        a = load(file.path(loc,a))
-        return(strata.files)
+      a = dir(loc)
+      a = a[grep('strata.files',a)]
+      a = a[grep(p$area,a)]
+      a = a[grep(p$season,a)]
+      if(p$length.based) {
+        a = a[grep(p$size.class[1],a)]
+        a = a[grep(p$size.class[2],a)]
+      }
+      if(p$by.sex) {
+        k = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+        if(length(k)>1) k = paste(k[1],k[2],sep='&')
+        a = a[grep(k,a)]
+      }
+      a = load(file.path(loc,a))
+      return(strata.files)
     }
     
     if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
-        if(DS=='stratified.estimates'){
-            a = dir(loc)
-            a = a[grep('stratified',a)]
-            a = a[grep(p$area,a)]
-            a = a[grep(p$season,a)]
-            if(p$length.based) {
-                a = a[grep(p$size.class[1],a)]
-                a = a[grep(p$size.class[2],a)]
-            }
-            if(p$by.sex) {
-                k = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
-                if(length(k)>1) k = paste(k[1],k[2],sep='&')
-                a = a[grep(k,a)]
-            }
-            
-            load(file.path(loc,a))
-            return(out)
-              }
-
-        set =  nefsc.db(DS='usinf.clean')
-        cas =  nefsc.db(DS='uscat.clean')
-        stra = nefsc.db(DS='usstrata.area')
-        de =   nefsc.db(DS='usdet.clean')
-        
-        set$EID = 1:nrow(set)
-            a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
-                          l = attributes(a)$PolyData[,c('PID','STRATA')]
-                          a = merge(a,l,by='PID',all.x=T)
-
-            sett = findPolys(set,a)
-            sett = merge(sett,l,by='PID')
-            set = merge(set,sett,by='EID')
-            set$STRATUM = set$STRATA
-            set$STRATA = set$PID = set$SID = set$Bdry = set$EID = NULL
-            # all catches have been converted to bigelow equivalents and therefore do not need any further towed distance calculations, the DISTCORRECTION is a standardized distance against the mean of the towed distance for that gear and is therefore the correction for towed distance to be used
-            #US nautical mile is 6080.2ft bigelow is 42.6'
-            #tow dist is 1nm for bigelow
-            
-            stra$NH = stra$area
-            strata.files = list()
-            big.out = matrix(NA,nrow=p$nruns,ncol=length(seq(0.01,0.99,0.01))+1)
-            out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA,gini = NA,gini.lo =NA, gini.hi=NA,df.yst=NA)
-            mp=0
-            np=1
-            effic.out = data.frame(yr=NA,strat.effic.wt=NA,alloc.effic.wt=NA,strat.effic.n=NA,alloc.effic.n=NA)
-            nopt.out =  list()
-            
-            
-            for(iip in ip) {
-                mp = mp+1
-            yr = p$runs[iip,"yrs"]
-            print ( p$runs[iip,] )
-         
-            #iv = which(cas$spec %in% vv) Turn on if species are selected right now only lobster is being brought in
-            iy = which(set$GMT_YEAR %in% yr)
-            ix = which(tolower(set$SEASON) == tolower(SEASON))
- pi = 'base'
-         if(p$define.by.polygons) {
-          print('dbp')
-             pi = 'restratified'
-            if(p$area=='georges.US') {return('this is not setup')}
-            if(p$area=='LFA41'){
-                 l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
-                  if(p$lobster.subunits) {
-                         l = l41[which(l41$OFFAREA == p$area),]
-                        } else {
-                            print('All LFA41 subsetted by LFA Area')
-                          l41 = joinPolys(as.PolySet(l41),operation='UNION')
-                          attr(l41,'projection') <- 'LL'
-                          l =l41 = subset(l41, SID==1)
-                        }
-                        }
-              if(p$area %in% c('LFA34','LFA35','LFA36','LFA38','LFA36-38','EGOM')) {
-                        LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
-                   if(p$area %ni% c('LFA35-38','EGOM'))        ppp = as.numeric(strsplit(p$area,"LFA")[[c(1,2)]])
-                  if(p$area =='LFA35-38') ppp = c(35,36,38)
-                  if(p$area =='EGOM') ppp = c(33,34,35,36,38,41)
-                  
-                        lll = subset(LFAs,PID %in% ppp)
-                        l = subset(lll,SID==1)
-                        attr(l,'projection') <- "LL"
-                      }
-              
-                            set$EID = 1:nrow(set)
-                            a = findPolys(set,l)
-                            iz = which(set$EID %in% a$EID)
-                            if(p$area=='adjacentLFA41') {
-                            iz = which(set$EID %ni% a$EID)
-                            ir = which(set$STRATUM %in% c(STRATUM))
-                            iz = intersect(iz,ir)
-                          }
-                    } else {
-                       iz = which(set$STRATUM %in% c(STRATUM))
-                    }
-                iy = intersect(intersect(ix,iy),iz)
-                se = set[iy,]
-                if(nrow(se)<1) {out[mp,1] <- yr 
-                              next()
-                            }
-                se$EID = 1:nrow(se)
-                ca = cas #cas[iv,] see above
-                se$z = se$AVGDEPTH
-                vars.2.keep = c('MISSION','X','Y','ID','SETNO','BEGIN_GMT_TOWDATE','GMT_YEAR','STRATUM','z','BOTTEMP','BOTSALIN','DISTCORRECTION','SEASON')
-                se = se[,vars.2.keep]
-                se$slong = se$X
-                se$slat = se$Y
-        if(nrow(se)>1){
-                p$lb = p$length.based
-                if(p$by.sex & !p$length.based) {p$size.class=c(0,1000); p$length.based=T}
-                if(!p$lb) { vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO')#,'SIZE_CLASS')
-                            ca = ca[,vars.2.keep]
-                        }
-                        
-
+      if(DS=='stratified.estimates'){
+        a = dir(loc)
+        a = a[grep('stratified',a)]
+        a = a[grep(p$area,a)]
+        a = a[grep(p$season,a)]
         if(p$length.based) {
-                  dp = de
-                  dp = dp[which(dp$ID %in% unique(se$ID)),]
-                  if(nrow(dp)>=1) {
+          a = a[grep(p$size.class[1],a)]
+          a = a[grep(p$size.class[2],a)]
+        }
+        if(p$by.sex) {
+          k = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+          if(length(k)>1) k = paste(k[1],k[2],sep='&')
+          a = a[grep(k,a)]
+        }
         
-                  flf = p$size.class[1]:p$size.class[2]
-                  dp$clen2 = ifelse(dp$FLEN %in% flf,dp$CLEN,0)
-
-              if(p$by.sex) dp$clen2 = ifelse(dp$FSEX %in% p$sex, dp$clen2, 0)
-
-                      dp$pb = dp$FWT * dp$CLEN
-                      dp$pb1 = dp$FWT * dp$clen2
-
-                  dpp = data.frame(mission=NA,setno=NA,size_class=NA,pn=NA,pw=NA)
-                  
-                  if(nrow(dp)>0) {
-                      dpp = aggregate(cbind(CLEN,clen2,pb,pb1)~MISSION+SETNO,data=dp,FUN=sum)
-                      dpp$pn = dpp$clen2/dpp$CLEN
-                      dpp$pw = dpp$pb1/dpp$pb
-                      dpp = dpp[,c('MISSION','SETNO','pn','pw')]
-                      }
-                  
-                  ca1 = merge(ca,dpp,by=c('MISSION','SETNO'))
-                  ca1$TOTWGT = ca1$TOTWGT * ca1$pw
-                  ca1$TOTNO = ca1$TOTNO * ca1$pn
-                  vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO')
-                  ca = ca1[,vars.2.keep]
-                  }
-                }
-
-            if(nrow(ca)>=1) {
-#browser()
-		        ca = aggregate(cbind(TOTWGT,TOTNO)~MISSION+SETNO,data=ca,FUN=sum)
-                  sc = merge(se,ca,by=c('MISSION','SETNO'),all.x=T)
-                  sc[,c('TOTWGT','TOTNO')] = na.zero(sc[,c('TOTWGT','TOTNO')])
-                  #sc$TOTNO = sc$TOTNO / sc$DISTCORRECTION #this happens during the nefsc.db uscat.clean step
-                  #sc$TOTWGT = sc$TOTWGT / sc$DISTCORRECTION
-                  io = which(stra$STRATA %in% unique(sc$STRATUM))
-                  sc$Strata = sc$STRATUM
-                  st = stra[io,c('STRATA','NH')]
-                  st = st[order(st$STRATA),]
-                  spr = data.frame(STRATA = STRATUM, Pr = props)
-                  st = merge(st,spr)
-                  names(st)[1] = 'Strata'
-                  if(p$reweight.strata) st$NH = st$NH * st$Pr #weights the strata based on area in selected region
-               
-                  if(exists('temperature',p)) {sc = sc[!is.na(sc$BOTTEMP),] ; sc$TOTNO = sc$BOTTEMP; sc$TOTWGT = sc$BOTTEMP }
-                  if(nrow(sc)==0)next()
-                  if(length(st$Strata)==0) next()
-                  st = st[order(st$Strata),]
-                  st = Prepare.strata.file(st)
-                  sc1= sc
-                  sc = Prepare.strata.data(sc)
-                  strata.files[[mp]]  = list(st,sc1)
-                  sW = Stratify(sc,st,sc$TOTWGT)
-                  sN = Stratify(sc,st,sc$TOTNO)
-                  ssW = summary(sW)
-                  ssN = summary(sN)
-    
-                if(p$strata.efficiencies) {
-                      ssW = summary(sW,effic=T,nopt=T)
-                      ssN = summary(sN,effic=T,nopt=T)
-                    effic.out[mp,] = c(yr,ssW$effic.str,ssW$effic.alloc,ssN$effic.str,ssN$effic.alloc)
-                    nopt.out[[mp]] = list(yr,ssW$n.opt,ssN$n.opt)
-                  }
-             
-               if(!p$strata.efficiencies) {
-              
-                      bsW = list(NA,NA,NA)
-                      bsN = list(NA,NA,NA)
-                      nt = NA
-                if(p$bootstrapped.ci) {
-                  bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='BC')
-                  bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
-                  nt  = sum(sW$Nh)/1000
-                  }
-                if(exists('big.ci',p)) {
-                    big.out[mp,] = c(yr,summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC',big.ci=T))
-                  }
-                out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[[1]][1],bsW[[1]][2],ssW[[3]]/1000,bsW[[1]][1]*nt,bsW[[1]][2]*nt,
-                ssN[[1]],ssN[[2]],bsN[[1]][1],bsN[[1]][2],ssN[[3]]/1000,bsN[[1]][1]*nt,bsN[[1]][2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]),round(sum(sc$TOTNO)),ssN$gini,bsN[[2]][1],bsN[[2]][2],ssN$df.yst)
-                }   else {
-                out[mp,] = c(yr,rep(0,23))
-              }
-              
-            }
+        load(file.path(loc,a))
+        return(out)
+      }
+      
+      set =  nefsc.db(DS='usinf.clean')
+      cas =  nefsc.db(DS='uscat.clean')
+      stra = nefsc.db(DS='usstrata.area')
+      de =   nefsc.db(DS='usdet.clean')
+      
+      set$EID = 1:nrow(set)
+      a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
+      l = attributes(a)$PolyData[,c('PID','STRATA')]
+      a = merge(a,l,by='PID',all.x=T)
+      
+      sett = findPolys(set,a)
+      sett = merge(sett,l,by='PID')
+      set = merge(set,sett,by='EID')
+      set$STRATUM = set$STRATA
+      set$STRATA = set$PID = set$SID = set$Bdry = set$EID = NULL
+      # all catches have been converted to bigelow equivalents and therefore do not need any further towed distance calculations, the DISTCORRECTION is a standardized distance against the mean of the towed distance for that gear and is therefore the correction for towed distance to be used
+      #US nautical mile is 6080.2ft bigelow is 42.6'
+      #tow dist is 1nm for bigelow
+      
+      stra$NH = stra$area
+      strata.files = list()
+      big.out = matrix(NA,nrow=p$nruns,ncol=length(seq(0.01,0.99,0.01))+1)
+      out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA,gini = NA,gini.lo =NA, gini.hi=NA,df.yst=NA)
+      mp=0
+      np=1
+      effic.out = data.frame(yr=NA,strat.effic.wt=NA,alloc.effic.wt=NA,strat.effic.n=NA,alloc.effic.n=NA)
+      nopt.out =  list()
+      
+      
+      for(iip in ip) {
+        mp = mp+1
+        yr = p$runs[iip,"yrs"]
+        print ( p$runs[iip,] )
+        
+        #iv = which(cas$spec %in% vv) Turn on if species are selected right now only lobster is being brought in
+        iy = which(set$GMT_YEAR %in% yr)
+        ix = which(tolower(set$SEASON) == tolower(SEASON))
+        pi = 'base'
+        if(p$define.by.polygons) {
+          print('dbp')
+          pi = 'restratified'
+          if(p$area=='georges.US') {return('this is not setup')}
+          if(p$area=='LFA41'){
+            l41 = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA41Offareas.csv'))
+            if(p$lobster.subunits) {
+              l = l41[which(l41$OFFAREA == p$area),]
+            } else {
+              print('All LFA41 subsetted by LFA Area')
+              l41 = joinPolys(as.PolySet(l41),operation='UNION')
+              attr(l41,'projection') <- 'LL'
+              l =l41 = subset(l41, SID==1)
             }
           }
-            if(exists('big.ci',p)) {
-              return(big.out)
-            }
-          if(p$strata.efficiencies) {
-                 return(list(effic.out,nopt.out))
+          if(p$area %in% c('LFA34','LFA35','LFA36','LFA38','LFA36-38','EGOM')) {
+            LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+            if(p$area %ni% c('LFA35-38','EGOM'))        ppp = as.numeric(strsplit(p$area,"LFA")[[c(1,2)]])
+            if(p$area =='LFA35-38') ppp = c(35,36,38)
+            if(p$area =='EGOM') ppp = c(33,34,35,36,38,41)
+            
+            lll = subset(LFAs,PID %in% ppp)
+            l = subset(lll,SID==1)
+            attr(l,'projection') <- "LL"
+          }
+          
+          set$EID = 1:nrow(set)
+          a = findPolys(set,l)
+          iz = which(set$EID %in% a$EID)
+          if(p$area=='adjacentLFA41') {
+            iz = which(set$EID %ni% a$EID)
+            ir = which(set$STRATUM %in% c(STRATUM))
+            iz = intersect(iz,ir)
+          }
+        } else {
+          iz = which(set$STRATUM %in% c(STRATUM))
+        }
+        iy = intersect(intersect(ix,iy),iz)
+        se = set[iy,]
+        if(nrow(se)<1) {out[mp,1] <- yr 
+        next()
+        }
+        se$EID = 1:nrow(se)
+        ca = cas #cas[iv,] see above
+        se$z = se$AVGDEPTH
+        vars.2.keep = c('MISSION','X','Y','ID','SETNO','BEGIN_GMT_TOWDATE','GMT_YEAR','STRATUM','z','BOTTEMP','BOTSALIN','DISTCORRECTION','SEASON')
+        se = se[,vars.2.keep]
+        se$slong = se$X
+        se$slat = se$Y
+        if(nrow(se)>1){
+          p$lb = p$length.based
+          if(p$by.sex & !p$length.based) {p$size.class=c(0,1000); p$length.based=T}
+          if(!p$lb) { vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO')#,'SIZE_CLASS')
+          ca = ca[,vars.2.keep]
+          }
+          
+          
+          if(p$length.based) {
+            dp = de
+            dp = dp[which(dp$ID %in% unique(se$ID)),]
+            if(nrow(dp)>=1) {
+              
+              flf = p$size.class[1]:p$size.class[2]
+              dp$clen2 = ifelse(dp$FLEN %in% flf,dp$CLEN,0)
+              
+              if(p$by.sex) dp$clen2 = ifelse(dp$FSEX %in% p$sex, dp$clen2, 0)
+              
+              dp$pb = dp$FWT * dp$CLEN
+              dp$pb1 = dp$FWT * dp$clen2
+              
+              dpp = data.frame(mission=NA,setno=NA,size_class=NA,pn=NA,pw=NA)
+              
+              if(nrow(dp)>0) {
+                dpp = aggregate(cbind(CLEN,clen2,pb,pb1)~MISSION+SETNO,data=dp,FUN=sum)
+                dpp$pn = dpp$clen2/dpp$CLEN
+                dpp$pw = dpp$pb1/dpp$pb
+                dpp = dpp[,c('MISSION','SETNO','pn','pw')]
               }
-                        lle = 'all'
-                        lbs = 'not'
-              if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
-              if(p$by.sex)      lbs = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
-             if(length(lbs)>1) lbs = paste(lbs[1],lbs[2],sep='&')
- 
-              fn = paste('stratified','nefsc',p$season,p$area,pi,'length',lle,lbs,'sexed','rdata',sep=".")
-              fn.st = paste('strata.files','nefsc',p$season,p$area,pi,'length',lle,lbs,'sexed','rdata',sep=".")
-            if(save) {  
-              save(out,file=file.path(loc,fn))
-              save(strata.files,file=file.path(loc,fn.st))
+              
+              ca1 = merge(ca,dpp,by=c('MISSION','SETNO'))
+              ca1$TOTWGT = ca1$TOTWGT * ca1$pw
+              ca1$TOTNO = ca1$TOTNO * ca1$pn
+              vars.2.keep =c('MISSION','SETNO','TOTWGT','TOTNO')
+              ca = ca1[,vars.2.keep]
             }
-             if(p$strata.files.return) return(strata.files)
-             if(exists('return.both',p)) return(list(strat.ests = out,data=strata.files))
-             return(out)
-
-   }
-
+          }
+          
+          if(nrow(ca)>=1) {
+            #browser()
+            ca = aggregate(cbind(TOTWGT,TOTNO)~MISSION+SETNO,data=ca,FUN=sum)
+            sc = merge(se,ca,by=c('MISSION','SETNO'),all.x=T)
+            sc[,c('TOTWGT','TOTNO')] = na.zero(sc[,c('TOTWGT','TOTNO')])
+            #sc$TOTNO = sc$TOTNO / sc$DISTCORRECTION #this happens during the nefsc.db uscat.clean step
+            #sc$TOTWGT = sc$TOTWGT / sc$DISTCORRECTION
+            io = which(stra$STRATA %in% unique(sc$STRATUM))
+            sc$Strata = sc$STRATUM
+            st = stra[io,c('STRATA','NH')]
+            st = st[order(st$STRATA),]
+            spr = data.frame(STRATA = STRATUM, Pr = props)
+            st = merge(st,spr)
+            names(st)[1] = 'Strata'
+            if(p$reweight.strata) st$NH = st$NH * st$Pr #weights the strata based on area in selected region
+            
+            if(exists('temperature',p)) {sc = sc[!is.na(sc$BOTTEMP),] ; sc$TOTNO = sc$BOTTEMP; sc$TOTWGT = sc$BOTTEMP }
+            if(nrow(sc)==0)next()
+            if(length(st$Strata)==0) next()
+            st = st[order(st$Strata),]
+            st = Prepare.strata.file(st)
+            sc1= sc
+            sc = Prepare.strata.data(sc)
+            strata.files[[mp]]  = list(st,sc1)
+            sW = Stratify(sc,st,sc$TOTWGT)
+            sN = Stratify(sc,st,sc$TOTNO)
+            ssW = summary(sW)
+            ssN = summary(sN)
+            
+            if(p$strata.efficiencies) {
+              ssW = summary(sW,effic=T,nopt=T)
+              ssN = summary(sN,effic=T,nopt=T)
+              effic.out[mp,] = c(yr,ssW$effic.str,ssW$effic.alloc,ssN$effic.str,ssN$effic.alloc)
+              nopt.out[[mp]] = list(yr,ssW$n.opt,ssN$n.opt)
+            }
+            
+            if(!p$strata.efficiencies) {
+              
+              bsW = list(NA,NA,NA)
+              bsN = list(NA,NA,NA)
+              nt = NA
+              if(p$bootstrapped.ci) {
+                bsW = summary(boot.strata(sW,method='BWR',nresamp=1000),ci.method='BC')
+                bsN = summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC')
+                nt  = sum(sW$Nh)/1000
+              }
+              if(exists('big.ci',p)) {
+                big.out[mp,] = c(yr,summary(boot.strata(sN,method='BWR',nresamp=1000),ci.method='BC',big.ci=T))
+              }
+              out[mp,] = c(yr,ssW[[1]],ssW[[2]],bsW[[1]][1],bsW[[1]][2],ssW[[3]]/1000,bsW[[1]][1]*nt,bsW[[1]][2]*nt,
+                           ssN[[1]],ssN[[2]],bsN[[1]][1],bsN[[1]][2],ssN[[3]]/1000,bsN[[1]][1]*nt,bsN[[1]][2]*nt,ssW$dwao,sum(sW[['nh']]),sum(sW[['nhws']]),round(sum(sc$TOTNO)),ssN$gini,bsN[[2]][1],bsN[[2]][2],ssN$df.yst)
+            }   else {
+              out[mp,] = c(yr,rep(0,23))
+            }
+            
+          }
+        }
+      }
+      if(exists('big.ci',p)) {
+        return(big.out)
+      }
+      if(p$strata.efficiencies) {
+        return(list(effic.out,nopt.out))
+      }
+      lle = 'all'
+      lbs = 'not'
+      if(p$length.based) lle = paste(p$size.class[1],p$size.class[2],sep="-")
+      if(p$by.sex)      lbs = ifelse(p$sex==1,'male',ifelse(p$sex==2,'female','berried'))
+      if(length(lbs)>1) lbs = paste(lbs[1],lbs[2],sep='&')
+      
+      fn = paste('stratified','nefsc',p$season,p$area,pi,'length',lle,lbs,'sexed','rdata',sep=".")
+      fn.st = paste('strata.files','nefsc',p$season,p$area,pi,'length',lle,lbs,'sexed','rdata',sep=".")
+      if(save) {  
+        save(out,file=file.path(loc,fn))
+        save(strata.files,file=file.path(loc,fn.st))
+      }
+      if(p$strata.files.return) return(strata.files)
+      if(exists('return.both',p)) return(list(strat.ests = out,data=strata.files))
+      return(out)
+      
+    }
+    
 }
