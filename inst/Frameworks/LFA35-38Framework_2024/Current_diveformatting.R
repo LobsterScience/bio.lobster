@@ -88,5 +88,5 @@ final[cols_to_convert] <- lapply(final[cols_to_convert], as.numeric)
 
 diveTrans<-final
 
-write.csv(diveTrans,"C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/divesurvey/BOFHistoric/BOF_Divesurvey.csv")
+write.csv(diveTrans,"C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/divesurvey/BOF_DiveFormatted.csv")
 

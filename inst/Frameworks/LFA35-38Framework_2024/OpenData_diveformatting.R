@@ -17,7 +17,7 @@ require(dplyr)
 require(sf)
 
 
-setwd("C:/Users/HowseVJ/OneDrive - divecompO-MPO/LFA 35-38 Framework Resources/Figures")
+#setwd("C:/Users/HowseVJ/OneDrive - divecompO-MPO/LFA 35-38 Framework Resources/Figures")
 
 ###########################
 # Source Data
@@ -28,7 +28,7 @@ section = read.csv("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/divesur
 morph = read.csv("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/divesurvey/BOFHistoric/opendataBiological8221.csv")
 
 
-##### divecomp LOBSTER COUNTS ##### 
+##### Check LOBSTER COUNTS ##### 
 #Section data : lobster count includes lobster that were encountered by not measured. 
 # moph has character data for lengths.. but no column for total lobster.
 
@@ -50,13 +50,13 @@ morph_divecomp <- morph %>%
   )
 morph_divecomp<-as.data.frame(morph_divecomp)
 
-### divecomp THE divecompS are the same
+### check if The divecompS are the same
 merged_divecomp <- tran_divecomp %>%
   rename(total_animals_tran= total_animals) %>%
   inner_join(sec_divecomp %>% rename(total_animals_sec = total_animals), by = "transect") %>%
   inner_join(morph_divecomp %>% rename(total_animals_morph = total_animals), by = "transect")
 
-# divecomp if the total_animals values are the same across all three dataframes
+# check if the total_animals values are the same across all three dataframes
 merged_divecomp <- merged_divecomp %>%
   mutate(same_total_animals = (total_animals_tran == total_animals_sec) & (total_animals_sec == total_animals_morph))
 
@@ -99,6 +99,9 @@ divecomp$carapacemm<-as.numeric(divecomp$carapacemm)
 divecomp$site[divecomp$site == "    Seal Cove" ] <- "Seal Cove"
 divecomp$site[divecomp$site == "   Whale Cove"  ] <- "Whale Cove"
 
+
+
+
 ##Convert substrates to numeric to match other data sources
 
 # substrate types 
@@ -123,19 +126,11 @@ divecomp <- divecomp %>%
 divecomp<- divecomp %>%
   mutate(LFA = case_when(
     region %in% c("Passamaquoddy Bay", "Maces Bay", "Deadman's to Seeleys Head", "West Isles", "Letang Estuary") ~ 36,
-    region == "Annapolis basin" ~ 35,
+    region == "Annapolis Basin" ~ 35,
     region == "Grand Manan" ~ 38,
     TRUE ~ NA_real_
   ))
-##Export dataframe for further analysis
 
-#write.csv(divecomp,"C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/divesurvey/BOFHistoric/historicdivecomp.csv")
-
-
-p = ggLobsterMap(area="BoF",addGrids=F,
-                 fill.colours = 'grey',bathy=F,return.object = T,colourLFA = F)
-p = p + geom_point(data = divecomp, aes(x = startlongitude , y = startlatitude), color = "red")
-p
 
 
 
@@ -167,7 +162,6 @@ for (transect_id in unique(divecomp$transect)) {
 
   divecomp[divecomp$transect == transect_id, "NewInt"] <- transect_data$NewInt
 }
-
 
 
 ### Next Fill the new primary and secondary substrate columns with existing data or modify the  % data to populate where primary and secondary are not present
@@ -230,5 +224,72 @@ for (transect_id in unique(divecomp$transect)) {
   }
 }
 
-# View the updated dataframe
-print(divecomp)
+
+
+##A loop that Creates a column that populates binary lobster count column - every row an encounter -- to match the totallobster within a section
+# Assuming your dataframe is named divecomp
+
+divecomp$lobster <- 0
+
+# "lobster" to 1 where "carapacemm" has a value
+divecomp$lobster[!is.na(divecomp$carapacemm)] <- 1
+
+#  Replace NA in section and section lobster count column with 1 and 0
+divecomp$section[is.na(divecomp$section)] <- 1
+divecomp$sectionlobstercount[is.na(divecomp$sectionlobstercount)] <- 0
+
+#Cycle through unique transects and sections
+unique_transects <- unique(divecomp$transect)
+
+for (transect in unique_transects) {
+  transect_data <- divecomp[divecomp$transect == transect, ]
+  unique_sections <- unique(transect_data$section)
+  
+  for (section in unique_sections) {
+    section_data <- transect_data[transect_data$section == section, ]
+    section_lobster_count <- unique(section_data$sectionlobstercount)
+    
+    if (length(section_lobster_count) == 1) {
+      num_lobsters <- section_lobster_count
+      num_records <- sum(!is.na(section_data$carapacemm))
+      
+      if (num_lobsters > num_records) {
+        num_new_rows <- num_lobsters - num_records
+        
+        for (i in 1:num_new_rows) { ## individual lobster data that shouldn't be replicated
+          new_row <- section_data[1, ]
+          new_row$carapacelength <- NA
+          new_row$sex <- NA
+          new_row$shellhardness <- NA
+          new_row$eggs <- NA
+          new_row$sex_num <- NA
+          new_row$carapacemm <- NA
+          new_row$lobster <- 1
+          
+          divecomp <- rbind(divecomp, new_row)
+        }
+      }
+    }
+  }
+  
+  # Output the transect number that is completed
+  print(paste("Completed transect:", transect))
+}
+
+# Sort the dataframe by transect and section 
+divecomp <- divecomp[order(divecomp$transect, divecomp$section), ]
+
+
+
+### Average Depth in meters by unique Transect - Is depth recorded and then corrected for the tide ?
+
+
+p = ggLobsterMap(area="BoF",addGrids=F,
+                 fill.colours = 'grey',bathy=F,return.object = T,colourLFA = F)
+p = p + geom_point(data = divecomp, aes(x = startlongitude , y = startlatitude), color = "red")
+p
+
+
+##Export dataframe for further analysis
+write.csv(divecomp,"C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/divesurvey/BOFHistoric/OD_DiveFormatted.csv")
+

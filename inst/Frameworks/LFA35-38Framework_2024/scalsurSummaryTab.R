@@ -1,6 +1,9 @@
 ##Summarizing Scallop Survey Data
 
 ########### This Chunk pulls out all of the bycatch data by Tow, without subsetting the tows by lobster presence ################
+require(bio.lobster)
+require(devtools)
+require(bio.utilities)
 
 spcd<- 2550
 sp<- "LOBSTER"
@@ -141,13 +144,17 @@ rdef<-merge(rdef,unique(rL[,c("PID", "LFA")]), all.x=T, by="PID")
 
 ##Convert dataframe to Sf
 all_tows_sf <- st_as_sf(all_tows_data , coords = c("SLONG", "SLAT"), crs = 4326)
+all_tows_sf$SLONG <- all_tows_data$SLONG
+all_tows_sf$SLAT <- all_tows_data$SLAT
 # Check same coordinate system
 rdef <- st_transform(rdef, crs = st_crs(all_tows_sf))
 
 ## Join them spatially
 all_tows_with_LFA <- st_join(all_tows_sf, rdef, join = st_within)
+
 ##convert back to DF
 all_tows_with_LFA_df <- as.data.frame(all_tows_with_LFA)
+all_tows_with_LFA_df$geometry <- st_geometry(all_tows_with_LFA)
 
 ### summarize the dataframe by year and LFA
 
@@ -186,3 +193,51 @@ scalsum <- scalsum%>%
 scalsum<-as.data.frame(scalsum)
 
 write.csv(scalsum, "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures/scalsummarytable.csv")
+
+
+#### Map of the tow locations by year
+sumSmap<-sumS%>%
+ filter(LFA != 34)
+#sumSmap<-as.data.frame(sumSmap)
+#sumSmap<-sumSmap%>%select(TOW_SEQ, year,LFA, SLONG,SLAT,Decade)
+
+sumSmap = st_as_sf(sumSmap,coords = c('SLONG','SLAT'),crs=4326)
+
+
+
+# Split the data by decade
+decade_1999_2009 <- sumSmap[sumSmap$Decade == "1999-2009", ]
+#decade_1999_2009 = st_as_sf(decade_1999_2009,coords = c('SLONG','SLAT'),crs=4326)
+
+decade_2010_2018 <- sumSmap[sumSmap$Decade == "2010-2018", ]
+decade_2019_2024 <- sumSmap[sumSmap$Decade == "2019-2024", ]
+
+
+
+ggLobsterMap('custom',xlim=c(-68,-63),ylim=c(43.75,46),addGrids = F,addPoints = T,pts=subset(decade_1999_2009),fw='~year')+
+  theme_test(base_size=14)
+
+ggLobsterMap('custom',ylim=c(43.75,46),xlim=c(-68,-63),addGrids = F,addPoints = T,pts=decade_2010_2018,fw='~year')+
+  theme_test(base_size=14)
+
+ggLobsterMap('custom',ylim=c(43.75,46),xlim=c(-68,-63),addGrids = F,addPoints = T,pts=decade_2019_2024,fw='~year')+
+  theme_test(base_size=14)
+
+# Create a plot for each decade
+plot_1999_2009 <- ggplot(data = decade_1999_2009) +
+  geom_sf(aes(geometry = geometry, color = as.factor(TOW_SEQ)), size = 2) +
+  facet_wrap(~ year) +
+  theme_minimal() +
+  labs(title = "1999-2009", color = "TOW_SEQ")
+
+plot_2010_2018 <- ggplot(data = decade_2010_2018) +
+  geom_sf(aes(geometry = geometry, color = as.factor(TOW_SEQ)), size = 2) +
+  facet_wrap(~ year) +
+  theme_minimal() +
+  labs(title = "2010-2018", color = "TOW_SEQ")
+
+plot_2019_2024 <- ggplot(data = decade_2019_2024) +
+  geom_sf(aes(geometry = geometry, color = as.factor(TOW_SEQ)), size = 2) +
+  facet_wrap(~ year) +
+  theme_minimal() +
+  labs(title = "2019-2024", color = "TOW_SEQ")

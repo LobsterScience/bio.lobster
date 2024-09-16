@@ -13,8 +13,19 @@ require(PBSmapping)
 require(dplyr)
 ###################DATA IMPORT######################
 
+#Viridis Magma
+pal=c("#fcfdbf", 
+      "#feb078",
+      "#f1605d",
+      "#b73779",
+      "#721f81",
+      "#2c115f",
+      "#000004")
+
+theme_set(theme_test(base_size = 14))
+
 ##### 1975-Today #####
-lobster.db('seasonal.landings.redo')
+#lobster.db('seasonal.landings.redo')
 h=lobster.db('seasonal.landings')
 h <- h %>% filter(row_number() <= n()-1)
 h$SecondYear <- as.numeric(sub(".*-", "", h$SYEAR))
@@ -56,7 +67,7 @@ g38<-g38 %>%
 
 
 #### 1800s-1940s######
-lobster.db('historic.landings.redo')
+#lobster.db('historic.landings.redo')
 d = lobster.db('historic.landings')  ## WILLIAMS Data
 count35 = c("KINGS","ANNAPOLIS", "COLCHESTER" , "CUMBERLAND")
 count36 = c('ALBERT','SAINT JOHN','CHARLOTTE')
@@ -104,19 +115,15 @@ land38<- land38%>%
 merge_df <- bind_rows(land35, land36, land38)
 
 
-ggplot(merge_df, aes(x = SYEAR, y = LANDINGS_MT, fill = ifelse(SYEAR == 2024, "2024", "Other"))) +
+histland<-ggplot(merge_df, aes(x = SYEAR, y = LANDINGS_MT, fill = ifelse(SYEAR == 2024, "2024", "Other"))) +
   geom_bar(stat="identity", width=0.7) +
   facet_wrap(~ LFA, nrow = 1) + 
   theme_test() +
   labs(x = "Season Year", y = "Landings (t)") +
   scale_y_continuous(limits = c(0, 6200), expand = c(0, 0.1)) + 
   scale_x_continuous(breaks = seq(1892, 2024, by = 12), expand = c(0.01, 0)) + 
-  scale_fill_manual(values = c("2024" = "#fc8961", "Other" = "#003f5c")) + 
-  guides(fill = "none")+
-  theme(
-    axis.text = element_text(size = 10),  
-    axis.title = element_text(size = 14),
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    strip.text = element_text(size = 14)
-  )
+  scale_fill_manual(values = c("2024" = "#f1605d", "Other" = "#000004")) + 
+  guides(fill = "none")
+
+ggsave(filename = "histlandings.png", plot = histland, path = "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures", width = 8, height = 6, units = "in", dpi = 300)
 
