@@ -738,7 +738,9 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         
         inf = subset(inf, type %in% c(1,5))
         
-        inf$WingSpread = ifelse(inf$gear==3,10.97/1000,ifelse(inf$gear==9,12.49/1000,ifelse(inf$gear==15,13/1000,NA))) #yankee 36
+        inf$WingSpread = ifelse(inf$gear==3,10.97/1000,ifelse(inf$gear==9,12.49/1000,ifelse(inf$gear %in% c(15,23),12/1000,NA)))
+        inf$WingSpread_div = inf$WingSpread/(12/1000)
+        
         inf = subset(inf,!is.na(inf$WingSpread)) #remove strange gear
         
         #use the median dist per mission and gear to fill in NAs
@@ -748,19 +750,20 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         inf$dist = ifelse(is.na(inf$dist),inf$aggDist,inf$dist)
         
         
-        inf$sweptArea = inf$WingSpread * (inf$dist*1.852) #km2
+        inf$sweptArea = inf$WingSpread * (inf$dist*1.852) #km2-- wing spread diffs were not accounted for in Yihao's analysis so apply them after
+        inf$dist = inf$dist*1.852
         de$id = paste(de$mission,de$setno,sep="-")
         inf$id = paste(inf$mission,inf$setno,sep="-")
         ca$id = paste(ca$mission,ca$setno,sep="-")
         
-        de = merge(de,inf[,c('id','sweptArea')])
-        ca = merge(ca,inf[,c('id','sweptArea')])
+        de = merge(de,inf[,c('id','dist','WingSpread_div')])
+        ca = merge(ca,inf[,c('id','dist','WingSpread_div')])
         
         #turn all catches into density per km2 since that is what the vessel calibrations were done on (ie using an offset)
-        de$clen = de$clen/de$sweptArea
-        ca$sampwgt = ca$sampwgt/ca$sweptArea
-        ca$totwgt = ca$totwgt/ca$sweptArea
-        ca$totno = ca$totno/ca$sweptArea
+        de$clen = de$clen/de$dist
+        ca$sampwgt = ca$sampwgt/ca$dist
+        ca$totwgt = ca$totwgt/ca$dist
+        ca$totno = ca$totno/ca$dist
         
         d = de
         catt = ca
@@ -787,7 +790,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         ca2 = subset(ca, id %ni% infS)
         
         # this section fills in all samp wgt / total wgt for prorating the catch from det to total sample
-        ca1$totwgt[which(is.na(ca1$totwgt))] <- 1/ca1$sweptArea[which(is.na(ca1$totwgt))] #replace NA with 1 for totalwgt since spp was id'd
+        ca1$totwgt[which(is.na(ca1$totwgt))] <- 1/ca1$dist[which(is.na(ca1$totwgt))] #replace NA with 1 for totalwgt since spp was id'd
         ca1$sampwgt[which(is.na(ca1$sampwgt))] <- ca1$totwgt[which(is.na(ca1$sampwgt))] #if any samp weights are NA replace with totwgt assuming totwgt=sampwgt
         ca1$sampwgt[which(ca1$sampwgt==0)] <- ca1$totwgt[which(ca1$sampwgt==0)] #if samp wgt is 0 but there is totwgt assume sampwgt=totwgt
         
@@ -806,9 +809,14 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         
         de1m$cor[which(de1m$flen<39)] <- cM #flat corrections for less than 39 and greater than 173
         de1m$cor[which(de1m$flen>173)] <- cMa
+        browser()
         
-        de1m$clen = de1m$clen / de1m$cor #correction factor, on density 
+        de1m$clen = de1m$clen / de1m$cor ### apply corrections
+        de1m$clen = de1m$clen /  de1m$WingSpread_div# include wing spread ratios
+        de1m$clen = de1m$clen /  (12/1000) # turn to sq km already dist corrected now apply the wing spread correction
+          
         de1m$fsex[which(is.na(de1m$fsex))] <- 0
+        
         
         
         #need to add in weights for subsampling
