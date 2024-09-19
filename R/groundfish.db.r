@@ -850,13 +850,11 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
        #combine vessel corrected (ca12), the nest tows (ca2) and all other species (catt)
         caF = dplyr::bind_rows(ca12,ca2,catt)
        
-       caF = subset(caF,select=c(-sweptArea))
        
        de1m = subset(de1m,select=-cor)
       
        #combine all tows vessel corrected (de1m), all nest tows (d) and all other species (de2)
         de = dplyr::bind_rows(de1m,d,de2)
-       de = subset(de,select=c(-sweptArea))
        de$clen = round(de$clen)
        
       saveRDS(caF,file=ci)
