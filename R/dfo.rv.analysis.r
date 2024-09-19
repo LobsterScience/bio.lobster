@@ -102,12 +102,16 @@ if(DS %in% c('stratified.estimates','stratified.estimates.redo')) {
         de = o$gsdet
         
         set$X = convert.dd.dddd(set$slong) *-1
+        if(any(set$X>0)){
+          lo = which(set$X>0)
+          set$X[lo] = set$X[lo]*-1
+        }
         set$Y = convert.dd.dddd(set$slat)
 
         stra$NH = as.numeric(stra$area)*3.4299 #square NM to square km
-        ii = which(months(set$sdate) %in% mns & set$strat %in% strat & set$type %in% c(1,5) & set$gear %in% c(3,9,15))
+        ii = which(months(set$sdate) %in% mns & set$strat %in% strat & set$type %in% c(1,5) & set$gear %in% c(3,9,15,23))
         set = set[ii,]
-
+    #    if(any(set$gear==23)) browser()
         cas = subset(cas,spec==2550)
     strata.files = list()
     out = data.frame(yr=NA,w.yst=NA,w.yst.se=NA,w.ci.yst.l=NA,w.ci.yst.u=NA,w.Yst=NA,w.ci.Yst.l=NA,w.ci.Yst.u=NA,n.yst=NA,n.yst.se=NA,n.ci.yst.l=NA,n.ci.yst.u=NA,n.Yst=NA,n.ci.Yst.l=NA,n.ci.Yst.u=NA,dwao=NA,Nsets=NA,NsetswithLobster=NA,ObsLobs = NA,gini = NA,gini.lo =NA, gini.hi=NA,df.yst=NA)
@@ -161,11 +165,11 @@ pi='base'
                         ppp = as.numeric(strsplit(p$area,"LFA")[[c(1,2)]])
                   if(p$area =='LFA35-38') ppp = c(35,36,38)
                         lll = subset(LFAs,PID %in% ppp)
-                        #l = subset(LFAs,SID==1) ###issue not using right subset sept 9 2024
+                        l = subset(LFAs,SID==1) ###issue not using right subset sept 9 2024
                         
                         attr(lll,'projection') <- "LL"
                         set$EID = 1:nrow(set)
-                        a = PBSmapping::findPolys(set,lll)
+                        a = PBSmapping::findPolys(set,l)
                        iz = which(set$EID %in% a$EID)
                     }} else {
                               iz = which(set$strat %in% c(strat))

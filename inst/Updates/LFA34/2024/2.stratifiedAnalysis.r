@@ -1,17 +1,17 @@
 
-#run Sept 29 2023
+#run Sept 17 2024
 require(bio.survey)
 require(bio.lobster)
 require(devtools)
 la()
 #p = bio.lobster::load.environment()
 p$libs = NULL
-ff = "LFA34Update"
+ff = "LFA34Update2024"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 dir.create(fpf1,showWarnings=F)
 dir.create(fp1,showWarnings=F)
-p$yrs = 1969:2023
+p$yrs = 1969:2024
 p1 = p
 
 stratifiedAnalyses = function(p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=ht,wd=wd){
@@ -145,8 +145,8 @@ if(survey == 'DFO'){
                 p$series =c('summer')
                 p$define.by.polygons = T
                 p$lobster.subunits=F
-                p$area = lfa
-                p$years.to.estimate = c(1970:2023)
+                p$area = 'LFA34'
+                p$years.to.estimate = c(1970:2024)
                 p$length.based = F
                 p$by.sex = F
                 p$bootstrapped.ci=T
@@ -158,9 +158,9 @@ if(survey == 'DFO'){
                 p = bio.utilities::make.list(list(yrs=p$years.to.estimate),Y=p)
                 p$reweight.strata = T #this subsets 
             
-
       aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
-      write.csv(aout,file=file.path(fpf,paste(lfa,'DFOtotalabund.csv',sep="-")))
+browser()
+            write.csv(aout,file=file.path(fpf,paste(lfa,'DFOtotalabund.csv',sep="-")))
 
 
                               p$add.reference.lines = F
