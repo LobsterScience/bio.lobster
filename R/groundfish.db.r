@@ -809,7 +809,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         
         de1m$cor[which(de1m$flen<39)] <- cM #flat corrections for less than 39 and greater than 173
         de1m$cor[which(de1m$flen>173)] <- cMa
-        browser()
+      
         
         de1m$clen = de1m$clen / de1m$cor ### apply corrections
         de1m$clen = de1m$clen /  de1m$WingSpread_div# include wing spread ratios
