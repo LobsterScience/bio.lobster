@@ -845,7 +845,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
        ca12$sampwgt[is.na(ca12$c_sampwgt)] = ca12$sampwgt[is.na(ca12$c_sampwgt)]*combCorrW
        ca12$totwgt[is.na(ca12$c_sampwgt)] = ca12$totwgt[is.na(ca12$c_sampwgt)]*combCorrW
        ca12$totno[is.na(ca12$c_sampwgt)] = round(ca12$totno[is.na(ca12$c_sampwgt)]*combCorrN)
-       ca12 = subset(ca12,select=c(-c_totno,-c_sampwgt,-rat,-sweptArea))
+       ca12 = subset(ca12,select=c(-c_totno,-c_sampwgt,-rat))
       
        #combine vessel corrected (ca12), the nest tows (ca2) and all other species (catt)
         caF = dplyr::bind_rows(ca12,ca2,catt)
