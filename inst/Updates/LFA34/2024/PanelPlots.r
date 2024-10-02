@@ -352,8 +352,8 @@ g1a.fr <- ggplot(data = ccf, aes(x = yr,y = CPUE)) +
   geom_point(size=2)+
   geom_point(data=ccp,aes(x=yr,y=CPUE),colour='grey66',shape=17,size=3)+
   geom_line(data=cp,aes(x=yr,y=x),colour='gray45',lwd=1.25)+
-  theme_csas(base_size = 12)
-  labs(x = "Année", y = "CPUE") +
+  theme_csas(base_size = 12)+
+  labs(x = "Année", y = "CPUE") 
 
 
 a=lobster.db('seasonal.landings')
@@ -387,9 +387,9 @@ g1.fr <- ggplot(data = subset(aaa,yr>1990), aes(x = yr,y=LFA34)) +
   geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='grey66',shape=17,size=2)+
   geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1,linetype='dashed')+
   geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=1)+
-  labs(x = "Year") +
-  theme_csas(base_size=12)
-  scale_y_continuous(name='Débarquements', sec.axis= sec_axis(~.*scaleright, name= 'Effort',breaks = seq(0,22000,by=5000)))+
+  labs(x = "Année") +
+  theme_csas(base_size=12)+
+  scale_y_continuous(name='Débarquements', sec.axis= sec_axis(~.*scaleright, name= 'Effort',breaks = seq(0,22000,by=5000)))
 
 g2 = ggplot(data = subset(al,source=='ILTS'), aes(x = Year,y = B)) +
   geom_point(size=2)+
@@ -408,8 +408,8 @@ g2 = ggplot(data = subset(al,source=='ILTS'), aes(x = Year,y = B)) +
     geom_line(data=subset(alr,source=='ILTS'),aes(x=yr,y=x),colour='grey66',lwd=1.25)+
     geom_hline(data=subset(RP,source=='ILTS'),aes(yintercept=USI),linetype='dotted',colour='grey66',linewidth=1.3)+
     geom_hline(data=subset(RP,source=='ILTS'),aes(yintercept=LRI),linetype='dashed',colour='grey66',linewidth=1.3)+
-    theme_csas(base_size = 12)
-    labs(x = "Année", y = "Biomasse commerciale ILTS") +
+    theme_csas(base_size = 12)+
+    labs(x = "Année", y = "Biomasse commerciale ILTS") 
 
 g3 = ggplot(data = subset(al,source=='DFO'), aes(x = Year,y = B)) +
   geom_point(size=2)+
@@ -418,7 +418,6 @@ g3 = ggplot(data = subset(al,source=='DFO'), aes(x = Year,y = B)) +
   geom_line(data=subset(alr,source=='DFO'),aes(x=yr,y=x),colour='grey66',lwd=1.25)+
   geom_hline(data=subset(RP,source=='DFO'),aes(yintercept=USI),linetype='dotted',colour='grey66',linewidth=1.3)+
   geom_hline(data=subset(RP,source=='DFO'),aes(yintercept=LRI),linetype='dashed',colour='grey66',linewidth=1.3)+
-  
   labs(x = "Year", y = "DFO Commercial Biomass") +
   theme_csas(base_size = 12)
 
@@ -429,9 +428,8 @@ g3 = ggplot(data = subset(al,source=='DFO'), aes(x = Year,y = B)) +
       geom_line(data=subset(alr,source=='DFO'),aes(x=yr,y=x),colour='grey66',lwd=1.25)+
       geom_hline(data=subset(RP,source=='DFO'),aes(yintercept=USI),linetype='dotted',colour='grey66',linewidth=1.3)+
       geom_hline(data=subset(RP,source=='DFO'),aes(yintercept=LRI),linetype='dashed',colour='grey66',linewidth=1.3)+
-      
-      theme_csas(base_size = 12)
-      labs(x = "Année", y = "Biomasse commerciale MPO") +
+       theme_csas(base_size = 12)+
+      labs(x = "Année", y = "Biomasse commerciale MPO") 
 
        
 cowplot::plot_grid(g1, g1a, g2, g3, ncol = 2, labels = "AUTO", align = "hv") #drop into document from 
@@ -544,10 +542,6 @@ IL$wMM = rmed(IL$yr, IL$w.Yst)[[2]]
 
 
 ###
-spa = subset(Sp,!is.na(w.Yst))
-lareas = data.frame(LRI=c(0,RP$LRI[which(RP$source=='NEFSC_Spring')]),ys = rep(max(spa$rMM)*1.1,2))
-uareas = data.frame(USI=c(RP$LRI[which(RP$source=='NEFSC_Spring')],RP$USI[which(RP$source=='NEFSC_Spring')]),ys = rep(max(spa$rMM)*1.1,2))
-rline = data.frame(x=c(RP$USI[which(RP$source=='NEFSC_Spring')],max(spa$wMM)*1.1),ys = rep(RP$RI[which(RP$source=='NEFSC_Spring')],2))
 
 phase.panels=function(French=FALSE) {
   
@@ -558,6 +552,10 @@ phase.panels=function(French=FALSE) {
     xlb="Biomasse commerciale"
     ylb="Mortalité par pêche relative" 
   }
+  spa = subset(Sp,!is.na(w.Yst))
+  lareas = data.frame(LRI=c(0,RP$LRI[which(RP$source=='NEFSC_Spring')]),ys = rep(max(spa$rMM)*1.1,2))
+  uareas = data.frame(USI=c(RP$LRI[which(RP$source=='NEFSC_Spring')],RP$USI[which(RP$source=='NEFSC_Spring')]),ys = rep(max(spa$rMM)*1.1,2))
+  rline = data.frame(x=c(RP$USI[which(RP$source=='NEFSC_Spring')],max(spa$wMM)*1.1),ys = rep(RP$RI[which(RP$source=='NEFSC_Spring')],2))
   
    g1 = ggplot(spa,aes(x=wMM,y=rMM))+
    geom_point()+
@@ -566,6 +564,7 @@ phase.panels=function(French=FALSE) {
    geom_text(data=subset(spa,yr %in% c(min(yr),max(yr))),aes(label=yr,x=wMM,y=rMM),position = position_nudge(y=c(-.023,.023)))+
    geom_area(data=lareas,aes(x=LRI,y=ys),fill='grey30',alpha=.25)+
    geom_area(data=uareas,aes(x=USI,y=ys),fill='grey70',alpha=.25)+
+   geom_segment(data=rline,aes(x=x[1],xend=x[2],y=ys[1],yend=ys[2]),linetype='dashed') +
    coord_cartesian(ylim=c(0.5,1.1))+
    theme_csas()
  
