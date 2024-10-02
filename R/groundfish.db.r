@@ -774,7 +774,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         catt = subset(catt,spec!=2550)
        
          #load in calibrations #from yin, benoit and martin 2024
-        load(file.path(project.datadirectory('bio.lobster'),'GroundfishConversions/2550_model_fit/BB5.rda')) 
+        load(file.path(bio.directory,'bio.lobster','data','RV_extras','BB5.rda')) 
         vc = res$main[,c('lenseq','est_rho')]
         vc = subset(vc,lenseq>38 & lenseq<174) #recommendations from paper
         vc$cor = vc$est_rho #to go from WIIA to NEST you divide all WIIA after you apply the swept area correction (#/km2)
