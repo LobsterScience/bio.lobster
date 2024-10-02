@@ -836,7 +836,6 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         caD$c_sampwgt = caD$c_sampwgt/1000
        ca12 = merge(ca1, caD,all=T) 
        ca12$rat = ca12$sampwgt/ca12$totwgt #ratio of samp to totwgt from gscat
-       
        ca12$sampwgt[!is.na(ca12$c_sampwgt)] = ca12$c_sampwgt[!is.na(ca12$c_sampwgt)] #fill in sample weight where we have c_samp wgt
        ca12$totwgt[!is.na(ca12$c_sampwgt)] = ca12$c_sampwgt[!is.na(ca12$c_sampwgt)] /ca12$rat[!is.na(ca12$c_sampwgt)] # fill in total weight from corrected sampwgt and ratio from gscat
        ca12$totno[!is.na(ca12$c_sampwgt)] = round(ca12$c_totno[!is.na(ca12$c_sampwgt)] /ca12$rat[!is.na(ca12$c_sampwgt)]) #fill in totno 
@@ -845,6 +844,16 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
        ca12$sampwgt[is.na(ca12$c_sampwgt)] = ca12$sampwgt[is.na(ca12$c_sampwgt)]*combCorrW
        ca12$totwgt[is.na(ca12$c_sampwgt)] = ca12$totwgt[is.na(ca12$c_sampwgt)]*combCorrW
        ca12$totno[is.na(ca12$c_sampwgt)] = round(ca12$totno[is.na(ca12$c_sampwgt)]*combCorrN)
+       
+       ##need to include wingspread in catches with no size to make densisities
+       
+       ca12$totno[is.na(ca12$c_totno)] = ca12$totno[is.na(ca12$c_totno)] /  ca12$WingSpread_div[is.na(ca12$c_totno)]# include wing spread ratios
+       ca12$totno[is.na(ca12$c_totno)] = ca12$totno[is.na(ca12$c_totno)] /  (12/1000) # turn to sq km already dist corrected now apply the wing spread correction
+       
+       ca12$totwgt[is.na(ca12$c_sampwgt)] = ca12$totwgt[is.na(ca12$c_sampwgt)] /  ca12$WingSpread_div[is.na(ca12$c_sampwgt)]# include wing spread ratios
+       ca12$totwgt[is.na(ca12$c_sampwgt)] = ca12$totwgt[is.na(ca12$c_sampwgt)] /  (12/1000) # turn to sq km already dist corrected now apply the wing spread correction
+       
+       
        ca12 = subset(ca12,select=c(-c_totno,-c_sampwgt,-rat))
       
        #combine vessel corrected (ca12), the nest tows (ca2) and all other species (catt)
