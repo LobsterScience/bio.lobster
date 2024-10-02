@@ -682,7 +682,7 @@ land = lobster.db('seasonal.landings')
 	      geom_line(aes(y= running.median),colour='grey45')+
 	      geom_hline(yintercept=RR75,colour='grey50',lwd=1.1,linetype='dashed')+
 	      scale_y_continuous(limits=c(0,1), n.breaks=6)+
-	      labs(x = "Année", y = "Indice d'Exploitation") +
+	      labs(x = "Année", y = "Indice d'exploitation") +
 	      theme_csas()
 	  
 	    # Recruitment 
@@ -695,14 +695,16 @@ land = lobster.db('seasonal.landings')
 	    labs(x = "Year", y = 'Recruitment Index') +
 	    theme_csas()
 	    
-	    g4.fr <- ggplot(data = rec, aes(x = YEAR)) +
+	  g4.fr <- ggplot(data = rec, aes(x = YEAR)) +
 	      geom_ribbon(data=rec,aes(ymin=lb,ymax=ub), fill="grey", alpha=0.2) +
 	      geom_point(aes(y = median)) +
 	      geom_line(aes(y= median),colour='grey45')+
 	      scale_y_continuous(limits=c(0,4), n.breaks=5)+
-	      labs(x = "Année", y = "Indice de Recrutement") +
+	      labs(x = "Année", y = "Indice de recrutement") +
 	      theme_csas()
-	    
+	  
+	  g4.fr
+	  
 	  
 	  fsrplot=cowplot::plot_grid(g1, g2, g3, g4, ncol = 2, labels = "AUTO",label_x=0.15,label_y=0.98, label_size = 15, align = "hv")
 	  fsrplot.fr=cowplot::plot_grid(g1.fr, g2.fr, g3.fr, g4.fr, ncol = 2, labels = "AUTO",label_x=0.15,label_y=0.98, label_size = 15, align = "hv")

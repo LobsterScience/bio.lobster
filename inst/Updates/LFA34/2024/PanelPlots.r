@@ -345,9 +345,15 @@ g1a <- ggplot(data = ccf, aes(x = yr,y = CPUE)) +
   geom_point(size=2)+
   geom_point(data=ccp,aes(x=yr,y=CPUE),colour='grey66',shape=17,size=3)+
   geom_line(data=cp,aes(x=yr,y=x),colour='gray45',lwd=1.25)+
- labs(x = "Year", y = "CPUE (kg/TH)") +
+ labs(x = "Year", y = "CPUE") +
   theme_csas(base_size = 12)
 
+g1a.fr <- ggplot(data = ccf, aes(x = yr,y = CPUE)) +
+  geom_point(size=2)+
+  geom_point(data=ccp,aes(x=yr,y=CPUE),colour='grey66',shape=17,size=3)+
+  geom_line(data=cp,aes(x=yr,y=x),colour='gray45',lwd=1.25)+
+  theme_csas(base_size = 12)
+  labs(x = "Année", y = "CPUE") +
 
 
 a=lobster.db('seasonal.landings')
@@ -371,10 +377,19 @@ g1 <- ggplot(data = subset(aaa,yr>1990), aes(x = yr,y=LFA34)) +
   geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='grey66',shape=17,size=2)+
   geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1,linetype='dashed')+
   geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=1)+
-  scale_y_continuous(name='Catch (t)', sec.axis= sec_axis(~.*scaleright, name= 'Effort',breaks = seq(0,22000,by=5000)))+
+  scale_y_continuous(name='Landings', sec.axis= sec_axis(~.*scaleright, name= 'Effort',breaks = seq(0,22000,by=5000)))+
   labs(x = "Year") +
   theme_csas(base_size=12)
 
+g1.fr <- ggplot(data = subset(aaa,yr>1990), aes(x = yr,y=LFA34)) +
+  geom_bar(stat='identity',fill='black') +
+  geom_bar(data=aap,aes(x=yr,y=LFA34),stat='identity',fill='gray66') +
+  geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='grey66',shape=17,size=2)+
+  geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1,linetype='dashed')+
+  geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=1)+
+  labs(x = "Year") +
+  theme_csas(base_size=12)
+  scale_y_continuous(name='Débarquements', sec.axis= sec_axis(~.*scaleright, name= 'Effort',breaks = seq(0,22000,by=5000)))+
 
 g2 = ggplot(data = subset(al,source=='ILTS'), aes(x = Year,y = B)) +
   geom_point(size=2)+
@@ -383,10 +398,18 @@ g2 = ggplot(data = subset(al,source=='ILTS'), aes(x = Year,y = B)) +
   geom_line(data=subset(alr,source=='ILTS'),aes(x=yr,y=x),colour='grey66',lwd=1.25)+
   geom_hline(data=subset(RP,source=='ILTS'),aes(yintercept=USI),linetype='dotted',colour='grey66',linewidth=1.3)+
   geom_hline(data=subset(RP,source=='ILTS'),aes(yintercept=LRI),linetype='dashed',colour='grey66',linewidth=1.3)+
-  
-  labs(x = "Year", y = "ILTS Commercial Biomass (t)") +
+  labs(x = "Year", y = "ILTS Commercial Biomass") +
   theme_csas(base_size = 12)
 
+  g2.fr = ggplot(data = subset(al,source=='ILTS'), aes(x = Year,y = B)) +
+    geom_point(size=2)+
+    geom_errorbar(aes(ymin = lB, ymax = uB), width = 0)+ 
+    #  facet_wrap(~source,scales='free_y')+
+    geom_line(data=subset(alr,source=='ILTS'),aes(x=yr,y=x),colour='grey66',lwd=1.25)+
+    geom_hline(data=subset(RP,source=='ILTS'),aes(yintercept=USI),linetype='dotted',colour='grey66',linewidth=1.3)+
+    geom_hline(data=subset(RP,source=='ILTS'),aes(yintercept=LRI),linetype='dashed',colour='grey66',linewidth=1.3)+
+    theme_csas(base_size = 12)
+    labs(x = "Année", y = "Biomasse commerciale ILTS") +
 
 g3 = ggplot(data = subset(al,source=='DFO'), aes(x = Year,y = B)) +
   geom_point(size=2)+
@@ -396,11 +419,28 @@ g3 = ggplot(data = subset(al,source=='DFO'), aes(x = Year,y = B)) +
   geom_hline(data=subset(RP,source=='DFO'),aes(yintercept=USI),linetype='dotted',colour='grey66',linewidth=1.3)+
   geom_hline(data=subset(RP,source=='DFO'),aes(yintercept=LRI),linetype='dashed',colour='grey66',linewidth=1.3)+
   
-  labs(x = "Year", y = "DFO Commercial Biomass (t)") +
+  labs(x = "Year", y = "DFO Commercial Biomass") +
   theme_csas(base_size = 12)
 
-cowplot::plot_grid(g1, g1a, g2, g3, ncol = 2, labels = "AUTO", align = "hv")
+    g3.fr = ggplot(data = subset(al,source=='DFO'), aes(x = Year,y = B)) +
+      geom_point(size=2)+
+      geom_errorbar(aes(ymin = lB, ymax = uB), width = 0)+ 
+      #  facet_wrap(~source,scales='free_y')+
+      geom_line(data=subset(alr,source=='DFO'),aes(x=yr,y=x),colour='grey66',lwd=1.25)+
+      geom_hline(data=subset(RP,source=='DFO'),aes(yintercept=USI),linetype='dotted',colour='grey66',linewidth=1.3)+
+      geom_hline(data=subset(RP,source=='DFO'),aes(yintercept=LRI),linetype='dashed',colour='grey66',linewidth=1.3)+
+      
+      theme_csas(base_size = 12)
+      labs(x = "Année", y = "Biomasse commerciale MPO") +
 
+       
+cowplot::plot_grid(g1, g1a, g2, g3, ncol = 2, labels = "AUTO", align = "hv") #drop into document from 
+
+#Francais labels on figure. Will save to wd by default. You can drop into the CSAS folder from there
+png(filename=file.path(getwd(), "fsr.figure1.french.png"), width=1200, height=900, res=125) #modify file path as required
+cowplot::plot_grid(g1.fr, g1a.fr, g2.fr, g3.fr, ncol = 2, labels = "AUTO", align = "hv") 
+print(paste0("french figure can be found here:", file.path(getwd(), "fsr.figure1.french.png"))) #modify file path as required
+dev.off()
 
 
 ##################################################################
@@ -509,16 +549,25 @@ lareas = data.frame(LRI=c(0,RP$LRI[which(RP$source=='NEFSC_Spring')]),ys = rep(m
 uareas = data.frame(USI=c(RP$LRI[which(RP$source=='NEFSC_Spring')],RP$USI[which(RP$source=='NEFSC_Spring')]),ys = rep(max(spa$rMM)*1.1,2))
 rline = data.frame(x=c(RP$USI[which(RP$source=='NEFSC_Spring')],max(spa$wMM)*1.1),ys = rep(RP$RI[which(RP$source=='NEFSC_Spring')],2))
 
- g1 = ggplot(spa,aes(x=wMM,y=rMM))+
+phase.panels=function(French=FALSE) {
+  
+  xlb="Commercial Biomass"
+  ylb="Relative Fishing Mortality"
+  
+  if(French){
+    xlb="Biomasse commerciale"
+    ylb="Mortalité par pêche relative" 
+  }
+  
+   g1 = ggplot(spa,aes(x=wMM,y=rMM))+
    geom_point()+
    geom_path()+
-   labs(x='Commercial Biomass',y='Relative Fishing Mortality')+
+   labs(x=xlb,y=ylb)+
    geom_text(data=subset(spa,yr %in% c(min(yr),max(yr))),aes(label=yr,x=wMM,y=rMM),position = position_nudge(y=c(-.023,.023)))+
    geom_area(data=lareas,aes(x=LRI,y=ys),fill='grey30',alpha=.25)+
    geom_area(data=uareas,aes(x=USI,y=ys),fill='grey70',alpha=.25)+
-  geom_segment(data=rline,aes(x=x[1],xend=x[2],y=ys[1],yend=ys[2]),linetype='dashed') +
    coord_cartesian(ylim=c(0.5,1.1))+
-     theme_csas()
+   theme_csas()
  
  Fpa = subset(Fa,!is.na(w.Yst))
  lareas = data.frame(LRI=c(0,RP$LRI[which(RP$source=='NEFSC_Fall')]),ys = rep(max(Fpa$rMM)*1.1,2))
@@ -528,14 +577,13 @@ rline = data.frame(x=c(RP$USI[which(RP$source=='NEFSC_Spring')],max(spa$wMM)*1.1
  g2 = ggplot(Fpa,aes(x=wMM,y=rMM))+
    geom_point()+
    geom_path()+
-   labs(x='Commercial Biomass',y='Relative Fishing Mortality')+
+   labs(x=xlb,y=ylb)+
    geom_text(data=subset(Fpa,yr %in% c(min(yr),max(yr))),aes(label=yr,x=wMM,y=rMM),position = position_nudge(y=c(-.023,.7),x=c(-300,0)))+
    geom_area(data=lareas,aes(x=LRI,y=ys),fill='grey30',alpha=.25)+
    geom_area(data=uareas,aes(x=USI,y=ys),fill='grey70',alpha=.25)+
    geom_segment(data=rline,aes(x=x[1],xend=x[2],y=ys[1],yend=ys[2]),linetype='dashed') +
    coord_cartesian(ylim=c(0,30))+
-   
-    theme_csas()
+   theme_csas()
  
  
  DFa = subset(DF,!is.na(w.Yst))
@@ -546,16 +594,14 @@ rline = data.frame(x=c(RP$USI[which(RP$source=='NEFSC_Spring')],max(spa$wMM)*1.1
 g3 = ggplot(DFa,aes(x=wMM,y=rMM))+
    geom_point()+
    geom_path()+
-   labs(x='Commercial Biomass',y='Relative Fishing Mortality')+
+  labs(x=xlb,y=ylb)+
    geom_text(data=subset(DFa,yr %in% c(min(yr),max(yr))),aes(label=yr,x=wMM,y=rMM),position = position_nudge(y=c(0.01,-.01),x=c(0,0)))+
    geom_area(data=lareas,aes(x=LRI,y=ys),fill='grey30',alpha=.25)+
    geom_area(data=uareas,aes(x=USI,y=ys),fill='grey70',alpha=.25)+
    geom_segment(data=rline,aes(x=x[1],xend=x[2],y=ys[1],yend=ys[2]),linetype='dashed') +
-  coord_cartesian(ylim=c(0.5,1.1))+
-   
+   coord_cartesian(ylim=c(0.5,1.1))+
    theme_csas()
  
-
 
 ILa = subset(IL,!is.na(w.Yst))
 lareas = data.frame(LRI=c(0,RP$LRI[which(RP$source=='ILTS')]),ys = rep(max(ILa$rMM)*1.1,2))
@@ -565,16 +611,21 @@ rline = data.frame(x=c(RP$USI[which(RP$source=='ILTS')],max(ILa$wMM)*1.1),ys = r
 g4 = ggplot(ILa,aes(x=wMM,y=rMM))+
   geom_point()+
   geom_path()+
-  labs(x='Commercial Biomass',y='Relative Fishing Mortality')+
+  labs(x=xlb,y=ylb)+
   geom_text(data=subset(ILa,yr %in% c(min(yr),max(yr))),aes(label=yr,x=wMM,y=rMM),position = position_nudge(y=c(0.01,-.01),x=c(0,0)))+
   geom_area(data=lareas,aes(x=LRI,y=ys),fill='grey30',alpha=.25)+
   geom_area(data=uareas,aes(x=USI,y=ys),fill='grey70',alpha=.25)+
   geom_segment(data=rline,aes(x=x[1],xend=x[2],y=ys[1],yend=ys[2]),linetype='dashed') +
   coord_cartesian(ylim=c(0.5,.95))+
-  
   theme_csas()
 
-
-
-
 cowplot::plot_grid(g1, g2, g3, g4, ncol = 2, labels = "AUTO", align = "hv")
+}
+
+phase.panels () #Save into document
+
+#Francais labels on figure. Will save to wd by default. You can drop into the CSAS folder from there
+png(filename=file.path(getwd(), "fsr.phase.panel.french.png"), width=1200, height=900, res=125) #modify file path as required
+phase.panels(French=TRUE)
+print(paste0("french figure can be found here:", file.path(getwd(), "fsr.phase.panel.french.png"))) #modify file path as required
+dev.off()
