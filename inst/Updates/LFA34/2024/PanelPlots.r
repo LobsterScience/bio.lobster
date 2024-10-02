@@ -437,7 +437,7 @@ g3 = ggplot(data = subset(al,source=='DFO'), aes(x = Year,y = B)) +
 cowplot::plot_grid(g1, g1a, g2, g3, ncol = 2, labels = "AUTO", align = "hv") #drop into document from 
 
 #Francais labels on figure. Will save to wd by default. You can drop into the CSAS folder from there
-png(filename=file.path(getwd(), "fsr.figure1.french.png"), width=1200, height=900, res=125) #modify file path as required
+png(filename=file.path(getwd(), "fsrpanel plots.figure1.french.png"), width=1200, height=900, res=125) #modify file path as required
 cowplot::plot_grid(g1.fr, g1a.fr, g2.fr, g3.fr, ncol = 2, labels = "AUTO", align = "hv") 
 print(paste0("french figure can be found here:", file.path(getwd(), "fsr.figure1.french.png"))) #modify file path as required
 dev.off()
