@@ -23,6 +23,9 @@ dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 p$lfas = c("27", "28", "29", "30", "31A", "31B", "32") # specify lfas for data summary
 p$subareas = c("27N","27S", "28", "29", "30", "31A", "31B", "32") # specify lfas for data summary
 
+#If you only want to update logs for the last two years, run this:
+#p$yr=p$current.assessment.year
+
 # update data through ROracle
 NewDataPull =F
 if(NewDataPull){
@@ -35,10 +38,11 @@ if(NewDataPull){
 }
 
 #Run a report of missing vs received logs and save a csv copy
-per.rec= lobster.db("percent_reporting")
 fl.name=paste("percent_logs_reported", Sys.Date(),"csv", sep=".")
+per.rec=per.rec[order(per.rec$YEARMTH),]
 write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
+#27-32 Map for Documents, presentations, etc.
 png(filename=file.path(figdir, "MapLFA27-32.png") ,width=6.5, height=6.5, units = "in", res = 800)
 LobsterMap('27-32', labels=c('lfa','grid'), grid.labcex=0.6)
 dev.off()
@@ -60,7 +64,7 @@ logs=lobster.db("process.logs")
 
 #Choose One:
 
-CPUE.data<-CPUEModelData2(p,redo=T) #Reruns cpue model. Onlt takes a couple minutes now.
+CPUE.data<-CPUEModelData2(p,redo=T) #Reruns cpue model. Only takes a couple minutes now.
 #CPUE.data<-CPUEModelData2(p,redo=F) Doesn't rerun model. Just takes last run version.
 
 cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:p$current.assessment.year, graphic='R')$annual.data #index end year
@@ -150,7 +154,7 @@ for (l in p$lfas){
 # Good for context in presentations at AC
 
 a = lobster.db('process.logs')
-a = subset(a,SYEAR %in% 2004:2023) 
+a = subset(a,SYEAR %in% 2004:p$current.assessment.year) 
 
 aa = split(a,f=list(a$LFA,a$SYEAR))
 cpue.lst<-list()
@@ -194,7 +198,7 @@ dev.off()
 #-----------------------------------------
 
 a = lobster.db('process.logs')
-a = subset(a,SYEAR %in% 2004:2023 & LFA %in% p$lfas) 
+a = subset(a,SYEAR %in% 2004:p$current.assessment.year & LFA %in% p$lfas) 
 
 #quick cludge to remove a couple bad date entries for 2021 in LFA 27+
 a=a[a$SD_LOG_ID %ni% c("2904147","2904341"),]
