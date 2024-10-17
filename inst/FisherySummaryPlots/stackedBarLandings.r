@@ -6,7 +6,7 @@ require(ggplot2)
 library(viridis)
 la()
 a = lobster.db('annual.landings')
-a = subset(a,!is.na(YR)& YR>1995 & YR<2024)
+a = subset(a,!is.na(YR)& YR>1975 & YR<2024)
 sa = a %>% gather(key='LFA',value='Landings',-YR)
 sa = subset(sa,LFA<'LFA33')
 sa = subset(sa,LFA %ni% 'LFA31')
@@ -17,7 +17,7 @@ gg = ggplot(sa,aes(x=YR,y=Landings/1000))+geom_bar(stat='identity')+
 
 a = lobster.db('seasonal.landings')
 a$SYEAR = as.numeric(substring(a$SYEAR,6,9))
-a = subset(a,!is.na(SYEAR)& SYEAR>1995& SYEAR<2024)
+a = subset(a,!is.na(SYEAR)& SYEAR>1975& SYEAR<2024)
 sa1 = a %>% pivot_longer(cols=starts_with('LFA'),names_to="LFA",values_to='Landings')
 names(sa1)[1] = "YR"
 
@@ -29,7 +29,7 @@ ggplot(o1,aes(x=YR,y=Landings/1000))+geom_bar(stat='identity',width=1)+
 
 ggplot(o1, aes(fill=LFA, x=YR, y=Landings/1000)) + 
   geom_bar(position="stack", stat="identity",colour='black')+theme_test()+xlab('Fishing Year')+ylab('Landings (kt)')+
- scale_fill_viridis(discrete=T) 
+ scale_fill_viridis(discrete=T) + theme_test(base_size = 15)
 
 l38 = aggregate(Landings~YR,data=subset(o,LFA %in% c('LFA38','LFA38B')),FUN=sum)
 
