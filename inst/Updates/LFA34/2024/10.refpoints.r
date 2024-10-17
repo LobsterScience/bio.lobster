@@ -38,7 +38,7 @@ names(d) = c('YR','LFA','LAND')
 
 b$YR = substr(b$SYEAR,6,9)
 a = subset(a,YR<1976)
-b = subset(b,YR>1975 & YR<=2023)
+b = subset(b,YR>1975 & YR<=2024)
 a34 = a[,c('YR','LFA34')]
 b34 = b[,c('YR','LFA34')]
 c34 = rbind(a34,b34)
