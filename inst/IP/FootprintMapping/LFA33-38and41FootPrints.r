@@ -3,7 +3,7 @@ require(devtools)
 require(bio.lobster)
 require(bio.utilities)
 require(sf)
-load_all('C:/Users/Cooka/Documents/git/bio.utilities')
+load_all('C:/Users/Zissersonb/Documents/git/bio.utilities')
 
 
 la()

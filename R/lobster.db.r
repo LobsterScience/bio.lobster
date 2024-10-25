@@ -810,7 +810,7 @@ if(DS %in% c('seasonal.landings','seasonal.landings.redo')) {
                   seasonal.landings = connect.command(con,'select * from LOBSTER.SLIP_LAND_SEASONAL')
                   seasonal.landings = seasonal.landings[order(seasonal.landings$SYEAR),]
                    print('Last two years of landings data may be incomplete, make sure to check with Cheryl.Denton@dfo-mpo.gc.ca on last update')
-                  print('LFA27 for >2015 does not have Gulf landings yet.....')
+                  print('LFA27 for needs to have gulf landings added manually each year from GFIS.....')
                   save(seasonal.landings,file=file.path(fnODBC,'seasonal.landings.rdata'))
             }
 

@@ -715,6 +715,252 @@ png(file=file.path(hcr.dir,paste0('LFAs27-32.PhasePlot.French.png')),width=9, he
 dev.off()
 
 
+
+# Fishery footprint- Useful in comparing years, etc
+#------------------------------------------------------------
+
+
+layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps")
+r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
+r = st_as_sf(r)
+
+a =  lobster.db('process.logs')
+a = subset(a,SYEAR>2004 & SYEAR<=p$current.assessment.year)
+b = lobster.db('seasonal.landings')
+b = subset(b,!is.na(SYEAR))
+b$SYEAR = 1976:p$current.assessment.year
+b$LFA38B <- NULL
+b = subset(b,SYEAR>2004 & SYEAR<=p$current.assessment.year)
+b = reshape(b,idvar='SYEAR', varying=list(2:6),direction='long')
+num.yr=length(2005:p$current.assessment.year)
+b$LFA=rep(c(33,34,35,36,38),each=num.yr)
+b$time <- NULL
+names(b)[1:2]=c('YR','SlipLand')
+
+
+d = lobster.db('annual.landings')
+d = subset(d,YR>2004 & YR<=p$current.assessment.year, select=c(YR,LFA27,LFA28,LFA29,LFA30,LFA31A,LFA31B,LFA32))
+d = reshape(d,idvar='YR', varying=list(2:8),direction='long')
+d$LFA=rep(c(27,28,29,30,'31A','31B',32),each=num.yr)
+d$time <- NULL
+names(d)[1:2]=c('YR','SlipLand')
+bd = rbind(d,b)
+
+bup = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SYEAR+LFA,data=a,FUN=sum)
+bup$CPUE = bup$WEIGHT_KG/bup$NUM_OF_TRAPS
+bAll = merge(bd,bup,by.x=c('YR','LFA'),by.y=c('SYEAR','LFA'))
+
+sL= split(a,f=list(a$LFA, a$SYEAR))
+sL = rm.from.list(sL)
+cpue.lst<-list()
+cpue.ann = list()
+
+for(i in 1:length(sL)){
+  tmp<-sL[[i]]
+  tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+  names(tmp)<-c('time','catch','effort')
+  tmp$date<-as.Date(tmp$time)
+  first.day<-min(tmp$date)
+  tmp$time<-julian(tmp$date,origin=first.day-1)
+  g<-biasCorrCPUE(tmp,by.time = F)
+  cpue.lst[[i]] <- c(lfa=unique(sL[[i]]$LFA),yr = unique(sL[[i]]$SYEAR),g)
+}
+
+cc =as.data.frame(do.call(rbind,cpue.lst))
+
+cAll = merge(bAll,cc,by.x=c('LFA','YR'),by.y=c('lfa','yr'))
+
+cAll$NTRAPs = cAll$SlipLand*1000/as.numeric(cAll$unBCPUE)
+cAll$NTRAPSU = cAll$SlipLand*1000/as.numeric(cAll$l95)
+cAll$NTRAPSL = cAll$SlipLand*1000/as.numeric(cAll$u95)
+
+
+###########################################
+#part the effort to grids
+
+partEffort = list()
+
+for(i in 1:length(sL)){
+  tmp = sL[[i]]
+  tTH = aggregate(NUM_OF_TRAPS~LFA,data=tmp,FUN=sum)
+  tC = subset(cAll, LFA==unique(tmp$LFA) & YR == unique(tmp$SYEAR)) 
+  pTH = aggregate(NUM_OF_TRAPS~GRID_NUM+LFA+SYEAR,data=tmp,FUN=sum)
+  pTH$BTTH = pTH$NUM_OF_TRAPS / tTH$NUM_OF_TRAPS * tC$NTRAPs
+  pTH$BlTH = pTH$NUM_OF_TRAPS / tTH$NUM_OF_TRAPS * tC$NTRAPSL
+  pTH$BuTH = pTH$NUM_OF_TRAPS / tTH$NUM_OF_TRAPS * tC$NTRAPSU
+  
+  partEffort[[i]] = pTH
+}
+
+partEffort = do.call(rbind, partEffort)
+
+#pe = merge(partEffort,r,by.x=c('GRID_NUM','LFA'),by.y=c('GRID_NO','LFA'))
+
+saveRDS(partEffort,'TrapHaulsWithinGrid.rds')
+
+
+#############################################
+# PartitionLandings to Grids
+
+partLandings = list()
+
+for(i in 1:length(sL)){
+  tmp = sL[[i]]
+  tTH = aggregate(WEIGHT_KG~LFA,data=tmp,FUN=sum)
+  tC = subset(cAll, LFA==unique(tmp$LFA) & YR == unique(tmp$SYEAR)) 
+  pTH = aggregate(WEIGHT_KG~GRID_NUM+LFA+SYEAR,data=tmp,FUN=sum)
+  pTH$BL = pTH$WEIGHT_KG / (tTH$WEIGHT_KG )* (tC$SlipLand*1000)
+  partLandings[[i]] = pTH
+}
+
+partLandings = do.call(rbind, partLandings)
+
+saveRDS(partLandings,'LandingsWithinGrid.rds')
+
+###################################################
+##Licenses By Grid and Week
+
+g = lobster.db('process.logs')
+g = subset(g,SYEAR>2004 & SYEAR<=p$current.assessment.year)
+
+gg = aggregate(SD_LOG_ID~LFA+GRID_NUM+SYEAR,data = g,FUN=function(x) length(unique(x)))
+
+saveRDS(gg,'SDLOGSWithinGrid.rds')
+
+#############merge
+#Licenses By Grid and Week
+
+g = lobster.db('process.logs')
+g = subset(g,SYEAR>2004 & SYEAR<=p$current.assessment.year)
+
+gKL = aggregate(LICENCE_ID~LFA+GRID_NUM+SYEAR,data = g,FUN=function(x) length(unique(x)))
+
+saveRDS(gKL,'LicencesWithinCommunity.rds')
+
+#############merge
+
+
+Tot = merge(merge(merge(partEffort,partLandings),gg),gKL)
+
+Tot = subset(Tot,select=c(SYEAR,LFA,GRID_NUM,BTTH,BL,SD_LOG_ID,LICENCE_ID))
+names(Tot)= c('FishingYear','LFA','Grid','TrapHauls','Landings','Trips','NLics')
+Tot$PrivacyScreen = ifelse(Tot$NLics>4,1,0)
+
+# we lose 149
+saveRDS(Tot,'PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
+
+Tot = readRDS('PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
+Tot$LFA = ifelse(Tot$LFA=='31B',312,Tot$LFA)
+Tot$LFA = ifelse(Tot$LFA=='31A',311,Tot$LFA)
+
+
+#making plots of Tot
+
+GrMap = readRDS(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA27-38GridsPrunedtoDepth-sf.rds'))
+coa = st_as_sf(readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastlineSF_NY_NL.rds")))
+
+
+GrMap1 = GrMap
+GrMap1$area = st_area(GrMap1)/1000000
+GrMap1$V2 = paste(GrMap1$LFA, GrMap1$GRID_NO,sep="-")
+st_geometry(GrMap1)<- NULL
+gg = aggregate(area~LFA+GRID_NO,data=GrMap1,FUN=function(x) abs(sum(x)))
+
+GrMap2 =merge(GrMap,gg)
+
+gTot = merge(GrMap2,Tot,by.x=c('LFA','GRID_NO'),by.y=c('LFA','Grid'),all.x=T)
+
+
+r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
+b=subset(r,LFA %in% c(27:33, 311, 312))
+
+o=subset(GrMap,LFA %in% c(27:33, 311, 312))
+
+ggplot(b)+
+  geom_sf()+
+  geom_sf(data=coa,fill='grey')+
+  geom_sf(data=o,fill='red')+
+  coord_sf(xlim = c(st_bbox(b)$xmin,st_bbox(b)$xmax),
+           ylim = c(st_bbox(b)$ymin,st_bbox(b)$ymax),
+           expand = FALSE)
+
+
+gTot$CPUE = gTot$Landings/gTot$TrapHauls
+g27p = subset(gTot, LFA%in% c(27:34, 311, 312) & FishingYear%in%2016:p$current.assessment.year)
+
+ok1 = ggplot(g27p,aes(fill=CPUE))+
+  geom_sf() +
+  scale_fill_distiller(trans='identity',palette='Spectral') +
+  facet_wrap(~FishingYear)+
+  #  geom_sf(data=g27n,fill='white')+  
+  geom_sf(data=coa,fill='grey')+
+  geom_sf(data=GrMap,fill=NA)+
+  coord_sf(xlim = c(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax),
+           ylim = c(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax),
+           expand = FALSE)+
+  scale_x_continuous(breaks = c(round(seq(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax,length.out=2),2)))+
+  scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))
+
+#Can run this line to only take certain LFAs
+#g27p=g27p[g27p$LFA %in% c('33','34'),]
+
+#Slice out individual years
+gl = subset(g27p,FishingYear==p$current.assessment.year-1)
+
+gp = subset(g27p,FishingYear==p$current.assessment.year)
+
+gl$geometry<- NULL
+
+gg = merge(gp,gl[,c('LFA','GRID_NO','CPUE')],by=c('LFA','GRID_NO'))
+
+
+ls=unique(gg$LFA)
+print(paste0('Looking at the following LFA(s):', ls,' for the following years: ', gl$FishingYear[1], ' & ',gp$FishingYear[1] ))
+
+percent_diff <- function(row) {
+  row$geometry<- NULL
+  
+  abs_diff <- (as.numeric(row[1]) - as.numeric(row[2]))
+  mean_val <- mean(as.numeric(row))
+  percent_diff <- (abs_diff / mean_val) * 100
+  return(percent_diff)
+}
+
+gg$percentChange =  apply(gg[,c('CPUE.x','CPUE.y')],1,percent_diff)
+
+
+require(colorspace)
+lab=paste(gl$FishingYear[1], sprintf('\u2192'),gp$FishingYear[1], sep=" " )
+
+
+cpue.diff={
+  ggplot(subset(gg,PrivacyScreen==1),aes(fill=percentChange))+
+    geom_sf() +
+    scale_fill_continuous_diverging(palette='Purple-Green') +
+    labs(fill = "    CPUE\n% Change")+
+    #facet_wrap(~FishingYear)+
+    #  geom_sf(data=g27n,fill='white')+  
+    geom_sf(data=coa,fill='grey')+
+    geom_sf(data=GrMap,fill=NA)+
+    coord_sf(xlim = c(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax),
+             ylim = c(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax),
+             expand = FALSE)+
+    theme(axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          axis.title.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          plot.margin=grid::unit(c(8,2,8,2), "mm"))+
+    scale_x_continuous(breaks = c(round(seq(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax,length.out=2),2)))+
+    scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))+
+    annotate("text", x=(st_bbox(g27p)$xmax)-0.9, y=(st_bbox(g27p)$ymin)+0.2, label= lab, size=6 )
+}
+
+png(filename=file.path(figdir, "cpue.diff.png"), width=1600, height=900, res=175)
+print(cpue.diff)
+dev.off()	
+
 ### Bycatch### - NOT USED SINCE 2020
 
 #Bycatch estimates are calculated using effort from logbook data for LFAs 31A and 31B
