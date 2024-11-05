@@ -3,7 +3,7 @@ require(bio.lobster)
 la()
 p=list()
 p$libs = NULL
-ff = "LFA41_2024"
+ff = "2024"
 fp1 = file.path(project.datadirectory('bio.lobster'),"assessments","LFA41","2024",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 p1 = p
@@ -35,7 +35,7 @@ stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,
         p$reweight.strata = T #this subsets 
 p = make.list(list(yrs=p$years.to.estimate),Y=p)
     
-     aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+     aout= nefsc.analysis_vh(DS='stratified.estimates.redo',p=p)
      write.csv(aout,file=file.path(fpf,paste(lfa,'NEFSCSpringCommercialB.csv',sep="-")))
 
     #Figure
@@ -66,7 +66,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
          p$metric = 'weights' #weights
       p$measure = 'stratified.total' #'stratified.total'
       p$file.name = file.path(f,paste(lfa,'NEFSCFallrestratifiedtotalweightscommercial.png',sep=""))
-     aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
+     aout= nefsc.analysis_vh(DS='stratified.estimates.redo',p=p)
 
       p$y.maximum = NULL # NULL # if ymax is too high for one year
       p$show.truncated.weights = F #if using ymax and want to show the weights that are cut off as values on figure

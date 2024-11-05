@@ -79,7 +79,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
   gridCent = st_centroid(r)
   
       p =  ggplot(data=ns_coast) +
-        geom_sf(fill=fill.colours, lwd=0.4)+
+        geom_sf(fill=fill.colours, lwd=0.2)+
           xlab("Longitude") +
           ylab("Latitude")+
         scale_x_continuous(breaks=round(seq(xlim[1],xlim[2],length.out = 4),2)) +
@@ -87,7 +87,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
       
       if(addLFAlines) {
       
-        p = p+ geom_sf(data=l,colour='black',linewidth=1.3,fill=NA) 
+        p = p+ geom_sf(data=l,colour='black',linewidth=0.4,fill=NA) 
           
       }
         if(bathy){
@@ -102,7 +102,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
       geom_sf(data=subset(l,LFA==area),lwd=1.35,fill='lightblue')  
   }
   if(addNAFO){
-        p = p + geom_sf(data=o,fill=NA,colour='orange',lwd=1.25) + geom_sf(data=ns_coast,fill=fill.colours) 
+        p = p + geom_sf(data=o,fill=NA,colour='orange',lwd=1) + geom_sf(data=ns_coast,fill=fill.colours) 
       }
   if(!is.null(attrData)) {
         g = attrData
@@ -152,7 +152,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
           p = p + geom_point(data=xy,aes(x=X,y=Y,colour=group)) +coord_sf(xlim=xlim,ylim=ylim)
           
         }
-        if(!is.null(fw)) p = p + geom_sf(data=pts,color='red') +facet_wrap(fw)+ coord_sf(xlim=xlim,ylim=ylim)
+        if(!is.null(fw)) p = p + geom_sf(data=pts,color='#d44842',size=1.25) +facet_wrap(fw)+ coord_sf(xlim=xlim,ylim=ylim)
         
       }
       

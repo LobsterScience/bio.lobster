@@ -13,7 +13,7 @@
 
 
 
-nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,save=T) {
+nefsc.analysis_vh <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p=p, ip=NULL,save=T) {
     
     loc = file.path( project.datadirectory(out.dir), "analysis" )
     dir.create( path=loc, recursive=T, showWarnings=F )
@@ -90,21 +90,37 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
       cas =  nefsc.db(DS='uscat.clean')
       stra = nefsc.db(DS='usstrata.area')
       de =   nefsc.db(DS='usdet.clean')
-    
+     
       set$EID = 1:nrow(set)
-      a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
-      l = attributes(a)$PolyData[,c('PID','STRATA')]
-      a = merge(a,l,by='PID',all.x=T)
+   
+    # ##Not Working  
+    a = sf::read_sf(find.bio.gis('BTS_Strata'),crs=4326) 
+    a = st_make_valid(a)
+    
+    #  l = attributes(a)$PolyData[,c('PID','STRATA')] #extracts attributes
+     # a = merge(a,l,by='PID',all.x=T) #Merges back into the shapefile
+    
+    setx = st_as_sf(set,coords=c('X','Y'),crs=4326)
+    
+    set = st_join(setx,a,join=st_within) 
+    
+    coordinates <- st_coordinates(set)
+    set<-cbind(set,coordinates)
+    set<-st_drop_geometry(set)
+       
+     # sett = findPolys(set,a)  #Finds the polygons from the set data - links events with polygons
+    #  sett = merge(sett,l,by='PID') #merges with the  polygons
+    #  set = merge(set,sett,by='EID') #Merges with the set data
+      set$STRATUM = set$STRATA # updates the set to be equal to the strata column
+      # set$STRATA = set$PID = set$SID = set$Bdry = set$EID = NULL #Removes the STRATA, PID, SID, Bdry, and EID columns from set
       
-      sett = findPolys(set,a)
-      sett = merge(sett,l,by='PID')
-      set = merge(set,sett,by='EID')
-      set$STRATUM = set$STRATA
-      set$STRATA = set$PID = set$SID = set$Bdry = set$EID = NULL
-      # all catches have been converted to bigelow equivalents and therefore do not need any further towed distance calculations, the DISTCORRECTION is a standardized distance against the mean of the towed distance for that gear and is therefore the correction for towed distance to be used
+   # all catches have been converted to bigelow equivalents and therefore do not need any further towed distance calculations, the DISTCORRECTION is a standardized distance against the mean of the towed distance for that gear and is therefore the correction for towed distance to be used
       #US nautical mile is 6080.2ft bigelow is 42.6'
       #tow dist is 1nm for bigelow
-      
+        
+
+     
+     
       stra$NH = stra$area
       strata.files = list()
       big.out = matrix(NA,nrow=p$nruns,ncol=length(seq(0.01,0.99,0.01))+1)
@@ -119,7 +135,6 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
         mp = mp+1
         yr = p$runs[iip,"yrs"]
         print ( p$runs[iip,] )
-        
         #iv = which(cas$spec %in% vv) Turn on if species are selected right now only lobster is being brought in
         iy = which(set$GMT_YEAR %in% yr)
         ix = which(tolower(set$SEASON) == tolower(SEASON))
@@ -147,11 +162,12 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
             
             lll = subset(LFAs,PID %in% ppp)
             l = subset(lll,SID==1)
-            attr(l,'projection') <- "LL"
+           attr(l,'projection') <- "LL"
           }
           
           set$EID = 1:nrow(set)
           a = findPolys(set,l)
+        
           iz = which(set$EID %in% a$EID)
           if(p$area=='adjacentLFA41') {
             iz = which(set$EID %ni% a$EID)

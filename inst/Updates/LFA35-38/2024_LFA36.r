@@ -1,25 +1,35 @@
-### LFA 35 figures
+### LFA 36 figures
 require(bio.lobster)
 require(bio.utilities)
 require(devtools)
 require(ggplot2)
 require(ggtext)
+require(dplyr)
 
 p=list()
 assessment.year = 2024 ##Check Year
 p$syr = 1989
 p$yrs = p$syr:assessment.year
+p$lfa=36
+datayrs=2020:2024
 
-#### Do redos on landings and logs where necessary
+#### Do redos on landings and logs and surveys where necessary
+#lobster.db('seasonal.landings.redo')
+#lobster.db('logs.redo')  
+#lobster.db('process.logs.redo')
+#lobster.db('annual.landings.redo')
+#lobster.db('scallop.redo')
+
+# groundfish.db('odbc.redo')
+#groundfish.db('gs_trawl_conversions_redo')
 
 #landings
 a=lobster.db('seasonal.landings')
 a$yr= as.numeric(substr(a$SYEAR,6,9))
 aaa = a
 #raw cpue
-#lobster.db('logs.redo')    
         b = lobster.db('process.logs')
-            b = subset(b,SYEAR %in% 2004:2024 & LFA =='35') ### CHECK LFA
+            b = subset(b,SYEAR %in% 2005:2024 & LFA =='36') ### CHECK LFA
             
             aa = split(b,f=list(b$LFA,b$SYEAR))
             cpue.lst<-list()
@@ -45,7 +55,7 @@ aaa = a
             cp = as.data.frame(do.call(cbind,rmed(cc$yr,cc$CPUE)))
 #effort
       ef = merge(cc,aaa)
-      ef$Effort = ef$LFA35/(ef$CPUE) ###CHECK LFA
+      ef$Effort = ef$LFA36/(ef$CPUE) ###CHECK LFA
 
 #commB
           require(bio.survey)
@@ -93,7 +103,7 @@ aaa = a
             b = lobster.db('seasonal.landings')
             b$YR = substr(b$SYEAR,6,9)
             a = subset(a,YR<1976)
-            b = subset(b,YR>1975 & YR<=2024)
+            b = subset(b,YR>1975 & YR<=2025)
             
             a$L3538 = rowSums(a[,12:14])
             b$L3538 = rowSums(b[,4:6])
@@ -162,10 +172,10 @@ efp = ef[nrow(ef),]
 ef = ef[-nrow(ef),]
 ymax=5000
 scaleright = max(ef$Effort)/ymax
-g1 <- ggplot(data = subset(aae,yr>2004), aes(x = yr,y=LFA35)) + #CHECK LFA
+g1 <- ggplot(data = subset(aae,yr>2004), aes(x = yr,y=LFA36)) + #CHECK LFA
   geom_bar(stat='identity',fill='black', width=0.75) +
    geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=2.5)+
-  geom_bar(data=aap,aes(x=yr,y=LFA35),stat='identity',fill='steelblue3', width=0.75) + #CHECK LFA
+  geom_bar(data=aap,aes(x=yr,y=LFA36),stat='identity',fill='steelblue3', width=0.75) + #CHECK LFA
   geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='steelblue3',shape=17,size=2.5)+
   geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1,linetype='dashed')+
   scale_y_continuous(name='Catch (t)', sec.axis= sec_axis(~.*scaleright, name= "Effort ('000s Trap Hauls)", breaks = seq(0,2000,by=250)))+
@@ -203,7 +213,7 @@ g3a <- ggplot(data = df, aes(x = yr)) +
   theme_csas() +
   theme(axis.title.y = ggtext::element_markdown())
 
-
+##Commercial abundance
 g4a <- ggplot(data = df, aes(x = yr)) +
   geom_point(aes(y = w.Yst)) +
   geom_line(data=xx,aes(x=yr,y = x),  colour = "red",lwd=1.25) +
@@ -220,5 +230,5 @@ percentReport=lobster.db('percent_reporting')
 
 PR_2024 <- percentReport[grepl("^2024", percentReport$YEARMTH), ]
 PR_2024<-PR_2024[order(PR_2024$YEARMTH), ]
-PR_2024<-PR_2024[c("YEARMTH", "L35PERCENT")]
+PR_2024<-PR_2024[c("YEARMTH", "L36PERCENT")]
 

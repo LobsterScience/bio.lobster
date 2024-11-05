@@ -62,7 +62,7 @@ Obs41$DAY=day(Obs41$dates)
 
 ###Clip Observer Coverage for maps
 
-Obs41<-Obs41[Obs41$SYEAR > 2018  & Obs41$SYEAR < 2024, ]
+Obs41<-Obs41[Obs41$SYEAR > 2011  & Obs41$SYEAR < 2025, ]
 
 
 #Identify what dates were observed

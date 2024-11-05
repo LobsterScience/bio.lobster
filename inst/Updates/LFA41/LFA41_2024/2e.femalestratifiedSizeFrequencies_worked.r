@@ -4,14 +4,11 @@ require(bio.lobster)
 
 p=list()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"assessments", "LFA41", "2023")
+fp = file.path(project.datadirectory('bio.lobster'),"assessments", "LFA41", "2024")
 la()
 
 
-
-
-
-p$current.assessment.year = 2023
+p$current.assessment.year = 2024
 
 #by length for histograms
 #
@@ -76,7 +73,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
         out = list()
         for(i in 1:length(a)) {
           p$size.class=c(a[i],a[i])
-          out[[i]] = nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
+          out[[i]] = nefsc.analysis_vh(DS='stratified.estimates.redo',p=p,save=F)
           }
 
         aa = do.call(rbind,out)
@@ -99,7 +96,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
         out = list()
         for(i in 1:length(a)) {
           p$size.class=c(a[i],a[i])
-          out[[i]] = nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
+          out[[i]] = nefsc.analysis_vh(DS='stratified.estimates.redo',p=p,save=F)
           }
 
         aa = do.call(rbind,out)

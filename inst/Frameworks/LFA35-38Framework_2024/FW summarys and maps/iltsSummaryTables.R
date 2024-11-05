@@ -36,6 +36,7 @@ sumLS_table <- sumLS %>%
     tows_with_2550 = n_distinct(SET_ID[SPECCD_ID == 2550])  # Counting Number of tows where SPECCD_ID == 2550
   )
 sumLS_table<-as.data.frame(sumLS_table)
+
 write.csv(sumLS_table, "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures/SurveyStations.csv")
 
 ###Lobster Specific Data Table
@@ -83,4 +84,4 @@ statANDmeas <- summary_lobMeas %>%
 
 write.csv(statANDmeas, "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures/stationandmeas.csv")
 
-
+#Survey, Length of Time Series, N stations within area of interest per year, timing of survey, gear spatial extent (km2 of domain)

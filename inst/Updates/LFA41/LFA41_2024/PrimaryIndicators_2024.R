@@ -1,18 +1,17 @@
 require(bio.lobster)
 require(bio.utilities)
 require(dplyr)
-require(devtools)
-
+require(tidyr)
 la()
 
 p=list()
 
 p$lfas = c("41") # specify lfa
-p$current.assessment.year =2023
+p$current.assessment.year =2024
 p$yrs = 1947:p$current.assessment.year
 
 assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
-fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2023','indicators')
+fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','indicators')
 
 #jpeg("BM41_2023TEST.jpeg", width = 9, height = 7, units = "in",res=600, bg = "white")
 par(mfrow = c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
@@ -30,11 +29,12 @@ ao$w.Yst[ao$yr %in% out$yr[which(!is.na(out$yr))]] <- out$w.Yst[which(!is.na(out
 ao$w.Yst = ao$w.Yst/1000
 
 #ao is full time series of biomasses
-ao<-ao[-c(52),]
+#ao<-ao[-c(52),] Data is now available
 plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
 points(ao$yr,ao$w.Yst,type='p',lty=1,pch=16,lwd=2)
 rmm = rmed(ao$yr,ao$w.Yst)
 lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+text(x = min(ao$yr), y = max(ao$w.Yst), labels = "DFO RV41", pos=4,  offset = 1, cex = 1.2, col = "dodgerblue4")
 
 
 ub = median(subset(ao,yr %in% 2000:2015,select=w.Yst)[,1]) * 0.4
@@ -67,6 +67,7 @@ plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
 points(ao$yr,ao$w.Yst,type='p',lty=1,pch=16,lwd=2)
 rmm = rmed(ao$yr,ao$w.Yst)
 lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+text(x = min(ao$yr), y = max(ao$w.Yst), labels = "DFO Georges", pos = 4, offset = 1, cex = 1.2, col = "dodgerblue4")
 
 #based on bcp
 ub = median(subset(ao,yr %in% 2000:2015,select=w.Yst)[,1]) * 0.4
@@ -78,14 +79,18 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 
 ###Spring ###
+rm(out)
 out=read.csv(file.path(fp,'NEFSC.spring.restratified.commercial.csv'))
 ao = out[,c('yr','w.Yst')]
 ao$w.Yst = ao$w.Yst/1000
+ao<-na.omit(ao)
+
 
 plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
 points(ao$yr,ao$w.Yst,type='p',lty=1,pch=16,lwd=2)
 rmm = rmed(ao$yr,ao$w.Yst)
 lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+text(x = min(ao$yr), y = max(ao$w.Yst), labels = "NEFSC Spring", pos = 4, offset = 1, cex = 1.2, col = "dodgerblue4")
 
 ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1]) * 0.4
 llb = ao$w.Yst[which(ao$w.Yst>0)]
@@ -95,17 +100,19 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 
 ###Fall###
-
+rm(out)
 out=read.csv(file.path(fp,'NEFSC.fall.restratified.commercial.csv'))
 ao = out[,c('yr','w.Yst')]
 ao$w.Yst = ao$w.Yst/1000
-
+ao<-na.omit(ao)
 
 
 plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
 points(ao$yr,ao$w.Yst,type='p',lty=1,pch=16,lwd=2)
 rmm = rmed(ao$yr,ao$w.Yst)
 lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+text(x = min(ao$yr), y = max(ao$w.Yst), labels = "NEFSC Fall", pos = 4, offset = 1, cex = 1.2, col = "dodgerblue4")
+
 
 ub = median(subset(ao,yr %in% 2001:2015,select=w.Yst)[,1]) * 0.4
 llb = ao$w.Yst[which(ao$w.Yst>0)]
@@ -129,10 +136,10 @@ require(bio.lobster)
 la()
 
 ff = c(
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2023','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2023','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2023','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
- file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2023','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+ file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
 
 
 #jpeg("RP41_2022_FR.jpeg", width = 11, height = 8, units = "in",res=600, bg = "white")
@@ -162,6 +169,7 @@ plot(out$yr,out$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
 points(out$yr,out$Fecm,type='p',lty=1,pch=16,lwd=2)
 rmm = rmed(out$yr,out$Fecm)
 lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+text(x = min(out$yr), y = max(out$Fecm), labels = "DFO RV41", pos=4,  offset = 1, cex = 1.2, col = "dodgerblue4")
 
 ub = median(subset(out,yr %in% 2000:2015,select=Fecm)[,1]) * 0.4
 abline(h=ub,col='lightcyan4',lwd=2,lty = 4)
@@ -188,6 +196,7 @@ plot(out$yr,out$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
 points(out$yr,out$Fecm,type='p',lty=1,pch=16,lwd=2)
 rmm = rmed(out$yr,out$Fecm)
 lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+text(x = min(out$yr), y = max(out$Fecm), labels = "DFO Georges", pos=4,  offset = 1, cex = 1.2, col = "dodgerblue4")
 
 
 nub = median(subset(out,yr %in% 1999:2015,select=Fecm)[,1])
@@ -217,6 +226,7 @@ plot(out$yr,out$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
 points(out$yr,out$Fecm,type='p',lty=1,pch=16,lwd=2)
 rmm = rmed(out$yr,out$Fecm)
 lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+text(x = min(out$yr), y = max(out$Fecm), labels = "NEFSC Spring", pos=4,  offset = 1, cex = 1.2, col = "dodgerblue4")
 
 ub = median(subset(out,yr %in% 2001:2015,select=Fecm)[,1]) * 0.4
 llb = out$Fecm[which(out$Fecm>0)]
@@ -247,6 +257,8 @@ plot(out$yr,out$Fecm,type='n',xlab=' ',ylab = paste(" ",sep=" "))
 points(out$yr,out$Fecm,type='p',lty=1,pch=16,lwd=2)
 rmm = rmed(out$yr,out$Fecm)
 lines(rmm[[1]],rmm[[2]],lty=1,lwd=3,col='red')
+text(x = min(out$yr), y = max(out$Fecm), labels = "NEFSC Fall", pos=4,  offset = 1, cex = 1.2, col = "dodgerblue4")
+
 
 ub = median(subset(out,yr %in% 2000:2015,select=Fecm)[,1]) * 0.4
 llb = out$Fecm[which(out$Fecm>0)]

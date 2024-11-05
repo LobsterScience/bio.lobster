@@ -132,7 +132,6 @@ all_tows_data = subset(lobster_tows_data,year>=1999)  ## only take the years we 
 
 #######Pair position of Tow start to LFA polygons to summarize by Year and LFA #########
 
-
 #polygons LFA
 layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps")
 
@@ -159,6 +158,27 @@ all_tows_with_LFA_df$geometry <- st_geometry(all_tows_with_LFA)
 ### summarize the dataframe by year and LFA
 
 all_tows_with_LFA_df$year<-as.numeric(all_tows_with_LFA_df$year)
+
+
+### Determine Mean lobster count per year #### REMAKE WITH STRATA PAIRING
+mean_abun <- all_tows_with_LFA_df %>%
+  group_by(LFA, year) %>%
+  filter(LFA !=34)%>%
+  filter(LFA !=37)%>%
+  summarize(Mean_Abundance = mean(abun_raw))
+
+scalsurMA<-ggplot(mean_abun, aes(x = year, y = Mean_Abundance)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ LFA, scales="free_y") +
+  labs(x = "Year", y = "Mean Abundance of Lobster Recruits") +
+  scale_x_continuous(limits = c(min(mean_abun$year), max(mean_abun$year) + 1))
+  theme_set(theme_test(base_size = 14))
+
+ggsave(filename = "meanrecruitabundancelobster.png", plot = scalsurMA, path = "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures", width = 16, height = 14, units = "in", dpi = 300)
+
+
+
 
 # Create Decade column with custom breaks, including 2019-2024
 sumS <- all_tows_with_LFA_df %>%
@@ -189,7 +209,9 @@ scalsum <- yearly_tow_counts %>%
   left_join(median_tows_per_year, by = c("Decade", "LFA"))
 
 scalsum <- scalsum%>%
-  filter(LFA != 34)
+  filter(LFA != 34)%>%
+  filter(LFA!=37)
+
 scalsum<-as.data.frame(scalsum)
 
 write.csv(scalsum, "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures/scalsummarytable.csv")
@@ -207,44 +229,25 @@ sumSmap = st_as_sf(sumSmap,coords = c('SLONG','SLAT'),crs=4326)
 
 # Split the data by decade
 decade_1999_2009 <- sumSmap[sumSmap$Decade == "1999-2009", ]
-#decade_1999_2009 = st_as_sf(decade_1999_2009,coords = c('SLONG','SLAT'),crs=4326)
-
 decade_2010_2018 <- sumSmap[sumSmap$Decade == "2010-2018", ]
 decade_2019_2024 <- sumSmap[sumSmap$Decade == "2019-2024", ]
 
 
+##point size has to be changed in gglobstermap
+ss1999<-ggLobsterMap('custom',xlim=c(-68,-63),ylim=c(43.75,46),addGrids = F,addPoints = T,pts=decade_1999_2009,fw='~year')+
+  theme_test(base_size=14)+
+  scale_x_continuous(labels = function(x) sprintf("%.0f", x))
+  ggsave(filename = "scallopcoverage1999.png", plot = ss1999, path = "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures", width = 16, height = 14, units = "in", dpi = 300)
 
-ggLobsterMap('custom',xlim=c(-68,-63),ylim=c(43.75,46),addGrids = F,addPoints = T,pts=subset(decade_1999_2009),fw='~year')+
-  theme_test(base_size=14)
+ss2010<-ggLobsterMap('custom',ylim=c(43.75,46),xlim=c(-68,-63),addGrids = F,addPoints = T,pts=decade_2010_2018,fw='~year')+
+  theme_test(base_size=14)+
+  scale_x_continuous(labels = function(x) sprintf("%.0f", x))
+ggsave(filename = "scallopcoverage2010.png", plot = ss2010, path = "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures", width = 16, height = 14, units = "in", dpi = 300)
 
-
-ggLobsterMap(area='BoF',addGrids = F,addPoints = T,pts=subset(decade_1999_2009),fw='~year')+
-  theme_test(base_size=14)
-
-ggLobsterMap('custom',ylim=c(43.75,46),xlim=c(-68,-63),addGrids = F,addPoints = T,pts=decade_2010_2018,fw='~year')+
-  theme_test(base_size=14)
-
-ggLobsterMap('custom',ylim=c(43.75,46),xlim=c(-68,-63),addGrids = F,addPoints = T,pts=decade_2019_2024,fw='~year')+
-  theme_test(base_size=14)
-
-# Create a plot for each decade
-plot_1999_2009 <- ggplot(data = decade_1999_2009) +
-  geom_sf(aes(geometry = geometry, color = as.factor(TOW_SEQ)), size = 2) +
-  facet_wrap(~ year) +
-  theme_minimal() +
-  labs(title = "1999-2009", color = "TOW_SEQ")
-
-plot_2010_2018 <- ggplot(data = decade_2010_2018) +
-  geom_sf(aes(geometry = geometry, color = as.factor(TOW_SEQ)), size = 2) +
-  facet_wrap(~ year) +
-  theme_minimal() +
-  labs(title = "2010-2018", color = "TOW_SEQ")
-
-plot_2019_2024 <- ggplot(data = decade_2019_2024) +
-  geom_sf(aes(geometry = geometry, color = as.factor(TOW_SEQ)), size = 2) +
-  facet_wrap(~ year) +
-  theme_minimal() +
-  labs(title = "2019-2024", color = "TOW_SEQ")
+ss2019<-ggLobsterMap('custom',ylim=c(43.75,46),xlim=c(-68,-63),addGrids = F,addPoints = T,pts=decade_2019_2024,fw='~year')+
+  theme_test(base_size=14)+
+  scale_x_continuous(labels = function(x) sprintf("%.0f", x))
+ggsave(filename = "scallopcoverage2019.png", plot = ss2019, path = "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures", width = 16, height = 14, units = "in", dpi = 300)
 
 
 
@@ -255,4 +258,51 @@ xle$Length = as.numeric(substr(xle$name,3,8))
 #xle= na.zero(xle,cols='value')
 xxa = aggregate(value~Length+Year,data=xle,FUN=mean)
 ggplot(subset(xxa),aes(x=Length,y=value))+geom_bar(stat='identity')+facet_wrap(~Year,scales = 'free_y')+xlab('Carapace Length')+ylab('Density') +theme_test(base_size = 14)+geom_vline(xintercept = 82.5,color='red')
+
+
+
+
+###### Mean abundance of recruit lobster from Scallop Survey by LFA and Year
+## Take Bycatch data and filter by size
+recruitBycatch<-bycatch[bycatch$MEAS_VAL >= 70 & bycatch$MEAS_VAL <= 82, ]
+recruitBycatch <- recruitBycatch[complete.cases(recruitBycatch), ]
+
+#######Pair position of Tow start to LFA polygons to summarize by Year and LFA #########
+
+#polygons LFA
+layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps")
+
+rL = read.csv(file.path(layerDir,"Polygons_LFA.csv"))
+rL$label=rL$LFA
+
+rdef=Mar.utils::df_to_sf(rL,lat.field = "Y",lon.field = "X") 
+rdef<-merge(rdef,unique(rL[,c("PID", "LFA")]), all.x=T, by="PID")
+
+##Convert dataframe to Sf
+recruits_sf <- st_as_sf(recruitBycatch , coords = c("SLONG", "SLAT"), crs = 4326)
+recruits_sf $SLONG <- recruitBycatch$SLONG
+recruits_sf $SLAT <- recruitBycatch$SLAT
+# Check same coordinate system
+rdef <- st_transform(rdef, crs = st_crs(recruits_sf))
+
+## Join them spatially
+recruits_sf_LFA <- st_join(recruits_sf, rdef, join = st_within)
+
+##convert back to DF
+recruits_sf_df <- as.data.frame(recruits_sf_LFA)
+recruits_sf_df$geometry <- st_geometry(recruits_sf_LFA)
+
+### summarize the dataframe by year and LFA
+
+recruits_sf_df$year<-as.numeric(recruits_sf_df$year)
+
+### if needed do it
+
+scalsurRecruit<-ggplot(recruits_sf_df, aes(x = year, y = mean_abundance)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ LFA, scales="free_y") +
+  labs(x = "Year", y = "Mean Abundance of Lobster") +
+  scale_x_continuous(limits = c(min(mean_abun$year), max(mean_abun$year) + 1))
+theme_set(theme_test(base_size = 14))
 
