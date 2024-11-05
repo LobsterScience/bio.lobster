@@ -4,12 +4,12 @@ require(PBSmapping)
 la()
 p = list()
 p$libs = NULL
-ff = "LFA34Update"
+ff = "LFA34Update2024"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 dir.create(fpf1)
 p1 = p
-p1$yrs = 1969:2023
+p1$yrs = 1969:2024
 
 #NEFSC Setup
 stratifiedAnalysesCommercial = function( p=p1, survey,lfa, fpf = fpf1, fp = fp1,f=ff,ht=ht,wd=wd){
@@ -80,7 +80,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
   if(survey=='DFO'){
     p$series =c('summer')# p$series =c('georges');p$series =c('fall')
-    p$years.to.estimate = c(1970:2023)
+    p$years.to.estimate = c(1970:2024)
     p$length.based = T
     p$by.sex = T
     p$size.class = c(83,300)
@@ -98,6 +98,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
     p$reweight.strata = T #this subsets 
 
     aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
+    browser()
   write.csv(aout,file=file.path(fpf,paste(lfa,'DFOCommercialB.csv',sep="-")))
    
     p$add.reference.lines = F

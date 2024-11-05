@@ -1,7 +1,11 @@
 # LFA 33 Update Script
 
 	p = bio.lobster::load.environment()
+	require(devtools)
+	require(bio.lobster)
 	require(bio.utilities)
+	require(sf)
+	require(ggplot2)
 	la()
 	p$yrs <- NULL #ensuring empty variable
 	
@@ -16,7 +20,11 @@
 	    p$lfas = c("33") # specify lfas for data summary
 	    p$subareas = c("33W", "33E") # specify lfas for data summary
 	    
+	    figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA33",p$current.assessment.year))
+	    dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 	   
+	    setwd(figdir)
+	    
 	    #If you only want to update logs for the last two years, run this:
 	    #p$yr=p$current.assessment.year
 
@@ -114,7 +122,7 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
     # Plots unbiased annual CPUE for all LFAs in Maritimes region
     # Good for context in presentations at AC
-    
+    {  
     a = lobster.db('process.logs')
     a = subset(a,SYEAR %in% 2004:p$current.assessment.year) 
     
@@ -148,7 +156,7 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
       point_colors <- ifelse(cc$yr <max(cc$yr), last_bar_color, "orange")
       cc1 = cc
       
-      png(filename=file.path(cpue.dir, "all_lfas_cpue.png"),width=8, height=5.5, units = "in", res = 800)
+      png(filename=file.path(figdir, "all_lfas_cpue.png"),width=8, height=5.5, units = "in", res = 800)
       ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+
         geom_smooth(se=FALSE)+geom_point(data=cc1,aes(x=yr,y=CPUE,colour=fyr))+facet_wrap(~lfa,scales='free_y')+
         scale_colour_manual(values = point_colors)+theme(legend.position = 'none')+
@@ -156,13 +164,59 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
       dev.off()
       
       
-      #Unbiased cpue patterns by week of season
-      #Added in winter 2024 afetre inclusion in 27-32. Not yet tested.
-      #Will need to modify AC presentation to include these contextual CPUE figures
-      #-----------------------------------------
+      # Plots unbiased annual CPUE for all LFAs in Maritimes region
+      # Good for context in presentations at AC
       
       a = lobster.db('process.logs')
-      a = subset(a,SYEAR %in% 2004:2004:p$current.assessment.year & LFA %in% p$lfas) 
+      a = subset(a,SYEAR %in% 2004:p$current.assessment.year) 
+      
+      aa = split(a,f=list(a$LFA,a$SYEAR))
+      cpue.lst<-list()
+      m=0
+      #by time
+      for(i in 1:length(aa)){
+        tmp<-aa[[i]]
+        tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+        names(tmp)<-c('time','catch','effort')
+        tmp$date<-as.Date(tmp$time)
+        first.day<-min(tmp$date)
+        tmp$time<-julian(tmp$date,origin=first.day-1)
+        tmp$time = ceiling(tmp$time/7) #convert to week of season
+        if(nrow(tmp)>5){
+          m=m+1
+          g<-as.data.frame(biasCorrCPUE(tmp,by.time=F))
+          g$lfa=unique(aa[[i]]$LFA)
+          g$yr = unique(aa[[i]]$SYEAR)
+          g = t(g)[,2]
+          cpue.lst[[m]] <- g
+        }
+      }
+      cc =as.data.frame(do.call(rbind,cpue.lst))
+      cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
+      cc = cc[order(cc$lfa,cc$yr),]
+      cc$yr = as.numeric(cc$yr)
+      cc$fyr = as.factor(cc$yr)
+      last_bar_color="black"
+        point_colors <- ifelse(cc$yr <max(cc$yr), last_bar_color, "orange")
+        cc1 = cc
+        
+        png(filename=file.path(figdir, "all_lfas_cpue.png"),width=8, height=5.5, units = "in", res = 800)
+        ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+
+          geom_smooth(se=FALSE)+geom_point(data=cc1,aes(x=yr,y=CPUE,colour=fyr))+facet_wrap(~lfa,scales='free_y')+
+          scale_colour_manual(values = point_colors)+theme(legend.position = 'none')+
+          labs(y= "CPUE", x = "Year")
+        dev.off()
+        
+    }     
+        
+      #Unbiased cpue patterns by week of season
+      #Will need to modify AC presentation to include these contextual CPUE figures
+      #-----------------------------------------
+    {   
+      a = lobster.db('process.logs')
+      a = subset(a,SYEAR %in% 2004:2004:p$current.assessment.year & LFA %in% p$lfas)
+      strt.yr=p$current.assessment.year-11
+      a = subset(a,SYEAR %in% strt.yr:strt.yr:p$current.assessment.year & LFA %in% p$lfas) 
       
       aa = split(a,f=list(a$LFA,a$SYEAR))
       aa = rm.from.list(aa)
@@ -239,7 +293,7 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
       
       
      l=p$lfas
-        png(filename=file.path(cpue.dir, paste0("weekly_cpue_",l,".png")),width=8, height=5.5, units = "in", res = 800)
+        png(filename=file.path(figdir, paste0("weekly_cpue_",l,".png")),width=8, height=5.5, units = "in", res = 800)
         print(
           ggplot(subset(cc,lfa==l),aes(x=t,y=CPUE))+geom_point()+
             geom_smooth(se=F)+facet_wrap(~yr)+
@@ -251,7 +305,7 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
           
         )
         dev.off()
-    
+    }
       
       
       #######-----------------------------------------
@@ -261,7 +315,7 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 #The following two tables need to be updated to reflect current year:
 #C:\bio.data\bio.lobster\data\inputs\ccir.inputs.csv
 #C:\bio.data\bio.lobster\data\inputs\MinLegalSize
-    
+    {    
 		lobster.db('ccir.redo')
 		inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
 		load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
@@ -287,7 +341,7 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
 		out.binomial = list()
 		attr(out.binomial,'model') <- 'binomial'
-		for(i in 1:length(dat)) { #if run breaks, update 1:length(dat) to reflect run# ie.e 16:length(dat)
+		for(i in 33:length(dat)) { #if run breaks, update 1:length(dat) to reflect run# ie.e 16:length(dat)
 			print(i)
 		  ds = dat[[i]]
 			#ds$method = 'binomial'
@@ -347,16 +401,14 @@ dev.off()
 png(filename=file.path(figdir, "CCIR_LFA33.French.png"),width=8, height=5, units = "in", res = 800)
 ExploitationRatePlots(data = oo[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR75,lfa = 33,fd=figdir, save=F, French=T)
 dev.off()
+}
 
-
-#data = oo[,c("Yr","ERfm","ERfl","ERfu")]
-#write.csv(data,file.path(figdir,paste('CCIR_LFA33.csv',sep='')))
 
 # FSRS #############
-
+{
 		FSRSvesday<-FSRSModelData()
 
-		mdata = subset(FSRSvesday,LFA==33&SYEAR<2024)
+		mdata = subset(FSRSvesday,LFA==33&SYEAR<2025) #index year
 
 		FSRSModelResultsLegal=FSRSmodel(mdata,lfa=33, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
 		FSRSModelShortsRecruit=FSRSmodel(mdata,lfa=33, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
@@ -387,12 +439,13 @@ dev.off()
 png(filename=file.path(figdir, "FSRS.legals.recruits.French.png"),width=8, height=5, units = "in", res = 800)
 FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legals[,c("YEAR","median","lb","ub")],lfa = 33,fd=figdir,title='',French=T, save=F)
 dev.off()
-
+}
 
 # Landings and Effort ############
-
-	 	land = lobster.db('seasonal.landings')
-
+{
+land = lobster.db('seasonal.landings')
+    
+    
 #if running this section without having done the CPUE analysis during the same session, run 2 lines below 
 #CPUE.data<-CPUEModelData(p,redo=F)
 #cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(CPUE.data$SYEAR),graphic='R')$annual.data
@@ -401,6 +454,8 @@ dev.off()
 		land$LANDINGS = land$LFA33
 		fishData = merge(cpueData,land[,c("YEAR","LANDINGS")])
 		fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+		
+		
 
 		# plot Landings
 
@@ -441,15 +496,16 @@ dev.off()
 	  axis(4)
 	  mtext("Effort (x 1000 casiers lev?s)", 4, 3.5, outer = F,las=0)
 	  dev.off()
+}
 
-
-	  #-----------------------------------------------------------------------
-
-	  # to compare weekly fishing effort year to year (include in AC presentation if desired)
-	  logs33=logs[logs$LFA=="33",]
+# to compare weekly fishing effort year to year (include in AC presentation if desired)
+	 
+     logs33=logs[logs$LFA=="33",]
 	  logs33$unique_days=paste(logs33$VR_NUMBER, logs33$DATE_FISHED, sep=':')
 	  
-
+	  #-----------------------------------------------------------------------
+	  
+	
 
 	  #To Double Check Number of Fishing Days in each week of season
 	  days=aggregate(DATE_FISHED~WOS+SYEAR,data=logs33,FUN=function(x) length(unique(x)))
@@ -471,7 +527,7 @@ dev.off()
     	  #plot past 10 years in light gray)
     	  for (i in c(0:10)){
     	  day=days[days$SYEAR==(max(days$SYEAR)-i),]  
-    	  lines(day$WOS, day$unique_days, col="gray94") 
+    	  lines(day$WOS, day$unique_days, col="gray83") 
     	   }
     	  lines(days.y0$WOS, days.y0$unique_days, col="red")
     	  #text(paste(days.y0$SYEAR[1]), x=26, y=300, col="red", cex=1.5)
@@ -489,17 +545,18 @@ dev.off()
 	  plot(x=days$WOS,y=days$CPUE, type='n', main= "Median CPUE by Week", xlab="Week of Season", ylab="CPUE (kg/trap)", xlim=c(2,27), xaxt='n')
 	  for (i in c(0:10)){
 	    day=days[days$SYEAR==(max(days$SYEAR)-i),]  
-	    lines(day$WOS, day$CPUE, col="gray94")
+	    lines(day$WOS, day$CPUE, col="gray82")
 	  }
 	  axis(side=1, at=seq(1,25,by=4.4), lab=c('Dec','Jan', 'Feb', "Mar", 'Apr', 'May'))
 	  lines(days.y0$WOS, days.y0$CPUE, col="red")
 	  #text(paste(days.y0$SYEAR[1]), x=26, y=1, col="red", cex=1.5)
 	  lines(days.y1$WOS, days.y1$CPUE, col="blue")
 	  #text(paste(days.y1$SYEAR[1]), x=26, y=1.4, col="blue", cex=1.5)
-	  legend(x=23, y=1.55,cex=0.8, lty=1,c(paste((max(days$SYEAR)-10), (max(days$SYEAR)-2), sep=" - "),days.y1$SYEAR[1],days.y0$SYEAR[1]), col=c("gray88", "blue", "red"), bty='n')
+	  legend(x=23, y=1.55,cex=0.8, lty=1,c(paste((max(days$SYEAR)-10), (max(days$SYEAR)-2), sep=" - "),days.y1$SYEAR[1],days.y0$SYEAR[1]), col=c("gray82", "blue", "red"), bty='n')
 	  dev.off()
-	  
-	  # Phase plot for conclusions and advice
+
+	
+	  # Phase plot for conclusions and advice (not used in FSR)
 	  
 	  #x11(width=8,height=7)
 	  
@@ -527,35 +584,388 @@ dev.off()
 	  #hcrPlot(B=x$CPUE[x$YEAR>2005],mF=y$ERfm,USR=usr,LRP=lrp,RR=RR75,yrs=2006:2018,ylims=c(0,1),xlims=NULL,labels=c('USR','LRP','RR'),RRdec=F, ylab = 'Exploitation', xlab = 'CPUE',yr.ends=T)
 	  #savePlot(file.path(figdir,'PhasePlot33.png'),type='png')
 
+#----------------------------------------------------------------
+#plotting as per csasdown 4 panel plot
 
-# Contextual Indicators #############
+#add in the theme_csas
+	  
+	  theme_csas <- function(base_size = 11, base_family = "", text_col = "grey20",
+	                         panel_border_col = "grey70") {
+	    half_line <- base_size / 2
+	    theme_light(base_size = base_size, base_family = "") +
+	      theme(
+	        panel.grid.major = element_blank(),
+	        panel.grid.minor = element_blank(),
+	        axis.ticks.length = unit(half_line / 2.2, "pt"),
+	        strip.background = element_rect(fill = NA, colour = NA),
+	        strip.text.x = element_text(colour = text_col),
+	        strip.text.y = element_text(colour = text_col),
+	        axis.text = element_text(colour = text_col),
+	        axis.title = element_text(colour = text_col),
+	        legend.title = element_text(colour = text_col, size = rel(0.9)),
+	        panel.border = element_rect(fill = NA, colour = panel_border_col, linewidth = 1),
+	        legend.key.size = unit(0.9, "lines"),
+	        legend.text = element_text(size = rel(0.7), colour = text_col),
+	        legend.key = element_rect(colour = NA, fill = NA),
+	        legend.background = element_rect(colour = NA, fill = NA),
+	        plot.title = element_text(colour = text_col, size = rel(1)),
+	        plot.subtitle = element_text(colour = text_col, size = rel(.85))
+	      )
+	  }
+	  
+	  
+	  #format from FSAR branch of CSASdown
+	  
+# Catch and eff
+	  aaa=fishData
+	  aap = aaa[nrow(aaa),] #Full data
+	 aaa = aaa[1:(nrow(aaa)-1),] #Full data without final year
+	  
+	
+	  ymax=12000
+	  scaleright = max(aaa$EFFORT2)/ymax
+	  g1 <- ggplot(data = aaa, aes(x = YEAR,y=LANDINGS)) +
+	    geom_bar(stat='identity',fill='black') +
+	    geom_bar(data=aap,aes(x=YEAR,y=LANDINGS),stat='identity',fill='gray66') +
+	    geom_point(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='black',shape=16)+
+	    geom_point(data=aap,aes(x=YEAR,y=EFFORT2/scaleright),colour='grey66',shape=17,size=1.5)+
+	    geom_line(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='black',linetype='dashed')+
+	    scale_y_continuous(name='Landings', sec.axis= sec_axis(~.*scaleright/1000, name= 'Effort',breaks = seq(0,10000,by=2000)))+
+	    labs(x = "Year") +
+	    theme_csas()
+	  
+	  #French Landings
+	  
+	  g1.fr <- ggplot(data = aaa, aes(x = YEAR,y=LANDINGS)) +
+	    geom_bar(stat='identity',fill='black') +
+	    geom_bar(data=aap,aes(x=YEAR,y=LANDINGS),stat='identity',fill='gray66') +
+	    geom_point(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='black',shape=16)+
+	    geom_point(data=aap,aes(x=YEAR,y=EFFORT2/scaleright),colour='grey66',shape=17,size=1.5)+
+	    geom_line(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='black',linetype='dashed')+
+	    scale_y_continuous(name='Débarquements', sec.axis= sec_axis(~.*scaleright/1000, name= 'Effort',breaks = seq(0,10000,by=2000)))+
+	    labs(x = "Année") +
+	    theme_csas()
+	 
+	  # standardized cpue
+	    g2 <- ggplot(data = crd, aes(x = YEAR)) +
+	    geom_point(aes(y = CPUE),size=1.5) +
+	    geom_line(aes(y= running.median),colour='grey45')+
+	    geom_point(data=subset(crd, YEAR==max(crd$YEAR)),aes(x=YEAR,y=CPUE),colour='grey66',shape=17,size=2.2)+
+	    labs(x = "Year", y = " CPUE") +
+	    geom_hline(yintercept=usr,colour='grey50',lwd=1.1,linetype='dashed')+
+	    geom_hline(yintercept=lrp,colour='grey50',lwd=1.1,linetype='dotted')+
+	    theme_csas() 
 
+	    g2.fr <- ggplot(data = crd, aes(x = YEAR)) +
+	      geom_point(aes(y = CPUE),size=1.5) +
+	      geom_line(aes(y= running.median),colour='grey45')+
+	      geom_point(data=subset(crd, YEAR==max(crd$YEAR)),aes(x=YEAR,y=CPUE),colour='grey66',shape=17,size=2.2)+
+	      labs(x = "Année", y = " CPUE") +
+	      geom_hline(yintercept=usr,colour='grey50',lwd=1.1,linetype='dashed')+
+	      geom_hline(yintercept=lrp,colour='grey50',lwd=1.1,linetype='dotted')+
+	      theme_csas() 
+	  
+	  # Exploitation CCIR
+	    exref=read.csv(file.path(figdir, "ExploitationRefs33.csv"))
+	    g3 <- ggplot(data = exref, aes(x = Yr)) +
+	    geom_ribbon(aes(ymin=ERfl,ymax=ERfu), fill="grey", alpha=0.22) +
+	    geom_point(aes(y = ERfm)) +
+	    geom_line(aes(y= ERfm),colour='grey',lwd=0.9, linetype='dotted')+
+	    geom_line(aes(y= running.median),colour='grey45')+
+	    geom_hline(yintercept=RR75,colour='grey50',lwd=1.1,linetype='dashed')+
+	    scale_y_continuous(limits=c(0,1), n.breaks=6)+
+	    labs(x = "Year", y = 'Exploitation Index') +
+	    theme_csas()
+	  
+	    g3.fr <- ggplot(data = exref, aes(x = Yr)) +
+	      geom_ribbon(aes(ymin=ERfl,ymax=ERfu), fill="grey", alpha=0.22) +
+	      geom_point(aes(y = ERfm)) +
+	      geom_line(aes(y= ERfm),colour='grey',lwd=0.9, linetype='dotted')+
+	      geom_line(aes(y= running.median),colour='grey45')+
+	      geom_hline(yintercept=RR75,colour='grey50',lwd=1.1,linetype='dashed')+
+	      scale_y_continuous(limits=c(0,1), n.breaks=6)+
+	      labs(x = "Année", y = "Indice d'exploitation") +
+	      theme_csas()
+	  
+	    # Recruitment 
+	    rec=read.csv(file.path(figdir, "FSRSRecruitCatchRate33.recruits.csv"))
+	    g4 <- ggplot(data = rec, aes(x = YEAR)) +
+	    geom_ribbon(data=rec,aes(ymin=lb,ymax=ub), fill="grey", alpha=0.2) +
+	    geom_point(aes(y = median)) +
+	    geom_line(aes(y= median),colour='grey45')+
+	    scale_y_continuous(limits=c(0,4), n.breaks=5)+
+	    labs(x = "Year", y = 'Recruitment Index') +
+	    theme_csas()
+	    
+	  g4.fr <- ggplot(data = rec, aes(x = YEAR)) +
+	      geom_ribbon(data=rec,aes(ymin=lb,ymax=ub), fill="grey", alpha=0.2) +
+	      geom_point(aes(y = median)) +
+	      geom_line(aes(y= median),colour='grey45')+
+	      scale_y_continuous(limits=c(0,4), n.breaks=5)+
+	      labs(x = "Année", y = "Indice de recrutement") +
+	      theme_csas()
+	  
+	  g4.fr
+	  
+	  
+	  fsrplot=cowplot::plot_grid(g1, g2, g3, g4, ncol = 2, labels = "AUTO",label_x=0.15,label_y=0.98, label_size = 15, align = "hv")
+	  fsrplot.fr=cowplot::plot_grid(g1.fr, g2.fr, g3.fr, g4.fr, ncol = 2, labels = "AUTO",label_x=0.15,label_y=0.98, label_size = 15, align = "hv")
 
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#mood
+	  png(filename=file.path(figdir, "fsrs.panel.plot.png"), width=1200, height=900, res=125)
+	  fsrplot
+	  dev.off()	  
+	  
+	  #French version
+	  png(filename=file.path(figdir, "fsrs.panel.plot.french.png"), width=1200, height=900, res=125)
+	  fsrplot.fr
+	  dev.off()
+	  
+	 
+# Fishery footprint- Useful in comparing years, etc
+#------------------------------------------------------------
+	  
 
-
-# run this "bio/bio.lobster/inst/LFA2733Framework/Assessment/1.IndicatorEstimation.CohortAnalysis.r"
-# and this "bio/bio.lobster/inst/LFA2733Framework/Assessment/ContextualIndicators.r"
-
-# Fishery footprint
-
-
-logs=lobster.db("process.logs")
-
-catchgrids.lst=list()
-
-	## Fishery Footprint - Landings
-	catchLevels = c(0,100000,200000,300000,400000,500000,600000,700000)
-	yrs = 2011:2018
-	for(i in 1:length(yrs)){
-		catchgrids.lst[[i]] = lobGridPlot(subset(logs,LFA%in%p$lfas&SYEAR==yrs[i],c("LFA","GRID_NUM","TOTAL_WEIGHT_KG")),FUN=sum,lvls=catchLevels)
-		pdf(file.path(figdir,paste0("FisheryFootprint",yrs[i],".pdf")),5,5)
-		LobsterMap('33',poly.lst=catchgrids.lst[[i]])
-		text(x=c(-65.5,-65.5,-64.5),y=c(43.1,42.7,42.7),labels=c(34,40,41),col=rgb(0,0,0,0.8),cex=1.5)
-	  	title(yrs[i],line=-3,cex.main=2,adj=0.3)
-	    SpatialHub::contLegend('bottomright',lvls=catchgrids.lst[[i]]$lvls/1000,Cont.data=catchgrids.lst[[i]],title="Catch (tons)",inset=0.02,cex=0.8,bg='white')
-	    dev.off()
-	    pdf2png(file.path(figdir,paste0("FisheryFootprint",yrs[i])))
-	}
-
+	  layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps")
+	  r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
+	  r = st_as_sf(r)
+	  
+	  a =  lobster.db('process.logs')
+	  a = subset(a,SYEAR>2004 & SYEAR<=p$current.assessment.year)
+	  b = lobster.db('seasonal.landings')
+	  b = subset(b,!is.na(SYEAR))
+	  b$SYEAR = 1976:p$current.assessment.year
+	  b$LFA38B <- NULL
+	  b = subset(b,SYEAR>2004 & SYEAR<=p$current.assessment.year)
+	  b = reshape(b,idvar='SYEAR', varying=list(2:6),direction='long')
+	  num.yr=length(2005:p$current.assessment.year)
+	  b$LFA=rep(c(33,34,35,36,38),each=num.yr)
+	  b$time <- NULL
+	  names(b)[1:2]=c('YR','SlipLand')
+	  
+	  
+	  d = lobster.db('annual.landings')
+	  d = subset(d,YR>2004 & YR<=p$current.assessment.year, select=c(YR,LFA27,LFA28,LFA29,LFA30,LFA31A,LFA31B,LFA32))
+	  d = reshape(d,idvar='YR', varying=list(2:8),direction='long')
+	  d$LFA=rep(c(27,28,29,30,'31A','31B',32),each=num.yr)
+	  d$time <- NULL
+	  names(d)[1:2]=c('YR','SlipLand')
+	  bd = rbind(d,b)
+	  
+	  bup = aggregate(cbind(WEIGHT_KG,NUM_OF_TRAPS)~SYEAR+LFA,data=a,FUN=sum)
+	  bup$CPUE = bup$WEIGHT_KG/bup$NUM_OF_TRAPS
+	  bAll = merge(bd,bup,by.x=c('YR','LFA'),by.y=c('SYEAR','LFA'))
+	  
+	  sL= split(a,f=list(a$LFA, a$SYEAR))
+	  sL = rm.from.list(sL)
+	  cpue.lst<-list()
+	  cpue.ann = list()
+	  
+	  for(i in 1:length(sL)){
+	    tmp<-sL[[i]]
+	    tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+	    names(tmp)<-c('time','catch','effort')
+	    tmp$date<-as.Date(tmp$time)
+	    first.day<-min(tmp$date)
+	    tmp$time<-julian(tmp$date,origin=first.day-1)
+	    g<-biasCorrCPUE(tmp,by.time = F)
+	    cpue.lst[[i]] <- c(lfa=unique(sL[[i]]$LFA),yr = unique(sL[[i]]$SYEAR),g)
+	  }
+	  
+	  cc =as.data.frame(do.call(rbind,cpue.lst))
+	  
+	  cAll = merge(bAll,cc,by.x=c('LFA','YR'),by.y=c('lfa','yr'))
+	  
+	  cAll$NTRAPs = cAll$SlipLand*1000/as.numeric(cAll$unBCPUE)
+	  cAll$NTRAPSU = cAll$SlipLand*1000/as.numeric(cAll$l95)
+	  cAll$NTRAPSL = cAll$SlipLand*1000/as.numeric(cAll$u95)
+	  
+	  
+	  ###########################################
+	  #part the effort to grids
+	  
+	  partEffort = list()
+	  
+	  for(i in 1:length(sL)){
+	    tmp = sL[[i]]
+	    tTH = aggregate(NUM_OF_TRAPS~LFA,data=tmp,FUN=sum)
+	    tC = subset(cAll, LFA==unique(tmp$LFA) & YR == unique(tmp$SYEAR)) 
+	    pTH = aggregate(NUM_OF_TRAPS~GRID_NUM+LFA+SYEAR,data=tmp,FUN=sum)
+	    pTH$BTTH = pTH$NUM_OF_TRAPS / tTH$NUM_OF_TRAPS * tC$NTRAPs
+	    pTH$BlTH = pTH$NUM_OF_TRAPS / tTH$NUM_OF_TRAPS * tC$NTRAPSL
+	    pTH$BuTH = pTH$NUM_OF_TRAPS / tTH$NUM_OF_TRAPS * tC$NTRAPSU
+	    
+	    partEffort[[i]] = pTH
+	  }
+	  
+	  partEffort = do.call(rbind, partEffort)
+	  
+	  #pe = merge(partEffort,r,by.x=c('GRID_NUM','LFA'),by.y=c('GRID_NO','LFA'))
+	  
+	  saveRDS(partEffort,'TrapHaulsWithinGrid.rds')
+	  
+	  
+	  #############################################
+	  # PartitionLandings to Grids
+	  
+	  partLandings = list()
+	  
+	  for(i in 1:length(sL)){
+	    tmp = sL[[i]]
+	    tTH = aggregate(WEIGHT_KG~LFA,data=tmp,FUN=sum)
+	    tC = subset(cAll, LFA==unique(tmp$LFA) & YR == unique(tmp$SYEAR)) 
+	    pTH = aggregate(WEIGHT_KG~GRID_NUM+LFA+SYEAR,data=tmp,FUN=sum)
+	    pTH$BL = pTH$WEIGHT_KG / (tTH$WEIGHT_KG )* (tC$SlipLand*1000)
+	    partLandings[[i]] = pTH
+	  }
+	  
+	  partLandings = do.call(rbind, partLandings)
+	  
+	  saveRDS(partLandings,'LandingsWithinGrid.rds')
+	  
+	  ###################################################
+	  ##Licenses By Grid and Week
+	  
+	  g = lobster.db('process.logs')
+	  g = subset(g,SYEAR>2004 & SYEAR<=p$current.assessment.year)
+	  
+	  gg = aggregate(SD_LOG_ID~LFA+GRID_NUM+SYEAR,data = g,FUN=function(x) length(unique(x)))
+	  
+	  saveRDS(gg,'SDLOGSWithinGrid.rds')
+	  
+	  #############merge
+	  #Licenses By Grid and Week
+	  
+	  g = lobster.db('process.logs')
+	  g = subset(g,SYEAR>2004 & SYEAR<=p$current.assessment.year)
+	  
+	  gKL = aggregate(LICENCE_ID~LFA+GRID_NUM+SYEAR,data = g,FUN=function(x) length(unique(x)))
+	  
+	  saveRDS(gKL,'LicencesWithinCommunity.rds')
+	  
+	  #############merge
+	  
+	  
+	  Tot = merge(merge(merge(partEffort,partLandings),gg),gKL)
+	  
+	  Tot = subset(Tot,select=c(SYEAR,LFA,GRID_NUM,BTTH,BL,SD_LOG_ID,LICENCE_ID))
+	  names(Tot)= c('FishingYear','LFA','Grid','TrapHauls','Landings','Trips','NLics')
+	  Tot$PrivacyScreen = ifelse(Tot$NLics>4,1,0)
+	  
+	  # we lose 149
+	  saveRDS(Tot,'PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
+	  
+	  Tot = readRDS('PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
+	  Tot$LFA = ifelse(Tot$LFA=='31B',312,Tot$LFA)
+	  Tot$LFA = ifelse(Tot$LFA=='31A',311,Tot$LFA)
+	  
+	  
+	  #making plots of Tot
+	  
+	  GrMap = readRDS(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA27-38GridsPrunedtoDepth-sf.rds'))
+	  coa = st_as_sf(readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastlineSF_NY_NL.rds")))
+	  
+	  
+	  GrMap1 = GrMap
+	  GrMap1$area = st_area(GrMap1)/1000000
+	  GrMap1$V2 = paste(GrMap1$LFA, GrMap1$GRID_NO,sep="-")
+	  st_geometry(GrMap1)<- NULL
+	  gg = aggregate(area~LFA+GRID_NO,data=GrMap1,FUN=function(x) abs(sum(x)))
+	  
+	  GrMap2 =merge(GrMap,gg)
+	  
+	  gTot = merge(GrMap2,Tot,by.x=c('LFA','GRID_NO'),by.y=c('LFA','Grid'),all.x=T)
+	  
+	  
+	  r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
+	  b=subset(r,LFA %in% c(27:33, 311, 312))
+	  
+	  o=subset(GrMap,LFA %in% c(27:33, 311, 312))
+	  
+	  ggplot(b)+
+	    geom_sf()+
+	    geom_sf(data=coa,fill='grey')+
+	    geom_sf(data=o,fill='red')+
+	    coord_sf(xlim = c(st_bbox(b)$xmin,st_bbox(b)$xmax),
+	             ylim = c(st_bbox(b)$ymin,st_bbox(b)$ymax),
+	             expand = FALSE)
+	  
+	  
+	  gTot$CPUE = gTot$Landings/gTot$TrapHauls
+	  g27p = subset(gTot, LFA%in% c(27:34, 311, 312) & FishingYear%in%2016:p$current.assessment.year)
+	  
+	  ok1 = ggplot(g27p,aes(fill=CPUE))+
+	    geom_sf() +
+	    scale_fill_distiller(trans='identity',palette='Spectral') +
+	    facet_wrap(~FishingYear)+
+	    #  geom_sf(data=g27n,fill='white')+  
+	    geom_sf(data=coa,fill='grey')+
+	    geom_sf(data=GrMap,fill=NA)+
+	    coord_sf(xlim = c(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax),
+	             ylim = c(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax),
+	             expand = FALSE)+
+	    scale_x_continuous(breaks = c(round(seq(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax,length.out=2),2)))+
+	    scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))
+	  
+	  #Can run this line to only take certain LFAs
+	  #g27p=g27p[g27p$LFA %in% c('33','34'),]
+	  
+	  #Slice out individual years
+	  gl = subset(g27p,FishingYear==p$current.assessment.year-1)
+	  
+	  gp = subset(g27p,FishingYear==p$current.assessment.year)
+	  
+	  gl$geometry<- NULL
+	  
+	  gg = merge(gp,gl[,c('LFA','GRID_NO','CPUE')],by=c('LFA','GRID_NO'))
+	  
+	  
+	  ls=unique(gg$LFA)
+	  print(paste0('Looking at the following LFA(s):', ls,' for the following years: ', gl$FishingYear[1], ' & ',gp$FishingYear[1] ))
+	  
+	  percent_diff <- function(row) {
+	    row$geometry<- NULL
+	    
+	    abs_diff <- (as.numeric(row[1]) - as.numeric(row[2]))
+	    mean_val <- mean(as.numeric(row))
+	    percent_diff <- (abs_diff / mean_val) * 100
+	    return(percent_diff)
+	  }
+	  
+	  gg$percentChange =  apply(gg[,c('CPUE.x','CPUE.y')],1,percent_diff)
+	  
+	  
+	  require(colorspace)
+	  lab=paste(gl$FishingYear[1], sprintf('\u2192'),gp$FishingYear[1], sep=" " )
+	 
+	  
+	    cpue.diff={
+	    ggplot(subset(gg,PrivacyScreen==1),aes(fill=percentChange))+
+	    geom_sf() +
+	    scale_fill_continuous_diverging(palette='Purple-Green') +
+	    labs(fill = "    CPUE\n% Change")+
+	    #facet_wrap(~FishingYear)+
+	    #  geom_sf(data=g27n,fill='white')+  
+	    geom_sf(data=coa,fill='grey')+
+	    geom_sf(data=GrMap,fill=NA)+
+	    coord_sf(xlim = c(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax),
+	             ylim = c(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax),
+	             expand = FALSE)+
+	    theme(axis.title.x=element_blank(),
+	          axis.text.x=element_blank(),
+	          axis.ticks.x=element_blank(),
+	          axis.title.y=element_blank(),
+	          axis.text.y=element_blank(),
+	          axis.ticks.y=element_blank(),
+	          plot.margin=grid::unit(c(8,2,8,2), "mm"))+
+	    scale_x_continuous(breaks = c(round(seq(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax,length.out=2),2)))+
+	    scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))+
+	    annotate("text", x=(st_bbox(g27p)$xmax)-0.9, y=(st_bbox(g27p)$ymin)+0.2, label= lab, size=6 )
+	    }
+	    
+	    png(filename=file.path(figdir, "cpue.diff.png"), width=1600, height=900, res=175)
+	    print(cpue.diff)
+	    dev.off()	
+	    
+   	 
+	  
+	  

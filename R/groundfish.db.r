@@ -738,7 +738,9 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         
         inf = subset(inf, type %in% c(1,5))
         
-        inf$WingSpread = ifelse(inf$gear==3,10.97/1000,ifelse(inf$gear==9,12.49/1000,ifelse(inf$gear==15,13/1000,NA))) #yankee 36
+        inf$WingSpread = ifelse(inf$gear==3,10.97/1000,ifelse(inf$gear==9,12.49/1000,ifelse(inf$gear %in% c(15,23),12/1000,NA)))
+        inf$WingSpread_div = inf$WingSpread/(12/1000)
+        
         inf = subset(inf,!is.na(inf$WingSpread)) #remove strange gear
         
         #use the median dist per mission and gear to fill in NAs
@@ -748,19 +750,20 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         inf$dist = ifelse(is.na(inf$dist),inf$aggDist,inf$dist)
         
         
-        inf$sweptArea = inf$WingSpread * (inf$dist*1.852) #km2
+        inf$sweptArea = inf$WingSpread * (inf$dist*1.852) #km2-- wing spread diffs were not accounted for in Yihao's analysis so apply them after
+        inf$dist = inf$dist*1.852
         de$id = paste(de$mission,de$setno,sep="-")
         inf$id = paste(inf$mission,inf$setno,sep="-")
         ca$id = paste(ca$mission,ca$setno,sep="-")
         
-        de = merge(de,inf[,c('id','sweptArea')])
-        ca = merge(ca,inf[,c('id','sweptArea')])
+        de = merge(de,inf[,c('id','dist','WingSpread_div')])
+        ca = merge(ca,inf[,c('id','dist','WingSpread_div')])
         
         #turn all catches into density per km2 since that is what the vessel calibrations were done on (ie using an offset)
-        de$clen = de$clen/de$sweptArea
-        ca$sampwgt = ca$sampwgt/ca$sweptArea
-        ca$totwgt = ca$totwgt/ca$sweptArea
-        ca$totno = ca$totno/ca$sweptArea
+        de$clen = de$clen/de$dist
+        ca$sampwgt = ca$sampwgt/ca$dist
+        ca$totwgt = ca$totwgt/ca$dist
+        ca$totno = ca$totno/ca$dist
         
         d = de
         catt = ca
@@ -771,7 +774,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         catt = subset(catt,spec!=2550)
        
          #load in calibrations #from yin, benoit and martin 2024
-        load(file.path(project.datadirectory('bio.lobster'),'GroundfishConversions/2550_model_fit/BB5.rda')) 
+        load(file.path(bio.directory,'bio.lobster','data','RV_extras','BB5.rda')) 
         vc = res$main[,c('lenseq','est_rho')]
         vc = subset(vc,lenseq>38 & lenseq<174) #recommendations from paper
         vc$cor = vc$est_rho #to go from WIIA to NEST you divide all WIIA after you apply the swept area correction (#/km2)
@@ -787,7 +790,7 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         ca2 = subset(ca, id %ni% infS)
         
         # this section fills in all samp wgt / total wgt for prorating the catch from det to total sample
-        ca1$totwgt[which(is.na(ca1$totwgt))] <- 1/ca1$sweptArea[which(is.na(ca1$totwgt))] #replace NA with 1 for totalwgt since spp was id'd
+        ca1$totwgt[which(is.na(ca1$totwgt))] <- 1/ca1$dist[which(is.na(ca1$totwgt))] #replace NA with 1 for totalwgt since spp was id'd
         ca1$sampwgt[which(is.na(ca1$sampwgt))] <- ca1$totwgt[which(is.na(ca1$sampwgt))] #if any samp weights are NA replace with totwgt assuming totwgt=sampwgt
         ca1$sampwgt[which(ca1$sampwgt==0)] <- ca1$totwgt[which(ca1$sampwgt==0)] #if samp wgt is 0 but there is totwgt assume sampwgt=totwgt
         
@@ -806,9 +809,14 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         
         de1m$cor[which(de1m$flen<39)] <- cM #flat corrections for less than 39 and greater than 173
         de1m$cor[which(de1m$flen>173)] <- cMa
+      
         
-        de1m$clen = de1m$clen / de1m$cor #correction factor, on density 
+        de1m$clen = de1m$clen / de1m$cor ### apply corrections
+        de1m$clen = de1m$clen /  de1m$WingSpread_div# include wing spread ratios
+        de1m$clen = de1m$clen /  (12/1000) # turn to sq km already dist corrected now apply the wing spread correction
+          
         de1m$fsex[which(is.na(de1m$fsex))] <- 0
+        
         
         
         #need to add in weights for subsampling
@@ -828,7 +836,6 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         caD$c_sampwgt = caD$c_sampwgt/1000
        ca12 = merge(ca1, caD,all=T) 
        ca12$rat = ca12$sampwgt/ca12$totwgt #ratio of samp to totwgt from gscat
-       
        ca12$sampwgt[!is.na(ca12$c_sampwgt)] = ca12$c_sampwgt[!is.na(ca12$c_sampwgt)] #fill in sample weight where we have c_samp wgt
        ca12$totwgt[!is.na(ca12$c_sampwgt)] = ca12$c_sampwgt[!is.na(ca12$c_sampwgt)] /ca12$rat[!is.na(ca12$c_sampwgt)] # fill in total weight from corrected sampwgt and ratio from gscat
        ca12$totno[!is.na(ca12$c_sampwgt)] = round(ca12$c_totno[!is.na(ca12$c_sampwgt)] /ca12$rat[!is.na(ca12$c_sampwgt)]) #fill in totno 
@@ -837,18 +844,26 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
        ca12$sampwgt[is.na(ca12$c_sampwgt)] = ca12$sampwgt[is.na(ca12$c_sampwgt)]*combCorrW
        ca12$totwgt[is.na(ca12$c_sampwgt)] = ca12$totwgt[is.na(ca12$c_sampwgt)]*combCorrW
        ca12$totno[is.na(ca12$c_sampwgt)] = round(ca12$totno[is.na(ca12$c_sampwgt)]*combCorrN)
-       ca12 = subset(ca12,select=c(-c_totno,-c_sampwgt,-rat,-sweptArea))
+       
+       ##need to include wingspread in catches with no size to make densisities
+       
+       ca12$totno[is.na(ca12$c_totno)] = ca12$totno[is.na(ca12$c_totno)] /  ca12$WingSpread_div[is.na(ca12$c_totno)]# include wing spread ratios
+       ca12$totno[is.na(ca12$c_totno)] = ca12$totno[is.na(ca12$c_totno)] /  (12/1000) # turn to sq km already dist corrected now apply the wing spread correction
+       
+       ca12$totwgt[is.na(ca12$c_sampwgt)] = ca12$totwgt[is.na(ca12$c_sampwgt)] /  ca12$WingSpread_div[is.na(ca12$c_sampwgt)]# include wing spread ratios
+       ca12$totwgt[is.na(ca12$c_sampwgt)] = ca12$totwgt[is.na(ca12$c_sampwgt)] /  (12/1000) # turn to sq km already dist corrected now apply the wing spread correction
+       
+       
+       ca12 = subset(ca12,select=c(-c_totno,-c_sampwgt,-rat))
       
        #combine vessel corrected (ca12), the nest tows (ca2) and all other species (catt)
         caF = dplyr::bind_rows(ca12,ca2,catt)
        
-       caF = subset(caF,select=c(-sweptArea))
        
        de1m = subset(de1m,select=-cor)
       
        #combine all tows vessel corrected (de1m), all nest tows (d) and all other species (de2)
         de = dplyr::bind_rows(de1m,d,de2)
-       de = subset(de,select=c(-sweptArea))
        de$clen = round(de$clen)
        
       saveRDS(caF,file=ci)

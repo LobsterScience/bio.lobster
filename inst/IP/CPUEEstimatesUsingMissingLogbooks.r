@@ -1,5 +1,5 @@
 # generate index of CPUE based on percent of missing logs by month
-lfa = '35'
+lfa = '36'
 syear = 2024
 
 

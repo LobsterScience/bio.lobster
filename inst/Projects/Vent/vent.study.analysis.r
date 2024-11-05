@@ -10,7 +10,7 @@ require(rio)
 require(knitr)
 
 
-study.yr="2023"## Make sure to index
+study.yr="2024"## Make sure to index
 
 #Create directory structure / references
 figdir = file.path(project.datadirectory("bio.lobster","requests","vent"))
@@ -79,6 +79,9 @@ names(test44)=c("date", "fisher", "sz.44")
 test47=test[test$vent.sz=="47",]
 test47=test47[,-3]
 names(test47)=c("date", "fisher", "sz.47")
+test49=test[test$vent.sz=="49",]
+test49=test49[,-3]
+names(test49)=c("date", "fisher", "sz.49")
 
 data.check=merge(test44, test47)
 data.check$diff=data.check$sz.44-data.check$sz.47
@@ -90,6 +93,7 @@ names(test46)=c("date", "fisher", "sz.46")
 data.check.rock=merge(test46, test47)
 data.check.rock$diff=data.check.rock$sz.46-data.check.rock$sz.47
 names(data.check.rock)=names(data.check)
+
 
 data.check2= rbind(data.check, data.check.rock)
 probs=data.check2[data.check2$diff!="0",]
@@ -293,7 +297,7 @@ all.fishers=as.data.frame(matrix(nrow=0, ncol=11))
 names(all.fishers)=c("fisher", "lfa", "year", "config1", "config2", "less.shorts", "same.shorts", "more.shorts", "less.legals", "same.legals", "more.legals")
 
 ### Can run a single year by setting yrs= that year
-#yrs="2023"
+#yrs="2024"
 
 for (y in yrs){
   
@@ -437,7 +441,7 @@ config2=NA
           ab$fish.year=with(ab, paste(fisher, yr, sep=":"))
           to.merge=all.fishers[,c("config.pair", "fish.year")]
           ab=merge(ab, to.merge, by="fish.year")
-          ab=ab[ab$vent.sz!="49",] #removes Dave Ferguson's few 49mm samplesin 2022
+          ab=ab[!(ab$vent.sz=="49"& ab$lfa=="27"),]  #removes Dave Ferguson's few 49mm samples in 2022. 
           rm(to.merge)          
                     ventc=unique(all.fishers$config.pair[all.fishers$lfa==l])
           
@@ -548,7 +552,7 @@ for (i in (1:length(ml))){
       ab$fish.year=with(ab, paste(fisher, yr, sep=":"))
       to.merge=all.fishers[,c("config.pair", "fish.year")]
       ab=merge(ab, to.merge, by="fish.year")
-      ab=ab[ab$vent.sz!="49",] #removes Dave Ferguson's few 49mm samples in 2022
+      ab=ab[!(ab$vent.sz=="49"& ab$lfa=="27"),] #removes Dave Ferguson's few 49mm samples in 2022
       rm(to.merge)          
       ventc=unique(all.fishers$config.pair[all.fishers$lfa %in% l])
       

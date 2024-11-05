@@ -102,3 +102,4 @@ partLandings = do.call(rbind, partLandings)
 
 saveRDS(list(Effort=partEffort,Landings=partLandings,atSea=a),'TrapHauls_LandingsWithinGridandWeek_atSeaData.rds')
 
+saveRDS(a,'atSeaData.rds')

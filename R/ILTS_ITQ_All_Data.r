@@ -469,43 +469,46 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
     xS$SA_CORRECTED_TOTAL_N = xS$SA_CORRECTED_TOTAL_WT = xS$SA_CORRECTED_PRORATED_N = xS$PRORATED_NUM_AT_LENGTH= xS$SEX = xS$FISH_LENGTH = xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = 0
    
     if(aggregate){ xS$SEX = xS$FISH_LENGTH  = xS$NUM_CAUGHT = xS$WEIGHT_KG =  xS$NUM_MEASURED = xS$NUM_AT_LENGTH = xS$PRORATED_NUM_AT_LENGTH = xS$SA_CORRECTED_TOTAL_N = xS$SA_CORRECTED_TOTAL_WT= NULL}
-    if(!aggregate){stop('not complete')}
-    # if(!aggregate){ ###this needs to be checked based on all the work above May22024
-    #   xS = x %>% dplyr::distinct(TRIP_ID,SET_NO,.keep_all = T)
-    #   xS$SPECCD_ID = species
-    #   xS$SA_CORRECTED_TOTAL_N = xS$SA_CORRECTED_TOTAL_WT = xS$SA_CORRECTED_PRORATED_N = xS$PRORATED_NUM_AT_LENGTH= xS$SEX = xS$FISH_LENGTH = xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = NULL
-    #   ss = aggregate(TRIP_ID~FISH_LENGTH,data=subset(xy,SEX<3 | is.na(SEX)),FUN=length)
-    #   v = unique(xy$SEX[which(xy$SEX<3)])
-    #   s1 = seq(min(ss$FISH_LENGTH),max(ss$FISH_LENGTH),1)
-    #   s1 = expand.grid(v,s1)
-    #   if(any(unique(xy$SEX)==3)){
-    #     #shorter vector for berried
-    #     ss = aggregate(TRIP_ID~FISH_LENGTH,data=subset(xy,SEX==3),FUN=length)
-    #     s2 = seq(min(ss$FISH_LENGTH),max(ss$FISH_LENGTH),1)
-    #     v=3
-    #     s2 = expand.grid(v,s2)
-    #     s1 = as.data.frame(rbind(s1,s2))
-    #   }
-    #   names(s1)=c('SEX','FISH_LENGTH')
-    #   oo = list()
-    #   for(i in 1:nrow(s1)){
-    #       o = xS
-    #       o$SEX = s1[i,'SEX']
-    #       o$FISH_LENGTH = s1[i,'FISH_LENGTH']
-    #       oo[[i]] = o
-    #   }
-    #   xS = bind_rows(oo)
-    #   xS$FID = paste(xS$FISHSET_ID,xS$FISH_LENGTH,xS$SEX)
-    #   xy$FID = paste(xy$FISHSET_ID,xy$FISH_LENGTH,xy$SEX)
-    #   xS = subset(xS,FID %ni% unique(xy$FID)) 
-    #   xy$FID = xS$FID = NULL
-    #   }
-    #  
+   # if(!aggregate){stop('not complete')}
+     if(!aggregate){ ###this needs to be checked based on all the work above May22024
+      xS = x %>% dplyr::distinct(TRIP_ID,SET_NO,.keep_all = T)
+      xS$SPECCD_ID = species
+      xS$SA_CORRECTED_TOTAL_N = xS$SA_CORRECTED_TOTAL_WT = xS$SA_CORRECTED_PRORATED_N = xS$PRORATED_NUM_AT_LENGTH= xS$SEX = xS$FISH_LENGTH = xS$NUM_CAUGHT = xS$NUM_AT_LENGTH = xS$NUM_MEASURED = xS$WEIGHT_KG = NULL
+      ss = aggregate(TRIP_ID~FISH_LENGTH,data=subset(xy,SEX<3 | is.na(SEX)),FUN=length)
+      v = unique(xy$SEX[which(xy$SEX<3)])
+      s1 = seq(min(ss$FISH_LENGTH),max(ss$FISH_LENGTH),1)
+      s1 = expand.grid(v,s1)
+      if(any(unique(xy$SEX)==3)){
+        #shorter vector for berried
+        ss = aggregate(TRIP_ID~FISH_LENGTH,data=subset(xy,SEX==3),FUN=length)
+        s2 = seq(min(ss$FISH_LENGTH),max(ss$FISH_LENGTH),1)
+        v=3
+        s2 = expand.grid(v,s2)
+        s1 = as.data.frame(rbind(s1,s2))
+      }
+      names(s1)=c('SEX','FISH_LENGTH')
+      oo = list()
+      for(i in 1:nrow(s1)){
+          o = xS
+          o$SEX = s1[i,'SEX']
+          o$FISH_LENGTH = s1[i,'FISH_LENGTH']
+          oo[[i]] = o
+      }
+      xS = bind_rows(oo)
+      xS$FID = paste(xS$FISHSET_ID,xS$FISH_LENGTH,xS$SEX)
+      xy$FID = paste(xy$FISHSET_ID,xy$FISH_LENGTH,xy$SEX)
+      xS = subset(xS,FID %ni% unique(xy$FID))
+      xS$SA_CORRECTED_PRORATED_N = 0
+      xy$FID = xS$FID = NULL
+      }
+
     xy$ID = xS$ID = NULL
 
-      xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N))
+      if( aggregate) xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N))
+    if(! aggregate) xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N,FISH_LENGTH,SEX))
+    
     xFinal = bind_rows(xS,xy)
-    if(!aggregate) xFinal = na.zero(xFinal,cols=27:34)
+ 
     
     return(xFinal)
     }

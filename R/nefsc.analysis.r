@@ -92,15 +92,20 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
       de =   nefsc.db(DS='usdet.clean')
     
       set$EID = 1:nrow(set)
-      a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
-      l = attributes(a)$PolyData[,c('PID','STRATA')]
-      a = merge(a,l,by='PID',all.x=T)
-      
-      sett = findPolys(set,a)
-      sett = merge(sett,l,by='PID')
-      set = merge(set,sett,by='EID')
-      set$STRATUM = set$STRATA
-      set$STRATA = set$PID = set$SID = set$Bdry = set$EID = NULL
+      a = sf::read_sf(find.bio.gis('BTS_Strata')) 
+      st_crs(a) <- 4326
+ #turned this section off sept 17 2024
+           #     a = importShapefile(find.bio.gis('BTS_Strata'),readDBF=T) 
+          ##      l = attributes(a)$PolyData[,c('PID','STRATA')]
+          #      a = merge(a,l,by='PID',all.x=T)
+          #      
+           #     sett = findPolys(set,a)
+            #    sett = merge(sett,l,by='PID')
+            #    set = merge(set,sett,by='EID')
+             #   set$STRATUM = set$STRATA
+            #    set$STRATA = set$PID = set$SID = set$Bdry = set$EID = NULL
+                
+            set$STRATUM = as.numeric(set$STRATUM)
       # all catches have been converted to bigelow equivalents and therefore do not need any further towed distance calculations, the DISTCORRECTION is a standardized distance against the mean of the towed distance for that gear and is therefore the correction for towed distance to be used
       #US nautical mile is 6080.2ft bigelow is 42.6'
       #tow dist is 1nm for bigelow

@@ -810,7 +810,7 @@ if(DS %in% c('seasonal.landings','seasonal.landings.redo')) {
                   seasonal.landings = connect.command(con,'select * from LOBSTER.SLIP_LAND_SEASONAL')
                   seasonal.landings = seasonal.landings[order(seasonal.landings$SYEAR),]
                    print('Last two years of landings data may be incomplete, make sure to check with Cheryl.Denton@dfo-mpo.gc.ca on last update')
-                  print('LFA27 for >2015 does not have Gulf landings yet.....')
+                  print('LFA27 for needs to have gulf landings added manually each year from GFIS.....')
                   save(seasonal.landings,file=file.path(fnODBC,'seasonal.landings.rdata'))
             }
 
@@ -1532,7 +1532,7 @@ atSea2$STRINGNO = as.character(atSea2$STRINGNO)
         de = subset(de,select=c(id,Length,Frequency,Sex))
         
         de = merge(de,se[,c('id','Dur_m','spread','dist')])
-        de$Frequency = de$Frequency*(de$Dur_m /20) #back to raw
+        de$Frequency = de$Frequency*(de$Dur_m /20) #back to raw -- frequency data is already corrected for sub sampling
         de$Frequency = de$Frequency/(de$spread/1000 * de$dist)
         de = subset(de,select = c(id,Length,Frequency, Sex))
         
@@ -1566,8 +1566,7 @@ atSea2$STRINGNO = as.character(atSea2$STRINGNO)
           lobLW(CL=row[1],sex=row[2])
         }
         de$fwt =  apply(de[,c('Length','sex')],1,lobLW1)
-        
-        de$Commwt = de$Comm*de$fwt
+        de$Commwt = de$Comm*de$fwt/1000
         
         dea = aggregate(cbind(Comm,Rec,Commwt)~id,data=de,FUN=sum)
         dea = subset(dea,id %in% unique(se$id))

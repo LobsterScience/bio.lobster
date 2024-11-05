@@ -8,7 +8,7 @@
 	require(lubridate)
 	la()
 
-ff = "LFA34Update"
+ff = "LFA34Update2024"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 dir.create(fp1)

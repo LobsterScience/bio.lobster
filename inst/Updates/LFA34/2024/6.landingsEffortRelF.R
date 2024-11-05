@@ -1,5 +1,5 @@
 #landings
-
+require(devtools)
 require(bio.lobster)
 require(PBSmapping)
 la()
@@ -9,6 +9,7 @@ a = lobster.db('annual.landings.redo')
 b = lobster.db('seasonal.landings.redo')
 a = lobster.db('annual.landings')
 b = lobster.db('seasonal.landings')
+
 
 d = lobster.db('historic.landings')
 l34 = c("YARMOUTH","DIGBY")
@@ -50,7 +51,7 @@ b34 = b[,c('YR','LFA34')]
 c34 = rbind(a34,b34)
 c34 = subset(c34,YR>1969)
 c34$yr = c34$YR
-dadir = file.path(project.figuredirectory('bio.lobster'),'LFA34Update')
+dadir = file.path(project.figuredirectory('bio.lobster'),'LFA34Update2024')
 df =  read.csv(file.path(dadir,'LFA34-DFOtotalabund.csv'))
 df2 = read.csv(file.path(dadir,'LFA34-DFOCommercialB.csv'))
 df$X = df2$X = NULL
