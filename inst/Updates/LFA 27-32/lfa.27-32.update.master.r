@@ -3,6 +3,7 @@ require(SpatialHub)
 require(lubridate)
 require(bio.utilities)
 require(ggplot2)
+require(sf)
 
 p = bio.lobster::load.environment()
 
@@ -17,8 +18,10 @@ assessment.year = p$current.assessment.year-1
 #p$yr=p$current.assessment.year
 
 figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA27-32",assessment.year))
-
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
+
+cpue.dir=file.path(figdir, "cpue")
+dir.create( cpue.dir, recursive = TRUE, showWarnings = TRUE )
 
 p$lfas = c("27", "28", "29", "30", "31A", "31B", "32") # specify lfas for data summary
 p$subareas = c("27N","27S", "28", "29", "30", "31A", "31B", "32") # specify lfas for data summary
@@ -35,6 +38,7 @@ if(NewDataPull){
   #lobster.db('vlog.redo') #These are static now, no need to update
   logs=lobster.db('season.dates.redo') #updates season dates as required
   logs=lobster.db('process.logs.redo')
+  per.rec= lobster.db("percent_reporting")
 }
 
 #Run a report of missing vs received logs and save a csv copy
@@ -55,9 +59,6 @@ dev.off()
 #######-----------------------------------------
 # Primary Indicator- Commercial CPUE
 #######-----------------------------------------
-
-cpue.dir=file.path(figdir, "cpue")
-dir.create( cpue.dir, recursive = TRUE, showWarnings = TRUE )
 
 
 logs=lobster.db("process.logs")
@@ -150,48 +151,48 @@ for (l in p$lfas){
   dev.off()
 }
 
-# Plots unbiased annual CPUE for all LFAs in Maritimes region
-# Good for context in presentations at AC
-
-a = lobster.db('process.logs')
-a = subset(a,SYEAR %in% 2004:p$current.assessment.year) 
-
-aa = split(a,f=list(a$LFA,a$SYEAR))
-cpue.lst<-list()
-m=0
-#by time
-for(i in 1:length(aa)){
-  tmp<-aa[[i]]
-  tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
-  names(tmp)<-c('time','catch','effort')
-  tmp$date<-as.Date(tmp$time)
-  first.day<-min(tmp$date)
-  tmp$time<-julian(tmp$date,origin=first.day-1)
-  tmp$time = ceiling(tmp$time/7) #convert to week of season
-  if(nrow(tmp)>5){
-    m=m+1
-    g<-as.data.frame(biasCorrCPUE(tmp,by.time=F))
-    g$lfa=unique(aa[[i]]$LFA)
-    g$yr = unique(aa[[i]]$SYEAR)
-    g = t(g)[,2]
-    cpue.lst[[m]] <- g
-  }
-}
-cc =as.data.frame(do.call(rbind,cpue.lst))
-cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
-cc = cc[order(cc$lfa,cc$yr),]
-cc$yr = as.numeric(cc$yr)
-cc$fyr = as.factor(cc$yr)
-last_bar_color="black"
-point_colors <- ifelse(cc$yr <max(cc$yr), last_bar_color, "orange")
-cc1 = cc
-
-png(filename=file.path(cpue.dir, "all_lfas_cpue.png"),width=8, height=5.5, units = "in", res = 800)
-ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+
-  geom_smooth(se=FALSE)+geom_point(data=cc1,aes(x=yr,y=CPUE,colour=fyr))+facet_wrap(~lfa,scales='free_y')+
-  scale_colour_manual(values = point_colors)+theme(legend.position = 'none')+
-  labs(y= "CPUE", x = "Year")
-dev.off()
+# # Plots unbiased annual CPUE for all LFAs in Maritimes region
+# # Good for context in presentations at AC
+# 
+# a = lobster.db('process.logs')
+# a = subset(a,SYEAR %in% 2004:p$current.assessment.year) 
+# 
+# aa = split(a,f=list(a$LFA,a$SYEAR))
+# cpue.lst<-list()
+# m=0
+# #by time
+# for(i in 1:length(aa)){
+#   tmp<-aa[[i]]
+#   tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+#   names(tmp)<-c('time','catch','effort')
+#   tmp$date<-as.Date(tmp$time)
+#   first.day<-min(tmp$date)
+#   tmp$time<-julian(tmp$date,origin=first.day-1)
+#   tmp$time = ceiling(tmp$time/7) #convert to week of season
+#   if(nrow(tmp)>5){
+#     m=m+1
+#     g<-as.data.frame(biasCorrCPUE(tmp,by.time=F))
+#     g$lfa=unique(aa[[i]]$LFA)
+#     g$yr = unique(aa[[i]]$SYEAR)
+#     g = t(g)[,2]
+#     cpue.lst[[m]] <- g
+#   }
+# }
+# cc =as.data.frame(do.call(rbind,cpue.lst))
+# cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
+# cc = cc[order(cc$lfa,cc$yr),]
+# cc$yr = as.numeric(cc$yr)
+# cc$fyr = as.factor(cc$yr)
+# last_bar_color="black"
+# point_colors <- ifelse(cc$yr <max(cc$yr), last_bar_color, "orange")
+# cc1 = cc
+# 
+# png(filename=file.path(cpue.dir, "all_lfas_cpue.png"),width=8, height=5.5, units = "in", res = 800)
+# ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+
+#   geom_smooth(se=FALSE)+geom_point(data=cc1,aes(x=yr,y=CPUE,colour=fyr))+facet_wrap(~lfa,scales='free_y')+
+#   scale_colour_manual(values = point_colors)+theme(legend.position = 'none')+
+#   labs(y= "CPUE", x = "Year")
+# dev.off()
 
 
 #Unbiased cpue patterns by week of season
@@ -902,7 +903,7 @@ ok1 = ggplot(g27p,aes(fill=CPUE))+
   scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))
 
 #Can run this line to only take certain LFAs
-#g27p=g27p[g27p$LFA %in% c('33','34'),]
+#g27p=g27p[g27p$LFA %in% c('27','28','29','30','311','312','32'),]
 
 #Slice out individual years
 gl = subset(g27p,FishingYear==p$current.assessment.year-1)
@@ -931,19 +932,16 @@ gg$percentChange =  apply(gg[,c('CPUE.x','CPUE.y')],1,percent_diff)
 
 require(colorspace)
 lab=paste(gl$FishingYear[1], sprintf('\u2192'),gp$FishingYear[1], sep=" " )
-
-
-cpue.diff={
-  ggplot(subset(gg,PrivacyScreen==1),aes(fill=percentChange))+
+tt=gg
+cpue.diff= function(x, tsize=6, vj=20){
+  ggplot(tt,aes(fill=percentChange))+
     geom_sf() +
     scale_fill_continuous_diverging(palette='Purple-Green') +
     labs(fill = "    CPUE\n% Change")+
-    #facet_wrap(~FishingYear)+
-    #  geom_sf(data=g27n,fill='white')+  
     geom_sf(data=coa,fill='grey')+
     geom_sf(data=GrMap,fill=NA)+
-    coord_sf(xlim = c(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax),
-             ylim = c(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax),
+    coord_sf(xlim = c(st_bbox(tt)$xmin,st_bbox(tt)$xmax),
+             ylim = c(st_bbox(tt)$ymin,st_bbox(tt)$ymax),
              expand = FALSE)+
     theme(axis.title.x=element_blank(),
           axis.text.x=element_blank(),
@@ -952,14 +950,29 @@ cpue.diff={
           axis.text.y=element_blank(),
           axis.ticks.y=element_blank(),
           plot.margin=grid::unit(c(8,2,8,2), "mm"))+
-    scale_x_continuous(breaks = c(round(seq(st_bbox(g27p)$xmin,st_bbox(g27p)$xmax,length.out=2),2)))+
-    scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))+
-    annotate("text", x=(st_bbox(g27p)$xmax)-0.9, y=(st_bbox(g27p)$ymin)+0.2, label= lab, size=6 )
-}
+    scale_x_continuous(breaks = c(round(seq(st_bbox(tt)$xmin,st_bbox(tt)$xmax,length.out=2),2)))+
+    scale_y_continuous(breaks = c(round(seq(st_bbox(tt)$ymin,st_bbox(tt)$ymax,length.out=2),2)))+
+    #annotate("text", x=(st_bbox(tt)$xmax)-0.2, y=(st_bbox(tt)$ymin)+0.05, label= lab, size=tsize )
+    annotate("text", x = Inf, y = Inf, label = lab, vjust = vj, hjust = 1.2, size=tsize)
+ }
 
-png(filename=file.path(figdir, "cpue.diff.png"), width=1600, height=900, res=175)
-print(cpue.diff)
+#One figure 27-32 for context
+png(filename=file.path(cpue.dir, "cpue_diff.png"), width=1600, height=900, res=175)
+print(cpue.diff())
 dev.off()	
+
+#Each Separate
+
+for (xx in ls){
+tt=subset(gg, LFA==xx)
+if(xx=="27") {scale_y_continuous(breaks = c(round(seq(st_bbox(tt)$ymin,st_bbox(tt)$ymax,length.out=2),2)))}
+if(xx=="27"){tsize=5}else{tsize=6}
+if(xx=="27"){vj=30}else{vj=20}
+if(xx=="27"){png(filename=file.path(cpue.dir, paste(xx,"cpue.diff.png", sep="_")), width=900, height=900, res=175)}else
+  {png(filename=file.path(cpue.dir, paste(xx,"cpue.diff.png", sep="_")), width=1600, height=900, res=175)}
+print(cpue.diff(tsize=tsize, vj=vj))
+dev.off()	
+}
 
 ### Bycatch### - NOT USED SINCE 2020
 
