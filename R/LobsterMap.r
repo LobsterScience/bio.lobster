@@ -167,7 +167,7 @@ if(save) {
 	
 	if(boundaries=='LFAs'){
 		
-		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
+		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys2.csv"))
 		LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 		LFA41<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))
 		subareas<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA2733subareas.csv"))

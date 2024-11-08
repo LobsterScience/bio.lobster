@@ -3,7 +3,7 @@
 ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(-74,-47),LFAfill='white',
                          attrData=NULL,attrColumn='Z', addGrids=T,addNAFO=F,nafo='4X', bathy=T,fw=NULL,legLab="",addLFAlines=T,
                          addLFALabels=F, addGridLabels=F,addPoints=F,pts, addNAFOLabels=F,scaleTrans='identity',brks=NULL,return.object=F,
-                         layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),LFA_label_size=8,colourLFA=T, ...){
+                         layerDir=file.path(bio.directory,'bio.lobster.data','mapping_data'),LFA_label_size=8,colourLFA=T, ...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
   if(area=='inshore')		{ ylim=c(42.1,48); 		xlim=c(-67.8,-57.8)	}

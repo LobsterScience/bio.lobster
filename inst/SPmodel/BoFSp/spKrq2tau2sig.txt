@@ -1,0 +1,65 @@
+#State-space surplus production model with lognormal errors
+#I index of abund
+#P = B/K
+
+#############################################################################
+model surplusprod {
+
+#Observation equation
+		for(i in 1:21) {
+				Imean[i] <- log(q1*K1*P[i]);
+                 I[i] ~ dlnorm(Imean[i],itau2);
+                 B[i] <- K1*P[i] 
+                 }
+         for(i in 22:N) {
+				Imean[i] <- log(q2*K1*P[i]);
+                 I[i] ~ dlnorm(Imean[i],itau21);
+                 B[i] <- K1*P[i] 
+                 }        
+
+#Process equation
+	#P[1]
+	Pmean[1] ~ dlnorm(0,1) I(0.00001,1.5)	;
+		P[1] ~ dlnorm(Pmean[1],isigma2)I(0,1.5)  
+		P.res[1] <- log(P[1])-Pmean[1]
+	
+	#P[2:N]
+	for (i in 2:N) {
+		    Pmean[i] <- log(max(P[i-1] + r1*P[i-1]*(1-P[i-1]) - k1*C[i-1],0.01));
+		    P[i] ~ dlnorm(Pmean[i],isigma2);
+		    P.res[i] <- log(P[i]) - Pmean[i]
+		    }
+	
+#####Prior on r######
+
+		r1~dweib(r.a,r.b);
+		r2~dweib(r.a,r.b);
+#####Prior on k######
+		i.k1.b<-1/k1.b
+		k1 ~ dlnorm(k1.a,i.k1.b);
+		K1 <- 1/k1;	
+		
+#Reference point calcs	
+		#deterministic
+		BMSP1 <- K1/2
+		MSP1<-r1*K1/4
+		FMSP1<-r1/2
+
+#####Prior on Q#####
+		q1 ~dunif(q.a,q.b)
+		q2 ~dunif(q.a,q.b)
+#######Priors on isigma2 and itau2#####
+	junk<-a0+b0+c0+d0
+		sd.p ~ dunif(0.25,1)
+		sd.o ~ dunif(0.25,1)
+		isigma2 <- pow(sd.p,-2)
+		itau2    <- pow(sd.o,-2)
+		Sigma2<-1/isigma2; 
+		Tau2<-1/itau2;
+		
+		sd1.p ~ dunif(0.25,1)
+		sd1.o ~ dunif(0.25,1)
+		itau21    <- pow(sd1.o,-2)
+		Tau21<-1/itau21;
+
+}

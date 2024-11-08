@@ -17,12 +17,12 @@ r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
 r = st_as_sf(r)
 
 a =  lobster.db('process.logs')
-a = subset(a,SYEAR>2004 & SYEAR<2024)
+a = subset(a,SYEAR>2004 & SYEAR<2025)
 b = lobster.db('seasonal.landings')
 b = subset(b,!is.na(SYEAR))
 b$SYEAR = 1976:2024
 b$LFA38B <- NULL
-b = subset(b,SYEAR>2004 & SYEAR<2024)
+b = subset(b,SYEAR>2004 & SYEAR<2025)
 b = reshape(b,idvar='SYEAR', varying=list(2:6),direction='long')
 b$LFA=rep(c(33,34,35,36,38),each=19)
 b$time <- NULL
@@ -30,7 +30,7 @@ names(b)[1:2]=c('YR','SlipLand')
 
 
 d = lobster.db('annual.landings')
-d = subset(d,YR>2004 & YR<2024, select=c(YR,LFA27,LFA28,LFA29,LFA30,LFA31A,LFA31B,LFA32))
+d = subset(d,YR>2004 & YR<2025, select=c(YR,LFA27,LFA28,LFA29,LFA30,LFA31A,LFA31B,LFA32))
 d = reshape(d,idvar='YR', varying=list(2:8),direction='long')
 d$LFA=rep(c(27,28,29,30,'31A','31B',32),each=19)
 d$time <- NULL
@@ -112,7 +112,7 @@ saveRDS(partLandings,'DiscretizedData/LandingsWithinGrid.rds')
 ##Licenses By Grid and Week
 
 g = lobster.db('process.logs')
-g = subset(g,SYEAR>2004 & SYEAR<2024)
+g = subset(g,SYEAR>2004 & SYEAR<2025)
 
 gg = aggregate(SD_LOG_ID~LFA+GRID_NUM+SYEAR,data = g,FUN=function(x) length(unique(x)))
 

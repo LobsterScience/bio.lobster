@@ -347,8 +347,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
               iv = subset(xy, GEAR=='280 BALLOON')
               ivi = subset(xy, GEAR!='280 BALLOON')
     if(species != 2550) stop('vessel corrections not implemented for anything but lobster')          
-              sou = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall_FINAL.rds'))
-      
+              sou = readRDS(file=file.path(bio.directory,'bio.lobster','data','summarybootRhoNestBall_FINAL.rds'))
       ivs = merge(iv,sou[,c('Length','Median')], by.x=c('FISH_LENGTH'),by.y=c('Length'),all.x=T)
       #non length correct conv (predict(fit)[1]/(1-predict(fit)[1])) = 2.282
       ivs$Median = ifelse(ivs$FISH_LENGTH==0,2.282,ivs$Median)
@@ -374,7 +373,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
         iv = subset(xy2, GEAR=='280 BALLOON')
         ivi = subset(xy2, GEAR!='280 BALLOON')
         
-        sou = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall_FINAL.rds'))
+        sou = readRDS(file=file.path(bio.directory,'bio.lobster.data',"survey_corrections", 'summarybootRhoNestBall_FINAL.rds'))
         
         ivs = merge(iv,sou[,c('Length','Median')], by.x=c('FISH_LENGTH'),by.y=c('Length'),all.x=T)
         #non length correct conv (predict(fit)[1]/(1-predict(fit)[1])) = 2.282
@@ -431,10 +430,10 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
       if(extend_ts){
         require(sf)
         u=0
-        if(all(size==c(70,82))) {ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_recruit_Proportions_34-38.rds'));u=1}
-        if(all(size==c(82,300))){ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_commercial_Proportions_34-38.rds'));u=1}
-        if(all(size==c(70,300))){ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_commercial_and_recruit_Proportions_34-38.rds'));u=1}
-        if(all(size==c(82,300))&biomass){ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_commercial_Proportions_wt_34-38.rds'));u=1; biomass=F}
+        if(all(size==c(70,82))) {ou = readRDS(file.path( bio.directory,'bio.lobster.data', 'survey_corrections','modelled_recruit_Proportions_34-38.rds'));u=1}
+        if(all(size==c(82,300))){ou = readRDS(file.path( bio.directory,'bio.lobster.data','survey_corrections' ,'modelled_commercial_Proportions_34-38.rds'));u=1}
+        if(all(size==c(70,300))){ou = readRDS(file.path( bio.directory,'bio.lobster.data','survey_corrections' ,'modelled_commercial_and_recruit_Proportions_34-38.rds'));u=1}
+        if(all(size==c(82,300))&biomass){ou = readRDS(file.path( bio.directory,'bio.lobster.data','survey_corrections' ,'modelled_commercial_Proportions_wt_34-38.rds'));u=1; biomass=F}
         
         if(u==0) {
           print('models need to be developed for this size range')

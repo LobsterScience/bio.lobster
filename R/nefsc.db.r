@@ -307,7 +307,8 @@ if(DS %in% c('usstrata.area','usstrata.area.redo')) {
   }
   
   #strata.area = sqlQuery(channel,paste("select * from groundfish.gsstratum where strat like '01%' ;"))
-  a = sf::read_sf(find.bio.gis('BTS_Strata')) 
+  a = st_as_sf(readRDS(file.path(bio.directory,'bio.lobster.data','mapping_data','BTS_Strata.rds')) )
+  a = st_make_valid(polys)
   st_crs(a) <- 4326
   a$area = st_area(a)/1000000
   TUNITS = T #converting km to trawlable units
