@@ -80,9 +80,9 @@ RV_sets <- function(){
   ca = st_as_sf(com, coords = c('X','Y'),crs=4326)
     load(file.path( bio.directory,'bio.lobster', "data", 'AlbatrossBigelowConv.rda')) #part of the bio.lobster Rpackage and is named 'a'
 
-  ouR = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster', "data",'RV_extras','modelled_recruit_Proportions_34-38.rds')))
-  ouC = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster', "data", 'RV_extras','modelled_Commercial_Proportions_34-38.rds')))
-  ouCW = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster', "data",'RV_extras' ,'modelled_Commercial_Proportions_wt_34-38.rds')))
+  ouR = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections",'modelled_recruit_Proportions_34-38.rds')))
+  ouC = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections",'modelled_Commercial_Proportions_34-38.rds')))
+  ouCW = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections" ,'modelled_Commercial_Proportions_wt_34-38.rds')))
   
   ss = st_nearest_feature(ca,ouR)
   ca$Recprop = ouR$Modelled_Proportion[ss]
