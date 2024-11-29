@@ -1510,7 +1510,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
            require(RODBC)
            #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
 
-  #Define a list of VRNs from offshore lobster vrns
+  #Define a list of VRNs from offshore lobster vrns in rprofile
 
 
       vms.q  =  paste("SELECT rownum vesid,
@@ -1521,7 +1521,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                  p.speed_knots
                  FROM mfd_obfmi.vms_all p, mfd_obfmi.marfis_vessels_syn v
                  WHERE p.VR_NUMBER = v.vr_number(+)
-                 AND p.vr_number IN ('",vrn.vector,"')",
+                 AND p.vr_number IN ('",paste(vrn.vector.41,collapse="','"),"')",
                   sep="" )
 
       vms.data  =  connect.command(con, vms.q, believeNRows=FALSE)
@@ -2096,7 +2096,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
           fsrs$Sex = ifelse(fsrs$Sex == 3, 2, fsrs$Sex)
           fsrs$julian = round(as.numeric(julian(fsrs$DATE)))
 
-           mls = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
+           mls = read.csv(file.path(bio.directory,'bio.lobster.data','misc',"MinLegalSize.csv"))
            if(any(names(mls)=='X')) mls$X = NULL
            lfa = rep(unlist(lapply(strsplit(names(mls)[2:ncol(mls)],"LFA"),'[[',2)),each=nrow(mls))
            mls = reshape(mls,idvar='Year',varying=list(2:14),v.names=c('MLS'),direction='long')
@@ -2108,8 +2108,9 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
            mls$lfa = as.numeric(mls$lfa)
            names(mls) = c('YEAR','ID','MLS','LFA')
            mls$MLS_FSRS  =  NA
-           scd.old = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
-           scd.new = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES_NEW2020.csv"))
+           
+           scd.old = read.csv(file=file.path(bio.directory,'bio.lobster.data','fsrs',"FSRS_SIZE_CODES.csv"))
+           scd.new = read.csv(file=file.path(bio.directory,'bio.lobster.data','fsrs',"FSRS_SIZE_CODES_NEW2020.csv"))
 
            mls.old=mls[mls$YEAR<2020,]
           for(i in 1:nrow(mls.old)) {
