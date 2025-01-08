@@ -5,13 +5,16 @@
 \title{ILTS_ITQ_All_Data}
 \usage{
 ILTS_ITQ_All_Data(
-  x,
   species = 2550,
   redo_base_data = F,
   size = NULL,
   sex = NULL,
-  aggregate = F,
-  return_tow_tracks = F
+  aggregate = T,
+  return_tow_tracks = F,
+  applyGearConversion = T,
+  biomass = T,
+  extend_ts = T,
+  return_base_data = F
 )
 }
 \arguments{
@@ -19,7 +22,7 @@ ILTS_ITQ_All_Data(
 
 \item{redo_base_data}{if TRUE redoes all the swept area calculations and data filtering / cleanup}
 
-\item{size}{specifies size range for your data; requires a two element vector c(min, max)}
+\item{size}{specifies size class; commercial = c(82,200); recruit=c(70,82)}
 
 \item{sex}{specifies sex for data; only applicable to lobster and crabs. 0 = unid; 1= male; 2= female; 3=egg carrying}
 

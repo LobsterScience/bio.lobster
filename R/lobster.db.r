@@ -1389,7 +1389,7 @@ if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
     
     
     if (DS %in% c("process.logs41.redo", "process.logs41") ) {
-      fo=file.path( fnODBC, "logs41.rdata")
+      fo=file.path( fnODBC, "processed_logs41.rdata")
       
       if (DS=="process.logs41.redo") {
         
@@ -1579,7 +1579,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
             names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO",
                      "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO",'NUM_HOOK_HAUL', "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH",
-                     "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT")
+                     "EGG_STAGE","SHELL",  "CULL_ID", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT")
 
       #BZ. Sept2021- Added "DISEASE", "CONDITION_CD", "CLUTCH" to above list to include these variables and match fields from atSea dataset
 

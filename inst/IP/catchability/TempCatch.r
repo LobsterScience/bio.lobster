@@ -57,7 +57,7 @@ a$YEAR = as.factor(a$YEAR)
 a=as_tibble(a)
 a = subset(a,LFA %ni% c(28,35,34,36) & Ref<40 & Legal<40)
 a$wt = a$wt/1000
-go = gam(Ref~LFA+YEAR+s(Temperature,k=4),data=a,offset=(log(UID)),family='nb')
+go = gam(Ref~s(Temperature,k=4),data=a,offset=(log(UID)),family='nb')
 go3 = gam(Ref~LFA+YEAR+ti(Temperature)+ti(Legal)+ti(Temperature,Legal),data=a,offset=(log(UID)),family='nb') #best
 go3a = gam(Ref~LFA+YEAR+(Temperature)+ti(Legal)+ti(Temperature,Legal),data=a,offset=(log(UID)),family='nb')
 
@@ -95,6 +95,10 @@ names(pre)[1] = 'Temperature'
 pre$group = NULL
 saveRDS(pre,file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))
 pre = readRDS(file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))
+
+ml = gam_model_list(covariates=c('LFA','YEAR','ti(Temperature)','ti(Legal)','ti(Temperature,Legal)'),response='Ref~1')
+gamDevExp_vars(model.list.output = ml,data=a,offset=log(a$UID),family='nb',select=T)
+
 
 
 ##application for LFA 31A

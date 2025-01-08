@@ -16,7 +16,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
   if(area=='west')	{ ylim=c(41.1,46); 		xlim=c(-67.8,-64)	}
   if(area=='27')		{ ylim=c(44.9,47.9); 	xlim=c(-61,-57.8)	}
   if(area=='27.Crop')		{ ylim=c(45.4,47.6); 	xlim=c(-61.1,-58.8)	}
-  if(area=='28')		{ ylim=c(45.3,46);	 	xlim=c(-61.6,-60.3)	}
+  if(area=='28')		{ ylim=c(45.3,46.4);	 	xlim=c(-61.6,-60.2)	}
   if(area=='29')		{ ylim=c(45.3,46); 		xlim=c(-61.6,-60.3)	}
   if(area=='30')		{ ylim=c(44.6,45.9); 	xlim=c(-60.8,-59.6)	}
   if(area=='31A')		{ ylim=c(44.4,45.7); 	xlim=c(-61.8,-60)	}

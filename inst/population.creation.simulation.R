@@ -50,7 +50,3 @@ ggplot(ou,aes(x=len,y=popSel))+geom_bar(stat='identity')+xlab('Length')+ylab('Nu
 
 #since there is a fishery this is what we would see
 ggplot(ou,aes(x=len,y=fishSel))+geom_bar(stat='identity')+xlab('Length')+ylab('Number of Lobster')
-Collapse
-
-
-f
