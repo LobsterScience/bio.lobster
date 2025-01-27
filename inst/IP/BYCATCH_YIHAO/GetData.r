@@ -1,5 +1,7 @@
 ###
 require(bio.lobster)
+require(sf)
+require(devtools)
 #at sea
 
 lobster.db('atSea')

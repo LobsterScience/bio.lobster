@@ -2,13 +2,13 @@
 #combining mature females abundance at length and fecundity at length
 require(bio.lobster)
 la()
-fp = file.path(project.datadirectory('bio.lobster'),"analysis",'lfa41Update2021')
+fp = file.path(project.datadirectory('bio.lobster'),"assessments",'LFA41','2024')
 
 
        ff = c(file.path(fp,'maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
               file.path(fp,'maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
               file.path(fp,'maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
-              file.path(fp,'maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+             file.path(fp,'maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
        
 
        for(i in 1:length(ff)) {

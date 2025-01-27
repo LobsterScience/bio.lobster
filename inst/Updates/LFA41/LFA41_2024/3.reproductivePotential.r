@@ -8,18 +8,43 @@ la()
       #        file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
        #       file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
         #      file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
-
+       
 ff = c(
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+        
+      file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+      file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+   file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
+file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
+       
+# Load and clean NEFSC
+for (i in 1:2) {  # Only the first two files need cleaning
+  load(ff[i])
+  aa <- aa[aa$yr != 2020, ]  # Remove data from 2020
+  save(aa, file = ff[i])  # Save the cleaned data back to the file (optional)
+}
+
+### If Fall Data is not ready yet 
+fallcheck <- file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata')
+# Load the data
+load(fallcheck)
+# Remove data for the year 2024
+aa <- aa[aa$yr != 2024, ]
+# Save the cleaned data back to the file
+save(aa, file = fallcheck)
+
+
+#Then reload
+ff = c(
+  
   file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
   file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
-
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
 
 
        for(i in 1:length(ff)) {
        			load(ff[i])
-	                 yll = max(aa$n.yst)
+	                 yll = max(aa$n.yst, na.rm=TRUE) ## remove NA because American Data has missing years
 	                 af = aggregate(ObsLobs~yr,data=aa,FUN=sum)
 	                 names(af) = c('x','y')
       	           h = split(aa,f=aa$yr)

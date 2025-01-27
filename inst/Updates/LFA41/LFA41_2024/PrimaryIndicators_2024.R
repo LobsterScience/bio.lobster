@@ -1,6 +1,7 @@
 require(bio.lobster)
 require(bio.utilities)
 require(dplyr)
+require(devtools)
 require(tidyr)
 la()
 

@@ -23,7 +23,7 @@ ff = c(
        if(Update.plot==T) par(mfrow=c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
 
 #NEFSC Spring survey
-  i=2
+  i=1
        			load(ff[i])
           	yll = max(aa$n.yst)
 	           h = split(aa,f=aa$yr)
@@ -54,7 +54,7 @@ ff = c(
 
                             p$y.maximum = NULL # NULL # if ymax is too high for one year
                             p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-                            		p$ylim = c(0,250)
+                            		p$ylim = c(0,275)
                                     p$legend = FALSE
                                     p$running.median = T
                                     p$running.length = 3
@@ -71,10 +71,10 @@ ff = c(
                  abline(h=llb,col='dodgerblue4',lwd=2)
                  abline(h=ub,col='lightcyan4',lwd=2, lty = 4 )
                 
-                if(Update.plot==F) savePlot(file.path(figfp,'RefsRepPotNEFSCSpring.png'))
+               # if(Update.plot==F) savePlot(file.path(figfp,'RefsRepPotNEFSCSpring.png', type = "png"))
      
 #NEFSC Autumn survey
-  i=3
+  i=2
             load(ff[i])
             yll = max(aa$n.yst)
              h = split(aa,f=aa$yr)
@@ -105,7 +105,7 @@ ff = c(
 
                             p$y.maximum = NULL # NULL # if ymax is too high for one year
                             p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-                                p$ylim = c(0,250)
+                                p$ylim = c(0,275)
                                     p$legend = FALSE
                                     p$running.median = T
                                     p$running.length = 3
@@ -123,11 +123,11 @@ ff = c(
                  abline(h=llb,col='dodgerblue4',lwd=2)
                  abline(h=ub,col='lightcyan4',lwd=2,lty = 4)
                 
-                if(Update.plot==F) savePlot(file.path(figfp,'RefsRepPotNEFSCAutumn.png'))
+               # if(Update.plot==F) savePlot(file.path(figfp,'RefsRepPotNEFSCAutumn.png', type = "png"))
      
 
 #DFO summer
-  i=1
+  i=4
             load(ff[i])
             yll = max(aa$n.yst)
              h = split(aa,f=aa$yr)
@@ -175,10 +175,10 @@ ff = c(
                        #  abline(h=ub,col='aquamarine3',lwd=2)
            
 
-                        if(Update.plot==F)   savePlot(file.path(figfp,'RefsRepPotDFO.png'))
+                       # if(Update.plot==F)   savePlot(file.path(figfp,'RefsRepPotDFO.png', type = "png"))
    
  #  DFO Georges
-  i=4
+  i=3
             load(ff[i])
             yll = max(aa$n.yst)
              h = split(aa,f=aa$yr)
@@ -226,7 +226,7 @@ ff = c(
 
 
 
-                        if(Update.plot==F)   savePlot(file.path(figfp,'RefsRepPotGeorges.png'))
+                     #   if(Update.plot==F)   savePlot(file.path(figfp,'RefsRepPotGeorges.png', type = "png"))
                         if(Update.plot==T)  {
 
                             mtext("Year",1,1,outer=T)

@@ -30,10 +30,10 @@ figdir = file.path("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update")
 p$lfas = c("41") # specify lfa
 
 #Not Oracle		
-#logs=lobster.db('process.logs.redo')
+logs=lobster.db('process.logs.redo')
 logs=lobster.db("process.logs")
 
-#land=lobster.db('annual.landings.redo')
+land=lobster.db('annual.landings.redo')
 land = lobster.db('annual.landings')
 
 #groundfish.db('odbc.redo',datayrs = 1970:2024)
@@ -45,7 +45,7 @@ land = lobster.db('annual.landings')
 a = groundfish.db('gsinf.odbc')
 summary(a)
 ## FOR NEFSC Survey
-#nefsc.db(DS='odbc.dump.redo')
+nefsc.db(DS='odbc.dump.redo')
 #inf = nefsc.db( DS = 'usinf.redo.odbc',fn.root = NULL,p=p)
 #ca = nefsc.db( DS = 'uscat.redo.odbc',fn.root = NULL,p=p)
 #de = nefsc.db( DS = 'usdet.redo.odbc',fn.root = NULL,p=p)
@@ -99,9 +99,9 @@ write.csv(land41, "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/landingstab
 
 #########Observer Coverage #############
 
-#lobster.db("observer41.redo")
+lobster.db("observer41.redo")
 lobster.db("observer41")
-#lobster.db('logs41.redo') 
+lobster.db('logs41.redo') 
 lobster.db('logs41')
 
 
