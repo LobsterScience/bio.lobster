@@ -3,7 +3,7 @@
 ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(-74,-47),LFAfill='white',
                          attrData=NULL,attrColumn='Z', addGrids=T,addNAFO=F,nafo='4X', bathy=T,fw=NULL,legLab="",addLFAlines=T,
                          addLFALabels=F, addGridLabels=F,addPoints=F,pts, addNAFOLabels=F,scaleTrans='identity',brks=NULL,return.object=F,
-                         layerDir=file.path(project.datadirectory("bio.lobster"), "data","maps"),LFA_label_size=8,colourLFA=T, ...){
+                         layerDir=file.path(bio.directory,'bio.lobster.data','mapping_data'),LFA_label_size=8,colourLFA=T, ...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
   if(area=='inshore')		{ ylim=c(42.1,48); 		xlim=c(-67.8,-57.8)	}
@@ -16,7 +16,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
   if(area=='west')	{ ylim=c(41.1,46); 		xlim=c(-67.8,-64)	}
   if(area=='27')		{ ylim=c(44.9,47.9); 	xlim=c(-61,-57.8)	}
   if(area=='27.Crop')		{ ylim=c(45.4,47.6); 	xlim=c(-61.1,-58.8)	}
-  if(area=='28')		{ ylim=c(45.3,46);	 	xlim=c(-61.6,-60.3)	}
+  if(area=='28')		{ ylim=c(45.3,46.4);	 	xlim=c(-61.6,-60.2)	}
   if(area=='29')		{ ylim=c(45.3,46); 		xlim=c(-61.6,-60.3)	}
   if(area=='30')		{ ylim=c(44.6,45.9); 	xlim=c(-60.8,-59.6)	}
   if(area=='31A')		{ ylim=c(44.4,45.7); 	xlim=c(-61.8,-60)	}
@@ -44,8 +44,8 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
   
     sf_use_s2(FALSE) #needed for cropping
   ns_coast =readRDS(file.path( layerDir,"CoastSF.rds"))
-  r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))
-  rL = readRDS(file.path(layerDir,"LFAPolysSF.rds"))
+  r<-readRDS(file.path( layerDir,"GridPolysLand_2023LFA37Split.rds"))
+  rL = readRDS(file.path(layerDir,"LFAPolys37Split.rds"))
   nf = readRDS(file.path(layerDir,"NAFO_sf.rds"))
   nafo.sel<-subset(nf,NAFO_1%in%nafo)
   o = list()
@@ -69,7 +69,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
   o =  suppressWarnings(suppressMessages(st_crop(o,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
   
   b = readRDS(file.path( layerDir,"bathy10-300SF.rds"))
-  l = readRDS(file.path( layerDir,"LFAPolysSF.rds"))
+  l = readRDS(file.path( layerDir,"LFAPolys37Split.rds"))
   st_crs(b) <- 4326
   st_crs(l) <- 4326
   b = suppressWarnings(suppressMessages(st_crop(b,xmin=xlim[1],ymin=ylim[1],xmax=xlim[2],ymax=ylim[2])))
@@ -99,7 +99,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
   if(colourLFA){
     
     p =  p+  
-      geom_sf(data=subset(l,LFA==area),lwd=1.35,fill='lightblue')  
+      geom_sf(data=subset(l,PID==area),lwd=1.35,fill='lightblue')  
   }
   if(addNAFO){
         p = p + geom_sf(data=o,fill=NA,colour='orange',lwd=1) + geom_sf(data=ns_coast,fill=fill.colours) 

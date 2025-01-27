@@ -392,7 +392,202 @@ FROM
   
 }
         
+if(DS %in% c('landings_by_vessel','landings_by_vessel.redo')){
+  if(grepl('redo',DS)){
+    bb = connect.command(con,"
+select season, lfa, vr_number, sum(mt) mt , 'MF' source from (
+select case
+when date_landed between to_date('2002-10-01','YYYY-MM-DD') and to_date('2003-09-30','YYYY-MM-DD') then 2003
+when date_landed between to_date('2003-10-01','YYYY-MM-DD') and to_date('2004-09-30','YYYY-MM-DD') then 2004
+when date_landed between to_date('2004-10-01','YYYY-MM-DD') and to_date('2005-09-30','YYYY-MM-DD') then 2005
+when date_landed between to_date('2005-10-01','YYYY-MM-DD') and to_date('2006-09-30','YYYY-MM-DD') then 2006
+when date_landed between to_date('2006-10-01','YYYY-MM-DD') and to_date('2007-09-30','YYYY-MM-DD') then 2007
+when date_landed between to_date('2007-10-01','YYYY-MM-DD') and to_date('2008-09-30','YYYY-MM-DD') then 2008
+when date_landed between to_date('2008-10-01','YYYY-MM-DD') and to_date('2009-09-30','YYYY-MM-DD') then 2009
+when date_landed between to_date('2009-10-01','YYYY-MM-DD') and to_date('2010-09-30','YYYY-MM-DD') then 2010
+when date_landed between to_date('2010-10-01','YYYY-MM-DD') and to_date('2011-09-30','YYYY-MM-DD') then 2011
+when date_landed between to_date('2011-10-01','YYYY-MM-DD') and to_date('2012-09-30','YYYY-MM-DD') then 2012
+when date_landed between to_date('2012-10-01','YYYY-MM-DD') and to_date('2013-09-30','YYYY-MM-DD') then 2013
+when date_landed between to_date('2013-10-01','YYYY-MM-DD') and to_date('2014-09-30','YYYY-MM-DD') then 2014
+when date_landed between to_date('2014-10-01','YYYY-MM-DD') and to_date('2015-09-30','YYYY-MM-DD') then 2015
+when date_landed between to_date('2015-10-01','YYYY-MM-DD') and to_date('2016-09-30','YYYY-MM-DD') then 2016
+when date_landed between to_date('2016-10-01','YYYY-MM-DD') and to_date('2017-09-30','YYYY-MM-DD') then 2017
+when date_landed between to_date('2017-10-01','YYYY-MM-DD') and to_date('2018-09-30','YYYY-MM-DD') then 2018
+when date_landed between to_date('2018-10-01','YYYY-MM-DD') and to_date('2019-09-30','YYYY-MM-DD') then 2019
+when date_landed between to_date('2019-10-01','YYYY-MM-DD') and to_date('2020-09-30','YYYY-MM-DD') then 2020
+when date_landed between to_date('2020-10-01','YYYY-MM-DD') and to_date('2021-09-30','YYYY-MM-DD') then 2021
+when date_landed between to_date('2021-10-01','YYYY-MM-DD') and to_date('2022-09-30','YYYY-MM-DD') then 2022
+when date_landed between to_date('2022-10-01','YYYY-MM-DD') and to_date('2023-09-30','YYYY-MM-DD') then 2023
+when date_landed between to_date('2023-10-01','YYYY-MM-DD') and to_date('2024-09-30','YYYY-MM-DD') then 2024
+else null
+end season,
+lfa, vr_number, slip_weight_lbs/2.2046/1000 mt
+from marfissci.lobster_sd_slip
+where date_landed between to_date('2002-10-01','YYYY-MM-DD') and to_date('2024-09-30','YYYY-MM-DD')
+and lfa in ('35','36','38')
+and species_code='700'
+)
+group by season, lfa, vr_number
+")
+aa = connect.command(con, paste("
+select VR_NUMBER, SEASON,sum(MT) MT, '38B' LFA, 'GreySlip' source 
+from (
+select VR_NUMBER, slip_weight_lbs/2.2046/1000 MT, landing_date_time, CASE
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2001-10-01' and '2002-09-30' then 2002
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2002-10-01' and '2003-09-30' then 2003
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2003-10-01' and '2004-09-30' then 2004
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2004-10-01' and '2005-09-30' then 2005
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2005-10-01' and '2006-09-30' then 2006
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2006-10-01' and '2007-09-30' then 2007
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2007-10-01' and '2008-09-30' then 2008
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2008-10-01' and '2009-09-30' then 2009
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2009-10-01' and '2010-09-30' then 2010
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2010-10-01' and '2011-09-30' then 2011
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2011-10-01' and '2012-09-30' then 2012
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2012-10-01' and '2013-09-30' then 2013
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2013-10-01' and '2014-09-30' then 2014
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2014-10-01' and '2015-09-30' then 2015
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2015-10-01' and '2016-09-30' then 2016
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2016-10-01' and '2017-09-30' then 2017
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2017-10-01' and '2018-09-30' then 2018
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2018-10-01' and '2019-09-30' then 2019
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2019-10-01' and '2020-09-30' then 2020
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2020-10-01' and '2021-09-30' then 2021
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2021-10-01' and '2022-09-30' then 2022
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2022-10-01' and '2023-09-30' then 2023
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2023-10-01' and '2024-09-30' then 2024
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2024-10-01' and '2025-09-30' then 2024
+else null
+end season
 
+from marfissci.lobster_md_slip a where mon_doc_defn_id in (46,49)
+
+)
+group by VR_NUMBER, season"))
+  
+  
+cc = connect.command(con, paste("	
+  select season, cfv_number vr_number, sum(live_wt) MT, lfa, 'IC' source from (	
+    SELECT	
+    case	
+when a.land_date between to_date('1989-10-01','YYYY-MM-DD') and to_date('1990-09-30','YYYY-MM-DD')	then 1990
+when a.land_date between to_date('1990-10-01','YYYY-MM-DD') and to_date('1991-09-30','YYYY-MM-DD')	then 1991
+when a.land_date between to_date('1991-10-01','YYYY-MM-DD') and to_date('1992-09-30','YYYY-MM-DD')	then 1992
+when a.land_date between to_date('1992-10-01','YYYY-MM-DD') and to_date('1993-09-30','YYYY-MM-DD')	then 1993
+when a.land_date between to_date('1993-10-01','YYYY-MM-DD') and to_date('1994-09-30','YYYY-MM-DD')	then 1994
+when a.land_date between to_date('1994-10-01','YYYY-MM-DD') and to_date('1995-09-30','YYYY-MM-DD')	then 1995
+when a.land_date between to_date('1995-10-01','YYYY-MM-DD') and to_date('1996-09-30','YYYY-MM-DD')	then 1996
+     else null	
+    end season,	
+    a.cfv_number,	
+    a.live_wt,	
+    a.land_prov_code	
+    || a.land_stat_dist_code	
+    || a.land_community_code,	
+    b.lfa	
+    FROM	
+    cl.all_identified_catches_view   a,	
+    frailc.marfis_ports              b	
+    WHERE	
+    a.land_prov_code	
+    || a.land_stat_dist_code	
+    || a.land_community_code = b.community_code (+)	
+    AND a.species_code = 700	
+    AND a.land_prov_code IN (1,2)	
+    and a.land_date between to_date('1989-10-01','YYYY-MM-DD') and to_date('1996-08-31','YYYY-MM-DD')	
+  )	
+  where lfa in ('35','36','38')	
+  and  cfv_number !='000000' 	
+  group by season, cfv_number, lfa	
+  "))
+   
+dd = connect.command(con,paste("
+  
+select season, lfa, cfv_no vr_number, sum(mt) mt, 'CL' source from (	
+select case	
+when land_date between to_date('1996-10-01','YYYY-MM-DD') and to_date('1997-09-30','YYYY-MM-DD')	then 1997
+when land_date between to_date('1997-10-01','YYYY-MM-DD') and to_date('1998-09-30','YYYY-MM-DD')	then 1998
+when land_date between to_date('1998-10-01','YYYY-MM-DD') and to_date('1999-09-30','YYYY-MM-DD')	then 1999
+when land_date between to_date('1999-10-01','YYYY-MM-DD') and to_date('2000-09-30','YYYY-MM-DD')	then 2000
+when land_date between to_date('2000-10-01','YYYY-MM-DD') and to_date('2001-09-30','YYYY-MM-DD')	then 2001
+when land_date between to_date('2001-10-01','YYYY-MM-DD') and to_date('2002-09-30','YYYY-MM-DD')	then 2002
+else null	
+end season,	
+case	
+when lobster_district = 1 then 36	
+when lobster_district = 2 then 38	
+when lobster_district = 3 then 35	
+else null	
+end lfa,	
+cfv_no, mt	
+from (	
+select to_date('19'||substr(a.slip_code,7,6),'yyyy-mm-dd') land_date, 	
+a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
+from cl.slip_header_1996 a, cl.slip_detail_1996 b	
+where a.slip_code = b.slip_code	
+and b.species_id like '700%'	
+and substr(a.lobster_district,1,1) in ('1','2','3')	
+and to_date('19'||substr(a.slip_code,7,6),'yyyy-mm-dd') >=to_date('1996-10-01','YYYY-MM-DD')	
+union all	
+select to_date('19'||substr(a.slip_code,7,6),'yyyy-mm-dd') land_date, 	
+a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
+from cl.slip_header_1997 a, cl.slip_detail_1997 b	
+where a.slip_code = b.slip_code	
+and b.species_id like '700%'	
+and substr(a.lobster_district,1,1) in ('1','2','3')	
+union all	
+select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
+from cl.slip_header_1998 a, cl.slip_detail_1998 b	
+where a.slip_code = b.slip_code	
+and b.species_id like '700%'	
+and substr(a.lobster_district,1,1) in ('1','2','3')	
+union all	
+select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
+from cl.slip_header_1999 a, cl.slip_detail_1999 b	
+where a.slip_code = b.slip_code	
+and b.species_id like '700%'	
+and substr(a.lobster_district,1,1) in ('1','2','3')	
+union all	
+select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
+from cl.slip_header_2000 a, cl.slip_detail_2000 b	
+where a.slip_code = b.slip_code	
+and b.species_id like '700%'	
+and substr(a.lobster_district,1,1) in ('1','2','3')	
+union all	
+select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
+from cl.slip_header_2001 a, cl.slip_detail_2001 b	
+where a.slip_code = b.slip_code	
+and b.species_id like '700%'	
+and substr(a.lobster_district,1,1) in ('1','2','3')	
+union all	
+select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
+from cl.slip_header_2002 a, cl.slip_detail_2002 b	
+where a.slip_code = b.slip_code	
+and b.species_id like '700%'	
+and substr(a.lobster_district,1,1) in ('1','2','3')	
+and to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') <=to_date('2002-09-30','YYYY-MM-DD')
+
+union all	
+select * from (
+select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
+from cl.slip_header_2002 a, cl.slip_detail_2002 b	
+where a.slip_code = b.slip_code	
+and b.species_id like '700%'	
+and substr(a.lobster_district,1,1) in ('1','2','3')	
+and to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') <=to_date('2002-09-30','YYYY-MM-DD')
+) 	
+) )	
+group by season, lfa, cfv_no	
+	"))
+
+ee = do.call(rbind,list(aa,bb,cc,dd))
+
+names(ee) = c('VR_NUMBER','SYEAR', 'MT','LFA','DATASOURCE')
+saveRDS(ee,file=file.path(fnODBC,'land_by_vess.rdata'))
+   }
+ee = readRDS(file=file.path(fnODBC,'land_by_vess.rdata'))
+  return(ee)
+}
 if(DS %in% c('slips','slips.redo')){
     if(grepl('redo',DS)) {
       #current
@@ -474,9 +669,9 @@ if(DS %in% c('process_slips', 'process_slips.redo')){
     
     vsM = sllllll
     
-    vsP = subset(vsP,select=c(LFA,DATE_LANDED,LICENCE_ID,SLIP_WEIGHT_LBS,PRICE)) # no port so removed from others
-    vsM = subset(vsM,select=c(LFA,Date,LICENCE_NO,WT_LBS,PRICE))
-    vsO = subset(vsO,select=c(LFA,DA,BOATVESID,WT_LBS,PRICE))
+    vsP = subset(vsP,select=c(LFA,DATE_LANDED,LICENCE_ID,SLIP_WEIGHT_LBS,PRICE,VR_NUMBER)) # no port so removed from others
+    vsM = subset(vsM,select=c(LFA,Date,LICENCE_NO,WT_LBS,PRICE,CFV_NO))
+    vsO = subset(vsO,select=c(LFA,DA,BOATVESID,WT_LBS,PRICE,BOATVESID))
     
     names(vsP) = names(vsO) = names(vsM)
     vsP$ID = 'marfis'
@@ -1138,14 +1333,17 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
     #these are the monitoring doc logs exclusively used for 41 and grey zone fishing
       if (DS=="greyzone_logs.redo") {
-        query_md = "select * from marfissci.lobster_md_log where mon_doc_defn_id=49"
+        query_md = "select * from marfissci.lobster_md_49_log where mon_doc_defn_id=49"
         db.setup(un=oracle.lobster.user, pw = oracle.lobster.password)
         log_md = connect.command(con, query_md)
+        #these are both jonah and lobster, subset for lobster
+        log_md = subset(log_md,SSF_SPECIES_CODE==700)
         save( log_md, file=file.path( fnODBC, "greyzonelogs.rdata"), compress=T)
         gc()  # garbage collection
 
         }
-      return(load(file=file.path( fnODBC, "greyzonelogs.rdata")))
+      load(file=file.path( fnODBC, "greyzonelogs.rdata"))
+      return(log_md)
     }
 
 
@@ -1191,7 +1389,7 @@ if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
     
     
     if (DS %in% c("process.logs41.redo", "process.logs41") ) {
-      fo=file.path( fnODBC, "logs41.rdata")
+      fo=file.path( fnODBC, "processed_logs41.rdata")
       
       if (DS=="process.logs41.redo") {
         
@@ -1312,7 +1510,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
            require(RODBC)
            #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
 
-  #Define a list of VRNs from offshore lobster vrns
+  #Define a list of VRNs from offshore lobster vrns in rprofile
 
 
       vms.q  =  paste("SELECT rownum vesid,
@@ -1323,7 +1521,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
                  p.speed_knots
                  FROM mfd_obfmi.vms_all p, mfd_obfmi.marfis_vessels_syn v
                  WHERE p.VR_NUMBER = v.vr_number(+)
-                 AND p.vr_number IN ('",vrn.vector,"')",
+                 AND p.vr_number IN ('",paste(vrn.vector.41,collapse="','"),"')",
                   sep="" )
 
       vms.data  =  connect.command(con, vms.q, believeNRows=FALSE)
@@ -1356,7 +1554,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
             # atSea
             atSea = connect.command(con, "select * from lobster.LOBSTER_ATSEA_VW")
-            atSea2 = connect.command(con, "select * from cooka.lobster_bycatch_assoc")
+            atSea2 = connect.command(con, "select * from lobster.lobster_bycatch_assoc")
 
             atSea2$PORT = NA
             atSea2$PORTNAME= atSea2$PORT_NAME
@@ -1381,7 +1579,7 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
 
             names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO",
                      "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO",'NUM_HOOK_HAUL', "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH",
-                     "EGG_STAGE","SHELL",  "CULL", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT")
+                     "EGG_STAGE","SHELL",  "CULL_ID", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT")
 
       #BZ. Sept2021- Added "DISEASE", "CONDITION_CD", "CLUTCH" to above list to include these variables and match fields from atSea dataset
 
@@ -1898,7 +2096,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
           fsrs$Sex = ifelse(fsrs$Sex == 3, 2, fsrs$Sex)
           fsrs$julian = round(as.numeric(julian(fsrs$DATE)))
 
-           mls = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","MinLegalSize.csv"))
+           mls = read.csv(file.path(bio.directory,'bio.lobster.data','misc',"MinLegalSize.csv"))
            if(any(names(mls)=='X')) mls$X = NULL
            lfa = rep(unlist(lapply(strsplit(names(mls)[2:ncol(mls)],"LFA"),'[[',2)),each=nrow(mls))
            mls = reshape(mls,idvar='Year',varying=list(2:14),v.names=c('MLS'),direction='long')
@@ -1910,8 +2108,9 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
            mls$lfa = as.numeric(mls$lfa)
            names(mls) = c('YEAR','ID','MLS','LFA')
            mls$MLS_FSRS  =  NA
-           scd.old = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES.csv"))
-           scd.new = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","FSRS_SIZE_CODES_NEW2020.csv"))
+           
+           scd.old = read.csv(file=file.path(bio.directory,'bio.lobster.data','fsrs',"FSRS_SIZE_CODES.csv"))
+           scd.new = read.csv(file=file.path(bio.directory,'bio.lobster.data','fsrs',"FSRS_SIZE_CODES_NEW2020.csv"))
 
            mls.old=mls[mls$YEAR<2020,]
           for(i in 1:nrow(mls.old)) {
@@ -1956,6 +2155,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         save( scallop.tows, file=file.path( fnODBC, "scallopTows.rdata"), compress=T)
        
         scallopSurv = connect.command(con, "select * from SCALLSUR.SCBYCATCH_STD where speccd_id='2550'")
+
       scallopSurv = subset(scallopSurv,TOW_TYPE_ID %in% c(1,5) & STRATA_ID %ni% c(50,55))
         save( scallopSurv, file=file.path( fnODBC, "scallopSurv.rdata"), compress=T)
 

@@ -1,0 +1,64 @@
+#State-space surplus production model with lognormal errors
+#I index of abund
+#P = B/K
+
+#############################################################################
+model surplusprod {
+
+#Observation equation
+
+ for(i in 1:N) {
+				Imean[i] <- log(q2*K2*P[i]);
+                 I[i] ~ dlnorm(Imean[i],itau21);
+                 B[i] <- K2*P[i] 
+                 }        
+
+
+#Process equation
+	#P[1]
+	Pmean[1] ~ dlnorm(0,1) I(0.00001,1.5)	;
+		P[1] ~ dlnorm(Pmean[1],isigma21)I(0,1.5)  
+		P.res[1] <- log(P[1])-Pmean[1]
+	
+	#P[2:N]
+	
+    
+	for (i in 2:N) {
+		    Pmean[i] <- log(max(P[i-1] + r2*P[i-1]*(1-P[i-1]) - k2*C[i-1],0.01));
+		    P[i] ~ dlnorm(Pmean[i],isigma21);
+		    P.res[i] <- log(P[i]) - Pmean[i]
+		    }	    
+    
+#####Prior on r######
+
+		r2~dweib(r.a,r.b);
+#####Prior on k######
+		i.k2.b<-1/k2.b
+		k2 ~ dlnorm(k2.a,i.k2.b);
+		K2 <- 1/k2;
+#Reference point calcs	
+		BMSP2 <- K2/2
+		MSP2<-r2*K2/4
+		FMSP2<-r2/2
+		
+
+		#stochastic from taylor expansion results from bousquet et al. 2008
+		
+		MSPc2<-r2*K2/4*(1-Sigma21/(r2*pow((1-r2/4),2))+(4*pow(Sigma21,2)/(pow(r2,2)*pow((4-r2),4)))*(pow(r2,4)-pow(4*r2,3)-pow(12*r2,2)+48*r2-16));
+		FMSPc2<-r2/2-(2*(2-r2)*Sigma21)/pow((4-r2),2)
+		BMSPc2 <- K2/2*(1-(8*Sigma21)/(r2*pow(4-r2,2))-(8*pow(Sigma21,2)/(r2*pow((4-r2),5)))*(pow(3*r2,3)-pow(18*r2,2)-(12*r2)+32))
+
+
+#####Prior on Q#####
+		#q set to 1 for this exercise
+		q2 ~dunif(q.a,q.b)
+#######Priors on isigma2 and itau2#####
+	junk<-a0+b0+c0+d0
+		sd1.p ~ dunif(0.001,1)
+		sd1.o ~ dunif(0.001,1)
+		isigma21 <- pow(sd1.p,-2)
+		itau21    <- pow(sd1.o,-2)
+		Sigma21<-1/isigma21; 
+		Tau21<-1/itau21;
+
+}

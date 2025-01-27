@@ -9,7 +9,7 @@
 #' @return Data objects that contain the data for use in further analyses.
 #' @examples ILTS_ITQ_All_Data(species=2550, size=c(1,200),sex=c(3),aggregate=T)
 #' @export
-ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL,aggregate=T,return_tow_tracks=F,applyGearConversion=T,biomass=T,extend_ts=T,return_base_data=F){
+ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=F,size = NULL, sex=NULL,aggregate=T,return_tow_tracks=F,applyGearConversion=T,biomass=T,extend_ts=T,return_base_data=F){
   require(dplyr)
   require(bio.lobster)
   require(bio.utilities)
@@ -22,7 +22,8 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
   if(redo_base_data){
   
         lobster.db("survey")
-    
+  set_info_file = file.path(project.datadirectory('bio.lobster'),'data','survey','ILTS_ITQ_SETS.data.rds')
+  if(redo_set_data){
       ic = ILTSClick
     ic$ID = paste(ic$TRIP_ID,ic$SET_NO,sep="_")
   #updating towed distance and spread stats  
@@ -204,7 +205,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
           surveyCatch$sweptArea[ii] = surveyCatch$distance[ii] = NA
           
   
-      #windsorize short trips
+      #windsorize short hauls
           ij = aggregate(distance~YEAR+GEAR,data=subset(surveyCatch,!is.na(distance)),FUN=function(x) quantile(x,0.01))
           ik = which(is.na(surveyCatch$distance))
           for(i in 1:length(ik)){
@@ -217,8 +218,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
           ##spread fillins #not enough data for years
           ij = aggregate(spread~GEAR,data=subset(surveyCatch,!is.na(spread)),FUN=function(x) quantile(x,.5))
           ik = which(is.na(surveyCatch$spread))
-          surveyCatch$sweptArea[ii] = NA
-  
+          
           for(i in 1:length(ik)){
             g = unique(surveyCatch$GEAR[ik[i]])
             surveyCatch$spread[ik[i]] = ij[which(ij$GEAR==g),'spread']
@@ -226,7 +226,9 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
   
         ik = which(is.na(surveyCatch$sweptArea))
         surveyCatch$sweptArea[ik] =surveyCatch$distance[ik] * surveyCatch$spread[ik]/1000 
-        
+        saveRDS(surveyCatch, file= set_info_file)
+  }
+  surveyCatch = readRDS(file= set_info_file)
         sC = surveyCatch
       	sC = subset(sC, HAULCCD_ID %in% c(1))
       	
@@ -234,7 +236,6 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
       	sC = subset(sC,select=c(TRIP_ID, SET_NO, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SPECCD_ID, NUM_CAUGHT, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, WEIGHT_KG))
         sC$ID = paste(sC$TRIP_ID,sC$SET_NO,sep="_")
       	ILTSTemp$ID = paste(ILTSTemp$TRIP_ID,ILTSTemp$SET_NO,sep="_")
-	
         	sCa = as.data.frame(unique(subset(sC,!is.na(STARTTIME) | !is.na(ENDTIME), select=c(ID,STARTTIME,ENDTIME))))
         	ot = list()
         	for(i in 1:nrow(sCa)){
@@ -252,6 +253,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
         	temp = as.data.frame(do.call(rbind,ot))
         	sC = merge(sC,temp[,c('ID','temp')],all.x=T)
           sC$ID = NULL
+          
           
           #fill in number caught with avg weight_kg and weight
           ii = which(is.na(sC$NUM_CAUGHT) & !is.na(sC$SPECCD_ID))
@@ -346,18 +348,30 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
     
               iv = subset(xy, GEAR=='280 BALLOON')
               ivi = subset(xy, GEAR!='280 BALLOON')
-    if(species != 2550) stop('vessel corrections not implemented for anything but lobster')          
-              sou = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall_FINAL.rds'))
-      
-      ivs = merge(iv,sou[,c('Length','Median')], by.x=c('FISH_LENGTH'),by.y=c('Length'),all.x=T)
-      #non length correct conv (predict(fit)[1]/(1-predict(fit)[1])) = 2.282
-      ivs$Median = ifelse(ivs$FISH_LENGTH==0,2.282,ivs$Median)
+    if(species  %ni% c(10, 2550)) stop('vessel corrections not implemented for anything but lobster and cod')          
+    if(species  ==2550)   {  print('Length based corrections')
+                              sou = readRDS(file=file.path(bio.directory,'bio.lobster.data','survey_corrections','summarybootRhoNestBall_FINAL.rds'))
+                              nlC = 2.282
+                              #non length correct conv (predict(fit)[1]/(1-predict(fit)[1])) = 2.282
+                              
+            }
+    if(species  ==10)   { 
+                print('Length aggregated corrections')
+                nlC =  0.5877103
+                sou = data.frame(Length=unique(iv$FISH_LENGTH), Median=nlC)
+                
+              }
+              
+    
+        ivs = merge(iv,sou[,c('Length','Median')], by.x=c('FISH_LENGTH'),by.y=c('Length'),all.x=T)
+      ivs$Median = ifelse(ivs$FISH_LENGTH==0,nlC,ivs$Median)
       fl = distinct(subset(ivs,is.na(Median)),FISH_LENGTH)[,1]
       i = max(subset(ivs,!is.na(Median))$FISH_LENGTH)
       fl = max(ivs$Median[which(ivs$FISH_LENGTH==i)])
       ivs$Median[which(ivs$FISH_LENGTH>i & is.na(ivs$Median))] <- fl
       ivs$SA_CORRECTED_PRORATED_N = ivs$SA_CORRECTED_PRORATED_N * ivs$Median
-      ivs$wt = lobLW(ivs$FISH_LENGTH, sex= ivs$SEX)/1000
+      if(species==2550) ivs$wt = lobLW(ivs$FISH_LENGTH, sex= ivs$SEX)/1000
+      if(species==10)  ivs$wt = (0.007005*ivs$FISH_LENGTH^	3.071947)/1000
       ivs$SA_CORRECTED_WTs =ivs$SA_CORRECTED_PRORATED_N* ivs$wt 
       
       ivsa = aggregate(cbind(SA_CORRECTED_PRORATED_N,SA_CORRECTED_WTs)~ID,data=ivs,FUN=sum)
@@ -374,17 +388,32 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
         iv = subset(xy2, GEAR=='280 BALLOON')
         ivi = subset(xy2, GEAR!='280 BALLOON')
         
-        sou = readRDS(file=file.path(project.datadirectory('bio.lobster'),'data','survey','summarybootRhoNestBall_FINAL.rds'))
+        sou = readRDS(file=file.path(bio.directory,'bio.lobster.data',"survey_corrections", 'summarybootRhoNestBall_FINAL.rds'))
+        if(species  %ni% c(10, 2550)) stop('vessel corrections not implemented for anything but lobster and cod')          
+        if(species  ==2550)   {  print('Length based corrections')
+          sou = readRDS(file=file.path(bio.directory,'bio.lobster.data','survey_corrections','summarybootRhoNestBall_FINAL.rds'))
+          nlC = 2.282
+          #non length correct conv (predict(fit)[1]/(1-predict(fit)[1])) = 2.282
+          
+        }
+        if(species  ==10)   { 
+          print('Length aggregated corrections')
+          nlC =  0.5877103
+          sou = data.frame(Length=unique(iv$FISH_LENGTH), Median=nlC)
+          
+        }
         
         ivs = merge(iv,sou[,c('Length','Median')], by.x=c('FISH_LENGTH'),by.y=c('Length'),all.x=T)
         #non length correct conv (predict(fit)[1]/(1-predict(fit)[1])) = 2.282
-        ivs$Median = ifelse(ivs$FISH_LENGTH==0,2.282,ivs$Median)
+        ivs$Median = ifelse(ivs$FISH_LENGTH==0,nlC,ivs$Median)
         fl = distinct(subset(ivs,is.na(Median)),FISH_LENGTH)[,1]
         i = max(subset(ivs,!is.na(Median))$FISH_LENGTH)
         fl = max(ivs$Median[which(ivs$FISH_LENGTH==i)])
         ivs$Median[which(ivs$FISH_LENGTH>i & is.na(ivs$Median))] <- fl
         ivs$SA_CORRECTED_PRORATED_N = ivs$SA_CORRECTED_PRORATED_N * ivs$Median
-        ivs$wt = lobLW(ivs$FISH_LENGTH, sex= ivs$SEX)/1000
+        
+        if(species==2550) ivs$wt = lobLW(ivs$FISH_LENGTH, sex= ivs$SEX)/1000
+        if(species==10)  ivs$wt = (0.007005*ivs$FISH_LENGTH^	3.071947)/1000
         ivs$SA_CORRECTED_WTs =ivs$SA_CORRECTED_PRORATED_N* ivs$wt 
         
         ivsa = aggregate(cbind(SA_CORRECTED_PRORATED_N,SA_CORRECTED_WTs)~ID,data=ivs,FUN=sum)
@@ -400,6 +429,9 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
      if(biomass){
        print('biomass')
        xy$wt = lobLW(xy$FISH_LENGTH, sex= xy$SEX)/1000
+       if(species==2550) xy$wt = lobLW(xy$FISH_LENGTH, sex= xy$SEX)/1000
+       if(species==10)  xy$wt = (0.007005*xy$FISH_LENGTH^	3.071947)/1000
+       
        xy$SA_CORRECTED_PRORATED_N =xy$SA_CORRECTED_PRORATED_N* xy$wt 
        xy$wt <- NULL
        xy2$wt = lobLW(xy2$FISH_LENGTH, sex= xy2$SEX)/1000
@@ -431,10 +463,10 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,size = NULL, sex=NULL
       if(extend_ts){
         require(sf)
         u=0
-        if(all(size==c(70,82))) {ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_recruit_Proportions_34-38.rds'));u=1}
-        if(all(size==c(82,300))){ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_commercial_Proportions_34-38.rds'));u=1}
-        if(all(size==c(70,300))){ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_commercial_and_recruit_Proportions_34-38.rds'));u=1}
-        if(all(size==c(82,300))&biomass){ou = readRDS(file.path(project.datadirectory('Framework_LFA35_38'),'outputs','surveys','modelled_commercial_Proportions_wt_34-38.rds'));u=1; biomass=F}
+        if(all(size==c(70,82))) {ou = readRDS(file.path( bio.directory,'bio.lobster.data', 'survey_corrections','modelled_recruit_Proportions_34-38.rds'));u=1}
+        if(all(size==c(82,300))){ou = readRDS(file.path( bio.directory,'bio.lobster.data','survey_corrections' ,'modelled_commercial_Proportions_34-38.rds'));u=1}
+        if(all(size==c(70,300))){ou = readRDS(file.path( bio.directory,'bio.lobster.data','survey_corrections' ,'modelled_commercial_and_recruit_Proportions_34-38.rds'));u=1}
+        if(all(size==c(82,300))&biomass){ou = readRDS(file.path( bio.directory,'bio.lobster.data','survey_corrections' ,'modelled_commercial_Proportions_wt_34-38.rds'));u=1; biomass=F}
         
         if(u==0) {
           print('models need to be developed for this size range')

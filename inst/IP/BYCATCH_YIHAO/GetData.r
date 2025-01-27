@@ -6,7 +6,7 @@ require(devtools)
 
 lobster.db('atSea')
 a = subset(atSea,LFA %in% c(33,34,35,41) & DESCRIPTION %ni% c('EA-MINAS','Maturity Sampling','Data not collected by trap','Petitcodiac Sampling','Tagging','Out of Season') & !is.na(SPECIESCODE) & year(STARTDATE)>2017 ,
-           select=c(TRIPNO,STARTDATE,LFA,LICENCE_ID,TRAPNO,STRINGNO,DEPTH, SOAKDAYS, LONGITUDE,LATITUDE, SPECIESCODE, SPECIES, SEX, SHELL, CARLENGTH, CONDITION) )
+           select=c(TRIPNO,STARTDATE,LFA,LICENCE_ID,TRAPNO,STRINGNO,DEPTH, SOAKDAYS, LONGITUDE,LATITUDE, SPECIESCODE, SPECIES, SEX, SHELL, CARLENGTH, CONDITION,CALWT) )
 a$YR=year(a$STARTDATE)
 
 
@@ -104,4 +104,4 @@ partLandings = do.call(rbind, partLandings)
 
 saveRDS(list(Effort=partEffort,Landings=partLandings,atSea=a),'TrapHauls_LandingsWithinGridandWeek_atSeaData.rds')
 
-saveRDS(a,'atSeaData.rds')
+saveRDS(a,'atSeaDataYihao_wts.rds')
