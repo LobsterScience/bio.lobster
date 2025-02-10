@@ -395,40 +395,87 @@ FROM
 if(DS %in% c('landings_by_vessel','landings_by_vessel.redo')){
   if(grepl('redo',DS)){
     bb = connect.command(con,"
-select season, lfa, vr_number, sum(mt) mt , 'MF' source from (
+        select season, lfa, to_char(vr_number) vr_number, sum(mt) mt, 'MF' source from (
 select case
-when date_landed between to_date('2002-10-01','YYYY-MM-DD') and to_date('2003-09-30','YYYY-MM-DD') then 2003
-when date_landed between to_date('2003-10-01','YYYY-MM-DD') and to_date('2004-09-30','YYYY-MM-DD') then 2004
-when date_landed between to_date('2004-10-01','YYYY-MM-DD') and to_date('2005-09-30','YYYY-MM-DD') then 2005
-when date_landed between to_date('2005-10-01','YYYY-MM-DD') and to_date('2006-09-30','YYYY-MM-DD') then 2006
-when date_landed between to_date('2006-10-01','YYYY-MM-DD') and to_date('2007-09-30','YYYY-MM-DD') then 2007
-when date_landed between to_date('2007-10-01','YYYY-MM-DD') and to_date('2008-09-30','YYYY-MM-DD') then 2008
-when date_landed between to_date('2008-10-01','YYYY-MM-DD') and to_date('2009-09-30','YYYY-MM-DD') then 2009
-when date_landed between to_date('2009-10-01','YYYY-MM-DD') and to_date('2010-09-30','YYYY-MM-DD') then 2010
-when date_landed between to_date('2010-10-01','YYYY-MM-DD') and to_date('2011-09-30','YYYY-MM-DD') then 2011
-when date_landed between to_date('2011-10-01','YYYY-MM-DD') and to_date('2012-09-30','YYYY-MM-DD') then 2012
-when date_landed between to_date('2012-10-01','YYYY-MM-DD') and to_date('2013-09-30','YYYY-MM-DD') then 2013
-when date_landed between to_date('2013-10-01','YYYY-MM-DD') and to_date('2014-09-30','YYYY-MM-DD') then 2014
-when date_landed between to_date('2014-10-01','YYYY-MM-DD') and to_date('2015-09-30','YYYY-MM-DD') then 2015
-when date_landed between to_date('2015-10-01','YYYY-MM-DD') and to_date('2016-09-30','YYYY-MM-DD') then 2016
-when date_landed between to_date('2016-10-01','YYYY-MM-DD') and to_date('2017-09-30','YYYY-MM-DD') then 2017
-when date_landed between to_date('2017-10-01','YYYY-MM-DD') and to_date('2018-09-30','YYYY-MM-DD') then 2018
-when date_landed between to_date('2018-10-01','YYYY-MM-DD') and to_date('2019-09-30','YYYY-MM-DD') then 2019
-when date_landed between to_date('2019-10-01','YYYY-MM-DD') and to_date('2020-09-30','YYYY-MM-DD') then 2020
-when date_landed between to_date('2020-10-01','YYYY-MM-DD') and to_date('2021-09-30','YYYY-MM-DD') then 2021
-when date_landed between to_date('2021-10-01','YYYY-MM-DD') and to_date('2022-09-30','YYYY-MM-DD') then 2022
-when date_landed between to_date('2022-10-01','YYYY-MM-DD') and to_date('2023-09-30','YYYY-MM-DD') then 2023
-when date_landed between to_date('2023-10-01','YYYY-MM-DD') and to_date('2024-09-30','YYYY-MM-DD') then 2024
+
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2002-10-01' and '2003-09-30' then 2003
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2003-10-01' and '2004-09-30' then 2004
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2004-10-01' and '2005-09-30' then 2005
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2005-10-01' and '2006-09-30' then 2006
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2006-10-01' and '2007-09-30' then 2007
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2007-10-01' and '2008-09-30' then 2008
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2008-10-01' and '2009-09-30' then 2009
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2009-10-01' and '2010-09-30' then 2010
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2010-10-01' and '2011-09-30' then 2011
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2011-10-01' and '2012-09-30' then 2012
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2012-10-01' and '2013-09-30' then 2013
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2013-10-01' and '2014-09-30' then 2014
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2014-10-01' and '2015-09-30' then 2015
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2015-10-01' and '2016-09-30' then 2016
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2016-10-01' and '2017-09-30' then 2017
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2017-10-01' and '2018-09-30' then 2018
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2018-10-01' and '2019-09-30' then 2019
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2019-10-01' and '2020-09-30' then 2020
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2020-10-01' and '2021-09-30' then 2021
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2021-10-01' and '2022-09-30' then 2022
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2022-10-01' and '2023-09-30' then 2023
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2023-10-01' and '2024-09-30' then 2024
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2024-10-01' and '2025-09-30' then 2025
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2002-11-01' and '2003-10-31' then 2003
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2003-11-01' and '2004-10-31' then 2004
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2004-11-01' and '2005-10-31' then 2005
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2005-11-01' and '2006-10-31' then 2006
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2006-11-01' and '2007-10-31' then 2007
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2007-11-01' and '2008-10-31' then 2008
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2008-11-01' and '2009-10-31' then 2009
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2009-11-01' and '2010-10-31' then 2010
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2010-11-01' and '2011-10-31' then 2011
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2011-11-01' and '2012-10-31' then 2012
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2012-11-01' and '2013-10-31' then 2013
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2013-11-01' and '2014-10-31' then 2014
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2014-11-01' and '2015-10-31' then 2015
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2015-11-01' and '2016-10-31' then 2016
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2016-11-01' and '2017-10-31' then 2017
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2017-11-01' and '2018-10-31' then 2018
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2018-11-01' and '2019-10-31' then 2019
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2019-11-01' and '2020-10-31' then 2020
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2020-11-01' and '2021-10-31' then 2021
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2021-11-01' and '2022-10-31' then 2022
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2022-11-01' and '2023-10-31' then 2023
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2023-11-01' and '2024-10-31' then 2024
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2024-11-01' and '2025-10-31' then 2025
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2002-04-01' and '2002-12-31' then 2002
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2003-01-01' and '2003-12-31' then 2003
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2004-01-01' and '2004-12-31' then 2004
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2005-01-01' and '2005-12-31' then 2005
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2006-01-01' and '2006-12-31' then 2006
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2007-01-01' and '2007-12-31' then 2007
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2008-01-01' and '2008-12-31' then 2008
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2009-01-01' and '2009-12-31' then 2009
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2010-01-01' and '2010-12-31' then 2010
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2011-01-01' and '2011-12-31' then 2011
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2012-01-01' and '2012-12-31' then 2012
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2013-01-01' and '2013-12-31' then 2013
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2014-01-01' and '2014-12-31' then 2014
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2015-01-01' and '2015-12-31' then 2015
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2016-01-01' and '2016-12-31' then 2016
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2017-01-01' and '2017-12-31' then 2017
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2018-01-01' and '2018-12-31' then 2018
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2019-01-01' and '2019-12-31' then 2019
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2020-01-01' and '2020-12-31' then 2020
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2021-01-01' and '2021-12-31' then 2021
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2022-01-01' and '2022-12-31' then 2022
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2023-01-01' and '2023-12-31' then 2023
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2024-01-01' and '2024-12-31' then 2024
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2025-01-01' and '2025-12-31' then 2025
 else null
 end season,
 lfa, vr_number, slip_weight_lbs/2.2046/1000 mt
 from marfissci.lobster_sd_slip
-where date_landed between to_date('2002-10-01','YYYY-MM-DD') and to_date('2024-09-30','YYYY-MM-DD')
-and lfa in ('35','36','38')
-and species_code='700'
-)
-group by season, lfa, vr_number
-")
+where to_char(date_landed,'YYYY-MM-DD') between '2002-04-01' and '2025-12-31'
+and species_code = 700
+) where season is not null
+group by season, lfa, to_char(vr_number)")
 aa = connect.command(con, paste("
 select VR_NUMBER, SEASON,sum(MT) MT, '38B' LFA, 'GreySlip' source 
 from (
@@ -456,7 +503,7 @@ when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2020-10-01' and '2021-09-3
 when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2021-10-01' and '2022-09-30' then 2022
 when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2022-10-01' and '2023-09-30' then 2023
 when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2023-10-01' and '2024-09-30' then 2024
-when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2024-10-01' and '2025-09-30' then 2024
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2024-10-01' and '2025-09-30' then 2025
 else null
 end season
 
@@ -470,13 +517,27 @@ cc = connect.command(con, paste("
   select season, cfv_number vr_number, sum(live_wt) MT, lfa, 'IC' source from (	
     SELECT	
     case	
-when a.land_date between to_date('1989-10-01','YYYY-MM-DD') and to_date('1990-09-30','YYYY-MM-DD')	then 1990
-when a.land_date between to_date('1990-10-01','YYYY-MM-DD') and to_date('1991-09-30','YYYY-MM-DD')	then 1991
-when a.land_date between to_date('1991-10-01','YYYY-MM-DD') and to_date('1992-09-30','YYYY-MM-DD')	then 1992
-when a.land_date between to_date('1992-10-01','YYYY-MM-DD') and to_date('1993-09-30','YYYY-MM-DD')	then 1993
-when a.land_date between to_date('1993-10-01','YYYY-MM-DD') and to_date('1994-09-30','YYYY-MM-DD')	then 1994
-when a.land_date between to_date('1994-10-01','YYYY-MM-DD') and to_date('1995-09-30','YYYY-MM-DD')	then 1995
-when a.land_date between to_date('1995-10-01','YYYY-MM-DD') and to_date('1996-09-30','YYYY-MM-DD')	then 1996
+when b.lfa in ('35','36','38') and a.land_date between to_date('1989-10-01','YYYY-MM-DD') and to_date('1990-09-30','YYYY-MM-DD')    then 1990
+when b.lfa in ('35','36','38') and a.land_date between to_date('1990-10-01','YYYY-MM-DD') and to_date('1991-09-30','YYYY-MM-DD')    then 1991
+when b.lfa in ('35','36','38') and a.land_date between to_date('1991-10-01','YYYY-MM-DD') and to_date('1992-09-30','YYYY-MM-DD')    then 1992
+when b.lfa in ('35','36','38') and a.land_date between to_date('1992-10-01','YYYY-MM-DD') and to_date('1993-09-30','YYYY-MM-DD')    then 1993
+when b.lfa in ('35','36','38') and a.land_date between to_date('1993-10-01','YYYY-MM-DD') and to_date('1994-09-30','YYYY-MM-DD')    then 1994
+when b.lfa in ('35','36','38') and a.land_date between to_date('1994-10-01','YYYY-MM-DD') and to_date('1995-09-30','YYYY-MM-DD')    then 1995
+when b.lfa in ('35','36','38') and a.land_date between to_date('1995-10-01','YYYY-MM-DD') and to_date('1996-09-30','YYYY-MM-DD')    then 1996
+when b.lfa in ('33','34') and a.land_date between to_date('1989-11-01','YYYY-MM-DD') and to_date('1990-10-31','YYYY-MM-DD') then 1990
+when b.lfa in ('33','34') and a.land_date between to_date('1990-11-01','YYYY-MM-DD') and to_date('1991-10-31','YYYY-MM-DD') then 1991
+when b.lfa in ('33','34') and a.land_date between to_date('1991-11-01','YYYY-MM-DD') and to_date('1992-10-31','YYYY-MM-DD') then 1992
+when b.lfa in ('33','34') and a.land_date between to_date('1992-11-01','YYYY-MM-DD') and to_date('1993-10-31','YYYY-MM-DD') then 1993
+when b.lfa in ('33','34') and a.land_date between to_date('1993-11-01','YYYY-MM-DD') and to_date('1994-10-31','YYYY-MM-DD') then 1994
+when b.lfa in ('33','34') and a.land_date between to_date('1994-11-01','YYYY-MM-DD') and to_date('1995-10-31','YYYY-MM-DD') then 1995
+when b.lfa in ('33','34') and a.land_date between to_date('1995-11-01','YYYY-MM-DD') and to_date('1996-10-31','YYYY-MM-DD') then 1996
+when b.lfa in ('27','28','29','30','31A','31B','32') and a.land_date between to_date('1990-01-01','YYYY-MM-DD') and to_date('1990-12-31','YYYY-MM-DD')  then 1990
+when b.lfa in ('27','28','29','30','31A','31B','32') and a.land_date between to_date('1991-01-01','YYYY-MM-DD') and to_date('1991-12-31','YYYY-MM-DD')  then 1991
+when b.lfa in ('27','28','29','30','31A','31B','32') and a.land_date between to_date('1992-01-01','YYYY-MM-DD') and to_date('1992-12-31','YYYY-MM-DD')  then 1992
+when b.lfa in ('27','28','29','30','31A','31B','32') and a.land_date between to_date('1993-01-01','YYYY-MM-DD') and to_date('1993-12-31','YYYY-MM-DD')  then 1993
+when b.lfa in ('27','28','29','30','31A','31B','32') and a.land_date between to_date('1994-01-01','YYYY-MM-DD') and to_date('1994-12-31','YYYY-MM-DD')  then 1994
+when b.lfa in ('27','28','29','30','31A','31B','32') and a.land_date between to_date('1995-01-01','YYYY-MM-DD') and to_date('1995-12-31','YYYY-MM-DD')  then 1995
+when b.lfa in ('27','28','29','30','31A','31B','32') and a.land_date between to_date('1996-01-01','YYYY-MM-DD') and to_date('1996-12-31','YYYY-MM-DD')  then 1996
      else null	
     end season,	
     a.cfv_number,	
@@ -495,89 +556,16 @@ when a.land_date between to_date('1995-10-01','YYYY-MM-DD') and to_date('1996-09
     AND a.species_code = 700	
     AND a.land_prov_code IN (1,2)	
     and a.land_date between to_date('1989-10-01','YYYY-MM-DD') and to_date('1996-08-31','YYYY-MM-DD')	
+     AND B.LFA IN ('27','28','29','30','31A','31B','32','33','34','35','36','38')
   )	
-  where lfa in ('35','36','38')	
+  where season is not null
   and  cfv_number !='000000' 	
   group by season, cfv_number, lfa	
   "))
    
-dd = connect.command(con,paste("
-  
-select season, lfa, cfv_no vr_number, sum(mt) mt, 'CL' source from (	
-select case	
-when land_date between to_date('1996-10-01','YYYY-MM-DD') and to_date('1997-09-30','YYYY-MM-DD')	then 1997
-when land_date between to_date('1997-10-01','YYYY-MM-DD') and to_date('1998-09-30','YYYY-MM-DD')	then 1998
-when land_date between to_date('1998-10-01','YYYY-MM-DD') and to_date('1999-09-30','YYYY-MM-DD')	then 1999
-when land_date between to_date('1999-10-01','YYYY-MM-DD') and to_date('2000-09-30','YYYY-MM-DD')	then 2000
-when land_date between to_date('2000-10-01','YYYY-MM-DD') and to_date('2001-09-30','YYYY-MM-DD')	then 2001
-when land_date between to_date('2001-10-01','YYYY-MM-DD') and to_date('2002-09-30','YYYY-MM-DD')	then 2002
-else null	
-end season,	
-case	
-when lobster_district = 1 then 36	
-when lobster_district = 2 then 38	
-when lobster_district = 3 then 35	
-else null	
-end lfa,	
-cfv_no, mt	
-from (	
-select to_date('19'||substr(a.slip_code,7,6),'yyyy-mm-dd') land_date, 	
-a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
-from cl.slip_header_1996 a, cl.slip_detail_1996 b	
-where a.slip_code = b.slip_code	
-and b.species_id like '700%'	
-and substr(a.lobster_district,1,1) in ('1','2','3')	
-and to_date('19'||substr(a.slip_code,7,6),'yyyy-mm-dd') >=to_date('1996-10-01','YYYY-MM-DD')	
-union all	
-select to_date('19'||substr(a.slip_code,7,6),'yyyy-mm-dd') land_date, 	
-a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
-from cl.slip_header_1997 a, cl.slip_detail_1997 b	
-where a.slip_code = b.slip_code	
-and b.species_id like '700%'	
-and substr(a.lobster_district,1,1) in ('1','2','3')	
-union all	
-select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
-from cl.slip_header_1998 a, cl.slip_detail_1998 b	
-where a.slip_code = b.slip_code	
-and b.species_id like '700%'	
-and substr(a.lobster_district,1,1) in ('1','2','3')	
-union all	
-select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
-from cl.slip_header_1999 a, cl.slip_detail_1999 b	
-where a.slip_code = b.slip_code	
-and b.species_id like '700%'	
-and substr(a.lobster_district,1,1) in ('1','2','3')	
-union all	
-select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
-from cl.slip_header_2000 a, cl.slip_detail_2000 b	
-where a.slip_code = b.slip_code	
-and b.species_id like '700%'	
-and substr(a.lobster_district,1,1) in ('1','2','3')	
-union all	
-select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
-from cl.slip_header_2001 a, cl.slip_detail_2001 b	
-where a.slip_code = b.slip_code	
-and b.species_id like '700%'	
-and substr(a.lobster_district,1,1) in ('1','2','3')	
-union all	
-select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
-from cl.slip_header_2002 a, cl.slip_detail_2002 b	
-where a.slip_code = b.slip_code	
-and b.species_id like '700%'	
-and substr(a.lobster_district,1,1) in ('1','2','3')	
-and to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') <=to_date('2002-09-30','YYYY-MM-DD')
 
-union all	
-select * from (
-select to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') land_date, a.cfv_no, b.t_live_weight/1000 MT, a.lobster_district	
-from cl.slip_header_2002 a, cl.slip_detail_2002 b	
-where a.slip_code = b.slip_code	
-and b.species_id like '700%'	
-and substr(a.lobster_district,1,1) in ('1','2','3')	
-and to_date(substr(a.slip_code,7,8),'yyyy-mm-dd') <=to_date('2002-09-30','YYYY-MM-DD')
-) 	
-) )	
-group by season, lfa, cfv_no	
+dd = connect.command(con,paste("
+select * from lobster.landings_per_vessel_1997_2002
 	"))
 
 ee = do.call(rbind,list(aa,bb,cc,dd))
@@ -1778,7 +1766,7 @@ atSea2$STRINGNO = as.character(atSea2$STRINGNO)
         
        saveRDS(aa,file=file.path(fd,fname)) 
       }
-      return(readRDS(aa,file=file.path(fd,fname)) )
+      return(readRDS(file=file.path(fd,fname)) )
 }
 ### port sampling
     if (DS %in% c("port.sampling.redo", "port.sampling") ) {
@@ -2151,7 +2139,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
 
      if (DS=="scallop.redo") {
         scallop.tows = connect.command(con, "select * from SCALLSUR.SCTOWS")
-        scallop.tows = subset(scallop.tows,TOW_TYPE_ID %in% c(1,5) & STRATA_ID %ni% c(50,55))
+        scallop.tows = subset(scallop.tows,TOW_TYPE_ID %in% c(1,5))# removed this filter AMC Jan 2025 & STRATA_ID %ni% c(50,55))
         save( scallop.tows, file=file.path( fnODBC, "scallopTows.rdata"), compress=T)
        
         scallopSurv = connect.command(con, "select * from SCALLSUR.SCBYCATCH_STD where speccd_id='2550'")
@@ -2168,11 +2156,11 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
        gc()  # garbage collection
         #odbcClose(con)
      }
-      scallopStratDefs = readRDS(file=file.path( fnODBC, "scallopStratDefs.rds"))
+    #  scallopStratDefs = readRDS(file=file.path( fnODBC, "scallopStratDefs.rds"))
       load(file.path( fnODBC, "scallopTows.rdata"))
       load(file.path( fnODBC, "scallopSurv.rdata"))
       
-      return(list(scallopStratDefs,scallop.tows,scallopSurv))
+      return(list(scallop.tows,scallopSurv))
     }
 
 ### lobster survey

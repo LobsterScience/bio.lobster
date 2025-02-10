@@ -48,13 +48,13 @@ vv$lfa = gsub("PERCENT","",vv$Cat)
 vr = c(paste('Oct',max(vv$yr)-1,sep="-"),
        paste('Nov',max(vv$yr)-1,sep="-"),
        paste('Dec',max(vv$yr)-1,sep="-"),
-       paste('Jan',max(vv$yr),sep="-"),
-       paste('Feb',max(vv$yr),sep="-"),
-       paste('Mar',max(vv$yr),sep="-"),
-       paste('Apr',max(vv$yr),sep="-"),
-       paste('May',max(vv$yr),sep="-"),
-       paste('Jun',max(vv$yr),sep="-"),
-       paste('Jul',max(vv$yr),sep="-"))
+       paste('Jan',max(vv$yr)-1,sep="-"),
+       paste('Feb',max(vv$yr)-1,sep="-"),
+       paste('Mar',max(vv$yr)-1,sep="-"),
+       paste('Apr',max(vv$yr)-1,sep="-"),
+       paste('May',max(vv$yr)-1,sep="-"),
+       paste('Jun',max(vv$yr)-1,sep="-"),
+       paste('Jul',max(vv$yr)-1,sep="-"))
        
        
 vv = subset(vv,yrmn %in% vr)
