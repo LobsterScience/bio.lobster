@@ -66,7 +66,8 @@ options(stringsAsFactors=F)
 	if(area=='SWN')		{ ylim=c(42.5,45); 		xlim=c(-67.8,-62.2)	}
 	if(area=='BoF')		{ ylim=c(43.75,46); 	xlim=c(-67.8,-63.2)	}
 	if(area=='33-35')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-63.2)	}
-  if(area=='33-34')	{ ylim=c(42.5,45); 		xlim=c(-67.5,-62.2)	}	
+  if(area=='33-34')	{ ylim=c(42.5,45); 		xlim=c(-67.5,-62.2)	}
+  if(area=='33-41') { ylim=c(41.1,45); 		xlim=c(-67.9,-62.3)	}
   if(area=='ENS')	  { ylim=c(43.8,45.7); 	xlim=c(-63.5,-59.8)	}
   
 	coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline",mapRes,".csv")))
@@ -167,7 +168,7 @@ if(save) {
 	
 	if(boundaries=='LFAs'){
 		
-		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys2.csv"))
+		LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
 		LFAgrid<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","GridPolys.csv"))
 		LFA41<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA41Offareas.csv"))
 		subareas<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFA2733subareas.csv"))

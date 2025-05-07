@@ -441,6 +441,14 @@ FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legal
 dev.off()
 }
 
+  #  Landed Value Placeholder
+    
+   # lobster.db('slips.redo')
+   # lobster.db('process_slips.redo')
+   # b = lobster.db('process_slips')
+    
+   # aggregate(cbind(adj_wt_kg,value)~LFA+SYEAR,data=b,FUN=sum)
+    
 # Landings and Effort ############
 {
 land = lobster.db('seasonal.landings')

@@ -8,6 +8,7 @@ require(tint)
 require(rmarkdown)
 require(rio)
 require(knitr)
+require(dplyr)
 
 
 study.yr="2024"## Make sure to index
@@ -310,7 +311,12 @@ for (y in yrs){
           f=fishers[i]
           print(f)
           a=vent[vent$fisher==f,]
-          a=a[,colSums(is.na(a))<nrow(a)] #drops columns that are all NA
+          #a=a[,colSums(is.na(a))<nrow(a)] #drops columns that are all NA
+          cols_to_keep <- c("license", "depth", "depth.m")
+          cols_to_remove <- which(colSums(is.na(a)) == nrow(a) & !names(a) %in% cols_to_keep)
+          
+          # Remove the identified columns
+          a <- a[, -cols_to_remove]
           
           trap.tot=length(unique(a$trap.id))*2 #Number of sampled traps included in the study for this year
           
@@ -328,6 +334,7 @@ for (y in yrs){
                          "vent.sz","vent.num","trap.num","s14","s15","s16","s17a","s17b","s18","s19","s20","yr","depth.m",
                          "config","shorts","legals","prop.short","prop.legals","config.name"))
           a=a[,colSums(is.na(a))<nrow(a)]   #remove all config columns that only have NA's
+          
           a[is.na(a)]=0 #converts NA's to zero, ok as it is only to sum
           
           test=aggregate(.~trap.id, a, sum)
@@ -380,7 +387,10 @@ for (y in yrs){
         
         
         ventf=vent[vent$fisher==f & is.finite(vent$prop.short),] #removes NA's for proportions for empty traps, can't compare shorts and legals with no catches
-        mu <- ddply(ventf, "config.name", summarise, grp.mean=mean(prop.short)) #Determines means by config
+        #mu <- ddply(ventf, "config.name", summarise, grp.mean=mean(prop.short)) #Determines means by config
+        mu <- ventf %>%
+            group_by(config.name) %>%
+            summarise(grp.mean = mean(prop.short, na.rm = TRUE))
         
         #perc.short()
         png(filename=paste0(fishdir,"/",f, ".", y,".perc.short.by.config.png"),width = 160, height = 150, units='mm', res = 300)

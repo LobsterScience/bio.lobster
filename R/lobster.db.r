@@ -1055,6 +1055,7 @@ if(DS %in% c('season.dates','season.dates.redo')) {
                     Fish.Date = season.dates = connect.command(con,'select * from LOBSTER.FISHING_SEASONS')
                     print('Lobster.Fishing_Seasons needs to be updated in SQL if you want to use this season dates script--these dates come from FAM.')
                     season.dates = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
+                    print(paste0("Maximum Season SYEAR in season.dates is ", max(season.dates$SYEAR)))
                   save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
             }
 
@@ -1972,12 +1973,12 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
     if (DS %in% c("fsrs.redo", "fsrs") ) {
 
      if (DS=="fsrs.redo") {
-        require(RODBC)
+        #require(RODBC)
         #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-        md = connect.command(con, "select max(haul_date) mdate from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
-        load(file=file.path( fnODBC, "fsrs.rdata"))
-        f_md = max(fsrs$HAUL_DATE)
-        if(f_md>=as.POSIXct(md[,1])) stop('No new data to over write old file')
+       # md = connect.command(con, "select max(haul_date) mdate from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
+        #load(file=file.path( fnODBC, "fsrs.rdata"))
+        #if_md = max(fsrs$HAUL_DATE)
+       # if(f_md>=as.POSIXct(md[,1])) stop('No new data to over write old file')
         
        fsrs = connect.command(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
         

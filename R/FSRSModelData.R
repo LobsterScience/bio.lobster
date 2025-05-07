@@ -58,6 +58,7 @@ FSRSModelData = function(trap.type='recruitment',TempModelling){
 		wb<-c(3.058, 2.875, 2.638)
 
 		FSRS.dat$WEIGHT<-NA
+		FSRS.dat=subset(FSRS.dat, SEX %in% c(1:3))
 		for(i in 1:3){
 			FSRS.dat$WEIGHT[FSRS.dat$SEX==i]<-FSRS.dat$LENGTH[FSRS.dat$SEX==i]^wb[i]*wa[i]
 		}
