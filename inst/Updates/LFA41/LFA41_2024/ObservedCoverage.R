@@ -11,7 +11,7 @@ require(lubridate)
 require(ggplot2)
 require(dplyr)
 require(RODBC)
-require(rgdal)
+
 
 
 p = bio.lobster::load.environment()
@@ -64,7 +64,7 @@ Obs41$DAY=day(Obs41$dates)
 
 ###Clip Observer Coverage for maps
 
-Obs41<-Obs41[Obs41$SYEAR > 2017  & Obs41$SYEAR < 2024, ]
+Obs41<-Obs41[Obs41$SYEAR > 2017, ]
 
 ## Number of Trips
 Trips_logs<-aggregate(MON_DOC_ID ~SYEAR, data = L41log, FUN = function(x) length(unique(x)))
@@ -84,3 +84,14 @@ colnames(num_obtrap)<-c("SYEAR","OBSTOTALTRAPS")
 Percentobs<-merge(Agg_Logs,num_obtrap, by = "SYEAR")
 Percentobs$PercentObserved<-(Percentobs$OBSTOTALTRAPS)/(Percentobs$NUM_OF_TRAPS)
 Percentobs$PercentObserved<-(Percentobs$PercentObserved*100)
+
+
+
+###Summarized observed trips
+
+filtered_data <- Obs41 %>%
+  filter(SYEAR %in% c(2022, 2023, 2024))
+
+unique_trips <- filtered_data %>%
+  select(TRIPNO, MONTH, SYEAR) %>%
+  distinct()

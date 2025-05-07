@@ -20,7 +20,7 @@ require(sf)
 
 p = bio.lobster::load.environment()
 la()
-assessment.year = 2023 ##Check Year
+assessment.year = 2024 ##Check Year
 p$syr = 1989
 p$yrs = p$syr:assessment.year
 

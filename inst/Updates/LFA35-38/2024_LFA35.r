@@ -170,7 +170,7 @@ g1 <- ggplot(data = subset(aae,yr>2004), aes(x = yr,y=LFA35)) + #CHECK LFA
   geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1,linetype='dashed')+
   scale_y_continuous(name='Catch (t)', sec.axis= sec_axis(~.*scaleright, name= "Effort ('000s Trap Hauls)", breaks = seq(0,2000,by=250)))+
   labs(x = "Year") +
-theme_csas()
+theme_csas() 
 
 
 ### RV Survey recruit abundance

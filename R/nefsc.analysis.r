@@ -90,7 +90,7 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
       cas =  nefsc.db(DS='uscat.clean')
       stra = nefsc.db(DS='usstrata.area')
       de =   nefsc.db(DS='usdet.clean')
-      
+    
       set$EID = 1:nrow(set)
       a = st_as_sf(readRDS(file.path(bio.directory,'bio.lobster.data','mapping_data','BTS_Strata.rds')) )
       a = st_make_valid(a)

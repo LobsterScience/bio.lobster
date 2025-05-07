@@ -1,7 +1,7 @@
 #' @export
 
 
-bycatch.db <- function(DS='redo.data',p=p,wd='C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster'){
+bycatch.db <- function(DS='redo.data',p=p,wd='C:/Users/HowseVJ/OneDrive - DFO-MPO/Bycatch Review'){
   options(stringsAsFactors=F)
   require(lubridate)
   dir.create(file.path(wd,'data'),showWarnings = F)

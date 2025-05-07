@@ -70,7 +70,7 @@ options(stringsAsFactors=F)
   if(area=='33-41') { ylim=c(41.1,45); 		xlim=c(-67.9,-62.3)	}
   if(area=='ENS')	  { ylim=c(43.8,45.7); 	xlim=c(-63.5,-59.8)	}
   
-	coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline",mapRes,".csv")))
+	coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline","HR",".csv")))
 	rivers<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("rivers",mapRes,".csv")))
 	attr(coast,"projection")<-"LL"
 	if(land.only){		addPolys(coast,col=land.col,...); return(1)}	

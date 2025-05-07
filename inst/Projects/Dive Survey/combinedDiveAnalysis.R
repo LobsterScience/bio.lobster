@@ -1,6 +1,6 @@
 ### COMBINED DIVE ANALYSIS ###
 require(lubridate)
-library(ggplot2)
+require(ggplot2)
 require(ggspatial)
 require(bio.lobster)
 require(bio.utilities)
@@ -8,6 +8,7 @@ require(dplyr)
 require(nlme)
 require(glmmTMB)
 require(DHARMa)
+require(data.table)
 
 
 setwd("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 35-38 Framework Resources/Figures")
@@ -91,6 +92,16 @@ nb_3<- glmmTMB(total_lobster ~ year * month +
 summary(nb_3)
 
 
+##redo with a predict for september
+
+
+nb_3<- glmmTMB(total_lobster ~ year | month +  # example of random effect of month
+                 LFA + 
+                 offset(log(areasamp)), 
+               data = combined_dive, 
+               family = nbinom2())
+summary(nb_3)
+
 
 ## Get residuals in glmm models
 res1model<-residuals(nb_1, type = "response")
@@ -150,22 +161,33 @@ plot(residuals(nb_2), main = "Residuals Plot - Model 2", ylab = "Residuals", xla
 plot(residuals(nb_3), main = "Residuals Plot - Model 3", ylab = "Residuals", xlab = "Index")
 
 anova(nb_1, nb_2, nb_3)
-
 ### summary Model 2 the simple one is the best fit
+
+
+sp<-predict(nb_1,combined_dive,type="response")
+sum_combined<-combined_dive
+sum_combined$pred<-sp
+
+ggplot(sum_combined, aes(x=factor(month), y=pred)) +geom_boxplot()
+
+### predicted number of lobster by month by year -- glmttmb is considering effort by offset
+## used glmmtimb to see if month and year effects are important
+
 
 
 
 ## Data is aggregated at the month of sampling level ##
 
 
-dive_monthly <- combined_dive %>%
-  group_by(year, month, LFA) %>%
-  summarise(
-    tid = n_distinct(tid),
-    total_lobster = sum(total_lobster),
-    areasamp_month = sum(areasamp)
-  ) %>%
-  ungroup()
+ dive_monthly <- combined_dive %>%
+   group_by(year, month, LFA) %>%
+   summarise(
+     tid = n_distinct(tid),
+     total_lobster = sum(total_lobster),
+     areasamp_month = sum(areasamp)
+   ) %>%
+   ungroup()
+
 
 #year*month+LFA+(1|monthly sept area)   total swept area per month would be offset 
 nb_A <- glmmTMB(total_lobster ~ year +
@@ -276,7 +298,6 @@ anova(nb_A, nb_B, nb_C, nb_D)
 
 ### Data is subset to only September because that's when most consistent sampling was done ##
 
-
 sept_dive <- dive_monthly %>%
   filter(month == 9)
 sept_dive <- sept_dive %>%
@@ -320,6 +341,11 @@ ggplot(aes(x = factor(year), y = residuals_22),data=sept_dive) +
   facet_wrap(~ LFA)
 
 
+## QQ plot check
+sim_res <- simulateResiduals(fittedModel = nb_22)
+plotQQunif(sim_res)
+
+
 ## AIC AND BIC
 # Extract AIC and BIC values
 aic_nb11 <- AIC(nb_11)
@@ -343,8 +369,118 @@ anova(nb_11, nb_22)
 ### Summary: LFA doesn't really make a difference
 
 
+sp<-predict(nb_22,sept_dive,type="response")
+sum_combined<-sept_dive
+sum_combined$pred<-sp
+
+ggplot(sum_combined, aes(x=factor(year), y=pred)) +geom_point()
+
+##################################
+
+sept38<- dive_monthly %>%
+  filter(month == 9)%>%
+  filter(LFA ==38)
+sept38 <- sept38 %>%
+  select(-residuals_A, -residuals_B, -residuals_C, -residuals_D)
 
 
+
+nb_55 <- glmmTMB(total_lobster ~ year +
+                   offset(log(areasamp_month)), 
+                 data = sept38, 
+                 family = nbinom2())
+summary(nb_55)
+
+## Get residuals in glmm models
+res55model<-residuals(nb_55, type = "response")
+sept38$residuals_55<-res55model
+plot(y=sept38$residuals_55, x=sept38$year)
+
+ggplot(aes(x = factor(year), y = residuals_55),data=sept38) +
+  geom_boxplot() +
+  labs(x = "Year", y = "Residuals") +
+  theme_minimal()
+
+
+## QQ plot check
+sim_res <- simulateResiduals(fittedModel = nb_55)
+plotQQunif(sim_res)
+
+
+## AIC AND BIC
+# Extract AIC and BIC values
+aic_nb55 <- AIC(nb_55)
+bic_nb55 <- BIC(nb_55)
+
+# Print AIC and BIC values
+cat("Model 55 - AIC:", aic_nb55, "BIC:", bic_nb55, "\n")
+
+# Residual plots
+plot(residuals(nb_55), main = "Residuals Plot - Model 55", ylab = "Residuals", xlab = "Index")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Data.table version to aggregate data by year and month
+DMonth <- as.data.table(combined_dive)
+DMonth<-dive_monthly[,.(no_trans = length(unique(tid)),tot_area = sum(areasamp),tot_lob=sum(total_lobster)),by = .(year, month,LFA)]
+
+
+  ggplot()+
+    geom_boxplot(aes(x=month,y=no_trans), data=DMonth)
+
+
+
+dive_year<-dive_monthly%>%
+  group_by(year)%>%
+  summarise(
+    tid = n_distinct(tid),
+    total_lobster = sum(total_lobster),
+    areasamp_month = sum(areasamp_month) ) %>%
+  ungroup()
+
+
+
+
+###NOTE: Check summarized data esp dplyr
+### need to show why sept is special - sampling effort mostly - longer time series 
+### want total lobster taking into account the offset
+##predicted values for each dataframe
+## number of transect per year
+## Changes in sampling regime 
+## massive spike largely due to sampling methods
+##  year and month are important and LFA is different
+##
 
 
 # read JARA use ?
@@ -355,3 +491,13 @@ anova(nb_11, nb_22)
 #Benefits:
 #  Improves Model Fit: By accounting for correlations in the data, the model can provide more accurate estimates.
 #Reduces Bias: Ignoring correlations can lead to biased parameter estimates and incorrect inferences.
+
+
+
+# Convert relevant columns to numeric
+#combined_dive$total_lobster <- as.numeric(combined_dive$total_lobster)
+#combined_dive$areasamp <- as.numeric(combined_dive$areasamp)
+
+#numeric_agg <- aggregate(cbind(total_lobster, areasamp) ~ year + month + LFA, data = combined_dive, sum)
+#tid_agg <- aggregate(tid ~ year + month + LFA, data = combined_dive, function(x) length(unique(x)))
+#dive_monthly <- merge(numeric_agg, tid_agg, by = c("year", "month", "LFA"))

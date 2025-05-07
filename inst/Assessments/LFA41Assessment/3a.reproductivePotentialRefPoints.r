@@ -4,11 +4,20 @@ require(bio.lobster)
 la()
 figfp = file.path(project.datadirectory('bio.lobster'),'figures', 'Assessment','LFA41')
 
-       ff = c(
-       		  file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
-              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
-              file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+    #   ff = c(
+       #		  file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+        #      file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+        #      file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+        #      file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+
+
+
+ff = c(
+  
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
 
        Update.plot=T
        if(Update.plot==T) par(mfrow=c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))

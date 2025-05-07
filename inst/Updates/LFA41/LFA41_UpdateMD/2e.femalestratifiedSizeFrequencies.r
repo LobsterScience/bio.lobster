@@ -1,16 +1,19 @@
 #size frequencies females
 require(bio.survey)
 require(bio.lobster)
-
-p = bio.lobster::load.environment()
+require(sf)
+p=list()
+#p = bio.lobster::load.environment()
 p$libs = NULL
-#fp = file.path(project.datadirectory('bio.lobster'),"assessments",'LFA41','2023')
-fp = file.path(project.datadirectory('bio.lobster'),"analysis")
+fp = file.path(project.datadirectory('bio.lobster'),"assessments",'LFA41','2024')
+#fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
 
-load_all('~/GitHub/bio.survey/')
+#load_all('~/GitHub/bio.survey/')
 
-
+p$lfas = c("41") # specify lfa
+p$current.assessment.year =2024
+p$yrs = 1947:p$current.assessment.year
 
 
 
@@ -24,7 +27,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
         p$lobster.subunits=F
         p$area = 'LFA41'
         p$reweight.strata = T #this subsets 
-        p$years.to.estimate = c(1999:(assessment.year-1))
+        p$years.to.estimate = c(1999:(assessment.year))
         p$length.based = T
         p$by.sex = T
         p$sex=c(2,3)
@@ -77,7 +80,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
         out = list()
         for(i in 1:length(a)) {
           p$size.class=c(a[i],a[i])
-          out[[i]] = nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
+          out[[i]] = nefsc.analysis_vh(DS='stratified.estimates.redo',p=p,save=F)
           }
 
         aa = do.call(rbind,out)
@@ -93,14 +96,14 @@ assessment.year = p$current.assessment.year ########### check the year #########
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
-      p$years.to.estimate = c(1969:(assessment.year-1)) # -1 because update is in the Fall
+      p$years.to.estimate = c(1969:(assessment.year)) 
       p = make.list(list(yrs=p$years.to.estimate),Y=p)
       
    	    a = seq(90,200,1)
         out = list()
         for(i in 1:length(a)) {
           p$size.class=c(a[i],a[i])
-          out[[i]] = nefsc.analysis(DS='stratified.estimates.redo',p=p,save=F)
+          out[[i]] = nefsc.analysis_vh(DS='stratified.estimates.redo',p=p,save=F)
           }
 
         aa = do.call(rbind,out)

@@ -2,12 +2,12 @@
 require(bio.survey)
 require(bio.lobster)
 
-p = bio.lobster::load.environment()
+p=list()
 p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"assessments", "LFA41", "2023")
 la()
 
-load_all('~/GitHub/bio.survey/')
+
 
 
 

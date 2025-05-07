@@ -42,13 +42,13 @@ rdef<-merge(rdef,unique(rL[,c("PID", "LFA")]), all.x=T, by="PID")
 	#
 	scallop.tows$Y = convert.dd.dddd(scallop.tows$START_LAT)
 	scallop.tows$X = convert.dd.dddd(scallop.tows$START_LONG)
-	scT = subset(scallop.tows,select=c('TOW_SEQ','TOW_DATE','STRATA_ID','X','Y','BOTTOM_TEMP'))
+	scT = subset(scallop.tows,select=c('TOW_SEQ','TOW_DATE','STRATA_ID','X','Y')) #Removed bottom temperature
 	
 	scC = subset(scallopSurv,select=c("TOW_SEQ",  "ABUNDANCE_STD","MEAS_VAL", "SEX_ID"))
   
 	scC = merge(scT,scC,all.x=T)
 	scC$YEAR = lubridate::year(scC$TOW_DATE)
-	scC$BOTTOM_TEMP = ifelse(is.na(scC$BOTTOM_TEMP),-99,scC$BOTTOM_TEMP)
+#	scC$BOTTOM_TEMP = ifelse(is.na(scC$BOTTOM_TEMP),-99,scC$BOTTOM_TEMP)
 	#year subset
   s = subset(scC,YEAR>=1999)
   i = which(is.na(s$ABUNDANCE_STD))
@@ -69,7 +69,7 @@ rdef<-merge(rdef,unique(rL[,c("PID", "LFA")]), all.x=T, by="PID")
   
   s$ABUNDANCE_STD_PRU = s$ABUNDANCE_STD * s$dumm * s$dumm2
   
-  sa = aggregate(cbind(ABUNDANCE_STD_PRU)~TOW_SEQ+STRATA_ID+TOW_DATE+X+Y+BOTTOM_TEMP+YEAR,data=s,FUN=sum)
+  sa = aggregate(cbind(ABUNDANCE_STD_PRU)~TOW_SEQ+STRATA_ID+TOW_DATE+X+Y+YEAR,data=s,FUN=sum) #removed bottom temp
   
 	totS = st_as_sf(sa,coords = c('X','Y'),crs=st_crs(4326))
 	if(return_sets_object) {return(totS); stop()}

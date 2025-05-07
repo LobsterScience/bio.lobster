@@ -1,15 +1,15 @@
 require(bio.survey)
 require(bio.lobster)
 la()
-p = bio.lobster::load.environment()
+p=list()
 p$libs = NULL
-ff = "LFA41_2023"
-fp1 = file.path(project.datadirectory('bio.lobster'),"assessments","LFA41","2023",ff)
+ff = "LFA41_2024"
+fp1 = file.path(project.datadirectory('bio.lobster'),"assessments","LFA41","2024",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 p1 = p
-p1$yrs = 1969:2023
+p1$yrs = 1969:2024
 
-p$current.assessment.year = 2023##Check Year
+p$current.assessment.year = 2024##Check Year
 p$syr = 1989
 p$yrs = p$syr:assessment.year
 
@@ -85,7 +85,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
   if(survey=='DFO'){
     p$series =c('summer')# p$series =c('georges');p$series =c('fall')
-    p$years.to.estimate = c(1970:2023)
+    p$years.to.estimate = c(1970:2024)
     p$length.based = T
     p$by.sex = T
     p$size.class = c(83,300)

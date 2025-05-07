@@ -46,4 +46,34 @@ with(ndata,{
 })	
 
 
-#Bay Of Fundy
+#offshore
+
+
+b = read.csv(file.path(project.datadirectory('bio.lobster'),'data','maturity','OffshoreMaturityFecundity2016(v2).csv'))
+b = subset(b,select=c(CL,Maturity))
+
+g = glm(Maturity~CL,data=subset(b),family=binomial(link='logit'))
+
+plot(b$CL, b$Maturity, pch = 16, xlab = "Carapace Length", ylab = "Maturity")
+l = seq(min(b$CL),max(b$CL),by=.1)
+mm =predict(g,list(CL=l),type='response')
+lines(l,mm)
+l[which.min(abs(mm-.5))]
+
+
+
+#correct CI's
+ndata <- list(CL=l)
+ndata = glmCIs(g,ndata)
+
+plot(b$CL, b$Maturity, pch = 16, xlab = "Carapace Length", ylab = "Maturity")
+lines(ndata$CL, ndata$fit_resp)
+lines(ndata$CL, ndata$upr, lty=2)
+lines(ndata$CL, ndata$lwr,lty=2)
+
+with(ndata,{
+	print( CL[which.min(abs(fit-.5))])
+	 print(CL[which.min(abs(upr-.5))])
+	 print(CL[which.min(abs(lwr-.5))])
+})	
+

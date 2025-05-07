@@ -8,14 +8,14 @@ la()
       #        file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
        #       file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
         #      file.path(project.datadirectory('bio.lobster'),'analysis','lfa41Assessment','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
-       
+
 ff = c(
-        
-      file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-       file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
-    file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
-file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
-       
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+
+
 
        for(i in 1:length(ff)) {
        			load(ff[i])
@@ -68,7 +68,7 @@ file.path(project.datadirectory('bio.lobster'),'analysis','maturefemaleLengthFre
          names(af) = c('yr','ObsLobs')
          out = merge(out,af)
 
-         fnn = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2022','indicators',paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][grep("Length",strsplit(ff[i],"/")[[1]])],"\\.")[[1]][1],'csv',sep="."))
+         fnn = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','indicators',paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][grep("Length",strsplit(ff[i],"/")[[1]])],"\\.")[[1]][1],'csv',sep="."))
           write.csv(out, file=fnn)
           out$ObsLobs = NULL
 

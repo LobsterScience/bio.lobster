@@ -1,23 +1,15 @@
 require(bio.lobster)
 require(bio.utilities)
 require(dplyr)
-require(bio.lobster)
-require(bio.polygons)
+require(devtools)
 
-p = bio.lobster::load.environment()
-p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
-p$current.assessment.year =2023
 
-p$yrs = 1947:p$current.assessment.year
-
-
+p=list()
 
 p$lfas = c("41") # specify lfa
 p$current.assessment.year =2023
-
-
+p$yrs = 1947:p$current.assessment.year
 
 assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
 fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2023','indicators')

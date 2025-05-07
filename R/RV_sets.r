@@ -112,7 +112,10 @@ RV_sets <- function(){
   com$Gear = ifelse(com$gear==3,'Yankee 36',ifelse(com$gear==9,'Western IIA','NEST'))
   com = rename.df(com,c('X','Y','sdate'),c('LONGITUDE','LATITUDE','DATE'))
   com$UID = com$DIST = com$WingSpread = com$gear= com$timestamp = NULL
-  
+  if(any(com$LONGITUDE>0)) {
+    o = which(com$LONGITUDE>0)
+    com$LONGITUDE[o] = com$LONGITUDE[o]*-1
+  }
   return(com)
   
 }
