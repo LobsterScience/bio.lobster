@@ -759,13 +759,12 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         de = merge(de,inf[,c('id','dist','WingSpread_div')])
         ca = merge(ca,inf[,c('id','dist','WingSpread_div')])
         
-        #turn all catches into density per km2 since that is what the vessel calibrations were done on (ie using an offset)
+        #turn all catches into density per km since that is what the vessel calibrations were done on (ie using an offset)
         de$clen = de$clen/de$dist
         ca$sampwgt = ca$sampwgt/ca$dist
         ca$totwgt = ca$totwgt/ca$dist
         ca$totno = ca$totno/ca$dist
-        
-        d = de
+        d=de
         catt = ca
         de = subset(de,spec==2550)
         d = subset(d,spec !=2550)
@@ -773,14 +772,6 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         ca = subset(ca,spec==2550)
         catt = subset(catt,spec!=2550)
        
-         #load in calibrations #from yin, benoit and martin 2024
-        load(file.path(bio.directory,'bio.lobster.data','survey_corrections','BB5.rda')) 
-        vc = res$main[,c('lenseq','est_rho')]
-        vc = subset(vc,lenseq>38 & lenseq<174) #recommendations from paper
-        vc$cor = vc$est_rho #to go from WIIA to NEST you divide all WIIA after you apply the swept area correction (#/km2)
-        
-        cM = subset(vc,lenseq==39,select=cor)[,1]
-        cMa = subset(vc,lenseq==173,select=cor)[,1]
         
         infS = subset(inf,gear %in% c(3,9),select=id)[,1] #select only yankee and WIIA since this is where corrections are applied
         
@@ -788,6 +779,9 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         de2 = subset(de, id %ni% infS)
         ca1 = subset(ca, id %in% infS)
         ca2 = subset(ca, id %ni% infS)
+        
+        
+      #this is all being done on the non NEST samples
         
         # this section fills in all samp wgt / total wgt for prorating the catch from det to total sample
         ca1$totwgt[which(is.na(ca1$totwgt))] <- 1/ca1$dist[which(is.na(ca1$totwgt))] #replace NA with 1 for totalwgt since spp was id'd
@@ -805,6 +799,15 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
         ca1$totwgt[which(ca1$totwgt==0)] <- ca1$sampwgt[which(ca1$totwgt==0)]
         
         #apply vessel corrections to area standardized clen's
+        #load in calibrations #from yin, benoit and martin 2024
+        load(file.path(bio.directory,'bio.lobster.data','survey_corrections','BB5.rda')) 
+        vc = res$main[,c('lenseq','est_rho')]
+        vc = subset(vc,lenseq>38 & lenseq<174) #recommendations from paper
+        vc$cor = vc$est_rho #to go from WIIA to NEST you divide all WIIA after you apply the distance correction (#/km)
+        
+        cM = subset(vc,lenseq==39,select=cor)[,1]
+        cMa = subset(vc,lenseq==173,select=cor)[,1]
+        
         de1m = merge(de1, vc[,c('lenseq','cor')],by.x='flen',by.y='lenseq',all.x=T)
         
         de1m$cor[which(de1m$flen<39)] <- cM #flat corrections for less than 39 and greater than 173
@@ -856,16 +859,23 @@ if(grepl('odbc.redo', DS)) db.setup() #Chooses RODBC vs ROracle based on R versi
        
        ca12 = subset(ca12,select=c(-c_totno,-c_sampwgt,-rat))
       
-       #combine vessel corrected (ca12), the nest tows (ca2) and all other species (catt)
-        caF = dplyr::bind_rows(ca12,ca2,catt)
+      #need to convert NEST tows to densities up to now its only been distance corrected
+      
+      ca2$sampwgt = ca2$sampwgt/(12/1000)
+      ca2$totwgt = ca2$totwgt/(12/1000)
+      ca2$totno = ca2$totno/(12/1000)
+  
+      #combine vessel corrected (ca12), the nest tows (ca2) and all other species (catt)
+       caF = dplyr::bind_rows(ca12,ca2,catt)
        
-       
+         ###de2 needs the wingspread correction
+         de2$clen = de2$clen /  (12/1000) # turn to sq km already dist corrected now apply the wing spread correction
+         
        de1m = subset(de1m,select=-cor)
       
        #combine all tows vessel corrected (de1m), all nest tows (d) and all other species (de2)
         de = dplyr::bind_rows(de1m,d,de2)
-       de$clen = round(de$clen)
-       
+       #de$clen = round(de$clen)
       saveRDS(caF,file=ci)
       saveRDS(de,file=di)
       saveRDS(inf,file=gi)

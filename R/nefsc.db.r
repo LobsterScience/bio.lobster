@@ -35,8 +35,16 @@ options(scipen=999)  # this avoids scientific notation
                   nefsc.db(DS = 'usinf.redo.odbc',fn.root)        
                   nefsc.db(DS = 'usdet.redo.odbc',fn.root)        
                   nefsc.db(DS = 'usstrata.area.redo.odbc',fn.root)        
-                  
+                  nefsc.db(DS ='usdet2.redo.odbc',fn.root)
+                                    
                 }
+
+if(DS %in% c('clean.redo')) {
+  nefsc.db(DS = 'uscat.clean.redo',fn.root)        
+  nefsc.db(DS = 'usinf.clean.redo',fn.root)        
+  nefsc.db(DS = 'usdet.clean.redo',fn.root)        
+  
+}
 
 
   if(DS %in% c('usinf', 'usinf.redo.odbc')) {
@@ -273,6 +281,11 @@ if(DS %in% c('usdet.clean','usdet.clean.redo')) {
   de$FWT = NA
   de$FSEX = bio.utilities::recode(de$FSEX,"0=0; 1=1; 2=2; 3=3; 4=2; 5=3") # 4 and 5 are for notched
   
+  #need to add in the prop female from the other detailed table
+  pf = nefsc.db(DS = 'usdet_prop_female')
+  de1=  merge(de, pf,all.x=T)
+  de1$FSEX = ifelse(de1$prop_non_berried==1 | is.na(de1$prop_non_berried)  ,de1$FSEX,3)
+  de = de1
   i = which(de$FSEX %in% c(1))
   de$FWT[i] = exp(-14.468) * de$FLEN[i] ^ 3.0781 * 2.204 #lw cov from GB 
   i = which(de$FSEX %in% c(2,3))
@@ -286,7 +299,7 @@ if(DS %in% c('usdet.clean','usdet.clean.redo')) {
   
   de = merge(de, inf[,c('SVVESSEL','SVGEAR','ID')],by = 'ID') #removes some of the sets that do match the filtered sets from inf.clean use CV's were quite high below 50mm and vessel corrections were not great
   
-  load(file.path( bio.directory,'bio.lobster', "data", 'AlbatrossBigelowConv.rda')) #part of the bio.lobster Rpackage and is named 'a'
+  load(file.path( git.repo,'bio.lobster.data', "survey_corrections", 'AlbatrossBigelowConv.rda')) #part of the bio.lobster Rpackage and is named 'a'
   a$Lm = a$CL * 10
   de$Lm = round(de$FLEN)
   de = merge(de,a,by='Lm',all.x=T) 
@@ -295,8 +308,57 @@ if(DS %in% c('usdet.clean','usdet.clean.redo')) {
   de$CLEN = de$CLEN * de$rho
   save(de,file=file.path(fn.root, 'usnefsc.det.clean.rdata'))
   return(de)
+}
+
+
+
+if(DS %in% c('usdet2','usdet_prop_female','usdet2.redo.odbc')) {
+  
+  if(DS == 'usdet2') {
+    
+    load(file = file.path(fnODBC, 'usnefsc.det2.rdata'))
+    return(usdet)
+    
+  }
+  
+  if(DS == 'usdet_prop_female') {
+    
+    load(file = file.path(fnODBC, 'usnefsc.propF.rdata'))
+    return(uu)
+    
+  }
+  usdet2<- connect.command(con,paste("select len.cruise6 mission, len.stratum, len.tow, len.station setno, len.svspp, len.catchsex fsex,len.maturity, len.length*10 as flen
+                          from usnefsc.uss_detail len, 
+                          (select distinct cruise6, purpose_code, status_code, year, season from usnefsc.uss_mstr_cruise
+                            where purpose_code =10
+                            and STATUS_CODE in (10,15)
+                            and YEAR >=1968
+                            and season in ('SPRING','FALL')) cru  
+                          where len.cruise6 = cru.cruise6  
+                          and STRATUM like '01%'
+                          and len.svspp = 301
+                           ",sep=""))
+  
+  usdet2$SETNO = as.numeric(usdet2$SETNO)
+  i = which(usdet2$FSEX==2 & usdet2$MATURITY %in% c(15,13))
+  usdet2$FSEX[i]=3
+  
+  require(dplyr)
+  
+  uu = usdet2 %>%
+        filter(FSEX %in% c(2,3)) %>%
+        group_by(MISSION, STRATUM, SETNO,FLEN) %>%
+        summarise(prop_non_berried = sum(FSEX==2)/n(),.groups='drop')
+  uu$FSEX = 2
+  save(usdet2, file = file.path(fnODBC, 'usnefsc.det2.rdata'))
+  save(uu, file = file.path(fnODBC, 'usnefsc.propF.rdata'))
+  
+  #odbcCloseAll()
   
 }
+
+
+  
 
 
 if(DS %in% c('usstrata.area','usstrata.area.redo')) {

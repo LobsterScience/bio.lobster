@@ -7,7 +7,7 @@ la()
 load_all('C:/Users/Cooka/Documents/git/bio.utilities')
 
 
-wd = ('C:\\Users\\Cooka\\OneDrive - DFO-MPO\\BycatchLobster')
+wd = ('C:\\Users\\cooka/OneDrive - DFO-MPO/Projects/BycatchLobster/')
 setwd(wd)
 p = bio.lobster::load.environment()
 

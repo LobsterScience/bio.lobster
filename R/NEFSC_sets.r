@@ -6,17 +6,17 @@ NEFSC_sets <- function(){
   cas =  nefsc.db(DS='uscat.clean')
   de =   nefsc.db(DS='usdet.clean')
   
-  sc1=seq(13,253,by=1)
+  sc1=seq(13,253,by=5)
   de$SZ = sc1[cut(de$FLEN,sc1,labels=F)]
   de$Berried = ifelse(de$FSEX==3,de$CLEN,0)
   de$Legal = ifelse(de$FSEX<3 & de$FLEN>82,de$CLEN,0)
-  de$Rec = ifelse( de$FLEN<=82 & de$FLEN>=70,de$CLEN,0)
+  de$Recruit = ifelse( de$FLEN %in% 70:82,de$CLEN,0)
   
   de$WEIGHT_KG = de$CLEN * de$FWT/1000
   de$Legal_wt = de$Legal * de$FWT/1000
   
   dA = aggregate(CLEN~SZ+FSEX+MISSION+SETNO+ID,data=de,FUN=sum)
-  dS = aggregate(cbind(Berried,Legal,CLEN,WEIGHT_KG,Legal_wt,Rec)~MISSION+SETNO+ID,data=de,FUN=sum)
+  dS = aggregate(cbind(Berried,Legal,CLEN,WEIGHT_KG,Legal_wt,Recruit)~MISSION+SETNO+ID,data=de,FUN=sum)
   dS$Lobster = dS$CLEN
   dS$CLEN = NULL
   dA$P = dA$CLEN
@@ -37,11 +37,12 @@ NEFSC_sets <- function(){
   sc$EMPTY = ifelse(sc$Lobster==0,1,0)
   
   sc$timestamp = as.POSIXct(sc$DATE,tz='America/Halifax',origin=lubridate::origin)
-  sc$timestamp = with_tz(sc$timestamp,"UTC")
+  sc$timestamp = lubridate::with_tz(sc$timestamp,"UTC")
   sc$DYEAR = lubridate::decimal_date(sc$timestamp)- lubridate::year(sc$timestamp)
  sc$DIST = sc$timestamp = NULL
- sc$YEAR = year(sc$DATE)
+ sc$YEAR = lubridate::year(sc$DATE)
  sc$Gear = 'NEST'
+ print('this is n or wt, accounting for trawl corrections but is not the numbers per km2')
   return(sc)
   
 }
