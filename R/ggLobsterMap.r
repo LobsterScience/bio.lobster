@@ -3,7 +3,7 @@
 ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(-74,-47),LFAfill='white',
                          attrData=NULL,attrColumn='Z', addGrids=T,addNAFO=F,nafo='4X', bathy=T,fw=NULL,legLab="",addLFAlines=T,
                          addLFALabels=F, addGridLabels=F,addPoints=F,pts, addNAFOLabels=F,scaleTrans='identity',brks=NULL,return.object=F,
-                         layerDir=file.path(bio.directory,'bio.lobster.data','mapping_data'),LFA_label_size=8,colourLFA=T, ...){
+                         layerDir=file.path(bio.directory,'bio.lobster.data','mapping_data'),LFA_label_size=8,grid_label_size=8, colourLFA=T, ...){
   
   if(area=='all')		{ ylim=c(41.1,48); 		xlim=c(-67.8,-57.8)	}
   if(area=='inshore')		{ ylim=c(42.1,48); 		xlim=c(-67.8,-57.8)	}
@@ -13,7 +13,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
   if(area=='ENS')	  { ylim=c(44.0,45.7); 	xlim=c(-62.2,-59.8)	}
   if(area=='34-38')	{ ylim=c(42.5,46); 		xlim=c(-67.8,-63.5)	}
   if(area=='35-36')	{ ylim=c(44.5,46);	 	xlim=c(-67.2,-63.2)	}
-  if(area=='west')	{ ylim=c(41.1,46); 		xlim=c(-67.8,-64)	}
+  if(area=='west')	{ ylim=c(41.1,46); 		xlim=c(-67.8,-62.2)	}
   if(area=='27')		{ ylim=c(44.9,47.9); 	xlim=c(-61,-57.8)	}
   if(area=='27.Crop')		{ ylim=c(45.4,47.6); 	xlim=c(-61.1,-58.8)	}
   if(area=='28')		{ ylim=c(45.3,46.4);	 	xlim=c(-61.6,-60.2)	}
@@ -45,6 +45,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
     sf_use_s2(FALSE) #needed for cropping
   ns_coast =readRDS(file.path( layerDir,"CoastSF.rds"))
   r<-readRDS(file.path( layerDir,"GridPolysLand_2023LFA37Split.rds"))
+  r = st_make_valid(r)
   rL = readRDS(file.path(layerDir,"LFAPolys37Split.rds"))
   nf = readRDS(file.path(layerDir,"NAFO_sf.rds"))
   nafo.sel<-subset(nf,NAFO_1%in%nafo)
@@ -139,7 +140,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
         p = p + geom_sf_text(data=cents, aes(label=label),family='sans',size=LFA_label_size)+coord_sf(xlim=xlim,ylim=ylim)
       }
       if(addGridLabels){
-        p = p + geom_sf_text(data=gridCent, aes(label=GRID_NO),family='sans') +coord_sf(xlim=xlim,ylim=ylim)
+        p = p + geom_sf_text(data=gridCent, aes(label=GRID_NO),family='sans',size=grid_label_size) +coord_sf(xlim=xlim,ylim=ylim)
       }
       if(addNAFOLabels){
         p = p + geom_sf_text(data=labs, aes(label=lab),family='sans') +coord_sf(xlim=xlim,ylim=ylim)
@@ -157,14 +158,14 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
       }
       
       if(return.object) return(p)
-  p + theme_bw()+
-    theme( panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
-          axis.title.x=element_blank(),
-          axis.title.y=element_blank(),        
-          axis.text.x=element_text(angle=90,hjust=1)) +
-    scale_x_continuous(breaks=round(seq(xlim[1],xlim[2],length.out = 4),2)) +
-    scale_y_continuous(breaks=round(seq(ylim[1],ylim[2],length.out = 4)))
+  p + theme_test_adam()#+
+    #theme( panel.grid.major = element_blank(),
+    #      panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
+    #      axis.title.x=element_blank(),
+    #      axis.title.y=element_blank(),        
+    #      axis.text.x=element_text(angle=90,hjust=1)) +
+    #scale_x_continuous(breaks=round(seq(xlim[1],xlim[2],length.out = 4),2)) +
+    #scale_y_continuous(breaks=round(seq(ylim[1],ylim[2],length.out = 4)))
               }
       
 

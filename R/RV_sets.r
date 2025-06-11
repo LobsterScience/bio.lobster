@@ -30,7 +30,7 @@ RV_sets <- function(){
   deL$Recruit = ifelse(deL$flen==82 ,deL$clen/2,deL$Recruit)
   
   
-  sc1=seq(3,253,by=1)
+  sc1=seq(13,253,by=5)
   deL$SZ = sc1[cut(deL$flen,sc1,right=FALSE,labels=F)]
   
   deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit)~UID+SZ,data=deL,FUN=sum)
@@ -78,7 +78,6 @@ RV_sets <- function(){
   com$UID = NULL
   
   ca = st_as_sf(com, coords = c('X','Y'),crs=4326)
-    load(file.path( bio.directory,'bio.lobster', "data", 'AlbatrossBigelowConv.rda')) #part of the bio.lobster Rpackage and is named 'a'
 
   ouR = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections",'modelled_recruit_Proportions_34-38.rds')))
   ouC = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections",'modelled_Commercial_Proportions_34-38.rds')))
@@ -116,6 +115,11 @@ RV_sets <- function(){
     o = which(com$LONGITUDE>0)
     com$LONGITUDE[o] = com$LONGITUDE[o]*-1
   }
+  com <- com %>%
+   rowwise() %>%
+    mutate(across(c(Lobster, WEIGHT_KG,Legal,Legal_wt,Berried,Recruit,P.13:P.223, P.13:P.223), ~ .x * OFFSET))
+  
+  print('this is n or wt, accounting for trawl corrections but is not the numbers per km2')
   return(com)
   
 }

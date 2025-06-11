@@ -3,8 +3,8 @@ require(bio.utilities)
 require(devtools)
 la()
 
-a = lobster.db('process.logs41')
-a = subset(a,SYEAR %in% 2007:2024& LFA %in% '34') 
+a = lobster.db('process.logs')
+a = subset(a,SYEAR %in% 2007:2024& LFA %in% '35') 
 
 aa = split(a,f=list(a$LFA,a$SYEAR))
 aa = rm.from.list(aa)
@@ -31,7 +31,7 @@ cc =as.data.frame(do.call(rbind,cpue.lst))
 #plot(aggregate(CPUE~t,data=subset(cc,lfa==35),FUN=function(x) round(mean(x),2)))
 
 ggplot(subset(cc,t<50 & yr>2015),aes(x=t,y=unBCPUE))+geom_point()+geom_smooth()+facet_wrap(~yr)
-ggplot(subset(cc,yr==2024),aes(x=t,y=unBCPUE))+geom_point()+geom_smooth(se=F)+facet_wrap(~yr)
+ggplot(subset(cc,yr==2020),aes(x=t,y=unBCPUE))+geom_point()+geom_smooth(se=F)+facet_wrap(~yr)
 
 
 
@@ -69,7 +69,7 @@ barplot(perc~WOS,data=subset(xg,perc<1),ylab='Proportion of Lic Reporting')
 
 ###no time
 a = lobster.db('process.logs')
-a = subset(a,SYEAR %in% 2007:2023& LFA %in% '34') 
+a = subset(a,SYEAR %in% 2007:2024& LFA %in% '35') 
 
 aa = split(a,f=list(a$LFA,a$SYEAR))
 aa = rm.from.list(aa)
