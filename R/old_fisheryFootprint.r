@@ -1,5 +1,5 @@
 #' @export
-fisheryFootprint <- function(x,res=0.1,var = 'CPUE',gini = T, propArea=NULL,fn = file.path(project.datadirectory('bio.lobster'),'figures')){
+old_fisheryFootprint <- function(x,res=0.1,var = 'CPUE',gini = T, propArea=NULL,fn = file.path(project.datadirectory('bio.lobster'),'figures')){
 			
 			xr = bufferRange(x$X)
 			yr = bufferRange(x$Y)

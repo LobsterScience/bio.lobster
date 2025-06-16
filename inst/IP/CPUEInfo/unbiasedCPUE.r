@@ -4,7 +4,7 @@ require(devtools)
 la()
 
 a = lobster.db('process.logs')
-a = subset(a,SYEAR %in% 2007:2024& LFA %in% '35') 
+a = subset(a,SYEAR %in% 2014:2024) 
 
 aa = split(a,f=list(a$LFA,a$SYEAR))
 aa = rm.from.list(aa)
@@ -69,7 +69,7 @@ barplot(perc~WOS,data=subset(xg,perc<1),ylab='Proportion of Lic Reporting')
 
 ###no time
 a = lobster.db('process.logs')
-a = subset(a,SYEAR %in% 2007:2024& LFA %in% '35') 
+a = subset(a,SYEAR %in% 2014:2024) 
 
 aa = split(a,f=list(a$LFA,a$SYEAR))
 aa = rm.from.list(aa)
@@ -95,5 +95,5 @@ cc =as.data.frame(do.call(rbind,cpue.lst))
 cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
 plot(CPUE~yr,data=cc,xlab='Year' ,ylab='CPUE')
 cc$yr = as.numeric(cc$yr)
-ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+geom_line()+theme_test()
+ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+geom_line()+theme_test()+facet_wrap(~lfa)
 
