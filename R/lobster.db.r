@@ -1326,7 +1326,8 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
           save( vlog, file=file.path( fnODBC, "processed.vlog.rdata"), compress=T)
           return(vlog)
         }
-        load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)
+        load(file.path( fnODBC, "processed.vlog.rdata"))
+        return(vlog)
     }
 
 if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
@@ -1394,25 +1395,31 @@ if (DS %in% c("uslandings_by_state") ) {
     }
     
     
-    if (DS %in% c("process.logs41.redo", "process.logs41") ) {
-      fo=file.path( fnODBC, "processed_logs41.rdata")
+    if (DS %in% c("process.logs41.redo", "process.logs41", "process.logs41.unfiltered") ) {
+      fo=file.path( fnODBC, "processed_logs41.rds")
+      f2=file.path( fnODBC, "processed_logs41.unfiltered.rds")
       
       if (DS=="process.logs41.redo") {
-        
+          require(sf)    
         lobster.db('logs41')
         logs41$ADJCATCH_KG = logs41$ADJCATCH / 2.204
         logs41$CPUE = logs41$ADJCATCH_KG / logs41$NUM_OF_TRAPS
-        lq = quantile(logs41$CPUE,c(0.01,.999),na.rm=T)
-        logs41p = subset(logs41,CPUE>=lq[1] & CPUE<=lq[2])
-
-   logs41p$yr = lubridate::year(logs41p$FV_FISHED_DATETIME)
-
-
-save( logs41p, file=fo, compress=T)
+        saveRDS( logs41, file=f2, compress=T)
         
+      lq = quantile(logs41$CPUE,c(0.01,.9995),na.rm=T)
+      logs41p = subset(logs41,CPUE>=lq[1] & CPUE<=lq[2])
+      logs41p$yr = lubridate::year(logs41p$FV_FISHED_DATETIME)
+       
+      gr41 = st_as_sf(readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds')))
+      logs41p$X = logs41p$DDLON * -1
+      logs41p$Y = logs41p$DDLAT
+      lp = st_as_sf(subset(logs41p, !is.na(X)),coords=c('X','Y'),crs=4326)
+      lp = st_join(lp,gr41)
+      saveRDS( lp, file=fo, compress=T)
       }
-      load(fo)
-    }
+      if (DS=="process.logs41.unfiltered") {return(readRDS(f2))  }
+      if (DS=="process.logs41") {return(readRDS(fo))}
+      }
         
 
 ### Offshore Commercial Logs for Jonah crab

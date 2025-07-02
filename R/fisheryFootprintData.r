@@ -31,7 +31,7 @@ fisheryFootprintData <- function(yrs=2005:2024, layerDir=file.path(git.repo,'bio
   bAll = merge(bd,bup,by.x=c('YR','LFA'),by.y=c('SYEAR','LFA'))
   
   sL= split(a,f=list(a$LFA, a$SYEAR))
-  sL = rm.from.list(sL)
+  sL = bio.utilities::rm.from.list(sL)
   cpue.lst<-list()
   cpue.ann = list()
   
@@ -134,5 +134,7 @@ if(period=='weekly'){
     Tot = subset(Tot,select=c(SYEAR,LFA,GRID_NUM,WOS,BTTH,BL,SD_LOG_ID,LICENCE_ID))
     names(Tot)= c('FishingYear','LFA','Grid',"WeekOfSeason",'TrapHauls','Landings','Trips','Licences')
 }
+  
   return(Tot)
+  
 }

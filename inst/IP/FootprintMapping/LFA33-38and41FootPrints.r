@@ -117,8 +117,10 @@ grid_polygons <- st_as_sf(grid)
 
 grid_in_polygon <- st_intersection(grid_polygons, l4)
 grid_in_polygon$ID = 1:nrow(grid_in_polygon)
-grid_in_polygon$LFA <- NULL
+grid_in_polygon$LFA <- 41
 ggplot(l4)+geom_sf()+geom_sf(data=grid_in_polygon,col='red')
+
+saveRDS(grid_in_polygon,file=file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds'))
 
 
 #joined logbooks and grids for 41
