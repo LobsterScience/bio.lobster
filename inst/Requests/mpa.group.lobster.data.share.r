@@ -12,7 +12,7 @@ require(patchwork)
 p = bio.lobster::load.environment()
 
 
-la()
+#la()
 
 #adjust as required
 assessment.year = "2024" 
@@ -44,9 +44,9 @@ r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
 r = st_as_sf(r)
 
 a =  lobster.db('process.logs')
-a = subset(a,SYEAR>=2010 & SYEAR<assessment.year) #subsetting data to 2010-2023 (2024 stil has outstandinmg logs, etc)
+a = subset(a,SYEAR>=2010 & SYEAR<assessment.year) #subsetting data to 2010-2023 (2024 still has outstandinmg logs, etc)
 b = lobster.db('seasonal.landings')
-b = subset(b,!is.na(SYEAR))
+b = subset(b <- b[b$SYEAR != "2024-2025", ])
 b$SYEAR = 1976:assessment.year
 b$LFA38B <- NULL
 b = subset(b,SYEAR>2004 & SYEAR<=assessment.year)
@@ -163,8 +163,8 @@ Tot = merge(merge(merge(partEffort,partLandings),gg),gKL)
 
 Tot = subset(Tot,select=c(SYEAR,LFA,GRID_NUM,BTTH,BL,SD_LOG_ID,LICENCE_ID))
 names(Tot)= c('FishingYear','LFA','Grid','TrapHauls','Landings','Trips','NLics')
-Tot$PrivacyScreen = ifelse(Tot$NLics>4,1,0)
-
+#Tot$PrivacyScreen = ifelse(Tot$NLics>4,1,0)
+#Tot <- Tot[Tot$PrivacyScreen != 0, ] #removes grids with <5 licenses reporting
 
 saveRDS(Tot,'PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
 
