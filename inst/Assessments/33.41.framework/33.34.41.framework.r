@@ -10,14 +10,16 @@ require(grid)
 require(patchwork)
 
 p = bio.lobster::load.environment()
-
+p$lfas=c("33", "34")
 
 la()
 
 #adjust as required
 assessment.year = "2024" 
 
-figdir = file.path(project.datadirectory("bio.lobster","assessments","33.41.framework",assessment.year))
+figdir = file.path(project.datadirectory("bio.lobster","assessments","33.41.framework","2025"))
+
+figdir = "C:/Users/zissersonb/OneDrive - DFO-MPO/Cook, Adam (DFO_MPO)'s files - LFA33_34_41_Framework/Documents/Figures/"
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
 setwd(figdir)
 
@@ -34,9 +36,11 @@ if(NewDataPull){
   lobster.db('fsrs.redo')
   lobster.db('logs.redo')
   lobster.db('annual.landings.redo')
+  lobster.db('seasonal.landings.redo')
   #lobster.db('vlog.redo') #These are static now, no need to update
   logs=lobster.db('season.dates.redo') #updates season dates as required
   logs=lobster.db('process.logs.redo')
+  
   per.rec= lobster.db("percent_reporting")
 }
 
@@ -47,17 +51,137 @@ png(filename=file.path(figdir, "map.33-41.png"),width=5, height=5, units = "in",
 LobsterMap('33-41')
 dev.off()
 
+# Landings
+
+
+theme_csas <- function(base_size = 11, base_family = "", text_col = "grey20",
+                       panel_border_col = "grey70") {
+    half_line <- base_size / 2
+    theme_light(base_size = base_size, base_family = "") +
+        theme(
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            axis.ticks.length = unit(half_line / 2.2, "pt"),
+            strip.background = element_rect(fill = NA, colour = NA),
+            strip.text.x = element_text(colour = text_col),
+            strip.text.y = element_text(colour = text_col),
+            axis.text = element_text(colour = text_col),
+            axis.title = element_text(colour = text_col),
+            legend.title = element_text(colour = text_col, size = rel(0.9)),
+            panel.border = element_rect(fill = NA, colour = panel_border_col, linewidth = 1),
+            legend.key.size = unit(0.9, "lines"),
+            legend.text = element_text(size = rel(0.7), colour = text_col),
+            legend.key = element_rect(colour = NA, fill = NA),
+            legend.background = element_rect(colour = NA, fill = NA),
+            plot.title = element_text(colour = text_col, size = rel(1)),
+            plot.subtitle = element_text(colour = text_col, size = rel(.85))
+        )
+}
+
+# CPUE / Landings / Effort
+
+for (l in p$lfas){
+
+land = lobster.db('seasonal.landings')
+land$YEAR = as.numeric(substr(land$SYEAR,6,9))
+land$LANDINGS <- land[[sprintf("LFA%s", l)]]
+
+CPUE.data<-CPUEModelData2(p,redo=T)
+cpueData= CPUEplot(CPUE.data,lfa= l,yrs=1981:max(land$YEAR),graphic='R')$annual.data
+
+fishData = merge(cpueData,land[,c("YEAR","LANDINGS")])
+fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+
+aaa=fishData
+aaa = aaa[1:(nrow(aaa)-1),] #Full data without final year
+
+
+ymax=12000
+scaleright = max(aaa$EFFORT2)/ymax
+
+g1 <- ggplot(data = aaa, aes(x = YEAR,y=LANDINGS)) +
+    geom_bar(stat='identity',fill='black') +
+    geom_point(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='black',shape=16)+
+    geom_line(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='black',linetype='dashed')+
+    scale_y_continuous(name='Landings', sec.axis= sec_axis(~.*scaleright/1000, name= 'Effort',breaks = seq(0,(max(aaa$EFFORT2/scaleright)*5),by=5000)))+
+    labs(x = "Year") +
+    theme_csas()
+
+
+g2 <- ggplot(data = aaa, aes(x = YEAR)) +
+    geom_line(aes(y=CPUE),colour='black',linetype='dashed')+
+    geom_point(aes(y = CPUE),size=2.5) +
+    ylim(0, 1.5)+
+    labs(x = "Year", y = " CPUE") +
+    theme_csas() 
+
+
+#Effort Example
+
+library(dplyr)
+library(ggplot2)
+
+# Step 1: Median fishing days per VR_NUMBER per year (2005–2024)
+fishing_days_summary <- logs %>%
+    filter(SYEAR >= 2005, SYEAR < 2025) %>%
+    group_by(SYEAR, VR_NUMBER) %>%
+    summarize(fishing_days = n_distinct(DATE_FISHED), .groups = "drop") %>%
+    group_by(SYEAR) %>%
+    summarize(median_fishing_days = median(fishing_days, na.rm = TRUE))
+
+# Step 2: Total NUM_OF_TRAPS per year (sum across all VR_NUMBERs)
+trap_summary <- logs %>%
+    filter(SYEAR >= 2005, SYEAR < 2025) %>%
+    group_by(SYEAR) %>%
+    summarize(total_traps = sum(NUM_OF_TRAPS, na.rm = TRUE))
+
+# Step 3: Join both summaries
+combined_data <- fishing_days_summary %>%
+    left_join(trap_summary, by = "SYEAR")
+
+# Step 4: Scaling factor for secondary axis
+# Choose a factor so both lines fit nicely (trial-based or using max ratios)
+scale_factor <- max(combined_data$median_fishing_days) / max(combined_data$total_traps)
+
+# Step 5: Plot with dual axis
+ggplot(combined_data, aes(x = SYEAR)) +
+    # Primary y-axis: Median fishing days
+    geom_line(aes(y = median_fishing_days), color = "steelblue") +
+    geom_point(aes(y = median_fishing_days), color = "steelblue", size = 3) +
+    
+    # Secondary y-axis: Total traps scaled to overlay
+    geom_line(aes(y = total_traps * scale_factor), color = "firebrick") +
+    geom_point(aes(y = total_traps * scale_factor), color = "firebrick", size = 3) +
+    
+    scale_y_continuous(
+        name = "Median Number of Fishing Days",
+        limits = c(0, 70),
+        sec.axis = sec_axis(~ . / scale_factor, name = "Total Number of Traps")
+    ) +
+    labs(
+        title = "Fishing Days (Median per Vessel) and Total Traps by Year (2005–2024)",
+        x = "Year"
+    ) +
+    theme_minimal() +
+    theme(
+        axis.title.y.left = element_text(color = "steelblue"),
+        axis.text.y.left = element_text(color = "steelblue"),
+        axis.title.y.right = element_text(color = "firebrick"),
+        axis.text.y.right = element_text(color = "firebrick")
+    )
+
 # Fishery footprint-
 #------------------------------------------------------------
-
+{
 r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
 r = st_as_sf(r)
 
+#get logs
 a =  lobster.db('process.logs')
-a = subset(a,SYEAR>=2010 & SYEAR<assessment.year) #subsetting data to 2010-2023 (2024 stil has outstandinmg logs, etc)
+a = subset(a,SYEAR>=2010 & SYEAR<assessment.year) #subsetting data to 2010-2024 (2025 still has outstandinmg logs, etc)
 b = lobster.db('seasonal.landings')
 b = subset(b,!is.na(SYEAR))
-b$SYEAR = 1976:(assessment.year-1)
+b$SYEAR = 1976:assessment.year
 b$LFA38B <- NULL
 b = subset(b,SYEAR>2004 & SYEAR<=assessment.year)
 b = reshape(b,idvar='SYEAR', varying=list(2:6),direction='long')
@@ -202,6 +326,14 @@ gTot = merge(GrMap2,Tot,by.x=c('LFA','GRID_NO'),by.y=c('LFA','Grid'),all.x=T)
 
 gTot$CPUE= as.numeric(gTot$Landings)/as.numeric(gTot$TrapHauls)
 
+library(dplyr)
+
+# Perform left join on LFA and FishingYear
+gTot <- gTot %>%
+    group_by(FishingYear, LFA) %>%
+    mutate(Prop.lfa.land = Landings / sum(Landings) *100) %>%
+    ungroup()  # Ungroup to prevent unintended behavior in further operations
+
 
 g27p = gTot
 g27p <- g27p %>%
@@ -210,54 +342,96 @@ g27p <- g27p %>%
         LFA == "312" ~ "31B",
         TRUE ~ LFA  # Keep other values unchanged
     ))
+g27p$Landings.t=g27p$Landings/1000
 
-#remove unneeded variables for sharing data
+#add privacy screen
 
-g27p=subset(g27p, FishingYear<=2023)
-g27p = subset(g27p, select = -c(PrivacyScreen, V2, grid) )
-names(g27p)=c("LFA", "REPORTING_GRID", "AREA", "FISHING_YEAR", "TRAP_HAULS", "LANDINGS_KG", "TRIPS", "LICENCES_REPORTED", "GEOMETRY","CPUE_KG_TH" )
+g27p = subset(g27p, select = -c(PrivacyScreen, V2, grid) ) #check that this works
 
-saveRDS(g27p,'lobster.pruned.grid.data.rds')
-
-test=readRDS('lobster.pruned.grid.data.rds')
+g27p= subset(g27p, LFA %in% c("33", "34") )
 
 
-#Following is mapping code to test above if needed
-
-r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
-b=r
-
-o=GrMap2
-
-ggplot(b)+
-  geom_sf()+
-  geom_sf(data=coa,fill='grey')+
-  geom_sf(data=o,fill='red')+
-  coord_sf(xlim = c(st_bbox(b)$xmin,st_bbox(b)$xmax),
-           ylim = c(st_bbox(b)$ymin,st_bbox(b)$ymax),
-           expand = FALSE)
+# Following is mapping code to test above if needed
+#----------------------------------------------------
+#r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
+#b=r
+#o=GrMap2
+#ggplot(b)+
+#  geom_sf()+
+#  geom_sf(data=coa,fill='grey')+
+#  geom_sf(data=o,fill='red')+
+#  coord_sf(xlim = c(st_bbox(b)$xmin,st_bbox(b)$xmax),
+#  ylim = c(st_bbox(b)$ymin,st_bbox(b)$ymax),
+#  expand = FALSE)
 
 
+#Figure Creation
 
-
-#One figure
-
-ok1 = function(x=g27p){
-  ggplot(x,aes(fill=CPUE))+
-  geom_sf() +
-  scale_fill_distiller(trans='identity',palette='Spectral') +
-  facet_wrap(~FishingYear)+
-  geom_sf(data=coa,fill='grey')+
-  geom_sf(data=GrMap,fill=NA)+
-  coord_sf(xlim = c(st_bbox(x)$xmin,st_bbox(x)$xmax),
-           ylim = c(st_bbox(x)$ymin,st_bbox(x)$ymax),
-           expand = FALSE)+
-  scale_x_continuous(breaks = c(round(seq(st_bbox(x)$xmin,st_bbox(x)$xmax,length.out=2),2)))+
-  scale_y_continuous(breaks = c(round(seq(st_bbox(x)$ymin,st_bbox(x)$ymax,length.out=2),2)))
+ok1 = function(x = g27p, fill_var = "CPUE", log_scale = FALSE, LFA="all") {
+    # Subset by LFA only if it's not "all" or NULL
+    if (!is.null(LFA) && LFA != "all") {
+        x <- x %>% filter(LFA == !!LFA)
+    }
+    
+    
+    # Apply log transformation if requested
+    if (log_scale) {
+        x[[fill_var]] <- log(x[[fill_var]] + 1)  # Adding 1 to avoid log(0) issues
+    }
+    
+    ggplot(x, aes(fill = !!sym(fill_var))) +
+        geom_sf() +
+        scale_fill_distiller(trans = 'identity', palette = 'Spectral') +
+        facet_wrap(~FishingYear) +
+        geom_sf(data = coa, fill = 'grey') +
+        geom_sf(data = GrMap, fill = NA) +
+        coord_sf(
+            xlim = c(st_bbox(x)$xmin, st_bbox(x)$xmax),
+            ylim = c(st_bbox(x)$ymin, st_bbox(x)$ymax),
+            expand = FALSE
+        ) +
+        scale_x_continuous(breaks = c(round(seq(st_bbox(x)$xmin, st_bbox(x)$xmax, length.out = 2), 2))) +
+        scale_y_continuous(breaks = c(round(seq(st_bbox(x)$ymin, st_bbox(x)$ymax, length.out = 2), 2)))
 }
 
-png(filename=file.path(figdir, "grid.cpue.all.lfas.png"), width=1200, height=900, res=175)
-print(ok1())
-dev.off()
+## Might want to send directly to One Drive??
 
+
+
+#Loops to generate maps for all fisheries data for 33 & 34, separately and combined
+
+mapdir=file.path(figdir,"33.34.fishery.maps")
+dir.create( mapdir,recursive = TRUE, showWarnings = FALSE )
+
+
+vars=c("Landings", "Landings.t", "CPUE","Trips","NLics", "TrapHauls","Prop.lfa.land")
+lvars=c("33", "34","all")
+
+for (var in vars){
+    for (lvar in lvars){
+
+ok1(g27p, fill_var = var, LFA=lvar)
+
+png(filename=file.path(mapdir, lvar, paste0("grid.",var,".",lvar,".png")), width=1200, height=1050, res=200)
+print(ok1(g27p, fill_var = var, LFA=lvar,log_scale = FALSE))
+dev.off()
+}
+}
+
+#For Landings, will also use log scale to make area more comparable
+
+lvars=c("33", "34","all")
+var="Landings"
+
+
+    for (lvar in lvars){
+        
+        ok1(g27p, fill_var = var, LFA=lvar)
+        
+        png(filename=file.path(mapdir, lvar, paste0("grid.",var,".",lvar,".log.scaled.",".png")), width=1200, height=1050, res=200)
+        print(ok1(g27p, fill_var = var, LFA=lvar,log_scale = TRUE))
+        dev.off()
+    }
+
+}
 
