@@ -841,10 +841,22 @@ if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
         load(file=file.path(fnODBC,'temperature.rdata'))
         return(TempData)
       }
-      #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
       TempData = connect.command(con,"select * from SNOWCRAB.SC_TEMP_MERGE")
       save(TempData,file=file.path(fnODBC,'temperature.rdata'))
     }
+    
+    if(DS %in% c('cw.temperature.data.redo', 'cw.temperature.data')){
+      if(DS == 'cw.temperature.data') {
+        load(file=file.path(fnODBC,'cw.temperature.rdata'))
+        return(tm)
+      }
+      td = dir(file.path(project.datadirectory('bio.lobster'),'Temperature Data','CW'),full.names = T)
+      tm  =readxl::read_xlsx(td)
+      names(tm) = c('StringID','DateSet','DateHauled','TempTime','Temp','LAT_DD','LON_DD','DEPTH_M')
+      save(tm,file=file.path(fnODBC,'cw.temperature.rdata'))
+    }
+    
+    
 
     if(DS %in% c('bathymetry')){
         load(file=file.path(project.datadirectory('bio.lobster'),'bathymetry','bathymetry.complete.canada.east.rdata'))
@@ -1505,7 +1517,6 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
          if (DS=="atSea.redo") {
            require(RODBC)
            #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-
             # atSea
             atSea = connect.command(con, "select * from lobster.LOBSTER_ATSEA_VW")
             atSea2 = connect.command(con, "select * from lobster.lobster_bycatch_assoc")
