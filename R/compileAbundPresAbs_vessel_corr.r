@@ -325,7 +325,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             ilt$Gear = 'NEST'
             
             ilt = ilt %>%
-              filter(YEAR>1998) %>%
+            #  filter(YEAR>1998) %>%
               select(id, Lobster, Legal, Legal_wt, Berried, Recruit, YEAR, DATE, EMPTY, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
             
     #Snow crab
