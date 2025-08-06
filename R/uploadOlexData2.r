@@ -46,7 +46,7 @@ uploadOlexData2 <- function(fn='C:/LOCAL WORKING FOLDER/ILTS/Olex Tracks/ILTS_20
   df1$StdTIME = as.character(format(df1$dau,format='%H:%M:%S'))
   
   
-  bio.lobster::db.setup(un=oracle.lobster.user,pw = oracle.lobster.password)
+  bio.lobster::db.setup(un=UID,pw = PWD)
   se = dbGetQuery(conn=con, statement = paste("select trip_id, set_no, min(starttime) starttime, min(endtime) endtime, min(setdate) setdate
                       from (select a.trip_id, b.set_no,case when c.pntcd_id = 2 then to_char(to_date(settime, 'hh24miss'),'hh24:mi:ss')else null end starttime,
                       case when c.pntcd_id = 3 then to_char(to_date(settime, 'hh24miss'),'hh24:mi:ss')else null end endtime,case when pntcd_id = 2 then setdate
