@@ -50,7 +50,7 @@ cc <- cc %>%
 # View result
 print(df)
 
-ggplot(subset(cc,yr%in% 2017),aes(x=date,y=unBCPUE))+geom_point()+geom_smooth()+facet_wrap(~yr)+lims(y=c(0,3.4))+labs(x='Date', y='CPUE')
+ggplot(subset(cc),aes(x=date,y=unBCPUE))+geom_point()+geom_smooth()+facet_wrap(~yr)+lims(y=c(0,3.4))+labs(x='Date', y='CPUE')
 
 #not time
 

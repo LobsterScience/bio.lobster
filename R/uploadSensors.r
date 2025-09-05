@@ -4,6 +4,7 @@ uploadSensors <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisnt
         Sys.setenv(ORA_SDTZ = "GMT")   
    if(any(grepl('.csv',datafile))) datafile = read.csv(datafile,header=T)
       if(dim(datafile)[2]!=19) stop('The number of columns in the datafile do not match the number required (19)') 
+        browser()
         datafile$FLAG=NA
       bio.lobster::db.setup(un=UID,pw=PWD)  
       datafile$GPSDATE = as.Date(datafile$GPSDATE)
@@ -32,6 +33,7 @@ uploadSensors <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisnt
         }
       }
       datafile = subset(datafile, !is.na(SET_NO))
+      datafile$GPSTIME = gsub(":", "",datafile$GPSTIME)
 
             if(appendIt==F & ROracle::dbExistsTable(con, tablenm)) stop('table already exists in the space. You need to either use a new name or use appendIT=T')
       if(appendIt==F & !ROracle::dbExistsTable(con, tablenm)){    
@@ -60,6 +62,7 @@ uploadSensors <- function(datafile,tablenm, appendIt=F,UID='cooka',PWD='thisisnt
         print(paste('Table ',tablenm,' has been created',sep=""))
         appendIt=T
       }
+      browser()
     dbWriteTable(conn=con,name=tablenm,append=appendIt, value=datafile)
     print('fileUploaded')
 
