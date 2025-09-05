@@ -1,4 +1,3 @@
-p = bio.lobster::load.environment()
 require(LobTag2)
 get_table("releases", db = "Oracle")
 
