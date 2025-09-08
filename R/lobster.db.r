@@ -1091,7 +1091,9 @@ if (DS %in% c("logs.redo", "logs") ) {
               # old logs LFA 34
               dd = dir(fnODBC)
              if(!any("oldlogs34.rdata" %in% dd)){
-             oldlogs34 = connect.command(con, "select * from lobster.lobster_log_data")
+             oldlogs34 = connect.command(con, "select b.licence_id, a.*
+                            from lobster_log_data a, marfissci.LICENCES_SF_OLD b
+                            where 'A'||a.licence_no = b.licence_id_old")
              save( oldlogs34, file=file.path( fnODBC, "oldlogs34.rdata"), compress=T)
               gc()  # garbage collection
               #odbcClose(con)
@@ -1156,7 +1158,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                          oldlogs34$LFA34_WEIGHT1_KGS=oldlogs34$LFA34_WEIGHT1_KGS/0.4536
                          oldlogs34$LFA34_WEIGHT2_KGS=oldlogs34$LFA34_WEIGHT2_KGS/0.4536
-                          oldlogs34=subset(oldlogs34,select=c("VR_NUMBER","LICENCE_NO","LOBSTER_AREA","TRIP_ID","DATE_FISHED","GRID_NUMBER_A","LFA34_WEIGHT1_KGS","TRAP_HAULS_GRID_A","GRID_NUMBER_B","LFA34_WEIGHT2_KGS","TRAP_HAULS_GRID_B","V_NOTCHED","PORT_LANDED"))
+                          oldlogs34=subset(oldlogs34,select=c("VR_NUMBER","LICENCE_ID","LOBSTER_AREA","TRIP_ID","DATE_FISHED","GRID_NUMBER_A","LFA34_WEIGHT1_KGS","TRAP_HAULS_GRID_A","GRID_NUMBER_B","LFA34_WEIGHT2_KGS","TRAP_HAULS_GRID_B","V_NOTCHED","PORT_LANDED"))
                           names(oldlogs34)=c("VR_NUMBER","LICENCE_ID","LFA","SD_LOG_ID","DATE_FISHED","GRID_NUM","WEIGHT_LBS","NUM_OF_TRAPS","GRID_NUM_B","WEIGHT_LBS_B","NUM_OF_TRAPS_B","V_NOTCHED","PORT_LANDED")
                           logs=merge(logs,oldlogs34,all=T)
 
@@ -1216,7 +1218,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     # add BUMPUP column: total landings/sum of logs for each year  & LFA
 
-                     bumpup=T
+                     bumpup=F
                     if(bumpup){
                       seasonLandings = lobster.db('seasonal.landings')
                       annualLandings = lobster.db('annual.landings')
@@ -1265,7 +1267,10 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                     logsInSeason = assignSubArea2733(logsInSeason)
 
-
+    ##there are duplicated records in marfissci.lobster_sd_log as GRID_NUM, WEIGHT_LBS and NUM_OF_TRAPS were identical across one sd_log_id....there were about 2600 instances (Aug 15 2025 AMC)
+    
+                    logsInSeason  = logsInSeason[!duplicated(logsInSeason),]
+                                    
           # Save logsInSeason as working data
               save(logsInSeason,file=file.path( fnProducts,"logsInSeason.rdata"),row.names=F)
    }
