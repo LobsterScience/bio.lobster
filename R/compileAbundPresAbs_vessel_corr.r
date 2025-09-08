@@ -17,7 +17,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             logs41$WEIGHT_KG = logs41$ADJCATCH/2.205
             logs41$DEPTH = ziff41$DEPTH = NA
             ziff41$LICENCE_ID = ziff41$ADJCATCH = off41$ADJ_LOB_LBS = ziff41$EST_WEIGHT_LOG_LBS= off41$OFFAREA = off41$LOB_EST_LBS = ziff41$CAPTAIN = logs41$OFFAREA = NULL 
-            logs41$LOG_EFRT_STD_INFO_ID = logs41$CAPTAIN = logs41$LICENCE_ID = logs41$EST_WEIGHT_LOG_LBS = logs41$ADJCATCH = NULL
+           logs41$STRINGID = logs41$SOAK_DAYS = logs41$TRIP_ID = logs41$LAT = logs41$LON =  logs41$LOG_EFRT_STD_INFO_ID = logs41$CAPTAIN = logs41$LICENCE_ID = logs41$EST_WEIGHT_LOG_LBS = logs41$ADJCATCH = NULL
             
             a41 = rbind(off41,ziff41,logs41)
             a41$SOURCE = 'FISHING_LOGS_OFFSHORE'
@@ -35,17 +35,27 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             off41_LOGS$LONGITUDE = ifelse(off41_LOGS$LONGITUDE>0,off41_LOGS$LONGITUDE*-1,off41_LOGS$LONGITUDE)
             off41_LOGS$Gear = 'Commercial'
             off41_LOGS = subset(off41_LOGS, !is.na(LONGITUDE) & !is.na(WEIGHT_KG))
-            x = makePBS(off41_LOGS,polygon=F)
-            LFAs<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","LFAPolys.csv"))
-            l41=subset(LFAs,PID==41)
-            attr(l41,'projection') <- 'LL'
-            ee = findPolys(x,l41,maxRows = nrow(x),includeBdry = T)
-            off41_LOGS = subset(x,EID %in% ee$EID)
-            off41_LOGS$id = paste(off41_LOGS$X, off41_LOGS$Y,sep='-')
-            off41_LOGS = off41_LOGS[-which(off41_LOGS$id %in% c('-61.25-41.25','-55.9768-42.1087','-62.4353-42.1467','-60.2333-41.25')),]
-            off41_LOGS = off41_LOGS[-which(off41_LOGS$DATE=='1996-10-10 23:00:00'),]
             
+            offs = st_as_sf(off41_LOGS,coords = c('LONGITUDE','LATITUDE'),crs=4326)
 
+            LFAs<-readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFAPolysSF.rds'))
+            l41=subset(LFAs,LFA==41)
+            offs = st_join(offs,l41)
+            off41_LOGS = subset(offs,!is.na(LFA))
+            off41_LOGS$LONGITUDE = st_coordinates(off41_LOGS)[,1]
+            off41_LOGS$LATITUDE = st_coordinates(off41_LOGS)[,2]
+            
+            off41_LOGS$id = paste(off41_LOGS$LONGITUDE, off41_LOGS$LATITUDE,sep='-')
+            off41_LOGS = off41_LOGS[-which(off41_LOGS$id %in% c('-61.25-41.25','-55.9768-42.1087','-62.4353-42.1467','-60.2333-41.25')),]
+            st_geometry(off41_LOGS) <- NULL
+            off41_LOGS$Legal_wt = off41_LOGS$WEIGHT_KG
+            off41_LOGS$DYEAR = off41_LOGS$V2 = off41_LOGS$LFA = off41_LOGS$WEIGHT_KG = NULL
+            off41_LOGS$Empty = 0
+  
+  #Greyzone logs
+            g = lobster.db('greyzone_logs')
+            
+            
   #At Sea Samples
             
             lobster.db('atSea')
@@ -55,10 +65,11 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             a$Berried = ifelse(a$SPECIESCODE == 2550 & a$SEX %in% 3,1,0)
             a$Lobster = ifelse(a$SPECIESCODE == 2550,1,0)
             a$Legal = ifelse(a$SPECIESCODE == 2550 & a$CARLENGTH > 82 & a$SEX %in% 1:2,1,0)
+            a$Recruit = ifelse(a$SPECIESCODE == 2550 & a$CARLENGTH %in% 70:82,1,0)
             a$Empty = ifelse(a$SPECIESCODE == 0,1,0)
             a$NonLobster = ifelse(a$SPECIESCODE %ni% c(0,2550), 1,0)
-            
-            a1 = subset(a,SPECIESCODE %in% c(2550))
+            a$Legal_wt = a$CALWT * a$Legal
+            a1 = subset(a,SPECIESCODE %in% c(0,2550))
             sc1=seq(13,253,by=5)
             a1$SZ = sc1[cut(a1$CARLENGTH,sc1,labels=F)]
             a1$SP_SZ = a1$SZ
@@ -67,7 +78,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             bb = reshape(aa[,c('UID','SP_SZ','P')],idvar='UID',timevar='SP_SZ', direction='wide')
             bb = na.zero(bb)
             
-            cc = aggregate(cbind(NonLobster,Empty,Legal, Lobster,Berried,CALWT)~UID+LATITUDE+LONGITUDE+STARTDATE,data=a,FUN=sum)
+            cc = aggregate(cbind(NonLobster,Empty,Legal, Lobster,Berried,Recruit, Legal_wt)~UID+LATITUDE+LONGITUDE+STARTDATE,data=a,FUN=sum)
             cc = subset(cc,Empty<2)
             dd = merge(cc,bb,by='UID',all.x=T)     
             dd$ID = 1:nrow(dd)
@@ -78,7 +89,6 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             dd$timestamp = with_tz(dd$timestamp,"UTC")
             dd$dyear = lubridate::decimal_date(dd$timestamp)- lubridate::year(dd$timestamp)
             dd$yr = year(dd$timestamp)
-            dd$WEIGHT_KG = dd$CALWT/1000
             dd = rename.df(dd,c('STARTDATE','yr','dyear'),c('DATE','YEAR','DYEAR'))
             
             i = which(dd$LONGITUDE>-50 & dd$LATITUDE>50)
@@ -107,11 +117,11 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             dd$LONGITUDE = dd$X
             dd$LATITUDE = dd$Y
             dd$X.1 = dd$Y.1 = NULL
-            ddPrune = subset(dd,select=c(DATE,LONGITUDE,LATITUDE,OFFSET,SOURCE,OFFSET_METRIC,DYEAR,WEIGHT_KG,YEAR, Lobster,Berried,Legal))
+            ddPrune = subset(dd,select=c(DATE,LONGITUDE,LATITUDE,OFFSET,SOURCE,OFFSET_METRIC,DYEAR,Legal_wt,YEAR, Lobster,Berried,Legal,Recruit,Empty))
             ddSize = dd
             ddPrune$Gear = 'Commercial'
             ddSize$Gear = 'Commercial'
-            
+            ddSize$DYEAR = ddPrune$DYEAR = ddSize$NonLobster = ddSize$X = ddSize$Y =NULL
   #FSRS         
             lobster.db('fsrs')
             fsrs$Empty = ifelse(fsrs$LOBSTER_NO==0,1,0)
@@ -139,10 +149,12 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             fsrs$CL[ikl] <-  j[fsrs$SIZE_CD[ikl]]
             
             fsrs$CALC_WT = lobLW(CL=fsrs$CL,sex=fsrs$SEX,fsrs=F)
-            
+            fsrs$Recruit = ifelse(fsrs$CL %in% 70:82,1,0)
+            fsrs$Legal = ifelse(fsrs$CL > 82 & fsrs$SHORT==0,1,0)
+            fsrs$Legal_wt = fsrs$Legal * fsrs$CALC_WT/1000
             fsrs$UID = paste(fsrs$VESSEL_CD,fsrs$HAUL_DATE, fsrs$RECORD_NUMBER,fsrs$TRAP_NO, fsrs$LATITUDE, fsrs$LONGITUDE,sep="-")
             Nl = aggregate(cbind(LOBSTER_NO,Empty)~UID+HAUL_DATE+LATITUDE+LONGITUDE+TEMP,data=fsrs,FUN=max)
-            WL = aggregate(cbind(CALC_WT,Berried,SHORT)~UID+HAUL_DATE+LATITUDE+LONGITUDE+TEMP,data=fsrs,FUN=function(x) sum(x,na.rm=T))
+            WL = aggregate(cbind(Legal, Legal_wt,Berried,SHORT,Recruit)~UID+HAUL_DATE+LATITUDE+LONGITUDE+TEMP,data=fsrs,FUN=function(x) sum(x,na.rm=T))
             
             nwl = merge(Nl,WL,all.x=T)
             
@@ -159,17 +171,16 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             nwlp$SOURCE = 'FSRS_RECRUITMENT_TRAPS'
             nwlp$YEAR = year(nwlp$HAUL_DATE)
             nwlp$DATE = nwlp$HAUL_DATE
-            nwlp$WEIGHT_KG = nwlp$CALC_WT/1000
             nwlp$timestamp = as.POSIXct(nwlp$DATE,tz='America/Halifax',origin=lubridate::origin)
             nwlp$timestamp = with_tz(nwlp$timestamp,"UTC")
             nwlp$DYEAR = lubridate::decimal_date(nwlp$timestamp)- lubridate::year(nwlp$timestamp)
             nwlp$Lobster = nwlp$LOBSTER_NO
-            nwlp$Legal = nwlp$Lobster - nwlp$SHORT
-            nwlp$UID <- nwlp$HAUL_DATE <- nwlp$LOBSTER_NO <- nwlp$CALC_WT <- nwlp$SHORT <- nwlp$timestamp <- NULL
-            fsrsPrune = subset(nwlp,select=c(DATE, YEAR, LONGITUDE, LATITUDE,WEIGHT_KG, OFFSET, TEMP,SOURCE, OFFSET_METRIC,DYEAR,Lobster, Berried,Legal  ))
+            nwlp$id = nwlp$UID
+            nwlp$TEMP = nwlp$DYEAR = nwlp$UID <- nwlp$HAUL_DATE <- nwlp$LOBSTER_NO <- nwlp$CALC_WT <- nwlp$SHORT <- nwlp$timestamp <- NULL
+            fsrsPrune = subset(nwlp,select=c(id,DATE, YEAR, LONGITUDE, LATITUDE,OFFSET,SOURCE, OFFSET_METRIC,Lobster, Berried,Legal,Legal_wt,Recruit,Empty  ))
             fsrsSize  = nwlp
-            fsrsPrune$Gear = 'Recruitment'
-            fsrsSize$Gear = 'Recruitment'
+            fsrsPrune$Gear = 'RecruitmentTrap'
+            fsrsSize$Gear = 'RecruitmentTrap'
             
             
   #FSRS commercial samples
@@ -183,9 +194,13 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             fsrs.comm$CL <- ifelse(is.na(fsrs.comm$Size) | fsrs.comm$Size== 0, NA, i[fsrs.comm$Size])
             fsrs.comm$CALC_WT = lobLW(CL=fsrs.comm$CL,sex=fsrs.comm$Sex,fsrs=F)
             fsrs.comm$EMPTY = ifelse(fsrs.comm$Lobster.Number==0,1,0)
+            fsrs.comm$Legal = ifelse(fsrs.comm$CL > 82 & fsrs.comm$Short==0,1,0)
+            fsrs.comm$Legal_wt = fsrs.comm$Legal * fsrs.comm$CALC_WT/1000
+            
             fsrs.comm$UID = paste(fsrs.comm$Vessel.Code,fsrs.comm$SDATE,fsrs.comm$Record.Number, fsrs.comm$Trap.Number, fsrs.comm$LATITUDE, fsrs.comm$LONGITUDE,sep="-")
+            fsrs.comm$Recruit = ifelse(fsrs.comm$CL %in% 70:82,1,0)
             Nl = aggregate(cbind(Lobster.Number,EMPTY)~UID+SDATE+LATITUDE+LONGITUDE+Temp,data=fsrs.comm,FUN=max)
-            WL = aggregate(cbind(CALC_WT,Berried,Short)~UID+SDATE+LATITUDE+LONGITUDE+Temp,data=fsrs.comm,FUN=function(x) sum(x,na.rm=T))
+            WL = aggregate(cbind(Legal_wt,Legal,Berried,Recruit)~UID+SDATE+LATITUDE+LONGITUDE+Temp,data=fsrs.comm,FUN=function(x) sum(x,na.rm=T))
             
             nwl = merge(Nl,WL,all.x=T)
             
@@ -193,33 +208,36 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             aa = aggregate(P~UID+CL,data=subset(fsrs.comm, !is.na(CL) | CL>0),FUN=sum)
             bb = reshape(aa[,c('UID','CL','P')],idvar='UID',timevar='CL', direction='wide')
             bb = na.zero(bb)
-            
+            aaa = aggregate(P~UID,data=aa,FUN=sum)
             nwlp = merge(nwl,bb,all.x=T)
-            nwlp = na.zero(nwlp)
+            nwlp = merge(nwlp,aaa,all.x=T)
             
+            nwlp = na.zero(nwlp)
+            t = which(nwlp$P-nwlp$Lobster.Number !=0)
+            nwlp$Lobster.Number[t] = nwlp$P[t]
             nwlp$OFFSET=1
             nwlp$OFFSET_METRIC = 'Number of traps'
             nwlp$SOURCE = 'FSRS_COMMERCIAL_TRAPS'
             nwlp$YEAR = year(nwlp$SDATE)
             nwlp$DATE = nwlp$SDATE
-            nwlp$WEIGHT_KG = nwlp$CALC_WT/1000
             nwlp$timestamp = as.POSIXct(nwlp$DATE,tz='America/Halifax',origin=lubridate::origin)
             nwlp$timestamp = with_tz(nwlp$timestamp,"UTC")
-            nwlp$DYEAR = lubridate::decimal_date(nwlp$timestamp)- lubridate::year(nwlp$timestamp)
             nwlp$Lobster = nwlp$Lobster.Number
-            nwlp$Legal = nwlp$Lobster - nwlp$Short
-            nwlp$UID <- nwlp$SDATE <- nwlp$Lobster.Number <- nwlp$CALC_WT <- nwlp$Short <- nwlp$timestamp <- NULL
+            nwlp$id = nwlp$UID
+            nwlp$Temp = nwlp$UID <- nwlp$SDATE <- nwlp$Lobster.Number <- nwlp$CALC_WT <- nwlp$Short <- nwlp$timestamp <- nwlp$P <- NULL
             nwlp = subset(nwlp, LONGITUDE< -50 & LATITUDE>43 & LATITUDE<50)
             nwlp = makePBS(nwlp,polygon=F,coords = c('LONGITUDE','LATITUDE'))
             coast<-read.csv(file.path( project.datadirectory("bio.lobster"), "data","maps","gshhs",paste0("shoreline",'HR',".csv")))
             d2 = PBSmapping::findPolys(nwlp,coast,includeBdry = F, maxRows = nrow(nwlp))
-            nwlp = rename.df(nwlp, c('X','Y','Temp'),c('LONGITUDE','LATITUDE','TEMP'))
+            nwlp = rename.df(nwlp, c('X','Y','EMPTY'),c('LONGITUDE','LATITUDE','Empty'))
             nwlp = subset(nwlp, EID %ni% d2$EID)
             nwlp = subset(nwlp, LONGITUDE> -66 & LONGITUDE< -62)
-            fsrsCommPrune = subset(nwlp,select=c(DATE, YEAR, LONGITUDE, LATITUDE,WEIGHT_KG, OFFSET,TEMP, SOURCE, OFFSET_METRIC,DYEAR,Lobster, Berried,Legal  ))
+            fsrsCommPrune = subset(nwlp,select=c(DATE, YEAR, LONGITUDE, LATITUDE, OFFSET, SOURCE, OFFSET_METRIC,Lobster, Berried,Legal,Recruit,Legal_wt,Empty  ))
             fsrsCommSize  = nwlp
-            fsrsCommSize = rename.df(fsrsCommSize,'EMPTY','Empty')
+            
             fsrsCommSize$Gear = 'Commercial'
+            fsrsCommSize$P = NULL
+            
             fsrsCommPrune$Gear = 'Commercial'
             ##merging all trap data
             ddSize$NonLobster = NULL
@@ -240,43 +258,114 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             trapsNoSize$LATITUDE[i] = trapsNoSize$Y[i]
             
             trapsNoSize$X = trapsNoSize$Y = trapsNoSize$EID = trapsNoSize$id = NULL
-            trapsNoSize  = subset(trapsNoSize,WEIGHT_KG>=0)
             trapSize  = subset(trapSize,Legal>=0)
             
             saveRDS(trapsNoSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesNoSize.rds')) 
             saveRDS(trapSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesSize.rds')) 
-              trapsNoSize<-readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesNoSize.rds')) 
+    
+          #  trapsNoSize = readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesNoSize.rds')) 
+          #  trapSize = readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesSize.rds')) 
             
-    #ILTS and ITQ
-            
-            ilts = ILTS_ITQ_All_Data()  
-            ilts$TRIP_ID = ilts$FISHSET_ID = NULL
-            ilts$P.208 = ilts$P.223 = ilts$P.218 = ilts$P.213
-            
-    #RV Survey
+            #RV Survey  ###covertt back to raw #s
             rv = RV_sets()
             rv$TEMP = rv$bottom_temperature
+            rv = subset(rv,YEAR>1998)
+            rv$id = paste(rv$mission,rv$setno,sep='_')
+            rv$OFFSET = rv$OFFSET*1e6
+            rv$OFFSET_METRIC = "TowedDist x wing spread m2"
             
-            rv$bottom_temperature = rv$mission = rv$setno = NULL
-    
-    #NEFSC Surveys
-                ne = NEFSC_sets()
-            ne$MISSION = ne$SETNO = NULL
+            rv = rv %>%
+                  select(id,Lobster, Legal, Legal_wt,Berried, Recruit, YEAR,DATE,EMPTY,starts_with("P."), LONGITUDE, LATITUDE, SOURCE, OFFSET, OFFSET_METRIC,Gear )
+            
+            #NEFSC Surveys
+            ne = NEFSC_sets()
+            ne$id = paste(ne$MISSION,ne$SETNO,sep="_")
+            ne$OFFSET = ne$OFFSET*1e6
+            ne$OFFSET_METRIC="TowedDist x wing spread m2"
+            ne = ne %>%
+                  select(id, Lobster, Legal, Legal_wt, Berried, Recruit, YEAR, DATE, EMPTY, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
+            
+            #ILTS and ITQ
+            
+            ilts = ILTS_ITQ_All_Data(biomass = F,aggregate=F)  
+            ilts$N = ilts$SA_CORRECTED_PRORATED_N * ilts$sweptArea ###covertt back to raw #s
+            sc1=seq(13,253,by=5)
+            ilts$SZ = sc1[cut(ilts$FISH_LENGTH,sc1,labels=F)]
+            ilts$Berried= ilts$Recruit = ilts$Legal=  0
+            ilts$Berried = ifelse(ilts$SEX==3,ilts$N,ilts$Berried)
+            ilts$Recruit = ifelse(ilts$FISH_LENGTH %in% 70:81,ilts$N,ilts$Recruit)
+            ilts$Recruit = ifelse(ilts$FISH_LENGTH ==82,ilts$N/2,ilts$Recruit)
+            
+            ilts$Legal = ifelse(ilts$FISH_LENGTH >82,ilts$N,ilts$Legal)
+            ilts$Legal = ifelse(ilts$FISH_LENGTH ==82,ilts$N/2,ilts$Legal)
+            ilts$Legal_wt = lobLW(CL=ilts$FISH_LENGTH,sex=ilts$SEX) * ilts$N/1000
+            ilts$ID = paste(ilts$TRIP_ID,ilts$SET_NO,sep="_")
+            dA = aggregate(N~SZ+ID,data=ilts,FUN=sum)
+            
+            dS = aggregate(cbind(Berried,Legal,N,Legal_wt,Recruit)~TRIP_ID+SET_NO+ID,data=ilts,FUN=sum)
+            dS$Lobster = dS$N
+            dS$N = NULL
+            dA$P = dA$N
+            aa = aggregate(P~ID+SZ,data=dA,FUN=sum)
+            bb = reshape(aa[,c('ID','SZ','P')],idvar='ID',timevar='SZ', direction='wide')
+            bb = na.zero(bb)
+            
+            ca = merge(dS,bb)
+            set = ilts %>%
+                  distinct(TRIP_ID,SET_NO,SET_DATE,SET_LONG,SET_LAT,sweptArea,YEAR,temp)
+            ilt = merge(set,ca,all.x=T)
+            ilt$EMPTY = ifelse(ilt$Lobster>0,0,1)
+            ilt$id = paste(ilt$TRIP_ID,ilt$SET_NO,sep="_")
+            ilt$OFFSET = ilt$sweptArea *1e6
+            ilt$OFFSET_METRIC = "TowedDist x wing spread m2"
+            ilt$LONGITUDE = ilt$SET_LONG
+            ilt$LATITUDE = ilt$SET_LAT
+            ilt$DATE = ilt$SET_DATE
+            ilt$SOURCE = 'ILTS'
+            ilt$Gear = 'NEST'
+            
+            ilt = ilt %>%
+            #  filter(YEAR>1998) %>%
+              select(id, Lobster, Legal, Legal_wt, Berried, Recruit, YEAR, DATE, EMPTY, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
+            
     #Snow crab
             sn = snowcrab_sets()
-            sn$TRIP_ID = sn$SET_NO = NULL
+            sn$id = paste(sn$TRIP_ID,sn$SET_NO,sep="_")
+            sn$OFFSET = sn$OFFSET*1e6
+            sn$OFFSET_METRIC =  "TowedDist x wing spread m2"
+            sn$Gear = 'Nephrops'
+            
+            sn = sn %>%
+                select(id,Lobster, OFFSET, OFFSET_METRIC,SOURCE,LATITUDE, LONGITUDE,DATE,EMPTY,Gear)
       
     #scallop surveys
             sc = scallop_sets()
             sc$EMPTY = ifelse(sc$Lobster==0,1,0)
+            sc$SOURCE = 'Scallop Survey'
+            sc$Gear = 'Dredge'
+            sc$OFFSET_METRIC="TowedDist x wing spread m2"
+            sc$DATE = sc$TOW_DATE
+            sc$LONGITUDE = sc$X
+            sc$LATITUDE = sc$Y
+            sc$id = paste('Scall',sc$TOW_SEQ,sep="_")
+            
+            sc = sc %>%
+              select(id, Lobster, Legal, Legal_wt, Berried, Recruit, YEAR, DATE, EMPTY, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
+    
+    #MNR
+            mn = MNR_sets()       
+           
+                     
+    ##all good to here June 3 2025        
+            ww = plyr::rbind.fill(ilt,rv,ne,sn,sc,mn)
             
             
+            ws = st_as_sf(ww,coords=c('LONGITUDE','LATITUDE'),crs=4326)
+            ww$Empty = ww$EMPTY
+            ww$EMPTY = NULL
+            wwNoSize = subset(ww, select=c(DATE, YEAR, LONGITUDE, LATITUDE, OFFSET, SOURCE, OFFSET_METRIC,Lobster, Berried,Legal,Recruit,Legal_wt,Empty,Gear))
             
-            ww = plyr::rbind.fill(ilts,rv,ne,sn,sc)
-            ww = rename.df(ww,c('EMPTY'),c('Empty'))
-            wwNoSize = subset(ww, select=c(DATE, YEAR, LONGITUDE, LATITUDE,TEMP,WEIGHT_KG, OFFSET, SOURCE, OFFSET_METRIC,DYEAR,Lobster, Berried,Legal ))
             combinedNoSize = plyr::rbind.fill(trapsNoSize,wwNoSize)
-            combinedNoSize$X = combinedNoSize$Y = combinedNoSize$EID = combinedNoSize$id = NULL
             
             ww$DATE = as.Date(ww$DATE)
             
@@ -287,6 +376,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
           combinedNoSize$YEAR = year(combinedNoSize$DATE)
           i = which(combinedNoSize$SOURCE=='Snow crab survey')
           combinedNoSize$Berried[i] = 0
+          combinedSize = subset(combinedSize, SOURCE !='Snow crab survey')
           saveRDS(combinedSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesSize.rds')) 
             saveRDS(combinedNoSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesNoSize.rds')) 
 } else {
@@ -294,11 +384,3 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
   if(!size) return(readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','combinedCatchesNoSize.rds'))) 
       }            
 }
-
-
-#t = ggLobsterMap(ylim=c(40,48),xlim=c(-69,-55),bathy=F,addGrids = F,return.object = T)
-#xx = st_as_sf(combinedNoSize, crs=4326, coords=c('LONGITUDE','LATITUDE'))
-
-#xx$gYR = round(xx$YEAR/5)*5
-
-#t +geom_sf(data=subset(xx,gYR==1970),size=.1) + geom_sf(data=subset(xx,gYR==1970 & WEIGHT_KG>0),size=.1,col='red')

@@ -5,8 +5,8 @@ CPUEModelData2 = function(p,redo=T){
 	  fn.root =  file.path( project.datadirectory('bio.lobster'), "data")
 	  fnODBC  =  file.path(fn.root, "ODBCDump")
 	  logs = lobster.db("process.logs")
-		vlog = lobster.db("process.vlog.redo")
-	  #get.vlog=load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)
+		#vlog = lobster.db("process.vlog")
+	  get.vlog=load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)
 		#vlog=load(file.path( fnODBC, "processed.vlog.rdata"))
 		
 		tmp1 = subset(logs,select=c("DATE_FISHED","SYEAR","WEIGHT_KG","LFA","NUM_OF_TRAPS","subarea","GRID_NUM"))

@@ -5,7 +5,9 @@ p = bio.lobster::load.environment()
 #la()
 #Plot LW Regressions for Lobster by Sex
  
-savdir="C:/RSaves/" #Change as Appropriate
+savdir=file.path(project.datadirectory("bio.lobster","requests","length.weight"))
+
+dir.create( savdir, recursive = TRUE, showWarnings = FALSE ) #Change as Appropriate
 
 #Plot Seperately
 
@@ -37,7 +39,7 @@ dev.off()
 #Plot on one
 
 
-  L=50:155
+  L=82.5:110
   B = lobLW(L, sex=1)
   m.MLW<-cbind(L,B)
   m.MLW<-as.data.frame(m.MLW)
@@ -67,5 +69,32 @@ dev.off()
   text(x=130, y=1.15, col="blue", "Male", pos=4)
   #abline(v = 82.5, col = 'black', lwd = 2, lty = 'dashed')
   #abline(v = 86, col = 'black', lwd = 2, lty = 'dashed')
-  rect(xleft = 82.5, xright = 86, ybottom = 0, ytop = 1.35, col="darkred", density=30, angle=-30, lwd=1)
+  #rect(xleft = 82.5, xright = 86, ybottom = 0, ytop = 1.35, col="darkred", density=30, angle=-30, lwd=1)
   dev.off()
+
+  
+ #bring in (limited) 2024 port sampling data
+ l24=read.csv(file.path(savdir, "master.nov.24.csv"))
+ l24=l24[,colSums(is.na(l24))<nrow(l24)]
+ colnames(l24) <- tolower(colnames(l24))
+ l24= l24 %>% rename("L" = "carapace", "B" = "wt.g.final")
+ 
+ l24=subset(l24, B< 3000 & B>100 & L>80 & L<200 )
+ 
+#males
+ m24=subset(l24, sex=="1")
+ lo.m=loess(B~L, m24)
+ l=order(m24$L)
+ plot(m.MLW$L, m.MLW$B,xlab="Carapace Length (mm)", ylab= "Weight (grams)", main= "", type="l", col="black")
+ lines(m24$L[l],lo.m$fitted[l],col="red",lwd=1)
+ 
+#females
+ f24=subset(l24, sex=="2")
+ lo.f=loess(B~L, f24)
+ lf=order(f24$L)
+ plot(f.MLW$L, f.MLW$F,xlab="Carapace Length (mm)", ylab= "Weight (grams)", main= "Female", type="l", col="black")
+ lines(f24$L[lf],lo.f$fitted[lf],col="red",lwd=1)
+  
+ 
+
+ 

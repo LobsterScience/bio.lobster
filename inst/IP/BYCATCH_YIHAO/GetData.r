@@ -11,8 +11,53 @@ a$YR=year(a$STARTDATE)
 #remove trips that bycatch was irregularly reported   
 a = subset(a, TRIPNO %ni% c('100026598','100027348','100027353','100027817','100027518','100027440','100027457','100027620','100027686','100027688','100027906','100028083','100028384','100027912','100028311','100028646','100028755','100028318','100028756','100028322','100028758','100029647','100029958','100053554','100053610','100053809','100054369','100054449','100053815','100053817','100053818','100053821','100053831','100054367','100053850','100053851','100054365','100054363','100054467','100026458','100026459','100026802','100026836','100026837','100026918','100026838','100027164','100026839','100026840','100027064','100027077','100027377','100027104','100027097','100027098','100027138','100027437','100027417','100027537','100029278','100029899','100029917','100030161','100030205','100030558','100030788','100051425','100052590','100038701','100039237','100043257','100045023','100048250','100054704'))
 
+
+
 saveRDS(a,file='LongerTS_bycatch_lobster_traps.rds')
 
+#for nathan
+ab = subset(a,SPECIESCODE==10)
+ab = bio.utilities::rename.df(ab,'CARLENGTH','Length')
+gr = readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','GridPolysSF.rds'))
+gr = st_make_valid(gr)
+abs = st_as_sf(subset(ab,!is.na(LONGITUDE)),coords=c('LONGITUDE','LATITUDE'),crs=4326)
+
+
+Fish.Date = lobster.db('season.dates')
+Fish.Date = backFillSeasonDates(Fish.Date,eyr=year(Sys.time()))
+lfa  =  sort(unique(Fish.Date$LFA))
+Fish.Date$START_DATE = as.Date(Fish.Date$START_DATE)#,"%d/%m/%Y")
+Fish.Date$END_DATE = as.Date(Fish.Date$END_DATE)#,"%d/%m/%Y")
+
+                          abs$DATE_FISHED = as.Date(abs$STARTDATE,"%Y-%m-%d", tz="UTC" )
+                          #logs$SYEAR = year(logs$DATE_FISHED)
+
+                        for(i in 1:length(lfa)) {
+                                h  =  Fish.Date[Fish.Date$LFA==lfa[i],]
+                            for(j in 1:nrow(h)) {
+                                abs$SYEAR[abs$LFA==lfa[i]&abs$DATE_FISHED>=h[j,'START_DATE']&abs$DATE_FISHED<=h[j,'END_DATE']] = h[j,'SYEAR']
+                                }
+                              }
+                 i = which(abs$TRIPNO=="019919-291122")
+ abs$SYEAR[i] = 2023
+abs$SYEAR[which(abs$LFA==41)] <- abs$YR[which(abs$LFA==41)]
+abs = st_join(abs,gr)
+abs$LFA = abs$LFA.x
+abs = subset(abs,SYEAR>2015)
+                       abs$WOS = NA
+                            for(i in 1:length(lfa)) {
+                                  h  =  Fish.Date[Fish.Date$LFA==lfa[i],]
+                               for(j in unique(abs$SYEAR[abs$LFA==lfa[i]])){
+                                   print(c(lfa[i],j))
+                                  abs$WOS[abs$LFA==lfa[i]&abs$SYEAR==j] = floor(as.numeric(abs$DATE_FISHED[abs$LFA==lfa[i]&abs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+                                }
+                              }
+
+abss = subset(abs,select=c(TRIPNO, DATE_FISHED,WOS,SYEAR,LFA,SPECIESCODE,Length, CONDITION ))
+
+da = fisheryFootprintData(period='weekly')
+
+saveRDS(list(abss,gr,da),file='Cod_bycatch_lobster_traps_grids_effort.rds')
 
 #grids
 

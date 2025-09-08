@@ -29,7 +29,7 @@ snowcrab_sets <- function(){
   tots$TEMP = tots$BOTTOM_TEMPERATURE
   tots$BOTTOM_TEMPERATURE = tots$ID = tots$dist0 = tots$EST_DISCARD_WT = tots$EST_NUM_CAUGHT = tots$START_LAT = tots$START_LONG = tots$BOARD_DATE = NULL
   tots$timestamp = as.POSIXct(tots$DATE,tz='America/Halifax',origin=lubridate::origin)
-  tots$timestamp = with_tz(tots$timestamp,"UTC")
+  tots$timestamp = lubridate::with_tz(tots$timestamp,"UTC")
   tots$DYEAR = lubridate::decimal_date(tots$timestamp)- lubridate::year(tots$timestamp)
   tots$timestamp = NULL
  return(tots) 

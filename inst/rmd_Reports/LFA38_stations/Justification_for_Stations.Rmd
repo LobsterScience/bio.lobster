@@ -1,0 +1,114 @@
+---
+title: "LFA38 Station Selection"
+author: "Adam Cook"
+date: "`r Sys.Date()`"
+output: 
+  bookdown::word_document2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Station Selection
+During the LFA 35-38 Stock Assessment Framework in Fall of 2024, gaps in survey coverage were noted in LFA 38. Attempts to remedy this effect were explored using data from adjacent surveys which are performed by DMNR and NEFSC. Although this remedied the edge effects, they are not able to fill in areas with missing or low survey coverage. 
+```{r data,echo=FALSE, include=FALSE, message=F, warning=F}
+source('C:/Users/cooka/Documents/git/bio.lobster/inst/IP/StationsLFA38.r')
+
+```
+
+## Survey Coverage
+
+Survey Coverage of LFA 34,35,36,37 and 38 from the inshore lobster trawl survey (ILTS; green) and the DFO Ecosystem Survey (RV; blue; Figure \@ref(fig:fullmap)). The ILTS survey began as the ITQ survey in 1995 and is a fixed station survey. The RV survey survey is a stratified random survey with Figure \@ref(fig:fullmap) showing all stations since 1970. It is important note that not all stations are completed every year which can be shown as a single year coverage for 2024 in Figure \@ref(fig:2024map). Very clearly there is a gap in survey coverage to the south and west of Grand Manan. Parts of this area will be unlikely be available to survey given the year round fishery in LFA 38 which is covered by LFA 38B. 
+Part of the gap in survey coverage can be made up by included scallop survey catches of lobster (Figure \@ref(fig:fullmapwScal)). There is gear selectivity differences between the scallop dredge and the bottom trawls used in both the RV and ILTS, however recent work has shown that this can be accounted for by the inclusion of a survey parameter (i.e. RV, ILTS, scallop) when developing geostatistical models (Barss et al. in prep.). It is important to have overlap between gear types to appropriately characterize this survey effect, and thus increasing coverage in the ILTS will allow us to make more efficient use of the scallop survey data and provide better coverage for the 'missing areas' in LFA 38. 
+
+The scallop dredge survey and the ILTS sample more inshore than the RV survey, which can be seen in the coverage maps. This also has an effect on the size distribution of captured lobsters, such that more large lobsters are captured in the RV survey which has a predominatly offshore focus (Figure \@ref(fig:sizeFreqs)).
+
+```{r fullmap, echo=FALSE,fig.width=6, fig.height=7,fig.align='center',fig.cap="Depth (z; m) and Survey Coverage from the RV (blue) and ILTS(green) surveys since 1970 and 1995 respectively"}
+require(ggplot2)
+ggplot()+
+  geom_sf(data=subset(pip,LFA %in% c(34,35,36,37,38)),aes(fill=z,colour=z)) +
+  scale_fill_gradient(low = "white", high = "red")+
+  scale_colour_gradient(low = "white", high = "red")+
+  #geom_sf(data=subset(ss,LFA%in% c(34,35,36,37,38)),size=.01)+
+  geom_sf(data=subset(xs, LFA%in% c(34,35,36,37,38)),size=.8,colour='blue')+
+  geom_sf(data=subset(ys,LFA%in% c(34,35,36,37,38)),size=.8,colour='green')+
+  geom_sf(data=subset(lp,LFA%in% c(34,35,36,37,38)),fill=NA)+
+  theme_test_adam()+
+  theme(legend.key.size = unit(0.3, "cm"),
+        legend.text = element_text(size = 6),
+        legend.title = element_text(size = 7),
+        plot.margin = margin(-2,0,-2,0))
+
+```
+
+```{r 2024map, echo=FALSE,fig.width=6, fig.height=7,fig.align='center',fig.cap=" Depth (z; m) and Survey Coverage from the RV (blue) and ILTS(green) in 2024."}
+require(ggplot2)
+ggplot()+
+  geom_sf(data=subset(pip,LFA %in% c(34,35,36,37,38)),aes(fill=z,colour=z)) +
+  scale_fill_gradient(low = "white", high = "red")+
+  scale_colour_gradient(low = "white", high = "red")+
+  #geom_sf(data=subset(ss,LFA%in% c(34,35,36,37,38)),size=.01)+
+  geom_sf(data=subset(xs, yr==2024& LFA%in% c(34,35,36,37,38)),size=.8,colour='blue')+
+  geom_sf(data=subset(ys,yr==2024&LFA%in% c(34,35,36,37,38)),size=.8,colour='green')+
+  geom_sf(data=subset(lp,LFA%in% c(34,35,36,37,38)),fill=NA)+
+  theme_test_adam()+
+  theme(legend.key.size = unit(0.3, "cm"),
+        legend.text = element_text(size = 6),
+        legend.title = element_text(size = 7),
+        plot.margin = margin(-2,0,-2,0))
+
+```
+
+
+```{r fullmapwScal, echo=FALSE,fig.width=6, fig.height=7,fig.align='center',fig.cap="Depth (z; m) and Survey Coverage from the RV (blue) and ILTS(green) surveys since 1970 and 1995 respectively. Black points represent scallop survey stations where lobster are included."}
+require(ggplot2)
+ggplot()+
+  geom_sf(data=subset(pip,LFA %in% c(34,35,36,37,38)),aes(fill=z,colour=z)) +
+  scale_fill_gradient(low = "white", high = "red")+
+  scale_colour_gradient(low = "white", high = "red")+
+  geom_sf(data=subset(ss,LFA%in% c(34,35,36,37,38)),size=.01)+
+  geom_sf(data=subset(xs, LFA%in% c(34,35,36,37,38)),size=.8,colour='blue')+
+  geom_sf(data=subset(ys,LFA%in% c(34,35,36,37,38)),size=.8,colour='green')+
+  geom_sf(data=subset(lp,LFA%in% c(34,35,36,37,38)),fill=NA)+
+  theme_test_adam()+
+  theme(legend.key.size = unit(0.3, "cm"),
+        legend.text = element_text(size = 6),
+        legend.title = element_text(size = 7),
+        plot.margin = margin(-2,0,-2,0))
+
+```
+
+
+```{r sizeFreqs, echo=FALSE,fig.width=6, fig.height=7,fig.align='center',fig.cap="Size Frequencies of Sampled Lobster from the ILTS, Scallop Survey and RV survey across all stations."}
+require(ggplot2)
+ggplot(sizs,aes(x=Value,fill=Source))+
+  geom_histogram(aes(y=after_stat(density)),binwidth=1,alpha=.6,position='identity')+
+  labs(x='Carapace Length',y='Density')+
+  facet_wrap(~Source,ncol=1,scales = 'free_y')+
+  theme_minimal()
+
+```
+```{r fishlocs, echo=FALSE,fig.width=6, fig.height=7,fig.align='center',fig.cap="Locations of Reported Fishing in LFA 38B from June to November 2004-2024."}
+require(ggplot2)
+ggplot()+
+  geom_sf(data=subset(pip,LFA %in% c(38)),aes(fill=z,colour=z)) +
+  scale_fill_gradient(low = "white", high = "red")+
+  scale_colour_gradient(low = "white", high = "red")+
+  geom_sf(data=subset(lp,LFA%in% c(38)),fill=NA)+
+  geom_sf(data=subset(zs,LFA%in% c(38)),size=.4)+
+  theme_test_adam()+
+  theme(legend.key.size = unit(0.3, "cm"),
+        legend.text = element_text(size = 6),
+        legend.title = element_text(size = 7),
+        plot.margin = margin(-2,0,-2,0))
+
+
+```
+
+
+
+## LFA 38B Fishing
+
+During the time of the year when the ILTS will be conducted in LFA 38, the area known as LFA 38B will not be available to survey due to ongoing fishing (Figure \@ref(fig:fishlocs)). 
+

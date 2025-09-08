@@ -26,6 +26,16 @@ if(DS %in% c('percent_reporting')){
       vsP = connect.command(con,"select * from lobster.percent_reporting")
       return(vsP)
     }
+
+    if(DS %in% c('amo','amo.redo')){
+      fli =  file.path(project.datadirectory('bio.lobster'),'data','amo.csv')
+      if(grepl('redo', DS)){
+      wp = read.table('https://www1.ncdc.noaa.gov/pub/data/cmb/ersst/v5/index/ersst.v5.amo.dat',skip=1,header = T)
+      write.csv(wp,fli,row.names = F)
+      }
+      
+      return(read.csv(fli))
+    }
     
     
 if(DS %in% c('licence_categories')){
@@ -831,10 +841,22 @@ if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
         load(file=file.path(fnODBC,'temperature.rdata'))
         return(TempData)
       }
-      #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
       TempData = connect.command(con,"select * from SNOWCRAB.SC_TEMP_MERGE")
       save(TempData,file=file.path(fnODBC,'temperature.rdata'))
     }
+    
+    if(DS %in% c('cw.temperature.data.redo', 'cw.temperature.data')){
+      if(DS == 'cw.temperature.data') {
+        load(file=file.path(fnODBC,'cw.temperature.rdata'))
+        return(tm)
+      }
+      td = dir(file.path(project.datadirectory('bio.lobster'),'Temperature Data','CW'),full.names = T)
+      tm  =readxl::read_xlsx(td)
+      names(tm) = c('StringID','DateSet','DateHauled','TempTime','Temp','LAT_DD','LON_DD','DEPTH_M')
+      save(tm,file=file.path(fnODBC,'cw.temperature.rdata'))
+    }
+    
+    
 
     if(DS %in% c('bathymetry')){
         load(file=file.path(project.datadirectory('bio.lobster'),'bathymetry','bathymetry.complete.canada.east.rdata'))
@@ -867,7 +889,7 @@ if(DS %in% c('historic.landings.redo', 'historic.landings')){
                 return(hland)
           }
                    #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-                  hland = connect.command(con,"select * from lobster.historical_county_land")
+                  hland = connect.command(con,"select * from lobster.historical_lobdist_land")
                   save(hland,file=file.path(fnODBC,'historic.landings.rdata'))
           }
 
@@ -1043,6 +1065,7 @@ if(DS %in% c('season.dates','season.dates.redo')) {
                     Fish.Date = season.dates = connect.command(con,'select * from LOBSTER.FISHING_SEASONS')
                     print('Lobster.Fishing_Seasons needs to be updated in SQL if you want to use this season dates script--these dates come from FAM.')
                     season.dates = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
+                    print(paste0("Maximum Season SYEAR in season.dates is ", max(season.dates$SYEAR)))
                   save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
             }
 
@@ -1315,7 +1338,8 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
           save( vlog, file=file.path( fnODBC, "processed.vlog.rdata"), compress=T)
           return(vlog)
         }
-        load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)
+        load(file.path( fnODBC, "processed.vlog.rdata"))
+        return(vlog)
     }
 
 if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
@@ -1334,7 +1358,14 @@ if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
       return(log_md)
     }
 
-
+if (DS %in% c("uslandings_by_state") ) {
+    print('data comes from https://www.fisheries.noaa.gov/foss/f?p=215:200:11583616673315:::::')  
+      x = read.csv(file=file.path( fn.root, "US_Landings50-23.csv"))
+      x <- x %>%
+          mutate(across(c(Pounds,Metric.Tons, Dollars), ~as.numeric(gsub(",","",.))))
+    return(x)
+      }
+    
 
 ### Offshore Commercial Logs
     if (DS %in% c("logs41.redo", "logs41") ) {
@@ -1376,85 +1407,32 @@ if (DS %in% c("greyzone_logs.redo", "greyzone_logs") ) {
     }
     
     
-    if (DS %in% c("process.logs41.redo", "process.logs41") ) {
-      fo=file.path( fnODBC, "processed_logs41.rdata")
+    if (DS %in% c("process.logs41.redo", "process.logs41", "process.logs41.unfiltered") ) {
+      fo=file.path( fnODBC, "processed_logs41.rds")
+      f2=file.path( fnODBC, "processed_logs41.unfiltered.rds")
       
       if (DS=="process.logs41.redo") {
-        
+          require(sf)    
         lobster.db('logs41')
         logs41$ADJCATCH_KG = logs41$ADJCATCH / 2.204
         logs41$CPUE = logs41$ADJCATCH_KG / logs41$NUM_OF_TRAPS
-        lq = quantile(logs41$CPUE,c(0.01,.999),na.rm=T)
-        logs41p = subset(logs41,CPUE>=lq[1] & CPUE<=lq[2])
-
-   logs41p$yr = lubridate::year(logs41p$FV_FISHED_DATETIME)
-
-
-save( logs41p, file=fo, compress=T)
+        saveRDS( logs41, file=f2, compress=T)
         
+      lq = quantile(logs41$CPUE,c(0.01,.9995),na.rm=T)
+      logs41p = subset(logs41,CPUE>=lq[1] & CPUE<=lq[2])
+      logs41p$yr = lubridate::year(logs41p$FV_FISHED_DATETIME)
+       
+      gr41 = st_as_sf(readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds')))
+      logs41p$X = logs41p$DDLON * -1
+      logs41p$Y = logs41p$DDLAT
+      lp = st_as_sf(subset(logs41p, !is.na(X)),coords=c('X','Y'),crs=4326)
+      lp = st_join(lp,gr41)
+      saveRDS( lp, file=fo, compress=T)
       }
-      load(fo)
-    }
+      if (DS=="process.logs41.unfiltered") {return(readRDS(f2))  }
+      if (DS=="process.logs41") {return(readRDS(fo))}
+      }
         
-    if(DS %in% c('logs41.habitat','logs41.habitat.redo')) {
-
-        if(DS == 'logs41.habitat' ) {
-              load(file=file.path(fnProducts,'lfa41LogsHabitatData.rdata'))
-              return(a41)
-            }
-              p = bio.lobster::load.environment()
-              require(bio.utilities)
-              require(bio.habitat)
-              require(raster)
-              loadfunctions('bio.habitat')
-              loadfunctions('bio.utilities')
-              loadfunctions('bio.indicators')
-            loadfunctions('bio.temperature')
-
-            lobster.db('logs41') #make sure to do a database recapture through logs41.redo before moving on
-
-            logs41 = rename.df(logs41,c('FV_FISHED_DATETIME'),c('DATE_FISHED'))
-
-            logs41$yr = year(logs41$DATE_FISHED) #2002 to present
-            ziff41$yr = year(ziff41$DATE_FISHED) #1995 to 2001
-            ziff41$DDLON = ziff41$DDLON * -1
-            off41$yr  = year(off41$DATE_FISHED) #1981 to 1994
-
-            logs41$OFFAREA = NULL
-
-            #oct16-oct15 fishing year until 2005 switch to Jan 1 to Dec 31
-
-            a41 = rbind(off41,ziff41,logs41)
-            a41$fishingYear = sapply(a41$DATE_FISHED,offFishingYear)
-
-            a41 = lonlat2planar(a41,input_names = c('DDLON','DDLAT'),proj.type = pH$internal.projection)
-            a41$plon = grid.internal(a41$plon,pH$plons)
-            a41$plat = grid.internal(a41$plat,pH$plats)
-            a41$z = NA
-            a41$depth = NULL
-
-            a41 = completeFun(a41,c('plon','plat'))
-            a41 = subset(a41,DDLAT>0)
-            a41 = subset(a41, MON_DOC_ID!=153219950609)
-            a41 = habitat.lookup(a41,p=p,DS='depth')
-
-            #clean up some errors
-            a41$z[which(a41$z>450)]  =  NA
-
-            hist(a41$z,'fd',xlab='Depth',main="")
-
-            #time stamping for seasonal temperatures
-
-            a41$timestamp = as.POSIXct(a41$DATE_FISHED,tz='America/Halifax',origin=lubridate::origin)
-            a41$timestamp = with_tz(a41$timestamp,"UTC")
-            a41$dyear = lubridate::decimal_date(a41$timestamp)- lubridate::year(a41$timestamp)
-            a41 = subset(a41,fishingYear<2016)
-
-            a41 = habitat.lookup(a41,p=p,DS='temperature.seasonal')
-            a41 = habitat.lookup(a41,p=p,DS='substrate')
-          save(a41,file=file.path(fnProducts,'lfa41LogsHabitatData.rdata'))
-          return(a41)
-    }
 
 ### Offshore Commercial Logs for Jonah crab
    if (DS %in% c("logs41jonah.redo", "logs41jonah") ) {
@@ -1539,7 +1517,6 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
          if (DS=="atSea.redo") {
            require(RODBC)
            #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-
             # atSea
             atSea = connect.command(con, "select * from lobster.LOBSTER_ATSEA_VW")
             atSea2 = connect.command(con, "select * from lobster.lobster_bycatch_assoc")
@@ -1874,7 +1851,7 @@ if(DS %in% c('lfa41.observer.samples.redo','lfa41.observer.samples')) {
         # Denton Script Sept 28 2016
         obs.samp  =  connect.command(con, paste("
 SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, st.fishset_id
-                                        FROM isdb.istrips trip, isdb.isfishsets st,   isdb.iscatches ca, isdb.isfish fish,
+                                        FROM istrips trip, isfishsets st,   iscatches ca, isfish fish,
                                                                           (SELECT
                                             fishset_id,
                                         (CASE
@@ -1960,12 +1937,12 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
     if (DS %in% c("fsrs.redo", "fsrs") ) {
 
      if (DS=="fsrs.redo") {
-        require(RODBC)
+        #require(RODBC)
         #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-        md = connect.command(con, "select max(haul_date) mdate from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
-        load(file=file.path( fnODBC, "fsrs.rdata"))
-        f_md = max(fsrs$HAUL_DATE)
-        if(f_md>=as.POSIXct(md[,1])) stop('No new data to over write old file')
+       # md = connect.command(con, "select max(haul_date) mdate from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
+        #load(file=file.path( fnODBC, "fsrs.rdata"))
+        #if_md = max(fsrs$HAUL_DATE)
+       # if(f_md>=as.POSIXct(md[,1])) stop('No new data to over write old file')
         
        fsrs = connect.command(con, "select * from fsrs_lobster.FSRS_LOBSTER_VW") #the sizes are all recoded to be continuous --- the old guage is now reflected in the new numbering AMC
         
@@ -2144,7 +2121,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
        
         scallopSurv = connect.command(con, "select * from SCALLSUR.SCBYCATCH_STD where speccd_id='2550'")
 
-      scallopSurv = subset(scallopSurv,TOW_TYPE_ID %in% c(1,5) & STRATA_ID %ni% c(50,55))
+      scallopSurv = subset(scallopSurv,TOW_TYPE_ID %in% c(1,5) )
         save( scallopSurv, file=file.path( fnODBC, "scallopSurv.rdata"), compress=T)
 
         #these are now saved as a sf object       

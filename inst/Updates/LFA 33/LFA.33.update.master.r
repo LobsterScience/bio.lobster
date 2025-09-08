@@ -66,6 +66,7 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 	#
 		logs=lobster.db("process.logs")
 
+		source("C:/bio/bio.lobster/R/CPUEModelData2.r")
 		#Choose one to redo or not Add TempSkip=T to not model CPUE with Temps
 		CPUE.data<-CPUEModelData2(p,redo=T)
 		#CPUE.data<-CPUEModelData2(p,redo=F)
@@ -441,6 +442,14 @@ FSRSCatchRatePlot(recruits = recruit[,c("YEAR","median","lb","ub")],legals=legal
 dev.off()
 }
 
+  #  Landed Value Placeholder
+    
+   # lobster.db('slips.redo')
+   # lobster.db('process_slips.redo')
+   # b = lobster.db('process_slips')
+    
+   # aggregate(cbind(adj_wt_kg,value)~LFA+SYEAR,data=b,FUN=sum)
+    
 # Landings and Effort ############
 {
 land = lobster.db('seasonal.landings')
