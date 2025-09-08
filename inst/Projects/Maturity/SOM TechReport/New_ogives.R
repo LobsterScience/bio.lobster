@@ -94,7 +94,8 @@ with(ndata35,{
 text(60, 0.85, paste("LFA 35"))
 text(60, 0.75,bquote(paste('L'['50']*' = ','83.3')))
 
-
+percentage_mature <- sum(b35$Pleopod_mat == 1) / nrow(b35) * 100
+print(percentage_mature)
 
 
 ########## to get a and b from nls binned data
@@ -142,6 +143,8 @@ with(ndata36,{
 text(60, 0.85, paste("LFA 36"))
 text(60, 0.75,bquote(paste('L'['50']*' = ','88.8')))
 
+percentage_mature <- sum(b36$Pleopod_mat == 1) / nrow(b36) * 100
+print(percentage_mature)
 
 
 ########## to get a and b from nls binned data
@@ -193,7 +196,8 @@ with(ndata38,{
 text(60, 0.85, paste("LFA 38"))
 text(60, 0.75,bquote(paste('L'['50']*' = ','88.5')))
 
-
+percentage_mature <- sum(b38$Pleopod_mat == 1) / nrow(b38) * 100
+print(percentage_mature)
 
 
 
@@ -246,7 +250,8 @@ with(ndata,{
 text(63, 0.9, paste("Bay of Fundy (LFAs 35,36,38)"))
 text(63, 0.85,bquote(paste('L'['50']*' = ','87.3')))
 
-
+percentage_mature <- sum(bof$Pleopod_mat == 1) / nrow(bof) * 100
+print(percentage_mature)
 
 # 
 # ## to get a and b from nls binned data

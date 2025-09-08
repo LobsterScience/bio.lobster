@@ -11,14 +11,14 @@ require(viridis)
 require(viridis)
 
 
+
 p=list()
-assessment.year = 2024 ##Check Year
-p$syr = 2022
-p$yrs = p$syr:assessment.year
+assessment.year = 2025 ##Check Yea
+
 p$lfas = c("41") # specify lfa
 
 
-#lobster.db("observer41.redo")
+lobster.db("observer41.redo")
 lobster.db("observer41")
 obs<-observer41
 
@@ -31,5 +31,5 @@ obs$Year <- year(obs$STARTDATE)
 obs$Month <- month(obs$STARTDATE)
 obs$Day <- day(obs$STARTDATE)
 
-obs_2024 <- subset(obs, Year == 2024)
+obs_2024 <- subset(obs, Year == 2025)
 
