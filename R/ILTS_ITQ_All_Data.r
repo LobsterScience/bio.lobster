@@ -9,7 +9,7 @@
 #' @return Data objects that contain the data for use in further analyses.
 #' @examples ILTS_ITQ_All_Data(species=2550, size=c(1,200),sex=c(3),aggregate=T)
 #' @export
-ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=F,size = NULL, sex=NULL,aggregate=T,return_tow_tracks=F,applyGearConversion=T,biomass=T,extend_ts=T,return_base_data=F){
+ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size = NULL, sex=NULL,aggregate=T,return_tow_tracks=F,applyGearConversion=T,biomass=T,extend_ts=T,return_base_data=F){
   require(dplyr)
   require(bio.lobster)
   require(bio.utilities)
