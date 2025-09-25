@@ -373,10 +373,9 @@ png(filename=file.path(cpue.dir, paste0("weekly_cpue_",l,".png")),width=8, heigh
 #lobster.db('ccir')
 lobster.db('ccir.redo') #Must 'redo' to bring in new data
 
-
- inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
- load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
- load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
+inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
+load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
+load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
 
 logs = lobster.db('process.logs')
 
