@@ -6,6 +6,7 @@
 	require(bio.utilities)
 	require(sf)
 	require(ggplot2)
+	require(dplyr)
 	la()
 	p$yrs <- NULL #ensuring empty variable
 	
@@ -45,8 +46,64 @@
 #Run a report of missing vs received logs and save a csv copy
 	    
 fl.name=paste("percent_logs_reported", Sys.Date(),"csv", sep=".")
-per.rec=per.rec[order(per.rec$YEARMTH),]
-write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
+per.rec= lobster.db("percent_reporting")
+per.rec <- per.rec[order(per.rec$YEARMTH), ]
+p1 <- per.rec[
+    substr(per.rec$YEARMTH, 1, 4) == as.character(p$current.assessment.year-1) &
+        substr(per.rec$YEARMTH, 5, 6) %in% c("11", "12"),
+]
+p2<- per.rec[grepl(p$current.assessment.year, per.rec$YEARMTH), ]
+per.rec=rbind(p1, p2)
+columns_to_keep <- c("YEARMTH", grep("L33|L34", colnames(per.rec), value = TRUE))
+per.rec <- per.rec[, columns_to_keep]
+per.rec <- per.rec[!apply(per.rec[, -which(names(per.rec) == "YEARMTH")], 1, function(x) all(is.na(x))), ]
+
+
+L33_miss <- sum(per.rec$L33MISS)
+L33_recd <- sum(per.rec$L33RECD)
+L33_percent <- 100 * L33_miss / (L33_miss + L33_recd)
+
+L34_miss <- sum(per.rec$L34MISS, na.rm = TRUE)
+L34_recd <- sum(per.rec$L34RECD, na.rm = TRUE)
+L34_percent <- 100 * L34_miss / (L34_miss + L34_recd)
+
+summary_tbl <- data.frame(
+    LobsterArea = c("L33", "L34"),
+    Miss = c(L33_miss, L34_miss),
+    Recd = c(L33_recd, L34_recd),
+    PercentMiss = c(L33_percent, L34_percent)
+)
+
+summary_tbl
+
+library(dplyr)
+
+# Make per.rec into character data frame
+per.rec_out <- per.rec %>%
+    mutate(across(everything(), as.character))
+
+# Add a blank row for separation
+blank_row <- as.data.frame(matrix("", ncol = ncol(per.rec_out)))
+colnames(blank_row) <- colnames(per.rec_out)
+
+# Make summary into the same shape by adding missing columns
+summary_out <- summary_tbl %>%
+    mutate(across(everything(), as.character)) %>%
+    # add missing cols as blanks so it can bind
+    tibble::add_column(
+        YEARMTH = "",
+        L33MISS = "",
+        L33RECD = "",
+        L33PERCENT = "",
+        L34MISS = "",
+        L34RECD = "",
+        L34PERCENT = "",
+        .before = 1
+    )
+
+# Bind everything together
+final_out <- bind_rows(per.rec_out, blank_row, summary_out)
+write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
 # Map ################
 
@@ -66,37 +123,70 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 	#
 		logs=lobster.db("process.logs")
 
-		source("C:/bio/bio.lobster/R/CPUEModelData2.r")
+		
 		#Choose one to redo or not Add TempSkip=T to not model CPUE with Temps
-		CPUE.data<-CPUEModelData2(p,redo=T)
+		#CPUE.data<-CPUEModelData2(p,redo=T)
 		#CPUE.data<-CPUEModelData2(p,redo=F)
-		
-		
-		cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(p$current.assessment.year),graphic='R')$annual.data
+		#cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(p$current.assessment.year),graphic='R')$annual.data
 	
-		crd = subset(cpueData,LFA==33,c("YEAR","CPUE"))
+	
+	
+		h = lobster.db('annual.landings')
+		i = lobster.db('seasonal.landings')
+		g = lobster.db('process.logs')
+		
+		ref = data.frame(LFA=c(27:30,'31A','31B',32,33),lrp=c(.14,.12,.11,.28,.16,.16,.14,.14),usr=c(.27,.25,.22,.56,.41,.32,.29,.28))
+		
+		g = subset(g, SYEAR<=p$current.assessment.year)
+		
+		#bring in voluntary log data to populate <2005
+		fn.root =  file.path( project.datadirectory('bio.lobster'), "data")
+		fnODBC  =  file.path(fn.root, "ODBCDump")
+		get.vlog=load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)
+		v = subset(vlog,SYEAR<2005, select=c("SYEAR","W_KG","N_TRP","LFA"))
+		names(v)=c("SYEAR","WEIGHT_KG","NUM_OF_TRAPS","LFA")
+		v$LFA[v$LFA%in%c("27N","27S")] = "27"
+		v$LFA[v$LFA%in%c("33W","33E")] = "33"
+		va = aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR+LFA,data=v,FUN=sum)
+		#merge vlog and logs here
+		
+		gag = aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR+LFA,data=g,FUN=sum)
+	    ga=rbind(va, gag)
+		ga$cpue = ga$WEIGHT_KG/ga$NUM_OF_TRAPS
+		l = unique(ga$LFA)
+		o = list()
+		for(j in 1:length(l)){
+		    n = subset(ga,LFA==l[j])
+		    running.median = with(rmed(n$SYEAR,n$cpue),data.frame(SYEAR=yr,running.median=x))
+		    o[[j]]=merge(n,running.median,all=T)
+		}
+		o = dplyr::bind_rows(o)
+		
+		##Above section can be dropped into 27-32 assessment
+		
+	    crd=crd = subset(o,LFA==33)	
+		names(crd)=c("YEAR", "LFA", "NUM_OFTRAPS","WEIGHT_KG", "CPUE", "running.median")
 		crd = crd[is.finite(crd$CPUE),]
-		mu = median(crd$CPUE[crd$YEAR %in% c(1990:2016)])
-		usr = mu * 0.8
-		lrp = mu * 0.4
+		usr = 0.28
+		lrp = 0.14
 
 
 	
 
-		png(filename=file.path(figdir, "CPUE_only.png"),width=8, height=5.5, units = "in", res = 800)
-    		par(mar=c(2.0,5.5,2.0,3.0))
-    		xlim=c(1990,max(crd$YEAR))
-    		plot(crd[,1],crd[,2],xlab='Year',ylab='CPUE (kg/TH)',type='b',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
-    		points(max(crd$YEAR), crd$CPUE[which(crd$YEAR==max(crd$YEAR))], pch=17, col='red', cex=1.2)
-		dev.off()
+	#	png(filename=file.path(figdir, "CPUE_only.png"),width=8, height=5.5, units = "in", res = 800)
+    #		par(mar=c(2.0,5.5,2.0,3.0))
+    #		xlim=c(1990,max(crd$YEAR))
+    #		plot(crd[,1],crd[,2],xlab='Year',ylab='CPUE (kg/TH)',type='b',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
+    #		points(max(crd$YEAR), crd$CPUE[which(crd$YEAR==max(crd$YEAR))], pch=17, col='red', cex=1.2)
+	#	dev.off()
 
     png(filename=file.path(figdir, "CPUE_LFA33.png"),width=8, height=5.5, units = "in", res = 800)
         par(mar=c(4.0,5.5,2.0,3.0))
         xlim=c(1990,max(crd$YEAR))
-        plot(crd[,1],crd[,2],xlab='Year',ylab='CPUE (kg/TH)',type='p',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
+        plot(crd$YEAR,crd$CPUE,xlab='Year',ylab='CPUE (kg/TH)',type='p',pch=16,xlim=xlim, ylim=c(0, 1.05*max(crd$CPUE)))
         points(max(crd$YEAR), crd$CPUE[which(crd$YEAR==max(crd$YEAR))], pch=17, col='red', cex=1.2)
-        running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
-        crd=merge(crd,running.median,all=T)
+        #running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
+        #crd=merge(crd,running.median,all=T)
         lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
         abline(h=usr,col='green',lwd=2,lty=2)
         abline(h=lrp,col='red',lwd=2,lty=3)
@@ -117,13 +207,10 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
     abline(h=lrp,col='red',lwd=2,lty=3)
     dev.off()
     
-    # plot
-    #x11(width=8,height=5)
-    CatchRatePlot(data = crd ,usr = usr,lrp=lrp,lfa = 33,fd=figdir, save=F)
 
     # Plots unbiased annual CPUE for all LFAs in Maritimes region
     # Good for context in presentations at AC
-    {  
+    
     a = lobster.db('process.logs')
     a = subset(a,SYEAR %in% 2004:p$current.assessment.year) 
     
@@ -165,50 +252,7 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
       dev.off()
       
       
-      # Plots unbiased annual CPUE for all LFAs in Maritimes region
-      # Good for context in presentations at AC
       
-      a = lobster.db('process.logs')
-      a = subset(a,SYEAR %in% 2004:p$current.assessment.year) 
-      
-      aa = split(a,f=list(a$LFA,a$SYEAR))
-      cpue.lst<-list()
-      m=0
-      #by time
-      for(i in 1:length(aa)){
-        tmp<-aa[[i]]
-        tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
-        names(tmp)<-c('time','catch','effort')
-        tmp$date<-as.Date(tmp$time)
-        first.day<-min(tmp$date)
-        tmp$time<-julian(tmp$date,origin=first.day-1)
-        tmp$time = ceiling(tmp$time/7) #convert to week of season
-        if(nrow(tmp)>5){
-          m=m+1
-          g<-as.data.frame(biasCorrCPUE(tmp,by.time=F))
-          g$lfa=unique(aa[[i]]$LFA)
-          g$yr = unique(aa[[i]]$SYEAR)
-          g = t(g)[,2]
-          cpue.lst[[m]] <- g
-        }
-      }
-      cc =as.data.frame(do.call(rbind,cpue.lst))
-      cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
-      cc = cc[order(cc$lfa,cc$yr),]
-      cc$yr = as.numeric(cc$yr)
-      cc$fyr = as.factor(cc$yr)
-      last_bar_color="black"
-        point_colors <- ifelse(cc$yr <max(cc$yr), last_bar_color, "orange")
-        cc1 = cc
-        
-        png(filename=file.path(figdir, "all_lfas_cpue.png"),width=8, height=5.5, units = "in", res = 800)
-        ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+
-          geom_smooth(se=FALSE)+geom_point(data=cc1,aes(x=yr,y=CPUE,colour=fyr))+facet_wrap(~lfa,scales='free_y')+
-          scale_colour_manual(values = point_colors)+theme(legend.position = 'none')+
-          labs(y= "CPUE", x = "Year")
-        dev.off()
-        
-    }     
         
       #Unbiased cpue patterns by week of season
       #Will need to modify AC presentation to include these contextual CPUE figures
@@ -313,14 +357,13 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
 
 # CCIR ###############
-#The following two tables need to be updated to reflect current year:
-#C:\bio.data\bio.lobster\data\inputs\ccir.inputs.csv
-#C:\bio.data\bio.lobster\data\inputs\MinLegalSize
+
+
     {    
 		lobster.db('ccir.redo')
-		inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
-		load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
-		load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
+		inp = read.csv(file.path(bio.directory,'bio.lobster.data','misc','ccir','ccir_inputs.csv'))
+		load(file.path(bio.directory,'bio.lobster.data','misc','ccir','ccir_groupings.rdata')) #object names Groupings
+		load(file.path(bio.directory,'bio.lobster.data','misc','ccir','ccir_seasons.rdata'))
 
     
 		lobster.db('ccir')
@@ -335,14 +378,14 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		#make sure to index year below as appropriate
 		#ccir_data = subset(ccir_data,YEAR<=p$current.assessment.year) 
 		
-		#to only run last three years:
-		ccir_data = subset(ccir_data,YEAR=c((p$current.assessment.year-2):(p$current.assessment.year))) #Don't know that this works
+		#to only run last three years (untested):
+		#ccir_data = subset(ccir_data,YEAR=c((p$current.assessment.year-2):(p$current.assessment.year))) #Don't know that this works
 		
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 		out.binomial = list()
 		attr(out.binomial,'model') <- 'binomial'
-		for(i in 33:length(dat)) { #if run breaks, update 1:length(dat) to reflect run# ie.e 16:length(dat)
+		for(i in 1:length(dat)) { #if run breaks, update 1:length(dat) to reflect run# ie.e 16:length(dat)
 			print(i)
 		  ds = dat[[i]]
 			#ds$method = 'binomial'
@@ -508,7 +551,8 @@ land = lobster.db('seasonal.landings')
 }
 
 # to compare weekly fishing effort year to year (include in AC presentation if desired)
-	 
+      logs=lobster.db("process.logs")
+      
      logs33=logs[logs$LFA=="33",]
 	  logs33$unique_days=paste(logs33$VR_NUMBER, logs33$DATE_FISHED, sep=':')
 	  
