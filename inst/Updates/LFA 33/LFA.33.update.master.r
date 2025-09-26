@@ -10,7 +10,7 @@
 	la()
 	p$yrs <- NULL #ensuring empty variable
 	
-	#la()
+
 #If running script after the fishery year, run this line
 #p$current.assessment.year=p$current.assessment.year-1
 
@@ -192,7 +192,9 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
         abline(h=lrp,col='red',lwd=2,lty=3)
     dev.off()
    
-    write.csv(crd,file.path(figdir,file='CatchRateRefs33.csv'))
+    write.csv(crd, file=paste0(figdir,file='CatchRateRefs33.csv'), row.names=F )
+    save(crd, file=paste0(figdir, "/cpueData.Rdata") )
+   
     
     #French Version of Figure:
     png(filename=file.path(figdir, "CPUE_LFA33.French.png"),width=8, height=5.5, units = "in", res = 800)
@@ -379,7 +381,7 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		#ccir_data = subset(ccir_data,YEAR<=p$current.assessment.year) 
 		
 		#to only run last three years (untested):
-		#ccir_data = subset(ccir_data,YEAR=c((p$current.assessment.year-2):(p$current.assessment.year))) #Don't know that this works
+		#ccir_data = subset(ccir_data,YEAR %in% c((as.numeric(p$current.assessment.year)-2):(p$current.assessment.year))) #Don't know that this works
 		
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
@@ -390,7 +392,7 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		  ds = dat[[i]]
 			#ds$method = 'binomial'
 			x = ccir_stan_run_binomial(dat = ds,save=T)
-			out.binomial[[i]] <- ccir_stan_summarize(x)
+			out.binomial[[i]] <- ccir_stan_summarize(x, fdir = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','lfa33'))
 		}
 
 ### If the folder C:\bio.data\bio.lobster\outputs\ccir\summary contains other model runs for different areas (i.e.27-32)
@@ -398,7 +400,7 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 	
 		#load statement below combines ccir summaries if broken runs
 		#ensure folder has only model run summaries
-		da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary') #modify as required
+		da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','lfa33') #modify as required
 
 		d = list.files(da,full.names=T)
 		d=d[!file.info(d)$isdir]
@@ -408,7 +410,7 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		
 		for( i in 1:length(d)){
 		  load(d[i])
-		  out.binomial[[i]] <- out
+		    out.binomial[[i]] = out
 		}
 
 
@@ -452,7 +454,7 @@ dev.off()
 {
 		FSRSvesday<-FSRSModelData()
 
-		mdata = subset(FSRSvesday,LFA==33&SYEAR<2025) #index year
+		mdata = subset(FSRSvesday,LFA==33&SYEAR<=p$current.assessment.year) #index year
 
 		FSRSModelResultsLegal=FSRSmodel(mdata,lfa=33, response="LEGALS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
 		FSRSModelShortsRecruit=FSRSmodel(mdata,lfa=33, response="SHORTS",interaction=F,type="bayesian",iter=5000,redo=T,ptraps=1000)
@@ -499,13 +501,13 @@ land = lobster.db('seasonal.landings')
     
     
 #if running this section without having done the CPUE analysis during the same session, run 2 lines below 
-#CPUE.data<-CPUEModelData(p,redo=F)
-#cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(CPUE.data$SYEAR),graphic='R')$annual.data
+#load (file=paste0(figdir, "/cpueData.Rdata") )
+
 
 		land$YEAR = as.numeric(substr(land$SYEAR,6,9))
 		land$LANDINGS = land$LFA33
-		fishData = merge(cpueData,land[,c("YEAR","LANDINGS")])
-		fishData$EFFORT2 = fishData$LANDINGS * 1000 / fishData$CPUE
+		fishData = merge(crd,land[,c("YEAR","LANDINGS")])
+		fishData$EFFORT2 = fishData$LANDINGS * 1000 / crd$CPUE
 		
 		
 
