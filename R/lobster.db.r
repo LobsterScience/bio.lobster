@@ -1970,6 +1970,7 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
 
         fsrs$SIZE_CD=fsrs$SIZE_GRP
         fsrs=within(fsrs, rm(SIZE_GRP))
+        fsrs$HAUL_DATE = as.Date(fsrs$HAUL_DATE)
         fsrs$mn = lubridate::month(fsrs$HAUL_DATE)
         fsrs$SYEAR= lubridate::year(fsrs$HAUL_DATE)
         ii = which(fsrs$LFA>32 & fsrs$mn %in% c(10,11,12))

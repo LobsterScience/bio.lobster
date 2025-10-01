@@ -127,13 +127,60 @@ if (double.check.logs){
 
 #Choose One:
 
-CPUE.data<-CPUEModelData2(p,redo=T) #Reruns cpue model. Only takes a couple minutes now.
+#CPUE.data<-CPUEModelData2(p,redo=T) #Reruns cpue model. Only takes a couple minutes now.
 #CPUE.data<-CPUEModelData2(p,redo=F) Doesn't rerun model. Just takes last run version.
 
-cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:p$current.assessment.year, graphic='R')$annual.data #index end year
+#cpueData=CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:p$current.assessment.year, graphic='R')$annual.data #index end year
 
 #add lrp and USR
 
+logs=lobster.db("process.logs")
+
+
+#Choose one to redo or not Add TempSkip=T to not model CPUE with Temps
+#CPUE.data<-CPUEModelData2(p,redo=T)
+#CPUE.data<-CPUEModelData2(p,redo=F)
+#cpueData=    CPUEplot(CPUE.data,lfa= p$lfas,yrs=1981:max(p$current.assessment.year),graphic='R')$annual.data
+
+
+
+h = lobster.db('annual.landings')
+i = lobster.db('seasonal.landings')
+g = lobster.db('process.logs')
+
+ref = data.frame(LFA=c(27:30,'31A','31B',32,33),lrp=c(.14,.12,.11,.28,.16,.16,.14,.14),usr=c(.27,.25,.22,.56,.41,.32,.29,.28))
+
+g = subset(g, SYEAR<=p$current.assessment.year)
+
+#bring in voluntary log data to populate <2005
+fn.root =  file.path( project.datadirectory('bio.lobster'), "data")
+fnODBC  =  file.path(fn.root, "ODBCDump")
+get.vlog=load(file.path( fnODBC, "processed.vlog.rdata"),.GlobalEnv)
+v = subset(vlog,SYEAR<2005, select=c("SYEAR","W_KG","N_TRP","LFA"))
+names(v)=c("SYEAR","WEIGHT_KG","NUM_OF_TRAPS","LFA")
+v$LFA[v$LFA%in%c("27N","27S")] = "27"
+v$LFA[v$LFA%in%c("33W","33E")] = "33"
+va = aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR+LFA,data=v,FUN=sum)
+#merge vlog and logs here
+
+gag = aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR+LFA,data=g,FUN=sum)
+ga=rbind(va, gag)
+ga$cpue = ga$WEIGHT_KG/ga$NUM_OF_TRAPS
+l = unique(ga$LFA)
+o = list()
+for(j in 1:length(l)){
+    n = subset(ga,LFA==l[j])
+    running.median = with(rmed(n$SYEAR,n$cpue),data.frame(SYEAR=yr,running.median=x))
+    o[[j]]=merge(n,running.median,all=T)
+}
+o = dplyr::bind_rows(o)
+
+crd=o	
+names(crd)=c("YEAR", "LFA", "NUM_OFTRAPS","WEIGHT_KG", "CPUE", "running.median")
+#crd = crd[is.finite(crd$CPUE),]
+#usr = 0.28
+#lrp = 0.14
+### replaced to here with new CPUE script used in LFA 33. Need to integrate to create figures. BZ Sept 2025
 cpueData$usr=NA
 cpueData$lrp=NA
 
@@ -373,10 +420,9 @@ png(filename=file.path(cpue.dir, paste0("weekly_cpue_",l,".png")),width=8, heigh
 #lobster.db('ccir')
 lobster.db('ccir.redo') #Must 'redo' to bring in new data
 
-
- inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
- load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
- load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
+inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
+load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
+load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_seasons.rdata'))
 
 logs = lobster.db('process.logs')
 
