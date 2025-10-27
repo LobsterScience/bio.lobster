@@ -23,7 +23,7 @@ deluryLeslie(y=x,estimate='delury',method='robust',weight = x$n / max(x$n) )
 outSPBd = c()
 outSPBl = c()
 
-t = setupDepletionData(logs=subset(g,LFA==29&COMMUNITY_CODE %in% c(10925,10928,10810) & SYEAR>2008 & SYEAR <2021),landings=NULL,lfa=29)
+t = setupDepletionData(logs=subset(g,LFA==29&COMMUNITY_CODE %in% c(10925,10928,10810) & SYEAR>2008 & SYEAR <2025),landings=NULL,lfa=29)
 yy = unique(t$season)
 
 for(i in 1:length(yy)){

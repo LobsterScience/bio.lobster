@@ -19,15 +19,17 @@ scallop_sets <- function(){
   scC$Legal = ifelse(scC$MEAS_VAL==82,scC$ABUNDANCE_RAW/2,scC$Legal)
   scC$Recruit = ifelse(scC$MEAS_VAL %in% 70:81,scC$ABUNDANCE_RAW,0)
   scC$Recruit = ifelse(scC$MEAS_VAL==82,scC$ABUNDANCE_RAW/2,scC$Recruit)
+  scC$Juv = ifelse(scC$MEAS_VAL<=60,scC$ABUNDANCE_RAW,0)
+  
   scC$Legal_wt = lobLW(CL=scC$MEAS_VAL,sex=scC$SEX_ID)* scC$Legal
-  deL1 = aggregate(cbind(ABUNDANCE_RAW,Berried,Legal,Legal_wt,Recruit)~TOW_SEQ+SZ,data=scC,FUN=sum)
+  deL1 = aggregate(cbind(ABUNDANCE_RAW,Berried,Legal,Legal_wt,Recruit,Juv)~TOW_SEQ+SZ,data=scC,FUN=sum)
   deL = subset(deL1,select=c(TOW_SEQ,SZ,ABUNDANCE_RAW))
   names(deL)[3]= 'P'
   aa = aggregate(P~TOW_SEQ+SZ,data=deL,FUN=sum)
   bb = reshape(aa[,c('TOW_SEQ','SZ','P')],idvar='TOW_SEQ',timevar='SZ', direction='wide')
   bb = na.zero(bb)
   
-  deL1 = aggregate(cbind(ABUNDANCE_RAW,Berried,Legal,Legal_wt,Recruit)~TOW_SEQ,data=scC,FUN=sum)
+  deL1 = aggregate(cbind(ABUNDANCE_RAW,Berried,Legal,Legal_wt,Recruit,Juv)~TOW_SEQ,data=scC,FUN=sum)
   
   scC = merge(deL1,bb)
   scC = bio.utilities::rename.df(scC, 'ABUNDANCE_RAW','Lobster')

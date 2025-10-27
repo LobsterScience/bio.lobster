@@ -1,12 +1,12 @@
 # generate index of CPUE based on percent of missing logs by month
-lfa = '36'
-syear = 2024
+lfa = '34'
+syear = 2025
 
 
 #raw cpue
 b = lobster.db('process.logs')
 li = lobster.db('licence_characteristics') #this year
-lic = subset(li, LFA==35,select=c(LICENCE_ID,LIC_TYPE,LIC_SUBTYPE,VR_NUMBER))
+lic = subset(li, LFA==34,select=c(LICENCE_ID,LIC_TYPE,LIC_SUBTYPE,VR_NUMBER))
 nLic = aggregate(LICENCE_ID~LIC_TYPE+LIC_SUBTYPE,data=lic,FUN=function(x) length(unique(x)))
 i = grep('PART',nLic$LIC_SUBTYPE)
 nLic$LICENCE_ID[i] = nLic$LICENCE_ID[i]/2 #partnerships only submit one log
@@ -76,4 +76,4 @@ out<-rbind(out,rep(g,ncol(out)))
 
 matplot(out,type='l',col='grey',ylab='Logbook reporting Scaled CPUE',xaxt='n')
 points(nrow(out),g,pch=16)
-axis(side=1,at=c(1,6,11,16),labels=c(2005,2010,2015,2020))
+axis(side=1,at=c(1,6,11,16),labels=c(2005,2012,2015,2025))
