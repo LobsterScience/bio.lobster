@@ -6,8 +6,8 @@
 \usage{
 ILTS_ITQ_All_Data(
   species = 2550,
-  redo_base_data = F,
-  redo_set_data = F,
+  redo_base_data = T,
+  redo_set_data = T,
   size = NULL,
   sex = NULL,
   aggregate = T,
