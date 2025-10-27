@@ -27,7 +27,7 @@ p$yrs=2025
         nefsc.db( DS = 'odbc.dump.redo',fn.root = file.path(project.datadirectory('bio.lobster'),'data'),p=p)
  
 
-        datayrs=2024
+        datayrs=2025
         #had to do these manually using RV_survey_from_ESEtables.r in 2023
         #groundfish.db( DS="gscat.odbc.redo", datayrs=datayrs )
         #groundfish.db( DS="gsdet.odbc.redo", datayrs=datayrs )

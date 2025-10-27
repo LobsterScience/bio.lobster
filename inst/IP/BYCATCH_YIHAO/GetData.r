@@ -55,6 +55,60 @@ abs = subset(abs,SYEAR>2015)
 
 abss = subset(abs,select=c(TRIPNO, DATE_FISHED,WOS,SYEAR,LFA,SPECIESCODE,Length, CONDITION ))
 
+#grid
+gr = readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','GridPolys_DepthPruned_37Split.rds'))
+gr41 = st_as_sf(readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds')))
+coa = st_as_sf(readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','CoastSF.rds')))
+coa= st_make_valid(coa)
+coa = subset(coa,PROVINCE=='Nova Scotia')
+coa = subset(coa,st_area(coa)==max(st_area(coa))) # remove islands and cape breton
+
+gr$GRID_NO = as.numeric(gr$GRID_NO)
+#remove the islands or multipart polygons and keep only the biggest ones
+gr <- gr %>%
+  mutate(area = st_area(geometry)) %>%
+  group_by(GRID_NO, LFA) %>%
+  slice_max(order_by = area, n = 1, with_ties = FALSE) %>%
+  ungroup() %>%
+  select(-area)
+gr41$LFA = as.character(gr41$LFA)
+gr41 = subset(gr41,GRID_NO %in% u4 & GRID_NO %ni% c(860,1199))
+
+gall = gtot = bind_rows(gr,gr41)
+gtot$centroid = st_centroid(gtot)
+cen_coords = st_coordinates(gtot$centroid)
+gtot$X = cen_coords[,1] 
+gtot$Y = cen_coords[,2] 
+gtot = st_as_sf(gtot)
+abss
+
+gab = st_join(abss,subset(gtot,select=c(LFA,GRID_NO,X,Y)))
+gab = subset(gab,!is.na(CONDITION))
+gab$Surv = ifelse(gab$CONDITION %in% c(0,1),1,0)
+
+library(dplyr)
+
+gab_su <- gab %>%
+  group_by(LFA.x,GRID_NO) %>%
+  summarise(
+    total_fish = n(),
+    survivors = sum(Surv),
+    proportion_surviving = mean(Surv)
+  )
+st_geometry(gab_su) <- NULL
+
+gg = st_as_sf(merge(gab_su,subset(gtot,select=c(LFA,GRID_NO)),by.x=c('LFA.x','GRID_NO'),by.y=c('LFA','GRID_NO')))
+saveRDS(gg,file='C:/Users/cooka/Documents/proportionCodSurvi.rds')
+
+ggplot()+geom_sf(data=gtot,fill='wheat')+
+  geom_sf(data=gg,aes(fill=proportion_surviving))+
+  scale_fill_gradient(
+    low = "black",  # corresponds to 0
+    high = "grey95", # corresponds to 1
+    name = "Survival Proportion"
+  ) +
+  theme_minimal()
+
 da = fisheryFootprintData(period='weekly')
 
 saveRDS(list(abss,gr,da),file='Cod_bycatch_lobster_traps_grids_effort.rds')

@@ -77,3 +77,14 @@ ca =as.data.frame(do.call(rbind,cpue.ann))
 
 ggplot(subset(ca,yr>2009),aes(x=yr,y=unBCPUE))+geom_point()+geom_smooth()+theme_minimal()
 
+#####spatial logs
+
+a = lobster.db('greyzone_logs')
+a$Date = lubridate::ymd(a$DATE_SAILED)
+a$yr = lubridate::year(a$Date)
+
+
+a$DDLAT = round((((a$ENT_LATITUDE /100/100-trunc(a$ENT_LATITUDE/100/100))*100)/60)+trunc(a$ENT_LATITUDE/100/100),4)
+a$DDLON = round((((a$ENT_LONGITUDE/100/100-trunc(a$ENT_LONGITUDE/100/100))*100)/60)+trunc(a$ENT_LONGITUDE/100/100),4)
+
+
