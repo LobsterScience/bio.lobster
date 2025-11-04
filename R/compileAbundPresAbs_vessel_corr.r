@@ -12,9 +12,9 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             ziff41$DDLON = ziff41$DDLON * -1
             
             off41$yr  = year(off41$DATE_FISHED) #1981 to 1994
-            off41$WEIGHT_KG = off41$ADJ_LOB_LBS/2.205
-            ziff41$WEIGHT_KG = ziff41$EST_WEIGHT_LOG_LBS/2.205
-            logs41$WEIGHT_KG = logs41$ADJCATCH/2.205
+            off41$WEIGHT_KG = off41$ADJ_LOB_LBS*0.453592
+            ziff41$WEIGHT_KG = ziff41$EST_WEIGHT_LOG_LBS*0.453592
+            logs41$WEIGHT_KG = logs41$ADJCATCH*0.453592
             logs41$DEPTH = ziff41$DEPTH = NA
             ziff41$LICENCE_ID = ziff41$ADJCATCH = off41$ADJ_LOB_LBS = ziff41$EST_WEIGHT_LOG_LBS= off41$OFFAREA = off41$LOB_EST_LBS = ziff41$CAPTAIN = logs41$OFFAREA = NULL 
            logs41$STRINGID = logs41$SOAK_DAYS = logs41$TRIP_ID = logs41$LAT = logs41$LON =  logs41$LOG_EFRT_STD_INFO_ID = logs41$CAPTAIN = logs41$LICENCE_ID = logs41$EST_WEIGHT_LOG_LBS = logs41$ADJCATCH = NULL
@@ -54,7 +54,19 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
   
   #Greyzone logs
             g = lobster.db('greyzone_logs')
+            g$DATE = as.Date(g$DATE_SAILED, format = "%Y-%b-%d")
+            g$OFFSET = g$NUM_OF_TRAPS
+            g$YEAR = lubridate::year(g$DATE)
+            g$SOURCE = 'GREY_ZONE_LOGS'
+            g$OFFSET_METRIC = 'Number of Traps'
+            g$Gear = 'Commercial'
+            g$LATITUDE = round((((g$ENT_LATITUDE /100/100-trunc(g$ENT_LATITUDE/100/100))*100)/60)+trunc(g$ENT_LATITUDE/100/100),4)
+            g$LONGITUDE = round((((g$ENT_LONGITUDE/100/100-trunc(g$ENT_LONGITUDE/100/100))*100)/60)+trunc(g$ENT_LONGITUDE/100/100),4)*-1
+            g$id = paste(g$DATE,g$LONGITUDE,g$LATITUDE,sep="_")
+            g$Legal_wt = g$EST_WEIGHT_LOG_LBS*0.453592
+            g$Empty = 0
             
+            g = subset(g,select=c(DATE,OFFSET, YEAR, SOURCE, OFFSET_METRIC, Gear, LONGITUDE, LATITUDE, id, Legal_wt, Empty))
             
   #At Sea Samples
             
@@ -260,14 +272,13 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             trapSize$Date = NULL
             trapSize = na.zero(trapSize)
             
-            trapsNoSize = plyr::rbind.fill(fsrsPrune,fsrsCommPrune,ddPrune,off41_LOGS)
+            trapsNoSize = plyr::rbind.fill(fsrsPrune,fsrsCommPrune,ddPrune,off41_LOGS,g)
             i = which(is.na(trapsNoSize$LONGITUDE)& !is.na(trapsNoSize$X))
             trapsNoSize$LONGITUDE[i] = trapsNoSize$X[i]
             i = which(is.na(trapsNoSize$LATITUDE)& !is.na(trapsNoSize$Y))
             trapsNoSize$LATITUDE[i] = trapsNoSize$Y[i]
             
             trapsNoSize$X = trapsNoSize$Y = trapsNoSize$EID = trapsNoSize$id = NULL
-            trapSize  = subset(trapSize,Legal>=0)
             
             saveRDS(trapsNoSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesNoSize.rds')) 
             saveRDS(trapSize,file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesSize.rds')) 
@@ -296,7 +307,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             
             #ILTS and ITQ
             
-            ilts = ILTS_ITQ_All_Data(biomass = F,aggregate=F)  
+            ilts = ILTS_ITQ_All_Data(biomass = F,aggregate=F,redo_base_data = F)  
             ilts$N = ilts$SA_CORRECTED_PRORATED_N * ilts$sweptArea ###covertt back to raw #s
             sc1=seq(13,253,by=5)
             ilts$SZ = sc1[cut(ilts$FISH_LENGTH,sc1,labels=F)]
@@ -322,7 +333,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             
             ca = merge(dS,bb)
             set = ilts %>%
-                  distinct(TRIP_ID,SET_NO,SET_DATE,SET_LONG,SET_LAT,sweptArea,YEAR,temp)
+                  distinct(TRIP_ID,SET_NO,SET_DATE,SET_LONG,SET_LAT,sweptArea,YEAR,temp,Length_comps)
             ilt = merge(set,ca,all.x=T)
             ilt$EMPTY = ifelse(ilt$Lobster>0,0,1)
             ilt$id = paste(ilt$TRIP_ID,ilt$SET_NO,sep="_")
@@ -333,6 +344,14 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             ilt$DATE = ilt$SET_DATE
             ilt$SOURCE = 'ILTS'
             ilt$Gear = 'NEST'
+            browser()
+            
+            p_cols <- grep("^P\\.", names(ilt), value = TRUE)
+            extra_cols <- c("Berried", "Legal", "Legal_wt", "Recruit", "Juv")
+            
+            # Combine all target columns
+            target_cols <- c(p_cols, extra_cols)
+            ilt[ilt$Length_comps == 0, target_cols] <- NA   
             
             ilt = ilt %>%
             #  filter(YEAR>1998) %>%

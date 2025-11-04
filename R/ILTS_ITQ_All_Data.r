@@ -9,7 +9,7 @@
 #' @return Data objects that contain the data for use in further analyses.
 #' @examples ILTS_ITQ_All_Data(species=2550, size=c(1,200),sex=c(3),aggregate=T)
 #' @export
-ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size = NULL, sex=NULL,aggregate=T,return_tow_tracks=F,applyGearConversion=T,biomass=T,extend_ts=T,return_base_data=F){
+ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size = NULL, sex=NULL,aggregate=T,return_tow_tracks=F,applyGearConversion=T,biomass=T,extend_ts=T,return_base_data=F){
   require(dplyr)
   require(bio.lobster)
   require(bio.utilities)
@@ -336,14 +336,23 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size 
 
               }
   ##using saved file  
-    x = readRDS(outfile)
+  x = readRDS(outfile)
+
     if(return_base_data) return(x)
     if(return_tow_tracks) return(readRDS(sensorfile))
     x$ID = paste(x$TRIP_ID,x$SET_NO,sep="-")
    if(is.null(size) & is.null(sex)) xy = subset(x,SPECCD_ID==species)
    if(!is.null(size) & is.null(sex)) xy = subset(x,SPECCD_ID==species & FISH_LENGTH>=size[1] & FISH_LENGTH<=size[2])
    if(!is.null(size) & !is.null(sex)) xy = subset(x,SPECCD_ID==species & FISH_LENGTH>=size[1] & FISH_LENGTH<=size[2] & SEX %in% sex)
-   
+   #which sets have length comps
+    wr = subset(x,SPECCD_ID==species)
+    require(dplyr)
+    ids_len <- wr %>%
+      filter(!is.na(FISH_LENGTH) & FISH_LENGTH>0) %>%
+      pull(ID) %>%
+      unique()
+    
+    
     #vessel conversions
     
               iv = subset(xy, GEAR=='280 BALLOON')
@@ -534,13 +543,13 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size 
       xy$FID = xS$FID = NULL
       }
 
-    xy$ID = xS$ID = NULL
-
-      if( aggregate) xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N))
-    if(! aggregate) xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N,FISH_LENGTH,SEX))
+    
+      if( aggregate) xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N,ID))
+    if(! aggregate) xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N,FISH_LENGTH,SEX,ID))
     
     xFinal = bind_rows(xS,xy)
- 
+    xFinal$Length_comps = ifelse(xFinal$ID %in% ids_len,1,0)
+    xFinal$ID = NULL
     
     return(xFinal)
     }
