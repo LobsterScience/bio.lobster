@@ -44,3 +44,8 @@ ga$cpue = ga$WEIGHT_KG/ga$NUM_OF_TRAPS
 ggplot(subset(ga,LFA %in% c(33,34)),aes(x=SYEAR,y=cpue))+geom_point()+geom_line()+
   facet_wrap(~subarea)+
   theme_test(base_size = 14)
+
+
+ggplot(subset(o,LFA %in% c(34,35,36,38)))+geom_point(aes(x=SYEAR,y=cpue))+geom_line(aes(x=SYEAR,y=running.median),color='blue',size=.8)+
+  facet_wrap(~LFA,scales = 'free_y') +
+  theme_test()+labs(x='Fishing Year',y='CPUE (kg/TH)')

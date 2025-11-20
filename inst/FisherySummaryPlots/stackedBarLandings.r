@@ -34,9 +34,9 @@ ggplot(o1,aes(x=YR,y=Lkt,fill=is_max))+geom_bar(stat='identity',width=1)+
   facet_wrap(~LFA, scales='free_y' )+xlab('Fishing Year')+ylab('Landings (kt)')+
   scale_x_continuous(breaks=round(seq(1975,2024,length=4)))+theme_test()+ theme(legend.position = 'none')+
 scale_fill_manual(values = c("FALSE" = "grey10", "TRUE" = "grey10")) +
-    geom_hline(data=mo1,aes(yintercept=Landings[,1]/1000),linetype='solid',colour='red')+
-  geom_hline(data=mo1,aes(yintercept=Landings[,2]/1000),linetype='dashed',colour='red')+
-  geom_hline(data=mo1,aes(yintercept=Landings[,3]/1000),linetype='dashed',colour='red')
+    geom_hline(data=mo1,aes(yintercept=Landings[,1]/1000),linetype='solid',colour='red')
+#  geom_hline(data=mo1,aes(yintercept=Landings[,2]/1000),linetype='dashed',colour='red')+
+#  geom_hline(data=mo1,aes(yintercept=Landings[,3]/1000),linetype='dashed',colour='red')
 
 
   

@@ -31,6 +31,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size 
     junk = list()
       for(i in 1:nrow(ic)){
             if(i %in% round(seq(5,nrow(ic),length.out=100))) print(i)
+              print(i)
               v = ic[i,]
               sur = subset(surveyCatch,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)
               rv = unique(sur$GEAR)
@@ -200,7 +201,6 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size 
               g = unique(surveyCatch$GEAR[ik[i]])
               surveyCatch$distance[ik[i]] = ij[which(ij$YEAR==y & ij$GEAR==g),'distance']
               }
-          
           ii = which(surveyCatch$distance<0.2)
           surveyCatch$sweptArea[ii] = surveyCatch$distance[ii] = NA
           
@@ -236,23 +236,48 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size 
       	sC = subset(sC,select=c(TRIP_ID, SET_NO, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SPECCD_ID, NUM_CAUGHT, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, WEIGHT_KG))
         sC$ID = paste(sC$TRIP_ID,sC$SET_NO,sep="_")
       	ILTSTemp$ID = paste(ILTSTemp$TRIP_ID,ILTSTemp$SET_NO,sep="_")
-        	sCa = as.data.frame(unique(subset(sC,!is.na(STARTTIME) | !is.na(ENDTIME), select=c(ID,STARTTIME,ENDTIME))))
+      	sCa = as.data.frame(unique(subset(sC,!is.na(STARTTIME) | !is.na(ENDTIME), select=c(ID,STARTTIME,ENDTIME))))
         	ot = list()
-        	for(i in 1:nrow(sCa)){
+        	
+        for(i in 1:nrow(sCa)){
         	  tt = subset(ILTSTemp,ID==sCa$ID[i])
         	  ww = sCa[i,]
         	  if(nrow(tt)<5) next
         	  tt$st = strptime((tt$UTCTIME),"%H%M%S")
-        	  ww$st = strptime(sCa$STARTTIME[i],"%H%M%S")
-        	  ww$et = strptime(sCa$ENDTIME[i],"%H%M%S")
-        	  
-        	  tt1 = subset(tt,st>=ww$st & st<=ww$et)
+        	  ww$st = strptime(ww$STARTTIME,"%H%M%S")
+        	  ww$et = strptime(ww$ENDTIME,"%H%M%S")
+        	  #this deals with UTC going over midnight
+        	  if (ww$st > ww$et) {
+        	    tt1 <- subset(tt,st>=ww$st | st<=ww$et)
+        	    } else {
+        	      tt1 <- subset(tt,st>=ww$st & st<=ww$et)
+        	  }
         	  ww$temp = median(tt1$TEMPC,na.rm=T)
         	  ot[[i]] = ww
         	}
         	temp = as.data.frame(do.call(rbind,ot))
         	sC = merge(sC,temp[,c('ID','temp')],all.x=T)
           sC$ID = NULL
+          ###fill in temp from sensors if we have it
+          ii = subset(sC,is.na(temp) & YEAR>2024)
+          # 
+          # stop(####this is not finished )
+          # for(i in 1:nrow(ii)){
+          #   v = ii[40,]
+          #   ve = subset(ILTSSensor,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)
+          #   ve = ve[order(ve$GPSTIME),]
+          #   ip = grep('^TEMPERATURE$',ve$SENSORNAME)
+          #   ggplot(ve[ip,],aes(x=GPSTIME,y=SENSORVALUE,colour=TRANSDUCERNAME))+geom_point()
+          #   ve = ve[ip,]
+          #   ve = subset(ve,SENSORVALUE>= -1.5 & SENSORVALUE<=30)
+          #   ve$Time = strptime(ve$GPSTIME,"%H%M%S")
+          #   v$st = strptime(v$STARTTIME,"%H%M%S")
+          #   v$et = strptime(v$ENDTIME,"%H%M%S")
+          #   ve = subset(ve,Time>=v$st & Time <= v$et)
+          #   
+          #   
+          # }
+          # 
           
           
           #fill in number caught with avg weight_kg and weight
@@ -281,6 +306,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size 
           
           sF = subset(sF,ID %ni% unique(sM$ID)) #remove the duplicates from sF
           if(any(names(sF)=='TRIP')) sF$TRIP = NULL
+          if(any(names(sF)=='SPECIES_SAMPLE_WEIGHT')) sF$SPECIES_SAMPLE_WEIGHT = NULL
           sFM = rbind(sF,sM)
           sFM$ID <- NULL
         
