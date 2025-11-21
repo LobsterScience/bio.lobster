@@ -11,10 +11,10 @@ la()
        
 ff = c(
         
-      file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-      file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
-   file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
-file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
+      file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+      file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+   file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
+file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
        
 # Load and clean NEFSC
 for (i in 1:2) {  # Only the first two files need cleaning
@@ -24,11 +24,11 @@ for (i in 1:2) {  # Only the first two files need cleaning
 }
 
 ### If Fall Data is not ready yet 
-fallcheck <- file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata')
+fallcheck <- file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata')
 # Load the data
 load(fallcheck)
 # Remove data for the year 2024
-aa <- aa[aa$yr != 2024, ]
+aa <- aa[aa$yr != 2025, ]
 # Save the cleaned data back to the file
 save(aa, file = fallcheck)
 
@@ -36,10 +36,10 @@ save(aa, file = fallcheck)
 #Then reload
 ff = c(
   
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
 
 
        for(i in 1:length(ff)) {
@@ -93,7 +93,7 @@ ff = c(
          names(af) = c('yr','ObsLobs')
          out = merge(out,af)
 
-         fnn = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','indicators',paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][grep("Length",strsplit(ff[i],"/")[[1]])],"\\.")[[1]][1],'csv',sep="."))
+         fnn = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','indicators',paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][grep("Length",strsplit(ff[i],"/")[[1]])],"\\.")[[1]][1],'csv',sep="."))
           write.csv(out, file=fnn)
           out$ObsLobs = NULL
 

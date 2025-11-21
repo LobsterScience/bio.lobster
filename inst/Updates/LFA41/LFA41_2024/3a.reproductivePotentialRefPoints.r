@@ -14,10 +14,10 @@ figfp = file.path(project.datadirectory('bio.lobster'),'figures', 'Assessment','
 
 ff = c(
   
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
 
        Update.plot=T
        if(Update.plot==T) par(mfrow=c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))

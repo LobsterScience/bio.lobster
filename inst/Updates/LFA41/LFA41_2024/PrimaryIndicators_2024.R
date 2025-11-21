@@ -4,15 +4,15 @@ require(dplyr)
 require(devtools)
 require(tidyr)
 la()
-
+ 
 p=list()
 
 p$lfas = c("41") # specify lfa
-p$current.assessment.year =2024
+p$current.assessment.year =2025
 p$yrs = 1947:p$current.assessment.year
 
 assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
-fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','indicators')
+fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','indicators')
 
 #jpeg("BM41_2023TEST.jpeg", width = 9, height = 7, units = "in",res=600, bg = "white")
 par(mfrow = c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
@@ -137,10 +137,10 @@ require(bio.lobster)
 la()
 
 ff = c(
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
- file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+ file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
 
 
 #jpeg("RP41_2022_FR.jpeg", width = 11, height = 8, units = "in",res=600, bg = "white")

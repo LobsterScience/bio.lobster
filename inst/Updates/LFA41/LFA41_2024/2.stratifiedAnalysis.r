@@ -7,9 +7,9 @@ la()
 p=list()
 p$lfas = c("41") # specify lfa
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"assessments",'LFA41','2024')
+fp = file.path(project.datadirectory('bio.lobster'),"assessments",'LFA41','2025')
 
-p$current.assessment.year = 2024
+p$current.assessment.year = 2025
 p$yrs = 1947:p$current.assessment.year
 assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
 

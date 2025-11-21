@@ -4,12 +4,12 @@ require(bio.lobster)
 
 p=list()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"assessments",'LFA41','2024')
+fp = file.path(project.datadirectory('bio.lobster'),"assessments",'LFA41','2025')
 
 
 la()
 #NEFSC Setup
-p$current.assessment.year = 2024
+p$current.assessment.year = 2025
 assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
 
 

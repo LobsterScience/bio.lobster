@@ -87,6 +87,7 @@ nefsc.analysis_vh <- function(DS='stratified.estimates', out.dir = 'bio.lobster'
       }
       
       set =  nefsc.db(DS='usinf.clean')
+      set <- set[!is.na(set$X) & !is.na(set$Y), ] ### Needed to remove the two sets that lacked X and Y information ( set 125 tow 006, and set 730 tow 008 in mission 202502)
       cas =  nefsc.db(DS='uscat.clean')
       stra = nefsc.db(DS='usstrata.area')
       de =   nefsc.db(DS='usdet.clean')

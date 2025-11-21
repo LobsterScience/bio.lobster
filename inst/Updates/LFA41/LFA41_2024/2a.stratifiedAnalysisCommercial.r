@@ -3,13 +3,13 @@ require(bio.lobster)
 la()
 p=list()
 p$libs = NULL
-ff = "2024"
-fp1 = file.path(project.datadirectory('bio.lobster'),"assessments","LFA41","2024",ff)
+ff = "2025"
+fp1 = file.path(project.datadirectory('bio.lobster'),"assessments","LFA41","2025",ff)
 fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 p1 = p
-p1$yrs = 1969:2024
+p1$yrs = 1969:2025
 
-p$current.assessment.year = 2024##Check Year
+p$current.assessment.year = 2025##Check Year
 p$syr = 1989
 p$yrs = p$syr:assessment.year
 
@@ -85,7 +85,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
   if(survey=='DFO'){
     p$series =c('summer')# p$series =c('georges');p$series =c('fall')
-    p$years.to.estimate = c(1970:2024)
+    p$years.to.estimate = c(1970:2025)
     p$length.based = T
     p$by.sex = T
     p$size.class = c(83,300)
@@ -132,3 +132,4 @@ print(aout[1,])
 
 stratifiedAnalysesCommercial(survey='NEFSC',lfa='LFA41',ht=8,wd=10)
 stratifiedAnalysesCommercial(survey='DFO',lfa='LFA41',ht=8,wd=10)
+

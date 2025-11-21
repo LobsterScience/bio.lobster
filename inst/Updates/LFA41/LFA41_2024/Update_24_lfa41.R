@@ -19,7 +19,7 @@ require(tidyr)
 
 
 p=list()
-p$assessment.year = 2024 ##Check Year
+p$assessment.year = 2025 ##Check Year
 p$syr = 1989
 
 p$lfa=41
@@ -36,41 +36,58 @@ logs=lobster.db("process.logs")
 land=lobster.db('annual.landings.redo')
 land = lobster.db('annual.landings')
 
-#groundfish.db('odbc.redo',datayrs = 1970:2024)
-#groundfish.db('gscat.odbc.redo')
-#groundfish.db('gsinf.odbc.redo')
-#groundfish.db('gsdet.odbc.redo')
+groundfish.db('odbc.redo',datayrs = 1970:2025)
+groundfish.db('gscat.odbc.redo')
+groundfish.db('gsinf.odbc.redo')
+groundfish.db('gsdet.odbc.redo')
+groundfish.db('gs_trawl_conversions_redo')
+
 
 #check what's in there
-a = groundfish.db('gsinf.odbc')
+a = groundfish.db('gsinf.odbc.redo')
 summary(a)
-## FOR NEFSC Survey
+
+## FOR NEFSC Survey 
 nefsc.db(DS='odbc.dump.redo')
-#inf = nefsc.db( DS = 'usinf.redo.odbc',fn.root = NULL,p=p)
-#ca = nefsc.db( DS = 'uscat.redo.odbc',fn.root = NULL,p=p)
-#de = nefsc.db( DS = 'usdet.redo.odbc',fn.root = NULL,p=p)
+inf = nefsc.db( DS = 'usinf.redo.odbc',fn.root = NULL,p=p)
+ca = nefsc.db( DS = 'uscat.redo.odbc',fn.root = NULL,p=p)
+de = nefsc.db( DS = 'usdet.redo.odbc',fn.root = NULL,p=p)
 
-#inf = nefsc.db( DS = 'usinf.clean.redo',fn.root = NULL,p=p)
-#de = nefsc.db( DS = 'usdet.clean.redo',fn.root = NULL,p=p)
-#ca = nefsc.db( DS = 'uscat.clean.redo',fn.root = NULL,p=p)
+inf = nefsc.db( DS = 'usinf.clean.redo',fn.root = NULL,p=p)
+de = nefsc.db( DS = 'usdet.clean.redo',fn.root = NULL,p=p)
+ca = nefsc.db( DS = 'uscat.clean.redo',fn.root = NULL,p=p)
 
-inf = nefsc.db( DS = 'usinf.clean',fn.root = NULL,p=p)
-de = nefsc.db( DS = 'usdet.clean',fn.root = NULL,p=p)
-ca = nefsc.db( DS = 'uscat.clean',fn.root = NULL,p=p)
- 
-#nefsc.db(DS = 'usstrata.area.redo.odbc')
+nefsc.db(DS = 'usstrata.area.redo.odbc')
 nefsc.db(DS = 'usstrata.area')
+
+
+##### REMOVE SET DATA WHERE X and Y are zero
+
+load("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/ODBCDump/usnefsc.inf.rdata")
+ls()  
+inf <- inf[!is.na(inf$X) & !is.na(inf$Y), ]
+summary(inf)
+save(inf, file = "C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/ODBCDump/usnefsc.inf.rdata")
+
+load("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/ODBCDump/usnefsc.inf.rdata")
+ls()  
+inf <- inf[!is.na(inf$X) & !is.na(inf$Y), ]
+summary(inf)
+save(inf, file = "C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/ODBCDump/usnefsc.inf.rdata")
+
+
+
 
 #########LANDINGS
 land41 <- land[, c("YR", "LFA41")]
-land41<- land41[land41$YR > 2001 & land41$YR <= 2024,]
+land41<- land41[land41$YR > 2001 & land41$YR <= 2025,]
 land41 <- land41[order(land41$YR), ]
 
 
 ##Landings barplot
 land41 <-land41 %>%
   mutate(
-    fill_color = ifelse(YR == 2024, "#96ACB7", "#202C59"),
+    fill_color = ifelse(YR == 2025, "#96ACB7", "#202C59"),
   )
 
 # Create the barplot
@@ -86,9 +103,9 @@ ggplot(land41, aes(x = factor(YR), y = LFA41, fill = fill_color)) +
     panel.border = element_rect(color = "black", fill = NA),  # Add plot borders
     axis.line = element_line(color = "black")  # Add axis lines
   ) +
-  scale_x_discrete(breaks = seq(2002, 2024, by = 2)) +
+  scale_x_discrete(breaks = seq(2002, 2025, by = 2)) +
   scale_y_continuous(expand = c(0, 0), limits = c(0, 900)) +  # Set y-axis limit to 900
-  geom_bar(data = land41 %>% filter(YR == 2024), aes(x = factor(YR), y = LFA41), stat = "identity", fill = NA, color = "#96ACB7", linetype = "dashed") +
+  geom_bar(data = land41 %>% filter(YR == 2025), aes(x = factor(YR), y = LFA41), stat = "identity", fill = NA, color = "#96ACB7", linetype = "dashed") +
   geom_hline(yintercept = 720, color = "red")
 
 
@@ -114,7 +131,7 @@ L41log$SYEAR= year(L41log$dates)
 L41log$DAY=day(L41log$dates)
 
 L41log$DDLON<-L41log$DDLON*-1
-L41log<-L41log[L41log$SYEAR > 2010  & L41log$SYEAR < 2025, ]
+L41log<-L41log[L41log$SYEAR > 2010  & L41log$SYEAR < 2026, ]
 
 
 ##Observer Data
@@ -126,12 +143,15 @@ Obs41$MONTH = month(Obs41$dates)
 Obs41$SYEAR= year(Obs41$dates)
 Obs41$DAY=day(Obs41$dates)
 
-Obs41<-Obs41[Obs41$SYEAR > 2010  & Obs41$SYEAR < 2025, ]
+Obs41<-Obs41[Obs41$SYEAR > 2010  & Obs41$SYEAR < 2026, ]
 
 
 ##Number of observed Trips
 Obs_trips <- aggregate(TRIPNO ~ SYEAR, data = Obs41, FUN = function(x) length(unique(x)))
 names(Obs_trips)[2] <- "ObservedTrips"
+
+
+
 
 ##Number of Fishing Trips - from Logs
 Fish_trips <- aggregate(TRIP_ID ~ SYEAR, data = L41log, FUN = function(x) length(unique(x)))
@@ -144,7 +164,7 @@ slip41$dates = as.Date(slip41$dates,format='%m-%d-%Y')
 slip41$MONTH = month(slip41$dates)
 slip41$SYEAR= year(slip41$dates)
 
-slip41<-slip41[slip41$SYEAR > 2010  & slip41$SYEAR < 2025, ]
+slip41<-slip41[slip41$SYEAR > 2010  & slip41$SYEAR < 2026, ]
 
 Slip_trips <- aggregate(LANDING_DATE_TIME ~ SYEAR, data = slip41, FUN = function(x) length(unique(x)))
 names(Slip_trips)[2] <- "TotalSlipTrips"
@@ -155,7 +175,7 @@ ObsTable <- merge(Obs_Fish, Slip_trips, by = "SYEAR")
 
 ObsTable$PercentObserved_logs<-(ObsTable$ObservedTrips/ObsTable$TotalLogTrips)*100
 
-write.csv(ObsTable,"C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/ObsTable.csv")
+write.csv(ObsTable,"C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/ObsTable25.csv")
 
 ### Observed Trips Table
 
