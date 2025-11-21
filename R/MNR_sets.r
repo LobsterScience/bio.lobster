@@ -63,10 +63,12 @@ MNR_sets <- function(){
   
   
   de$Recruit=ifelse(de$Length<82 &de$Length>=70,de$Frequency,0)
-  de$Reccruit=ifelse(de$Length==82,de$Frequency/2,de$Recruit)
+  de$Recruit=ifelse(de$Length==82,de$Frequency/2,de$Recruit)
   
   de$Legal=ifelse(de$Length>82,de$Frequency,0)
   de$Legal=ifelse(de$Length==82,de$Frequency/2,de$Legal)
+  de$Juv=ifelse(de$Length<=60,de$Frequency,0)
+  
   de$sex = ifelse(de$Sex=='Female',2,ifelse(de$Sex=='Male',1,3))
   de$Legal=ifelse(de$sex==3,0,de$Legal)
   de$Berried=ifelse(de$sex==3,de$Frequency,0)
@@ -77,7 +79,7 @@ MNR_sets <- function(){
   de$fwt =  apply(de[,c('Length','sex')],1,lobLW1)
   de$Legal_wt = de$Legal*de$fwt/1000
   
-  dea = aggregate(cbind(Legal,Recruit,Legal_wt, Berried)~id,data=de,FUN=sum)
+  dea = aggregate(cbind(Legal,Recruit,Legal_wt, Berried,Juv)~id,data=de,FUN=sum)
   dea = subset(dea,id %in% unique(se$id))
   dea = merge(dea,bb)
   cde = merge(ca,dea)
@@ -95,6 +97,6 @@ MNR_sets <- function(){
   aa$LATITUDE = aa$Y
   aa$LONGITUDE = aa$X
   aa = aa %>%
-        select(id,DATE, YEAR,Lobster, Legal, Legal_wt, EMPTY, Berried, starts_with('P.'),OFFSET, OFFSET_METRIC,Gear, SOURCE,LONGITUDE,LATITUDE)
+        select(id,DATE, YEAR,Lobster, Legal, Legal_wt, EMPTY, Berried,Juv,Recruit, starts_with('P.'),OFFSET, OFFSET_METRIC,Gear, SOURCE,LONGITUDE,LATITUDE)
 return(aa)
   }

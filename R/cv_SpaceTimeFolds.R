@@ -2,7 +2,8 @@
 #making fold ids
 cv_SpaceTimeFolds = function(dat,idCol='TRIP',nfolds=8){
 	dat$fold_id = NA
-	x = split(dat,f=dat[,idCol])
+if(length(unique(dat[,idCol]))>1){
+		x = split(dat,f=dat[,idCol])
 	o = list()
 	s = 1:nfolds
 	for(i in 1:length(x)){
@@ -14,4 +15,9 @@ cv_SpaceTimeFolds = function(dat,idCol='TRIP',nfolds=8){
 		o[[i]] = m
 	}
 	return(do.call(rbind,o))
+}
+	if(length(unique(dat[,idCol]))==1){
+	  dat$fold_id <- sample(rep(1:nfolds,length.out=nrow(dat)))
+	return(dat)
+	}
 }

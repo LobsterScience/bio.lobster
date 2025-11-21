@@ -9,7 +9,7 @@ p = bio.lobster::load.environment()
 la()
 
 ## Fishery Footprint - Landings
-  x = data.frame(LFA=c(27,28,29,30,'31A',"31B",32,33,34,35,36,38),Z = c('CPUE and CCIR','CPUE','CPUE and CCIR','CPUE and CCIR','CPUE and CCIR','CPUE and CCIR','CPUE and CCIR','CPUE and CCIR',"Trawl Survey Indices and Relative F","Standardized CPUE","Standardized CPUE",'Standardized CPUE'))
+  x = data.frame(LFA=c(27,28,29,30,'31A',"31B",32,33,34,35,36,38),Z = c('CPUE and CCIR','CPUE','CPUE and CCIR','CPUE and CCIR','CPUE and CCIR','CPUE and CCIR','CPUE and CCIR','CPUE and CCIR',"Trawl Survey Indices and Relative F","Trawl Survey Indices","Trawl Survey Indices",'Trawl Survey Indices'))
   xx = lobLFAAttr(Data=x)  
   LobsterMap('27-38',poly.lst=xx,polylstend=T,labcex=.8)
   legend('bottomright',legend=c(xx$lvls),fill=xx$col,bty='n',cex=.8)

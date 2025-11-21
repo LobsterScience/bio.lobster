@@ -180,13 +180,13 @@ efp = ef[nrow(ef),]
 ef = ef[-nrow(ef),]
 ymax=5000
 scaleright = max(ef$Effort)/ymax
-g1 <- ggplot(data = subset(aaa,yr>1990), aes(x = yr,y=LFA36)) +
+g1 <- ggplot(data = subset(aaa,yr>1990), aes(x = yr,y=LFA38)) +
   geom_bar(stat='identity',fill='black') +
   geom_bar(data=aap,aes(x=yr,y=LFA36),stat='identity',fill='gray66') +
-  geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='grey66',shape=17,size=3)+
-  geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1.2,linetype='dashed')+
-  geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=3)+
-  scale_y_continuous(name='Catch (t)', sec.axis= sec_axis(~.*scaleright, name= 'Effort',breaks = seq(0,2000,by=250)))+
+#  geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='grey66',shape=17,size=3)+
+  #geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1.2,linetype='dashed')+
+  #geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=3)+
+  scale_y_continuous(name='Catch (t)')+#, sec.axis= sec_axis(~.*scaleright, name= 'Effort',breaks = seq(0,2000,by=250)))+
   labs(x = "Year") +
 theme_csas()
 

@@ -9,7 +9,7 @@
 #' @return Data objects that contain the data for use in further analyses.
 #' @examples ILTS_ITQ_All_Data(species=2550, size=c(1,200),sex=c(3),aggregate=T)
 #' @export
-ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size = NULL, sex=NULL,aggregate=T,return_tow_tracks=F,applyGearConversion=T,biomass=T,extend_ts=T,return_base_data=F){
+ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size = NULL, sex=NULL,aggregate=T,return_tow_tracks=F,applyGearConversion=T,biomass=T,extend_ts=T,return_base_data=F){
   require(dplyr)
   require(bio.lobster)
   require(bio.utilities)
@@ -31,6 +31,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size 
     junk = list()
       for(i in 1:nrow(ic)){
             if(i %in% round(seq(5,nrow(ic),length.out=100))) print(i)
+              print(i)
               v = ic[i,]
               sur = subset(surveyCatch,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)
               rv = unique(sur$GEAR)
@@ -200,7 +201,6 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size 
               g = unique(surveyCatch$GEAR[ik[i]])
               surveyCatch$distance[ik[i]] = ij[which(ij$YEAR==y & ij$GEAR==g),'distance']
               }
-          
           ii = which(surveyCatch$distance<0.2)
           surveyCatch$sweptArea[ii] = surveyCatch$distance[ii] = NA
           
@@ -236,23 +236,48 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size 
       	sC = subset(sC,select=c(TRIP_ID, SET_NO, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SPECCD_ID, NUM_CAUGHT, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, WEIGHT_KG))
         sC$ID = paste(sC$TRIP_ID,sC$SET_NO,sep="_")
       	ILTSTemp$ID = paste(ILTSTemp$TRIP_ID,ILTSTemp$SET_NO,sep="_")
-        	sCa = as.data.frame(unique(subset(sC,!is.na(STARTTIME) | !is.na(ENDTIME), select=c(ID,STARTTIME,ENDTIME))))
+      	sCa = as.data.frame(unique(subset(sC,!is.na(STARTTIME) | !is.na(ENDTIME), select=c(ID,STARTTIME,ENDTIME))))
         	ot = list()
-        	for(i in 1:nrow(sCa)){
+        	
+        for(i in 1:nrow(sCa)){
         	  tt = subset(ILTSTemp,ID==sCa$ID[i])
         	  ww = sCa[i,]
         	  if(nrow(tt)<5) next
         	  tt$st = strptime((tt$UTCTIME),"%H%M%S")
-        	  ww$st = strptime(sCa$STARTTIME[i],"%H%M%S")
-        	  ww$et = strptime(sCa$ENDTIME[i],"%H%M%S")
-        	  
-        	  tt1 = subset(tt,st>=ww$st & st<=ww$et)
+        	  ww$st = strptime(ww$STARTTIME,"%H%M%S")
+        	  ww$et = strptime(ww$ENDTIME,"%H%M%S")
+        	  #this deals with UTC going over midnight
+        	  if (ww$st > ww$et) {
+        	    tt1 <- subset(tt,st>=ww$st | st<=ww$et)
+        	    } else {
+        	      tt1 <- subset(tt,st>=ww$st & st<=ww$et)
+        	  }
         	  ww$temp = median(tt1$TEMPC,na.rm=T)
         	  ot[[i]] = ww
         	}
         	temp = as.data.frame(do.call(rbind,ot))
         	sC = merge(sC,temp[,c('ID','temp')],all.x=T)
           sC$ID = NULL
+          ###fill in temp from sensors if we have it
+          ii = subset(sC,is.na(temp) & YEAR>2024)
+          # 
+          # stop(####this is not finished )
+          # for(i in 1:nrow(ii)){
+          #   v = ii[40,]
+          #   ve = subset(ILTSSensor,TRIP_ID == v$TRIP_ID & SET_NO==v$SET_NO)
+          #   ve = ve[order(ve$GPSTIME),]
+          #   ip = grep('^TEMPERATURE$',ve$SENSORNAME)
+          #   ggplot(ve[ip,],aes(x=GPSTIME,y=SENSORVALUE,colour=TRANSDUCERNAME))+geom_point()
+          #   ve = ve[ip,]
+          #   ve = subset(ve,SENSORVALUE>= -1.5 & SENSORVALUE<=30)
+          #   ve$Time = strptime(ve$GPSTIME,"%H%M%S")
+          #   v$st = strptime(v$STARTTIME,"%H%M%S")
+          #   v$et = strptime(v$ENDTIME,"%H%M%S")
+          #   ve = subset(ve,Time>=v$st & Time <= v$et)
+          #   
+          #   
+          # }
+          # 
           
           
           #fill in number caught with avg weight_kg and weight
@@ -281,6 +306,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size 
           
           sF = subset(sF,ID %ni% unique(sM$ID)) #remove the duplicates from sF
           if(any(names(sF)=='TRIP')) sF$TRIP = NULL
+          if(any(names(sF)=='SPECIES_SAMPLE_WEIGHT')) sF$SPECIES_SAMPLE_WEIGHT = NULL
           sFM = rbind(sF,sM)
           sFM$ID <- NULL
         
@@ -336,14 +362,23 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size 
 
               }
   ##using saved file  
-    x = readRDS(outfile)
+  x = readRDS(outfile)
+
     if(return_base_data) return(x)
     if(return_tow_tracks) return(readRDS(sensorfile))
     x$ID = paste(x$TRIP_ID,x$SET_NO,sep="-")
    if(is.null(size) & is.null(sex)) xy = subset(x,SPECCD_ID==species)
    if(!is.null(size) & is.null(sex)) xy = subset(x,SPECCD_ID==species & FISH_LENGTH>=size[1] & FISH_LENGTH<=size[2])
    if(!is.null(size) & !is.null(sex)) xy = subset(x,SPECCD_ID==species & FISH_LENGTH>=size[1] & FISH_LENGTH<=size[2] & SEX %in% sex)
-   
+   #which sets have length comps
+    wr = subset(x,SPECCD_ID==species)
+    require(dplyr)
+    ids_len <- wr %>%
+      filter(!is.na(FISH_LENGTH) & FISH_LENGTH>0) %>%
+      pull(ID) %>%
+      unique()
+    
+    
     #vessel conversions
     
               iv = subset(xy, GEAR=='280 BALLOON')
@@ -534,13 +569,13 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=T,redo_set_data=T,size 
       xy$FID = xS$FID = NULL
       }
 
-    xy$ID = xS$ID = NULL
-
-      if( aggregate) xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N))
-    if(! aggregate) xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N,FISH_LENGTH,SEX))
+    
+      if( aggregate) xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N,ID))
+    if(! aggregate) xy = subset(xy,select=c(TRIP_ID, SET_NO, SPECCD_ID, YEAR, VESSEL_NAME, LFA, GEAR, FISHSET_ID, STATION, SET_LAT, SET_LONG, SET_DEPTH, SET_TIME, SET_DATE, SET_ID, STARTTIME, ENDTIME, DEPTHM, gear, distance, sweptArea, sensor, spread, temp, SA_CORRECTED_PRORATED_N,FISH_LENGTH,SEX,ID))
     
     xFinal = bind_rows(xS,xy)
- 
+    xFinal$Length_comps = ifelse(xFinal$ID %in% ids_len,1,0)
+    xFinal$ID = NULL
     
     return(xFinal)
     }

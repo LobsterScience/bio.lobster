@@ -66,6 +66,7 @@ if(DS %in% c('licence_characteristics', 'licence_characteristics_redo')){
     p.firstname,
     p.birthdate,
     lp.START_DATE,
+      lp.END_DATE,
     lt.desc_eng lic_type,
     lst.desc_eng lic_subtype,
     p.community_code,
