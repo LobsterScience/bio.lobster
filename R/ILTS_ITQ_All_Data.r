@@ -15,7 +15,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size 
   require(bio.utilities)
   require(devtools)
   require(geosphere)
-
+print('this is updated Dec 8 2025')
   outfile = file.path(project.datadirectory('bio.lobster'),'data','survey','ILTS_ITQ_all.data.rds')
   sensorfile = file.path(project.datadirectory('bio.lobster'),'data','survey','ILTS_ITQ_sensorData.rds')
   
@@ -383,7 +383,6 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size 
                                 fl = max(iv$Median[which(iv$FISH_LENGTH==i)])
                                 iv$Median[which(iv$FISH_LENGTH>i & is.na(iv$Median))] <- fl
                                 iv$SA_CORRECTED_PRORATED_N = iv$SA_CORRECTED_PRORATED_N * iv$Median
-                                
                                 #if fish_length ==0, no numbers at length, so need to use totals per set
                                 ii = which(iv$FISH_LENGTH==0)
                                 iv$SA_CORRECTED_PRORATED_N[ii] = iv$SA_CORRECTED_TOTAL_N[ii] * iv$Median[ii]
@@ -391,6 +390,7 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size 
       if(!applyGearConversion){
                               ii = which(iv$FISH_LENGTH==0)
                               iv$SA_CORRECTED_PRORATED_N[ii] = iv$SA_CORRECTED_TOTAL_N[ii] 
+                              iv$SA_CORRECTED_PRORATED_WT[ii] = iv$SA_CORRECTED_TOTAL_WT[ii]
                     }           
     
       
@@ -424,9 +424,9 @@ ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size 
        xy$wt = lobLW(xy$FISH_LENGTH, sex= xy$SEX)/1000
        if(species==2550) xy$wt = lobLW(xy$FISH_LENGTH, sex= xy$SEX)/1000
        if(species==10)  xy$wt = (0.007005*xy$FISH_LENGTH^	3.071947)/1000
-       
        xy$SA_CORRECTED_PRORATED_N =xy$SA_CORRECTED_PRORATED_N* xy$wt 
-       xy$wt <- NULL
+       ii = which(xy$FISH_LENGTH==0)
+       xy$SA_CORRECTED_PRORATED_N[ii] =xy$SA_CORRECTED_TOTAL_WT[ii] 
      }
      
      #pruned to size and/or sex
