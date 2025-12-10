@@ -6,10 +6,14 @@
 #' @param size specifies size class; commercial = c(82,200); recruit=c(70,82)
 #' @param sex specifies sex for data; only applicable to lobster and crabs. 0 = unid; 1= male; 2= female; 3=egg carrying
 #' @param aggregate if TRUE aggregates the data by trip and set based on above arguments. If no size or sex is specified its total abundance.
+#' @param return_tow_tracks gives the lats lons of each tow
+#' @param applyGearConversion applies gear conversion for 280Balloon to NEST (Cook et al 2025)
+#' @param biomass logical flag of whether biomass or abundance is returned
+#' @param return_set_data data that has not been processed
 #' @return Data objects that contain the data for use in further analyses.
 #' @examples ILTS_ITQ_All_Data(species=2550, size=c(1,200),sex=c(3),aggregate=T)
 #' @export
-ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size = NULL, sex=NULL,aggregate=T,return_tow_tracks=F,applyGearConversion=T,biomass=T,extend_ts=T,return_base_data=F){
+ILTS_ITQ_All_Data <-function(species=2550,redo_base_data=F,redo_set_data=T,size = NULL, sex=NULL,aggregate=T,return_tow_tracks=F,applyGearConversion=T,biomass=T,return_base_data=F){
   require(dplyr)
   require(bio.lobster)
   require(bio.utilities)

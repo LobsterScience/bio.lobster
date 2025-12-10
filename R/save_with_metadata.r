@@ -1,13 +1,17 @@
-
-# Main API -----------------------------------------------------------
-
 #' Save an object with rich metadata (provenance + environment)
 #' @param object The R object to save (data.frame, list, model, etc.)
 #' @param file Output .rds filename
 #' @param description A short human-readable description
 #' @param fn Optional: pass the function that produced `object` (for code capture)
 #' @param extra_meta Optional named list with any additional fields you want
+#' @param dictionary Optional data dictionary 
 #' @param compress One of "gzip" (default), "xz", "bzip2", or FALSE
+#' @examples
+#' x <- data.frame(YEAR=1999:2013,Stat = runif(15,0,100))
+#' dict = data.frame(
+#'    Column = c("Year","Anomalies"),
+#'    type  = sapply(x, function(x) paste(class(x), collapse = "/")))
+#' save_with_metadata(object=x,file='SaveFile.rds',dictionary=dict)
 #' @export
 save_with_metadata <- function(object,
                                file,
