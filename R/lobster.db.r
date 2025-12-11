@@ -1296,7 +1296,11 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
       load(file.path( fnODBC, "vlogs34.rdata"), .GlobalEnv)
      }
 
-
+    if(DS %in% c(traplimits)){
+        x=data.frame(LFA=c(27,28,29,30,'31A','31B',32,33,34,35,36,38,'38B'),NTraps = c(275,rep(250,7),375,300,300,375,375))
+        return(x)
+      
+    }
     if (DS %in% c("process.vlog.redo", "process.vlog") ) {
 
      if (DS=="process.vlog.redo") {
