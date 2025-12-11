@@ -2,7 +2,7 @@ require(bio.lobster)
 require(bio.utilities)
 
 a = lobster.db('process.logs')
-a = subset(a,SYEAR %in% 2021:2024 )
+a = subset(a,SYEAR %in% 2021:2025 & LFA %in% c(34,35) )
 
 aa = split(a,f=list(a$LFA,a$SYEAR))
 cpue.lst<-list()
