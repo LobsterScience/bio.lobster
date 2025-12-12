@@ -1080,7 +1080,8 @@ if (DS %in% c("logs.redo", "logs") ) {
              #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
              if (is.null(pH$yr)){
               # logs
-               logs = connect.command(con, "select * from marfissci.lobster_sd_log")
+              # logs = connect.command(con, "select * from marfissci.lobster_sd_log")
+              logs = connect.command(con, "select * from marfissci.lobster_sd_log_all") #incorporates elogs and paper
               save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
 
               # slips
@@ -1150,16 +1151,26 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                           max_trap = c(825,750,750,750,750,750,750,750,1126,1126,1126,1226)
                           #max_lbs = c(2750,2750,2750,2750,2750,2750,2750,10000,30000,30000,30000,30000)
                           Fish.Date$START_DATE = as.Date(Fish.Date$START_DATE)#,"%d/%m/%Y")
+                          
+                          
+                          
+                          
                           Fish.Date$END_DATE = as.Date(Fish.Date$END_DATE)#,"%d/%m/%Y")
 
 
                     # imported logs from marfis
                           lobster.db('logs')
 
+                         #remove ELOG record if paper exists for that day
+                          key_paper <- with(logs, paste(LICENCE_ID, DATE_FISHED))[logs$SRC == "PAPER"]
+                          key_all <- with(logs, paste(LICENCE_ID, DATE_FISHED))
+                          logs <- logs[ !(logs$SRC == "ELOG" & key_all %in% key_paper), ]
+                          
                          oldlogs34$LFA34_WEIGHT1_KGS=oldlogs34$LFA34_WEIGHT1_KGS/0.4536
                          oldlogs34$LFA34_WEIGHT2_KGS=oldlogs34$LFA34_WEIGHT2_KGS/0.4536
                           oldlogs34=subset(oldlogs34,select=c("VR_NUMBER","LICENCE_ID","LOBSTER_AREA","TRIP_ID","DATE_FISHED","GRID_NUMBER_A","LFA34_WEIGHT1_KGS","TRAP_HAULS_GRID_A","GRID_NUMBER_B","LFA34_WEIGHT2_KGS","TRAP_HAULS_GRID_B","V_NOTCHED","PORT_LANDED"))
-                          names(oldlogs34)=c("VR_NUMBER","LICENCE_ID","LFA","SD_LOG_ID","DATE_FISHED","GRID_NUM","WEIGHT_LBS","NUM_OF_TRAPS","GRID_NUM_B","WEIGHT_LBS_B","NUM_OF_TRAPS_B","V_NOTCHED","PORT_LANDED")
+                          oldlogs34$SRC='PAPER'
+                          names(oldlogs34)=c("VR_NUMBER","LICENCE_ID","LFA","SD_LOG_ID","DATE_FISHED","GRID_NUM","WEIGHT_LBS","NUM_OF_TRAPS","GRID_NUM_B","WEIGHT_LBS_B","NUM_OF_TRAPS_B","V_NOTCHED","PORT_LANDED", "SRC")
                           logs=merge(logs,oldlogs34,all=T)
 
 
@@ -1284,10 +1295,14 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
         # vlog
         vlog = connect.command(con, "select a.FDATE,a.N_TRP,a.W_TOT,a.FCODE,a.N_L,a.W_AVG,a.PORT,a.CPTH,a.NBF,a.SEASON,a.W_C,a.CPTH_C, b.LFA,b.COUNTY,b.STAT,b.PORT_CODE,b.LATITUDE,b.LONGITUDE,b.COMMENTS from lobster.CRLOGDATA a, lobster.CRLOCATIONS b where a.port = b.port")
-        vlogs34 = connect.command(con, "select * from lobster.logdata_other")
-        save( vlog, file=file.path( fnODBC, "vlog.rdata"), compress=T)
-        save( vlogs34, file=file.path( fnODBC, "vlogs34.rdata"), compress=T)
-
+        vlogs34 = connect.command(con, "select * from lobster.crlogdata_lfa34")
+        vlog$SRC="VLOG"
+        vlogs34$SRC="VLOG"
+        save(vlog, file=file.path( fnODBC, "vlog.rdata"))
+        save(vlogs34, file=file.path( fnODBC, "vlogs34.rdata"))
+     
+                  
+       
         gc()  # garbage collection
         #odbcClose(con)
       }
