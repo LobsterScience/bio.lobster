@@ -19,7 +19,7 @@ FSRSmodel=function(FSRS,lfa,response="SHORTS",redo=T,interaction=F,type="base" ,
  
   FSRS=subset(FSRS,!is.na(TEMP)&TEMP>(-5))
 
-
+#browser()
 
   #Do a NB GLMM using glmer
   require(MASS)
