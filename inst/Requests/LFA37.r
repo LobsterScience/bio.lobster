@@ -2,7 +2,6 @@
 
 require(bio.lobster)
 require(bio.utilities)
-require(PBSmapping)
 require(devtools)
 require(SpatialHub)
 la()
@@ -10,13 +9,21 @@ p = list()
 p$lfas = 38
  logsInSeason<-lobster.db('process.logs.unfiltered')
 
-grids = c(39,40,41,42) 
+grids = c(38,39,40,41,42) 
 
-s = subset(logsInSeason,LFA==38 & SYEAR>2020)
-s$id = paste(s$DATE_FISHED,s$LICENCE_ID)
-sr = subset(s,GRID_NUM %in% grids) 
+lc = lobster.db('licence_categories')
+l = lobster.db('licence_characteristics')
+li = subset(l, LFA==38)
+s = subset(logsInSeason,LFA==38 & SYEAR>2019 & SYEAR<2026)
+s1 = merge(s,subset(li,select=c(LICENCE_ID, SURNAME, LIC_TYPE, LIC_SUBTYPE)),by=c('LICENCE_ID'))
+s1$CC= grepl('CC',s1$LIC_TYPE)
+s1$CC = ifelse(s1$LICENCE_ID==111293 & s1$SYEAR<2024,FALSE, s1$CC)
+st = aggregate(LICENCE_ID~SYEAR+CC, data=s1, FUN=function(x) length(unique(x)))
+
+s1$id = paste(s1$DATE_FISHED,s1$LICENCE_ID)
+sr = subset(s1,GRID_NUM %in% grids) 
 tr = aggregate(id~SYEAR+LICENCE_ID,data=sr,FUN=function(x) length(unique(x)))
-tri = aggregate(id~SYEAR+LICENCE_ID,data=subset(s,LICENCE_ID %in% tr$LICENCE_ID),FUN=function(x) length(unique(x)))
+tri = aggregate(id~SYEAR+LICENCE_ID,data=subset(s1,LICENCE_ID %in% tr$LICENCE_ID),FUN=function(x) length(unique(x)))
 names(tri)[3] = 'TotalTrips'
 names(tr)[3] = 'L37Trips'
 
@@ -25,17 +32,25 @@ tt = bio.utilities::na.zero(tt)
 tt$propTrips = tt$L37Trips/tt$TotalTrips
 
 
-s$L37 = ifelse(s$GRID_NUM %in% grids,1,0)
+s1$L37 = ifelse(s1$GRID_NUM %in% grids,1,0)
 
-s$W37 = s$WEIGHT_KG*s$L37
+s1$W37 = s1$WEIGHT_KG*s1$L37
 
-gr = aggregate(cbind(WEIGHT_KG,W37)~SYEAR+LICENCE_ID,data=subset(s,LICENCE_ID %in% unique(tr$LICENCE_ID)),FUN=sum)
+gr = aggregate(cbind(WEIGHT_KG,W37)~SYEAR+LICENCE_ID+CC,data=subset(s1,LICENCE_ID %in% unique(tr$LICENCE_ID)),FUN=sum)
 gr$prop37 = gr$W37/gr$WEIGHT_KG
+
+table(gr$SYEAR[which(gr$prop37>0)])
+
+aggregate(prop37~SYEAR+CC, data=gr,FUN=function(x) summary(x[x>0]))
+
+table(gr$SYEAR[which(gr$prop37==1)])
+
 
 ####################################################
 
-#how many 38 licences have used LFA 37 grids in the last 5 years
-length(unique(tt$LICENCE_ID)) #28
+#how many 38 licences have used LFA 37 grids in the last 6 years
+length(unique(tt$LICENCE_ID)) #33
+
 
 #how many 38 licences use LFA 37 grids in 3 of last 5 years
 v =aggregate(SYEAR~LICENCE_ID,data=subset(tt,L37Trips>0),FUN=length)
@@ -53,7 +68,7 @@ nrow(bb[bb$SYEAR>2,]) #6
 
 #when do people fish in LFA 37
 sr = subset(s,GRID_NUM %in% grids) 
-aggregate(id~WOS,data=sr,FUN=function(x) length(unique(x)))
+aggregate(id~WOS+SYEAR,data=sr,FUN=function(x) length(unique(x)))
 
 
 

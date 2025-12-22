@@ -88,7 +88,7 @@ ggLobsterMap <- function(area='custom',fill.colours='grey',ylim=c(40,52),xlim=c(
       
       if(addLFAlines) {
       
-        p = p+ geom_sf(data=l,colour='black',linewidth=0.4,fill=NA) 
+        p = p+ geom_sf(data=l,colour='black',linewidth=1.4,fill=NA) 
           
       }
         if(bathy){

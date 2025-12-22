@@ -21,7 +21,7 @@ bw$Inf_Val = bw$infPr * bw$WT_LBS
 bw$T = bw$WT_LBS/2204.62
 bwa = aggregate(cbind(T,Inf_Val)~LFA+SYEAR,data=bw,FUN=function(x) c(mean(x),quantile(x,probs=c(0.25,0.75))))
 ggplot(subset(bwa,LFA %ni% c(28,41)),aes(x=SYEAR,y=T[,1] ,ymin=T[,2],ymax=T[,3]))+geom_line()+geom_errorbar(width=0)+facet_wrap(~LFA)+xlab('Fishing Season')+ylab('Landings Per Licence (T)')+theme_test()+theme(axis.text.x = element_text(size = 7))
-
+bwa = subset(bwa, SYEAR>1989)
 
 ggplot(subset(bwa,LFA %ni% c(28,41)),aes(x=SYEAR,y=Inf_Val[,1] /1000,ymin=Inf_Val[,2]/1000,ymax=Inf_Val[,3]/1000))+geom_line()+geom_errorbar(width=0)+facet_wrap(~LFA)+xlab('Fishing Season')+ylab("Landed Value Per Licence ('000$)")+theme_test()+
   theme(axis.text.x = element_text(size = 7))
@@ -84,8 +84,9 @@ gra <- gra %>%
     LFA == 312 ~ "31B",
     TRUE       ~ as.character(LFA)  # keep others unchanged
   ))
+gra$area = abs(st_area(gra))
 
-gra$area = st_area(gra)
+grb = gra
 gra=aggregate(area~LFA+GRID_NO,data=gra,FUN=sum)
 grag=aggregate(area~LFA,data=gra,FUN=sum)
 grag$area = as.numeric(grag$area)/1000000
@@ -115,22 +116,67 @@ rea = merge(gra,re, by.x=c('LFA','GRID_NO'),by.y=c('LFA','grid'))
 
 
 reaa = aggregate(cbind(area,landings_grid)~LFA+SYEAR,data=rea,FUN=sum)
+#replace the landings from logs with landings from fishery
+        g = lobster.db('annual.landings')
+        g = g[,c(1,2,4:7,9)]
+        
+        gg = reshape(g,direction='long',idvar='YR',varying=list(2:7),v.names='Landings')
+        gg$LFA = rep(names(g)[2:ncol(g)],each=nrow(g))
+        gg$LFA = substring(gg$LFA,4,8)
+        
+        k = lobster.db('seasonal.landings')
+        k = subset(k,!is.na(SYEAR))
+        k$SYEAR=1976:2025
+        kk = reshape(k,direction='long',idvar='SYEAR',varying=list(2:6),v.names='Landings')
+        kk$LFA = rep(names(k)[2:(ncol(k))],each=nrow(k))
+        kk$LFA = substring(kk$LFA,4,8)
+        
+        names(gg)[1] = 'SYEAR'
+        
+        ou = rbind(gg,kk)
+        ou = subset(ou,SYEAR>2000, select=c(SYEAR, Landings,LFA))
 
-ggplot(subset(reaa,LFA != 37),aes(x=SYEAR,y=area))+geom_line()+facet_wrap(~LFA)+
-  geom_hline(data=subset(grag,LFA !=37),aes(yintercept=area),colour='red')+theme_test()+labs(x='Fishing Season',y='Area Fished accounting for >95% landings')
+reaa$landings_grid <- NULL
+reaa =merge(reaa, ou)
 
-reaa$land_km2 = reaa$landings_grid/reaa$area
+ggplot(subset(reaa,LFA != 37),aes(x=SYEAR,y=area/1000))+geom_line()+facet_wrap(~LFA, scales='free_y')+
+  geom_hline(data=subset(grag,LFA !=37),aes(yintercept=area/1000),colour='red')+theme_test()+labs(x='Fishing Season',y='Area Fished accounting for >95% landings')
+
+reaa$land_km2 = reaa$Landings/reaa$area
+
 ggplot(subset(reaa,LFA != 37),aes(x=SYEAR,y=land_km2))+geom_line()+facet_wrap(~LFA)+
-  theme_test()+labs(x='Fishing Season',y='Landings/km2')
+  theme_test()+labs(x='Fishing Season',y='Landings (t) /km2')
 
 
 #active licences per LFA and area
-ul = aggregate(LICENCE_ID~SYEAR+LFA,data=a,FUN=function(x) length(unique(x)))
-ul = subset(ul, SYEAR>2008)
+            ul = aggregate(LICENCE_ID~SYEAR+LFA,data=a,FUN=function(x) length(unique(x)))
+            ul = subset(ul, SYEAR>2008)
+            
+            ru = merge(ul, reaa)
+            ru$lic_km2 = ru$LICENCE_ID/ru$area
+            ggplot(subset(ru,LFA != 37),aes(x=SYEAR,y=lic_km2))+geom_line()+facet_wrap(~LFA)+
+              theme_test()+labs(x='Fishing Season',y='Licences/km2')
+            
+            v = lobster.db('trap_limits')
+            
+            v = merge(ru,v)
+            v$Traps_km2 = v$lic_km2*v$NTraps
+    ggplot(subset(v,LFA != 37),aes(x=SYEAR,y=Traps_km2))+geom_line()+facet_wrap(~LFA)+
+              theme_test()+labs(x='Fishing Season',y='Traps/km2')
 
-ru = merge(ul, reaa)
-ru$lic_km2 = ru$LICENCE_ID/ru$area
-ggplot(subset(ru,LFA != 37),aes(x=SYEAR,y=lic_km2))+geom_line()+facet_wrap(~LFA)+
-  theme_test()+labs(x='Fishing Season',y='Licences/km2')
-
-
+    
+    names(v) = c('LFA','FISHING_SEASON','NLicences_catA','Area95','Landings_per_km','Landings(t)','Licences_per_km2','NTraps_per_Licence','Traps_km2')
+lfa2lpu <- function(x){
+  ifelse(
+    x %in% '27', 'L27',ifelse(
+    x %in% c(29:32,'31A','31B') ,'CB_ENS',ifelse(
+    x %in% 33:34 ,'SWN',ifelse(
+    x %in% 35:38 ,'BOF',NA))))
+      }
+    v$LPU = lfa2lpu(v$LFA)     
+    
+  v$Landings_per_Licence = v$`Landings(t)`/v$NLicences_catA
+  write.csv(v,'~/git/slice_per_lic/data/can_Landings_area_calcs.csv')
+  
+  
+  

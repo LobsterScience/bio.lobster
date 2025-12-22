@@ -53,7 +53,7 @@ if(DS %in% c('licence_categories')){
       return(ca)
     }
 
-if(DS %in% c('licence_characteristics', 'licence_characteristics_redo')){
+if(DS %in% c('licence_characteristics', 'licence_characteristics.redo')){
   fn = file.path(fnODBC,'licence_characteristics.rds')
       if(grepl('redo',DS)){
 
@@ -112,7 +112,9 @@ WHERE
 
       return(readRDS(fn))
     }
-
+if(DS %in% c('Gulf_27_Licences')){
+    return(readr::read_csv(file.path(project.datadirectory('bio.lobster'),'data','LicenceHolder','GulfRegion_LFA272023.csv'), col_types=readr::cols(Licence_Id=readr::col_character())))
+}
 if(DS %in% c('licence_ages','licence_ages.redo')){
       if(grepl('redo',DS)) { 
       oo = connect.command(con,"
@@ -1016,7 +1018,7 @@ if(DS %in% c('seasonal.landings','seasonal.landings.redo')) {
                   seasonal.landings = connect.command(con,'select * from LOBSTER.SLIP_LAND_SEASONAL')
                   seasonal.landings = seasonal.landings[order(seasonal.landings$SYEAR),]
                    print('Last two years of landings data may be incomplete, make sure to check with Cheryl.Denton@dfo-mpo.gc.ca on last update')
-                  print('LFA27 for needs to have gulf landings added manually each year from GFIS.....')
+                  print('LFA27 needs to have gulf landings added manually each year from GFIS.....')
                   save(seasonal.landings,file=file.path(fnODBC,'seasonal.landings.rdata'))
             }
 
@@ -1296,7 +1298,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
       load(file.path( fnODBC, "vlogs34.rdata"), .GlobalEnv)
      }
 
-    if(DS %in% c(traplimits)){
+    if(DS %in% c('trap_limits')){
         x=data.frame(LFA=c(27,28,29,30,'31A','31B',32,33,34,35,36,38,'38B'),NTraps = c(275,rep(250,7),375,300,300,375,375))
         return(x)
       
