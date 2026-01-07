@@ -79,22 +79,22 @@ RV_sets <- function(){
   
   ca = st_as_sf(com, coords = c('X','Y'),crs=4326)
 
-  ouR = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections",'modelled_recruit_Proportions_34-38.rds')))
-  ouC = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections",'modelled_Commercial_Proportions_34-38.rds')))
-  ouCW = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections" ,'modelled_Commercial_Proportions_wt_34-38.rds')))
+#  ouR = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections",'modelled_recruit_Proportions_34-38.rds')))
+#  ouC = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections",'modelled_Commercial_Proportions_34-38.rds')))
+#  ouCW = st_as_sf(readRDS(file.path( bio.directory,'bio.lobster.data', "survey_corrections" ,'modelled_Commercial_Proportions_wt_34-38.rds')))
   
-  ss = st_nearest_feature(ca,ouR)
-  ca$Recprop = ouR$Modelled_Proportion[ss]
-  ss = st_nearest_feature(ca,ouC)
-  ca$Comprop = ouC$Modelled_Proportion[ss]
-  ss = st_nearest_feature(ca,ouCW)
-  ca$CompropW = ouCW$Modelled_Proportion[ss]
+#  ss = st_nearest_feature(ca,ouR)
+#  ca$Recprop = ouR$Modelled_Proportion[ss]
+#  ss = st_nearest_feature(ca,ouC)
+#  ca$Comprop = ouC$Modelled_Proportion[ss]
+#  ss = st_nearest_feature(ca,ouCW)
+#  ca$CompropW = ouCW$Modelled_Proportion[ss]
   
   iw = which(ca$YEAR<1999)
-  ca$Legal[iw] = round(ca$Lobster[iw] * ca$Comprop[iw])
-  ca$Legal_wt[iw] = ca$WEIGHT_KG[iw] * ca$CompropW[iw]
-  ca$Recruit[iw] = round(ca$Lobster[iw] * ca$Recprop[iw])
-  ca$Juv[iw] = round(ca$Lobster[iw] * ca$Recprop[iw])
+  ca$Legal[iw] = NA
+  ca$Legal_wt[iw] = NA
+  ca$Recruit[iw] = NA
+  ca$Juv[iw] = NA
   
   ca$X = st_coordinates(ca)[,1]
   ca$Y = st_coordinates(ca)[,2]

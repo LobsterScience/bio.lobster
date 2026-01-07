@@ -38,21 +38,57 @@ if(DS %in% c('percent_reporting')){
     }
     
     
-if(DS %in% c('licence_categories')){
-      cats = readxl::excel_sheets(file.path(project.datadirectory('bio.lobster'),'data','LicenceHolder','Lobster_Licences_1999-2022.xlsx'))
-      ou=list()
-      for(i in 1:length(cats)){
-      ou[[i]] = readxl::read_excel(file.path(project.datadirectory('bio.lobster'),'data','LicenceHolder','Lobster_Licences_1999-2022.xlsx'),sheet=i)
-      }
-      ca = dplyr::bind_rows(ou)
-      ca$LFA1 = substr(ca$LFA,24,100)
-      i = grep('GREY',ca$LFA)
-      ca$LFA1[i] = '38B'
-      ca$LFA = ca$LFA1
-      ca$LFA1 = NULL
-      return(ca)
-    }
+if(DS %in% c('licence_categories', 'licence_categories.redo')){
+  
+  if(grepl('redo',DS)){
+  tod = lubridate::today()
+  yrs = 1999:(lubridate::year(tod)-1)
+  db.setup(un=oracle.lobster.user,pw=oracle.lobster.password)
+  ou=list()
+  for(i in 1:length(yrs)){
+    y = yrs[i]
+    asof <- sprintf("%d-12-31", y)
+    sq = sprintf("select area LFA, licence_type, licence_sub_type, count(licence_id) N from (
+              select 
+              distinct la.area_id,
+              a.area,
+              lh.licence_id,
+              lh.licence_type_id,
+              lt.desc_eng licence_type,
+              lh.LICENCE_SUBTYPE_ID,
+              ls.DESC_ENG licence_sub_type
+              from
+              marfis.V_LICENCE_HISTORY lh,
+              marfissci.LICENCE_SUBTYPES ls,
+              marfissci.licence_areas la,
+              marfissci.licence_types lt,
+              marfissci.areas a
+              where
+              a.area_id = la.area_id and
+              la.licence_id = lh.licence_id and
+              lh.LICENCE_SUBTYPE_ID = ls.LICENCE_SUBTYPE_ID and
+              lh.LICENCE_TYPE_ID = lt.LICENCE_TYPE_ID and
+              to_date('%s','YYYY-MM-DD') between lh.START_DATE_TIME and lh.END_DATE_TIME
+              and to_date('%s','YYYY-MM-DD') between la.START_DATE and la.END_DATE
+              and lh.species_code in (700,923)
+              and sector_id = 7
+              )
+              group by area, licence_type, licence_sub_type",asof,asof)
 
+  vsP = connect.command(con,sq)
+  vsP$END_YR = y
+  vsP= vsP[order(vsP$LFA),]
+  ou[[i]] = vsP
+    }
+  vs = do.call(rbind,ou)
+  save_with_metadata(vs, file=file.path(fnODBC,'licence_categories.rds'), description = 'Stacked sub category not included until recent years, Partnership is both sta/part and is the count of both licences ', extra_meta='Matches::LS4006C-Lic Summary by Lic Area and Subtype.imr')
+  return(vs)
+  }
+  
+  vs = readRDS( file=file.path(fnODBC,'licence_categories.rds'))
+  return(vs)
+}
+    
 if(DS %in% c('licence_characteristics', 'licence_characteristics.redo')){
   fn = file.path(fnODBC,'licence_characteristics.rds')
       if(grepl('redo',DS)){
@@ -1682,7 +1718,7 @@ atSea2$STRINGNO = as.character(atSea2$STRINGNO)
       fd = file.path(project.datadirectory('bio.lobster'),'data','MaineDMRSurvey')
       print('this is just for Region 5 in Fall and is in per km2')
       if(grepl('redo',DS)){
-        print('Data obtained from https://mainedmr.shinyapps.io/MaineDMR_Trawl_Survey_Portal/')
+        print('Data needs to be obtained from https://mainedmr.shinyapps.io/MaineDMR_Trawl_Survey_Portal/ prior to running this script')
         x = dir(fd,full.names = T)
         x = x[grep('csv',x)]
         ou = list()

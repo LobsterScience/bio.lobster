@@ -44,7 +44,7 @@ ezc = st_transform(ezc,crs=canada_albers)
 pp = readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','DisputedZone_38B.rds'))
 pp = st_transform(pp,crs=canada_albers)
 pp = st_make_valid(pp)
-ezcB = st_union(ezc,pp)y7
+ezcB = st_union(ezc,pp)
 
 he = st_intersects(hex_sf,ezcB,sparse = F)
 
@@ -89,7 +89,7 @@ br = quantile(abacS$NUM_OF_TRAPS, probs=seq(0,1,length.out=6),na.rm=T)
 rbr = round(br)
 labs1 =  paste0("[", head(rbr, -1), ", ", tail(rbr, -1), "]")
 
-abacS$qEstNtr = cut(abacS$NUM_OF_TRAPS, breaks=br, include.lowest = T, labels = labs)
+abacS$qEstNtr = cut(abacS$NUM_OF_TRAPS, breaks=br, include.lowest = T, labels = labs1)
 
 p1t = v +
   geom_sf(data=subset(abacS,triID>4),aes( fill = qEstNtr))+
@@ -153,7 +153,7 @@ br = quantile(a44$NUM_OF_TRAPS, probs=seq(0,1,length.out=6),na.rm=T)
 rbr = round(br)
 labs1 =  paste0("[", head(rbr, -1), ", ", tail(rbr, -1), "]")
 
-a44$qEstNtr = cut(a44$NUM_OF_TRAPS, breaks=br, include.lowest = T, labels = labs)
+a44$qEstNtr = cut(a44$NUM_OF_TRAPS, breaks=br, include.lowest = T, labels = labs1)
 
 p1t = v +
   geom_sf(data=subset(a44),aes( fill = qEstNtr))+

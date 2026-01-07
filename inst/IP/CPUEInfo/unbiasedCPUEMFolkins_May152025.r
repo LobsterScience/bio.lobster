@@ -3,7 +3,7 @@ require(bio.utilities)
 require(devtools)
 require(ggplot2)
 a = lobster.db('process.logs')
-a = subset(a,SYEAR %in% 2020:2024 )
+a = subset(a,SYEAR %in% 2007:2024 )
 
 aa = split(a,f=list(a$LFA,a$SYEAR))
 cpue.lst<-list()
@@ -29,6 +29,7 @@ cc =as.data.frame(do.call(rbind,cpue.lst))
 cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
 plot(CPUE~yr,data=cc,xlab='Year' ,ylab='CPUE')
 cc$yr = as.numeric(cc$yr)
+cc$LFA= cc$lfa
 ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+geom_line()+facet_wrap(~LFA)+theme_test()
 cc$CPUE = round(cc$CPUE,2)
 
