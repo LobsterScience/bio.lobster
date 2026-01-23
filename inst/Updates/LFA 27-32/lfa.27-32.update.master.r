@@ -18,8 +18,8 @@ p = bio.lobster::load.environment()
 la()
 
 #Choose one
-assessment.year = p$current.assessment.year 
-#assessment.year = p$current.assessment.year-1 
+#assessment.year = p$current.assessment.year 
+assessment.year = p$current.assessment.year-1 
 
 #create subfolders
 # Define all directory paths in a *named list*+
@@ -137,15 +137,6 @@ if (double.check.logs){
             }
 }
 
-#Choose One:
-
-logs=lobster.db("process.logs")
-g = logs
-
-#2025/26- need to import elogs for 28, 29, 30
-db.setup(un=oracle.lobster.user,pw=oracle.lobster.password) #Chooses RODBC vs ROracle based on R version and installed packages. db.setup(RODBC=T) will force RODBC
-elg= connect.command(con,'select * from marfissci.LOBSTER_ELOG_20251112')
-
 
 
 #Establishing a master reference table of all lrp, usr
@@ -154,6 +145,8 @@ ref = data.frame(LFA=c(27:30,'31A','31B',32),
                  usr=c(.27,.25,.22,.56,.41,.32,.29)
                  )
 
+logs=lobster.db("process.logs")
+g = logs
 g = subset(g, SYEAR<=p$current.assessment.year)
 
 #bring in voluntary log data to populate <2005
@@ -222,7 +215,7 @@ o <- rbind(
 
 crd <- merge(o, ref, by = "LFA", all.x = TRUE) #add ref points
 crd = crd[order(crd$LFA,crd$YEAR),]
-crd = crd[is.finite(crd$CPUE),]
+#crd = crd[is.finite(crd$CPUE),]
 
 write.csv(crd, file=paste0(cpue.dir, "/fishery.stats.27-32.csv"), row.names=F )
 save(crd, file=paste0(cpue.dir, "/cpueData.Rdata") )
@@ -242,10 +235,11 @@ crplot= function(x, French=F){
         if (French){ylab='CPUE (kg/casier levé)'}
         plot(cr$YEAR,cr$CPUE,xlab=' ',ylab=ylab,type='p',pch=16, 
              xlim=xlim, ylim=c(lrp-.1,1.05*(max(cr$CPUE, na.rm = TRUE)) ))
-        lines(cr$YEAR,cr$running.median,col='blue',lty=1,lwd=2)
+        lines(cr$YEAR,cr$CPUErmed,col='blue',lty=1,lwd=2)
         abline(h=usr,col='green',lwd=2,lty=2)
         abline(h=lrp,col='red',lwd=2,lty=3)
         text(x=1988, y= max(cr$CPUE, na.rm = TRUE), l, cex=2)
+        points(x=p$current.assessment.year, y=cr$CPUE[cr$YEAR==p$current.assessment.year], pch=17, col="orange", cex=1.4)
         }
 
 
@@ -573,7 +567,7 @@ oo$RR75[oo$LFA==i]=RR75$ERf75[RR75$LFA==i]
 
 save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
 load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
-
+RR75  = aggregate(ERf75~LFA,data=oo,FUN=max)
 oo=as.data.frame(oo)
 ccir.sum=oo[,c(1, 6, 3, 7, 8 )]
 
@@ -582,7 +576,7 @@ write.csv(ccir.sum, file=paste0(ccir.dir, "/ccir.27-32.csv"), row.names=F )
 # plot Individual
 for(i in c("27", "29", "30", "31A", "31B", "32")){
   o = subset(oo,LFA==i)
-  RR7 = subset(RR75,LFA==i)$ERf75
+  RR7=o$RR75[1]
   #English
   png(filename=file.path(ccir.dir, paste0('ExploitationRefs',i, '.png')),width=8, height=4, units = "in", res = 800)
   ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i, French=F)
@@ -591,7 +585,6 @@ for(i in c("27", "29", "30", "31A", "31B", "32")){
   png(filename=file.path(ccir.dir, paste0('ExploitationRefs',i, '.French.png')),width=8, height=4, units = "in", res = 800)
   ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i, French=T)
   dev.off()
-
 }
 
 #Plot as one figure for document
@@ -602,7 +595,7 @@ par(mfrow=c(3,2))
 
 for(i in c("27", "29", "30", "31A", "31B", "32")){
   o = subset(oo,LFA==i)
-  RR7 = subset(RR75,LFA==i)$ERf75
+  RR7 = o$RR75[1]
   ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i, French=F)
 }
 dev.off()
@@ -613,7 +606,7 @@ par(mfrow=c(3,2))
 
 for(i in c("27", "29", "30", "31A", "31B", "32")){
   o = subset(oo,LFA==i)
-  RR7 = subset(RR75,LFA==i)$ERf75
+  RR7 = o$RR75[1]
   #French
   ExploitationRatePlots(data = o[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR7,lfa = i,fd=ccir.dir, save=F, title=i, French=T)
 }
@@ -668,10 +661,6 @@ rm(RR_lookup, oo2, oo_sub)
 save(fishData, file=file.path(figdir, "fishData.RData"))
 write.csv(fishData, file=file.path(figdir, "fishData.csv"), row.names = F)
 
-
-
-#add save for fish data
-
 #land = lobster.db('annual.landings')
 #land=fishData
 #logs=lobster.db("process.logs")
@@ -715,13 +704,13 @@ png(filename=file.path(land.dir, "Landings_LFA27-30.png"),width=8, height=5.5, u
         
         par(mar=c(3,5,2.0,4.5))
         plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS, na.rm=T)*1.2),pch=15,col='royalblue1',lwd=4,lend=3, col.lab='royalblue3', col.axis='royalblue3')
-        #lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='green1',lwd=4, lend=3)
+        lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='green1',lwd=4, lend=3)
         text(x=(xlim[1]+2), y= 1.15*max(data$LANDINGS, na.rm = TRUE), lst[i], cex=1.2)
         
         par(new=T)
         
         plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, cex=0.8,  axes=F,xlim=xlim,ylim=c(0,effort_max))
-        #points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,cex = 1.0,bg='green1')
+        points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,cex = 1.0,bg='green1')
         axis(4)
         if (i %in% c(2,4)) {mtext(efftext,cex = 0.75, side=4, line = 3, outer = F, las = 0)}
     }
@@ -745,13 +734,13 @@ for (i in 1:length(lst)) {
     
     par(mar=c(3,5,2.0,4.5))
     plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS, na.rm=T)*1.2),pch=15,col='royalblue1',lwd=4,lend=3, col.lab='royalblue3', col.axis='royalblue3')
-   # lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='green1',lwd=4, lend=3)
+   lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='green1',lwd=4, lend=3)
     text(x=(xlim[1]+2), y= 1.15*max(data$LANDINGS, na.rm = TRUE), lst[i], cex=1.2)
     
     par(new=T)
     
     plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, cex=0.8,  axes=F,xlim=xlim,ylim=c(0,effort_max))
-    #points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,cex = 1.0,bg='green1')
+    points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,cex = 1.0,bg='green1')
     axis(4)
     if (i %in% c(2,4)) {mtext(efftext,cex = 0.75, side=4, line = 3, outer = F, las = 0)}
 
@@ -774,13 +763,13 @@ png(filename=file.path(land.dir, paste0("Landings_LFA",lst[i],".png")),width=8, 
     
     par(mar=c(3,5,2.0,4.5))
     plot(data$YEAR,data$LANDINGS,ylab=ylab,type='h',xlim=xlim, xlab=" ", ylim=c(0,max(data$LANDINGS, na.rm=T)*1.2),pch=15,col='royalblue1',lwd=4,lend=3, col.lab='royalblue3', col.axis='royalblue3')
-   # lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='green1',lwd=4, lend=3)
+    lines(data$YEAR[nrow(data)],data$LANDINGS[nrow(data)],type='h',pch=21,col='green1',lwd=4, lend=3)
     text(x=(xlim[1]+2), y= 1.15*max(data$LANDINGS, na.rm = TRUE), lst[i], cex=1.2)
     
     par(new=T)
     
     plot(data$YEAR,data$EFFORT2/1000,ylab='',xlab='', type='b', pch=16, cex=0.8,  axes=F,xlim=xlim,ylim=c(0,effort_max))
-    #points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,cex = 1.0,bg='green1')
+    points(data$YEAR[nrow(data)],data$EFFORT2[nrow(data)]/1000, type='b', pch=24,cex = 1.0,bg='green1')
     axis(4)
     if (i %in% c(2,4)) {mtext(efftext,cex = 0.75, side=4, line = 3, outer = F, las = 0)}
  
@@ -951,6 +940,7 @@ theme_csas <- function(base_size = 11, base_family = "", text_col = "grey20",
 
 #format from FSAR branch of CSASdown
 
+load(file=paste0(figdir, "/fishData.RData"))
 
 # Catch and eff
 
@@ -2121,10 +2111,9 @@ require(LobTag2)
 setwd(tag.dir) #by setting wd, it will default to this location for saving tagging maps
 
 #map releases only. Globally then by LFA
-map_by_factor(db="Oracle",factor.from="releases", group.by="YEAR", all.release=T, show.recaptures = F, inset.map =F,
-              point.size=1.2, file.type="png", zoom.out=10)
+map_by_factor(db="Oracle",filter.from="releases", factor.by="YEAR", all.release=T, show.recaptures = F, inset.map =F, tag.prefix = 'XY', point.size=1.2, file.type="png", zoom.out=1)
 
-map_by_factor(db="Oracle",factor.from="releases", map.by="MANAGEMENT_AREA", group.by="YEAR", all.release=T, show.recaptures = F, inset.map =F,
+map_by_factor(db="Oracle",filter.from="releases", map.by="MANAGEMENT_AREA", filter.by="YEAR", all.release=T, show.recaptures = F, inset.map =F,
               point.size=1, file.type="png", zoom.out=10)
 
 #map recaptures only
