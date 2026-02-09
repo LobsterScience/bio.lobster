@@ -519,7 +519,7 @@ when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY
 when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2025-01-01' and '2025-12-31' then 2025
 else null
 end season,
-lfa, vr_number, slip_weight_lbs/2.2046/1000 mt
+lfa, vr_number, slip_weight_lbs/2.20462/1000 mt
 from marfissci.lobster_sd_slip
 where to_char(date_landed,'YYYY-MM-DD') between '2002-04-01' and '2025-12-31'
 and species_code = 700
@@ -528,7 +528,7 @@ group by season, lfa, to_char(vr_number)")
 aa = connect.command(con, paste("
 select VR_NUMBER, SEASON,sum(MT) MT, '38B' LFA, 'GreySlip' source 
 from (
-select VR_NUMBER, slip_weight_lbs/2.2046/1000 MT, landing_date_time, CASE
+select VR_NUMBER, slip_weight_lbs/2.20462/1000 MT, landing_date_time, CASE
 when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2001-10-01' and '2002-09-30' then 2002
 when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2002-10-01' and '2003-09-30' then 2003
 when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2003-10-01' and '2004-09-30' then 2004
@@ -734,7 +734,7 @@ if(DS %in% c('process_slips', 'process_slips.redo')){
     tt = subset(tt,LFA %ni% '31_32')
     tt = subset(tt,SYEAR %ni% c(1997,1974,1975))
     
-    ta = aggregate(WT_LBS/2.2046/1000~LFA+SYEAR,data=tt,FUN=sum)
+    ta = aggregate(WT_LBS/2.20462/1000~LFA+SYEAR,data=tt,FUN=sum)
     names(ta)[3]='T'
     db.setup(un=oracle.lobster.user,pw=oracle.lobster.password)
     gu = connect.command(con,'select * from frailc.gulf_land')
@@ -769,7 +769,7 @@ if(DS %in% c('process_slips', 'process_slips.redo')){
     
     tt = merge(tt,tad[,c('SYEAR','LFA','ratio')],all.x=T)
     
-    tt$adj_wt_kg = tt$WT_LBS/2.2046*tt$ratio
+    tt$adj_wt_kg = tt$WT_LBS/2.20462*tt$ratio
     tt$value = tt$WT_LBS*tt$ratio*tt$PRICE
     
    # 
@@ -975,7 +975,7 @@ if(DS %in% c('landings.by.port.redo','landings.by.port')) {
                     #            }
                     #      }
 
-                        dats$WEIGHT_KG = dats$WT_LBS*0.453592
+                        dats$WEIGHT_KG = dats$WT_LBS/2.20462
                     #  if(any(!is.finite(dats$WOS))) {kl = which(!is.finite(dats$WOS)); dats$WOS[kl] = NA}
                     #  dats = aggregate(WEIGHT_KG~PORT+SDATE+WOS+SYEAR+LFA,data=dats,FUN=sum)
                     #  dats = subset(dats,WOS>0)
@@ -1188,12 +1188,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                           #lfa "27"  "28"  "29"  "30"  "31A" "31B" "32"  "33"  "34"  "35"  "36"  "38"
 
                           max_trap = c(825,750,750,750,750,750,750,750,1126,1126,1126,1226)
-                          #max_lbs = c(2750,2750,2750,2750,2750,2750,2750,10000,30000,30000,30000,30000)
                           Fish.Date$START_DATE = as.Date(Fish.Date$START_DATE)#,"%d/%m/%Y")
-                          
-                          
-                          
-                          
                           Fish.Date$END_DATE = as.Date(Fish.Date$END_DATE)#,"%d/%m/%Y")
 
 
@@ -1205,8 +1200,8 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                           key_all <- with(logs, paste(LICENCE_ID, DATE_FISHED))
                           logs <- logs[ !(logs$SRC == "ELOG" & key_all %in% key_paper), ]
                           
-                         oldlogs34$LFA34_WEIGHT1_KGS=oldlogs34$LFA34_WEIGHT1_KGS/0.4536
-                         oldlogs34$LFA34_WEIGHT2_KGS=oldlogs34$LFA34_WEIGHT2_KGS/0.4536
+                         oldlogs34$LFA34_WEIGHT1_KGS=oldlogs34$LFA34_WEIGHT1_KGS*2.20462
+                         oldlogs34$LFA34_WEIGHT2_KGS=oldlogs34$LFA34_WEIGHT2_KGS*2.20462
                           oldlogs34=subset(oldlogs34,select=c("VR_NUMBER","LICENCE_ID","LOBSTER_AREA","TRIP_ID","DATE_FISHED","GRID_NUMBER_A","LFA34_WEIGHT1_KGS","TRAP_HAULS_GRID_A","GRID_NUMBER_B","LFA34_WEIGHT2_KGS","TRAP_HAULS_GRID_B","V_NOTCHED","PORT_LANDED"))
                           oldlogs34$SRC='PAPER'
                           names(oldlogs34)=c("VR_NUMBER","LICENCE_ID","LFA","SD_LOG_ID","DATE_FISHED","GRID_NUM","WEIGHT_LBS","NUM_OF_TRAPS","GRID_NUM_B","WEIGHT_LBS_B","NUM_OF_TRAPS_B","V_NOTCHED","PORT_LANDED", "SRC")
@@ -1215,8 +1210,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
                           logs$TOTAL_NUM_TRAPS = rowSums(logs[c('NUM_OF_TRAPS','NUM_OF_TRAPS_B','NUM_OF_TRAPS_C')],na.rm=T)
                           logs$TOTAL_WEIGHT_LBS = rowSums(logs[c('WEIGHT_LBS','WEIGHT_LBS_B','WEIGHT_LBS_C')],na.rm=T)
-                          logs$TOTAL_WEIGHT_KG = logs$TOTAL_WEIGHT_LBS*0.4536
-
+                          logs$TOTAL_WEIGHT_KG = logs$TOTAL_WEIGHT_LBS/2.20462
                     # select for records within season
                           logs$DATE_FISHED = as.Date(logs$DATE_FISHED,"%Y-%m-%d", tz="UTC" )
                           #logs$SYEAR = year(logs$DATE_FISHED)
@@ -1229,7 +1223,8 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                               }
                 print('Logs Outside of Season Start and End Dates are Discarded')
                         logs = subset(logs,!is.na(SYEAR))
-
+                
+                        
                     # add week of season (WOS) variable
                         logs$DOS = logs$WOS = NA
                             for(i in 1:length(lfa)) {
@@ -1252,18 +1247,19 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                     commonCols = c("SUM_DOC_ID", "VR_NUMBER", "VESSEL_NAME", "SUBMITTER_NAME", "LICENCE_ID", "LFA", "COMMUNITY_CODE","SD_LOG_ID", "DATE_FISHED","SYEAR","WOS",'quarter',"TOTAL_NUM_TRAPS","TOTAL_WEIGHT_KG","DOS")
 
                     logsInSeasonA = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS),c(commonCols,"GRID_NUM", "WEIGHT_LBS", "NUM_OF_TRAPS"))
-                    logsInSeasonB = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_B)&!is.na(NUM_OF_TRAPS_B),c(commonCols,"GRID_NUM_B", "WEIGHT_LBS_B", "NUM_OF_TRAPS_B"))
-                    logsInSeasonC = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_C)&!is.na(NUM_OF_TRAPS_C),c(commonCols,"GRID_NUM_C", "WEIGHT_LBS_C", "NUM_OF_TRAPS_C"))
-
+                    #adj jan28-2026 stop removing grids with weight but not trap hauls, filter them later
+                    #logsInSeasonB = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_B)&!is.na(NUM_OF_TRAPS_B),c(commonCols,"GRID_NUM_B", "WEIGHT_LBS_B", "NUM_OF_TRAPS_B"))
+                    #logsInSeasonC = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_C)&!is.na(NUM_OF_TRAPS_C),c(commonCols,"GRID_NUM_C", "WEIGHT_LBS_C", "NUM_OF_TRAPS_C"))
+                    logsInSeasonB = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_B),c(commonCols,"GRID_NUM_B", "WEIGHT_LBS_B", "NUM_OF_TRAPS_B"))
+                    logsInSeasonC = subset(logs,!is.na(SYEAR)&!is.na(WEIGHT_LBS_C),c(commonCols,"GRID_NUM_C", "WEIGHT_LBS_C", "NUM_OF_TRAPS_C"))
+                    
+                    
                     names(logsInSeasonB) = names(logsInSeasonA)
                     names(logsInSeasonC) = names(logsInSeasonA)
 
                     logsInSeason = rbind(logsInSeasonA,logsInSeasonB,logsInSeasonC)
-                    logsInSeason$WEIGHT_KG = logsInSeason$WEIGHT_LBS*0.4536
-
-
-                    logsInSeason$CPUE = logsInSeason$WEIGHT_KG/logsInSeason$NUM_OF_TRAPS
-
+                    logsInSeason$WEIGHT_KG = logsInSeason$WEIGHT_LBS/2.20462
+                    
 
 
                     # add BUMPUP column: total landings/sum of logs for each year  & LFA
@@ -1297,8 +1293,11 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                       }
                     }
                      save(logsInSeason,file=file.path( fnProducts,"logsInSeasonUnfiltered.rdata"),row.names=F)
-
-                    # filter by max trap
+                    
+                     logsInSeason = subset(logsInSeason,!is.na(NUM_OF_TRAPS))
+                     logsInSeason$CPUE = logsInSeason$WEIGHT_KG/logsInSeason$NUM_OF_TRAPS
+                     
+                     # filter by max trap
                     if(length(max_trap)==length(lfa)){   #these do not match Jan 31, 2018 this code was added but not checked LFA 38 gets dropped
                     logsInSeason.lst = list()
                     for(i in 1:length(lfa)){
@@ -1382,7 +1381,7 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
 
           vlog = addSYEAR(vlog,date.field="FDATE")
           #vlog$SYEAR = as.numeric(substr(vlog$SEASON,6,9))
-          vlog$W_KG = vlog$W_TOT*0.4536
+          vlog$W_KG = vlog$W_TOT/2.20462
           vlog$CPUE = vlog$W_KG/vlog$N_TRP
 
 
@@ -1477,14 +1476,14 @@ if (DS %in% c("uslandings_by_state") ) {
       if (DS=="process.logs41.redo") {
           require(sf)    
         lobster.db('logs41')
-        logs41$ADJCATCH_KG = logs41$ADJCATCH / 2.204
+        logs41$ADJCATCH_KG = logs41$ADJCATCH / 2.20462
         logs41$CPUE = logs41$ADJCATCH_KG / logs41$NUM_OF_TRAPS
         saveRDS( logs41, file=f2, compress=T)
         
       lq = quantile(logs41$CPUE,c(0.01,.9995),na.rm=T)
       logs41p = subset(logs41,CPUE>=lq[1] & CPUE<=lq[2])
       logs41p$yr = lubridate::year(logs41p$FV_FISHED_DATETIME)
-       
+       b$
       gr41 = st_as_sf(readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds')))
       logs41p$X = logs41p$DDLON * -1
       logs41p$Y = logs41p$DDLAT
@@ -1803,7 +1802,8 @@ atSea2$STRINGNO = as.character(atSea2$STRINGNO)
         aa = st_as_sf(scde,coords = c('X','Y'),crs=4326)
         aa$Date = as.POSIXct(aa$Start_Date, format="%Y-%m-%dT%H:%M:%SZ", tz="UTC")
         aa$Year = lubridate::year(aa$Date)
-        
+        aa$OFFSET = aa$spread/1000*aa$dist 
+        print('all values are in density (ie per km2), offset is in km2')
        saveRDS(aa,file=file.path(fd,fname)) 
       }
       return(readRDS(file=file.path(fd,fname)) )
