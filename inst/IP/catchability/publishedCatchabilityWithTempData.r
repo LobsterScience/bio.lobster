@@ -18,15 +18,24 @@ cS2 = rescale0_1(ca2)
 
 
 pre = readRDS(file=file.path(project.datadirectory('bio.lobster'),'analysis','ClimateModelling','tempCatchability.rds'))
-pre$preds = rescale0_1(pre$pred)
+pre$preds = scale(pre$predicted)
+
+fin = readRDS(file.path(project.datadirectory('Framework_LFA33_34_41'),'compiled_cpue_predictions.rds'))
+fin$temp = round(fin$bcT*2)/2
+fi = aggregate(pred~temp,data=fin,FUN=function(x) quantile(x,c(0.25,0.5,0.75)))
 
 
-plot(pre$Temperature,pre$preds,xlim=c(0,23),type='l',col='black',lwd=3,ylab='Temperature Catchability',xlab='Temperature')
+plot(pre$Temperature,pre$preds,xlim=c(0,23),type='b',col='black',lwd=3,ylab='Temperature Catchability',xlab='Temperature')
 par(new=T)
-#plot(temp,catchability,xlim=c(0,23),yaxt='n',col='red',xlab="",ylab="",pch=16)
+plot(temp,scale(catchability),xlim=c(0,23),yaxt='n',col='red',xlab="",ylab="",pch=16)
 par(new=T)
-plot(temp3,walk,xlim=c(0,23),yaxt='n',col='blue',xlab="",ylab="",pch=16)
-#abline(reg,col='blue')
+plot(temp3,scale(walk),xlim=c(0,23),yaxt='n',col='blue',xlab="",ylab="",pch=16)
+abline(reg,col='blue')
 legend('topleft',c('Marginal temperature effects','Walking Rate'),pch=c(-1,16),lwd=c(2,-1),col=c('black',"blue"))
-#par(new=T)
-#plot(temp2,cS2,xlim=c(0,23),yaxt='n',col='green',xlab="",ylab="",pch=16)
+par(new=T)
+plot(temp2,scale(cS2),xlim=c(0,23),yaxt='n',col='orange',xlab="",ylab="",pch=16)
+par(new=T)
+plot(fi$temp,scale(fi$pred[,2]),xlim=c(0,23),yaxt='n',type='b', col='green',xlab="",ylab="",pch=16)
+
+
+

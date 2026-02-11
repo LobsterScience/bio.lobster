@@ -49,6 +49,51 @@ ggplot(o1, aes(fill=LFA, x=YR, y=Landings)) +
  scale_fill_viridis(discrete=T) + theme_test(base_size = 15)
 
 
+
+ggplot(subset(o1, LFA %in% c('LFA34','LFA35','LFA36','LFA38')), aes(fill=LFA, x=YR, y=Landings)) + 
+  geom_bar(position="stack", stat="identity",colour='black')+theme_test()+xlab('Fishing Year')+ylab('Landings (t)')+
+  scale_fill_viridis(discrete=T) + theme_test(base_size = 13)+
+  theme(
+    plot.background = element_rect(
+      fill = "pink",
+      colour = NA
+    )
+  ,
+panel.background = element_rect(
+  fill = "pink",
+  colour = NA
+),
+legend.background = element_rect(
+  fill = "pink",
+  colour = NA
+)
+)
+
+o2 = subset(o1,LFA %in% c('LFA33','LFA32','LFA31B','LFA31A','LFA30','LFA29','LFA27'))
+o2$LFA. <-factor(o2$LFA,levels=(c('LFA27','LFA29','LFA30','LFA31A','LFA31B','LFA32','LFA33')))
+ggplot(subset(o2,), aes(fill=LFA., x=YR, y=Landings)) + 
+  geom_bar(position=position_stack(reverse = T), stat="identity",colour='black')+theme_test()+xlab('Fishing Year')+ylab('Landings (t)')+
+  scale_fill_viridis(discrete=T,direction=-1) + theme_test(base_size = 13)+ theme(
+    plot.background = element_rect(
+      fill = "#F0FFF0",
+      colour = NA
+    )
+    ,
+    panel.background = element_rect(
+      fill = "#F0FFF0",
+      colour = NA
+    ),
+    legend.background = element_rect(
+      fill = "#F0FFF0",
+      colour = NA
+    )
+    
+  )
+
+
+
+
+
 l38 = aggregate(Landings~YR,data=subset(o,LFA %in% c('LFA38','LFA38B')),FUN=sum)
 
 

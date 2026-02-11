@@ -13,15 +13,8 @@ require(dplyr)
 require(RODBC)
 
 
-
-p = bio.lobster::load.environment()
-p$libs = NULL
 fp = file.path(project.datadirectory('bio.lobster'),"analysis")
 la()
-assessment.year = 2024
-p$yrs = 1947:p$current.assessment.year
-p$lfas = c("41") # specify lfa
-
 
 #figdir = file.path("C:/Users/HowseVJ/Documents/Scripts")
 
@@ -90,8 +83,18 @@ Percentobs$PercentObserved<-(Percentobs$PercentObserved*100)
 ###Summarized observed trips
 
 filtered_data <- Obs41 %>%
-  filter(SYEAR %in% c(2022, 2023, 2024))
+  filter(SYEAR %in% c(2022, 2023, 2024,2025))
 
 unique_trips <- filtered_data %>%
   select(TRIPNO, MONTH, SYEAR) %>%
   distinct()
+
+
+
+
+result <- Obs41%>%
+  filter(SYEAR %in% c(2024, 2025)) %>%    
+  group_by(SYEAR, TRIPNO) %>%           
+  summarise(STARTDATE = min(STARTDATE),  
+            .groups = "drop")
+result<-as.data.frame(result)

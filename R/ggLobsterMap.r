@@ -7,7 +7,7 @@ ggLobsterMap <- function(
         LFAfill='white',
         attrData=NULL,
         attrColumn='Z',
-        addGrids=TRUE,
+        addGrids=FALSE,
         addNAFO=FALSE,
         nafo='4X',
         bathy=TRUE,
@@ -155,16 +155,16 @@ ggLobsterMap <- function(
     # ----------------------
     # Highlight LFAs
     # ----------------------
-    if(!is.null(highlightLFA)){
+    if(!is.null(colourLFA)){
         user_to_pid <- c("27"="27","28"="28","29"="29","30"="30",
                          "31A"="311","31a"="311","31B"="312","31b"="312",
                          "32"="32","33"="33","34"="34","35"="35",
                          "36"="36","37"="37","38"="38")
-        hl <- subset(lfa, PID %in% user_to_pid[as.character(highlightLFA)])
+        hl <- subset(lfa, PID %in% user_to_pid[as.character(colourLFA)])
         
         p <- p + geom_sf(
             data=hl,
-            fill=alpha("lightskyblue1",0.15),
+            fill=alpha("skyblue",0.5),
             colour=alpha("black",0.8),
             linewidth=0.4
         )
@@ -196,6 +196,19 @@ ggLobsterMap <- function(
             )
         if(!is.null(fw)) p <- p + facet_wrap(fw)
     }
+ 
+    
+    
+    # ----------------------
+    # COASTLINE 
+    # ----------------------
+    p <- p + geom_sf(
+        data=ns_coast,
+        fill=fill.colours,
+        colour="black",
+        linewidth=0.5
+    )
+    
     
     # ----------------------
     # LFA labels
@@ -262,16 +275,8 @@ ggLobsterMap <- function(
         }
     }
     
-    
-    # ----------------------
-    # COASTLINE — DRAW LAST
-    # ----------------------
-    p <- p + geom_sf(
-        data=ns_coast,
-        fill=fill.colours,
-        colour="black",
-        linewidth=0.5
-    )
+
+ 
     
     # ----------------------
     # Final map settings
