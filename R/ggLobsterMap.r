@@ -109,6 +109,8 @@ ggLobsterMap <- function(
     
     gridCent <- st_centroid(grids)
     
+    
+    
     if(addNAFOLabels){
         nafo_sel <- subset(nafo_sf, NAFO_1 %in% nafo)
         nafo_u   <- st_union(nafo_sel)
