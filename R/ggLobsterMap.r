@@ -1,4 +1,4 @@
-#' @export
+gp="git checkout master && git pull && git merge develop && git push && git checkout develop && git merge master && git sdtatus"#' @export
 ggLobsterMap <- function(
         area='custom',
         fill.colours='grey',
@@ -30,6 +30,16 @@ ggLobsterMap <- function(
         highlightLFA=NULL,
         ...
 ){
+    lfa_colours <- c(
+        "skyblue",
+        "gold",
+        "red1",
+        "green3",
+        "orchid",
+        "orange",
+        "dodgerblue3"
+    )
+    
     
     # ----------------------
     # Area presets (FULL)
@@ -153,22 +163,47 @@ ggLobsterMap <- function(
     }
     
     # ----------------------
-    # Highlight LFAs
+    # Highlight LFAs (automatic colours)
     # ----------------------
     if(!is.null(colourLFA)){
-        user_to_pid <- c("27"="27","28"="28","29"="29","30"="30",
-                         "31A"="311","31a"="311","31B"="312","31b"="312",
-                         "32"="32","33"="33","34"="34","35"="35",
-                         "36"="36","37"="37","38"="38")
-        hl <- subset(lfa, PID %in% user_to_pid[as.character(colourLFA)])
         
-        p <- p + geom_sf(
-            data=hl,
-            fill=alpha("skyblue",0.5),
-            colour=alpha("black",0.8),
-            linewidth=0.4
+        user_to_pid <- c(
+            "27"="27","28"="28","29"="29","30"="30",
+            "31A"="311","31a"="311",
+            "31B"="312","31b"="312",
+            "32"="32","33"="33","34"="34",
+            "35"="35","36"="36","37"="37","38"="38"
         )
+        
+        # Normalize colourLFA to a list of LFA groups
+        if(is.character(colourLFA)){
+            groups <- as.list(colourLFA)
+        } else if(is.list(colourLFA)){
+            groups <- colourLFA
+        } else {
+            stop("colourLFA must be a character vector or a list")
+        }
+        
+        if(length(groups) > length(lfa_colours)){
+            stop("Not enough default colours for number of LFA groups")
+        }
+        
+        for(i in seq_along(groups)){
+            
+            lfas <- groups[[i]]
+            pids <- user_to_pid[as.character(lfas)]
+            
+            hl <- subset(lfa, PID %in% pids)
+            
+            p <- p + geom_sf(
+                data = hl,
+                fill = scales::alpha(lfa_colours[i], 0.5),
+                colour = alpha("black", 0.8),
+                linewidth = 0.4
+            )
+        }
     }
+    
     
     # ----------------------
     # Attribute data
@@ -196,7 +231,7 @@ ggLobsterMap <- function(
             )
         if(!is.null(fw)) p <- p + facet_wrap(fw)
     }
- 
+    
     
     
     # ----------------------
@@ -275,8 +310,8 @@ ggLobsterMap <- function(
         }
     }
     
-
- 
+    
+    
     
     # ----------------------
     # Final map settings

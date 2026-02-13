@@ -109,11 +109,14 @@ per.rec=per.rec[order(per.rec$YEARMTH),]
 write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
 #27-32 Map for Documents, presentations, etc.
-png(filename=file.path(figdir, "MapLFA27-32.png") ,width=6.5, height=6.5, units = "in", res = 800)
-LobsterMap('27-32', labels=c('lfa','grid'), grid.labcex=0.6)
-dev.off()
+#png(filename=file.path(figdir, "MapLFA27-32.png") ,width=6.5, height=6.5, units = "in", res = 800)
+#LobsterMap('27-32', labels=c('lfa','grid'), grid.labcex=0.6)
+#dev.off()
 
-#For Individual LFAs with grids labelled
+p <- ggLobsterMap(area='27-32', addLFALabels=T, LFA_label_size = 5)
+ggsave("Map27-32.png")
+
+#For Individual LFAs
 #png(filename=file.path(figdir, "MapLFA32.png") ,width=6.5, height=6.5, units = "in", res = 800)
 #LobsterMap('32', labels=c('lfa','grid'), grid.labcex=0.6)
 #dev.off()
