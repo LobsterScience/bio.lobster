@@ -1,4 +1,6 @@
-gp="git checkout master && git pull && git merge develop && git push && git checkout develop && git merge master && git sdtatus"#' @export
+#' Title: Map LFAs
+#' Description: Plot lobster fishing areas with labels, grids, bathymetry, etc.
+#' @export
 ggLobsterMap <- function(
         area='custom',
         fill.colours='grey',

@@ -14,7 +14,6 @@ ILTS_ITQ_All_Data(
   return_tow_tracks = F,
   applyGearConversion = T,
   biomass = T,
-  extend_ts = T,
   return_base_data = F
 )
 }
@@ -28,6 +27,14 @@ ILTS_ITQ_All_Data(
 \item{sex}{specifies sex for data; only applicable to lobster and crabs. 0 = unid; 1= male; 2= female; 3=egg carrying}
 
 \item{aggregate}{if TRUE aggregates the data by trip and set based on above arguments. If no size or sex is specified its total abundance.}
+
+\item{return_tow_tracks}{gives the lats lons of each tow}
+
+\item{applyGearConversion}{applies gear conversion for 280Balloon to NEST (Cook et al 2025)}
+
+\item{biomass}{logical flag of whether biomass or abundance is returned}
+
+\item{return_set_data}{data that has not been processed}
 }
 \value{
 Data objects that contain the data for use in further analyses.

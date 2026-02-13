@@ -113,7 +113,7 @@ write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 #LobsterMap('27-32', labels=c('lfa','grid'), grid.labcex=0.6)
 #dev.off()
 
-p <- ggLobsterMap(area='27-32', addLFALabels=T, LFA_label_size = 5)
+p <- ggLobsterMap(area='27-32', addLFALabels=T, LFA_label_size = 5, addGrids = T)
 ggsave(file=file.path(figdir, "Map27-32.png"))
 
 #For Individual LFAs
