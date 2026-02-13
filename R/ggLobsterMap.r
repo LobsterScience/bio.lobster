@@ -25,9 +25,9 @@ ggLobsterMap <- function(
         layerDir=file.path(bio.directory,'bio.lobster.data','mapping_data'),
         LFA_label_size=4,
         grid_label_size=3,
-        colourLFA=TRUE,
+        #colourLFA=FALSE,
         show37label=FALSE,
-        highlightLFA=NULL,
+        colourLFA=NULL,
         ...
 ){
     lfa_colours <- c(
