@@ -1,4 +1,4 @@
-
+#' @export
   plot.freq.distribution.prior.posterior = function( prior, posterior, legendadd=FALSE, br=75 ,xlab=xlab) {
  
     qnt =  c(0.005, 0.995) # quants
