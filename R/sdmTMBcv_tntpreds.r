@@ -8,7 +8,7 @@ sdmTMBcv_tntpreds <- function(object){
 		g = object$models[[i]]
 		d = subset(x,fold_id %ni% i)
 		e = subset(x,fold_id %in% i)
-		w = predict(g,newdata = d)
+		w = predict(g,newdata = d,offset=d$OFFSET)
 		d$pred = g$family$linkinv(w$est)
 		d$tt = 'train'
 		e$pred = e$cv_predicted

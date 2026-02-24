@@ -109,11 +109,14 @@ per.rec=per.rec[order(per.rec$YEARMTH),]
 write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
 #27-32 Map for Documents, presentations, etc.
-png(filename=file.path(figdir, "MapLFA27-32.png") ,width=6.5, height=6.5, units = "in", res = 800)
-LobsterMap('27-32', labels=c('lfa','grid'), grid.labcex=0.6)
-dev.off()
+#png(filename=file.path(figdir, "MapLFA27-32.png") ,width=6.5, height=6.5, units = "in", res = 800)
+#LobsterMap('27-32', labels=c('lfa','grid'), grid.labcex=0.6)
+#dev.off()
 
-#For Individual LFAs with grids labelled
+p <- ggLobsterMap(area='27-32', addLFALabels=T, LFA_label_size = 5, addGrids = T)
+ggsave(file=file.path(figdir, "Map27-32.png"))
+
+#For Individual LFAs
 #png(filename=file.path(figdir, "MapLFA32.png") ,width=6.5, height=6.5, units = "in", res = 800)
 #LobsterMap('32', labels=c('lfa','grid'), grid.labcex=0.6)
 #dev.off()
@@ -142,7 +145,7 @@ if (double.check.logs){
 #Establishing a master reference table of all lrp, usr
 ref = data.frame(LFA=c(27:30,'31A','31B',32),
                  lrp=c(.14,.12,.11,.28,.16,.16,.14),
-                 usr=c(.27,.25,.22,.56,.41,.32,.29)
+                 usr=c(.27,.25,.22,.56,.31,.32,.29)
                  )
 
 logs=lobster.db("process.logs")
@@ -239,7 +242,7 @@ crplot= function(x, French=F){
         abline(h=usr,col='green',lwd=2,lty=2)
         abline(h=lrp,col='red',lwd=2,lty=3)
         text(x=1988, y= max(cr$CPUE, na.rm = TRUE), l, cex=2)
-        points(x=p$current.assessment.year, y=cr$CPUE[cr$YEAR==p$current.assessment.year], pch=17, col="orange", cex=1.4)
+        points(x=assessment.year, y=cr$CPUE[cr$YEAR==assessment.year], pch=17, col="orange", cex=1.4)
         }
 
 
@@ -951,6 +954,7 @@ aaa$EFFORT2[aaa$YEAR<2005]=NA
 aaa= aaa[order(aaa$YEAR), ]
 aaa= subset(aaa, YEAR<=assessment.year)
 
+
 #ymax=12000 
 #scaleright = max(aaa$EFFORT2)/ymax
 
@@ -958,6 +962,17 @@ aaa= subset(aaa, YEAR<=assessment.year)
 # Compute maxima
 land_max <- max(aaa$LANDINGS, na.rm = TRUE)
 eff_max  <- max(aaa$EFFORT2,  na.rm = TRUE)
+
+#Determine breaks for effort by LFA
+effnum=NA
+if(i==1) {effnum=2000}
+if(i==2) {effnum=20}
+if(i==3) {effnum=200}
+if(i==4) {effnum=100}
+if(i==5) {effnum=200}
+if(i==6) {effnum=200}
+if(i==7) {effnum=500}
+
 
 # We want the highest effort point to be at 90% of the landings height
 target_fraction <- 1.2
@@ -972,7 +987,9 @@ g1 <- ggplot(data = aaa, aes(x = YEAR,y=LANDINGS)) +
     geom_point(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='black',shape=16)+
     geom_point(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='grey66',shape=17,size=1.5)+
     geom_line(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='black',linetype='dashed')+
-    scale_y_continuous(name='Landings', sec.axis= sec_axis(~.*scaleright/1000, name= 'Effort',breaks = seq(0,10000,by=2000)))+
+    geom_bar(data=subset(aaa, YEAR==max(aaa$YEAR)),aes(x=YEAR,y=LANDINGS),stat='identity',fill='gold')+
+    geom_point(data=subset(aaa, YEAR==max(aaa$YEAR)),aes(x=YEAR,y=EFFORT2/scaleright),colour='black', shape=24,bg="gold",size=2.2)+
+    scale_y_continuous(name='Landings', sec.axis= sec_axis(~.*scaleright/1000, name= 'Effort',breaks = seq(0,eff_max,by=effnum)))+
     labs(x = "Year") +
     theme_csas()
 
@@ -984,15 +1001,40 @@ g1.fr <- ggplot(data = aaa, aes(x = YEAR,y=LANDINGS)) +
     geom_point(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='black',shape=16)+
     geom_point(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='grey66',shape=17,size=1.5)+
     geom_line(data=aaa,aes(x=YEAR,y=EFFORT2/scaleright),colour='black',linetype='dashed')+
-    scale_y_continuous(name='Débarquements', sec.axis= sec_axis(~.*scaleright/1000, name= 'Effort',breaks = seq(0,10000,by=2000)))+
+    geom_bar(data=subset(aaa, YEAR==max(aaa$YEAR)),aes(x=YEAR,y=LANDINGS),stat='identity',fill='gold')+
+    geom_point(data=subset(aaa, YEAR==max(aaa$YEAR)),aes(x=YEAR,y=EFFORT2/scaleright),colour='black', shape=24,bg="gold",size=2.2)+
+    scale_y_continuous(name='Débarquements', sec.axis= sec_axis(~.*scaleright/1000, name= 'Effort',breaks = seq(0,eff_max,by=effnum)))+
     labs(x = "Année") +
     theme_csas()
 
 # standardized cpue
+if (p$lfa[i]==28){
+    
+    g2 <- ggplot(data = aaa, aes(x = YEAR)) +
+        geom_point(aes(y = CPUE),size=1.5) +
+        geom_line(data = subset(aaa, YEAR <= 1996),aes(y = CPUErmed),colour = "grey45" ) + #start to 1886
+        geom_line(data = subset(aaa, YEAR >= 2007),aes(y = CPUErmed),colour = "grey45" )+ #from 2007 onward
+        geom_point(data=subset(aaa, YEAR==max(aaa$YEAR)),aes(x=YEAR,y=CPUE),colour='black', shape=24,bg="gold",size=2.2)+
+        labs(x = "Year", y = " CPUE") +
+        geom_hline(yintercept=aaa$usr[1],colour='grey50',lwd=1.1,linetype='dashed')+
+        geom_hline(yintercept=aaa$lrp[1],colour='grey50',lwd=1.1,linetype='dotted')+
+        theme_csas() 
+    
+    g2.fr <- ggplot(data = aaa, aes(x = YEAR)) +
+        geom_point(aes(y = CPUE),size=1.5) +
+        geom_line(data = subset(aaa, YEAR <= 1996),aes(y = CPUErmed),colour = "grey45" ) + #start to 1886
+        geom_line(data = subset(aaa, YEAR >= 2007),aes(y = CPUErmed),colour = "grey45" )+ #from 2007 onward
+        geom_point(data=subset(aaa, YEAR==max(aaa$YEAR)),aes(x=YEAR,y=CPUE),colour='black', shape=24,bg="gold",size=2.2)+
+        labs(x = "Année", y = " CPUE") +
+        geom_hline(yintercept=aaa$usr[1],colour='grey50',lwd=1.1,linetype='dashed')+
+        geom_hline(yintercept=aaa$lrp[1],colour='grey50',lwd=1.1,linetype='dotted')+
+        theme_csas() 
+}
+else{
 g2 <- ggplot(data = aaa, aes(x = YEAR)) +
     geom_point(aes(y = CPUE),size=1.5) +
-    geom_line(aes(y= CPUErmed),colour='grey45')+
-    geom_point(data=subset(aaa, YEAR==max(aaa$YEAR)),aes(x=YEAR,y=CPUE),colour='grey66',shape=17,size=2.2)+
+    geom_line(aes(y= CPUErmed), colour='grey45')+
+    geom_point(data=subset(aaa, YEAR==max(aaa$YEAR)),aes(x=YEAR,y=CPUE),colour='black', shape=24,bg="gold",size=2.2)+
     labs(x = "Year", y = " CPUE") +
     geom_hline(yintercept=aaa$usr[1],colour='grey50',lwd=1.1,linetype='dashed')+
     geom_hline(yintercept=aaa$lrp[1],colour='grey50',lwd=1.1,linetype='dotted')+
@@ -1000,13 +1042,13 @@ g2 <- ggplot(data = aaa, aes(x = YEAR)) +
 
 g2.fr <- ggplot(data = aaa, aes(x = YEAR)) +
     geom_point(aes(y = CPUE),size=1.5) +
-    geom_line(aes(y= CPUErmed),colour='grey45')+
-    geom_point(data=subset(aaa, YEAR==max(aaa$YEAR)),aes(x=YEAR,y=CPUE),colour='grey66',shape=17,size=2.2)+
+    geom_line(aes(y= CPUErmed), colour='grey45')+
+    geom_point(data=subset(aaa, YEAR==max(aaa$YEAR)),aes(x=YEAR,y=CPUE),colour='black', shape=24,bg="gold",size=2.2)+
     labs(x = "Année", y = " CPUE") +
     geom_hline(yintercept=aaa$usr[1],colour='grey50',lwd=1.1,linetype='dashed')+
     geom_hline(yintercept=aaa$lrp[1],colour='grey50',lwd=1.1,linetype='dotted')+
     theme_csas() 
-
+}
 
 # Exploitation CCIR
 
@@ -1067,7 +1109,7 @@ if (aaa$LFA[1] == "28") {
 
 
 # Recruitment 
-rec=read.csv(file.path(fsrs.dir, paste0("FSRSRecruitCatchRate", p$lfas[1], ".recruits.csv")))
+rec=read.csv(file.path(fsrs.dir, paste0("FSRSRecruitCatchRate", p$lfas[i], ".recruits.csv")))
 
 
 if (aaa$LFA[1] == "28") {

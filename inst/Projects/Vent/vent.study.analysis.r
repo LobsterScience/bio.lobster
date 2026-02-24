@@ -762,15 +762,57 @@ for(i in 1:length(fishers)) {
 # 
 
 
+vent29=subset(vent2, lfa=="29")
 
+#frequency by size class by config:
+size_cols <- paste0("s", c(14, 15, 16, "17a", 18, 19, 20))
 
+library(dplyr)
 
+config_size_prop_84mm <- vent29 %>%
+    group_by(config) %>%
+    summarise(
+        across(all_of(size_cols), ~ sum(.x, na.rm = TRUE)),
+        .groups = "drop"
+    ) %>%
+    rowwise() %>%
+    mutate(
+        total = sum(c_across(all_of(size_cols)))
+    ) %>%
+    mutate(
+        across(all_of(size_cols), ~ .x / total)
+    ) %>%
+    ungroup() %>%
+    select(-total)
 
+props_84=as.data.frame(config_size_prop_84mm)
+names(props_84)=c("config", "<70mm", "70-75mm", "75-80mm", "80-84mm", "84-90mm", "90-95mm", ">95mm")
+write.csv(props_84, file="props.by.vent.84mm.csv")
 
+n29=subset(vent2, lfa!="29") 
 
+#frequency by size class by config:
+size_cols <- paste0("s", c(14, 15, 16, "17a", "17b", 18, 19, 20))
 
+config_size_prop_825mm <- n29 %>%
+    group_by(config) %>%
+    summarise(
+        across(all_of(size_cols), ~ sum(.x, na.rm = TRUE)),
+        .groups = "drop"
+    ) %>%
+    rowwise() %>%
+    mutate(
+        total = sum(c_across(all_of(size_cols)))
+    ) %>%
+    mutate(
+        across(all_of(size_cols), ~ .x / total)
+    ) %>%
+    ungroup() %>%
+    select(-total)
 
-
+props_82.5=as.data.frame(config_size_prop_825mm)
+names(props_82.5)=c("config", "<70mm", "70-75mm", "75-80mm", "80-82.5mm","82.5-85mm", "84-90mm", "90-95mm", ">95mm")
+write.csv(props_82.5, file="props.by.vent.82.5mm.csv")
 
 
 

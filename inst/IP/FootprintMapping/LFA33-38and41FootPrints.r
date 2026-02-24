@@ -52,7 +52,7 @@ ggplot(b)+
 
 
 gTot$CPUE = gTot$Landings/gTot$TrapHauls
-g27p = subset(gTot, LFA%in% 33:38 & FishingYear%in%2016:2023)
+g27p = subset(gTot, LFA%in% 33:38 & FishingYear%in%2016:2025)
 
 ok1 = ggplot(g27p,aes(fill=CPUE))+
   geom_sf() +
@@ -68,7 +68,7 @@ ok1 = ggplot(g27p,aes(fill=CPUE))+
   scale_y_continuous(breaks = c(round(seq(st_bbox(g27p)$ymin,st_bbox(g27p)$ymax,length.out=2),2)))
 
 gl = subset(g27p,FishingYear==2016)
-gp = subset(g27p,FishingYear==2023)
+gp = subset(g27p,FishingYear==2025)
 
 gl$geometry<- NULL
 
@@ -104,7 +104,7 @@ ggplot(subset(gg,PrivacyScreen==1),aes(fill=percentChange))+
 
 
 ##LFA 41
-lobster.db('process.logs41')
+logs41p = lobster.db('process.logs41')
 logs41p$DDLON = logs41p$DDLON*-1
 logs41p = subset(logs41p, !is.na(DDLON) )
 lo41 = st_as_sf(logs41p,coords = c('DDLON','DDLAT'),crs=4326)
@@ -133,16 +133,16 @@ jja = merge(jja,grid_in_polygon)
 
 jja = st_as_sf(jja)
 
-j23 = subset(jja,yr==2023)
+j23 = subset(jja,yr==2025)
 
 names(j23)[1:4]=c('GRID_NO','FishingYear','TrapHauls','Landings')
 
 j23$CPUE = j23$Landings/j23$TrapHauls
 
 #####
-ggplot(subset(gg),aes(fill=Landings))+
+ggplot(subset(gg),aes(fill=Landings/1000))+
   geom_sf() +
-  geom_sf(data=j23,aes(fill=Landings))+
+  geom_sf(data=j23,aes(fill=Landings/1000))+
   scale_fill_continuous_diverging(palette='Purple-Green') +
   #facet_wrap(~FishingYear)+
   #  geom_sf(data=g27n,fill='white')+  
@@ -151,8 +151,45 @@ ggplot(subset(gg),aes(fill=Landings))+
  geom_sf(data=grid_in_polygon,fill=NA)+
   coord_sf(xlim = c(st_bbox(gg)$xmin,st_bbox(gg)$xmax),
            ylim = c(st_bbox(j23)$ymin,st_bbox(gg)$ymax),
-           expand = FALSE)+ggtitle('Landings Inshore 2022-2023 FY; Offshore 2023 Calendar Year')
+           expand = FALSE)+ggtitle('Landings Inshore 2024-2025 FY; Offshore 2025 Calendar Year')
   
+
+##two separate colour scales 
+require(ggnewscale)
+#####
+
+names(jja)[1:4]=c('GRID_NO','FishingYear','TrapHauls','Landings')
+
+ggplot()+
+  geom_sf(data=subset(g27p,FishingYear==2021),aes(fill=Landings/1000)) +
+  scale_fill_continuous_diverging(palette='Purple-Green',name='LFA 33 & 34') +
+  new_scale_fill() +
+  geom_sf(data=subset(jja,FishingYear==2021),aes(fill=Landings/1000))+
+  scale_fill_continuous_diverging(palette='Blue-Red',name='LFA 41') +
+  geom_sf(data=coa,fill='grey')+
+  geom_sf(data=GrMap,fill=NA)+
+  geom_sf(data=grid_in_polygon,fill=NA)+
+  coord_sf(xlim = c(st_bbox(gg)$xmin,st_bbox(gg)$xmax),
+           ylim = c(st_bbox(jja)$ymin,st_bbox(gg)$ymax),
+           expand = FALSE)+ggtitle('Landings Inshore 2020-2021 FY; Offshore 2021 Calendar Year')
+
+
+ggplot()+
+  geom_sf(data=subset(g27p,FishingYear==2025),aes(fill=Landings/1000)) +
+  scale_fill_continuous_diverging(palette='Purple-Green',name='LFA 33 & 34') +
+  new_scale_fill() +
+  geom_sf(data=subset(jja,FishingYear==2025),aes(fill=Landings/1000))+
+  scale_fill_continuous_diverging(palette='Blue-Red',name='LFA 41') +
+  geom_sf(data=coa,fill='grey')+
+  geom_sf(data=GrMap,fill=NA)+
+  geom_sf(data=grid_in_polygon,fill=NA)+
+  coord_sf(xlim = c(st_bbox(gg)$xmin,st_bbox(gg)$xmax),
+           ylim = c(st_bbox(jja)$ymin,st_bbox(gg)$ymax),
+           expand = FALSE)+ggtitle('Landings Inshore 2024-2025 FY; Offshore 2025 Calendar Year')
+
+
+
+
 ggplot(subset(gg),aes(fill=TrapHauls))+
   geom_sf() +
   geom_sf(data=j23,aes(fill=TrapHauls))+
@@ -164,7 +201,7 @@ ggplot(subset(gg),aes(fill=TrapHauls))+
   geom_sf(data=grid_in_polygon,fill=NA)+
   coord_sf(xlim = c(st_bbox(gg)$xmin,st_bbox(gg)$xmax),
            ylim = c(st_bbox(j23)$ymin,st_bbox(gg)$ymax),
-           expand = FALSE)+ggtitle('Traphauls Inshore 2022-2023 FY; Offshore 2023 Calendar Year')
+           expand = FALSE)+ggtitle('Traphauls Inshore 2024-2025 FY; Offshore 2025 Calendar Year')
 
 ggplot(subset(gg),aes(fill=CPUE.x))+
   geom_sf() +
@@ -177,5 +214,5 @@ ggplot(subset(gg),aes(fill=CPUE.x))+
   geom_sf(data=grid_in_polygon,fill=NA)+
   coord_sf(xlim = c(st_bbox(gg)$xmin,st_bbox(gg)$xmax),
            ylim = c(st_bbox(j23)$ymin,st_bbox(gg)$ymax),
-           expand = FALSE)+ggtitle('CPUE Inshore 2022-2023 FY; Offshore 2023 Calendar Year')
+           expand = FALSE)+ggtitle('CPUE Inshore 2024-2025 FY; Offshore 2025 Calendar Year')
 

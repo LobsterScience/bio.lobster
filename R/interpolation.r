@@ -289,7 +289,7 @@ smooth.bank<-function(dat,fun=mean,res=0.01,aspr=1.345640,no.data='0',matrix=F,p
 # dat = a dataframe with 3 columns (longitude, latitude, variable to be mapped)
 # aspr = aspect ratio for a given latitude (default is for 45 deg.)
 # res = resolution of image in decimal degrees
-
+#' @keywords internal
 image.prep<-function(X,Y,Z,dat,aspr=1.345640,res=0.02,summary.dat=F,log.dat=T,method='gstat',matrix.dat=T,idp=0.5,nmax=7,maxdist=Inf,linear=F, subset.poly=NULL, covariate.dat=NULL,regrid=F,mod.type="Sph",subscale=0.01){
 
 	require (splancs)
