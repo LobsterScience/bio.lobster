@@ -77,4 +77,9 @@ of$fYR = as.factor(of$YR)
   labs(x='Year',y='Minimum Observed Length (mm) Berried Females')+
   scale_x_continuous(breaks = scales::pretty_breaks(n=3))+theme_test()
 
-
+ 
+ ggplot(subset(of,LFA==34),aes(x=YR,y=flen,colour=DS,group=DS))+
+   geom_point(size=1.5)+facet_wrap(~LFA,scales='free') +
+   geom_smooth(method='lm', se=F,size=1.5) + labs(x='Year',y='Minimum Observed Length (mm) Berried Females')+
+   scale_x_continuous(breaks = scales::pretty_breaks(n=3))+theme_test()
+ 

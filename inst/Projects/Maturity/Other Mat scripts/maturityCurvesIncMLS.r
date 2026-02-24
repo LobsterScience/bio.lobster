@@ -1,5 +1,8 @@
 require(bio.lobster)
-#maturity curves
+require(devtools)
+require(bio.utilities)
+la()
+#maturity curve
 
 matFun = function(a,b,cl){
   1/(1+exp(a+b*cl))
@@ -78,37 +81,83 @@ dat = list(
   l38=list(som=l38,sf = sf_bof,mls=82.5,s1=.14,s2=.22),
   l41=list(som=l41,sf = sf_bof,mls=82.5,s1=.01,s2=.02)
 )
-out = data.frame(LFA=NA,som=NA,cPM=NA,onePM=NA,twoPM=NA)
+#growth matrix
+load_all('C:/Users/Cooka/Documents/git/LobsterHCR/')
+p=list()
+o = moltIncrModel(p=p,redo=F,sex=2)
+o = o[[1]][1:length(cl),1:length(cl)]
+o = na.zero(o)
+
+out = data.frame(LFA=NA,som=NA,cPM=NA,mulcPM=NA,onePM=NA,twoPM=NA,mult_onePM=NA, mult_twoPM=NA)
 matts = list()
 for(i in 1:length(dat)){
   b = dat[[i]]
   out[i,'LFA'] = names(dat)[i]
   mat = matFun(a=b$som[1],b=b$som[2],cl=cl)
+  #prop multiparous
+  p2nd = as.numeric(t(mat) %*% o)
+  #p2nd = p2nd/max(p2nd)
+  p2nd_given_mature <- p2nd / mat
+  #plot(cl,p2nd_given_mature)
+  lines(cl,mat)
   out[i,'som']=findValue(cl,mat,.5)
-  if(b$mls<84) out[i,'cPM'] = mean(c(mat[which.min(abs(cl-b$mls))],mat[which.min(abs(cl-b$mls))+1]))
+  if(b$mls==82.5) out[i,'cPM'] = mean(c(mat[which.min(abs(cl-b$mls))],mat[which.min(abs(cl-b$mls))+1])) #maturity at 82.5
   if(b$mls==84) out[i,'cPM'] = mat[which.min(abs(cl-84))]
+  if(i==6) browser()
+  if(b$mls==82.5) out[i,'mulcPM'] = mean(c(p2nd_given_mature[which.min(abs(cl-b$mls))],p2nd_given_mature[which.min(abs(cl-b$mls))+1])) #maturity at 82.5
+  if(b$mls==84) out[i,'mulcPM'] = p2nd_given_mature[which.min(abs(cl-84))]
+  
   
   out[i,'onePM'] = mat[which.min(abs(cl-84))]
   out[i,'twoPM'] = mat[which.min(abs(cl-86))]
-  matts[[i]] = data.frame(cl=cl,mat=mat,lfa=rep(toupper(names(dat)[i]),times=length(cl)))
+  
+  out[i,'mult_onePM'] = p2nd_given_mature[which.min(abs(cl-84))]
+  out[i,'mult_twoPM'] = p2nd_given_mature[which.min(abs(cl-86))]
+  
+  
+  matts[[i]] = data.frame(cl=cl,mat=mat,prop_multip=p2nd_given_mature,lfa=rep(toupper(names(dat)[i]),times=length(cl)))
   }
 
 mm = as.data.frame(do.call(rbind,matts))
-mm = toNums(mm,c(1:2))
+mm = toNums(mm,c(1:3))
 
 vlines=data.frame(lfa=rep(c('L27','L29','L30','L31A','L31B','L32','L33','L34','L35','L36','L38','L41'),each=3),
                   li = rep(c(82.5,84,86),times=12),cols = rep(c('blue','black','red'),times=12))
 vlines[4,'li']=84
 
+require(ggplot2)
+ggplot(subset(mm,cl>60 & cl<120 & lfa!='L41'),aes(x=cl,y=mat))+geom_line()+
+  geom_vline(data = subset(vlines,lfa %ni% 'L41'), aes(xintercept = li, colour=cols) )+
+  facet_wrap(~lfa)+xlab('Carapace Length')+ylab('Proportion Mature')+
+  theme_test()
 
-ggplot(subset(mm,cl>60 & cl<110),aes(x=cl,y=mat))+geom_line()+
+ggplot(subset(mm,cl>60 & cl<120),aes(x=cl,y=prop_multip))+geom_line()+
   geom_vline(data = vlines, aes(xintercept = li, colour=cols) )+
-  facet_wrap(~lfa)+xlab('Carapace Length')+ylab('Proportion Mature')
+  facet_wrap(~lfa)+xlab('Carapace Length')+ylab('Proportion Multiparous')+
+  theme_test()
 
-out$perInc84 = out$perInc86 = NA
+#just MLS
+require(dplyr)
+vl <- vlines %>%
+  group_by(lfa) %>%
+  slice(1) %>%
+  ungroup()
+
+ggplot(subset(mm,cl>60 & cl<120 & lfa!='L41'),aes(x=cl,y=mat))+geom_line()+
+  geom_vline(data = subset(vl,lfa %ni% 'L41'), aes(xintercept = li, colour=cols) )+
+  facet_wrap(~lfa)+xlab('Carapace Length')+ylab('Proportion Mature')+
+  theme_test(base_size = 14)+theme(legend.position = "none")
+
+
+
+out$multip_perInc84 = out$multip_perInc86 = out$perInc84 = out$perInc86 = NA
 for(i in 1:nrow(out)){
 out$perInc84[i] = (out$onePM[i]-out$cPM[i])/out$cPM[i]*100
 out$perInc86[i] = (out$twoPM[i]-out$cPM[i])/out$cPM[i]*100
+
+out$multip_perInc84[i] = (out$onePM[i]-out$cPM[i])/out$cPM[i]*100
+out$perInc86[i] = (out$twoPM[i]-out$cPM[i])/out$cPM[i]*100
+
 }
 
 
@@ -116,3 +165,7 @@ plot(out$som,out$perInc84,xlab='Size at 50% Maturity',ylab='Percent Increase in 
 text(x=out$som,y=out$perInc84,labels=toupper(out$LFA))
 plot(out$som,out$perInc86,xlab='Size at 50% Maturity',ylab='Percent Increase in Mature to 86mm',pch="")
 text(x=out$som,y=out$perInc86,labels=toupper(out$LFA))
+
+### prob multiparous
+
+
