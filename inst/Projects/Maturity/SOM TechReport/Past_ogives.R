@@ -5,7 +5,7 @@ require(ggplot2)
 require(dplyr)
 require(statmod)
 
-p = bio.lobster::load.environment()
+#p = bio.lobster::load.environment()
 la()
 ##########------------------ Data Input ------------------##########
 a = read.csv(file.path(project.datadirectory('bio.lobster'),'data','Maturity','LobsterMaturityDatabase.csv'))

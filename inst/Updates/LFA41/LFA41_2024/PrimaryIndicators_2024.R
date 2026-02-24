@@ -15,7 +15,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
 fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','indicators')
 
 #jpeg("BM41_2023TEST.jpeg", width = 9, height = 7, units = "in",res=600, bg = "white")
-par(mfrow = c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
+#par(mfrow = c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
 
 ###DFO RV survey
 all.out=read.csv(file.path(fp,'DFO.restratified.All.csv'))
