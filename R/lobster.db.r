@@ -1685,6 +1685,8 @@ atSea2$STRINGNO = as.character(atSea2$STRINGNO)
             atSea3$CLUTCH = as.numeric(atSea3$CLUTCH)
             atSea3$CALWT = as.numeric(atSea3$CALWT)
             
+            atSea3$LFA = gsub("L","",atSea3$LFA)
+            
             
             ## combine all 3 tables
             atSea = dplyr::bind_rows(list(atSea,atSea2, atSea3))
