@@ -628,7 +628,8 @@ ee = readRDS(file=file.path(fnODBC,'land_by_vess.rdata'))
 if(DS %in% c('slips','slips.redo')){
     if(grepl('redo',DS)) {
       #current
-      vsP = connect.command(con,"select * from MARFISSCI.LOBSTER_SD_SLIP")
+      vsP = connect.command(con,"select * from MARFISSCI.LOBSTER_SD_SLIP_W_LIC")
+      vsP = subset(vsP,SPECIES_CODE==700 & NIL_REPORT_FLAG=='N')
       save(vsP, file=file.path(fnODBC,'slips.rdata'))
       return(vsP)
     }
@@ -639,7 +640,7 @@ if(DS %in% c('slips','slips.redo')){
 if(DS %in% c('process_slips', 'process_slips.redo')){
   if(grepl('redo',DS)) {
     sl = lobster.db('slips')
-    sl = subset(sl, SPECIES_CODE==700 & NIL_REPORT_FLAG=='N') 
+    sl = subset(sl, SPECIES_CODE==700 & NIL_REPORT_FLAG=='N' ,select =c(-LICENCE_TYPE,-LICENCE_SUBTYPE)) 
     sl$LFA = ifelse(sl$LICENCE_ID=='027050',27,sl$LFA)
     sl$DYR = lubridate::decimal_date(as.Date(sl$DATE_LANDED)) - lubridate::year(as.Date(sl$DATE_LANDED))
     sl$WYR = ceiling(sl$DYR*52)
@@ -932,6 +933,17 @@ if(DS %in% c('historic.landings.redo', 'historic.landings')){
                   save(hland,file=file.path(fnODBC,'historic.landings.rdata'))
           }
 
+    
+    if(DS %in% c('historic.landings.county.redo', 'historic.landings.county')){
+      if(DS == 'historic.landings.county') {
+        load(file=file.path(fnODBC,'historic.landings.county.rdata'))
+        return(hland)
+      }
+      #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
+      hland = connect.command(con,"select * from lobster.historical_county_land")
+      save(hland,file=file.path(fnODBC,'historic.landings.county.rdata'))
+    }
+    
 
 
 if(DS %in% c('landings.by.port.redo','landings.by.port')) {

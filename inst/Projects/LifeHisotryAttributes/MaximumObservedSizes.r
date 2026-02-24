@@ -76,4 +76,8 @@ ggplot(of,aes(x=YR,y=flen,colour=DS,group=DS))+
   geom_smooth(method='lm', se=F) + labs(x='Year',y='Maximum Observed Length (mm)')+
   scale_x_continuous(breaks = scales::pretty_breaks(n=3))
 
+ggplot(subset(of,LFA==34),aes(x=YR,y=flen,colour=DS,group=DS))+
+  geom_point(size=1.5)+facet_wrap(~LFA,scales='free') +
+  geom_smooth(method='lm', se=F,size=1.5) + labs(x='Year',y='Maximum Observed Length (mm)')+
+  scale_x_continuous(breaks = scales::pretty_breaks(n=3))+theme_test()
 
