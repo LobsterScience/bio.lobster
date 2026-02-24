@@ -5,6 +5,7 @@
 #' @return Data objects that contain the data for use in further analyses.
 #' @examples lobster.db('fsrs.redo') # makes the data objects for the FSRS data.
 #' lobster.db('fsrs') #loads the object fsrs
+#' @import dplyr
 #' @export
 
 lobster.db = function( DS="complete.redo",pH=p) {
@@ -1602,7 +1603,6 @@ if(DS %in% c('lfa41.vms', 'lfa41.vms.redo')) {
             atSea2$STARTDATE[atSea2$datechar<10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar<10],"%d-%b-%y")
             atSea2$STARTDATE[atSea2$datechar==10] = as.Date( atSea2$BOARD_DATE[atSea2$datechar==10])
 
-            atSea3 = atSea2
 
             names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO",
                      "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO",'NUM_HOOK_HAUL', "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH",
@@ -1621,7 +1621,61 @@ atSea2$LICENCE_ID = as.character(atSea2$LICENCE_ID)
 atSea2$TRAPNO = as.character(atSea2$TRAPNO)
 atSea2$STRINGNO = as.character(atSea2$STRINGNO)
 
-            atSea = dplyr::bind_rows(list(atSea,atSea2))
+
+            ## As of 2026 import new at sea data location/format:
+            trip.info = connect.command(con, "select * from lobster.AT_SEA_TRIP_INFO")
+            set.info = connect.command(con, "select * from lobster.AT_SEA_SET_INFO")
+            trap.info = connect.command(con, "select * from lobster.AT_SEA_TRAP_INFO")
+            fish.info = connect.command(con, "select * from lobster.AT_SEA_FISH_INFO")
+            
+            ##join new data into single table
+            fish.info <- fish.info %>% dplyr::select(-TRAP_NO)
+            fish_trap <- left_join(fish.info,trap.info)
+            fish_trap <- fish_trap %>% dplyr::select(-SET_NO)
+            fish_trap_set <- left_join(fish_trap, set.info)
+            full.tab <- left_join(fish_trap_set, trip.info)
+            
+            ##unify variables with old data
+            full.tab <- full.tab %>% mutate(lat.deg= substr(LATDDMM, 1,2),
+                                        lat.min = substr(LATDDMM,3, nchar(LATDDMM)))
+            full.tab <- full.tab %>% mutate(LAT = as.numeric(lat.deg)+ as.numeric(lat.min)/60)
+            
+            full.tab <- full.tab %>% mutate(lon.deg= substr(LONGDDMM, 1,2),
+                                            lon.min = substr(LONGDDMM,3, nchar(LONGDDMM)))
+            full.tab <- full.tab %>% mutate(LON = -as.numeric(lon.deg)- as.numeric(lon.min)/60)
+            
+            full.tab$BOARD_DATE = as_datetime(full.tab$BOARD_DATE, format = "%Y-%m-%d")
+            
+            
+            atSea3 <- full.tab %>% mutate(SAMCODE = NA, PORT = NA, CALWT = NA) %>% dplyr::select(TRIP, BOARD_DATE, COMAREA_ID, PORT, PORT_NAME, CAPTAIN, LICENSE_NO, SAMCODE, OWNER_GROUP, TRAP_NO, TRAP_TYPE, SET_NO, DEPTH, SOAK_DAYS, 
+                                                                          LAT, LON, STRATUM_ID, NUM_HOOK, SPECCD_ID, COMMON, SEXCD_ID, VNOTCH, EGG_STAGE, SHELL, CULLS, FISH_LENGTH, DISEASE,
+                                                                          CONDITION, CLUTCH, CALWT)
+            
+           
+            colnames(atSea3) <- colnames(atSea)
+            
+            atSea3$PORT = as.numeric(atSea3$PORT)
+            atSea3$SAMCODE = as.character(atSea3$SAMCODE)
+            atSea3$TRAPTYPE = as.numeric(atSea3$TRAPTYPE)
+            atSea3$DEPTH = as.numeric(atSea3$DEPTH)
+            atSea3$SOAKDAYS = as.numeric(atSea3$SOAKDAYS)
+            atSea3$GRIDNO = as.numeric(atSea3$GRIDNO)
+            atSea3$NUM_HOOK_HAUL = as.numeric(atSea3$NUM_HOOK_HAUL)
+            atSea3$SPECIESCODE = as.numeric(atSea3$SPECIESCODE)
+            atSea3$SEX = as.numeric(atSea3$SEX)
+            atSea3$VNOTCH = as.numeric(atSea3$VNOTCH)
+            atSea3$EGG = as.numeric(atSea3$EGG)
+            atSea3$SHELL = as.numeric(atSea3$SHELL)
+            atSea3$CULL = as.numeric(atSea3$CULL)
+            atSea3$CARLENGTH = as.numeric(atSea3$CARLENGTH)
+            atSea3$DISEASE = as.numeric(atSea3$DISEASE)
+            atSea3$CONDITION = as.numeric(atSea3$CONDITION)
+            atSea3$CLUTCH = as.numeric(atSea3$CLUTCH)
+            atSea3$CALWT = as.numeric(atSea3$CALWT)
+            
+            
+            ## combine all 3 tables
+            atSea = dplyr::bind_rows(list(atSea,atSea2, atSea3))
 
             save( atSea, file=file.path( fnODBC, "atSea.rdata"), compress=T)
             gc()  # garbage collection
