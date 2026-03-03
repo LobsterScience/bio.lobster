@@ -44,47 +44,9 @@ cand <- cand %>%
     legal    = rowSums(across(all_of(legal_cols),    ~ tidyr::replace_na(., 0)))
   )
 
-vaa  =aggregate(cbind(s14,s15,s16,s17a,s17b,s18,s19,s20)~day_of_season+lfa+sy,data=cand,FUN=sum)
-
-vaa_noyr  =aggregate(cbind(s14,s15,s16,s17a,s17b,s18,s19,s20)~day_of_season+config,data=cand,FUN=sum)
-
 
 library(VGAM)
 library(splines)
-
-vaa_noyr$total <- with(vaa_noyr, s14+s15+s16+s17a+s17b+s18+s19+s20)
-
-fit_vgam <- vgam(
-  cbind(s14,s15,s16,s17a,s17b,s18,s19,s20) ~ s(day_of_season)+config,
-  family = multinomial(refLevel = 1),
-  data = subset(vaa_noyr)
-)
-
-summary(fit_vgam)
-
-newdat <- data.frame(day_of_season = seq(min(vaa_noyr$day_of_season), max(vaa_noyr$day_of_season), length.out = 60))
-pred_p <- predict(fit_vgam, newdata = newdat, type = "response")
-
-require(tidyr)
-plot_df <- cbind(newdat, as.data.frame(pred_p)) %>%
-  pivot_longer(
-    cols = -day_of_season,
-    names_to = "size_class",
-    values_to = "prob"
-  )
-
-ggplot(plot_df, aes(x = day_of_season, y = prob, color = size_class)) +
-  geom_line(linewidth = 1.1) +
-  scale_y_continuous(labels = scales::percent_format()) +
-  labs(
-    x = "Day of Season (DOS)",
-    y = "Probability",
-    color = "Size class",
-    title = "Fitted size-class probabilities over day of season"
-  ) +
-  theme_minimal(base_size = 13)
-
-
 ################
 ##rather than sizes do it as classes
 
@@ -134,35 +96,6 @@ cand = subset(cand,!is.na(day_of_season))
 cand$total = cand$sublegal+cand$legal
 require(mgcv)
 fit_gam <- gam(
-  total ~ (day_of_season*fconfig)+fconfig,
-  family = poisson(link='log'),   
-  data = subset(cand,total>0)
-)
-
-summary(fit_gam)
-
-newdat <- data.frame(expand.grid(day_of_season = seq(min(vaa_noyr$day_of_season), max(vaa_noyr$day_of_season), length.out = 60),fconfig=unique(cand$fconfig)))
-pred_p <- predict(fit_gam, newdata = newdat, type = "response")
-
-require(tidyr)
-plot_df <- cbind(newdat, as.data.frame(pred_p))
-
-ggplot(subset(plot_df), aes(x = day_of_season, y = pred_p, color = fconfig)) +
-  geom_line(linewidth = 1.1) +
-  labs(
-    x = "Day of Season (DOS)",
-    y = "Total Lobster Catch",
-    color = "Configuration of Vents"
-  ) +
-  theme_minimal(base_size = 13)
-
-####
-###subslegal
-
-cand = subset(cand,!is.na(day_of_season))
-cand$total = cand$sublegal+cand$legal
-require(mgcv)
-fit_gam <- gam(
   sublegal ~ (day_of_season*fconfig)+fconfig,
   family = poisson(link='log'), 
   data = subset(cand,total>0)
@@ -187,15 +120,18 @@ ggplot(subset(plot_df), aes(x = day_of_season, y = pred_p, color = fconfig)) +
 
 cand = subset(cand,!is.na(day_of_season))
 cand$total = cand$sublegal+cand$legal
+cand$MLS = 'm82.5'
+cand$MLS = ifelse(cand$LFA==29,'m84',cand$MLS)
+
 fit_gam <- gam(
-  sublegal ~ (day_of_season*fconfig)+fconfig+legal,
+  sublegal ~ (day_of_season*MLS)+fconfig+legal,
   family = poisson(link='log'), 
   data = subset(cand,total>0)
 )
 
 summary(fit_gam)
 
-newdat <- data.frame(expand.grid(day_of_season = seq(min(vaa_noyr$day_of_season), max(vaa_noyr$day_of_season), length.out = 60),fconfig=unique(cand$fconfig),legal=mean(cand$legal)))
+newdat <- data.frame(expand.grid(day_of_season = seq(min(vaa_noyr$day_of_season), max(vaa_noyr$day_of_season), length.out = 60),fconfig=unique(cand$fconfig),legal=mean(cand$legal),MLS=unique(cand$MLS)))
 pred_p <- predict(fit_gam, newdata = newdat, type = "response")
 #predp is for the first column of the cbind.... ie short
 
@@ -206,8 +142,9 @@ ggplot(subset(plot_df), aes(x = day_of_season, y = pred_p, color = fconfig)) +
   geom_line(linewidth = 1.1) +
   labs(
     x = "Day of Season (DOS)",
-    y = "Sublegal Lobster Catch",
+    y = "Sublegal Lobster Catch (n/trap)",
     color = "Configuration of Vents"
   ) +
-  theme_minimal(base_size = 13)
+  facet_wrap(~MLS)+
+  theme_test(base_size = 13)
 
