@@ -102,7 +102,7 @@ ggLobsterMap <- function(
     # ----------------------
     ns_coast <- readRDS(file.path(layerDir,"CoastSF.rds"))
     grids    <- st_make_valid(readRDS(file.path(layerDir,"GridPolysLand_2023LFA37Split.rds"))); fills=NA
-    if(addGridsDepthPruned) grids = st_make_valid(readRDS(file.path(layerDir,'GridPolys_DepthPruned_37Split.rds'))); addGrids=T; fills='#FFC0CB33'; addGridLabels=F
+    if(addGridsDepthPruned){ grids = st_make_valid(readRDS(file.path(layerDir,'GridPolys_DepthPruned_37Split.rds'))); addGrids=T; fills='#FFC0CB33'; addGridLabels=F}
 
       lfa      <- readRDS(file.path(layerDir,"LFAPolys37Split.rds"))
     bath     <- readRDS(file.path(layerDir,"bathy10-300SF.rds"))

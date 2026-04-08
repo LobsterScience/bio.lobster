@@ -95,5 +95,6 @@ cc =as.data.frame(do.call(rbind,cpue.lst))
 cc$CPUE = as.numeric(cc$`biasCorrCPUE(tmp, by.time = F)`)
 plot(CPUE~yr,data=cc,xlab='Year' ,ylab='CPUE')
 cc$yr = as.numeric(cc$yr)
-ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+geom_line()+theme_test()+facet_wrap(~lfa)+  labs(x = "Saison de pêche", y = "CPUE")
+ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+geom_line()+theme_test(base_size = 13)+facet_wrap(~lfa)+  labs(x = "Saison de pêche", y = "CPUE")
 
+ggplot(cc,aes(x=yr,y=CPUE))+geom_point()+geom_line()+theme_test(base_size = 13)+facet_wrap(~lfa)+  labs(x = "Fishing Season", y = "CPUE")
