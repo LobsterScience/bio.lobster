@@ -2,7 +2,7 @@
 require(bio.lobster)
 
 ##Commercial
-ff = "LFA34Update2024"
+ff = "LFA34Update2025"
 fp1 = file.path(project.datadirectory('bio.lobster'),"analysis",ff)
 fpf = fpf1 = file.path(project.figuredirectory('bio.lobster'),ff)
 
@@ -311,7 +311,7 @@ ggplot(data = al, aes(x = Year,y = B)) +
 
 #landings and effort
 a = lobster.db('process.logs')
-a = subset(a,SYEAR %in% 2004:2024& LFA %in% '34') 
+a = subset(a,SYEAR %in% 2004:2025& LFA %in% '34') 
 
 aa = split(a,f=list(a$LFA,a$SYEAR))
 aa = rm.from.list(aa)
@@ -340,10 +340,10 @@ cp = as.data.frame(do.call(cbind,rmed(cc$yr,cc$CPUE)))
 cp$x = as.numeric(cp$x)
 cp$yr = as.numeric(cp$yr)
 ccp = cc[nrow(cc),]
-ccf = cc[-nrow(cc),]
+ccf = cc[nrow(cc),]
 g1a <- ggplot(data = ccf, aes(x = yr,y = CPUE)) +
   geom_point(size=2)+
-  geom_point(data=ccp,aes(x=yr,y=CPUE),colour='grey66',shape=17,size=3)+
+#  geom_point(data=ccp,aes(x=yr,y=CPUE),colour='grey66',shape=17,size=3)+
   geom_line(data=cp,aes(x=yr,y=x),colour='gray45',lwd=1.25)+
  labs(x = "Year", y = "CPUE") +
   theme_csas(base_size = 12)
@@ -373,7 +373,7 @@ ymax=30000
 scaleright = max(ef$Effort)/ymax
 g1 <- ggplot(data = subset(aaa,yr>1990), aes(x = yr,y=LFA34)) +
   geom_bar(stat='identity',fill='black') +
-  geom_bar(data=aap,aes(x=yr,y=LFA34),stat='identity',fill='gray66') +
+  #geom_bar(data=aap,aes(x=yr,y=LFA34),stat='identity',fill='gray66') +
   geom_point(data=efp,aes(x=yr,y=Effort/scaleright),colour='grey66',shape=17,size=2)+
   geom_line(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',lwd=1,linetype='dashed')+
   geom_point(data=ef,aes(x=yr,y=Effort/scaleright),colour='black',shape=16,size=1)+

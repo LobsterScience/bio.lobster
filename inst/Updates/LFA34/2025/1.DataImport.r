@@ -8,12 +8,12 @@ la()
 p = bio.lobster::load.environment()
 p=list()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"analysis",'LFA34Update2024')
+fp = file.path(project.datadirectory('bio.lobster'),"analysis",'LFA34Update2025')
 dir.create(fp)
 la()
 p$yrs = 1947:2025
 load_all('~/git/bio.survey/')
-p$yrs=2025
+p$yrs=2026
 
 
         # run in windows environment

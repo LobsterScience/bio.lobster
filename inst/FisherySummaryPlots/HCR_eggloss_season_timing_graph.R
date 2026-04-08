@@ -18,12 +18,10 @@ project <- tibble::tribble(
   "A", "LFA36",    as.Date("2023-11-14"), as.Date("2024-01-15"),
   "A", "LFA36",    as.Date("2024-03-31"), as.Date("2024-06-29"),
   "A", "LFA38",    as.Date("2023-11-13"), as.Date("2024-06-29"),
-  "B", "Moulting", as.Date("2024-06-01"), as.Date("2024-09-30"),
-  "B", "Moulting", as.Date("2023-06-01"), as.Date("2023-09-30"),
-  "B", "Peak Moulting", as.Date("2023-06-15"), as.Date("2023-08-15"),
-  "B", "Peak Moulting", as.Date("2024-06-15"), as.Date("2024-08-15"),
-  "B", "Hardening", as.Date("2023-09-30"), as.Date("2023-10-15"),
-  "B", "Hardening", as.Date("2024-09-30"), as.Date("2024-10-15")
+  "B", "Egg Release", as.Date("2024-07-15"), as.Date("2024-09-20"),
+  "B", "Egg Release", as.Date("2023-07-15"), as.Date("2023-09-20"),
+  "B", "Larval Hatch", as.Date("2023-06-28"), as.Date("2023-08-05"),
+  "B", "Larval Hatch", as.Date("2024-06-28"), as.Date("2024-08-05"),
 ) %>%
   mutate(
     start_date = as.Date(start_date),
@@ -40,15 +38,15 @@ p$start_date <- as.Date(p$start_date)
 p$end_date   <- as.Date(p$end_date)
 
 moulting_bg <- p %>%
-  filter(Activity %in% c("Hardening", "Moulting", "Peak Moulting"))
+  filter(Activity %in% c("Egg Release", "Larval Hatch"))
 
 moulting_bg$Activity <- factor(
   moulting_bg$Activity,
-  levels = c("Moulting", "Peak Moulting", "Hardening")
+  levels =  c("Egg Release", "Larval Hatch")
 )
 
 activities <- p %>%
-  filter(!Activity %in% c("Hardening", "Moulting", "Peak Moulting"))
+  filter(!Activity %in%  c("Egg Release", "Larval Hatch"))
 
 ggplot() +
   geom_rect(
@@ -72,10 +70,8 @@ ggplot() +
   
   scale_fill_manual(
     values = c(
-      "Moulting" = "green",
-      "Peak Moulting" = "darkgreen",
-      "Hardening" = "lightblue"
-    )
+      "Egg Release" = "pink",
+      "Larval Hatch" = "lightblue"    )
   ) +
   
   labs(x = "Date", y = "LFA") +

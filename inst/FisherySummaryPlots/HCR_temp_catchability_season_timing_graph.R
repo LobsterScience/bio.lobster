@@ -2,9 +2,21 @@
 library(dplyr)
 library(ggplot2)
 
+df=readRDS('temp_catchabiliy_month.rds')
+df$date = as.Date(paste('2024',1:12,'01',sep="-"))
+df$date2 = as.Date(paste('2024',1:12,'31',sep="-"))
+df$date2[c(4,6,9)] = as.Date(paste('2024',c(4,6,9),'30',sep="-"))
+df$date2[c(2)] = as.Date(paste('2024',c(2),'28',sep="-"))
+df$date2[c(10,12)] = as.Date(paste('2023',c(10,12),'31',sep="-"))
+df$date[c(10,12)] = as.Date(paste('2023',c(10,12),'1',sep="-"))
+df$date[c(11)] = as.Date(paste('2023',c(11),'1',sep="-"))
+df$date2[c(11)] = as.Date(paste('2023',c(11),'30',sep="-"))
+
+df$date2[c(2)] = as.Date(paste('2024',c(2),'28',sep="-"))
+
 # -----------------------
 project <- tibble::tribble(
-  ~wp, ~Activity, ~start_date, ~end_date,
+  ~wp, ~T_Catchability, ~start_date, ~end_date,
   "A", "LFA27",    as.Date("2024-05-15"), as.Date("2024-07-15"),
   "A", "LFA29",    as.Date("2024-04-28"), as.Date("2024-06-28"),
   "A", "LFA30",    as.Date("2024-05-17"), as.Date("2024-07-18"),
@@ -17,38 +29,25 @@ project <- tibble::tribble(
   "A", "LFA35",    as.Date("2024-02-28"), as.Date("2024-07-31"),
   "A", "LFA36",    as.Date("2023-11-14"), as.Date("2024-01-15"),
   "A", "LFA36",    as.Date("2024-03-31"), as.Date("2024-06-29"),
-  "A", "LFA38",    as.Date("2023-11-13"), as.Date("2024-06-29"),
-  "B", "Moulting", as.Date("2024-06-01"), as.Date("2024-09-30"),
-  "B", "Moulting", as.Date("2023-06-01"), as.Date("2023-09-30"),
-  "B", "Peak Moulting", as.Date("2023-06-15"), as.Date("2023-08-15"),
-  "B", "Peak Moulting", as.Date("2024-06-15"), as.Date("2024-08-15"),
-  "B", "Hardening", as.Date("2023-09-30"), as.Date("2023-10-15"),
-  "B", "Hardening", as.Date("2024-09-30"), as.Date("2024-10-15")
-) %>%
-  mutate(
-    start_date = as.Date(start_date),
-    end_date   = as.Date(end_date)
-  ) %>%
+  "A", "LFA38",    as.Date("2023-11-13"), as.Date("2024-06-29"))  %>%
   filter(!is.na(start_date), !is.na(end_date), end_date >= start_date)
 
+proj2 = subset(df,select=c(month_exploitation,date,date2))
+proj2$wp = 'B'
+names(proj2)[1:3]=c('T_Catchability','start_date','end_date')
+p = bind_rows(project,proj2)
 
-p <- project
-
-
-
-p$start_date <- as.Date(p$start_date)
-p$end_date   <- as.Date(p$end_date)
 
 moulting_bg <- p %>%
-  filter(Activity %in% c("Hardening", "Moulting", "Peak Moulting"))
+  filter(T_Catchability %in% c("low", "moderate",'high'))
 
-moulting_bg$Activity <- factor(
-  moulting_bg$Activity,
-  levels = c("Moulting", "Peak Moulting", "Hardening")
+moulting_bg$T_Catchability <- factor(
+  moulting_bg$T_Catchability,
+  levels =  c("low", "moderate",'high')
 )
 
 activities <- p %>%
-  filter(!Activity %in% c("Hardening", "Moulting", "Peak Moulting"))
+  filter(!T_Catchability %in%c("low", "moderate",'high'))
 
 ggplot() +
   geom_rect(
@@ -57,7 +56,7 @@ ggplot() +
         xmax = end_date,
         ymin = -Inf,
         ymax = Inf,
-        fill = Activity),
+        fill = T_Catchability),
     alpha = 0.4
   ) +
   
@@ -65,17 +64,16 @@ ggplot() +
     data = activities,
     aes(x = start_date,
         xend = end_date,
-        y = Activity,
-        yend = Activity),
+        y = T_Catchability,
+        yend = T_Catchability),
     linewidth = 6
   ) +
   
   scale_fill_manual(
     values = c(
-      "Moulting" = "green",
-      "Peak Moulting" = "darkgreen",
-      "Hardening" = "lightblue"
-    )
+      "low" = "papayawhip",
+      "moderate" = "greenyellow",
+      "high" = 'salmon')
   ) +
   
   labs(x = "Date", y = "LFA") +
@@ -83,4 +81,3 @@ ggplot() +
 
   scale_x_date(date_breaks = "1 month", date_labels = "%b ")+
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-

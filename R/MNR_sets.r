@@ -41,9 +41,9 @@ MNR_sets <- function(){
   
   de = merge(de,se[,c('id','Dur_m','spread','dist')])
   de$Frequency = de$Frequency*(de$Dur_m /20) #back to raw -- frequency data is already corrected for sub sampling
-  de$Frequency = de$Frequency/(de$spread/1000 * de$dist)
+  #de$Frequency = de$Frequency/(de$spread/1000 * de$dist)
   de = subset(de,select = c(id,Length,Frequency, Sex))
-  
+  print('DMR estimates are in numbers or wt not in density')
   sc1=seq(3,253,by=5)
   de$SZ = sc1[cut(de$Length,sc1,right=FALSE,labels=F)]
   de$UID = de$ID
@@ -78,8 +78,10 @@ MNR_sets <- function(){
   }
   de$fwt =  apply(de[,c('Length','sex')],1,lobLW1)
   de$Legal_wt = de$Legal*de$fwt/1000
+  de$Recruit_wt = de$Recruit*de$fwt/1000
   
-  dea = aggregate(cbind(Legal,Recruit,Legal_wt, Berried,Juv)~id,data=de,FUN=sum)
+  
+  dea = aggregate(cbind(Legal,Recruit,Legal_wt, Berried,Juv,Recruit_wt)~id,data=de,FUN=sum)
   dea = subset(dea,id %in% unique(se$id))
   dea = merge(dea,bb)
   cde = merge(ca,dea)
@@ -97,6 +99,6 @@ MNR_sets <- function(){
   aa$LATITUDE = aa$Y
   aa$LONGITUDE = aa$X
   aa = aa %>%
-        select(id,DATE, YEAR,Lobster, Legal, Legal_wt, EMPTY, Berried,Juv,Recruit, starts_with('P.'),OFFSET, OFFSET_METRIC,Gear, SOURCE,LONGITUDE,LATITUDE)
+        select(id,DATE, YEAR,Lobster, Legal, Legal_wt, EMPTY, Berried,Juv,Recruit,Recruit_wt, starts_with('P.'),OFFSET, OFFSET_METRIC,Gear, SOURCE,LONGITUDE,LATITUDE)
 return(aa)
   }

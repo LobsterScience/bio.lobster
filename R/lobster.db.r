@@ -1133,7 +1133,7 @@ if (DS %in% c("logs.redo", "logs") ) {
              if (is.null(pH$yr)){
               # logs
               # logs = connect.command(con, "select * from marfissci.lobster_sd_log")
-              logs = connect.command(con, "select * from marfissci.lobster_sd_log_all") #incorporates elogs and paper
+              logs = connect.command(con, "select * from marfissci.lobster_sd_log_all_filtered") #incorporates elogs and paper
               save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
 
               # slips
@@ -1496,7 +1496,7 @@ if (DS %in% c("uslandings_by_state") ) {
       lq = quantile(logs41$CPUE,c(0.01,.9995),na.rm=T)
       logs41p = subset(logs41,CPUE>=lq[1] & CPUE<=lq[2])
       logs41p$yr = lubridate::year(logs41p$FV_FISHED_DATETIME)
-       b$
+      
       gr41 = st_as_sf(readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds')))
       logs41p$X = logs41p$DDLON * -1
       logs41p$Y = logs41p$DDLAT

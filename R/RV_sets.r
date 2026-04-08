@@ -28,12 +28,14 @@ RV_sets <- function(){
   deL$Legal_wt = deL$Legal * deL$fwt
   deL$Recruit = ifelse(deL$flen<82 & deL$flen>=70 ,deL$clen,0)
   deL$Recruit = ifelse(deL$flen==82 ,deL$clen/2,deL$Recruit)
+  deL$Recruit_wt = deL$Recruit * deL$fwt
+  
   deL$Juv = ifelse(deL$flen<=60,deL$clen,0)
   
   sc1=seq(13,253,by=5)
   deL$SZ = sc1[cut(deL$flen,sc1,right=FALSE,labels=F)]
   
-  deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv)~UID+SZ,data=deL,FUN=sum)
+  deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt)~UID+SZ,data=deL,FUN=sum)
   caL$UID = paste(caL$mission, caL$setno, caL$size_class,sep="-")
   deL1 = merge(deL1, caL[,c('UID','sampwgt','totwgt','totno')],all.x=T)
   
@@ -45,13 +47,14 @@ RV_sets <- function(){
   deL1$Legal = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Legal, deL1$Legal * (deL1$totwgt/deL1$sampwgt))
   deL1$Legal_wt = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Legal_wt, deL1$Legal_wt * (deL1$totwgt/deL1$sampwgt))
   deL1$Recruit = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Recruit, deL1$Recruit * (deL1$totwgt/deL1$sampwgt))
+  deL1$Recruit_wt = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Recruit_wt, deL1$Recruit_wt * (deL1$totwgt/deL1$sampwgt))
   
   d1 = as.data.frame(do.call(rbind,strsplit(deL1$UID,"-")))
   deL1 = cbind(deL1, d1)
   deL1 = rename.df(deL1, c('V1','V2','V3'),c('mission','setno','scla'))
-  deL2 = aggregate(cbind(clen,wts,Legal,Legal_wt,Berried,Recruit,Juv)~mission+setno+SZ,data=deL1,FUN=sum)
+  deL2 = aggregate(cbind(clen,wts,Legal,Legal_wt,Berried,Recruit,Juv,Recruit_wt)~mission+setno+SZ,data=deL1,FUN=sum)
   deL2$UID = paste(deL2$mission, deL2$setno, sep="_")
-  deL3 = aggregate(cbind(clen,wts,Legal,Legal_wt,Berried,Recruit,Juv)~mission+setno+UID,data=deL2,FUN=sum)
+  deL3 = aggregate(cbind(clen,wts,Legal,Legal_wt,Berried,Recruit,Juv,Recruit_wt)~mission+setno+UID,data=deL2,FUN=sum)
   
   deL2$P=deL2$clen
   aa = aggregate(P~UID+SZ,data=deL2,FUN=sum)
@@ -61,6 +64,7 @@ RV_sets <- function(){
   ddd = rename.df(ddd,c('clen','wts'),c('Lobster','WEIGHT_KG'))
   ddd$WEIGHT_KG = ddd$WEIGHT_KG/1000
   ddd$Legal_wt = ddd$Legal_wt/1000
+  ddd$Recruit_wt = ddd$Recruit_wt/1000
   
   #
   #combine files
@@ -118,7 +122,7 @@ RV_sets <- function(){
   }
   com <- com %>%
    rowwise() %>%
-    mutate(across(c(Lobster, WEIGHT_KG,Legal,Legal_wt,Berried,Recruit,Juv,P.13:P.223, P.13:P.223), ~ .x * OFFSET))
+    mutate(across(c(Lobster, WEIGHT_KG,Legal,Legal_wt,Berried,Recruit,Recruit_wt,Juv,P.13:P.223, P.13:P.223), ~ .x * OFFSET))
   
   print('this is n or wt, accounting for trawl corrections but is not the numbers per km2')
   return(com)
