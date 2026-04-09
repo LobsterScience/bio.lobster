@@ -10,14 +10,18 @@ NEFSC_sets <- function(){
   de$SZ = sc1[cut(de$FLEN,sc1,labels=F)]
   de$Berried = ifelse(de$FSEX==3,de$CLEN,0)
   de$Legal = ifelse(de$FSEX<3 & de$FLEN>82,de$CLEN,0)
+  de$Legal = ifelse(de$FSEX<3 & de$FLEN==82,de$CLEN/2,de$Legal)
   de$Recruit = ifelse( de$FLEN %in% 70:82,de$CLEN,0)
+  de$Recruit = ifelse( de$FLEN ==82,de$CLEN/2,de$Recruit)
+  
   de$Juv = ifelse( de$FLEN <= 60,de$CLEN,0)
   
   de$WEIGHT_KG = de$CLEN * de$FWT/1000
   de$Legal_wt = de$Legal * de$FWT/1000
-  
+  de$Recruit_wt = de$Recruit * de$FWT/1000
   dA = aggregate(CLEN~SZ+FSEX+MISSION+SETNO+ID,data=de,FUN=sum)
-  dS = aggregate(cbind(Berried,Legal,CLEN,WEIGHT_KG,Legal_wt,Recruit,Juv)~MISSION+SETNO+ID,data=de,FUN=sum)
+  
+  dS = aggregate(cbind(Berried,Legal,CLEN,WEIGHT_KG,Legal_wt,Recruit,Juv,Recruit_wt)~MISSION+SETNO+ID,data=de,FUN=sum)
   dS$Lobster = dS$CLEN
   dS$CLEN = NULL
   dA$P = dA$CLEN

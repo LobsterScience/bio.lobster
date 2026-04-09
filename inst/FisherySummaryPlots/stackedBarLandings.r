@@ -6,7 +6,7 @@ require(ggplot2)
 library(viridis)
 la()
 a = lobster.db('annual.landings')
-a = subset(a,!is.na(YR)& YR>1975 & YR<2025)
+a = subset(a,!is.na(YR)& YR>1975 & YR<2026)
 sa = a %>% gather(key='LFA',value='Landings',-YR)
 sa = subset(sa,LFA<'LFA33')
 sa = subset(sa,LFA %ni% 'LFA31')
@@ -17,21 +17,21 @@ gg = ggplot(sa,aes(x=YR,y=Landings/1000))+geom_bar(stat='identity')+
 
 a = lobster.db('seasonal.landings')
 a$SYEAR = as.numeric(substring(a$SYEAR,6,9))
-a = subset(a,!is.na(SYEAR)& SYEAR>1975& SYEAR<2025)
+a = subset(a,!is.na(SYEAR)& SYEAR>1975& SYEAR<2026)
 sa1 = a %>% pivot_longer(cols=starts_with('LFA'),names_to="LFA",values_to='Landings')
 names(sa1)[1] = "YR"
 
 o = bind_rows(sa,sa1)
  o1 = subset(o,LFA %ni% 'LFA38B')
 
-mo1 = aggregate(Landings~LFA,data=subset(o1,YR %in% 1975:2023),FUN=function(x) c(median(x),quantile(x,c(0.25,0.75))))
+mo1 = aggregate(Landings~LFA,data=subset(o1,YR %in% 1975:2024),FUN=function(x) c(median(x),quantile(x,c(0.25,0.75))))
 o1$Lkt = o1$Landings/1000
 
 o1 <- o1 %>%
   group_by(LFA) %>%
   mutate(is_max = Lkt == max(Lkt,na.rm=T))
 ggplot(o1,aes(x=YR,y=Lkt,fill=is_max))+geom_bar(stat='identity',width=1)+
-  facet_wrap(~LFA, scales='free_y' )+xlab('Fishing Year')+ylab('Landings (kt)')+
+  facet_wrap(~LFA, scales='free_y' ,nrow=2)+xlab('Fishing Year')+ylab('Landings (kt)')+
   scale_x_continuous(breaks=round(seq(1975,2024,length=4)))+theme_test()+ theme(legend.position = 'none')+
 scale_fill_manual(values = c("FALSE" = "grey10", "TRUE" = "grey10")) +
     geom_hline(data=mo1,aes(yintercept=Landings[,1]/1000),linetype='solid',colour='red')

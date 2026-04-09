@@ -9,7 +9,7 @@ h = lobster.db('annual.landings')
 i = lobster.db('seasonal.landings')
 g = lobster.db('process.logs')
 
-ref = data.frame(LFA=c(27:30,'31A','31B',32,33),lrp=c(.14,.12,.11,.28,.16,.16,.14,.14),usr=c(.27,.25,.22,.56,.41,.32,.29,.28))
+ref = data.frame(LFA=c(27:30,'31A','31B',32,33),lrp=c(.14,.12,.11,.28,.16,.16,.14,.14),usr=c(.27,.25,.22,.56,.31,.32,.29,.28))
 
 g = subset(g, SYEAR<2026 & SYEAR>2004)
 ga = aggregate(cbind(NUM_OF_TRAPS,WEIGHT_KG)~SYEAR+LFA,data=g,FUN=sum)

@@ -10,6 +10,7 @@ ggLobsterMap <- function(
         attrData=NULL,
         attrColumn='Z',
         addGrids=FALSE,
+        addGridsDepthPruned=FALSE,
         addNAFO=FALSE,
         nafo='4X',
         bathy=TRUE,
@@ -73,7 +74,7 @@ ggLobsterMap <- function(
         `40`     = list(ylim=c(42.25,43),  xlim=c(-66.5,-65.25)),
         `41`     = list(ylim=c(41.1,44),   xlim=c(-68,-63.5)),
         `41_full`= list(ylim=c(40,46.5),   xlim=c(-68,-55)),
-        SWN      = list(ylim=c(42.5,45),   xlim=c(-67.8,-62.2)),
+        SWN      = list(ylim=c(42.15,45),   xlim=c(-67.8,-62.2)),
         BoF      = list(ylim=c(43.75,46),  xlim=c(-67.8,-63.2)),
         `33-35`  = list(ylim=c(42.5,46),   xlim=c(-67.8,-63.2)),
         `33-34`  = list(ylim=c(42.5,45),   xlim=c(-67.5,-62.2))
@@ -100,8 +101,10 @@ ggLobsterMap <- function(
     # Load layers
     # ----------------------
     ns_coast <- readRDS(file.path(layerDir,"CoastSF.rds"))
-    grids    <- st_make_valid(readRDS(file.path(layerDir,"GridPolysLand_2023LFA37Split.rds")))
-    lfa      <- readRDS(file.path(layerDir,"LFAPolys37Split.rds"))
+    grids    <- st_make_valid(readRDS(file.path(layerDir,"GridPolysLand_2023LFA37Split.rds"))); fills=NA
+    if(addGridsDepthPruned){ grids = st_make_valid(readRDS(file.path(layerDir,'GridPolys_DepthPruned_37Split.rds'))); addGrids=T; fills='#FFC0CB33'; addGridLabels=F}
+
+      lfa      <- readRDS(file.path(layerDir,"LFAPolys37Split.rds"))
     bath     <- readRDS(file.path(layerDir,"bathy10-300SF.rds"))
     nafo_sf  <- readRDS(file.path(layerDir,"NAFO_sf.rds"))
     cents    <- readRDS(file.path(layerDir,"LFALabelsSF.rds"))
@@ -151,7 +154,7 @@ ggLobsterMap <- function(
     # Grids
     # ----------------------
     if(addGrids){
-        p <- p + geom_sf(data=grids, fill=NA)
+        p <- p + geom_sf(data=grids, fill=fills)
     }
     
     # ----------------------

@@ -44,3 +44,5 @@ da  =bind_rows(d,aa,bb,)
 
 daa = aggregate(LAND~YR,data=da,FUN=sum)
 plot(daa)
+
+

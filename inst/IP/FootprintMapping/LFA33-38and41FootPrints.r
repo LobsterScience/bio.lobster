@@ -112,12 +112,19 @@ lo41 = st_as_sf(logs41p,coords = c('DDLON','DDLAT'),crs=4326)
 l4 = readRDS(file.path(project.datadirectory('bio.lobster'),'data','maps','LFAPolysSF.rds'))
 l4 = subset(l4,LFA==41, select=LFA)
 bbox <- st_bbox(l4)
-grid <- st_make_grid(bbox, cellsize = c(0.17, 0.17), what = "polygons")
-grid_polygons <- st_as_sf(grid)
+grid <- st_make_grid(bbox, cellsize = c(0.17, 0.17), what = "polygons") |>
+         st_as_sf() |>
+        rename(geometry = x) |>
+        st_set_geometry("geometry")
 
 grid_in_polygon <- st_intersection(grid_polygons, l4)
 grid_in_polygon$ID = 1:nrow(grid_in_polygon)
 grid_in_polygon$LFA <- 41
+
+grid_in_polygon <- grid_in_polygon |>
+  rename(geometry = x) |>
+  st_set_geometry("geometry")
+
 ggplot(l4)+geom_sf()+geom_sf(data=grid_in_polygon,col='red')
 
 saveRDS(grid_in_polygon,file=file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds'))

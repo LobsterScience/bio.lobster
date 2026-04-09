@@ -156,7 +156,7 @@ nefsc.analysis <- function(DS='stratified.estimates', out.dir = 'bio.lobster', p
             l = subset(lll,SID==1)
             attr(l,'projection') <- "LL"
           }
-          
+          set = subset(set, !is.na(X) | !is.na(X) )
           set$EID = 1:nrow(set)
           a = findPolys(set,l)
           iz = which(set$EID %in% a$EID)

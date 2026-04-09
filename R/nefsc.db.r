@@ -72,7 +72,7 @@ if(DS %in% c('clean.redo')) {
                   #       and stratum like '01%' 
                   #       ;")) 
                    
-                  usinf = connect.command(con,paste("SELECT *
+    usinf = connect.command(con,paste("SELECT *
                     FROM  USNEFSC.USS_STATION a, 
                           (select distinct cruise6, season, year 
                               from usnefsc.uss_mstr_cruise 
@@ -84,7 +84,7 @@ if(DS %in% c('clean.redo')) {
                         and to_number(SHG) <= 136
                         and stratum like '01%' 
                         ")) 
-                  
+    
                     usinf = rename.df(usinf,c('CRUISE6','STATION'),c('MISSION','SETNO'))
                     usinf$SETNO = as.numeric(usinf$SETNO)
                     usi=usinf
@@ -287,11 +287,11 @@ if(DS %in% c('usdet.clean','usdet.clean.redo')) {
   de1$FSEX = ifelse(de1$prop_non_berried==1 | is.na(de1$prop_non_berried)  ,de1$FSEX,3)
   de = de1
   i = which(de$FSEX %in% c(1))
-  de$FWT[i] = exp(-14.468) * de$FLEN[i] ^ 3.0781 * 2.204 #lw cov from GB 
+  de$FWT[i] = exp(-14.468) * de$FLEN[i] ^ 3.0781  #lw cov from GB 
   i = which(de$FSEX %in% c(2,3))
-  de$FWT[i] = exp(-13.3388) * de$FLEN[i] ^ 2.8455 * 2.204 #lw cov from GB 
+  de$FWT[i] = exp(-13.3388) * de$FLEN[i] ^ 2.8455 #lw cov from GB 
   i = which(de$FSEX %in% c(0))
-  de$FWT[i] = exp(-13.7012) * de$FLEN[i] ^ 2.9212 * 2.204 #lw cov from GB 
+  de$FWT[i] = exp(-13.7012) * de$FLEN[i] ^ 2.9212 #lw cov from GB 
   
   de$FWT    = de$FWT*1000 #to g
   #de = de[which(de$LENGTH<300),]
