@@ -13,7 +13,7 @@ require(viridis)
 
 
 p=list()
-assessment.year = 2025 ##Check Yea
+assessment.year = 2026 ##Check Yea
 
 p$lfas = c("41") # specify lfa
 
@@ -31,5 +31,16 @@ obs$Year <- year(obs$STARTDATE)
 obs$Month <- month(obs$STARTDATE)
 obs$Day <- day(obs$STARTDATE)
 
-obs_2024 <- subset(obs, Year == 2025)
+obs_check <- subset(obs, Year > 2024)
+
+
+n_unique_trips <- dplyr::n_distinct(obs_check$TRIPNO)
+n_unique_trips
+
+library(dplyr)
+
+unique_trips <- obs_check %>%
+  group_by(TRIPNO) %>%
+  summarise(CompletionDate = max(dates, na.rm = TRUE)) %>%
+  arrange(CompletionDate)
 

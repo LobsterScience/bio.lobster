@@ -114,6 +114,31 @@ landings41<-land41[, c("YR", "LFA41")]
 
 write.csv(land41, "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/landingstable.csv")
 
+########### Landings when last year isn't incomplete
+######### LANDINGS
+land41 <- land[, c("YR", "LFA41")]
+land41 <- land41[land41$YR > 2001 & land41$YR <= 2025, ]
+land41 <- land41[order(land41$YR), ]
+
+## Landings barplot (all bars same colour, no special outline)
+ggplot(land41, aes(x = factor(YR), y = LFA41)) +
+  geom_bar(stat = "identity", fill = "#202C59", color = "black") +
+  theme_minimal() +
+  labs(x = "Year", y = "Landings (t)") +
+  theme(
+    legend.position = "none",
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA),
+    axis.line = element_line(color = "black")
+  ) +
+  scale_x_discrete(breaks = seq(2002, 2025, by = 2)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 900)) +
+  geom_hline(yintercept = 720, color = "red")
+
+
+
+
 #########Observer Coverage #############
 
 lobster.db("observer41.redo")

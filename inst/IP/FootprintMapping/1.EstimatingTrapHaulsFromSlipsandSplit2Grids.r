@@ -20,6 +20,9 @@ a =  lobster.db('process.logs')
 a = subset(a,SYEAR>2004 & SYEAR<2026)
 b = lobster.db('seasonal.landings')
 b = subset(b,!is.na(SYEAR))
+b$SYEAR <- as.numeric(sub(".*-", "", b$SYEAR))
+b <- b[-nrow(b), ]
+
 b$SYEAR = 1976:2025
 b$LFA38B <- NULL
 b = subset(b,SYEAR>2004 & SYEAR<2026)
