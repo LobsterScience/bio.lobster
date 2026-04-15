@@ -276,6 +276,7 @@ ggLobsterMap <- function(
         p <- p + geom_sf_text(
             data = gridCent,
             aes(label = GRID_NO),
+            na.rm=T,
             family = "sans",
             colour="gray",
             size   = grid_label_size
