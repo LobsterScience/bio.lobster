@@ -105,21 +105,22 @@ lfs= c("L27","L28", "L29", "L30" , "L31A", "L31B", "L32")
     
 
 fl.name=paste("percent_logs_reported", Sys.Date(),"csv", sep=".")
-per.rec=per.rec[order(per.rec$YEARMTH),]
-write.csv(per.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
+write.csv(perc.log.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
 #27-32 Map for Documents, presentations, etc.
-#png(filename=file.path(figdir, "MapLFA27-32.png") ,width=6.5, height=6.5, units = "in", res = 800)
-#LobsterMap('27-32', labels=c('lfa','grid'), grid.labcex=0.6)
-#dev.off()
 
-p <- ggLobsterMap(area='27-32', addLFALabels=T, LFA_label_size = 5, addGrids = T)
+pp <- ggLobsterMap(area='27-32', addLFALabels=T, LFA_label_size = 5, addGrids = T)
 ggsave(file=file.path(figdir, "Map27-32.png"))
 
-#For Individual LFAs
-#png(filename=file.path(figdir, "MapLFA32.png") ,width=6.5, height=6.5, units = "in", res = 800)
-#LobsterMap('32', labels=c('lfa','grid'), grid.labcex=0.6)
-#dev.off()
+for (i in p$lfas){
+  print(pp <- ggLobsterMap(area='27-32', addLFALabels=T, LFA_label_size = 5, addGrids = T, colourLFA = i))
+  ggsave(file=file.path(figdir, paste("MapLFA", as.character(i),".png", sep="")))  
+}
+
+#one for 28 & 29 combined
+pp <- ggLobsterMap(area='CB', addLFALabels=T, LFA_label_size = 5, addGrids = T, colourLFA = c("28", "29"))
+ggsave(file=file.path(figdir, "Map28_29.png"))
+
 
 #######-----------------------------------------
 # Primary Indicator- Commercial CPUE
@@ -346,7 +347,8 @@ for (l in pls){
 
 #Unbiased cpue patterns by week of season
 #-----------------------------------------
-
+p$lfas = c("27", "28", "29", "30", "31A", "31B", "32") # specify lfas for data summary
+ 
 a = lobster.db('process.logs')
 a = subset(a,SYEAR %in% (assessment.year-11):assessment.year & LFA %in% p$lfas) 
 
@@ -424,7 +426,6 @@ cc =as.data.frame(do.call(rbind,cpue.lst))
 
 mean= aggregate(cc, CPUE~yr+lfa,mean )
 
-
 for (l in p$lfas){
 png(filename=file.path(cpue.dir, paste0("weekly_cpue_",l,".png")),width=8, height=5.5, units = "in", res = 800)
   print(
@@ -472,10 +473,6 @@ attr(out.binomial,'model') <- 'binomial'
 for(i in 1:length(dat)) { #Change to restart a broken run based on iteration number (count files in summary folder...run from there)
   print(i)
   ds = dat[[i]]
-
-#line underneath likely redundant. Should default to binomial
-  #ds$method = 'binomial'
-
   x = ccir_stan_run_binomial(dat = ds,save=F)
   out.binomial[[i]] <- ccir_stan_summarize(x)
 }
@@ -1189,7 +1186,7 @@ dev.off()
 
 # Fishery footprint- Useful in comparing years, etc
 #------------------------------------------------------------
-#setwd(grid.dir)
+setwd(grid.dir)
 
 layerDir=file.path(code_root,"bio.lobster.data", "mapping_data")
 r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
@@ -1321,8 +1318,8 @@ Tot$PrivacyScreen = ifelse(Tot$NLics>4,1,0)
 saveRDS(Tot,'PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
 
 Tot = readRDS('PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
-Tot$LFA = ifelse(Tot$LFA=='31B',312,Tot$LFA)
-Tot$LFA = ifelse(Tot$LFA=='31A',311,Tot$LFA)
+#Tot$LFA = ifelse(Tot$LFA=='31B',312,Tot$LFA)
+#Tot$LFA = ifelse(Tot$LFA=='31A',311,Tot$LFA) #changes 31A to 311, 31B to 312
 
 
 #making plots of Tot
@@ -1345,9 +1342,11 @@ gTot = merge(GrMap2,Tot,by.x=c('LFA','GRID_NO'),by.y=c('LFA','Grid'),all.x=T)
 
 
 r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
-b=subset(r,LFA %in% c(27:32, 311, 312))
+#b=subset(r,LFA %in% c(27:32, 311, 312))
+#o=subset(GrMap,LFA %in% c(27:32, 311, 312))
 
-o=subset(GrMap,LFA %in% c(27:32, 311, 312))
+b=subset(r,LFA %in% c(27:32, "31A", "31B"))
+o=subset(GrMap,LFA %in% c(27:32, "31A", "31B"))
 
 ggplot(b)+
   geom_sf()+
@@ -1357,9 +1356,10 @@ ggplot(b)+
            ylim = c(st_bbox(b)$ymin,st_bbox(b)$ymax),
            expand = FALSE)
 
+start.yr=assessment.year-3
 
 gTot$CPUE = gTot$Landings/gTot$TrapHauls
-g27p = subset(gTot, LFA%in% c(27:32, 311, 312) & FishingYear%in%2019:assessment.year)
+g27p = subset(gTot, LFA%in% c(27:32, "31A", "31B") & FishingYear %in% start.yr:assessment.year)
 g27p <- g27p %>%
     mutate(LFA = case_when(
         LFA == "311" ~ "31A",
@@ -1397,7 +1397,7 @@ print(ok())
 dev.off()
 
 
-#past 6 years
+#past 4 years
 ok1 = function(x=g27p){
   ggplot(x,aes(fill=CPUE))+
   geom_sf() +
@@ -1418,7 +1418,7 @@ ok1 = function(x=g27p){
 png(filename=file.path(cpue.dir, "multiyear_grid_cpue_all_lfas.png"), width=1200, height=900, res=175)
 print(ok1())
 dev.off()
-
+ok1()
 
 ls.no28=c("27","29","30","31A","31B","32")
 
@@ -1430,7 +1430,9 @@ for (xx in ls.no28){
     dev.off()	
 }
 
-#Comparative CPUE Maps
+#Comparative CPUE & other Maps
+#Not used winter 2026
+{
 #Can run this line to only take certain LFAs
 #g27p=g27p[g27p$LFA %in% c('27','28','29','30','311','312','32'),]
 
@@ -1692,221 +1694,240 @@ ggplot(adj.land, aes(x = LFA, y = lb.per.boat, fill = LFA)) +
         legend.position = "none"  # Remove the legend
     )
 
-
+}
 
 #####----------------------------------------------------------------------------
 # Environmental / Temperature
 
-## Temperature (from FSRS)
-p$lfas = c("27", "29", "30", "31A", "31B", "32")
+library(dplyr)
+library(ggplot2)
+library(patchwork)
 
+# ------------------------------
+# User settings
+assessment.year <- 2025
+lfas <- c("27", "29", "30", "31A", "31B", "32")
 
-lobster.db('fsrs') #brings in all fsrs data in df "fsrs"
-    
-    fsrs$LFA=as.character(fsrs$LFA)
-    fsrs$LFA[fsrs$LFA == "31.1"] = "31A"
-    fsrs$LFA[fsrs$LFA == "31.2"] = "31B"
-    fsrs$TEMP[fsrs$TEMP < -1] = NA
-    
-    fsrs$HAUL_DATE=as.Date(fsrs$HAUL_DATE,"%Y-%m-%d", tz="UTC")
-    
-    
-    
+# Define plot-only WOS shifts here: LFA-Year combination and shift value
+# Format: list(LFA = list(year = shift))
+wos_plot_shifts <- list(
+  "31A" = list(
+    "2025" = -1  # shift WOS by -1 week
+  )
+)
 
-    Fish.Date = lobster.db('season.dates')
-    Fish.Date$START_DATE[Fish.Date$LFA=="31B" & Fish.Date$SYEAR=="2024"]="2024-04-19"
-    Fish.Date$START_DATE[Fish.Date$LFA=="29" & Fish.Date$SYEAR=="2024"]="2024-04-30"
-    
-# add day (DOS) and week (WOS) of season variable
-fsrs$DOS = fsrs$WOS = NA
+# ------------------------------
+# Load FSRS and Season Data
+lobster.db('fsrs')  # loads data frame fsrs
+fsrs$LFA <- as.character(fsrs$LFA)
+fsrs$LFA[fsrs$LFA == "31.1"] <- "31A"
+fsrs$LFA[fsrs$LFA == "31.2"] <- "31B"
+fsrs$TEMP[fsrs$TEMP < -1] <- NA
+fsrs$HAUL_DATE <- as.Date(fsrs$HAUL_DATE, "%Y-%m-%d", tz = "UTC")
 
+Fish.Date <- lobster.db('season.dates')
+Fish.Date$START_DATE[Fish.Date$LFA=="31B" & Fish.Date$SYEAR=="2024"] <- as.Date("2024-04-19")
+Fish.Date$START_DATE[Fish.Date$LFA=="29" & Fish.Date$SYEAR=="2024"] <- as.Date("2024-04-30")
 
-for(i in 1:length(p$lfas)) {
-    h  =  Fish.Date[Fish.Date$LFA==p$lfas[i],]
-    for(j in sort(unique(fsrs$SYEAR[fsrs$LFA==p$lfas[i]]))){
-        print(c(p$lfas[i],j))
-        fsrs$DOS[fsrs$SYEAR==j&fsrs$LFA==p$lfas[i]] = fsrs$HAUL_DATE[fsrs$SYEAR==j&fsrs$LFA==p$lfas[i]]-h$START_DATE[h$SYEAR==j]+1
-        fsrs$WOS[fsrs$LFA==p$lfas[i]&fsrs$SYEAR==j] = floor(as.numeric(fsrs$HAUL_DATE[fsrs$LFA==p$lfas[i]&fsrs$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
-    }
+# ------------------------------
+# Compute DOS and WOS for all data
+fsrs$DOS <- fsrs$WOS <- NA
+
+for(i in seq_along(lfas)) {
+  h <- Fish.Date[Fish.Date$LFA == lfas[i], ]
+  for(j in sort(unique(fsrs$SYEAR[fsrs$LFA == lfas[i]]))) {
+    fsrs$DOS[fsrs$SYEAR == j & fsrs$LFA == lfas[i]] <- 
+      fsrs$HAUL_DATE[fsrs$SYEAR == j & fsrs$LFA == lfas[i]] - h$START_DATE[h$SYEAR == j] + 1
+    fsrs$WOS[fsrs$LFA == lfas[i] & fsrs$SYEAR == j] <- 
+      floor(as.numeric(fsrs$HAUL_DATE[fsrs$LFA == lfas[i] & fsrs$SYEAR == j] - min(h$START_DATE[h$SYEAR == j]))/7) + 1
+  }
 }
 
-fsrs=subset(fsrs, WOS %in% c(1:9)) #removes data with erroneous WOS
-fsrs$unq=paste(fsrs$VESSEL_CD, fsrs$HAUL_DATE, sep=":") #unique identifier for vessel and date
+fsrs <- subset(fsrs, WOS %in% 1:9)  # remove erroneous WOS
+fsrs$unq <- paste(fsrs$VESSEL_CD, fsrs$HAUL_DATE, sep = ":")
 
-saveRDS(fsrs, file.path( temp.dir, "fsrs.temps.rds"))
+saveRDS(fsrs, file.path(temp.dir, "fsrs.temps.rds"))
 
+# ------------------------------
+# Weekly summary
 temp.sum <- fsrs %>%
-    group_by(unq) %>%
-    summarise(
-        TEMP = mean(TEMP, na.rm = TRUE),         # Average of TEMP
-        WOS = first(WOS, order_by = unq),           # Average of WOS
-        LFA = first(LFA, order_by = unq),  # First LFA
-        SYEAR = first(SYEAR, order_by = unq)  # First SYEAR
-    )
+  group_by(unq) %>%
+  summarise(
+    TEMP = mean(TEMP, na.rm = TRUE),
+    WOS = first(WOS, order_by = unq),
+    LFA = first(LFA, order_by = unq),
+    SYEAR = first(SYEAR, order_by = unq)
+  )
 
-saveRDS(fsrs, file.path( temp.dir, "fsrs.weekly.temps.rds"))
+saveRDS(temp.sum, file.path(temp.dir, "fsrs.weekly.temps.rds"))
 
-#The following plots the temp anomalies for each LFA for the past 9 years
-
-lfas.no28 = c("27", "29", "30", "31A", "31B", "32")
-for (jj in lfas.no28){
-    past_nine_years <- assessment.year - 8  # The starting year of the last 9 years
-    
-    temp.sum_filtered <- temp.sum %>%
-        filter(LFA == jj, SYEAR >= past_nine_years) %>%  # Filter for LFA == 29 and the past 9 years
-        group_by(WOS, SYEAR) %>%  # Group by WOS and SYEAR (year)
-        summarise(mean_TEMP = mean(TEMP, na.rm = TRUE))  # Calculate mean of TEMP for each group
-    
-    # Step 2: Calculate the overall average TEMP by WOS across all years past 20 years
-    temp_sum_20 <- temp.sum %>%
-        filter(SYEAR >= assessment.year-19)  # Filter for past 20 years
-    
-    overall_avg_TEMP_20 <- temp_sum_20 %>%
-        filter(LFA == jj) %>%  # Filter for LFA == 29
-        group_by(WOS) %>%
-        summarise(overall_avg = mean(TEMP, na.rm = TRUE))  # Calculate the average TEMP by WOS
-    
-    # Step 3: Plot the data using ggplot2 with a red line for the overall average TEMP
-    
-     p <- ggplot(temp.sum_filtered, aes(x = WOS, y = mean_TEMP)) +
-        geom_line() +  # Plot the mean TEMP by WOS for each year
-        geom_line(data = overall_avg_TEMP_20, aes(x = WOS, y = overall_avg), color = "red", linewidth = .7) +  # Add the red line for overall average TEMP since 2009
-        facet_wrap(~ SYEAR, scales = "free_y") +  # Separate panels by year (SYEAR)
-        labs(title = paste0("Bottom Temperature by Week LFA",jj), x = "Week", y = expression("Temperature (°C)")) +
-         scale_y_continuous(limits = c(0, 14), breaks = seq(0, 14, 2)) +  # Set y-axis limits to 0 to 14 with breaks at 2
-         theme_minimal() 
-    
- 
-    # Step 4: Add annotation outside the plot using patchwork's plot_annotation()
- final_plot <- p + 
-        plot_annotation(
-            caption = "*Red line is 20 year climatology",
-            theme = theme(plot.title = element_text(size = 16),
-            plot.caption = element_text(size = 12, hjust = 0, color="red")  # Caption size and alignment (left)
-            ))
-        
+# ------------------------------
+# 1. Plot weekly temps by LFA (full 1:9 WOS, 31A 2025 shifted by -1 only in plot)
+for(lfa in lfas) {
   
-    
-# Save the final plot  
-ggsave(final_plot,filename=file.path(temp.dir, paste0("LFA",jj,"_weekly_temps.png")), width=10, height=8, dpi=300)
+  # Filter last 9 years
+  temp_filtered <- temp.sum %>%
+    filter(LFA == lfa, SYEAR >= (assessment.year - 8)) %>%
+    group_by(WOS, SYEAR) %>%
+    summarise(mean_TEMP = mean(TEMP, na.rm = TRUE), .groups = "drop")
+  
+  # 20-year climatology
+  temp_20yr <- temp.sum %>%
+    filter(LFA == lfa, SYEAR >= (assessment.year - 20), SYEAR < assessment.year) %>%
+    group_by(WOS) %>%
+    summarise(overall_avg = mean(TEMP, na.rm = TRUE), .groups = "drop")
+  
+  # Plot-only WOS shift
+  temp_filtered <- temp_filtered %>%
+    mutate(WOS_plot = WOS)
+  
+  if(!is.null(wos_plot_shifts[[lfa]])) {
+    for(y in names(wos_plot_shifts[[lfa]])) {
+      shift_val <- wos_plot_shifts[[lfa]][[y]]
+      temp_filtered$WOS_plot[temp_filtered$SYEAR == as.numeric(y)] <- 
+        temp_filtered$WOS[temp_filtered$SYEAR == as.numeric(y)] + shift_val
+    }
+  }
+  
+  # Create weekly plot
+  p_weekly <- ggplot(temp_filtered, aes(x = WOS_plot, y = mean_TEMP)) +
+    geom_line() +
+    geom_line(data = temp_20yr, aes(x = WOS, y = overall_avg), color = "red", linewidth = 0.7) +
+    facet_wrap(~ SYEAR, scales = "free_y") +
+    labs(
+      title = paste0("Bottom Temperature by Week LFA ", lfa),
+      x = "Week",
+      y = expression("Temperature (°C)")
+    ) +
+    scale_x_continuous(breaks = seq(0, 9, 2)) +
+    scale_y_continuous(limits = c(0, 14), breaks = seq(0, 14, 2)) +
+    theme_minimal()
+  
+  # Add caption if 31A
+  cap_text <- if(lfa == "31A") {
+    "*Red line is 20-year climatology. 2025 shifted for comparison"
+  } else {
+    "*Red line is 20-year climatology"
+  }
+  
+  final_plot <- p_weekly + plot_annotation(caption = cap_text) &
+    theme(
+      plot.title = element_text(size = 16),
+      plot.caption = element_text(size = 12, hjust = 0)
+    )
+  
+  ggsave(final_plot, filename = file.path(temp.dir, paste0("LFA", lfa, "_weekly_temps.png")), width = 10, height = 8, dpi = 300)
+}
 
-temp.sum_fil <- temp.sum %>%
-    filter(LFA == jj, SYEAR >= assessment.year-19) %>%  # Filter for LFA == 29 and the past 9 years
-    group_by(WOS, SYEAR) %>%  # Group by WOS and SYEAR (year)
-    summarise(mean_TEMP = mean(TEMP, na.rm = TRUE))  # Calculate mean of TEMP for each group
-
-filtered_data <- temp.sum_fil %>%
-    filter(WOS %in% c(2, 5, 8))
-
-# Find the most recent year in the data
-most_recent_year <- max(filtered_data$SYEAR)
-
-# Filter the data for the last 7 years
-last_7_years_data <- filtered_data %>%
-    filter(SYEAR >= most_recent_year - 6)
-
-# Create the plot with trend lines
-pp= ggplot(filtered_data, aes(x = SYEAR, y = mean_TEMP)) +
+# ------------------------------
+# 2. Temp trends for weeks 2, 5, 8
+for(lfa in lfas) {
+  
+  temp_filtered <- temp.sum %>%
+    filter(LFA == lfa, SYEAR >= (assessment.year - 20)) %>%
+    group_by(WOS, SYEAR) %>%
+    summarise(mean_TEMP = mean(TEMP, na.rm = TRUE), .groups = "drop")
+  
+  # Apply WOS shift for 31A 2025
+  temp_filtered <- temp_filtered %>%
+    mutate(WOS_plot = WOS)
+  
+  if(!is.null(wos_plot_shifts[[lfa]])) {
+    for(y in names(wos_plot_shifts[[lfa]])) {
+      shift_val <- wos_plot_shifts[[lfa]][[y]]
+      temp_filtered$WOS_plot[temp_filtered$SYEAR == as.numeric(y)] <- 
+        temp_filtered$WOS[temp_filtered$SYEAR == as.numeric(y)] + shift_val
+    }
+  }
+  
+  # Only keep the weeks we want for trends (after shifts!)
+  temp_filtered <- temp_filtered %>% filter(WOS_plot %in% c(2, 5, 8))
+  
+  # Find most recent year and last 7 years
+  most_recent_year <- max(temp_filtered$SYEAR)
+  last_7_years <- temp_filtered %>% filter(SYEAR >= most_recent_year - 6)
+  
+  # Plot trends
+  pp <- ggplot(temp_filtered, aes(x = SYEAR, y = mean_TEMP)) +
     geom_line() +
     geom_point() +
-    # Trend line for the entire period
-    geom_smooth(method = "lm", se = FALSE, color = "blue", linetype = "dashed") +  
-    # Trend line for the last 7 years
-    geom_smooth(data = last_7_years_data, method = "lm", se = FALSE, color = "red", linetype = "solid") + 
-    facet_wrap(~ WOS, scales = "fixed", 
-               labeller = labeller(WOS = c("2" = "Week 2", "5" = "Week 5", "8" = "Week 8"))) +  # Create separate plots for each WOS
-    labs(title = paste0("Average Temperature by Week of Season LFA",jj ),
+    geom_smooth(method = "lm", se = FALSE, color = "blue", linetype = "dashed") +
+    geom_smooth(data = last_7_years, method = "lm", se = FALSE, color = "red", linetype = "solid") +
+    facet_wrap(~ WOS_plot, scales = "fixed",
+               labeller = labeller(WOS_plot = c("2" = "Week 2", "5" = "Week 5", "8" = "Week 8"))) +
+    labs(title = paste0("Average Temperature by Week of Season LFA ", lfa),
          x = "Year", y = "Mean Temperature") +
     theme_minimal()
-
-fin_plot <- pp + 
-    plot_annotation(
-        caption = "*Blue is 20 year trend, red is 7 year trend",
-        theme = theme(plot.title = element_text(size = 16),
-                      plot.caption = element_text(size = 12, hjust = 0, color="black")  # Caption size and alignment (left)
-        ))
-
-ggsave(fin_plot,filename=file.path(temp.dir, paste0("LFA",jj,"temp_trends_WOS.png")), width=10, height=8, dpi=300)
-
+  
+  fin_plot <- pp + plot_annotation(caption = "*Blue is 20-year trend, red is 7-year trend") &
+    theme(
+      plot.title = element_text(size = 16),
+      plot.caption = element_text(size = 12, hjust = 0)
+    )
+  
+  ggsave(fin_plot, filename = file.path(temp.dir, paste0("LFA", lfa, "_temp_trends_WOS.png")), width = 10, height = 8, dpi = 300)
 }
 
-# all temp anomalies for assessment.year by LFA
+# ------------------------------
+# 3. Combined LFA anomaly plots for current year (with plot-only shift)
 plot_list <- list()
 temp_filtered_list <- list()
 
-p$lfas = c("27", "29", "30", "31A", "31B", "32")
-
-for (jj in p$lfas) {
-    past_nine_years <- assessment.year - 8  # The starting year of the last 9 years
-    
-    # Filter for the last 9 years and calculate mean TEMP
-    temp.sum_filtered <- temp.sum %>%
-        filter(LFA == jj, SYEAR >= past_nine_years) %>%  # Filter for LFA == jj and the past 9 years
-        group_by(WOS, SYEAR) %>%  # Group by WOS and SYEAR (year)
-        summarise(mean_TEMP = mean(TEMP, na.rm = TRUE))  # Calculate mean of TEMP for each group
-    
-    # Add the LFA column to the filtered data and populate it with jj
-    temp.sum_filtered <- temp.sum_filtered %>%
-        mutate(LFA = jj)  # Add the LFA column with the current value of jj
-    
-    # Append the filtered data to the list
-    temp_filtered_list[[jj]] <- temp.sum_filtered
-    
-    # Step 2: Calculate the overall average TEMP by WOS across all years past 20 years
-    temp_sum_20 <- temp.sum %>%
-        filter(SYEAR >= assessment.year - 19)  # Filter for past 20 years
-    
-    overall_avg_TEMP_20 <- temp_sum_20 %>%
-        filter(LFA == jj) %>%  # Filter for LFA == jj
-        group_by(WOS) %>%
-        summarise(overall_avg = mean(TEMP, na.rm = TRUE))  # Calculate the average TEMP by WOS
-    
-    # Step 3: Filter for 2024 data and plot the data using ggplot2 with a red line for the overall average TEMP
-    temp.sum_filtered_2024 <- temp.sum_filtered %>%
-        filter(SYEAR == 2024)  # Filter to keep only the 2024 data
-    
-    overall_avg_TEMP_20_2024 <- overall_avg_TEMP_20 %>%
-        filter(WOS %in% temp.sum_filtered_2024$WOS)  # Ensure matching WOS values for 2024
-    
-    p_2024 <- ggplot(temp.sum_filtered_2024, aes(x = WOS, y = mean_TEMP)) +
-        geom_line() +  # Plot the mean TEMP by WOS for each year
-        geom_line(data = overall_avg_TEMP_20_2024, aes(x = WOS, y = overall_avg), color = "red", linewidth = .7) +  # Add the red line for overall average TEMP
-        labs(title = jj, x = "Week", y = expression("Temperature (°C)")) +
-        scale_y_continuous(limits = c(0, 14), breaks = seq(0, 14, 2)) +  # Set y-axis limits to 0 to 14 with breaks at 2
-        scale_x_continuous(limits = c(0, 9), breaks = seq(0, 9, 2)) +  # Set x-axis limits to 0 to 9 with breaks at 2
-        theme_minimal() +
-        theme(legend.position = "none")  # Hide the legend since it's not needed
-    
-    # Add the 2024 plot for the specific LFA to the plot list
-    #plot_list=list()
-    plot_list[[paste0("LFA_", jj)]] <- p_2024
+for(lfa in lfas) {
+  temp_filtered <- temp.sum %>%
+    filter(LFA == lfa, SYEAR >= assessment.year - 8) %>%
+    group_by(WOS, SYEAR) %>%
+    summarise(mean_TEMP = mean(TEMP, na.rm = TRUE), .groups = "drop") %>%
+    mutate(LFA = lfa, WOS_plot = WOS)
+  
+  if(!is.null(wos_plot_shifts[[lfa]])) {
+    for(y in names(wos_plot_shifts[[lfa]])) {
+      shift_val <- wos_plot_shifts[[lfa]][[y]]
+      temp_filtered$WOS_plot[temp_filtered$SYEAR == as.numeric(y)] <- 
+        temp_filtered$WOS[temp_filtered$SYEAR == as.numeric(y)] + shift_val
+    }
+  }
+  
+  temp_filtered_list[[lfa]] <- temp_filtered
+  
+  # Current year plot
+  temp_current <- temp_filtered %>% filter(SYEAR == assessment.year)
+  temp_20yr <- temp.sum %>%
+    filter(LFA == lfa, SYEAR >= (assessment.year - 20), SYEAR < assessment.year) %>%
+    group_by(WOS) %>% summarise(overall_avg = mean(TEMP, na.rm = TRUE), .groups = "drop")
+  
+  p_current <- ggplot(temp_current, aes(x = WOS_plot, y = mean_TEMP)) +
+    geom_line() +
+    geom_line(data = temp_20yr, aes(x = WOS, y = overall_avg), color = "red", linewidth = 0.7) +
+    labs(title = lfa, x = "Week", y = expression("Temperature (°C)")) +
+    scale_y_continuous(limits = c(0, 14), breaks = seq(0, 14, 2)) +
+    scale_x_continuous(limits = c(0, 9), breaks = seq(0, 9, 2)) +
+    theme_minimal() +
+    theme(legend.position = "none")
+  
+  plot_list[[paste0("LFA_", lfa)]] <- p_current
 }
 
 combined_temp_filtered <- bind_rows(temp_filtered_list)
 saveRDS(combined_temp_filtered, file.path(temp.dir, "fsrs.weekly.temps.rds"))
 
-# Combine all the 2024 plots into a single figure
-combined_plot <- wrap_plots(plot_list, ncol = 3) + 
-    plot_annotation(
-        title = "Temperature Anomalies by LFA",  # Title for the combined plot
-        subtitle = NULL,  # No subtitle
-        caption = "*Red line is 20 year LFA-specific climatology",  # Caption at the bottom right
-        theme = theme(
-            plot.margin = margin(0, 0, 0, 0),  # Optional: Adjust margin if needed
-            plot.caption = element_text(size = 10, hjust = 0, color="red"),  # Caption size and alignment (left)
-            plot.title = element_text(size = 14, hjust = 0)  # Title size and alignment
-        )
-    ) 
+library(patchwork)
+combined_plot <- wrap_plots(plot_list, ncol = 3) +
+  plot_annotation(
+    title = "Temperature Anomalies by LFA",
+    caption = "*Red line is 20-year LFA-specific climatology",
+    theme = theme(
+      plot.caption = element_text(size = 10, hjust = 0, color="red"),
+      plot.title = element_text(size = 14, hjust = 0)
+    )
+  )
 
-# Display the combined plot
-combined_plot
-
-# Save the combined plot
-ggsave(combined_plot, filename = file.path(temp.dir, paste0(assessment.year, "_fsrs_temp_anomalies_by_lfa.png")), width = 8 , height = 5, dpi = 300)
-
+ggsave(combined_plot, filename = file.path(temp.dir, paste0(assessment.year, "_fsrs_temp_anomalies_by_lfa.png")),
+       width = 8, height = 5, dpi = 300)
 
 #Glorys Temp Model Data
-
+#Not used in 2025
+{
 layerDir=file.path(code_root,"bio.lobster.data", "mapping_data")
 r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
 r = st_as_sf(r)
@@ -1978,11 +1999,12 @@ ano.by.month=ggplot(subset(glorys, yr=="2024")) +
              ylim = c((st_bbox(glorys)$ymin)+3,(st_bbox(glorys)$ymax)-0.5),
              expand = FALSE)
 ano.by.monthsummary(f.temps$doy)
-
+}
 
 #-------------------------------------------------------------------------------
 #Investigate link between temps and CCIR
-
+#not used in 2025
+{
 ex=read.csv(file.path(ccir.dir, "ccir.27-32.csv"))
 tp=data.frame(readRDS(file.path(temp.dir, "fsrs.weekly.temps.rds")))
 
@@ -2021,10 +2043,12 @@ ggplot(ex_with_temp_renamed, aes(x = `Week 1 Temp`, y = `CCIR Exploitation`)) +
         y = "CCIR Exploitation"
     ) +
     theme_minimal()  # Apply a minimal theme
-
+}
 #-------------------------------------------------------------------------------
 #Lobsters R Us (Blaire Martell) provided data on incoming lobster health at the plant
-
+#not used in 2025
+{
+  
 x=readRDS(project.datadirectory( "bio.lobster","requests","season.dates", "lru", "lobsters.r.us.master.rds"))
 x$yrdoy=paste(x$yr, x$doy, sep=":")
 
@@ -2138,6 +2162,7 @@ lruplot <-
 print(lruplot)
 
 ggsave(lruplot,filename=file.path(temp.dir, "lru_data.pdf"), width=6, height=6, dpi=180)
+}
 
 #-----------------------------------------------------------------------------------------------
 #Tagging
@@ -2153,37 +2178,31 @@ require(LobTag2)
 setwd(tag.dir) #by setting wd, it will default to this location for saving tagging maps
 
 #map releases only. Globally then by LFA
-map_by_factor(db="Oracle",filter.from="releases", factor.by="YEAR", all.release=T, show.recaptures = F, inset.map =F, tag.prefix = 'XY', point.size=1.2, file.type="png", zoom.out=1)
+map_by_factor(db='Oracle', filter.from='releases',filter.by="YEAR",filter.for="2021:2026", tag.prefix='XY', all.releases = T, factor.by= "YEAR",
+              #output.location = tag.dir,
+              show.recaptures=F, file.type="png", zoom.out=10)
 
-map_by_factor(db="Oracle",filter.from="releases", map.by="MANAGEMENT_AREA", filter.by="YEAR", all.release=T, show.recaptures = F, inset.map =F,
-              point.size=1, file.type="png", zoom.out=10)
+
 
 #map recaptures only
-map_by_factor(db="Oracle",factor.from="recaptures", group.by="YEAR", all.release=T, show.releases= F, inset.map =F,
-              point.size=1.2, file.type="png", zoom.out=10)
+map_by_factor(db='Oracle', filter.from='recaptures', tag.prefix='XY', all.releases = F, factor.by= "YEAR",  
+              #output.location = tag.dir, 
+              file.type="png", zoom.out=10)
 
-map_by_factor(db="Oracle",factor.from="recaptures", map.by="MANAGEMENT_AREA", group.by="YEAR", show.releases = F, inset.map =F,
-              point.size=1, file.type="png", zoom.out=10)
+#Below code shows tags moving a certain distance by LFA
+#can adjust distance and add.paths= T or F
+for(i in lfas){
+  map_by_factor("Oracle", "RELEASES", "MANAGEMENT_AREA",i, tag.prefix = "XY", add.paths = F, advanced.filter = "releases <- releases %>% filter(TAG_ID %in% (path %>% filter(as.numeric(DIST) >= 20) %>% pull(TID)))",
+                output.location = tag.dir, zoom.out = 10)  
+}
 
-#map paths only for tags with recaptures
-path.dir=file.path(tag.dir, "paths")
-dir.create(path.dir)
-setwd(path.dir)
-
-map_by_factor(db="Oracle",factor.from="releases", all.release=F, add.paths = T,  inset.map =F, point.size=1.2, file.type="png", zoom.out=10)
-map_by_factor(db="Oracle",factor.from="recaptures", all.release=F, add.paths = T,  inset.map =F, point.size=1.2, file.type="png", zoom.out=10)
-
-
-map_by_factor(db="Oracle",factor.from="releases", map.by="MANAGEMENT_AREA", group.by="YEAR", all.releases = T, add.paths = T, inset.map =F, 
-              point.size=1, file.type="png", zoom.out=10)
-
-map_by_factor(db="Oracle",factor.from="recaptures", map.by="MANAGEMENT_AREA", group.by="YEAR", all.releases = T, add.paths = T, inset.map =F, 
-              point.size=1, file.type="png", zoom.out=10)
-
-
+for(i in lfas){
+  map_by_factor("Oracle", "recaptures", "MANAGEMENT_AREA",i, tag.prefix = "XY", add.paths = F, advanced.filter = "recaptures <- recaptures %>% filter(TAG_ID %in% (path %>% filter(as.numeric(DIST) >= 20) %>% pull(TID)))",
+                output.location = tag.dir, zoom.out = 10)  
+}
 
 ### Bycatch### - NOT USED SINCE 2020
-
+{
 #Bycatch estimates are calculated using effort from logbook data for LFAs 31A and 31B
 #To estimate LFA 27 bycatch, gulf landings need to be added to logs.
 
@@ -2191,4 +2210,4 @@ bc.dir=file.path(figdir, "bycatch")
 dir.create( bc.dir, recursive = TRUE, showWarnings = TRUE )
 
 Lobster.Bycatch(lfa=c("31A","31B"), save=T, save.dir=bc.dir)
-
+}
