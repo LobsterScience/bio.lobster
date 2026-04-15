@@ -896,6 +896,10 @@ if(DS %in% c('atSea.logbook.link','atSea.logbook.link.redo')){
       names(tm) = c('StringID','DateSet','DateHauled','TempTime','Temp','LAT_DD','LON_DD','DEPTH_M')
       save(tm,file=file.path(fnODBC,'cw.temperature.rdata'))
     }
+    if(DS %in% c('trudel.temperature.data')){
+        tm = readRDS(file.path(project.datadirectory('bio.lobster'),'Temperature Data', 'Trudel_Bay_of_Fundy_2023-2025' ,'temp.depth.summary.rds'))
+        return(tm)
+    }
     
     
 
