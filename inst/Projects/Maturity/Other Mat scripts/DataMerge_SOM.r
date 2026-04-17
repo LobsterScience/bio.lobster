@@ -29,17 +29,30 @@ lobster_clean <- lobster_raw %>%
 #### Make new length column  ####
 
 # Identify all LENGTH_mm_Lab variants
-length_lab_cols <- grep("^LENGTH_mm_Lab", names(lobster_clean), value = TRUE)
+lab_cols <- grep("^LENGTH_mm_Lab", names(lobster_clean), value = TRUE)
+lab_cols
+
 
 lobster_clean <- lobster_clean %>%
   mutate(
-   
-    LENGTH_mm_Lab_clean = coalesce(!!!syms(length_lab_cols)),
-    LENGTH_mm_Lab_clean = na_if(LENGTH_mm_Lab_clean, "0"),
-    LENGTH_mm_Lab_clean = as.numeric(LENGTH_mm_Lab_clean),
-    LENGTH_mm_Boat      = as.numeric(LENGTH_mm_Boat),
-        lobster_length = coalesce(LENGTH_mm_Lab_clean, LENGTH_mm_Boat)
-  )
+    LENGTH_mm_Lab = coalesce(!!!syms(lab_cols)),
+    LENGTH_mm_Lab = na_if(LENGTH_mm_Lab, "0"),
+    LENGTH_mm_Lab = as.numeric(LENGTH_mm_Lab)  )
+
+lab_cols <- grep("^LENGTH_mm_Lab", names(lobster_clean), value = TRUE)
+lab_cols
+
+all_same <- lobster_clean %>%
+  select(all_of(lab_cols)) %>%
+  mutate(across(everything(), ~na_if(as.character(.x), "0"))) %>%
+  { rowSums(!is.na(.)) == 0 | apply(., 1, function(x) length(unique(na.omit(x))) == 1) } %>%
+  all()
+all_same
+
+#remove bad cols
+lobster_clean <- lobster_clean %>%
+  select(-matches("^LENGTH_mm_Lab\\.\\.\\."))
+
 
 
 #### Remove bogus unnamed columns ####
@@ -76,6 +89,7 @@ ggplot(lobster_clean, aes(x = lobster_length)) +
        y = "Count")
 
 
+
 ## check Unique variables 
 unique_values <- list(
   Hardness      = unique(lobster_clean$HARDNESS),
@@ -107,26 +121,6 @@ lobster_clean%>%
 cg_check<-cg_na_or_5 <- lobster_clean %>%
   filter(is.na(CG_STAGE) | CG_STAGE == "5")
 write_csv(cg_check, "C:/Users/HowseVJ/OneDrive - DFO-MPO/Maturity Writing/DataFiles/SOM to check/cg_check.csv")
-
-
-## Standardize LFAs
-
-
-lobster_clean<- lobster_clean %>%
-  mutate(
-    LFA = case_when(
-      LFA == "32"      ~ "L32",
-      LFA == "LFA 32"  ~ "L32",
-      LFA == "31B"     ~ "L31B",
-      LFA == "34"      ~ "L34",
-      LFA == "36"      ~ "L36",
-      TRUE             ~ LFA   # keep everything else unchanged
-    )
-  )
-
-##Remove bogus columns
-lobster_clean <- lobster_clean %>%
-  select(-starts_with("..."))
 
 
 
@@ -163,6 +157,9 @@ lobster_clean <- lobster_clean %>%
     LON_FINISH = if_else(!is.na(LON_FINISH) & LON_FINISH > 0, -LON_FINISH, LON_FINISH)
   )
 
+
+
+
 ##Plot positions
 
 lobster_clean %>%
@@ -197,7 +194,7 @@ coords %>%
 latcheck<-lobster_clean%>%
   filter(as.numeric(LAT) > 48)
 
-## Make all positoins same format
+## Make all positions same format
 
 convert_ddmm_to_dd <- function(x) {
   x <- as.numeric(x)

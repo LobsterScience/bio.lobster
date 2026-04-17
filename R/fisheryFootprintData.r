@@ -1,5 +1,5 @@
 #' @export
-fisheryFootprintData <- function(yrs=2005:2024, layerDir=file.path(git.repo,'bio.lobster.data','mapping_data'),period='annual'){
+fisheryFootprintData <- function(yrs=2005:2025, layerDir=file.path(git.repo,'bio.lobster.data','mapping_data'),period='annual'){
   
   
   r<-readRDS(file.path( layerDir,"GridPolysSF.rds"))

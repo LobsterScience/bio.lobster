@@ -1144,9 +1144,11 @@ if (DS %in% c("logs.redo", "logs") ) {
               # old logs LFA 34
               dd = dir(fnODBC)
              if(!any("oldlogs34.rdata" %in% dd)){
-             oldlogs34 = connect.command(con, "select b.licence_id, a.*
-                            from lobster_log_data a, marfissci.LICENCES_SF_OLD b
-                            where 'A'||a.licence_no = b.licence_id_old")
+             oldlogs34 = connect.command(con, 
+                                         "select b.licence_id, a.*
+                         from lobster_log_data a, marfissci.LICENCES_SF_OLD b
+                           where 'A'||a.licence_no = b.licence_id_old")
+             
              save( oldlogs34, file=file.path( fnODBC, "oldlogs34.rdata"), compress=T)
               gc()  # garbage collection
               #odbcClose(con)
