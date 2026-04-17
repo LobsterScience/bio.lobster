@@ -53,6 +53,7 @@ ggLobsterMap <- function(
         `27-38`  = list(ylim=c(42.5,48),   xlim=c(-67.4,-57.8)),
         `27-33`  = list(ylim=c(42.5,48),   xlim=c(-66.6,-57.8)),
         `27-32`  = list(ylim=c(43.5,48),   xlim=c(-63.6,-57.8)),
+        `CB`     = list(ylim=c(45,48),     xlim=c(-62,-57.8)),
         ENS      = list(ylim=c(44.0,45.7), xlim=c(-62.2,-59.8)),
         `34-38`  = list(ylim=c(42.5,46),   xlim=c(-67.8,-63.5)),
         `35-36`  = list(ylim=c(44.5,46),   xlim=c(-67.2,-63.2)),
@@ -275,6 +276,7 @@ ggLobsterMap <- function(
         p <- p + geom_sf_text(
             data = gridCent,
             aes(label = GRID_NO),
+            na.rm=T,
             family = "sans",
             colour="gray",
             size   = grid_label_size
