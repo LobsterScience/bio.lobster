@@ -28,6 +28,7 @@ ggLobsterMap <- function(
         layerDir=file.path(bio.directory,'bio.lobster.data','mapping_data'),
         LFA_label_size=4,
         grid_label_size=3,
+        grid_label_colour='grey',
         #colourLFA=FALSE,
         show37label=FALSE,
         colourLFA=NULL,
@@ -75,8 +76,8 @@ ggLobsterMap <- function(
         `40`     = list(ylim=c(42.25,43),  xlim=c(-66.5,-65.25)),
         `41`     = list(ylim=c(41.1,44),   xlim=c(-68,-63.5)),
         `41_full`= list(ylim=c(40,46.5),   xlim=c(-68,-55)),
-        SWN      = list(ylim=c(42.15,45),   xlim=c(-67.8,-62.2)),
-        BoF      = list(ylim=c(43.75,46),  xlim=c(-67.8,-63.2)),
+        'SWN'      = list(ylim=c(42.15,45),   xlim=c(-67.8,-62.2)),
+        'BoF'      = list(ylim=c(43.75,46),  xlim=c(-67.8,-63.2)),
         `33-35`  = list(ylim=c(42.5,46),   xlim=c(-67.8,-63.2)),
         `33-34`  = list(ylim=c(42.5,45),   xlim=c(-67.5,-62.2))
     )
@@ -94,7 +95,7 @@ ggLobsterMap <- function(
     library(dplyr)
     library(scales)
     library(shadowtext)
-    
+   
     sf_use_s2(FALSE)
     theme_set(theme_bw())
     
@@ -102,7 +103,7 @@ ggLobsterMap <- function(
     # Load layers
     # ----------------------
     ns_coast <- readRDS(file.path(layerDir,"CoastSF.rds"))
-    grids    <- st_make_valid(readRDS(file.path(layerDir,"GridPolysLand_2023LFA37Split.rds"))); fills=NA
+    grids    <- st_make_valid(readRDS(file.path(layerDir,"Grids_updated_2026.rds"))); fills=NA
     if(addGridsDepthPruned){ grids = st_make_valid(readRDS(file.path(layerDir,'GridPolys_DepthPruned_37Split.rds'))); addGrids=T; fills='#FFC0CB33'; addGridLabels=F}
 
       lfa      <- readRDS(file.path(layerDir,"LFAPolys37Split.rds"))
@@ -135,7 +136,7 @@ ggLobsterMap <- function(
     lfa      <- suppressWarnings(st_crop(lfa, crop_box))
     bath     <- suppressWarnings(st_crop(bath, crop_box))
     cents    <- suppressWarnings(st_crop(cents, crop_box))
-    
+    gridCent <- suppressWarnings(st_crop(gridCent, crop_box)) 
     # ----------------------
     # Base plot (empty)
     # ----------------------
@@ -273,14 +274,16 @@ ggLobsterMap <- function(
     # Grid labels
     # ----------------------
     if(addGridLabels){
-        p <- p + geom_sf_text(
-            data = gridCent,
-            aes(label = GRID_NO),
-            na.rm=T,
-            family = "sans",
-            colour="gray",
-            size   = grid_label_size
-        )
+      p <- p + geom_sf_label(
+        data = gridCent,
+        aes(label = GRID_NO),
+        fill = alpha("white", 0.9),      # box background
+        color =  grid_label_colour,       # text colour
+        label.size = 0,    # border thickness, 0=no border
+        label.padding = unit(0.1, "lines"),
+        size = grid_label_size,
+        family = "sans"
+      )
     }
     
     # ----------------------
