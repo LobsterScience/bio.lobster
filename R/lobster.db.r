@@ -1123,6 +1123,7 @@ if(DS %in% c('season.dates','season.dates.redo')) {
                     season.dates = backFillSeasonDates(Fish.Date,eyr=year(Sys.time())-1)
                     print(paste0("Maximum Season SYEAR in season.dates is ", max(season.dates$SYEAR)))
                   save(season.dates,file=file.path(fnODBC,'season.dates.rdata'))
+                  return(season.dates)
             }
 
 
