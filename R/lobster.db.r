@@ -2396,5 +2396,59 @@ if(DS %in% c('rv.survey.samples.redo','rv.survey.samples.samples')) {
       readRDS(file=file.path( fnODBC, "species_codes.rds"))
 
       }
-  }
+  
+    ### Current Lobster Licences
+    if (DS %in% c("current.licences.redo", "current.licences") ) {
+      
+      if (DS=="current.licences.redo") {
+       
+        licences = connect.command(con, "SELECT
+                               a.area lfa,
+                               l.licence_id,
+                               lp.fin,
+                               p.surname,
+                               p.firstname,
+                               p.birthdate,
+                               p.community_code,
+                               c.community_name,
+                               p.address1,
+                               p.address2,
+                               p.address3,
+                               p.postal_cd,
+                               p.telephone,
+                               p.email_address,
+                               v.vr_number,
+                               v.vessel_name
+                               FROM
+                               marfissci.participants           p,
+                               marfissci.vessels                v,
+                               marfissci.licences               l,
+                               marfissci.licence_participants   lp,
+                               marfissci.licence_areas          la,
+                               marfissci.areas                  a,
+                               marfissci.licence_vessels        lv,
+                               marfissci.communities            c
+                               WHERE
+                               l.licence_id = lp.licence_id
+                               AND l.licence_id = la.licence_id
+                               AND l.licence_id = lv.licence_id (+)
+                               AND lv.vr_number = v.vr_number (+)
+                               AND la.area_id = a.area_id
+                               AND lp.fin = p.fin
+                               AND p.community_code = c.community_code
+                               AND l.species_code = 700
+                               AND SYSDATE BETWEEN lp.start_date AND lp.end_date
+                               AND SYSDATE BETWEEN la.start_date AND la.end_date
+                               AND SYSDATE BETWEEN lv.start_date (+) AND lv.end_date (+) ")
+        licences=subset(licences, LFA %in% c("33","34","32","31B","35","27","36","38","31A","29","28","30","41"))
+        save( licences, file=file.path( fnODBC, "licences.rdata"), compress=T)
+        gc()  # garbage collection
+        #odbcClose(con)
+        return(licences)
+      }
+      load(file.path( fnODBC, "licences.rdata"), .GlobalEnv)
+    }
+    
+    
+    }
 
