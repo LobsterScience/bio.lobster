@@ -1,6 +1,6 @@
 #' @export
 #' 
-RV_sets <- function(){
+RV_sets <- function(length_group=5, aggregate=T, by_sex=F){
   
   o = groundfish.db('gs_trawl_conversions')
   set = o$gsinf
@@ -32,10 +32,11 @@ RV_sets <- function(){
   
   deL$Juv = ifelse(deL$flen<=60,deL$clen,0)
   
-  sc1=seq(13,253,by=5)
+  sc1=seq(13,253,by=length_group)
   deL$SZ = sc1[cut(deL$flen,sc1,right=FALSE,labels=F)]
   
-  deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt)~UID+SZ,data=deL,FUN=sum)
+  if(!by_sex) deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt)~UID+SZ,data=deL,FUN=sum)
+  if(by_sex) deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt)~UID+SZ+fsex,data=deL,FUN=sum)
   caL$UID = paste(caL$mission, caL$setno, caL$size_class,sep="-")
   deL1 = merge(deL1, caL[,c('UID','sampwgt','totwgt','totno')],all.x=T)
   
@@ -48,10 +49,18 @@ RV_sets <- function(){
   deL1$Legal_wt = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Legal_wt, deL1$Legal_wt * (deL1$totwgt/deL1$sampwgt))
   deL1$Recruit = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Recruit, deL1$Recruit * (deL1$totwgt/deL1$sampwgt))
   deL1$Recruit_wt = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Recruit_wt, deL1$Recruit_wt * (deL1$totwgt/deL1$sampwgt))
-  
   d1 = as.data.frame(do.call(rbind,strsplit(deL1$UID,"-")))
   deL1 = cbind(deL1, d1)
   deL1 = rename.df(deL1, c('V1','V2','V3'),c('mission','setno','scla'))
+  if(!aggregate){
+    print('This only returns observations, not Zeros')
+    com = merge(deL1,set[,c('mission','setno','X','Y','dist','WingSpread','gear','sdate','bottom_temperature')])
+    com$YEAR = lubridate::year(com$sdate)
+    io = which(com$YEAR>1998)
+    com[io,] = na.zero(com[io,])
+    com$UID = NULL
+    return(com)
+    }
   deL2 = aggregate(cbind(clen,wts,Legal,Legal_wt,Berried,Recruit,Juv,Recruit_wt)~mission+setno+SZ,data=deL1,FUN=sum)
   deL2$UID = paste(deL2$mission, deL2$setno, sep="_")
   deL3 = aggregate(cbind(clen,wts,Legal,Legal_wt,Berried,Recruit,Juv,Recruit_wt)~mission+setno+UID,data=deL2,FUN=sum)
@@ -120,9 +129,12 @@ RV_sets <- function(){
     o = which(com$LONGITUDE>0)
     com$LONGITUDE[o] = com$LONGITUDE[o]*-1
   }
+  
+  p_cols <- paste0("P.", 13:223)
+  
   com <- com %>%
    rowwise() %>%
-    mutate(across(c(Lobster, WEIGHT_KG,Legal,Legal_wt,Berried,Recruit,Recruit_wt,Juv,P.13:P.223, P.13:P.223), ~ .x * OFFSET))
+    mutate(across(c(Lobster, WEIGHT_KG,Legal,Legal_wt,Berried,Recruit,Recruit_wt,Juv,any_of(p_cols)), ~ .x * OFFSET))
   
   print('this is n or wt, accounting for trawl corrections but is not the numbers per km2')
   return(com)

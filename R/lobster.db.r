@@ -189,6 +189,42 @@ if(DS %in% c('licence_ages','licence_ages.redo')){
     
 }
 
+if(DS %in% c('licence_types','licence_types.redo')){
+  fn = 'licence_types.rdata'
+  if(grepl('redo',DS)) {
+      vsO = connect.command(con,"select 
+                distinct la.area_id,
+                a.area,
+                lh.licence_id,
+                lh.licence_type_id,
+                lt.desc_eng licence_type,
+                lh.LICENCE_SUBTYPE_ID,
+                ls.DESC_ENG licence_sub_type,
+                lh.START_DATE_TIME lhstartdate,
+                lh.END_DATE_TIME lhenddate,
+                la.START_DATE lastartdate,
+                la.END_DATE laenddate
+                from
+                marfis.V_LICENCE_HISTORY lh,
+                marfissci.LICENCE_SUBTYPES ls,
+                marfissci.licence_areas la,
+                marfissci.licence_types lt,
+                marfissci.areas a
+                where
+                a.area_id = la.area_id and
+                la.licence_id = lh.licence_id and
+                lh.LICENCE_SUBTYPE_ID = ls.LICENCE_SUBTYPE_ID and
+                lh.LICENCE_TYPE_ID = lt.LICENCE_TYPE_ID
+                and lh.species_code in (700,923)
+                and sector_id = 7"
+                      )
+     save(vsO,file=file.path(fnODBC,fn))
+    }
+  
+ load(file.path(fnODBC,fn)) 
+  return(vsO)
+}
+    
 
 if(DS %in% c('inflation')){
 
@@ -686,6 +722,7 @@ if(DS %in% c('process_slips', 'process_slips.redo')){
     vsO = subset(sllllll,!is.na(PRICE))
     
     sl = vsC[[2]] #this is rolled up to monthly slips so is the best we can do
+    
     sl$DYR = lubridate::decimal_date(as.Date(sl$Date)) - lubridate::year(as.Date(sl$Date))
     sl$WYR = ceiling(sl$DYR*52)
     sl$DWYR = lubridate::year(as.Date(sl$Date)) + sl$WYR/52
@@ -735,7 +772,6 @@ if(DS %in% c('process_slips', 'process_slips.redo')){
     
     tt = subset(tt,LFA %ni% '31_32')
     tt = subset(tt,SYEAR %ni% c(1997,1974,1975))
-    
     ta = aggregate(WT_LBS/2.20462/1000~LFA+SYEAR,data=tt,FUN=sum)
     names(ta)[3]='T'
     db.setup(un=oracle.lobster.user,pw=oracle.lobster.password)
@@ -1165,7 +1201,7 @@ if (DS %in% c("logs.redo", "logs") ) {
               logs = subset(logs,lubridate::year(DATE_FISHED) %ni% yrs )
               slips = subset(slips,lubridate::year(DATE_LANDED) %ni% yrs )
            
-              logss = connect.command(con, paste("select * from marfissci.lobster_sd_log_all where to_char(date_fished,'yyyy') IN (",paste(yrs,collapse=','),")",sep=""))
+              logss = connect.command(con, paste("select * from marfissci.lobster_sd_log_all_filtered where to_char(date_fished,'yyyy') IN (",paste(yrs,collapse=','),")",sep=""))
               logs = as.data.frame(rbind(logs,logss))
               save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
              
