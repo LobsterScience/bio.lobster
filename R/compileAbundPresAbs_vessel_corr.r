@@ -298,7 +298,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
           #  trapSize = readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesSize.rds')) 
             
             #RV Survey  ###covertt back to raw #s
-            rv = RV_sets()
+            rv = RV_sets(length_group = 5)
             rv$TEMP = rv$bottom_temperature
             rv = subset(rv,YEAR>1998)
             rv$id = paste(rv$mission,rv$setno,sep='_')
@@ -309,7 +309,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
                   select(id,Lobster, Legal, Legal_wt,Berried, Recruit, Recruit_wt, Juv,YEAR,DATE,EMPTY,starts_with("P."), LONGITUDE, LATITUDE, SOURCE, OFFSET, OFFSET_METRIC,Gear )
             
             #NEFSC Surveys
-            ne = NEFSC_sets()
+            ne = NEFSC_sets(length.group=1)
             ne$id = paste(ne$MISSION,ne$SETNO,sep="_")
             ne$OFFSET = ne$OFFSET*1e6
             ne$OFFSET_METRIC="TowedDist x wing spread m2"

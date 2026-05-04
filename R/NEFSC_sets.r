@@ -1,12 +1,12 @@
 #' @export
 
-NEFSC_sets <- function(){
+NEFSC_sets <- function(length.group=5){
   
   set =  nefsc.db(DS='usinf.clean')
   cas =  nefsc.db(DS='uscat.clean')
   de =   nefsc.db(DS='usdet.clean')
   
-  sc1=seq(13,253,by=5)
+  sc1=seq(13,253,by=length.group)
   de$SZ = sc1[cut(de$FLEN,sc1,labels=F)]
   de$Berried = ifelse(de$FSEX==3,de$CLEN,0)
   de$Legal = ifelse(de$FSEX<3 & de$FLEN>82,de$CLEN,0)

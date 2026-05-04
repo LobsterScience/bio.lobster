@@ -21,8 +21,6 @@ ab = bio.utilities::rename.df(ab,'CARLENGTH','Length')
 gr = readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','GridPolysSF.rds'))
 gr = st_make_valid(gr)
 abs = st_as_sf(subset(ab,!is.na(LONGITUDE)),coords=c('LONGITUDE','LATITUDE'),crs=4326)
-
-
 Fish.Date = lobster.db('season.dates')
 Fish.Date = backFillSeasonDates(Fish.Date,eyr=year(Sys.time()))
 lfa  =  sort(unique(Fish.Date$LFA))
@@ -71,16 +69,29 @@ gr <- gr %>%
   slice_max(order_by = area, n = 1, with_ties = FALSE) %>%
   ungroup() %>%
   select(-area)
-gr41$LFA = as.character(gr41$LFA)
-gr41 = subset(gr41,GRID_NO %in% u4 & GRID_NO %ni% c(860,1199))
 
+a4 = lobster.db('process.logs41')
+a4 = subset(a4,!is.na(ID) & yr>2005 & yr<2026)
+a4$SYEAR = a4$yr
+a4$DATE_FISHED = a4$FV_FISHED_DATETIME
+a4$DOY = lubridate::yday(a4$FV_FISHED_DATETIME)
+a4$WEIGHT_KG = a4$ADJCATCH_KG
+u4 = unique(a4$ID)
+
+
+gr41$LFA = as.character(gr41$LFA)
+gr41 = subset(gr41,ID %in% u4 )
+grv = st_centroid(gr41)
+grv$X = st_coordinates(grv)[,1]
+grv = subset(grv,X< -62)
+gr41 = subset(gr41,ID %in% grv$ID)
 gall = gtot = bind_rows(gr,gr41)
 gtot$centroid = st_centroid(gtot)
 cen_coords = st_coordinates(gtot$centroid)
 gtot$X = cen_coords[,1] 
 gtot$Y = cen_coords[,2] 
 gtot = st_as_sf(gtot)
-abss
+
 
 gab = st_join(abss,subset(gtot,select=c(LFA,GRID_NO,X,Y)))
 gab = subset(gab,!is.na(CONDITION))

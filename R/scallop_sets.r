@@ -1,6 +1,6 @@
 #' @export
 
-scallop_sets <- function(){
+scallop_sets <- function(length.group=5){
   a = lobster.db('scallop')
   scallop.tows=a[[1]]
   scallopSurv = a[[2]]
@@ -12,7 +12,7 @@ scallop_sets <- function(){
   scC = subset(scallopSurv,select=c("TOW_SEQ",  "ABUNDANCE_RAW","MEAS_VAL", "SEX_ID") )
   ms = sum(scC$MEAS_VAL*scC$ABUNDANCE_RAW,na.rm=T) / sum(scC$ABUNDANCE_RAW,na.rm=T)
   scC$MEAS_VAL = ifelse(scC$ABUNDANCE_RAW>0 & is.na(scC$MEAS_VAL),ms,scC$MEAS_VAL)
-  sc1=seq(13,253,by=5)
+  sc1=seq(13,253,by=length.group)
   scC$SZ = sc1[cut(scC$MEAS_VAL,sc1,right=FALSE,labels=F)]
   scC$Berried = ifelse(scC$SEX_ID==3,scC$ABUNDANCE_RAW,0)
   scC$Legal = ifelse(scC$MEAS_VAL>82,scC$ABUNDANCE_RAW,0)
