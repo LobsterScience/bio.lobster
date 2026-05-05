@@ -1,0 +1,303 @@
+---
+title: "ELOG Data Report"
+author: "Lobster Ecology and Assessment Team"
+date: "`r Sys.Date()`"
+output: html_document
+params:
+  data.pull: "logs.redo"
+  redo.years: 2026
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, echo = F)
+library(bio.lobster)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(sf)
+library(readxl)
+library(knitr)
+```
+
+
+```{r}
+p = list()
+p$yrs = params$redo.years
+if(params$data.pull == "logs.redo"){
+  lobster.db(params$data.pull, pH = p)
+}
+if(params$data.pull == "logs"){
+ lobster.db(params$data.pull) 
+}
+d <- lobster.db('season.dates.redo') 
+f <- lobster.db('licence_types.redo')
+
+```
+
+
+```{r}
+#### general elog prep
+elog <- logs %>% filter(SRC  %in%  "ELOG")
+elog$YEAR = year(elog$DATE_FISHED)
+elog$GRID_NUM = factor(elog$GRID_NUM) #amc these are in wide form GRID_NUM, GRID_NUM_B, GRID_NUM_C your code will need to be adjusted to reflect that
+elog$log.id = paste(elog$LICENCE_ID, elog$DATE_FISHED, elog$WEIGHT_LBS)
+dups <- elog %>% group_by(log.id) %>% filter(n()>1) %>% ungroup() %>% arrange(log.id)
+elog <- elog %>% distinct(log.id, .keep_all = TRUE) ## remove the duplictaes 
+
+```
+
+# Spatial Overview
+
+```{r}
+## Spatial files
+lfapolys <- readRDS(paste0(system.file("data", package = "at.sea.lobster"), "/LFAPolysSF.rds")) # can we update to use bio.lobster.data/mapping_data/ .... I would like this to be the default locations for these types of files so we dont have so many copies
+gridpolys <- readRDS(paste0(system.file("data", package = "at.sea.lobster"), "/GridPolysSF.rds")) # same as above
+grid.geoms <- gridpolys %>% rename("GRID_NUM" = GRID_NO) %>% dplyr::select(geometry, GRID_NUM)
+grid.geoms <- as.data.frame(grid.geoms)
+
+counts <- elog %>%
+  group_by(GRID_NUM, YEAR) %>%   # add other vars here if needed
+  summarise(n = n(), .groups = "drop")
+
+log.grid <- left_join(counts, grid.geoms)
+log.grid <- sf::st_as_sf(log.grid)## need to recover sf class after joining
+
+
+
+### Product 1
+p1 <- ggplot() +
+  geom_sf(data = gridpolys, fill = "grey90")+
+  geom_sf(data = log.grid, aes(fill = n)) +
+  #geom_sf(data = lfapolys, fill = NA, color = "black") +
+  scale_fill_viridis_c(na.value = "grey90") +
+  facet_wrap(~ YEAR) +
+  theme_minimal()+
+  ggtitle("Total Number of ELog Reports by Grid")
+p1
+```
+
+```{r}
+####################################################################### Error Checking
+## Missing LFA and GRid
+elog <- elog %>% mutate(na.lfa = ifelse(is.na(LFA), "missing", "good")) ## missing LFA records
+elog <- elog %>% mutate(na.grid = ifelse(is.na(GRID_NUM), "missing", "good")) ## missing grid records
+## License Ids Not Found
+lic=lobster.db("current.licences.redo")
+lic <- lic %>% dplyr::select(LICENCE_ID, LFA, SURNAME)
+lic <- lic %>% rename("LFA_ref" = LFA)
+elog <- elog %>% mutate(miss.lic = ifelse(LICENCE_ID %in% lic$LICENCE_ID, "found", "missing")) ## are any licenses not found in the master list?
+## missmatch between LFA and License
+elog <- left_join(elog, lic)
+elog <- elog %>% mutate(bad.lfa = ifelse(!is.na(LFA) & !LFA == LFA_ref, "bad", "good"))
+## Mismatch between LFA and GRID
+grids <- gridpolys %>% dplyr::select(GRID_NO, LFA) %>% st_drop_geometry()
+grids <- grids %>% mutate(LFA = case_when(
+  LFA == "311" ~ "31A",
+  LFA == "312" ~ "31B",
+  TRUE ~ LFA
+))
+grids <- grids %>% rename("GRID_NUM" = GRID_NO)
+grids <- grids %>% group_by(GRID_NUM) %>% summarise(lfa.options = list(unique(LFA)), .groups = "drop") ## get available LFAs that each grid could fall within
+elog <- left_join(elog, grids)
+elog <- elog %>% rowwise() %>% mutate(bad.grid = ifelse(!is.na(LFA) & !is.na(GRID_NUM) & !LFA %in% lfa.options, "bad", "good")) %>% ungroup()
+
+## Erroneuous number of traps and WEight
+elog <- elog %>% mutate(trap.lim = case_when(
+  LFA == "27"~ 275,
+  LFA %in% c("28","29","30","31A","31B","32","33")~ 250,
+  LFA == "34" ~ 400, #this is by date as well, 375 till april then 400 post april
+  LFA %in% c("35","36") ~ 300,
+  LFA == "38" ~ 375,
+  TRUE ~ NA
+))
+
+#amc merge elogs with licence types AI tells me data.table is the best thing to use for this, esp if we are looking at big data (ie mucho elogs)
+library(data.table)
+
+# Convert to data.table
+setDT(f)
+setDT(elog)
+
+f[, `:=`(
+  LHSTARTDATE = as.POSIXct(LHSTARTDATE),
+  LHENDDATE   = as.POSIXct(LHENDDATE),
+  LASTARTDATE = as.POSIXct(LASTARTDATE),
+  LAENDDATE   = as.POSIXct(LAENDDATE)
+)]
+
+elog[, DATE_FISHED := as.POSIXct(DATE_FISHED)]
+
+setkey(f, LICENCE_ID, LHSTARTDATE, LHENDDATE, LASTARTDATE, LAENDDATE)
+merged <- f[
+  elog,
+  on = .(
+    LICENCE_ID,
+    LHSTARTDATE <= DATE_FISHED,
+    LHENDDATE   >= DATE_FISHED,
+    LASTARTDATE <= DATE_FISHED,
+    LAENDDATE   >= DATE_FISHED
+  )
+]
+elog = subset(as.data.frame(merged),select=c(-LICENCE_SUBTYPE_ID,-LICENCE_TYPE_ID,-LHSTARTDATE,-LHENDDATE,-LASTARTDATE,-LAENDDATE))
+##note there are NAs in the LICENCE_TYPE column for the merged elog from above line, this is because licence_id is likely incorrect. .... this will need to be flagged as an error as well
+###as above this will need to be applied to each column if more than one grid is reported 
+
+elog <- elog %>%
+  mutate(
+    trap_multiplier = case_when(
+      LICENCE_TYPE == "VESSEL BASED LIMITED" &
+        LICENCE_SUB_TYPE %in% c("STACKED", "PARTNERSHIP") ~ 1.5,
+
+      LICENCE_TYPE == "CC VESSEL BASED LIMITED" &
+        LICENCE_SUB_TYPE %in% c("STACKED", "PARTNERSHIP") ~ 2,
+
+      TRUE ~ 1
+    ),
+    adj_trap.lim = trap.lim * trap_multiplier
+  )
+
+elog$trap.lim = elog$trap.lim*2 ### allow for stacking parnterships and commercial communal (1.5 and 2 X)
+elog<- elog %>% mutate(il.trap = ifelse(NUM_OF_TRAPS > trap.lim, "illegal", "good"))
+elog <- elog %>% mutate(bad.weight = ifelse(WEIGHT_LBS > 5000, "bad", "good"))
+
+```
+# Week of Season Overview
+```{r}
+########################################################## Week of Season Analysis
+#########################################################
+
+weekdat <- elog %>% dplyr::select(LFA, YEAR, LICENCE_ID, DATE_FISHED, WEIGHT_LBS,
+                                  na.lfa, na.grid, bad.lfa, bad.grid, miss.lic, il.trap, bad.weight, log.id)
+weekdat <- weekdat %>% mutate(DATE_FISHED = as.Date(substr(DATE_FISHED, 1, 10))) ## remove useless time
+
+## deal with split seasons / seasons that cross years, cause sdate names season year by the year it runs into
+weekdat <- weekdat %>%
+  mutate(SYEAR = case_when(
+    LFA == "33" & month(DATE_FISHED) > 9 ~ year(DATE_FISHED) + 1,
+    LFA == "33" & month(DATE_FISHED) < 9 ~ year(DATE_FISHED),
+    LFA == "34" & month(DATE_FISHED) > 9 ~ year(DATE_FISHED) + 1,
+    LFA == "34" & month(DATE_FISHED) < 9 ~ year(DATE_FISHED),
+    LFA == "35" & month(DATE_FISHED) > 9 ~ year(DATE_FISHED) + 1,
+    LFA == "35" & month(DATE_FISHED) < 9 ~ year(DATE_FISHED),
+    LFA == "36" & month(DATE_FISHED) > 9 ~ year(DATE_FISHED) + 1,
+    LFA == "36" & month(DATE_FISHED) < 9 ~ year(DATE_FISHED),
+    LFA == "38" & month(DATE_FISHED) > 9 ~ year(DATE_FISHED) + 1,
+    LFA == "38" & month(DATE_FISHED) < 9 ~ year(DATE_FISHED),
+    TRUE ~ year(DATE_FISHED)
+  ))
+
+
+sdate <- d %>% dplyr::select(SYEAR, LFA, START_DATE)
+sdate <- sdate %>% arrange(LFA, SYEAR ,as.Date(START_DATE))
+sd <- sdate %>% group_by(LFA, SYEAR) %>% summarise(s1 = first(START_DATE), s2 = last(START_DATE))
+
+## manually add any missing season start dates.
+#  s31A <- "2026-04-17"
+#  s31B <- "2026-04-09"
+#  s32 <- "2026-04-09"
+# # s33 <- "2025-11-24"
+# # s34 <- "2025-11-24"
+# # s35a <- "2025-10-14"
+# # s35b <- "2026-02-28"
+# # s36a <- "2025-11-11"
+# # s36b <- "2026-03-31"
+# # s38 <- "2025-11-11"
+# LFA <- c("31A","31B","32")
+#  s1 <- c(s31A,s31B,s32)
+#  s2 <- c(s31A,s31B,s32)
+# miss <- as.data.frame(cbind(LFA,s1,s2))
+# miss$SYEAR = 2026
+# miss <- miss %>% dplyr::select(colnames(sd))
+#  miss$s1 = as.Date(miss$s1)
+#  miss$s2 = as.Date(miss$s2)
+#  sd <- rbind(sd, miss) 
+
+weekdat <- left_join(weekdat, sd)
+weekdat$SYEAR = factor(weekdat$SYEAR)
+weekdat <- weekdat %>% arrange(LFA, LICENCE_ID, DATE_FISHED)
+## how long after start was date fished
+weekdat <- weekdat %>% mutate(date.diff = ifelse(DATE_FISHED < s2, difftime(DATE_FISHED, s1, units = "weeks"),
+                                         difftime(DATE_FISHED, s2, units = "weeks")))
+weekdat <- weekdat %>% mutate(WEEK = ceiling(date.diff)) ## week of season as a factor
+
+## add. error check: REcords that fall before the season start
+weekdat <- weekdat %>% mutate(pre.season = ifelse(date.diff<0, "pre.season", "good"))
+
+
+### product 2
+p2 <- ggplot(weekdat, aes(x = date.diff, fill = SYEAR)) +
+  geom_histogram(position = "dodge", bins = 30) +
+  facet_wrap(~ LFA) +
+  xlab("Weeks Since Season Start") +
+  ylab("Logs")
+
+wdlic <- weekdat %>% group_by(SYEAR, WEEK) %>% summarise(LICENCES_REPORTING = length(unique(LICENCE_ID)))
+p2
+wdlic <- weekdat %>% group_by(LFA,SYEAR, WEEK) %>% summarise(LICENCES_REPORTING = length(unique(LICENCE_ID)))
+p3 <- ggplot(wdlic, aes(x = WEEK, y = LICENCES_REPORTING, fill = SYEAR)) +
+  geom_col(position = "dodge")+
+  facet_wrap(~ LFA) +
+  xlab("Weeks Since Season Start") +
+  ylab("Licences Reporting")
+p3
+```
+
+```{r}
+
+########################################################################### Summary tables
+
+
+## General data summary
+yrly.logs <- elog %>% group_by(YEAR) %>% summarise(TOTAL_LOGS = n())
+dups <- dups %>% group_by(YEAR) %>% summarise(DUPLICATE_LOGS = n())
+yrl.wt <-  elog %>% group_by(YEAR) %>% summarise(AVERAGE_TRIP_WEIGHT = mean(WEIGHT_LBS))
+lfa.na <- elog %>% filter(na.lfa %in% "missing") %>% group_by(YEAR) %>% summarise(MISSING_LFA= n())
+grid.na <- elog %>% filter(na.grid %in% "missing") %>% group_by(YEAR) %>% summarise(MISSING_GRID = n())
+miss.lic.ref <- elog %>% filter(miss.lic %in% "missing") %>% group_by(YEAR) %>% summarise(UNKNOWN_LICENSE_NUM = n())
+bad.lfa <- elog %>% filter(bad.lfa %in% "bad") %>% group_by(YEAR) %>% summarise(LFA_LICENSE_MISMATCH = n())
+bad.grid <- elog %>% filter(bad.grid %in% "bad") %>% group_by(YEAR) %>% summarise(GRID_LFA_MISMATCH= n())
+il.trap <- elog %>% filter(il.trap %in% "illegal") %>% group_by(YEAR) %>% summarise(ILLEGAL_TRAP_NUM = n())
+bad.weight <- elog %>% filter(bad.weight %in% "bad") %>% group_by(YEAR) %>% summarise(WEIGHT_OVER_5k_LBS = n())
+pre.season <- weekdat %>% filter(pre.season %in% "pre.season") %>% group_by(YEAR) %>% summarise(BEFORE_SEASON_START = n())
+
+er <- as.data.frame(unique(elog$YEAR))
+colnames(er) = "YEAR"
+er <- left_join(er, yrly.logs)
+er <- left_join(er, dups)
+er <- left_join(er, yrl.wt)
+er <- left_join(er, lfa.na)
+er <- left_join(er, grid.na)
+er <- left_join(er, miss.lic.ref)
+er <- left_join(er, bad.lfa)
+er <- left_join(er,bad.grid)
+er <- left_join(er, pre.season)
+er <- left_join(er, il.trap)
+er <- left_join(er, bad.weight)
+er[is.na(er)] <- 0
+##################################### WEEK of Season summary table
+w.tab <- weekdat %>% filter(WEEK> 0)
+w.tab$WEEK = factor(w.tab$WEEK)   # reset factor levels > 0 
+w.tab <- w.tab %>% arrange(LFA,SYEAR, WEEK) %>% filter(!is.na(LFA), !is.na(WEEK))
+## add aditional error columns
+w.tab <- w.tab %>% group_by(LFA,SYEAR,WEEK, LICENCE_ID) %>% summarise(TOTAL_LOGS = n(), DAYS.FISHED = length(unique(DATE_FISHED)), WEEK.WEIGHT = sum(WEIGHT_LBS),
+                                                                      LFA_LICENCE_MISMATCH = sum(bad.lfa == "bad", na.rm = TRUE), 
+                                                                      GRID_LFA_MISMATCH = sum(bad.grid == "bad", na.rm = TRUE),
+                                                                      ILLEGAL_TRAP_NUM = sum(il.trap == "illegal", na.rm = TRUE),
+                                                                      WEIGHT_OVER_5k_LBS = sum(bad.weight == "bad", na.rm = TRUE))
+w.tab <- w.tab %>% group_by(LFA,SYEAR, WEEK) %>% summarise(TOTAL_LOGS = sum(TOTAL_LOGS), LICENCES_REPORTING = length(unique(LICENCE_ID)),AVG.DAYS.FISHED = mean(DAYS.FISHED), 
+                                                           AVG.WEIGHT.LBS = mean(WEEK.WEIGHT), LFA_LICENCE_MISMATCH = sum(LFA_LICENCE_MISMATCH),
+                                                           GRID_LFA_MISMATCH = sum(GRID_LFA_MISMATCH), ILLEGAL_TRAP_NUM = sum(ILLEGAL_TRAP_NUM),
+                                                           WEIGHT_OVER_5k_LBS = sum(WEIGHT_OVER_5k_LBS))
+
+```
+# General Data Summary
+```{r}
+knitr::kable(er)
+```
+# LFA and Week of Season Summary
+```{r}
+knitr::kable(w.tab)
+```
+

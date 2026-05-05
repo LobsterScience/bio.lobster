@@ -14,6 +14,7 @@ ggLobsterMap(
   attrData = NULL,
   attrColumn = "Z",
   addGrids = FALSE,
+  addGridsDepthPruned = FALSE,
   addNAFO = FALSE,
   nafo = "4X",
   bathy = TRUE,
@@ -31,6 +32,7 @@ ggLobsterMap(
   layerDir = file.path(bio.directory, "bio.lobster.data", "mapping_data"),
   LFA_label_size = 4,
   grid_label_size = 3,
+  grid_label_colour = "grey",
   show37label = FALSE,
   colourLFA = NULL,
   ...
