@@ -6,6 +6,7 @@ output: html_document
 params:
   data.pull: "logs.redo"
   redo.years: 2026
+  data.output: "C:/Users/ELEMENTG/OneDrive - DFO-MPO/ELOGS assessment"
 ---
 
 
@@ -41,10 +42,22 @@ f <- lobster.db('licence_types.redo')
 #### general elog prep
 elog <- logs %>% filter(SRC  %in%  "ELOG")
 elog$YEAR = year(elog$DATE_FISHED)
-elog$GRID_NUM = factor(elog$GRID_NUM) #amc these are in wide form GRID_NUM, GRID_NUM_B, GRID_NUM_C your code will need to be adjusted to reflect that
-elog$log.id = paste(elog$LICENCE_ID, elog$DATE_FISHED, elog$WEIGHT_LBS)
-dups <- elog %>% group_by(log.id) %>% filter(n()>1) %>% ungroup() %>% arrange(log.id)
-elog <- elog %>% distinct(log.id, .keep_all = TRUE) ## remove the duplictaes 
+elog$log.id = paste(elog$LICENCE_ID, elog$DATE_FISHED, elog$WEIGHT_LBS) ## catch and remove duplicate logs
+dups <- elog %>% group_by(log.id) %>% filter(n()>1) %>% ungroup() %>% arrange(log.id) ## save duplicates for later error reporting
+elog <- elog %>% distinct(log.id, .keep_all = TRUE)
+elog <- elog %>% dplyr::select(-CUNNER_WEIGHT_GRID_A,-CUNNER_WEIGHT_GRID_B,-CUNNER_WEIGHT_GRID_C, 
+                               -JONAH_CRAB_WEIGHT_GRID_A, -JONAH_CRAB_WEIGHT_GRID_B, -JONAH_CRAB_WEIGHT_GRID_C,
+                               -GREEN_CRAB_WEIGHT_GRID_A, -GREEN_CRAB_WEIGHT_GRID_B, -GREEN_CRAB_WEIGHT_GRID_C,
+                               -SCULPIN_WEIGHT_GRID_A, -SCULPIN_WEIGHT_GRID_B, -SCULPIN_WEIGHT_GRID_C,
+                               -ROCK_CRAB_WEIGHT_GRID_A, -ROCK_CRAB_WEIGHT_GRID_B, -ROCK_CRAB_WEIGHT_GRID_C)  ## can bring any of these back in if we want to look at them
+
+elog <- elog %>% tidyr::pivot_longer(cols = c(GRID_NUM, GRID_NUM_B, GRID_NUM_C,
+             WEIGHT_LBS, WEIGHT_LBS_B, WEIGHT_LBS_C, NUM_OF_TRAPS, NUM_OF_TRAPS_B, NUM_OF_TRAPS_C),
+    names_to = c(".value", "set"),
+    names_pattern = "(.*?)(_B|_C)?$")
+elog <- elog %>% mutate(set = ifelse(set %in% "", "A", gsub("_", "", set)))
+elog <- elog %>% filter(!(set == "B" & is.na(GRID_NUM)), !(set == "C" & is.na(GRID_NUM)))
+elog$GRID_NUM = factor(elog$GRID_NUM)
 
 ```
 
@@ -52,8 +65,8 @@ elog <- elog %>% distinct(log.id, .keep_all = TRUE) ## remove the duplictaes
 
 ```{r}
 ## Spatial files
-lfapolys <- readRDS(paste0(system.file("data", package = "at.sea.lobster"), "/LFAPolysSF.rds")) # can we update to use bio.lobster.data/mapping_data/ .... I would like this to be the default locations for these types of files so we dont have so many copies
-gridpolys <- readRDS(paste0(system.file("data", package = "at.sea.lobster"), "/GridPolysSF.rds")) # same as above
+lfapolys <- readRDS("R:/Science/Population Ecology Division/Shared/!PED_Unit17_Lobster/Lobster Unit Shared/Data & Code Files/bio.data/bio.lobster/data/maps/LFAPolysSF.rds")
+gridpolys <- readRDS( "R:/Science/Population Ecology Division/Shared/!PED_Unit17_Lobster/Lobster Unit Shared/Data & Code Files/bio.data/bio.lobster/data/maps/GridPolysSF.rds")
 grid.geoms <- gridpolys %>% rename("GRID_NUM" = GRID_NO) %>% dplyr::select(geometry, GRID_NUM)
 grid.geoms <- as.data.frame(grid.geoms)
 
@@ -127,53 +140,51 @@ f[, `:=`(
   LAENDDATE   = as.POSIXct(LAENDDATE)
 )]
 
-elog[, DATE_FISHED := as.POSIXct(DATE_FISHED)]
+elog[, DATE_FISHED.ref := as.POSIXct(DATE_FISHED)]
 
 setkey(f, LICENCE_ID, LHSTARTDATE, LHENDDATE, LASTARTDATE, LAENDDATE)
 merged <- f[
   elog,
   on = .(
     LICENCE_ID,
-    LHSTARTDATE <= DATE_FISHED,
-    LHENDDATE   >= DATE_FISHED,
-    LASTARTDATE <= DATE_FISHED,
-    LAENDDATE   >= DATE_FISHED
+    LHSTARTDATE <= DATE_FISHED.ref,
+    LHENDDATE   >= DATE_FISHED.ref,
+    LASTARTDATE <= DATE_FISHED.ref,
+    LAENDDATE   >= DATE_FISHED.ref
   )
 ]
 elog = subset(as.data.frame(merged),select=c(-LICENCE_SUBTYPE_ID,-LICENCE_TYPE_ID,-LHSTARTDATE,-LHENDDATE,-LASTARTDATE,-LAENDDATE))
-##note there are NAs in the LICENCE_TYPE column for the merged elog from above line, this is because licence_id is likely incorrect. .... this will need to be flagged as an error as well
-###as above this will need to be applied to each column if more than one grid is reported 
+### last checked, the licenses not assigned LICENCE_TYPE by the merge are the same 3 that weren't found in current.licenses.redo
 
 elog <- elog %>%
   mutate(
     trap_multiplier = case_when(
       LICENCE_TYPE == "VESSEL BASED LIMITED" &
-        LICENCE_SUB_TYPE %in% c("STACKED", "PARTNERSHIP") ~ 1.5,
+        grepl("STACKED|PARTNERSHIP", LICENCE_SUB_TYPE, ignore.case = TRUE) ~ 1.5,
 
       LICENCE_TYPE == "CC VESSEL BASED LIMITED" &
-        LICENCE_SUB_TYPE %in% c("STACKED", "PARTNERSHIP") ~ 2,
+        grepl("STACKED|PARTNERSHIP", LICENCE_SUB_TYPE, ignore.case = TRUE) ~ 2,
 
       TRUE ~ 1
     ),
     adj_trap.lim = trap.lim * trap_multiplier
   )
 
-elog$trap.lim = elog$trap.lim*2 ### allow for stacking parnterships and commercial communal (1.5 and 2 X)
-elog<- elog %>% mutate(il.trap = ifelse(NUM_OF_TRAPS > trap.lim, "illegal", "good"))
+elog<- elog %>% mutate(il.trap = ifelse(NUM_OF_TRAPS > adj_trap.lim, "illegal", "good"))
 elog <- elog %>% mutate(bad.weight = ifelse(WEIGHT_LBS > 5000, "bad", "good"))
-
 ```
 # Week of Season Overview
 ```{r}
 ########################################################## Week of Season Analysis
 #########################################################
 
-weekdat <- elog %>% dplyr::select(LFA, YEAR, LICENCE_ID, DATE_FISHED, WEIGHT_LBS,
-                                  na.lfa, na.grid, bad.lfa, bad.grid, miss.lic, il.trap, bad.weight, log.id)
-weekdat <- weekdat %>% mutate(DATE_FISHED = as.Date(substr(DATE_FISHED, 1, 10))) ## remove useless time
+# weekdat <- elog %>% dplyr::select(LFA, YEAR, LICENCE_ID, DATE_FISHED, WEIGHT_LBS,
+#                                   na.lfa, na.grid, bad.lfa, bad.grid, miss.lic, il.trap, bad.weight, log.id)
+
+elog.s <- elog %>% mutate(DATE_FISHED = as.Date(substr(DATE_FISHED, 1, 10))) ## remove useless time
 
 ## deal with split seasons / seasons that cross years, cause sdate names season year by the year it runs into
-weekdat <- weekdat %>%
+elog.s <- elog.s %>%
   mutate(SYEAR = case_when(
     LFA == "33" & month(DATE_FISHED) > 9 ~ year(DATE_FISHED) + 1,
     LFA == "33" & month(DATE_FISHED) < 9 ~ year(DATE_FISHED),
@@ -214,17 +225,49 @@ sd <- sdate %>% group_by(LFA, SYEAR) %>% summarise(s1 = first(START_DATE), s2 = 
 #  miss$s2 = as.Date(miss$s2)
 #  sd <- rbind(sd, miss) 
 
-weekdat <- left_join(weekdat, sd)
-weekdat$SYEAR = factor(weekdat$SYEAR)
-weekdat <- weekdat %>% arrange(LFA, LICENCE_ID, DATE_FISHED)
+elog.s <- left_join(elog.s, sd)
+elog.s$SYEAR = factor(elog.s$SYEAR)
+elog.s <- elog.s %>% arrange(LFA, LICENCE_ID, DATE_FISHED)
 ## how long after start was date fished
-weekdat <- weekdat %>% mutate(date.diff = ifelse(DATE_FISHED < s2, difftime(DATE_FISHED, s1, units = "weeks"),
+elog.s <- elog.s %>% mutate(date.diff = ifelse(DATE_FISHED < s2, difftime(DATE_FISHED, s1, units = "weeks"),
                                          difftime(DATE_FISHED, s2, units = "weeks")))
-weekdat <- weekdat %>% mutate(WEEK = ceiling(date.diff)) ## week of season as a factor
+elog.s <- elog.s %>% mutate(WEEK = ceiling(date.diff)) ## week of season as a factor
 
 ## add. error check: REcords that fall before the season start
-weekdat <- weekdat %>% mutate(pre.season = ifelse(date.diff<0, "pre.season", "good"))
+elog.s <- elog.s %>% mutate(pre.season = ifelse(date.diff<0, "pre.season", "good"))
 
+
+## create raw report of all error rows:
+error.log <- elog.s %>% filter(na.lfa %in% "missing" | na.grid %in% "missing" | miss.lic %in% "missing" | 
+                               bad.lfa %in% "bad" | bad.grid  %in% "bad" | il.trap %in% "illegal" | 
+                               bad.weight %in% "bad" | pre.season %in% "pre.season")
+  
+error.log <- error.log %>%
+  mutate(
+    ISSUE = paste(
+      ifelse(na.lfa == "missing", "Missing LFA", NA),
+      ifelse(na.grid == "missing", "Missing Grid", NA),
+      ifelse(miss.lic == "missing", "Unknown Licence ID", NA),
+      ifelse(bad.lfa == "bad", "Licence / LFA Missmatch", NA),
+      ifelse(bad.grid == "bad", "Grid / LFA Missmatch", NA),
+      ifelse(il.trap == "illegal", "Reported Traps Exceed Licence Limit", NA),
+      ifelse(bad.weight == "bad", "Weight Greater than 5k lbs", NA),
+      ifelse(pre.season == "pre.season", "Dated Before Season Opened", NA),
+      sep = ", "
+    ),
+    ISSUE = gsub("(^, )|(, $)", "", ISSUE),   # clean leading/trailing commas
+    ISSUE = gsub(", NA|NA, |NA", "", ISSUE)   # remove NA artifacts
+  )
+
+error.log <- error.log %>% dplyr::select(-log.id, -AREA_ID, -na.lfa, -na.grid, -miss.lic, -LFA_ref, -bad.lfa, -bad.grid, 
+                                         -trap_multiplier, -il.trap, -bad.weight, -lfa.options, -trap.lim, -SYEAR, -s1, -s2,
+                                         -WEEK, -pre.season, -date.diff)
+error.log <- error.log %>% rename("LICENCE_AREA" = AREA, "trap_limit" = adj_trap.lim)
+
+write.csv(error.log, file.path(params$data.output, "ELOG_Error_Log.csv"), row.names = FALSE)
+
+weekdat <- elog.s %>% dplyr::select(LFA, YEAR, LICENCE_ID, DATE_FISHED, WEIGHT_LBS,
+                              na.lfa, na.grid, bad.lfa, bad.grid, miss.lic, il.trap, bad.weight, log.id, SYEAR, WEEK,date.diff)
 
 ### product 2
 p2 <- ggplot(weekdat, aes(x = date.diff, fill = SYEAR)) +

@@ -2444,15 +2444,8 @@ if(DS %in% c('rv.survey.samples.redo','rv.survey.samples.samples')) {
                                lp.fin,
                                p.surname,
                                p.firstname,
-                               #p.birthdate,
                                p.community_code,
                                c.community_name,
-                              # p.address1,
-                              # p.address2,
-                              # p.address3,
-                              # p.postal_cd,
-                               #p.telephone,
-                              # p.email_address,
                                v.vr_number,
                                v.vessel_name
                                FROM
@@ -2476,6 +2469,14 @@ if(DS %in% c('rv.survey.samples.redo','rv.survey.samples.samples')) {
                                AND SYSDATE BETWEEN lp.start_date AND lp.end_date
                                AND SYSDATE BETWEEN la.start_date AND la.end_date
                                AND SYSDATE BETWEEN lv.start_date (+) AND lv.end_date (+) ")
+        #p.birthdate,
+        # p.address1,
+        # p.address2,
+        # p.address3,
+        # p.postal_cd,
+        #p.telephone,
+        # p.email_address,
+        
         licences=subset(licences, LFA %in% c("33","34","32","31B","35","27","36","38","31A","29","28","30","41"))
         save( licences, file=file.path( fnODBC, "licences.rdata"), compress=T)
         gc()  # garbage collection
