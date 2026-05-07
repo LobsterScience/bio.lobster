@@ -24,17 +24,17 @@ names(sa1)[1] = "YR"
 o = bind_rows(sa,sa1)
  o1 = subset(o,LFA %ni% 'LFA38B')
 
-mo1 = aggregate(Landings~LFA,data=subset(o1,YR %in% 1975:2024),FUN=function(x) c(median(x),quantile(x,c(0.25,0.75))))
+mo1 = aggregate(Landings~LFA,data=subset(o1,YR %in% 1975:2025),FUN=function(x) c(median(x),quantile(x,c(0.25,0.75))))
 o1$Lkt = o1$Landings/1000
 
 o1 <- o1 %>%
   group_by(LFA) %>%
   mutate(is_max = Lkt == max(Lkt,na.rm=T))
-ggplot(o1,aes(x=YR,y=Lkt,fill=is_max))+geom_bar(stat='identity',width=1)+
+ggplot(subset(o1,LFA=='LFA34'),aes(x=YR,y=Lkt,fill=is_max))+geom_bar(stat='identity',width=1)+
   facet_wrap(~LFA, scales='free_y' ,nrow=2)+xlab('Fishing Year')+ylab('Landings (kt)')+
-  scale_x_continuous(breaks=round(seq(1975,2024,length=4)))+theme_test()+ theme(legend.position = 'none')+
-scale_fill_manual(values = c("FALSE" = "grey10", "TRUE" = "grey10")) +
-    geom_hline(data=mo1,aes(yintercept=Landings[,1]/1000),linetype='solid',colour='red')
+  scale_x_continuous(breaks=round(seq(1975,2025,length=4)))+theme_test()+ theme(legend.position = 'none')+
+scale_fill_manual(values = c("FALSE" = "grey10", "TRUE" = "grey10")) 
+#    geom_hline(data=mo1,aes(yintercept=Landings[,1]/1000),linetype='solid',colour='red')
 #  geom_hline(data=mo1,aes(yintercept=Landings[,2]/1000),linetype='dashed',colour='red')+
 #  geom_hline(data=mo1,aes(yintercept=Landings[,3]/1000),linetype='dashed',colour='red')
 
@@ -159,18 +159,106 @@ ggplot(subset(o1,LFA %ni% c('LFA27','LFA29', 'LFA28','LFA30','LFA31A','LFA31B','
 
 ###VALUE
 
-b = lobster.db('process_slips')
+d = lobster.db('process_slips')
+b = lobster.db('inflation')
+i = which(b$year==2001)
+b$nInf = b$amount[1:nrow(b)]/b$amount[i]
 
-ok = aggregate(value~SYEAR+LFA,data=b,FUN=sum)
-ok$Ld = ok$value/1000000
+bw = merge(d,b,by.x='SYEAR',by.y='year')
+bw$infPr = bw$PRICE/bw$nInf #adjusted to 2001
+bw$Inf_Val = bw$infPr * bw$WT_LBS
+bw$T = bw$WT_LBS/2204.62
+bwa = aggregate(cbind(value,Inf_Val,T)~LFA+SYEAR,data=bw,FUN=function(x) c(mean(x),quantile(x,probs=c(0.25,0.75))))
+ok = aggregate(cbind(value,Inf_Val,T)~LFA+SYEAR,data=bw,FUN=sum)
 
+#ok = aggregate(value~SYEAR+LFA,data=b,FUN=sum)
+ok$value = ok$value/1000000
+ok$Ld = ok$Inf_Val/1000000
 ok <- ok %>%
   group_by(LFA) %>%
   mutate(is_max = Ld == max(Ld,na.rm=T))
-ggplot(subset(ok,SYEAR<2025 & LFA %ni% 41),aes(x=SYEAR,y=Ld,fill=is_max))+geom_bar(stat='identity',width=1)+
-  facet_wrap(~LFA, scales='free_y' )+xlab('Fishing Year')+ylab('Landed Value (millions)')+
-  scale_x_continuous(breaks=round(seq(1975,2024,length=4)))+theme_test()+ theme(legend.position = 'none')+
-  scale_fill_manual(values = c("FALSE" = "grey10", "TRUE" = "red")) 
+
+ggplot(subset(ok,SYEAR>1997 & SYEAR<2026 & LFA %in% 34),aes(x=SYEAR,y=Ld))+geom_bar(stat='identity',width=1)+xlab('Fishing Year')+ylab('Landed Value (millions), Inflation Adj')+
+  scale_x_continuous(breaks=round(seq(1998,2025,length=4)))+theme_test()+ theme(legend.position = 'none')+
+scale_y_continuous(breaks=round(seq(100,330,length=4)))+theme_test()+ theme(legend.position = 'none')+
+  coord_cartesian(ylim=c(100,330))
+
+
+ggplot(subset(ok,SYEAR>1997 & SYEAR<2026 & LFA %in% 34),aes(x=SYEAR,y=value))+geom_bar(stat='identity',width=1)+xlab('Fishing Year')+ylab('Landed Value (millions)')+
+  scale_x_continuous(breaks=round(seq(1998,2025,length=4)))+theme_test()+ theme(legend.position = 'none')+
+  scale_y_continuous(breaks=round(seq(100,500,length=4)))+theme_test()+ theme(legend.position = 'none')+
+  coord_cartesian(ylim=c(100,500))
+
+
+v = lobster.db('seasonal.landings')
+v$SYEAR = as.numeric(substr(v$SYEAR,6,9))
+
+ok1 = subset(ok,LFA==34)
+scale_factor <- max(ok1$T, na.rm = TRUE) / max(ok1$value, na.rm = TRUE)
+
+g1 = ggplot(ok1, aes(x = SYEAR)) +
+  geom_col(aes(y = T), fill = "steelblue", alpha = 0.7) +
+  geom_line(aes(y = value * scale_factor), color = "red", linewidth = 1) +
+  geom_line(aes(y = Ld * scale_factor), color = "purple", linewidth = 1) +
+  scale_y_continuous(
+    name = "Landings (t)",
+    sec.axis = sec_axis(~ . / scale_factor, name = "Dollar Value (millions)")
+  ) +
+  theme_minimal()+
+  labs(x='Fishing Season')
+
+g2 = ggLobsterMap('SWN',addLFALabels = T,colourLFA = '34')
+
+layout=rbind(c(1,1,1),c(1,1,2))
+
+gridExtra::grid.arrange(g1,g2,layout_matrix=
+                          (layout))
+#nlics
+g = lobster.db('slips')
+i = which(g$LICENCE_SUBTYPE=='PARTNERSHIP A')
+g$LICENCE_SUBTYPE[i] = 'STACKED'
+g$YR = lubridate::year(g$DATE_LANDED)
+g$MN = lubridate::month(g$DATE_LANDED)
+g$SYEAR = g$YR
+g$SYEAR = ifelse(g$LFA %in% c(33,34,36,38 ) & g$MN %in% c(11,12),g$SYEAR+1,g$SYEAR)
+g$SYEAR = ifelse(g$LFA %in% c(35 ) & g$MN %in% c(10,11,12),g$SYEAR+1,g$SYEAR)
+g$N = 1
+ga = aggregate(N~LFA+SYEAR+LICENCE_TYPE+LICENCE_SUBTYPE+LICENCE_ID,data=g,FUN=sum)
+
+gap = aggregate(N~LFA+SYEAR+LICENCE_ID,data=ga,FUN=length)
+gg = subset(gap,N>1)
+
+drop_keys <- with(gg, paste(LFA, SYEAR, LICENCE_ID))
+
+ga_final <- ga[!(
+  ga$LICENCE_SUBTYPE == "STACKED" &
+    paste(ga$LFA, ga$SYEAR, ga$LICENCE_ID) %in% drop_keys
+), ]
+
+
+
+require(tidyr)
+
+gw = subset(ga_final,LFA %ni% 'LOBSTER - GREY ZONE' & LICENCE_SUBTYPE %in% c('PARTNERSHIP A','CATEGORY B','CATEGORY A','STACKED')) %>%
+  pivot_wider(
+    id_cols = c(LFA, SYEAR),
+    names_from = LICENCE_SUBTYPE,
+    values_from = N,
+    values_fill = 0,
+    values_fn = length
+  )
+names(gw)[2] = 'SYEAR'
+gw$STACKED = gw$STACKED*2
+gw$Tot_catA = apply(gw[,c('CATEGORY A','STACKED')],1,sum)
+
+gs = subset(gw,LFA==34)
+ggplot(subset(gs,SYEAR>2001 & SYEAR<2026),aes(x=SYEAR))+geom_line(aes(y=Tot_catA),color='red')+
+geom_line(aes(y=STACKED),color='purple')+
+  theme_minimal()+
+  labs(x='Fishing Season',y='N Licences')
+
+
+#scale_fill_manual(values = c("FALSE" = "grey10", "TRUE" = "red")) 
 
 
 
