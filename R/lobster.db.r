@@ -1177,14 +1177,6 @@ if (DS %in% c("logs.redo", "logs") ) {
               logs = connect.command(con, "select * from marfissci.lobster_sd_log_all_filtered") #incorporates elogs and paper
               save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
 
-              # slips
-              slips = connect.command(con, "select * from marfissci.lobster_sd_slip")
-              save( slips, file=file.path( fnODBC, "slip.rdata"), compress=T)
-              gc()  # garbage collection
-
-              # old logs LFA 34
-              dd = dir(fnODBC)
-             if(!any("oldlogs34.rdata" %in% dd)){
              oldlogs34 = connect.command(con, "select b.licence_id, a.*
                             from lobster_log_data a, marfissci.LICENCES_SF_OLD b
                             where 'A'||a.licence_no = b.licence_id_old")
@@ -1192,31 +1184,23 @@ if (DS %in% c("logs.redo", "logs") ) {
               gc()  # garbage collection
               #odbcClose(con)
               }
-              }
              if(!is.null(pH$yr)){
                
-               load (file.path( fnODBC, "slip.rdata"), .GlobalEnv)
                load (file.path( fnODBC, "logs.rdata"), .GlobalEnv)
                 yrs = c(pH$yr-1,pH$yr)
               print(paste('this is just updating ',paste(yrs,collapse=',')))
               logs = subset(logs,lubridate::year(DATE_FISHED) %ni% yrs )
-              slips = subset(slips,lubridate::year(DATE_LANDED) %ni% yrs )
-           
+
               logss = connect.command(con, paste("select * from marfissci.lobster_sd_log_all_filtered where to_char(date_fished,'yyyy') IN (",paste(yrs,collapse=','),")",sep=""))
               logs = as.data.frame(rbind(logs,logss))
               save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
              
-              slipss = connect.command(con, paste("select * from marfissci.lobster_sd_slip where to_char(date_landed,'yyyy') IN (",paste(yrs,collapse=','),")",sep=""))
-              slips = as.data.frame(rbind(slips,slipss))
-              save( slips, file=file.path( fnODBC, "slip.rdata"), compress=T)
-              gc()  # garbage collection
               }
            }
     
-            load (file.path( fnODBC, "slip.rdata"), .GlobalEnv)
             load (file.path( fnODBC, "logs.rdata"), .GlobalEnv)
             load (file.path( fnODBC, "oldlogs34.rdata"), .GlobalEnv)
-            print("Three files loaded called 'slips', 'logs' and 'oldlogs34" )
+            print("Two files loaded called 'logs' and 'oldlogs34" )
 
           }
 
