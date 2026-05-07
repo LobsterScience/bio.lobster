@@ -3,10 +3,11 @@ title: "ELOG Data Report"
 author: "Lobster Ecology and Assessment Team"
 date: "`r Sys.Date()`"
 output: html_document
+
 params:
-  data.pull: "logs.redo"
+  data.pull: "logs"
   redo.years: 2026
-  data.output: "C:/Users/ELEMENTG/OneDrive - DFO-MPO/ELOGS assessment"
+  output.dir: NULL
 ---
 
 
@@ -20,6 +21,7 @@ library(ggplot2)
 library(sf)
 library(readxl)
 library(knitr)
+library(rstudioapi)
 ```
 
 
@@ -261,13 +263,13 @@ error.log <- error.log %>%
 
 error.log <- error.log %>% dplyr::select(-log.id, -AREA_ID, -na.lfa, -na.grid, -miss.lic, -LFA_ref, -bad.lfa, -bad.grid, 
                                          -trap_multiplier, -il.trap, -bad.weight, -lfa.options, -trap.lim, -SYEAR, -s1, -s2,
-                                         -WEEK, -pre.season, -date.diff)
+                                         -WEEK, -pre.season, -date.diff, -SURNAME)
 error.log <- error.log %>% rename("LICENCE_AREA" = AREA, "trap_limit" = adj_trap.lim)
 
-write.csv(error.log, file.path(params$data.output, "ELOG_Error_Log.csv"), row.names = FALSE)
+write.csv(error.log, file.path(params$output.dir, "ELOG_Error_Log.csv"), row.names = FALSE)
 
 weekdat <- elog.s %>% dplyr::select(LFA, YEAR, LICENCE_ID, DATE_FISHED, WEIGHT_LBS,
-                              na.lfa, na.grid, bad.lfa, bad.grid, miss.lic, il.trap, bad.weight, log.id, SYEAR, WEEK,date.diff)
+                              na.lfa, na.grid, bad.lfa, bad.grid, miss.lic, il.trap, bad.weight, log.id, SYEAR, WEEK,date.diff, pre.season)
 
 ### product 2
 p2 <- ggplot(weekdat, aes(x = date.diff, fill = SYEAR)) +
