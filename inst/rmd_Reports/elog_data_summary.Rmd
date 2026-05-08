@@ -7,7 +7,7 @@ output: html_document
 params:
   data.pull: "logs"
   redo.years: 2026
-  output.dir: NULL
+  output.dir: 'C:/Users/CookA/Documents/tmp'
 ---
 
 
@@ -22,6 +22,8 @@ library(sf)
 library(readxl)
 library(knitr)
 library(rstudioapi)
+require(devtools)
+la()
 ```
 
 
@@ -44,7 +46,7 @@ f <- lobster.db('licence_types.redo')
 #### general elog prep
 elog <- logs %>% filter(SRC  %in%  "ELOG")
 elog$YEAR = year(elog$DATE_FISHED)
-elog$log.id = paste(elog$LICENCE_ID, elog$DATE_FISHED, elog$WEIGHT_LBS) ## catch and remove duplicate logs
+elog$log.id = paste(elog$LICENCE_ID, elog$DATE_FISHED, elog$GRID_NUM, elog$WEIGHT_LBS) ## catch and remove duplicate logs
 dups <- elog %>% group_by(log.id) %>% filter(n()>1) %>% ungroup() %>% arrange(log.id) ## save duplicates for later error reporting
 elog <- elog %>% distinct(log.id, .keep_all = TRUE)
 elog <- elog %>% dplyr::select(-CUNNER_WEIGHT_GRID_A,-CUNNER_WEIGHT_GRID_B,-CUNNER_WEIGHT_GRID_C, 
