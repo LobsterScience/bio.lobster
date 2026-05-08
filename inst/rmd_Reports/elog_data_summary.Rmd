@@ -7,7 +7,7 @@ output: html_document
 params:
   data.pull: "logs"
   redo.years: 2026
-  output.dir: NULL
+  output.dir: 'C:/Users/CookA/Documents/tmp'
 ---
 
 
@@ -21,6 +21,8 @@ library(sf)
 library(readxl)
 library(knitr)
 library(rstudioapi)
+require(devtools)
+la()
 ```
 
 
