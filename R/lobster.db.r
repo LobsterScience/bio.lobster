@@ -1172,9 +1172,9 @@ if (DS %in% c("logs.redo", "logs") ) {
               require(RODBC)
              #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
              if (is.null(pH$yr)){
-              # logs
-              # logs = connect.command(con, "select * from marfissci.lobster_sd_log")
-              logs = connect.command(con, "select * from marfissci.lobster_sd_log_all_filtered") #incorporates elogs and paper
+              
+               logs = connect.command(con, "select * from marfissci.lobster_sd_log") #incorporates elogs and paper
+              #logs = connect.command(con, "select * from marfissci.lobster_sd_log_all_filtered") #incorporates elogs and paper
               save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
 
               # slips
@@ -1202,7 +1202,8 @@ if (DS %in% c("logs.redo", "logs") ) {
               logs = subset(logs,lubridate::year(DATE_FISHED) %ni% yrs )
               slips = subset(slips,lubridate::year(DATE_LANDED) %ni% yrs )
            
-              logss = connect.command(con, paste("select * from marfissci.lobster_sd_log_all_filtered where to_char(date_fished,'yyyy') IN (",paste(yrs,collapse=','),")",sep=""))
+              logss = connect.command(con, paste("select * from marfissci.lobster_sd_log where to_char(date_fished,'yyyy') IN (",paste(yrs,collapse=','),")",sep=""))
+              #logss = connect.command(con, paste("select * from marfissci.lobster_sd_log_all_filtered where to_char(date_fished,'yyyy') IN (",paste(yrs,collapse=','),")",sep=""))
               logs = as.data.frame(rbind(logs,logss))
               save( logs, file=file.path( fnODBC, "logs.rdata"), compress=T)
              
