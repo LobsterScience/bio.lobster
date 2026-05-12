@@ -22,10 +22,10 @@ library(readxl)
 library(knitr)
 library(rstudioapi)
 require(devtools)
+
 if(exists("oracle.personal.user") & !oracle.personal.user == "ELEMENTG"){
   la()
 }
-
 ```
 
 
