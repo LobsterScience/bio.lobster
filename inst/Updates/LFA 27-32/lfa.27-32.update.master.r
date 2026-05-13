@@ -18,8 +18,8 @@ p = bio.lobster::load.environment()
 la()
 
 #Choose one
-#assessment.year = p$current.assessment.year 
-assessment.year = p$current.assessment.year-1 
+assessment.year = p$current.assessment.year 
+#assessment.year = p$current.assessment.year-1 
 
 #create subfolders
 # Define all directory paths in a *named list*+
@@ -62,7 +62,6 @@ if(NewDataPull){
   #lobster.db('vlog.redo') #These are static now, no need to update
   logs=lobster.db('season.dates.redo') #updates season dates as required
   logs=lobster.db('process.logs.redo')
- 
 }
 
 #Run a report of missing vs received logs and save a csv copy
@@ -129,18 +128,6 @@ ggsave(file=file.path(figdir, "Map28_29.png"))
 
 logs=lobster.db("process.logs")
 
-#Double check that % logs in Marfis Science match perc.rec above
-
-double.check.logs=F
-#double.check.logs=T
-if (double.check.logs){
-        for (ii in p$lfas){
-            t=subset(logs, LFA==ii)
-            print(ii)
-            print(table(t$SYEAR))
-            }
-}
-
 
 
 #Establishing a master reference table of all lrp, usr
@@ -149,7 +136,6 @@ ref = data.frame(LFA=c(27:30,'31A','31B',32),
                  usr=c(.27,.25,.22,.56,.31,.32,.29)
                  )
 
-logs=lobster.db("process.logs")
 g = logs
 g = subset(g, SYEAR<=p$current.assessment.year)
 

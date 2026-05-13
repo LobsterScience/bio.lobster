@@ -1239,9 +1239,9 @@ if(DS %in% c('process.logs','process.logs.unfiltered', 'process.logs.redo')) {
                           lobster.db('logs')
 
                          #remove ELOG record if paper exists for that day
-                          key_paper <- with(logs, paste(LICENCE_ID, DATE_FISHED))[logs$SRC == "PAPER"]
-                          key_all <- with(logs, paste(LICENCE_ID, DATE_FISHED))
-                          logs <- logs[ !(logs$SRC == "ELOG" & key_all %in% key_paper), ]
+                          #key_paper <- with(logs, paste(LICENCE_ID, DATE_FISHED))[logs$SRC == "PAPER"]
+                          #key_all <- with(logs, paste(LICENCE_ID, DATE_FISHED))
+                          #logs <- logs[ !(logs$SRC == "ELOG" & key_all %in% key_paper), ]
                           
                          oldlogs34$LFA34_WEIGHT1_KGS=oldlogs34$LFA34_WEIGHT1_KGS*2.20462
                          oldlogs34$LFA34_WEIGHT2_KGS=oldlogs34$LFA34_WEIGHT2_KGS*2.20462
