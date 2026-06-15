@@ -30,7 +30,7 @@ o1$Lkt = o1$Landings/1000
 o1 <- o1 %>%
   group_by(LFA) %>%
   mutate(is_max = Lkt == max(Lkt,na.rm=T))
-ggplot(subset(o1,LFA=='LFA34'),aes(x=YR,y=Lkt,fill=is_max))+geom_bar(stat='identity',width=1)+
+ggplot(subset(o1),aes(x=YR,y=Lkt,fill=is_max))+geom_bar(stat='identity',width=1)+
   facet_wrap(~LFA, scales='free_y' ,nrow=2)+xlab('Fishing Year')+ylab('Landings (kt)')+
   scale_x_continuous(breaks=round(seq(1975,2025,length=4)))+theme_test()+ theme(legend.position = 'none')+
 scale_fill_manual(values = c("FALSE" = "grey10", "TRUE" = "grey10")) 
@@ -154,7 +154,31 @@ ggplot(subset(o1,LFA %ni% c('LFA27','LFA29', 'LFA28','LFA30','LFA31A','LFA31B','
     inherit.aes = FALSE
   ) 
 
+#prop landings
+library(dplyr)
 
+o1_prop <- o1 %>%
+  group_by(YR) %>%
+  mutate(prop_landings = Landings / sum(Landings, na.rm = TRUE)) %>%
+  ungroup()
+
+o134 = subset(o1_prop,LFA=='LFA33')
+sf = max(o134$Landings, na.rm=T) / max(o134$prop_landings, na.rm=T)
+
+ggplot(o134, aes(x = YR)) +
+  geom_bar(aes(y = Landings), color = "blue", stat='identity') +
+  geom_line(aes(y = prop_landings * sf), color = "red", size = 1) +
+  scale_y_continuous(
+    name = "Landings",
+    sec.axis = sec_axis(~ . / sf, name = "Proportion of Maritimes Region Landings")
+  ) +
+  labs(x='Fishing Season')+
+  theme_minimal(base_size = 14)+
+      theme(
+      axis.title.y.left  = element_text(color = "blue"),
+      axis.title.y.right = element_text(color = "red")
+    )
+  
 
 
 ###VALUE

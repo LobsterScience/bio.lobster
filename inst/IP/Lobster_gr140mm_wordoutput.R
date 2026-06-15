@@ -16,9 +16,10 @@ a$Legal = ifelse(a$CARLENGTH>82,1,0)
 a$Legal = ifelse(a$CARLENGTH==82,.5,a$Legal)
 a = subset(a,!is.na(Legal))
 a$LegalWt = a$Legal*a$CALWT
-### I am losing lobster somewhere need to check
-a34 = aggregate(cbind(Legal,LegalWt)~LFA.y+GridGroup,subset(a,LFA.y==34 & !is.na(GridGroup) & Legal>0 & SYEAR>2017 & mn %in% c(12,1,2,3,4,5)),FUN=sum)
-a34_j = aggregate(cbind(Legal,LegalWt)~LFA.y+GridGroup,subset(a,CARLENGTH>=140&LFA.y==34 & !is.na(GridGroup) & Legal>0 & YR>2017& mn %in% c(12,1,2,3,4,5)),FUN=sum)
+
+
+a34 = aggregate(cbind(Legal,LegalWt)~LFA.y+GridGroup,subset(a,LFA.y==34 & !is.na(GridGroup) & Legal>0 & SYEAR>2017 ),FUN=sum)
+a34_j = aggregate(cbind(Legal,LegalWt)~LFA.y+GridGroup,subset(a,CARLENGTH>=140&LFA.y==34 & !is.na(GridGroup) & Legal>0 & YR>2017),FUN=sum)
 names(a34_j)[3:4] = paste(names(a34_j)[3:4],'j',sep="_")
 a34 = merge(a34,a34_j)
 a34$propN = round(a34$Legal_j/a34$Legal*100,1)
@@ -27,8 +28,8 @@ a34$n_Legal = round(a34$Legal)
 Final34 = subset(a34,select=c(LFA.y, GridGroup, propN, propW,n_Legal))
 g34 = ggplot(subset(gr,LFA==34))+geom_sf()+ geom_sf_text(data=st_point_on_surface(subset(gr,LFA==34)),aes(label=Label),size=3)+theme_test_adam()
 
-a34 = aggregate(cbind(Legal,LegalWt)~LFA.y+GridGroup,subset(a,LFA.x==33 & !is.na(GridGroup) & Legal>0 & YR>2017& mn %in% c(12,1,2,3,4,5)),FUN=sum)
-a34_j = aggregate(cbind(Legal,LegalWt)~LFA.y+GridGroup,subset(a,CARLENGTH>=140&LFA.y==33 & !is.na(GridGroup) & Legal>0 & YR>2017& mn %in% c(12,1,2,3,4,5)),FUN=sum)
+a34 = aggregate(cbind(Legal,LegalWt)~LFA.y+GridGroup,subset(a,LFA.x==33 & !is.na(GridGroup) & Legal>0 & YR>2017),FUN=sum)
+a34_j = aggregate(cbind(Legal,LegalWt)~LFA.y+GridGroup,subset(a,CARLENGTH>=140&LFA.y==33 & !is.na(GridGroup) & Legal>0 & YR>2017),FUN=sum)
 names(a34_j)[3:4] = paste(names(a34_j)[3:4],'j',sep="_")
 a34 = merge(a34,a34_j)
 a34$propN = round(a34$Legal_j/a34$Legal*100,1)
@@ -38,12 +39,12 @@ Final33 = subset(a34,select=c(LFA.y, GridGroup, propN, propW,n_Legal))
 g33 = ggplot(subset(gr,LFA==33))+geom_sf()+ geom_sf_text(data=st_point_on_surface(subset(gr,LFA==33)),aes(label=Label),size=3)+theme_test_adam()
 
 
-a34 = aggregate(cbind(Legal,LegalWt)~LFA.y,subset(a,LFA.y==35 & !is.na(GridGroup) & Legal>0 & YR>2017& mn %in% c(10,11,12,1,2,3,4,5)),FUN=sum)
-a34_j = aggregate(cbind(Legal,LegalWt)~LFA.y,subset(a,CARLENGTH>=140&LFA.y==35 & !is.na(GridGroup) & Legal>0 & YR>2017& mn %in% c(10,11,12,1,2,3,4,5)),FUN=sum)
+a34 = aggregate(cbind(Legal,LegalWt)~LFA.y,subset(a,LFA.y==35 & !is.na(GridGroup) & Legal>0 & YR>2017),FUN=sum)
+a34_j = aggregate(cbind(Legal,LegalWt)~LFA.y,subset(a,CARLENGTH>=140&LFA.y==35 & !is.na(GridGroup) & Legal>0 & YR>2017),FUN=sum)
 names(a34_j)[2:3] = paste(names(a34_j)[2:3],'j',sep="_")
 a34 = merge(a34,a34_j)
-a34$propN = round(a34$Legal_j/a34$Legal*100,1)
-a34$propW = round(a34$LegalWt_j/a34$LegalWt*100,1)
+a34$propN = round(a34$Legal_j/a34$Legal*100,2)
+a34$propW = round(a34$LegalWt_j/a34$LegalWt*100,2)
 a34$n_Legal = round(a34$Legal)
 Final35 = subset(a34,select=c(LFA.y, propN, propW,n_Legal))
 
@@ -119,4 +120,4 @@ doc <- body_add_par(doc,
 doc <- add_section(doc, df=Final33,lfa=33, plot=g33, tablenum = 1, fignum = 1)
 doc <- add_section(doc, df=Final34,lfa=34, plot=g34, tablenum = 2, fignum = 2)
 doc <- add_section(doc, df=Final35,lfa=35, plot=g35, tablenum = 3, fignum = 3)
-print(doc,target = 'ff.docx')
+print(doc,target = 'ff3.docx')

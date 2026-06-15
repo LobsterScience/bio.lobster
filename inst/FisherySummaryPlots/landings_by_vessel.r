@@ -59,5 +59,5 @@ for(i in 1:length(lo)){
 }
 ou = bind_rows(out)
 
-ggplot(subset(d,LFA=='38B'),aes(x=SYEAR,y=MT))+geom_point()+theme_test(base_size = 14)+labs(y='Landings Per Vessel (T)',x='Year')
+ggplot(subset(d),aes(x=SYEAR,y=MT))+geom_point()+facet_wrap(~LFA)+theme_test(base_size = 14)+labs(y='Landings Per Vessel (T)',x='Year')
        
