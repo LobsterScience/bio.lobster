@@ -32,8 +32,10 @@ RV_sets <- function(length_group=5, aggregate=T, by_sex=F){
   
   deL$Juv = ifelse(deL$flen<=60,deL$clen,0)
   
-  sc1=seq(13,253,by=length_group)
-  deL$SZ = sc1[cut(deL$flen,sc1,right=FALSE,labels=F)]
+  #sc1=seq(13,253,by=length_group)
+  #deL$SZ = sc1[cut(deL$flen,sc1,right=FALSE,labels=F)]
+  deL$SZ = round(deL$flen/length_group)*length_group
+  
   
   if(!by_sex) deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt)~UID+SZ,data=deL,FUN=sum)
   if(by_sex) deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt)~UID+SZ+fsex,data=deL,FUN=sum)

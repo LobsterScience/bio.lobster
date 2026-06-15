@@ -156,7 +156,7 @@ ggLobsterMap <- function(
     # Grids
     # ----------------------
     if(addGrids){
-        p <- p + geom_sf(data=grids, fill=fills)
+        p <- p + geom_sf(data=grids, fill=fills,colour='grey')
     }
     
     # ----------------------
