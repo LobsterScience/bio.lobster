@@ -1,3 +1,5 @@
+#' @export
+
 rm.from.list2=function (list1)  {
              a <- dim_list(list1)
              if (any(a[, 1] == 0)) {
