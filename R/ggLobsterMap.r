@@ -32,6 +32,7 @@ ggLobsterMap <- function(
     #colourLFA=FALSE,
     show37label=FALSE,
     colourLFA=NULL,
+    simple.map=F,
     ...
 ){
   lfa_colours <- c(
@@ -328,10 +329,32 @@ ggLobsterMap <- function(
     # ----------------------
     # Final map settings
     # ----------------------
-    p <- p +
-        coord_sf(xlim=xlim, ylim=ylim, expand=FALSE) +
-        labs(x="Longitude", y="Latitude")
+    #p <- p +
+    #    coord_sf(xlim=xlim, ylim=ylim, expand=FALSE) +
+    #    labs(x="Longitude", y="Latitude")
     
+   
+    
+    if(simple.map){
+      
+      p <- p +
+        coord_sf(xlim=xlim, ylim=ylim, expand=FALSE) +
+        scale_x_continuous(
+          labels = \(x) paste0(abs(x), "\u00B0")
+        ) +
+        scale_y_continuous(
+          labels = \(y) paste0(y, "\u00B0")
+        ) +
+        labs(x = NULL, y = NULL)
+      
+    } else {
+      
+      p <- p +
+        coord_sf(xlim=xlim, ylim=ylim, expand=FALSE) +
+        labs(x = "Longitude", y = "Latitude")
+      
+    }
     if(return.object) return(p)
     p
-}
+    
+    }

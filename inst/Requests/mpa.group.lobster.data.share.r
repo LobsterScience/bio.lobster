@@ -8,6 +8,7 @@ require(sf)
 require(PBSmapping)
 require(grid)
 require(patchwork)
+require(tidyr)
 
 p = bio.lobster::load.environment()
 
@@ -15,7 +16,7 @@ p = bio.lobster::load.environment()
 #la()
 
 #adjust as required
-assessment.year = "2024" 
+assessment.year = "2025" 
 
 figdir = file.path(project.datadirectory("bio.lobster","requests","mpa.group",assessment.year))
 dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
@@ -44,9 +45,9 @@ r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
 r = st_as_sf(r)
 
 a =  lobster.db('process.logs')
-a = subset(a,SYEAR>=2010 & SYEAR<assessment.year) #subsetting data to 2010-2023 (2024 still has outstandinmg logs, etc)
+a = subset(a,SYEAR>=2010 & SYEAR<=assessment.year) #subsetting data to year specified above
 b = lobster.db('seasonal.landings')
-b = subset(b <- b[b$SYEAR != "2024-2025", ])
+b = subset(b <- b[b$SYEAR != "2025-2026", ])
 b$SYEAR = 1976:assessment.year
 b$LFA38B <- NULL
 b = subset(b,SYEAR>2004 & SYEAR<=assessment.year)
@@ -140,7 +141,7 @@ saveRDS(partLandings,'LandingsWithinGrid.rds')
 ##Licenses By Grid and Week
 
 g = lobster.db('process.logs')
-g = subset(g,SYEAR>2004 & SYEAR<=p$current.assessment.year)
+g = subset(g,SYEAR>2004 & SYEAR<=assessment.year)
 
 gg = aggregate(SD_LOG_ID~LFA+GRID_NUM+SYEAR,data = g,FUN=function(x) length(unique(x)))
 
@@ -150,7 +151,7 @@ saveRDS(gg,'SDLOGSWithinGrid.rds')
 #Licenses By Grid and Week
 
 g = lobster.db('process.logs')
-g = subset(g,SYEAR>2004 & SYEAR<=p$current.assessment.year)
+g = subset(g,SYEAR>2004 & SYEAR<=assessment.year)
 
 gKL = aggregate(LICENCE_ID~LFA+GRID_NUM+SYEAR,data = g,FUN=function(x) length(unique(x)))
 
@@ -163,32 +164,22 @@ Tot = merge(merge(merge(partEffort,partLandings),gg),gKL)
 
 Tot = subset(Tot,select=c(SYEAR,LFA,GRID_NUM,BTTH,BL,SD_LOG_ID,LICENCE_ID))
 names(Tot)= c('FishingYear','LFA','Grid','TrapHauls','Landings','Trips','NLics')
+
+#-----------
+# Following section can privacy screen
+#Do not use for sharing within DFO
+
 #Tot$PrivacyScreen = ifelse(Tot$NLics>4,1,0)
 #Tot <- Tot[Tot$PrivacyScreen != 0, ] #removes grids with <5 licenses reporting
-
-saveRDS(Tot,'PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
-
-Tot = readRDS('PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
+#saveRDS(Tot,'PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
+#Tot = readRDS('PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
 Tot$LFA = ifelse(Tot$LFA=='31B',312,Tot$LFA)
 Tot$LFA = ifelse(Tot$LFA=='31A',311,Tot$LFA)
 
 
 #making plots of Tot
 
-GrMap = readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
-coa = st_as_sf(readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastlineSF_NY_NL.rds")))
-GrMap1 = GrMap
-
-GrMap1$area = st_area(GrMap1)/1000000
-GrMap1$V2 = paste(GrMap1$LFA, GrMap1$GRID_NO,sep="-")
-attr(GrMap1$area, "units") <- "km^2"
-st_geometry(GrMap1)<- NULL
-gg = aggregate(area~LFA+GRID_NO,data=GrMap1,FUN=function(x) abs(sum(x)))
-
-GrMap2 =merge(GrMap,gg)
-
-gTot = merge(GrMap2,Tot,by.x=c('LFA','GRID_NO'),by.y=c('LFA','Grid'),all.x=T)
-
+gTot=Tot
 
 gTot$CPUE= as.numeric(gTot$Landings)/as.numeric(gTot$TrapHauls)
 
@@ -203,51 +194,46 @@ g27p <- g27p %>%
 
 #remove unneeded variables for sharing data
 
-g27p=subset(g27p, FishingYear<=2023)
-g27p = subset(g27p, select = -c(PrivacyScreen, V2, grid) )
-names(g27p)=c("LFA", "REPORTING_GRID", "AREA", "FISHING_YEAR", "TRAP_HAULS", "LANDINGS_KG", "TRIPS", "LICENCES_REPORTED", "GEOMETRY","CPUE_KG_TH" )
+g27p=subset(g27p, FishingYear<= assessment.year) #Shouldn't have any data above assessment.year but just in case
+g27p <- g27p[, c("LFA", "Grid", "FishingYear",
+                 "TrapHauls", "Landings", "Trips",
+                 "NLics", "CPUE")]
+names(g27p)=c("LFA", "REPORTING_GRID", "FISHING_YEAR", "TRAP_HAULS", "LANDINGS_KG", "TRIPS", "LICENCES_REPORTED","CPUE_KG_TH" )
 
 saveRDS(g27p,'lobster.pruned.grid.data.rds')
 
 test=readRDS('lobster.pruned.grid.data.rds')
 
+#------------------------------------------------
+#OpenData request would like the exact license_ID's by grid by year
 
-#Following is mapping code to test above if needed
+a =  lobster.db('process.logs')
 
-r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
-b=r
+lic_summary <- a %>%
+  filter(SYEAR >= 2010) %>%
+  group_by(SYEAR, LFA, GRID_NUM) %>%
+  summarise(
+    LICENCES_REPORTED = n_distinct(LICENCE_ID),
+    UNIQUE_LICENCE_IDS = paste(sort(unique(LICENCE_ID)), collapse = ","),
+    .groups = "drop"
+  ) %>%
+  arrange(SYEAR, LFA, GRID_NUM)
 
-o=GrMap2
+Licence_Summary <- as.data.frame(lic_summary)
 
-ggplot(b)+
-  geom_sf()+
-  geom_sf(data=coa,fill='grey')+
-  geom_sf(data=o,fill='red')+
-  coord_sf(xlim = c(st_bbox(b)$xmin,st_bbox(b)$xmax),
-           ylim = c(st_bbox(b)$ymin,st_bbox(b)$ymax),
-           expand = FALSE)
+names(Licence_Summary) <- c(
+  "FISHING_YEAR",
+  "LFA",
+  "REPORTING_GRID",
+  "LICENCES_REPORTED",
+  "UNIQUE_LICENCE_IDS"
+)
 
+saveRDS(Licence_Summary,'Licence_Summary.rds')
 
-
-
-#One figure
-
-ok1 = function(x=g27p){
-  ggplot(x,aes(fill=CPUE))+
-  geom_sf() +
-  scale_fill_distiller(trans='identity',palette='Spectral') +
-  facet_wrap(~FishingYear)+
-  geom_sf(data=coa,fill='grey')+
-  geom_sf(data=GrMap,fill=NA)+
-  coord_sf(xlim = c(st_bbox(x)$xmin,st_bbox(x)$xmax),
-           ylim = c(st_bbox(x)$ymin,st_bbox(x)$ymax),
-           expand = FALSE)+
-  scale_x_continuous(breaks = c(round(seq(st_bbox(x)$xmin,st_bbox(x)$xmax,length.out=2),2)))+
-  scale_y_continuous(breaks = c(round(seq(st_bbox(x)$ymin,st_bbox(x)$ymax,length.out=2),2)))
-}
-
-png(filename=file.path(figdir, "grid.cpue.all.lfas.png"), width=1200, height=900, res=175)
-print(ok1())
-dev.off()
-
+  openxlsx::write.xlsx(
+    Licence_Summary,
+    "Licence_Summary.xlsx",
+    colNames = TRUE
+  )
 
