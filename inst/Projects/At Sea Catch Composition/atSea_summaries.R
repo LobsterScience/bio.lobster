@@ -5,6 +5,8 @@ require(bio.lobster)
 require(bio.utilities)
 require(ggplot2)
 require(dplyr)
+require(PBSmapping)
+
 
 la()
 p=list()
@@ -15,110 +17,107 @@ load_all('~/GitHub/bio.survey/')
 setwd("C:/Users/HowseVJ/OneDrive - DFO-MPO/Bycatch Review/requests")
 
 
-a=lobster.db('atSea.redo')
-b=lobster.db('season.dates.redo')
-c=lobster.db('atSea.clean.redo')
+#lobster.db('atSea.redo')
+lobster.db('atSea')
+#lobster.db('season.dates.redo')
+sd= lobster.db('season.dates')
+#lobster.db('atSea.clean.redo') PBS mapping can't handle the amount of data here anymore
+aS <- atSea
+aS = subset(aS,LFA %in% c(33,34,35,36,38) & !is.na(SPECIESCODE) & STARTDATE>as.Date('2000-01-01'),
+           select=c(TRIPNO,DESCRIPTION,STARTDATE,LFA,LICENCE_ID,TRAPNO,TRAPTYPE,STRINGNO,DEPTH, SOAKDAYS, SPECIESCODE, SPECIES, SEX, SHELL, CARLENGTH, CONDITION,CALWT)) 
+aS$YR=year(aS$STARTDATE)
+aS=subset(aS, DESCRIPTION %ni% c('EA-MINAS','Data not collected by trap'))
 
-a = lobster.db('atSea.clean') ## If you want to switch to Season year instead
-a = subset(a,LFA %in% c(33,34,35,36,38) & !is.na(SPECIESCODE) & STARTDATE>as.Date('2000-01-01'),
-           select=c(TRIPNO,DESCRIPTION,STARTDATE,LFA,LICENCE_ID,TRAPNO,TRAPTYPE,STRINGNO,DEPTH, SOAKDAYS, SPECIESCODE, SPECIES, SEX, SHELL, CARLENGTH, CONDITION,CALWT, SYEAR)) 
-a$YR=year(a$STARTDATE)
-a=subset(a, DESCRIPTION %ni% c('EA-MINAS','Data not collected by trap'))
+aS$STARTDATE <- as.Date(aS$STARTDATE)
+aS2 <- addSYEAR(aS)
 
 
-a= subset(a, SPECIESCODE == '2550')
-a<- a[rowSums(!is.na(a)) > 0, ]
+
+aS2= subset(aS2, SPECIESCODE == '2550')
+aS2<- aS2[rowSums(!is.na(aS2)) > 0, ]
 
 keep_types <- c(1, 2, 3, 7,22,-99,NA)
-a <- a[a$TRAPTYPE %in% keep_types, ]
-dim(a)
+aS2<- aS2[aS2$TRAPTYPE %in% keep_types, ]
+dim(aS2)
 
 
+### CHECk Lengths
+sum(aS2$CARLENGTH < 82, na.rm = TRUE)
+sum(aS2$CARLENGTH >= 82 & aS2$CARLENGTH <= 83, na.rm = TRUE)
+sum(aS2$CARLENGTH > 83, na.rm = TRUE)
 
-a_sub <- a %>%
-  group_by(TRIPNO, TRAPNO) %>% 
+aS2 <- aS2 %>%
+  mutate(UID = paste0(TRIPNO, "_", TRAPNO))
+
+aS2 <- aS2 %>%
   mutate(
-    # Identify categories
-    keep_group = case_when(
-      CARLENGTH > 82 ~ "keep_all",
-      CARLENGTH >= 82 & CARLENGTH <= 83 ~ "sample_half",
-      TRUE ~ "drop"
+    commercial = case_when(
+      CARLENGTH >= 83 ~ "legal",
+      CARLENGTH < 82  ~ "sublegal",
+      TRUE ~ NA_character_   # placeholder for 82–83 group
     )
   ) %>%
-  # For the sample_half group, take 50% of rows per TRIPNO+TRAPNO
-  group_modify(~ {
-    df <- .x
-    keep_all <- df %>% filter(keep_group == "keep_all")
-    sample_half <- df %>% filter(keep_group == "sample_half")
+  group_by(UID) %>%
+  mutate(
+    #  82–83 animals
+    mid_group = (CARLENGTH >= 82 & CARLENGTH < 83),
     
-    # sample half of them (floor ensures no over-sampling)
-    n_half <- floor(nrow(sample_half) / 2)
+    # within UID  split 50/50
+    rank_mid = ifelse(mid_group, row_number(), NA),
     
-    sampled <- sample_half %>% slice_sample(n = n_half)
+    # Count how many mid-group animals per UID
+    n_mid = sum(mid_group, na.rm = TRUE),
     
-    bind_rows(keep_all, sampled)
-  }) %>%
+    # Assign half to legal, half to sublegal
+    commercial = case_when(
+      !mid_group ~ commercial,  # keep existing assignments
+      rank_mid <= n_mid / 2 ~ "sublegal",
+      TRUE ~ "legal"
+    )
+  ) %>%
   ungroup() %>%
-  select(-keep_group)
+  select(-mid_group, -rank_mid, -n_mid)
 
-dim(a_sub)
+sum(aS2$commercial == 'legal', na.rm = TRUE)
+sum(aS2$commercial == 'sublegal', na.rm = TRUE)
 
-
-# Create a grouping factor for TRIPNO + TRAPNO
-grp <- interaction(a$TRIPNO, a$TRAPNO, drop = TRUE)
-
-a_list <- split(a, grp)
-
-process_group <- function(df) {
-  # Keep all >82
-  keep_all <- df[df$CARLENGTH >= 83, ]
-  
-  # Identify 82–83 animals
-  mid <- df[df$CARLENGTH >= 82 & df$CARLENGTH <83, ]
-  
-  # Sample half of them
-  if (nrow(mid) > 0) {
-    n_half <- floor(nrow(mid) / 2)
-    mid_sample <- mid[sample(seq_len(nrow(mid)), n_half), ]
-  } else {
-    mid_sample <- df[FALSE, ]  # empty
-  }
-  
-  rbind(keep_all, mid_sample)
-}
-a_sub <- do.call(rbind, lapply(a_list, process_group))
-rownames(a_sub) <- NULL
-
-
-
-
-### LFAs 33-35 from 2018-2025
-df_33_35 <- a %>%
+##### LFAs 33-35 from 2018-2025 #####
+df_33_35 <- aS2 %>%
   filter(LFA %in% c("33", "34", "35"),
-         YR >= 2018,
-         YR <= 2026)
+         SYEAR >= 2018,
+         SYEAR <= 2026)
+df_33_35<-as.data.frame(df_33_35)
 
-tot_33_35 <- aggregate(CARLENGTH ~ LFA + YR, data = df_33_35, FUN = length)
-over_140_33_35 <- aggregate(CARLENGTH ~ LFA + YR, data = df_33_35,
-                            FUN = function(x) sum(x >= 140, na.rm = TRUE))
-pct_33_35 <- merge(tot_33_35, over_140_33_35,
-                   by = c("LFA", "YR"),
-                   suffixes = c("_total", "_over140"))
-pct_33_35$pct_over140 <- 100 * pct_33_35$CARLENGTH_over140 / pct_33_35$CARLENGTH_total
+legal <- subset(df_33_35, commercial == "legal")
+total_legal <- aggregate(
+  CARLENGTH ~ SYEAR + LFA,
+  data = legal,
+  FUN = length)
+names(total_legal)[3] <- "total_legal"
 
-pct_33_35$LFA <- as.factor(pct_33_35$LFA)
-pct_33_35$YR  <- as.numeric(as.character(pct_33_35$YR))
-pct_33_35$Percent_Rounded <- round(pct_33_35$pct_over140, 2)
+legal_140 <- aggregate(
+  CARLENGTH ~ SYEAR + LFA,
+  data = subset(legal, CARLENGTH >= 140),
+  FUN = length)
+names(legal_140)[3] <- "legal_140plus"
 
-write.csv(pct_33_35,"C:/Users/HowseVJ/OneDrive - DFO-MPO/Bycatch Review/requests/Jumbos33_35.csv" )
+catch_summary33_35 <- merge(total_legal, legal_140, by = c("SYEAR", "LFA"), all.x = TRUE)
 
-ggplot(pct_33_35, aes(x = YR, y = pct_over140)) +
+catch_summary33_35$legal_140plus[is.na(catch_summary33_35$legal_140plus)] <- 0
+
+catch_summary33_35$pct_140plus <-
+  100 * catch_summary33_35$legal_140plus / catch_summary33_35$total_legal
+
+write.csv(catch_summary33_35,"C:/Users/HowseVJ/OneDrive - DFO-MPO/Bycatch Review/requests/catch_summary33_35.csv" )
+
+
+
+ggplot(catch_summary33_35, aes(x = SYEAR, y = pct_140plus)) +
   geom_line(color = "black", linewidth = 1) +
   geom_point(color = "black") +
   facet_wrap(~ LFA, scales = "free_y") +
   labs(
-   #title = "LFAs 33–35",
-    x = "Year",
+    x = "Season Year",
     y = "Percent ≥ 140 mm"
   ) +
   theme_bw() +
@@ -128,36 +127,77 @@ ggplot(pct_33_35, aes(x = YR, y = pct_over140)) +
   )
 
 
-### LFAs 36-38 from 2000-2025
-df_36_38 <- a %>%
+
+### ALL YEARS TOGETHER
+legal <- subset(df_33_35, commercial == "legal")
+
+total_legal_all <- aggregate(
+  CARLENGTH ~ LFA,
+  data = legal,
+  FUN = length)
+names(total_legal_all)[2] <- "total_legal"
+
+
+legal_140_all <- aggregate(
+  CARLENGTH ~ LFA,
+  data = subset(legal, CARLENGTH >= 140),
+  FUN = length)
+names(legal_140_all)[2] <- "legal_140plus"
+
+# Merge
+catch_summary33_35_all <- merge(
+  total_legal_all,
+  legal_140_all,
+  by = "LFA",
+  all.x = TRUE)
+
+# Percent ≥140
+catch_summary33_35_all$pct_140plus <-
+  100 * catch_summary33_35_all$legal_140plus /catch_summary33_35_all$total_legal
+write.csv(catch_summary33_35_all,"C:/Users/HowseVJ/OneDrive - DFO-MPO/Bycatch Review/requests/catch_summary33_35_all.csv" )
+
+
+
+
+
+############# LFAs 36-38 from 2000-2025 ##############
+df_36_38 <- aS2 %>%
   filter(LFA %in% c("36", "38"),
-         YR >= 2000,
-         YR <= 2026)
+         SYEAR >= 2000,
+         SYEAR <= 2026)
+df_36_38<-as.data.frame(df_36_38)
 
 
-tot_36_38 <- aggregate(CARLENGTH ~ LFA + YR, data = df_36_38, FUN = length)
+legal <- subset(df_36_38, commercial == "legal")
+total_legal <- aggregate(
+  CARLENGTH ~ SYEAR + LFA,
+  data = legal,
+  FUN = length)
+names(total_legal)[3] <- "total_legal"
 
-over_140_36_38 <- aggregate(CARLENGTH ~ LFA + YR, data = df_36_38,
-                            FUN = function(x) sum(x >= 140, na.rm = TRUE))
-pct_36_38 <- merge(tot_36_38, over_140_36_38,
-                   by = c("LFA", "YR"),
-                   suffixes = c("_total", "_over140"))
-pct_36_38$pct_over140 <- 100 * pct_36_38$CARLENGTH_over140 / pct_36_38$CARLENGTH_total
+legal_140 <- aggregate(
+  CARLENGTH ~ SYEAR + LFA,
+  data = subset(legal, CARLENGTH >= 140),
+  FUN = length)
+names(legal_140)[3] <- "legal_140plus"
 
-pct_36_38$LFA <- as.factor(pct_36_38$LFA)
-pct_36_38$YR  <- as.numeric(as.character(pct_36_38$YR))
-pct_36_38$Percent_Rounded <- round(pct_36_38$pct_over140, 2)
+catch_summary36_38 <- merge(total_legal, legal_140, by = c("SYEAR", "LFA"), all.x = TRUE)
 
-write.csv(pct_36_38,"C:/Users/HowseVJ/OneDrive - DFO-MPO/Bycatch Review/requests/Jumbos36_38.csv" )
+catch_summary36_38$legal_140plus[is.na(catch_summary36_38$legal_140plus)] <- 0
+
+catch_summary36_38$pct_140plus <-
+  100 * catch_summary36_38$legal_140plus / catch_summary36_38$total_legal
+
+write.csv(catch_summary36_38,"C:/Users/HowseVJ/OneDrive - DFO-MPO/Bycatch Review/requests/catch_summary36_38.csv" )
 
 
-ggplot(pct_36_38, aes(x = YR, y = pct_over140)) +
+
+ggplot(catch_summary36_38, aes(x = SYEAR, y = pct_140plus)) +
   geom_line(color = "black", linewidth = 1) +
   geom_point(color = "black") +
   facet_wrap(~ LFA, scales = "free_y") +
   labs(
-    #title = "LFAs 36 & 38",
-    x = "Year",
+    x = "Season Year",
     y = "Percent ≥ 140 mm"
   ) +
   theme_bw() +
@@ -165,6 +205,46 @@ ggplot(pct_36_38, aes(x = YR, y = pct_over140)) +
     strip.text = element_text(size = 12, face = "bold"),
     plot.title = element_text(size = 14, face = "bold")
   )
+
+
+
+
+### ALL YEARS TOGETHER
+legal <- subset(df_36_38, commercial == "legal")
+
+total_legal_all <- aggregate(
+  CARLENGTH ~ LFA,
+  data = legal,
+  FUN = length)
+names(total_legal_all)[2] <- "total_legal"
+
+
+legal_140_all <- aggregate(
+  CARLENGTH ~ LFA,
+  data = subset(legal, CARLENGTH >= 140),
+  FUN = length)
+names(legal_140_all)[2] <- "legal_140plus"
+
+# Merge
+catch_summary36_38_all <- merge(
+  total_legal_all,
+  legal_140_all,
+  by = "LFA",
+  all.x = TRUE)
+
+# Percent ≥140
+catch_summary36_38_all$pct_140plus <-
+  100 * catch_summary36_38_all$legal_140plus /catch_summary36_38_all$total_legal
+
+write.csv(catch_summary36_38_all,"C:/Users/HowseVJ/OneDrive - DFO-MPO/Bycatch Review/requests/catch_summary36_38_all.csv" )
+
+
+
+
+
+
+
+
 
 
 #####review length frequencies
@@ -223,7 +303,7 @@ df_33_35$TRAPTYPE <- recode_traptype(df_33_35$TRAPTYPE)
 df_36_38$TRAPTYPE <- recode_traptype(df_36_38$TRAPTYPE)
 
 table_33_35 <- aggregate(
-  cbind(DESCRIPTION, TRAPTYPE) ~ LFA + YR,
+  cbind(DESCRIPTION, TRAPTYPE) ~ LFA + SYEAR,
   data = df_33_35,
   FUN = function(x) paste(sort(unique(x)), collapse = ", ")
 )
@@ -232,7 +312,7 @@ write.csv(table_33_35 ,"C:/Users/HowseVJ/OneDrive - DFO-MPO/Bycatch Review/reque
 
 
 table_36_38 <- aggregate(
-  cbind(DESCRIPTION, TRAPTYPE) ~ LFA + YR,
+  cbind(DESCRIPTION, TRAPTYPE) ~ LFA + SYEAR,
   data = df_36_38,
   FUN = function(x) paste(sort(unique(x)), collapse = ", ")
 )
