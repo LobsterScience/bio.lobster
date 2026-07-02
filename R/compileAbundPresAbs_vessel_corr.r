@@ -298,7 +298,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
           #  trapSize = readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesSize.rds')) 
             
             #RV Survey  ###covertt back to raw #s
-            rv = RV_sets(length_group = 5)
+            rv = RV_sets(length_group = 1)
             rv$TEMP = rv$bottom_temperature
             rv = subset(rv,YEAR>1998)
             rv$id = paste(rv$mission,rv$setno,sep='_')
@@ -320,8 +320,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             
             ilts = ILTS_ITQ_All_Data(biomass = F,aggregate=F,redo_base_data = F)  
             ilts$N = ilts$SA_CORRECTED_PRORATED_N * ilts$sweptArea ###covertt back to raw #s
-            sc1=seq(13,253,by=5)
-            ilts$SZ = sc1[cut(ilts$FISH_LENGTH,sc1,labels=F)]
+            ilts$SZ = round(ilts$FISH_LENGTH/1)*1
             ilts$Berried= ilts$Recruit = ilts$Legal=  ilts$Juv =0
             ilts$Berried = ifelse(ilts$SEX==3,ilts$N,ilts$Berried)
             ilts$Recruit = ifelse(ilts$FISH_LENGTH %in% 70:81,ilts$N,ilts$Recruit)

@@ -2,47 +2,47 @@
 #' Description: Plot lobster fishing areas with labels, grids, bathymetry, etc.
 #' @export
 ggLobsterMap <- function(
-        area='custom',
-        fill.colours='grey',
-        ylim=c(40,52),
-        xlim=c(-74,-47),
-        LFAfill='white',
-        attrData=NULL,
-        attrColumn='Z',
-        addGrids=FALSE,
-        addGridsDepthPruned=FALSE,
-        addNAFO=FALSE,
-        nafo='4X',
-        bathy=TRUE,
-        fw=NULL,
-        legLab="",
-        addLFAlines=TRUE,
-        addLFALabels=FALSE,
-        addGridLabels=FALSE,
-        addPoints=FALSE,
-        pts=NULL,
-        addNAFOLabels=FALSE,
-        scaleTrans='identity',
-        brks=NULL,
-        return.object=FALSE,
-        layerDir=file.path(bio.directory,'bio.lobster.data','mapping_data'),
-        LFA_label_size=4,
-        grid_label_size=3,
-        grid_label_colour='grey',
-        #colourLFA=FALSE,
-        show37label=FALSE,
-        colourLFA=NULL,
-        ...
+    area='custom',
+    fill.colours='grey',
+    ylim=c(40,52),
+    xlim=c(-74,-47),
+    LFAfill='white',
+    attrData=NULL,
+    attrColumn='Z',
+    addGrids=FALSE,
+    addGridsDepthPruned=FALSE,
+    addNAFO=FALSE,
+    nafo='4X',
+    bathy=TRUE,
+    fw=NULL,
+    legLab="",
+    addLFAlines=TRUE,
+    addLFALabels=FALSE,
+    addGridLabels=FALSE,
+    addPoints=FALSE,
+    pts=NULL,
+    addNAFOLabels=FALSE,
+    scaleTrans='identity',
+    brks=NULL,
+    return.object=FALSE,
+    layerDir=file.path(bio.directory,'bio.lobster.data','mapping_data'),
+    LFA_label_size=4,
+    grid_label_size=3,
+    grid_label_colour='grey',
+    #colourLFA=FALSE,
+    show37label=FALSE,
+    colourLFA=NULL,
+    ...
 ){
-    lfa_colours <- c(
-        "skyblue",
-        "gold",
-        "red1",
-        "green3",
-        "orchid",
-        "orange",
-        "dodgerblue3"
-    )
+  lfa_colours <- c(
+    "skyblue",
+    "gold",
+    "red1",
+    "green3",
+    "orchid",
+    "orange",
+    "dodgerblue3"
+  )
     
     
     # ----------------------
@@ -156,7 +156,7 @@ ggLobsterMap <- function(
     # Grids
     # ----------------------
     if(addGrids){
-        p <- p + geom_sf(data=grids, fill=fills)
+        p <- p + geom_sf(data=grids, fill=fills,colour='grey')
     }
     
     # ----------------------

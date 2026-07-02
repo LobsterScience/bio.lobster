@@ -11,7 +11,7 @@ require(patchwork)
 
 p = bio.lobster::load.environment()
 
-
+#amc updated May 13 2026
 #la()
 
 #adjust as required
@@ -39,14 +39,15 @@ if(NewDataPull){
 
 # Fishery footprint-
 #------------------------------------------------------------
+r = readRDS(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA27-38GridsPrunedtoDepth-sf.rds'))
 
-r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
+#r<-readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
 r = st_as_sf(r)
 
 a =  lobster.db('process.logs')
 a = subset(a,SYEAR>=2010 & SYEAR<assessment.year) #subsetting data to 2010-2023 (2024 still has outstandinmg logs, etc)
 b = lobster.db('seasonal.landings')
-b = subset(b <- b[b$SYEAR != "2024-2025", ])
+b = subset(b <- b[b$SYEAR %ni% c( "2024-2025",'2025-2026'), ])
 b$SYEAR = 1976:assessment.year
 b$LFA38B <- NULL
 b = subset(b,SYEAR>2004 & SYEAR<=assessment.year)
@@ -165,17 +166,17 @@ Tot = subset(Tot,select=c(SYEAR,LFA,GRID_NUM,BTTH,BL,SD_LOG_ID,LICENCE_ID))
 names(Tot)= c('FishingYear','LFA','Grid','TrapHauls','Landings','Trips','NLics')
 #Tot$PrivacyScreen = ifelse(Tot$NLics>4,1,0)
 #Tot <- Tot[Tot$PrivacyScreen != 0, ] #removes grids with <5 licenses reporting
+#saveRDS(Tot,'PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
 
-saveRDS(Tot,'PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
-
-Tot = readRDS('PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
+#Tot = readRDS('PrivacyScreened_TrapHauls_Landings_Trips_Gridand.rds')
 Tot$LFA = ifelse(Tot$LFA=='31B',312,Tot$LFA)
 Tot$LFA = ifelse(Tot$LFA=='31A',311,Tot$LFA)
 
 
 #making plots of Tot
 
-GrMap = readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
+#GrMap = readRDS(file.path( layerDir,"GridPolys_DepthPruned_37Split.rds"))
+GrMap = readRDS(file.path(project.datadirectory('bio.lobster'),'data','maps','LFA27-38GridsPrunedtoDepth-sf.rds'))
 coa = st_as_sf(readRDS(file.path( project.datadirectory("bio.lobster"), "data","maps","CoastlineSF_NY_NL.rds")))
 GrMap1 = GrMap
 
@@ -191,7 +192,7 @@ gTot = merge(GrMap2,Tot,by.x=c('LFA','GRID_NO'),by.y=c('LFA','Grid'),all.x=T)
 
 
 gTot$CPUE= as.numeric(gTot$Landings)/as.numeric(gTot$TrapHauls)
-
+gTot = subset(gTot, LFA !=37)
 
 g27p = gTot
 g27p <- g27p %>%
@@ -204,8 +205,10 @@ g27p <- g27p %>%
 #remove unneeded variables for sharing data
 
 g27p=subset(g27p, FishingYear<=2023)
-g27p = subset(g27p, select = -c(PrivacyScreen, V2, grid) )
-names(g27p)=c("LFA", "REPORTING_GRID", "AREA", "FISHING_YEAR", "TRAP_HAULS", "LANDINGS_KG", "TRIPS", "LICENCES_REPORTED", "GEOMETRY","CPUE_KG_TH" )
+
+st_geometry(g27p) <- NULL
+g27p$V2 <- NULL
+names(g27p)=c("LFA", "REPORTING_GRID", "AREA", "FISHING_YEAR", "TRAP_HAULS", "LANDINGS_KG", "TRIPS", "LICENCES_REPORTED", "CPUE_KG_TH" )
 
 saveRDS(g27p,'lobster.pruned.grid.data.rds')
 

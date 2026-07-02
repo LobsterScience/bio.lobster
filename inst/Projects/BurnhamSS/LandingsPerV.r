@@ -179,4 +179,4 @@ lfa2lpu <- function(x){
   write.csv(v,'~/git/slice_per_lic/data/can_Landings_area_calcs.csv')
   
   
-  
+  ###number of active vessel
