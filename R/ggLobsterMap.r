@@ -32,7 +32,7 @@ ggLobsterMap <- function(
     #colourLFA=FALSE,
     show37label=FALSE,
     colourLFA=NULL,
-    simple.map=F,
+    simple.map=T,
     ...
 ){
   lfa_colours <- c(
