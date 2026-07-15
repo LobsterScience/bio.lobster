@@ -1637,7 +1637,11 @@ a.port = b.port")
       
       names2=c("TRIP", "STARTDATE", "COMAREA_ID", "PORT", "PORTNAME", "CAPTAIN", "LICENSE_NO", "SAMCODE", "DESCRIPTION", "TRAP_NO",
                "TRAP_TYPE", "SET_NO", "DEPTH", "SOAK_DAYS", "LATDDMM", "LONGDDMM", "GRIDNO",'NUM_HOOK_HAUL', "SPECIESCODE", "SPECIES", "SEXCD_ID","VNOTCH",
-               "EGG_STAGE","SHELL",  "CULL_ID", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT")
+               "EGG_STAGE","SHELL",  "CULL_ID", "FISH_LENGTH", "DISEASE", "CONDITION_CD", "CLUTCH", "CALWT", "ABUNDANCE","KEPT", "RELEASE_CD")
+      ## VH July 2026 - added ABUNDANCE, KEPT, and RELEASE_CD
+      atSea$ABUNDANCE <- NA
+      atSea$KEPT <- NA
+      atSea$RELEASE_CD <- NA
       
       #BZ. Sept2021- Added "DISEASE", "CONDITION_CD", "CLUTCH" to above list to include these variables and match fields from atSea dataset
       
@@ -1646,12 +1650,14 @@ a.port = b.port")
       atSea2$LATDDMM = convert.dd.dddd(atSea2$LATDDMM)
       atSea2$LONGDDMM = convert.dd.dddd(atSea2$LONGDDMM) * -1
       
+   
+      
       names(atSea2) = names(atSea)
       atSea$TRIPNO = as.character(atSea$TRIPNO)
       atSea2$LICENCE_ID = as.character(atSea2$LICENCE_ID)
       atSea2$TRAPNO = as.character(atSea2$TRAPNO)
       atSea2$STRINGNO = as.character(atSea2$STRINGNO)
-      
+
       
       ## As of 2026 import new at sea data location/format:
       trip.info = connect.command(con, "select * from lobster.AT_SEA_TRIP_INFO")
@@ -1678,10 +1684,23 @@ a.port = b.port")
       full.tab$BOARD_DATE = as_datetime(full.tab$BOARD_DATE, format = "%Y-%m-%d")
       
       
-      atSea3 <- full.tab %>% mutate(SAMCODE = NA, PORT = NA, CALWT = NA) %>% dplyr::select(TRIP, BOARD_DATE, COMAREA_ID, PORT, PORT_NAME, CAPTAIN, LICENSE_NO, SAMCODE, OWNER_GROUP, TRAP_NO, TRAP_TYPE, SET_NO, DEPTH, SOAK_DAYS, 
+      atSea3 <- full.tab %>% mutate(SAMCODE = NA, PORT = NA, CALWT = NA, CULL = CULLS) %>% dplyr::select(TRIP, BOARD_DATE, COMAREA_ID, PORT, PORT_NAME, CAPTAIN, LICENSE_NO, SAMCODE, OWNER_GROUP, TRAP_NO, TRAP_TYPE, SET_NO, DEPTH, SOAK_DAYS, 
                                                                                            LAT, LON, STRATUM_ID, NUM_HOOK, SPECCD_ID, COMMON, SEXCD_ID, VNOTCH, EGG_STAGE, SHELL, CULLS, FISH_LENGTH, DISEASE,
-                                                                                           CONDITION, CLUTCH, CALWT)
+                                                                                           CONDITION, CLUTCH, CALWT, ABUNDANCE, KEPT, RELEASE_CD)
       
+   
+      ncol(atSea3)
+      length(colnames(atSea3))
+      names(atSea3)
+      
+      ncol(atSea2)
+      length(colnames(atSea2))
+      names(atSea2)
+      
+      
+      ncol(atSea)
+      length(colnames(atSea))
+      names(atSea)
       
       colnames(atSea3) <- colnames(atSea)
       
@@ -1703,6 +1722,12 @@ a.port = b.port")
       atSea3$CONDITION = as.numeric(atSea3$CONDITION)
       atSea3$CLUTCH = as.numeric(atSea3$CLUTCH)
       atSea3$CALWT = as.numeric(atSea3$CALWT)
+      atSea$ABUNDANCE <- as.numeric(atSea$ABUNDANCE)
+      atSea2$ABUNDANCE <- as.numeric(atSea2$ABUNDANCE)
+      atSea3$ABUNDANCE <- as.numeric(atSea3$ABUNDANCE)
+      atSea$KEPT <- as.numeric(atSea$KEPT)
+      atSea2$KEPT<- as.numeric(atSea2$KEPT)
+      atSea3$KEPT <- as.numeric(atSea3$KEPT)
       
       atSea3$LFA = gsub("L","",atSea3$LFA)
       
