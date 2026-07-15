@@ -1752,9 +1752,9 @@ a.port = b.port")
             a = which(is.na(aS$Y) | is.na(aS$X))
             if(length(a)<dim(aS)[1]){
             if(length(a)>0) {
-              a1 = findPolys(aS[-a,],LFAgrid,maxRows = 3e6,includeBdry=1)
+              a1 = findPolys(aS[-a,],LFAgrid,maxRows = 1e7,includeBdry=1) ##CHANGED maxrows to avoid error
               }else{
-                a1 = findPolys(aS,LFAgrid,maxRows = 3e6,includeBdry=1)
+                a1 = findPolys(aS,LFAgrid,maxRows = 1e7,includeBdry=1)##CHANGED maxrows to avoid error
               }
             }
             aS = merge(aS,a1,by='EID',all.x=T)
