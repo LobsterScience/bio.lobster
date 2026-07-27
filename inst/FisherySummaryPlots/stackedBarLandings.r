@@ -162,7 +162,7 @@ o1_prop <- o1 %>%
   mutate(prop_landings = Landings / sum(Landings, na.rm = TRUE)) %>%
   ungroup()
 
-o134 = subset(o1_prop,LFA=='LFA33')
+o134 = subset(o1_prop,LFA=='LFA35')
 sf = max(o134$Landings, na.rm=T) / max(o134$prop_landings, na.rm=T)
 
 ggplot(o134, aes(x = YR)) +
