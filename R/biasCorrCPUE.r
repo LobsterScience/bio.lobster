@@ -5,6 +5,7 @@ biasCorrCPUE <- function(data,by.time=F,min.sample.size=15){
   start<-Sys.time()
   data<-na.omit(data)
   t<-aggregate(date~time,data=data,FUN=length)
+  
   if(!by.time){
       c<-with(data,sum(catch))	
       e<-with(data,sum(effort))

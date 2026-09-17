@@ -1081,7 +1081,8 @@ a.port = b.port")
   if(DS %in% c('annual.landings','annual.landings.redo')) {
     if(DS == 'annual.landings') {
       load(file=file.path(fnODBC,'annual.landings.rdata'))
-      return(annual.landings)
+      
+      return(annual.landings[order(annual.landings$YR),])
     }
     
     #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
@@ -1094,7 +1095,7 @@ a.port = b.port")
   if(DS %in% c('seasonal.landings','seasonal.landings.redo')) {
     if(DS == 'seasonal.landings') {
       load(file=file.path(fnODBC,'seasonal.landings.rdata'))
-      return(seasonal.landings)
+      return(seasonal.landings[order(seasonal.landings$SYEAR),])
     }
     
     #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
@@ -1236,9 +1237,8 @@ a.port = b.port")
     oldlogs34$LFA34_WEIGHT2_KGS=oldlogs34$LFA34_WEIGHT2_KGS*2.20462
     oldlogs34=subset(oldlogs34,select=c("VR_NUMBER","LICENCE_ID","LOBSTER_AREA","TRIP_ID","DATE_FISHED","GRID_NUMBER_A","LFA34_WEIGHT1_KGS","TRAP_HAULS_GRID_A","GRID_NUMBER_B","LFA34_WEIGHT2_KGS","TRAP_HAULS_GRID_B","V_NOTCHED","PORT_LANDED"))
     oldlogs34$SRC='PAPER'
-    names(oldlogs34)=c("VR_NUMBER","LICENCE_ID","LFA","SD_LOG_ID","DATE_FISHED","GRID_NUM","WEIGHT_LBS","NUM_OF_TRAPS","GRID_NUM_B","WEIGHT_LBS_B","NUM_OF_TRAPS_B","V_NOTCHED","PORT_LANDED", "SRC")
-    logs=merge(logs,oldlogs34,all=T)
-    
+    names(oldlogs34)=c("VR_NUMBER","LICENCE_ID","LFA","SD_LOG_ID","DATE_FISHED","GRID_NUM","WEIGHT_LBS","NUM_OF_TRAPS","GRID_NUM_B","WEIGHT_LBS_B","NUM_OF_TRAPS_B","V_NOTCHED","COMMUNITY_CODE", "SRC")
+    logs=dplyr::bind_rows(logs,oldlogs34)
     
     logs$TOTAL_NUM_TRAPS = rowSums(logs[c('NUM_OF_TRAPS','NUM_OF_TRAPS_B','NUM_OF_TRAPS_C')],na.rm=T)
     logs$TOTAL_WEIGHT_LBS = rowSums(logs[c('WEIGHT_LBS','WEIGHT_LBS_B','WEIGHT_LBS_C')],na.rm=T)
@@ -1398,8 +1398,8 @@ a.port = b.port")
       vlogs34$PORT[vlogs34$PORT=="PINKNEY'S PT."]<-"PINKNEY S POINT"
       vlogs34$PORT[vlogs34$PORT=="WOODS HBR."]<-"WOODS HARBOUR"
       
-      Ports = read.csv(file.path( project.datadirectory("bio.lobster"), "data","inputs","Ports.csv"))
-      Prts34 = subset(Ports,LFA==34,c("Port_Code","Port_Name","County","Statistical_District","LFA" ,"centlat" ,"centlon"))
+      Ports = lobster.db('port_location')
+      Prts34 = subset(Ports,LFA==34,c("PORT_CODE","PORT_NAME","COUNTY","STATISTICAL_DISTRICT","LFA" ,"CENTLAT" ,"CENTLON"))
       names(Prts34)=c("PORT_CODE","PORT","COUNTY","STAT","LFA" ,"Y" ,"X")
       vlogs34 = merge(vlogs34,Prts34,all.x=T)
       
@@ -1423,12 +1423,41 @@ a.port = b.port")
       stat33W = c(27,28,30,31)
       stat27N = c(1,4)
       stat27S = c(6,7)
-      vlog$LFA[vlog$STAT%in%stat27N] = "27N"
-      vlog$LFA[vlog$STAT%in%stat27S] = "27S"
-      vlog$LFA[vlog$STAT%in%stat33E] = "33E"
-      vlog$LFA[vlog$STAT%in%stat33W] = "33W"
-      vlog$LFA[vlog$PORT_CODE%in%ports31A] = "31A"
-      vlog$LFA[vlog$PORT_CODE%in%ports31B] = "31B"
+      vlog$LFA2 = vlog$LFA
+      vlog$LFA2[vlog$STAT%in%stat27N] = "27N"
+      vlog$LFA2[vlog$STAT%in%stat27S] = "27S"
+      vlog$LFA2[vlog$STAT%in%stat33E] = "33E"
+      vlog$LFA2[vlog$STAT%in%stat33W] = "33W"
+      vlog$LFA2[vlog$PORT_CODE%in%ports31A] = "31A"
+      vlog$LFA2[vlog$PORT_CODE%in%ports31B] = "31B"
+      
+      vlog$LFA2 = ifelse(vlog$LFA2=='33W' & vlog$LFA==34,34,vlog$LFA2)
+      
+      vlog$DATE_FISHED = vlog$FDATE
+      vlog$UNIQUE_FISHER = paste(vlog$PORT_CODE,vlog$FCODE, sep="-")
+      Fish.Date = lobster.db('season.dates')
+      Fish.Date = backFillSeasonDates(Fish.Date,eyr=year(Sys.time()))
+      lfa  =  sort(unique(Fish.Date$LFA))
+      for(i in 1:length(lfa)) {
+        h  =  Fish.Date[Fish.Date$LFA==lfa[i],]
+        for(j in 1:nrow(h)) {
+          vlog$SYEAR[vlog$LFA==lfa[i]&vlog$DATE_FISHED>=h[j,'START_DATE']&vlog$DATE_FISHED<=h[j,'END_DATE']] = h[j,'SYEAR']
+        }
+      }
+    
+      # add week of season (WOS) variable
+      vlog$DOS = vlog$WOS = NA
+      for(i in 1:length(lfa)) {
+        h  =  Fish.Date[Fish.Date$LFA==lfa[i],]
+        for(j in unique(vlog$SYEAR[vlog$LFA==lfa[i]])){
+          print(c(lfa[i],j))
+          vlog$DOS[vlog$SYEAR==j&vlog$LFA==lfa[i]]<-vlog$DATE_FISHED[vlog$SYEAR==j&vlog$LFA==lfa[i]]-min(vlog$DATE_FISHED[vlog$SYEAR==j&vlog$LFA==lfa[i]])+1
+          vlog$WOS[vlog$LFA==lfa[i]&vlog$SYEAR==j] = floor(as.numeric(vlog$DATE_FISHED[vlog$LFA==lfa[i]&vlog$SYEAR==j]-min(h$START_DATE[h$SYEAR==j]))/7)+1
+        }
+      }
+      
+      
+      
       save( vlog, file=file.path( fnODBC, "processed.vlog.rdata"), compress=T)
       return(vlog)
     }
