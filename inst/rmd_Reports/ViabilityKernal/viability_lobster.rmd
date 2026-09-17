@@ -1,0 +1,151 @@
+---
+title: "Viability Kernel Analysis for Lobster Fishery Objectives"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  html_document:
+  toc: true
+  toc_depth: 2
+  number_sections: yes
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+echo = TRUE, 
+warning = FALSE, 
+message = FALSE
+)
+```
+
+# Introduction
+
+This document implements a viability kernel (VK) analysis for a lobster fishery
+under multiple objectives involving effort, economics, and climate variability.
+
+# Load packages
+
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+# Temperature–dependent catch per trip
+
+```{r}
+cpue_temp <- function(T, T_opt = 9, max_cpue = 120, width = 2) {
+  max_cpue * exp(-((T - T_opt)^2) / (2 * width^2))
+}
+```
+
+# Define the state space
+
+```{r}
+vk_states <- expand.grid(
+  days_fished = seq(50, 200, by = 5),
+  temp = seq(6, 12, by = 0.25)
+)
+```
+
+# Economic parameters and targets
+
+```{r}
+price_per_lb <- 10
+fuel_burn <- 120
+fuel_price <- 1.80
+bait_use <- 40
+bait_price <- 1.25
+
+cpue_target <- 90
+profit_target <- 2000
+max_days <- 180
+```
+
+# Derived metrics
+
+```{r}
+vk_states <- vk_states %>%
+  mutate(
+    cpue = cpue_temp(temp),
+    revenue_trip = cpue * price_per_lb,
+    cost_trip = fuel_burn * fuel_price + bait_use * bait_price,
+    profit_trip = revenue_trip - cost_trip,
+    seasonal_profit = profit_trip * days_fished
+  )
+```
+
+# Viability constraints
+
+```{r}
+vk_states <- vk_states %>%
+  mutate(
+    effort_ok = days_fished <= max_days,
+    cpue_ok = cpue >= cpue_target,
+    profit_ok = seasonal_profit >= profit_target,
+    viable = effort_ok & cpue_ok & profit_ok
+  )
+```
+
+# Viability Kernel (Effort × Temperature)
+
+```{r}
+ggplot(vk_states, aes(days_fished, temp, fill = viable)) +
+  geom_tile() +
+  scale_fill_manual(values = c("grey80", "darkgreen")) +
+  theme_minimal()
+```
+
+# Seasonal extensions to the viability kernel
+
+```{r}
+seasons <- tibble(
+  season = c("Early", "Mid", "Late"),
+  price_mult = c(0.85, 1.00, 1.15),
+  quality_mult = c(0.8, 1.0, 1.1),
+  temp_shift = c(-0.5, 0, 0.5)
+)
+```
+
+```{r}
+cpue_temp_season <- function(T, season, T_opt = 9, max_cpue = 120, width = 2) {
+  penalty <- case_when(
+    season == "Early" ~ 0.8,
+    season == "Mid" ~ 1.0,
+    TRUE ~ 0.9
+  )
+  penalty * max_cpue * exp(-((T - T_opt)^2) / (2 * width^2))
+}
+```
+
+```{r}
+vk_seasonal <- expand.grid(
+  days_fished = seq(50, 200, 5),
+  temp = seq(6, 12, 0.25),
+  season = seasons$season
+) %>% left_join(seasons, by = "season")
+```
+
+```{r}
+vk_seasonal <- vk_seasonal %>%
+  mutate(
+    cpue = cpue_temp_season(temp + temp_shift, season),
+    effective_price = price_per_lb * price_mult * quality_mult,
+    revenue_trip = cpue * effective_price,
+    cost_trip = fuel_burn * fuel_price + bait_use * bait_price,
+    profit_trip = revenue_trip - cost_trip,
+    seasonal_profit = profit_trip * days_fished,
+    viable_season = cpue >= cpue_target & seasonal_profit >= profit_target & days_fished <= max_days
+  )
+```
+
+```{r}
+vk_kernel_strict <- vk_seasonal %>%
+  group_by(days_fished, temp) %>%
+  summarise(viable = all(viable_season), .groups = "drop")
+```
+
+```{r}
+ggplot(vk_kernel_strict, aes(days_fished, temp, fill = viable)) +
+  geom_tile() +
+  scale_fill_manual(values = c("grey80", "darkgreen")) +
+  theme_minimal()
+```
