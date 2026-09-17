@@ -4,7 +4,7 @@ require(bio.utilities)
 	p = bio.lobster::load.environment()
 	la()
 		
-	assessment.year = 2018 ########### check the year ############### !!!!!!!!!!!
+	assessment.year = 2026 ########### check the year ############### !!!!!!!!!!!
 
 
     p$syr = 1989
@@ -16,12 +16,11 @@ require(bio.utilities)
     p$subareas = c("34", "35", "36", "38") # specify lfas for data summary
 
     lS<-lobster.db('process.logs')
-    lS = subset(lS,SYEAR<2019)
+  #  lS = subset(lS,SYEAR<2019)
     H = lobster.db('historic.cpue')
     H$CPUE = H$LBSPTRAP/2.2046
-	 lobster.db('process.vlog')
-	V = vlog
-    V$SYEAR = as.numeric(year(V$FDATE))
+    V= lobster.db('process.vlog')
+	  V$SYEAR = as.numeric(year(V$FDATE))
                   V$SYEAR = year(V$FDATE)
                   V$MONTH = month(V$FDATE)
                   ii = which(V$MONTH>8)
@@ -68,7 +67,7 @@ require(bio.utilities)
     aaL34 = aggregate(DATE_FISHED~LFA+SYEAR, data=subset(lS,LFA==34), FUN=mean)
     names(aaL34)[3] = 'SDATE'
 
-    aL34 = merge(aL34,aaL34)
+    a34 = merge(aL34,aaL34)
 
     b34 = as.data.frame(rbind(rbind(H34,V34),L34))
     bb34 = as.data.frame(rbind(rbind(aH34,aV34),aL34))
@@ -84,6 +83,10 @@ require(bio.utilities)
             with(subset(bb34,SYEAR<1970),points(CPUE~SDATE, col='red',pch=16,type='b'))
             with(subset(bb34,SYEAR>1970),points(CPUE~SDATE, col='red',pch=16,type='b'))
     
+            aL34 = rbind(aL34,aV34[,c('LFA','SYEAR','CPUE')])
+            aL34 = aL34[order(aL34$SYEAR),]
+            ggg = data.frame(SYEAR = 1989:2026,Meds = rmed(yr=aL34$SYEAR,aL34$CPUE))
+            ggplot(subset(aL34,SYEAR<2026),aes(x=SYEAR,y=CPUE))+geom_point()+geom_line(data=ggg,aes(x=SYEAR,y=Meds.x), colour='red',linewidth=1)+theme_test(base_size=14)
    
 #################
 ##LFA 35 not enough data to make it worth it

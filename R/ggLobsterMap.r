@@ -664,5 +664,15 @@ ggLobsterMap <- function(
   if(return.object)
     return(p)
   
-  p
+    
+    
+    # ----------------------
+    # Final map settings
+    # ----------------------
+    p <- p +
+        coord_sf(xlim=xlim, ylim=ylim, expand=FALSE) +
+        labs(x="Longitude", y="Latitude")+
+        theme(panel.grid = element_blank())
+    
+    if(return.object) return(p)
 }

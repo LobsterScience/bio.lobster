@@ -123,7 +123,7 @@ cand$total = cand$sublegal+cand$legal
 cand$MLS = 'm82.5'
 cand$MLS = ifelse(cand$LFA==29,'m84',cand$MLS)
 
-fit_gam <- gam(
+fit_gamS <- fit_gam <- gam(
   sublegal ~ (day_of_season*MLS)+fconfig+legal,
   family = poisson(link='log'), 
   data = subset(cand,total>0)
@@ -148,3 +148,55 @@ ggplot(subset(plot_df), aes(x = day_of_season, y = pred_p, color = fconfig)) +
   facet_wrap(~MLS)+
   theme_test(base_size = 13)
 
+#####legals
+
+fit_gam_L <- fit_gam <- gam(
+  legal ~ (day_of_season*MLS)+fconfig,
+  family = poisson(link='log'), 
+  data = subset(cand,total>0)
+)
+
+summary(fit_gam)
+
+newdat <- data.frame(expand.grid(day_of_season = seq(min(vaa_noyr$day_of_season), max(vaa_noyr$day_of_season), length.out = 60),fconfig=unique(cand$fconfig),legal=mean(cand$legal),MLS=unique(cand$MLS)))
+pred_p <- predict(fit_gam, newdata = newdat, type = "response")
+#predp is for the first column of the cbind.... ie short
+
+require(tidyr)
+plot_df <- cbind(newdat, as.data.frame(pred_p))
+
+ggplot(subset(plot_df), aes(x = day_of_season, y = pred_p, color = fconfig)) +
+  geom_line(linewidth = 1.1) +
+  labs(
+    x = "Day of Season (DOS)",
+    y = "Legal Lobster Catch (n/trap)",
+    color = "Configuration of Vents"
+  ) +
+  facet_wrap(~MLS)+
+  theme_test(base_size = 13)
+
+s1 <- summary(fit_gam_L)
+s2 <- summary(fit_gamS)
+
+# Parametric coefficients
+coef1 <- as.data.frame(s1$p.table)
+coef1$term <- rownames(coef1)
+
+coef2 <- as.data.frame(s2$p.table)
+coef2$term <- rownames(coef2)
+
+coef1$model <- "Legal"
+coef2$model <- "Sublegal"
+
+coef_table <- rbind(coef1, coef2)
+library(officer)
+library(flextable)
+
+doc <- read_docx()
+
+doc <- body_add_flextable(doc, flextable(coef_table))
+
+print(doc, target = "GAM_coefficients.docx")
+
+sjPlot::tab_model(fit_gam_L, fit_gamS,
+                  file = "gam_table.doc")

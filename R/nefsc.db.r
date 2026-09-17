@@ -71,8 +71,34 @@ if(DS %in% c('clean.redo')) {
                   #       and to_number(SHG) <= 136
                   #       and stratum like '01%' 
                   #       ;")) 
-                   
-    usinf = connect.command(con,paste("SELECT *
+                   #sept2026 needed to update this to bring in TOGA labelled sets
+    usinf = connect.command(con,paste("      (      SELECT a.CRUISE6,STRATUM,TOW,a.STATION,SEASON,STATUS_CODE,ID,AREA,SVVESSEL,CRUNUM,SVGEAR,BEGIN_GMT_TOWDATE,GMT_YEAR,GMT_MONTH,GMT_DAY,TOWDUR,AVGDEPTH,BOTTEMP,BOTSALIN,DOPDISTB,DECDEG_ENDLON,DECDEG_ENDLAT,
+      DECDEG_BEGLON,DECDEG_BEGLAT
+                    FROM  USNEFSC.USS_STATION a, 
+                          (select distinct cruise6, season, year 
+                              from usnefsc.uss_mstr_cruise 
+                              where status_code in (10,15) 
+                              and purpose_code = 10
+                              and season in ('SPRING','FALL')
+                              and year>=1968) b,
+                              usnefsc.uss_tow_evaluation c
+                    where   a.cruise6 = b.cruise6
+                    and a.cruise6 = c.cruise6
+                    and a.station=c.station 
+                    and c.type_code=1
+                    and c.operation_code in (1,2,3)
+                    and c.gear_code in (1,2,3)
+                    and c.acquisition_code in (1,2,3)
+                        
+                        --and to_number(SHG) <= 136
+                        --and statype =1
+                        --and haul <3
+                        --and gearcond <4
+                        and stratum like '01%' 
+                        )
+        union(
+     SELECT a.CRUISE6,STRATUM,TOW,a.STATION,SEASON,STATUS_CODE,ID,AREA,SVVESSEL,CRUNUM,SVGEAR,BEGIN_GMT_TOWDATE,GMT_YEAR,GMT_MONTH,GMT_DAY,TOWDUR,AVGDEPTH,BOTTEMP,BOTSALIN,DOPDISTB,DECDEG_ENDLON,DECDEG_ENDLAT,
+      DECDEG_BEGLON,DECDEG_BEGLAT
                     FROM  USNEFSC.USS_STATION a, 
                           (select distinct cruise6, season, year 
                               from usnefsc.uss_mstr_cruise 
@@ -82,7 +108,10 @@ if(DS %in% c('clean.redo')) {
                               and year>=1968) b
                     where   a.cruise6 = b.cruise6
                         and to_number(SHG) <= 136
-                        and stratum like '01%' 
+                        and stratum like '01%' )
+
+                        
+                     
                         ")) 
     
                     usinf = rename.df(usinf,c('CRUISE6','STATION'),c('MISSION','SETNO'))
@@ -105,7 +134,7 @@ if(DS %in% c('clean.redo')) {
 				i = which(is.na(inf$X))
 				inf$Y[i] = inf$DECDEG_BEGLAT[i]
 				inf$X[i] = inf$DECDEG_BEGLON[i]
-				vars2keep = c('MISSION','CRUISE','STRATUM','TOW','SETNO','SEASON','STATUS_CODE','ID','AREA','SVVESSEL','CRUNUM','SVGEAR','BEGIN_GMT_TOWDATE','GMT_YEAR','GMT_MONTH','GMT_DAY','TOWDUR','AVGDEPTH','BOTTEMP','BOTSALIN','DOPDISTB','X','Y')
+				vars2keep = c('MISSION','STRATUM','TOW','SETNO','SEASON','STATUS_CODE','ID','AREA','SVVESSEL','CRUNUM','SVGEAR','BEGIN_GMT_TOWDATE','GMT_YEAR','GMT_MONTH','GMT_DAY','TOWDUR','AVGDEPTH','BOTTEMP','BOTSALIN','DOPDISTB','X','Y')
   				inf = inf[,vars2keep]
   				inf$DIST = inf$DOPDISTB
 
@@ -210,7 +239,7 @@ if(DS %in% c('uscat', 'uscat.redo.odbc')) {
 				cainf$TOTWGT[o] = cainf$TOTWGT[o]* 36/41
 				print('All catches are now in Bigelow Equivalents; implying that 13m wingspread can be used for all swept area calculations')
  
- 				vars2keep = c('ID','MISSION','STRATUM','SETNO','CRUISE','BEGIN_GMT_TOWDATE','GMT_YEAR','AVGDEPTH','BOTTEMP','BOTSALIN','X','Y','DIST','DISTCORRECTION','SEASON','TOTWGT','TOTNO','CALWT','SUBSAMPLE')
+ 				vars2keep = c('ID','MISSION','STRATUM','SETNO','BEGIN_GMT_TOWDATE','GMT_YEAR','AVGDEPTH','BOTTEMP','BOTSALIN','X','Y','DIST','DISTCORRECTION','SEASON','TOTWGT','TOTNO','CALWT','SUBSAMPLE')
   				cainf = cainf[,vars2keep]
   				save(cainf,file=file.path(fn.root, 'usnefsc.cat.clean.rdata'))
 				return(cainf)
