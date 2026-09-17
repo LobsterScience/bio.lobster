@@ -33,6 +33,13 @@ ggLobsterMap <- function(
     colourLFA=NULL,
     colourGrid=NULL,
     simple.map=T,
+    save=FALSE,
+    save.dir=getwd(),
+    save.format="png", #can be 'pdf' as well
+    save.name=NULL,
+    save.width=NULL,    # NULL = automatically calculate from map extent
+    save.height=6,      # fixed physical height in inches
+    save.dpi=200,
     ...
 ){
   
@@ -658,6 +665,100 @@ ggLobsterMap <- function(
         x="Longitude",
         y="Latitude"
       )
+  }
+  
+  
+  # ----------------------
+  # Save map
+  # ----------------------
+  # ----------------------
+  # Save map
+  # ----------------------
+  if(save){
+    
+    # Automatically calculate output width from the
+    # geographic aspect ratio when save.width is NULL.
+    #
+    # The calculation is done in a projected CRS so that
+    # longitude and latitude are represented as actual distances.
+    if(is.null(save.width)){
+      
+      bbox_sf <- st_as_sfc(
+        st_bbox(
+          c(
+            xmin=xlim[1],
+            ymin=ylim[1],
+            xmax=xlim[2],
+            ymax=ylim[2]
+          ),
+          crs=4326
+        )
+      )
+      
+      bbox_proj <- st_transform(
+        bbox_sf,
+        3347
+      )
+      
+      bbox_dims <- st_bbox(bbox_proj)
+      
+      map_width <- bbox_dims["xmax"] - bbox_dims["xmin"]
+      map_height <- bbox_dims["ymax"] - bbox_dims["ymin"]
+      
+      save.width <- save.height *
+        (map_width / map_height)
+    }
+    
+    if(!save.format %in% c("png","pdf"))
+      stop(
+        "save.format must be either 'png' or 'pdf'"
+      )
+    
+    if(!dir.exists(save.dir))
+      dir.create(
+        save.dir,
+        recursive=TRUE
+      )
+    
+    if(is.null(save.name))
+      save.name <- paste0(
+        "Map_",
+        area
+      )
+    
+    filename <- file.path(
+      save.dir,
+      paste0(
+        save.name,
+        ".",
+        save.format
+      )
+    )
+    
+    if(save.format == "png"){
+      
+      ggsave(
+        filename=filename,
+        plot=p,
+        width=save.width,
+        height=save.height,
+        units="in",
+        dpi=save.dpi,
+        device=ragg::agg_png
+      )
+      
+    } else if(save.format == "pdf"){
+      
+      ggsave(
+        filename=filename,
+        plot=p,
+        width=save.width,
+        height=save.height,
+        units="in",
+        device="pdf"
+      )
+      
+    }
   }
   
   

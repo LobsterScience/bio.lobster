@@ -48,6 +48,8 @@ for (nm in names(dir.paths)) {
 }
 
 p$lfas = c("27", "28", "29", "30", "31A", "31B", "32") # specify lfas for data summary
+#p$lfas2 = c("33", "34", "35", "36", "38") # specify lfas for data summary
+
 p$subareas = c("27N","27S", "28", "29", "30", "31A", "31B", "32") # specify lfas for data summary
 
 #If you only want to update logs and CCIR for the last two years, run this:
@@ -108,17 +110,34 @@ write.csv(perc.log.rec, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 
 #27-32 Map for Documents, presentations, etc.
 
-pp <- ggLobsterMap(area='27-32', addLFALabels=T, LFA_label_size = 5, addGrids = T)
-ggsave(file=file.path(figdir, "Map27-32.png"))
+pp <- ggLobsterMap(area='27-32', addLFALabels=T, LFA_label_size = 5, addGrids = F, save=T, save.dir=figdir, save.name = "Map.LFA27-32" )
+print(pp)
 
 for (i in p$lfas){
-  print(pp <- ggLobsterMap(area='27-32', addLFALabels=T, LFA_label_size = 5, addGrids = T, colourLFA = i))
-  ggsave(file=file.path(figdir, paste("MapLFA", as.character(i),".png", sep="")))  
+  
+  pp <- ggLobsterMap(
+    area = "27-32",
+    addLFALabels = TRUE,
+    LFA_label_size = 5,
+    addGrids = FALSE,
+    colourLFA = i,
+    save = TRUE,
+    save.dir = figdir,
+    save.name = paste0("MapLFA", i),
+    save.format = "png",
+    save.height = 6,
+    save.dpi = 200
+  )
+  
+  print(pp)
 }
 
+
+
 #one for 28 & 29 combined
-pp <- ggLobsterMap(area='CB', addLFALabels=T, LFA_label_size = 5, addGrids = T, colourLFA = c("28", "29"))
-ggsave(file=file.path(figdir, "Map28_29.png"))
+pp <- ggLobsterMap(area='CB', addLFALabels=T, LFA_label_size = 5, addGrids = T, colourLFA = c("28", "29"), save=T, save.dir=figdir, save.name = "Map.LFA28.29" )
+print(pp)
+
 
 
 #######-----------------------------------------
@@ -433,8 +452,14 @@ png(filename=file.path(cpue.dir, paste0("weekly_cpue_",l,".png")),width=8, heigh
 #######-----------------------------------------
 ## Continuous Change In Ratio (CCIR)
 
-#lobster.db('ccir')
+### September 2026. Implementing many changes based on improved (and working) LFA 33 script
+### This improves directory structure having LFA and Year directories within outputs/ccir/...
+### not fully tested yet- Sept 2026
+
+p$current.assessment.year= assessment.year
+
 lobster.db('ccir.redo') #Must 'redo' to bring in new data
+lobster.db('ccir')
 
 inp = read.csv(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_inputs.csv'))
 load(file.path(project.datadirectory('bio.lobster'),'data','inputs','ccir_groupings.rdata')) #object names Groupings
@@ -446,80 +471,230 @@ require(bio.ccir)
 require(rstan)
 
 load_all(paste(git.repo,'bio.ccir',sep="/")) # for debugging
-#start.year=assessment.year-4 #to run on last four years
-#start.year=2000 #to run on entire data set
-start.year=assessment.year-2 #run last three years, past data shouldn't change
 
-#taken from LFA 33 assessment Oct 25. Might not be useful 
+#make sure to index year below as appropriate
+ccir_data = subset(ccir_data,YEAR<=p$current.assessment.year) 
 
-dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5, start.yr = start.year) #sexs 1.5 means no sex defn
+#to only run last three years:
+#ccir_data = subset(ccir_data, YEAR %in% (assessment.year - 2):assessment.year)
+
+
+dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[1:6], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 out.binomial = list()
-attr(out.binomial,'model') <- 'binomial'
-for(i in 1:length(dat)) { #Change to restart a broken run based on iteration number (count files in summary folder...run from there)
-  print(i)
+attr(out.binomial, 'model') <- 'binomial'
+
+overall.start = Sys.time()
+
+for(i in 1:length(dat)) { 
+  
   ds = dat[[i]]
-  x = ccir_stan_run_binomial(dat = ds,save=F)
-  out.binomial[[i]] <- ccir_stan_summarize(x)
+  
+  # Identify model
+  lfa = ds$LFA
+  yr = ds$Yr
+  grid = paste(min(ds$Grid), max(ds$Grid), sep = '-')
+  
+  cat("\nRunning model", i, "of", length(dat),
+      "| LFA", lfa, "| Grid", grid, "| Year", yr, "\n")
+  
+  # Start timer
+  start.time = Sys.time()
+  
+  # Run model
+  x = ccir_stan_run_binomial(dat = ds, save = T)
+  
+  # Model run time
+  run.time = Sys.time() - start.time
+  
+  cat("Completed | Run time:",
+      round(as.numeric(run.time, units = "mins"), 2),
+      "min | Total elapsed:",
+      round(as.numeric(Sys.time() - overall.start, units = "mins"), 1),
+      "min\n")
+  
+  # Summary directory
+  summary.fdir = file.path(
+    project.datadirectory('bio.lobster'),
+    'outputs', 'ccir',paste0('LFA', ds$LFA),p$current.assessment.year,'summary' )
+  
+  # Summarize
+  out.binomial[[i]] = ccir_stan_summarize(x,  fdir = summary.fdir )
+
+  }
+
+
+
+#------------------------------------------------------------
+# Load all binomial model summaries from the current
+# assessment-year directory
+#------------------------------------------------------------
+
+out.binomial = list()
+attr(out.binomial, 'model') <- 'binomial'
+
+# LFAs included in the CCIR 27-32 assessment
+lfas = c(27, 29, 30, "31a", "31b", 32)
+
+for(lfa in lfas) {
+  
+  # Summary directory for this LFA and assessment year
+  da = file.path(
+    project.datadirectory('bio.lobster'),
+    'outputs',
+    'ccir',
+    paste0('LFA', lfa),
+    p$current.assessment.year,
+    'summary'
+  )
+  
+  # Find all model summaries in this assessment directory
+  d = sort(
+    list.files(
+      da,
+      pattern = "summary\\.rdata$",
+      full.names = TRUE
+    )
+  )
+  
+  d = d[!file.info(d)$isdir]
+  
+  # Load each summary
+  for(i in 1:length(d)) {
+    
+    load(d[i])
+    
+    out.binomial[[length(out.binomial) + 1]] = out
+  }
 }
 
-### If the folder C:\bio.data\bio.lobster\outputs\ccir\summary contains other model runs for different areas (i.e.LFA 33)
-### move these to the appropriate folder within the summary folder (aka hide them)
+#------------------------------------------------------------
+# Assign grouping labels to model summaries
+#------------------------------------------------------------
+# This uses the Groupings object rather than model/list order.
+# Only LFA 27 is separated into north and south groupings.
 
-#Need to move the new files into the proper folder to combine historic and current data
-#Take all 27-32 files from "C:\bio.data\bio.lobster\outputs\ccir\summary" and move them to
-#C:\bio.data\bio.lobster\outputs\ccir\summary\LFA27.32 
-# then drop a copy of all summary files for all years back in "C:\bio.data\bio.lobster\outputs\ccir\summary"
+for(i in 1:length(out.binomial)){
+  
+  # Extract the grid numbers for this model
+  grid = as.numeric(strsplit(out.binomial[[i]]$Grid, "\\.")[[1]])
+  
+  # Find the Groupings entry corresponding to this LFA
+  g = Groupings[[which(sapply(Groupings, function(x)
+    x$lfa == out.binomial[[i]]$LFA))]]
+  
+  # Identify the grid groups
+  groups = names(g)[grepl("^G", names(g))]
+  
+  # Determine which group contains this model's grids
+  for(j in groups){
+    
+    if(all(grid %in% g[[j]])){
+      
+      suffix = sub("^G", "", j)
+      
+      # Only LFA 27 has separate north and south groupings
+      if(out.binomial[[i]]$LFA == 27){
+        
+        if(suffix == "1") suffix = "N"
+        if(suffix == "2") suffix = "S"
+        
+        out.binomial[[i]]$LFA =
+          paste0(out.binomial[[i]]$LFA, suffix)
+      }
+      
+      break
+    }
+  }
+}
 
-#load statement below combines ccir summaries if broken runs
-#ensure folder has only model run summaries
-da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary') #modify as required
-
-d = list.files(da,full.names=T)
-d=d[!file.info(d)$isdir] #ensures only files are listed not directories
-out.binomial = list()
-#ensure folder has only model run summaries!!!!!
-for( i in 1:length(d)){
-  load(d[i])
-  out.binomial[[i]] = out
-} 
-
-#if(grepl(351,x$Grid[1])) Main = 'LFA 27 South'
-#if(grepl(356,x$Grid[1])) Main = 'LFA 27 North'
-
-#out.binomial[[1]]$LFA = "27N"
-#out.binomial[[2]]$LFA = "27S"
+#------------------------------------------------------------
+# Collapse individual model summaries
+#------------------------------------------------------------
 
 ouBin = ccir_collapse_summary(out.binomial)
-attr(ouBin,'model') <- 'binomial'
 
-save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
-load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels2732.rdata'))
+attr(ouBin, 'model') <- 'binomial'
+
+
+#------------------------------------------------------------
+# Directory for compiled CCIR results for the 27-32 assessment
+#------------------------------------------------------------
+
+compiled.fdir = file.path(
+  project.datadirectory('bio.lobster'),
+  'outputs',
+  'ccir',
+  'summary',
+  '27.32',
+  p$current.assessment.year
+)
+
+# Create directory if it does not already exist
+if(!dir.exists(compiled.fdir))
+  dir.create(compiled.fdir, recursive = TRUE)
+
+# Save compiled binomial model summaries
+save(
+  ouBin,
+  file = file.path(
+    compiled.fdir,
+    'compiledBinomialModels2732.rdata'
+  )
+)
+
+# Reload compiled results
+load(
+  file = file.path(
+    compiled.fdir,
+    'compiledBinomialModels2732.rdata'
+  )
+)
 
 #Combine  LFA 27 north and south
-u = subset(ouBin, LFA == 27)
+# Calculate landings for each grid group represented in LFA 27
+u = subset(ouBin, grepl("^27", LFA))
 g = unique(u$Grid)
-g = strsplit(g,"\\.")
-o = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[1]]),FUN=sum)
-names(o)[2] = g[[1]][1]
-o2 = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[2]]),FUN=sum)
-names(o2)[2] = g[[2]][1]
-o = merge(o,o2)
-names(o)[1] = 'Yr'
+g = strsplit(g, "\\.")
+
+# Calculate landings for each grid group represented in LFA 27
+o = lapply(g, function(grids) {
+  aggregate(
+    WEIGHT_KG ~ SYEAR,
+    data = subset(logs, GRID_NUM %in% grids),
+    FUN = sum
+  )
+})
+
+# Rename the landing columns using the first grid in each group
+for(i in 1:length(o))
+  names(o[[i]])[2] = g[[i]][1]
+
+# Combine the two grid groups into one landings table
+o = Reduce(
+  function(x, y) merge(x, y, all = TRUE),
+  o
+)
+
+names(o)[1] = "Yr"
+
+oo <- ccir_timeseries_exploitation_plots( ouBin,
+combined.LFA = TRUE,landings = o, fdir = ccir.dir)
 
 
-#png(filename=file.path(ccir.dir, "TS.exploitation.27.combined.png"),width=8, height=5.5, units = "in", res = 800)
-oo <- ccir_timeseries_exploitation_plots(ouBin,combined.LFA=T,landings=o, fdir=ccir.dir)
-#dev.off()
+# Calculate exploitation rates for individual LFAs
+u = subset(ouBin, !grepl("^27", LFA))
 
-u = subset(ouBin, LFA != 27)
 kl = unique(u$Grid)
-outs=list()
+
+outs = list()
+
 for(i in 1:length(kl)) {
   u = subset(ouBin, Grid == kl[i])
- # png(filename=paste(ccir.dir,"/TS.exploitation.",u$LFA[1],".",u$Grid[1] ,".png", sep=""),width=8, height=5.5, units = "in", res = 800)
-  outs[[i]] <- ccir_timeseries_exploitation_plots(u, fdir=ccir.dir)
- # dev.off()
+  outs[[i]] <- ccir_timeseries_exploitation_plots(
+    u,
+    fdir = ccir.dir
+  )
 }
 
 
@@ -527,6 +702,10 @@ o = do.call(rbind,outs)
 ooo = subset(o,select=c(Yr,ERfl,ERfm,ERfu,ERf75,LFA))
 
 oo = rbind(oo,ooo)
+
+#Fixed CCIR script to here Sept 9
+
+
 oo$LFA[oo$LFA == "LFA 27 Combined"] = 27
 oo$LFA[oo$LFA == "LFA 29"] = 29
 oo$LFA[oo$LFA == "LFA 30"] = 30
@@ -543,6 +722,7 @@ oo <- oo %>%
     ungroup()
 
 oo <- oo %>% arrange(LFA, Yr)
+oo=as.data.frame(oo)
 
 RR75  = aggregate(ERf75~LFA,data=oo,FUN=max)
 oo$RR75=NA
@@ -551,13 +731,20 @@ for(i in oo$LFA){
 oo$RR75[oo$LFA==i]=RR75$ERf75[RR75$LFA==i]
 }
 
-save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
-load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledExploitationCCIR2732.rdata'))
-RR75  = aggregate(ERf75~LFA,data=oo,FUN=max)
-oo=as.data.frame(oo)
+save( oo, file = file.path(compiled.fdir,'compiledExploitationCCIR2732.rdata'  ))
+load(file = file.path(compiled.fdir,'compiledExploitationCCIR2732.rdata'  ))
+
+
 ccir.sum=oo[,c(1, 6, 3, 7, 8 )]
 
-write.csv(ccir.sum, file=paste0(ccir.dir, "/ccir.27-32.csv"), row.names=F )
+write.csv(
+  ccir.sum,
+  file = file.path(
+    compiled.fdir,
+    "ccir.27-32.csv"
+  ),
+  row.names = FALSE
+)
 
 # plot Individual
 for(i in c("27", "29", "30", "31A", "31B", "32")){
