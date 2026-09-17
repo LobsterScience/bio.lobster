@@ -233,16 +233,19 @@ saveRDS(g27p,'lobster.pruned.grid.data.rds')
 test=readRDS('lobster.pruned.grid.data.rds')
 
 #------------------------------------------------
-#OpenData request would like the exact license_ID's by grid by year
+#OpenData request would like the exact license_ID's and VRN's by grid by year
 
 a =  lobster.db('process.logs')
 
 lic_summary <- a %>%
   filter(SYEAR >= 2010) %>%
+  filter(SYEAR <= 2025) %>%
   group_by(SYEAR, LFA, GRID_NUM) %>%
   summarise(
     LICENCES_REPORTED = n_distinct(LICENCE_ID),
     UNIQUE_LICENCE_IDS = paste(sort(unique(LICENCE_ID)), collapse = ","),
+    VR_NUMBERS_REPORTED = n_distinct(VR_NUMBER),
+    UNIQUE_VR_NUMBERS = paste(sort(unique(VR_NUMBER)), collapse = ","),
     .groups = "drop"
   ) %>%
   arrange(SYEAR, LFA, GRID_NUM)
@@ -254,10 +257,13 @@ names(Licence_Summary) <- c(
   "LFA",
   "REPORTING_GRID",
   "LICENCES_REPORTED",
-  "UNIQUE_LICENCE_IDS"
+  "UNIQUE_LICENCE_IDS",
+  "VR_NUMBERS_REPORTED",
+  "UNIQUE_VR_NUMBERS"
 )
 
-saveRDS(Licence_Summary,'Licence_Summary.rds')
+saveRDS(Licence_Summary, "Licence_Summary.rds")
+
 
   openxlsx::write.xlsx(
     Licence_Summary,
