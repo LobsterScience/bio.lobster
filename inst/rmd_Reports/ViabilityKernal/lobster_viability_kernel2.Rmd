@@ -1,0 +1,188 @@
+---
+title: "Viability Kernel Analysis for Lobster Fishery Objectives"
+author: ''
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+  html_document:
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+# Introduction
+
+This document implements a **viability kernel (VK) analysis** for a lobster
+fishery, exploring feasibility across multiple objectives:
+
+- Fishing effort (days fished)
+- Catch per trip (temperature dependent)
+- Fuel and bait costs
+- Economic performance (profit target)
+- Environmental variability (temperature)
+
+The viability kernel identifies combinations of **effort and temperature** for
+which *all objectives can be met simultaneously*.
+
+---
+
+# Load packages
+
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+---
+
+# Temperature-dependent catch per trip
+
+```{r}
+cpue_temp <- function(T,
+                      T_opt = 9,
+                      max_cpue = 120,
+                      width = 2) {
+  max_cpue * exp(-((T - T_opt)^2) / (2 * width^2))
+}
+```
+
+---
+
+# Define the state space
+
+```{r}
+vk_states <- expand.grid(
+  days_fished = seq(50, 200, by = 5),
+  temp = seq(6, 12, by = 0.25)
+)
+```
+
+---
+
+# Define economic parameters and targets
+
+```{r}
+price_per_lb <- 10
+fuel_burn    <- 120
+fuel_price   <- 1.80
+bait_use     <- 40
+bait_price   <- 1.25
+
+cpue_target   <- 90
+profit_target <- 2000
+max_days      <- 180
+```
+
+---
+
+# Compute derived metrics
+
+```{r}
+vk_states <- vk_states %>%
+  mutate(
+    cpue = cpue_temp(temp),
+    revenue_trip = cpue * price_per_lb,
+    cost_trip = fuel_burn * fuel_price + bait_use * bait_price,
+    profit_trip = revenue_trip - cost_trip,
+    seasonal_profit = profit_trip * days_fished
+  )
+```
+
+---
+
+# Define viability constraints
+
+```{r}
+vk_states <- vk_states %>%
+  mutate(
+    effort_ok = days_fished <= max_days,
+    cpue_ok   = cpue >= cpue_target,
+    profit_ok = seasonal_profit >= profit_target,
+    viable    = effort_ok & cpue_ok & profit_ok
+  )
+```
+
+---
+
+# Viability kernel (Effort × Temperature)
+
+```{r}
+ggplot(vk_states, aes(days_fished, temp, fill = viable)) +
+  geom_tile() +
+  scale_fill_manual(values = c("grey80", "darkgreen")) +
+  labs(
+    title = "Viability Kernel for Lobster Fishery",
+    x = "Days fished per season",
+    y = "Temperature (°C)",
+    fill = "State"
+  ) +
+  theme_minimal()
+```
+
+---
+
+# Binding constraint diagnostics
+
+```{r}
+vk_states <- vk_states %>%
+  mutate(
+    failure_reason = case_when(
+      !cpue_ok   ~ "Catch target not met",
+      !profit_ok ~ "Profit constraint",
+      !effort_ok ~ "Effort limit exceeded",
+      TRUE       ~ "Viable"
+    )
+  )
+```
+
+```{r}
+ggplot(vk_states, aes(days_fished, temp, fill = failure_reason)) +
+  geom_tile() +
+  labs(
+    title = "Binding Constraints Across State Space",
+    x = "Days fished per season",
+    y = "Temperature (°C)",
+    fill = "Constraint"
+  ) +
+  theme_minimal()
+```
+
+---
+
+# Trade-offs: Temperature vs Profit
+
+```{r}
+ggplot(vk_states, aes(temp, seasonal_profit, color = viable)) +
+  geom_point(alpha = 0.4) +
+  scale_color_manual(values = c("grey60", "darkgreen")) +
+  labs(
+    title = "Seasonal Profit vs Temperature",
+    x = "Temperature (°C)",
+    y = "Seasonal profit ($)",
+    color = "Viable"
+  ) +
+  theme_minimal()
+```
+
+---
+
+# Extract the Viability Kernel
+
+```{r}
+vk_kernel <- filter(vk_states, viable)
+
+range(vk_kernel$days_fished)
+range(vk_kernel$temp)
+```
+
+---
