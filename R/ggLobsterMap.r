@@ -671,9 +671,6 @@ ggLobsterMap <- function(
   # ----------------------
   # Save map
   # ----------------------
-  # ----------------------
-  # Save map
-  # ----------------------
   if(save){
     
     # Automatically calculate output width from the
@@ -762,9 +759,8 @@ ggLobsterMap <- function(
   }
   
   
-  if(return.object)
-    return(p)
-  
+  if(return.object) return(p)
+
     
     
     # ----------------------
@@ -776,4 +772,5 @@ ggLobsterMap <- function(
         theme(panel.grid = element_blank())
     
     if(return.object) return(p)
+  p
 }
