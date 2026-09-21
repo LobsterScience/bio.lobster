@@ -14,10 +14,10 @@ figfp = file.path(project.datadirectory('bio.lobster'),'figures', 'Assessment','
 
 ff = c(
   
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
 
        Update.plot=T
        if(Update.plot==T) par(mfrow=c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
@@ -30,6 +30,7 @@ ff = c(
 	           out= c()
               	for(j in 1:length(h)) {
               			g = h[[j]]
+              			if(all(is.na(g$w.yst))) next()
               			y = unique(g$yr)
               			#g$Mat = exp(-17.8583 +(0.1894 *g$FLEN)) / (1+exp(-17.8583 +(0.1894 *g$FLEN))) #pezzack and duggan 1989
               			g$Mat = 1 / (1+exp(-(-22.5522 +0.2455 *g$FLEN))) #gaudette 2016 from offshore lobsters collected in 2016
@@ -38,7 +39,8 @@ ff = c(
               			g$Fecm = g$Fec * g$n.Yst / 1000000
               			n = aggregate(cbind(n.Yst,Fecm)~yr,data = g, FUN=sum, na.rm=T)
                     out = rbind(out,n)
-              			}
+              	}
+	     #      write.csv(out,file=file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators','SpringNEFSCRepProd.csv'))
 
       #bayesian change point
                          							  p=list()
@@ -54,7 +56,7 @@ ff = c(
 
                             p$y.maximum = NULL # NULL # if ymax is too high for one year
                             p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-                            		p$ylim = c(0,275)
+                            		p$ylim = c(0,215)
                                     p$legend = FALSE
                                     p$running.median = T
                                     p$running.length = 3
@@ -89,7 +91,8 @@ ff = c(
                     n = aggregate(cbind(n.Yst,Fecm)~yr,data = g, FUN=sum, na.rm=T)
                     out = rbind(out,n)
                     }
-
+        #     write.csv(out,file=file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators','FallNEFSCRepProd.csv'))
+             
       #bayesian change point
       
                                   p=list()
@@ -105,7 +108,7 @@ ff = c(
 
                             p$y.maximum = NULL # NULL # if ymax is too high for one year
                             p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
-                                p$ylim = c(0,275)
+                                p$ylim = c(0,650)
                                     p$legend = FALSE
                                     p$running.median = T
                                     p$running.length = 3
@@ -141,7 +144,9 @@ ff = c(
                     g$Fecm = g$Fec * g$n.Yst / 1000000
                     n = aggregate(cbind(n.Yst,Fecm)~yr,data = g, FUN=sum, na.rm=T)
                     out = rbind(out,n)
-                    }
+                }
+         #    write.csv(out,file=file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators','DFORepProd.csv'))
+             
 
                             p=list()
                             p$add.reference.lines = F
@@ -193,7 +198,8 @@ ff = c(
                     n = aggregate(cbind(n.Yst,Fecm)~yr,data = g, FUN=sum, na.rm=T)
                     out = rbind(out,n)
                     }
-
+          #   write.csv(out,file=file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators','GeorgesRepProd.csv'))
+             
                             p=list()
                             p$add.reference.lines = F
                                   p$time.series.start.year = min(aa$yr)
@@ -231,7 +237,7 @@ ff = c(
 
                             mtext("Year",1,1,outer=T)
                             mtext("Reproductive Potential",2,1,outer=T,las=0)
-                          savePlot(file.path(figfp,'RefsRepPot.png'), type = "png")
+           #               savePlot(file.path(figfp,'RefsRepPot.png'), type = "png")
 
                           } 
 

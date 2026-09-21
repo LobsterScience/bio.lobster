@@ -1,5 +1,6 @@
 require(bio.survey)
 require(bio.lobster)
+require(PBSmapping)
 la()
 p=list()
 p$libs = NULL
@@ -71,11 +72,11 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
   write.csv(aout,file=file.path(fpf,'indicators',paste(lfa,'DFOCommercialB.csv',sep="-")))
    
   p$series =c('georges')# p$series =c('georges');p$series =c('fall')
-  p$years.to.estimate = c(1970:2026)
+  p$years.to.estimate = c(2007:2026)
+  p$area = 'Georges.Canada'
   p$define.by.polygons = F
   p$lobster.subunits=F
-  p$area = lfa
-  p$reweight.strata = T #this subsets 
+  p$reweight.strata = F #this subsets 
   
   aout= dfo.rv.analysis(DS='stratified.estimates.redo',p=p)
   write.csv(aout,file=file.path(fpf,'indicators',paste(lfa,'DFOCommercialB_georges.csv',sep="-")))

@@ -11,10 +11,10 @@ la()
        
 ff = c(
         
-      file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-      file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
-   file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
-file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
+      file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+      file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+   file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
+file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
        
 # Load and clean NEFSC
 for (i in 1:2) {  # Only the first two files need cleaning
@@ -24,11 +24,11 @@ for (i in 1:2) {  # Only the first two files need cleaning
 }
 
 ### If Fall Data is not ready yet 
-fallcheck <- file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata')
+fallcheck <- file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata')
 # Load the data
 load(fallcheck)
 # Remove data for the year 2024
-aa <- aa[aa$yr != 2025, ]
+aa <- aa[aa$yr != 2026, ]
 # Save the cleaned data back to the file
 save(aa, file = fallcheck)
 
@@ -36,11 +36,11 @@ save(aa, file = fallcheck)
 #Then reload
 ff = c(
   
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
-
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+ file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'),
+  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'))
+ comb = list()
 
        for(i in 1:length(ff)) {
        			load(ff[i])
@@ -51,6 +51,7 @@ ff = c(
       	           out= c()
       	for(j in 1:length(h)) {
                   	g = h[[j]]
+                  	if(all(is.na(g$w.yst))) next()
               			y = unique(g$yr)
               			#g$Mat = exp(-17.8583 +(0.1894 *g$FLEN)) / (1+exp(-17.8583 +(0.1894 *g$FLEN))) #pezzack and duggan 1989
               			g$Mat = 1 / (1+exp(-(-22.5522 +0.2455 *g$FLEN))) #gaudette 2016 from offshore lobsters collected in 2016
@@ -93,9 +94,14 @@ ff = c(
          names(af) = c('yr','ObsLobs')
          out = merge(out,af)
 
-         fnn = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','indicators',paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][grep("Length",strsplit(ff[i],"/")[[1]])],"\\.")[[1]][1],'csv',sep="."))
+         fnn = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators',paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][grep("Length",strsplit(ff[i],"/")[[1]])],"\\.")[[1]][1],'csv',sep="."))
           write.csv(out, file=fnn)
-          out$ObsLobs = NULL
+          out$Source = sub(".*LFA41(.*?)\\.rdata", "\\1", ff[i])
+      comb[[i]] = out
+       }
 
-		}
+
+cc = bind_rows(comb)
+require(ggplot2)
+ggplot(cc,aes(x=yr,y=Fecm))+geom_point()+facet_wrap(~Source,scales='free_y')
 

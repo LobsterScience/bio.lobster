@@ -30,8 +30,6 @@ figdir = file.path("C:/Users/cooka/Documents/tmp")
 p$lfas = c("41") # specify lfa
 
 #Not Oracle		
-logs=lobster.db('process.logs.redo')
-logs=lobster.db("process.logs")
 
 land=lobster.db('annual.landings.redo')
 land = lobster.db('annual.landings')
@@ -43,12 +41,7 @@ groundfish.db('gsdet.odbc.redo')
 groundfish.db('gs_trawl_conversions_redo')
 
 
-#check what's in there
-a = groundfish.db('gsinf.odbc')
-summary(a)
-
 ## FOR NEFSC Survey 
-nefsc.db(DS='odbc.dump.redo')
 inf = nefsc.db( DS = 'usinf.redo.odbc',fn.root = NULL,p=p)
 ca = nefsc.db( DS = 'uscat.redo.odbc',fn.root = NULL,p=p)
 de = nefsc.db( DS = 'usdet.redo.odbc',fn.root = NULL,p=p)
@@ -59,22 +52,6 @@ ca = nefsc.db( DS = 'uscat.clean.redo',fn.root = NULL,p=p)
 
 nefsc.db(DS = 'usstrata.area.redo.odbc')
 nefsc.db(DS = 'usstrata.area')
-
-
-##### REMOVE SET DATA WHERE X and Y are zero
-
-load(file.path(project.datadirectory("bio.lobster"),"data/ODBCDump/usnefsc.inf.rdata"))
-ls()  
-inf <- inf[!is.na(inf$X) & !is.na(inf$Y), ]
-summary(inf)
-save(inf, file = "C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/ODBCDump/usnefsc.inf.rdata")
-
-load("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/ODBCDump/usnefsc.inf.rdata")
-ls()  
-inf <- inf[!is.na(inf$X) & !is.na(inf$Y), ]
-summary(inf)
-save(inf, file = "C:/Users/HowseVJ/Documents/bio.data/bio.lobster/data/ODBCDump/usnefsc.inf.rdata")
-
 
 
 
@@ -105,44 +82,23 @@ ggplot(land41, aes(x = factor(YR), y = LFA41, fill = fill_color)) +
   ) +
   scale_x_discrete(breaks = seq(2002, 2025, by = 2)) +
   scale_y_continuous(expand = c(0, 0), limits = c(0, 900)) +  # Set y-axis limit to 900
-  geom_bar(data = land41 %>% filter(YR == 2025), aes(x = factor(YR), y = LFA41), stat = "identity", fill = NA, color = "#96ACB7", linetype = "dashed") +
+  geom_bar(data = land41 %>% filter(YR == 2026), aes(x = factor(YR), y = LFA41), stat = "identity", fill = NA, color = "#96ACB7", linetype = "dashed") +
   geom_hline(yintercept = 720, color = "red")
-
+ggsave(file.path(figdir,'Landings41.pnd'))
 
 ##Landings Table 
 landings41<-land41[, c("YR", "LFA41")]
 
-write.csv(land41, "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/landingstable.csv")
-
-########### Landings when last year isn't incomplete
-######### LANDINGS
-land41 <- land[, c("YR", "LFA41")]
-land41 <- land41[land41$YR > 2001 & land41$YR <= 2025, ]
-land41 <- land41[order(land41$YR), ]
-
-## Landings barplot (all bars same colour, no special outline)
-ggplot(land41, aes(x = factor(YR), y = LFA41)) +
-  geom_bar(stat = "identity", fill = "#202C59", color = "black") +
-  theme_minimal() +
-  labs(x = "Year", y = "Landings (t)") +
-  theme(
-    legend.position = "none",
-    panel.grid.minor = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.border = element_rect(color = "black", fill = NA),
-    axis.line = element_line(color = "black")
-  ) +
-  scale_x_discrete(breaks = seq(2002, 2025, by = 2)) +
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 900)) +
-  geom_hline(yintercept = 720, color = "red")
+write.csv(land41, file.path(figdir,"landingstable.csv"))
 
 
 
 
 #########Observer Coverage #############
 
-lobster.db("observer41.redo")
-lobster.db("observer41")
+lobster.db("atSea.redo")
+lobster.db("atSea")
+Obs41 = subset(atSea,LFA==41)
 lobster.db('logs41.redo') 
 lobster.db('logs41')
 
@@ -160,7 +116,6 @@ L41log<-L41log[L41log$SYEAR > 2010  & L41log$SYEAR < 2027, ]
 
 
 ##Observer Data
-Obs41<-observer41
 ##Need SYear -- pull it out of date
 Obs41$dates<-as.POSIXct(Obs41$STARTDATE, format='%Y-%m-%d %H:%M:%S')
 Obs41$dates = as.Date(Obs41$dates,format='%m-%d-%Y')
@@ -200,90 +155,18 @@ ObsTable <- merge(Obs_Fish, Slip_trips, by = "SYEAR")
 
 ObsTable$PercentObserved_logs<-(ObsTable$ObservedTrips/ObsTable$TotalLogTrips)*100
 
-write.csv(ObsTable,"C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/ObsTable25.csv")
+write.csv(ObsTable,file.path(figdir,"ObsTable25.csv"))
 
-### Observed Trips Table
-
-#From SQL Pull 
-#select startdate, yr, tripno, trapno, speciescode, species, calwt, nvl(discardwt,0) discardwt from (
-#  select startdate, to_char(startdate, 'yyyy') yr, tripno, trapno, speciescode, species, calwt,
-#  case
-#  when speciescode = 2550 and carlength < 82 then calwt
-#  when speciescode = 2550 and carlength = 82 then calwt/2
-#  when speciescode = 2550 and carlength >=150 then calwt
-#  when speciescode = 2550 and vnotch is not null and sex = 2 then calwt
-#  when speciescode = 2550 and sex = 3 then calwt
-#  when speciescode = 2550 and shell in (1,2,3) then calwt
-#  when speciescode ! = 2550 then calwt
-#  else null
-#  end discardwt
-#  from lobster.lobster_atsea_vw
-#  where lfa = '41'
-#  and startdate > '2018-10-15')
-
-Obstraps<-read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/lobster_atsea_v_2.csv")
-
-##Calculate the number of unique observed Trips each year
-
-##Observed Traps
-#make unique ID with Trap and Trip
-Obstraps$obstrapID<-paste(Obstraps$TRIPNO, Obstraps$TRAPNO)
-num_obtrap<-aggregate(obstrapID ~ YR, data=Obstraps, function(x) length(unique(x)))
+Obs41$obstrapID<-paste(Obs41$TRIPNO, Obs41$TRAPNO,Obs41$STRINGNO)
+num_obtrap<-aggregate(obstrapID ~ SYEAR, data=Obs41, function(x) length(unique(x)))
 colnames(num_obtrap)<-c("YEAR","OBSTOTALTRAPS")
 
 
-##Calculate the number of unique Fishing Trips Each Year 
 
-#MARFISSCI.LOBSTER_MD_LOG - is the string by string estimated catch and effort from logs.
-#select to_char(fv_fished_datetime, 'yyyy') yr, sum(num_of_traps) num_of_traps
-#from marfissci.lobster_md_log
-#where MON_DOC_DEFN_ID = 19 
-#group by to_char(fv_fished_datetime, 'yyyy')
-#order by to_char(fv_fished_datetime, 'yyyy')
+loginfo = aggregate(NUM_OF_TRAPS~SYEAR,data=L41log,FUN=sum)
 
-
-#ISTRAPS is the data collected by the observer during observed trips on the gear success form (attached).
-
-#ISSETSMV is the data collected by the observer on the catch per set (string). It is an estimation based on the observed traps. Like the catch card we fill out on the ILTS, but bumped up to the entire string of traps.
-
-##FOR Observered Traps:
-##
-
-
-#loginfo is the number of traps  = effort - total fished traps
-loginfo<-read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/Lobster_Md_log_2.csv")
-loginfo<-loginfo[loginfo$YR>2017,]
-colnames(loginfo)<-c("YEAR","TOTALTRAPS")
-
-
-
-loginfo<-loginfo[loginfo$YEAR<2026,]
-loginfo<-na.omit(loginfo)
-
-percentObs_traps<-merge(loginfo,num_obtrap, by="YEAR")
-percentObs_traps$PerObserved<-(percentObs_traps$OBSTOTALTRAPS)/(percentObs_traps$TOTALTRAPS)
+percentObs_traps<-merge(loginfo,num_obtrap, by.x="SYEAR",by.y='YEAR')
+percentObs_traps$PerObserved<-(percentObs_traps$OBSTOTALTRAPS)/(percentObs_traps$NUM_OF_TRAPS)
 percentObs_traps$PerObserved<-(percentObs_traps$PerObserved*100)
 
-write.csv(percentObs_traps,"C:/Users/HowseVJ/Documents/GitHub/bio.lobster/inst/Updates/LFA41/LFA41_2024/PercentTrapsObs.csv")
-
-
-
-
-
-######## Try it in R for the same answer
-
-
-###
-require(bio.lobster)
-#at sea
-
-lobster.db('atSea')
-a = subset(atSea,LFA %in% c(41))
-a$YR=year(a$STARTDATE)
-a<-a[a$YR >2010,]
-
-## Maybe just from Logs41?
-
-## from Oracle
-lobster.db('logs.redo') 
-lobster.db('logs')
+write.csv(percentObs_traps,file.path(figdir,"PercentTrapsObs.csv"))

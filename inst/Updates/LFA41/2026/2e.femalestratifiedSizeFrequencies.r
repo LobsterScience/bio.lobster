@@ -4,7 +4,7 @@ require(bio.lobster)
 
 p=list()
 p$libs = NULL
-fp = file.path(project.datadirectory('bio.lobster'),"assessments", "LFA41", "2026")
+fp = file.path(project.datadirectory('bio.lobster'),"assessments", "LFA41", "2026",'indicators')
 la()
 
 
