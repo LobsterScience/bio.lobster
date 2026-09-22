@@ -1,6 +1,6 @@
 #' @export
 
-scallop_sets <- function(length.group=5){
+scallop_sets <- function(length.group=1){
   a = lobster.db('scallop')
   scallop.tows=a[[1]]
   scallopSurv = a[[2]]

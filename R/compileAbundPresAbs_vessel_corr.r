@@ -403,7 +403,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             ws = st_as_sf(ww,coords=c('LONGITUDE','LATITUDE'),crs=4326)
             ww$Empty = ww$EMPTY
             ww$EMPTY = NULL
-            wwNoSize = subset(ww, select=c(DATE, YEAR, LONGITUDE, LATITUDE, OFFSET, SOURCE, OFFSET_METRIC,Lobster, Berried,Legal,Recruit,Juv,Legal_wt,Recruit_wt,Empty,Gear))
+            wwNoSize = subset(ww, select=c(id , DATE, YEAR, LONGITUDE, LATITUDE, OFFSET, SOURCE, OFFSET_METRIC,Lobster, Berried,Legal,Recruit,Juv,Legal_wt,Recruit_wt,Empty,Gear))
             
             combinedNoSize = dplyr::bind_rows(trapsNoSize,wwNoSize)
             

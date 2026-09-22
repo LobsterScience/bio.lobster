@@ -44,7 +44,7 @@ MNR_sets <- function(){
   #de$Frequency = de$Frequency/(de$spread/1000 * de$dist)
   de = subset(de,select = c(id,Length,Frequency, Sex))
   print('DMR estimates are in numbers or wt not in density')
-  sc1=seq(3,253,by=5)
+  sc1=seq(3,253,by=1)
   de$SZ = sc1[cut(de$Length,sc1,right=FALSE,labels=F)]
   de$UID = de$ID
   de1 = aggregate(Frequency~id+SZ,data=de,FUN=sum)

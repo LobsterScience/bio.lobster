@@ -47,8 +47,6 @@ cc =as.data.frame(do.call(rbind,cpue.lst))
 cc <- cc %>%
   mutate(date = as.Date("30-JUN", format = "%d-%b") + t + years(2001-2025))
 
-# View result
-print(df)
 
 ggplot(subset(cc),aes(x=date,y=unBCPUE))+geom_point()+geom_smooth()+facet_wrap(~yr)+lims(y=c(0,3.4))+labs(x='Date', y='CPUE')
 
@@ -85,6 +83,9 @@ a$yr = lubridate::year(a$Date)
 
 
 a$DDLAT = round((((a$ENT_LATITUDE /100/100-trunc(a$ENT_LATITUDE/100/100))*100)/60)+trunc(a$ENT_LATITUDE/100/100),4)
-a$DDLON = round((((a$ENT_LONGITUDE/100/100-trunc(a$ENT_LONGITUDE/100/100))*100)/60)+trunc(a$ENT_LONGITUDE/100/100),4)
+a$DDLON = round((((a$ENT_LONGITUDE/100/100-trunc(a$ENT_LONGITUDE/100/100))*100)/60)+trunc(a$ENT_LONGITUDE/100/100),4)*-1
 
-
+as =st_as_sf(subset(a,!is.na(DDLAT)),coords=c('DDLON','DDLAT'),crs=4326)
+as$DATE_LANDED = as.Date(as$DATE_LANDED, format = "%Y-%b-%d")
+str(as)
+ggplot(subset(as,lubridate::year(DATE_LANDED)==2023))+geom_sf()+facet_wrap(~lubridate::year(as.Date(DATE_LANDED)))+geom_sf(data=g,fill='pink',alpha=.4)

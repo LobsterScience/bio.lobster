@@ -3,7 +3,7 @@ require(devtools)
 require(tidyr)
 require(dplyr)
 la()
-
+ #this only works if sales occur during the season, others outside teh season will affect this
 
 
 a = lobster.db('percent_reporting')
@@ -44,11 +44,12 @@ for(i in 1:length(bl)){
   for(j in 1:iter){
     for(k in 1:length(m)){
         aa = subset(al,LFA==unique(junk$LFA) & MN == m[k])
-        sl = subset(junk,MN==m[k])$SLIP_WEIGHT_LBS
+        if(nrow(aa)==0) next()
+        sl = subset(junk,MN==m[k] & !is.na(SLIP_WEIGHT_LBS))$SLIP_WEIGHT_LBS
       v[j,k] = sum(c(sample(sl, size=aa$MISS, replace = T),sl))
       }
   }
-  me = apply(v/2204.62,1,sum)
+  me = apply(v/2204.62,1,sum,na.rm=T)
   
   
   outs[[i]]= c(LFA=aa$LFA,SYEAR=aa$SYEAR,meanProrated = mean(me), l95=quantile(me, 0.025),u95 = quantile(me,0.975))

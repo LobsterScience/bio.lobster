@@ -1,0 +1,792 @@
+---
+title: "Lobster Fishery Viability Analysis"
+author: "DFO Precautionary Approach Framework"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: cosmo
+---
+
+# Overview
+
+This document demonstrates a DFO-style precautionary approach assessment using:
+
+- Seasonal temperatures
+- Population abundance estimates
+- Fishing effort (days fished)
+- Effort-dependent depletion
+- Biomass reference points
+- Removal reference (FMSY/2)
+- Stochastic projections
+
+# Required Packages
+
+```{r setup, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(minpack.lm)
+library(knitr)
+library(scales)
+
+theme_set(theme_bw())
+```
+
+# Generate Example Dataset
+
+```{r generate-data}
+
+set.seed(123)
+
+years <- 2000:2025
+n <- length(years)
+
+SpringTemp <- round(runif(n, 2, 11), 2)
+SummerTemp <- round(runif(n, 7, 14), 2)
+FallTemp   <- round(runif(n, 10, 16), 2)
+
+DaysFished <- round(runif(n, 45, 55))
+
+ER <- pmin(
+  pmax(
+    rnorm(
+      n,
+      mean = 0.25,
+      sd = 0.05
+    ),
+    0.10
+  ),
+  0.50
+)
+
+Population <- numeric(n)
+
+Population[1] <- 12000
+
+for(i in 1:(n-1)) {
+
+  r_true <- 0.8
+  K_true <- 30000
+
+  growth <-
+    r_true *
+    Population[i] *
+    (1 - Population[i] / K_true)
+
+  catch_now <-
+    Population[i] * ER[i]
+
+  Population[i + 1] <-
+    Population[i] +
+    growth -
+    catch_now +
+    rnorm(1, 0, 500)
+
+  Population[i + 1] <-
+    min(
+      max(Population[i + 1], 10000),
+      30000
+    )
+}
+
+peak_effect <-
+  8000 *
+  exp(
+    -((years - 2015)^2) /
+      (2 * 4^2)
+  )
+
+Population <-
+  Population + peak_effect
+
+Population <-
+  pmin(Population, 30000)
+
+Population <- round(Population)
+
+Catch <- round(
+  Population * ER
+)
+
+lobster_data <- data.frame(
+  Year = years,
+  SpringTemp,
+  SummerTemp,
+  FallTemp,
+  Population,
+  DaysFished,
+  Catch
+)
+
+write.csv(
+  lobster_data,
+  "lobster_data.csv",
+  row.names = FALSE
+)
+
+head(lobster_data)
+
+```
+
+# Load Data
+
+```{r}
+dat <- read.csv("lobster_data.csv")
+
+head(dat)
+
+summary(dat)
+```
+
+# Create Thermal Index
+
+The thermal index summarizes seasonal environmental conditions.
+
+```{r}
+
+dat <- dat %>%
+  mutate(
+    TempIndex =
+      0.4 * SpringTemp +
+      0.4 * SummerTemp +
+      0.2 * FallTemp
+  )
+
+summary(dat$TempIndex)
+
+```
+
+# CPUE
+
+```{r}
+
+dat <- dat %>%
+  mutate(
+    CPUE = Catch / DaysFished
+  )
+
+ggplot(dat, aes(Year, CPUE)) +
+  geom_line(linewidth = 1.1) +
+  geom_point(size = 2) +
+  labs(
+    y = "CPUE",
+    title = "Catch Per Unit Effort"
+  )
+
+```
+
+# Effort Depletion Model
+
+Assume effective catchability declines as fishing effort increases.
+
+\[
+q_{eff} = q e^{-dE}
+\]
+
+where:
+
+- \(q\) = baseline catchability
+- \(d\) = depletion parameter
+- \(E\) = fishing effort in days
+
+```{r}
+
+depletion_model <- nlsLM(
+
+  CPUE ~
+    q *
+    Population *
+    exp(-d * DaysFished),
+
+  data = dat,
+
+  start = list(
+    q = mean(dat$CPUE) /
+      mean(dat$Population),
+    d = 0.01
+  )
+
+)
+
+summary(depletion_model)
+
+q_hat <- coef(depletion_model)["q"]
+d_hat <- coef(depletion_model)["d"]
+
+```
+
+# Estimate Fishing Mortality
+
+Assume:
+
+\[
+F_t = q_t E_t
+\]
+
+```{r}
+
+dat <- dat %>%
+  mutate(
+    F_est =
+      q_hat *
+      exp(-d_hat * DaysFished) *
+      DaysFished
+  )
+
+summary(dat$F_est)
+
+```
+
+# Population Dynamics Model
+
+Population dynamics:
+
+\[
+B_{t+1}
+=
+B_t
++
+r_t B_t
+\left(1-\frac{B_t}{K}\right)
+-
+F_t B_t
+\]
+
+Temperature-dependent productivity:
+
+\[
+r_t = r e^{\beta T_t}
+\]
+
+```{r}
+
+negLL <- function(par, dat){
+
+  r <- exp(par[1])
+  K <- exp(par[2])
+  beta <- par[3]
+
+  n <- nrow(dat)
+
+  B <- numeric(n)
+  B[1] <- dat$Population[1]
+
+  nll <- 0
+
+  for(i in 1:(n - 1)) {
+
+    Fnow <-
+      q_hat *
+      exp(-d_hat * dat$DaysFished[i]) *
+      dat$DaysFished[i]
+
+    r_eff <-
+      r *
+      exp(beta * dat$TempIndex[i])
+
+    pred <-
+      B[i] +
+      r_eff *
+      B[i] *
+      (1 - B[i] / K) -
+      Fnow *
+      B[i]
+
+    pred <- max(pred, 1)
+
+    B[i + 1] <- pred
+
+    nll <- nll -
+      dnorm(
+        dat$Population[i + 1],
+        mean = pred,
+        sd = max(0.10 * pred, 1),
+        log = TRUE
+      )
+  }
+
+  nll
+}
+
+```
+
+# Estimate Parameters
+
+```{r}
+
+fit <- optim(
+
+  par = c(
+    log(0.8),
+    log(max(dat$Population) * 1.5),
+    0
+  ),
+
+  fn = negLL,
+  dat = dat,
+
+  method = "BFGS",
+  hessian = TRUE
+
+)
+
+fit$convergence
+
+r_hat <- exp(fit$par[1])
+K_hat <- exp(fit$par[2])
+beta_hat <- fit$par[3]
+
+parameter_estimates <- data.frame(
+  Parameter = c("r", "K", "beta"),
+  Estimate = c(r_hat, K_hat, beta_hat)
+)
+
+kable(parameter_estimates, digits = 3)
+
+```
+
+# Reconstruct Biomass Trajectory
+
+```{r}
+
+PredictedBiomass <- numeric(nrow(dat))
+
+PredictedBiomass[1] <- dat$Population[1]
+
+for(i in 1:(nrow(dat) - 1)) {
+
+  Fnow <-
+    q_hat *
+    exp(-d_hat * dat$DaysFished[i]) *
+    dat$DaysFished[i]
+
+  r_eff <-
+    r_hat *
+    exp(beta_hat * dat$TempIndex[i])
+
+  PredictedBiomass[i + 1] <-
+    PredictedBiomass[i] +
+    r_eff *
+    PredictedBiomass[i] *
+    (1 - PredictedBiomass[i] / K_hat) -
+    Fnow *
+    PredictedBiomass[i]
+
+}
+
+dat$PredictedBiomass <- PredictedBiomass
+
+```
+
+# Biomass Fit
+
+```{r}
+
+ggplot(dat, aes(Year)) +
+
+  geom_line(
+    aes(
+      y = Population,
+      colour = "Observed"
+    ),
+    linewidth = 1.2
+  ) +
+
+  geom_line(
+    aes(
+      y = PredictedBiomass,
+      colour = "Predicted"
+    ),
+    linewidth = 1.2
+  ) +
+
+  scale_colour_manual(
+    values = c(
+      Observed = "black",
+      Predicted = "blue"
+    )
+  ) +
+
+  labs(
+    title = "Observed vs Predicted Biomass",
+    y = "Biomass",
+    colour = ""
+  )
+
+```
+
+# Precautionary Approach Reference Points
+
+For the Schaefer model:
+
+\[
+B_{MSY} = \frac{K}{2}
+\]
+
+\[
+LRP = 0.4 B_{MSY}
+\]
+
+\[
+USR = 0.8 B_{MSY}
+\]
+
+```{r}
+
+Bmsy <- K_hat / 2
+
+LRP <- 0.40 * Bmsy
+
+USR <- 0.80 * Bmsy
+
+reference_points <- data.frame(
+  Reference = c(
+    "LRP",
+    "USR",
+    "BMSY"
+  ),
+  Value = c(
+    LRP,
+    USR,
+    Bmsy
+  )
+)
+
+kable(reference_points, digits = 0)
+
+```
+
+# Removal Reference
+
+For a Schaefer model:
+
+\[
+F_{MSY} = \frac{r}{2}
+\]
+
+Removal Reference:
+
+\[
+RR = F_{MSY}
+\]
+
+or
+
+\[
+RR = \frac{r}{4}
+\]
+
+```{r}
+
+Fmsy <- r_hat / 2
+
+RR <- Fmsy 
+
+RR
+
+```
+
+# Fishing Mortality Relative to RR
+
+```{r}
+
+dat <- dat %>%
+  mutate(
+    ExceedsRR = F_est > RR
+  )
+
+mean(dat$ExceedsRR)
+
+ggplot(dat, aes(Year, F_est)) +
+
+  geom_line(linewidth = 1.1) +
+  geom_point(size = 2) +
+
+  geom_hline(
+    yintercept = RR,
+    colour = "red",
+    linewidth = 1,
+    linetype = 2
+  ) +
+
+  labs(
+    title = "Fishing Mortality Relative to Removal Reference",
+    y = "Fishing Mortality (F)"
+  )
+
+```
+
+# Current Stock Status
+
+```{r}
+
+currentB <- tail(dat$Population, 1)
+
+status <- case_when(
+  currentB < LRP ~ "Critical",
+  currentB < USR ~ "Cautious",
+  TRUE ~ "Healthy"
+)
+
+status
+
+```
+
+# Biomass Status Plot
+
+```{r}
+
+ggplot(
+  dat,
+  aes(Year, Population)
+) +
+
+  annotate(
+    "rect",
+    xmin = -Inf,
+    xmax = Inf,
+    ymin = 0,
+    ymax = LRP,
+    fill = "red",
+    alpha = 0.2
+  ) +
+
+  annotate(
+    "rect",
+    xmin = -Inf,
+    xmax = Inf,
+    ymin = LRP,
+    ymax = USR,
+    fill = "orange",
+    alpha = 0.2
+  ) +
+
+  annotate(
+    "rect",
+    xmin = -Inf,
+    xmax = Inf,
+    ymin = USR,
+    ymax = Inf,
+    fill = "green",
+    alpha = 0.15
+  ) +
+
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+
+  labs(
+    title = "Biomass Relative to PA Reference Points",
+    y = "Biomass"
+  )
+
+```
+
+# Stochastic Projection
+
+```{r}
+
+nsim <- 5000
+nyears <- 20
+
+futureB <- matrix(
+  NA,
+  nrow = nsim,
+  ncol = nyears
+)
+
+futureB[,1] <- currentB
+
+meanTemp <- mean(dat$TempIndex)
+sdTemp <- sd(dat$TempIndex)
+
+meanEffort <- mean(
+  tail(dat$DaysFished, 5)
+)
+
+for(s in 1:nsim){
+
+  for(y in 2:nyears){
+
+    Tnow <- rnorm(
+      1,
+      meanTemp,
+      sdTemp
+    )
+
+    r_eff <-
+      r_hat *
+      exp(beta_hat * Tnow)
+
+    Bprev <- futureB[s, y - 1]
+
+    Fproj <-
+      q_hat *
+      exp(-d_hat * meanEffort) *
+      meanEffort
+
+    Bnew <-
+      Bprev +
+      r_eff *
+      Bprev *
+      (1 - Bprev / K_hat) -
+      Fproj *
+      Bprev
+
+    Bnew <- max(Bnew, 1)
+
+    futureB[s, y] <-
+      Bnew *
+      rlnorm(
+        1,
+        meanlog = 0,
+        sdlog = 0.15
+      )
+  }
+}
+
+```
+
+# PA Risk Metrics
+
+```{r}
+
+risk_table <- data.frame(
+
+  Year = 1:nyears,
+
+  ProbAboveLRP =
+    colMeans(futureB > LRP),
+
+  ProbAboveUSR =
+    colMeans(futureB > USR),
+
+  ProbBelowLRP =
+    colMeans(futureB < LRP)
+
+)
+
+kable(risk_table, digits = 3)
+
+```
+# Economic Viability Assumptions
+```{r}
+fleet_size <- 100
+
+# Minimum average landings required
+# for a vessel to remain viable
+
+viability_threshold <- 2
+```
+
+# Projection Plot
+
+```{r}
+
+proj <- as.data.frame(futureB)
+
+proj$Sim <- 1:nrow(proj)
+
+proj_long <-
+  pivot_longer(
+    proj,
+    cols = -Sim,
+    names_to = "Year",
+    values_to = "Biomass"
+  )
+
+proj_long$Year <-
+  as.numeric(
+    gsub("V", "", proj_long$Year)
+  )
+
+ggplot(
+  proj_long,
+  aes(
+    Year,
+    Biomass,
+    group = Sim
+  )
+) +
+
+  geom_line(alpha = 0.01) +
+
+  geom_hline(
+    yintercept = LRP,
+    colour = "red"
+  ) +
+
+  geom_hline(
+    yintercept = USR,
+    colour = "orange"
+  ) +
+
+  labs(
+    title = "20-Year Stochastic Biomass Projections",
+    y = "Biomass"
+  )
+
+```
+
+# Viability Summary
+
+```{r}
+
+terminalB <- futureB[, nyears]
+
+viability <- data.frame(
+
+  Metric = c(
+    "Mean Biomass",
+    "Median Biomass",
+    "P(B > LRP)",
+    "P(B > USR)",
+    "P(B < LRP)"
+  ),
+
+  Value = c(
+    mean(terminalB),
+    median(terminalB),
+    mean(terminalB > LRP),
+    mean(terminalB > USR),
+    mean(terminalB < LRP)
+  )
+
+)
+
+kable(viability, digits = 3)
+
+```
+
+# Management Advice
+
+```{r}
+
+advice <- case_when(
+
+  status == "Healthy" ~
+    "Stock currently resides in the Healthy Zone.",
+
+  status == "Cautious" ~
+    "Stock currently resides in the Cautious Zone. Rebuilding actions should be considered.",
+
+  TRUE ~
+    "Stock currently resides in the Critical Zone. Rebuilding measures are recommended."
+
+)
+
+advice
+
+```
+
+# Assessment Summary
+
+This assessment provides:
+
+1. Seasonal temperature effects.
+2. Effort-dependent depletion effects.
+3. Biomass reference points (LRP and USR).
+4. Removal reference based on FMSY/2.
+5. Stock status relative to the PA framework.
+6. Fishing mortality status relative to RR.
+7. Twenty-year stochastic projections.
+8. Probability of remaining above LRP and USR.

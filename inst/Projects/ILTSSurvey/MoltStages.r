@@ -15,7 +15,6 @@ sc = subset(surveyCatch)
 
 #fall
 fa = prop.table(table(yf$SHELL,yf$YEAR,yf$SEX),2)
-barplot(fa)
 
 fad = as.data.frame(fa)
 ggplot(fad,aes(x=Var2,y=Freq,fill=Var1))+geom_col()

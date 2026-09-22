@@ -17,7 +17,7 @@
 
 	    # define place for figures to go
 	    figdir = file.path(project.datadirectory("bio.lobster","assessments","Updates","LFA33",p$current.assessment.year))
-	    dir.create( figdir, recursive = TRUE, showWarnings = FALSE )
+	    dir.create( figdir, recursive = TRUE, showWarnings = TRUE )
 	    p$lfas = c("33") # specify lfas for data summary
 	    p$subareas = c("33W", "33E") # specify lfas for data summary
 
@@ -110,7 +110,7 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		#or
 
 		png(filename=file.path(figdir, "MapLFA33.png"),width=5, height=5, units = "in", res = 800)
-		LobsterMap('33')
+    ggLobsterMap('33', addLFALabels = T, LFA_label_size = 8, addGrids = T)
 		dev.off()
 
 # CPUE ###############
@@ -176,8 +176,6 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		points(max(crd$YEAR), crd$CPUE[which(crd$YEAR==max(crd$YEAR))], pch=17, col='red', cex=1.2)
 		#running.median = with(rmed(crd[,1],crd[,2]),data.frame(YEAR=yr,running.median=x))
 		#crd=merge(crd,running.median,all=T)
-		lines(crd[,1],crd$running.median,col='blue',lty=1,lwd=2)
-		
 		dev.off()
 
     png(filename=file.path(figdir, "CPUE_LFA33.png"),width=8, height=5.5, units = "in", res = 800)
@@ -211,6 +209,7 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
     
 
     # Plots unbiased annual CPUE for all LFAs in Maritimes region
+    # bias corrected for variability in effort and catch relationship rather than above which sums effort and catch 
     # Good for context in presentations at AC
     
     a = lobster.db('process.logs')
@@ -272,19 +271,36 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
         
         #by time
         for(i in 1:length(aa)){
-            tmp<-aa[[i]]
-            tmp = tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
-            names(tmp)<-c('time','catch','effort')
-            tmp$date<-as.Date(tmp$time)
-            first.day<-min(tmp$date)
-            tmp$time<-julian(tmp$date,origin=first.day-1)
-            tmp = tmp[order(tmp$time),]
-            tmp$time = ceiling(tmp$time/7) #convert to week of season
-            g<-as.data.frame(biasCorrCPUE(tmp,by.time=T,min.sample.size = 5))
-            g$lfa=unique(aa[[i]]$LFA)
-            g$yr = unique(aa[[i]]$SYEAR)
-            # g = t(g)[,1]
+          
+          tmp <- aa[[i]]
+          tmp <- tmp[,c('DATE_FISHED','WEIGHT_KG','NUM_OF_TRAPS')]
+          names(tmp) <- c('time','catch','effort')
+          
+          tmp$date <- as.Date(tmp$time)
+          first.day <- min(tmp$date)
+          
+          tmp$time <- julian(tmp$date, origin = first.day - 1)
+          tmp <- tmp[order(tmp$time),]
+          tmp$time <- ceiling(tmp$time/7)
+          
+          # Check whether any week has >5 observations
+          n.by.week <- table(tmp$time)
+          
+          if(any(n.by.week > 5)){
+            
+            g <- as.data.frame(
+              biasCorrCPUE(
+                tmp,
+                by.time = TRUE,
+                min.sample.size = 5
+              )
+            )
+            
+            g$lfa <- unique(aa[[i]]$LFA)
+            g$yr <- unique(aa[[i]]$SYEAR)
+            
             cpue.lst[[i]] <- g
+          }
         }
         
         cc =as.data.frame(do.call(rbind,cpue.lst))
@@ -295,15 +311,19 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
         l=p$lfas
         png(filename=file.path(figdir, paste0("weekly_cpue_",l,".png")),width=8, height=5.5, units = "in", res = 800)
         print(
-            ggplot(subset(cc,lfa==l),aes(x=t,y=CPUE))+geom_point()+
-                geom_smooth(se=F)+facet_wrap(~yr)+
-                labs(title =paste0("LFA ",l))+
-                labs(y= "CPUE (kg/th)", x = "Week of Season") +
-                theme(plot.title = element_text(hjust = 0.5))+
-                # stat_summary(fun='mean', geom="line")
-                geom_hline(data=mean[mean$lfa==l,], aes(yintercept= CPUE), color='red', linewidth=0.6)
-            
-        )
+          ggplot(subset(cc,lfa==l),aes(x=t,y=CPUE)) +
+            geom_point(size = 0.75) +
+            geom_smooth(se=F, linewidth=0.75) +
+            facet_wrap(~yr) +
+            labs(title = paste0("LFA ",l)) +
+            labs(y = "CPUE (kg/th)", x = "Week of Season") +
+            theme(plot.title = element_text(hjust = 0.5)) +
+            geom_hline(
+              data = mean[mean$lfa==l,],
+              aes(yintercept = CPUE),
+              color = 'red',
+              linewidth = 0.6)
+            )
         dev.off()
    
         }
@@ -340,66 +360,170 @@ write.csv(final_out, file=paste0(figdir,"/",fl.name),na="", row.names=F)
 		dat = ccir_compile_data(x = ccir_data,log.data = logs, area.defns = Groupings[7], size.defns = inp, season.defns = Seasons, sexs = 1.5) #sexs 1.5 means no sex defn
 
 		out.binomial = list()
-		attr(out.binomial,'model') <- 'binomial'
-		for(i in 1:length(dat)) { #if run breaks, update 1:length(dat) to reflect run# ie.e 16:length(dat)
-			print(i)
+		attr(out.binomial, 'model') <- 'binomial'
+		
+		overall.start = Sys.time()
+		
+		for(i in 1:length(dat)) { 
+		  
 		  ds = dat[[i]]
-			#ds$method = 'binomial'
-			x = ccir_stan_run_binomial(dat = ds,save=T)
-			out.binomial[[i]] <- ccir_stan_summarize(x, fdir = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','lfa33'))
+		  
+		  # Identify model
+		  lfa = ds$LFA
+		  yr = ds$Yr
+		  grid = paste(min(ds$Grid), max(ds$Grid), sep = '-')
+		  
+		  cat("\nRunning model", i, "of", length(dat),
+		      "| LFA", lfa, "| Grid", grid, "| Year", yr, "\n")
+		  
+		  # Start timer
+		  start.time = Sys.time()
+		  
+		  # Run model
+		  x = ccir_stan_run_binomial(dat = ds, save = T)
+		  
+		  # Model run time
+		  run.time = Sys.time() - start.time
+		  
+		  cat("Completed | Run time:",
+		      round(as.numeric(run.time, units = "mins"), 2),
+		      "min | Total elapsed:",
+		      round(as.numeric(Sys.time() - overall.start, units = "mins"), 1),
+		      "min\n")
+		  
+		  # Summary directory
+		  summary.fdir = file.path(project.datadirectory('bio.lobster'),
+		                           'outputs', 'ccir', paste0('LFA', ds$LFA),
+		                           p$current.assessment.year, 'summary')
+		  
+		  # Summarize
+		  out.binomial[[i]] = ccir_stan_summarize(x, fdir = summary.fdir)
 		}
+		
 
-### If the folder C:\bio.data\bio.lobster\outputs\ccir\summary contains other model runs for different areas (i.e.27-32)
-### move these to the appropriate folder within the summary folder (aka hide them)
-	
 		#load statement below combines ccir summaries if broken runs
 		#ensure folder has only model run summaries
-		da = file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','lfa33') #modify as required
-
-		d = list.files(da,full.names=T)
-		d=d[!file.info(d)$isdir]
-		#d=setdiff(list.files(da, full.names=T), list.dirs(recursive = FALSE, full.names = FALSE))
+		
+		da = summary.fdir #modify as required
+		
+		d = sort(list.files(da, pattern = "summary\\.rdata$", full.names = T))
+		d = d[!file.info(d)$isdir]
+		
 		out.binomial = list()
+		
 		#ensure folder has only model run summaries!!!!!
 		
-		for( i in 1:length(d)){
+		for(i in 1:length(d)){
 		  load(d[i])
-		    out.binomial[[i]] = out
+		  out.binomial[[i]] = out
 		}
-
-
-		out.binomial[[1]]$LFA = "33W"
-		out.binomial[[2]]$LFA = "33E"
+		
+		# Assign W/E labels to model summaries based on their grid groupings
+		# This uses the Groupings object so the code is portable across LFAs.
+		
+		for(i in 1:length(out.binomial)){
+		  
+		  # Extract the grid numbers for this model
+		  grid = as.numeric(strsplit(out.binomial[[i]]$Grid, "\\.")[[1]])
+		  
+		  # Find the Groupings entry corresponding to this model's LFA
+		  g = Groupings[[which(sapply(Groupings, function(x)
+		    x$lfa == out.binomial[[i]]$LFA))]]
+		  
+		  # Identify the grid groups (G1, G2, etc.) for this LFA
+		  groups = names(g)[grepl("^G", names(g))]
+		  
+		  # Determine which grid group contains the model's grids
+		  for(j in groups){
+		    
+		    if(all(grid %in% g[[j]])){
+		      
+		      # Convert the grouping number to a label
+		      # G1 = W and G2 = E
+		      suffix = sub("^G", "", j)
+		      
+		      if(suffix == "1") suffix = "W"
+		      if(suffix == "2") suffix = "E"
+		      
+		      # Append the grouping label to the LFA
+		      # e.g. 33 + W = 33W
+		      out.binomial[[i]]$LFA =
+		        paste0(out.binomial[[i]]$LFA, suffix)
+		      
+		      # Stop once the correct grouping has been found
+		      break
+		    }
+		  }
+		}
+	
+		
+		
 		ouBin = ccir_collapse_summary(out.binomial)
 		attr(ouBin,'model') <- 'binomial'
 		#ouBin$Yr = ouBin$Yr +1
 		save(ouBin,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
 		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','compiledBinomialModels33.rdata'))
 
+		# Identify the grid groups represented in the compiled summaries
 		g = unique(ouBin$Grid)
-		g = strsplit(g,"\\.")
-		o = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[1]]),FUN=sum)
-		names(o)[2] = g[[1]][1]
-		o2 = aggregate(WEIGHT_KG~SYEAR,data=subset(logs,GRID_NUM %in% g[[2]]),FUN=sum)
-		names(o2)[2] = g[[2]][1]
-		o = merge(o,o2)
-		names(o)[1] = 'Yr'
+		g = strsplit(g, "\\.")
+		
+		# Calculate total landings for each grid group by year
+		o = lapply(g, function(grids) {
+		  aggregate(
+		    WEIGHT_KG ~ SYEAR,
+		    data = subset(logs, GRID_NUM %in% grids),
+		    FUN = sum
+		  )
+		})
+		
+		# Name each landings column using the first grid in the group
+		# This preserves the format expected by ccir_timeseries_exploitation_plots()
+		for(i in 1:length(o))
+		  names(o[[i]])[2] = g[[i]][1]
+		
+		# Combine the landings for all grid groups
+		o = Reduce(function(x, y) merge(x, y, all = TRUE), o)
+		
+		# Rename the year column to match the CCIR summaries
+		names(o)[1] = "Yr"
+	
 		oo <- ccir_timeseries_exploitation_plots(ouBin,combined.LFA=T,landings=o)
 
-		save(oo,file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','lfa33','compiledExploitationCCIR33.rdata'))
-		load(file=file.path(project.datadirectory('bio.lobster'),'outputs','ccir','summary','lfa33','compiledExploitationCCIR33.rdata'))
-		RR75 = max(oo$ERf75[oo$Yr<p$current.assessment.year])#index year if needed
-
-#oo=read.csv(file.path(figdir, "LFA33ccirout.csv"))
-	# plot
-
-png(filename=file.path(figdir, "CCIR_LFA33.png"),width=8, height=5, units = "in", res = 800)
-ExploitationRatePlots(data = oo[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR75,lfa = 33,fd=figdir, save=F)
-dev.off()
+		# Save compiled exploitation results
+		fname = paste0('compiledExploitationCCIR', lfa, '.rdata')
+		save(oo, file = file.path(summary.fdir, fname))
+		
+		# Reload compiled exploitation results if needed
+		load(file = file.path(summary.fdir, fname))
+		
+		RR75 = max(oo$ERf75[oo$Yr < p$current.assessment.year]) # index year if needed
+		
+		#oo = read.csv(file.path(figdir, paste0("LFA", lfa, "ccirout.csv")))
+		
+		# Plot
+		png(filename = file.path(figdir, paste0("CCIR_LFA", lfa, ".png")),
+		    width = 8, height = 5, units = "in", res = 800)
+		
+		ExploitationRatePlots(
+		  data = oo[,c("Yr","ERfm","ERfl","ERfu")],
+		  lrp = RR75,
+		  lfa = lfa,
+		  fd = figdir,
+		  save = F
+		)
+		
+		dev.off()
 
 #French Version
 png(filename=file.path(figdir, "CCIR_LFA33.French.png"),width=8, height=5, units = "in", res = 800)
-ExploitationRatePlots(data = oo[,c("Yr","ERfm","ERfl","ERfu")],lrp=RR75,lfa = 33,fd=figdir, save=F, French=T)
+ExploitationRatePlots(
+  data = oo[,c("Yr","ERfm","ERfl","ERfu")],
+  lrp = RR75,
+  lfa = lfa,
+  fd = figdir,
+  save = F,
+ French=T)
 dev.off()
 }
 
