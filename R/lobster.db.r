@@ -1812,7 +1812,14 @@ a.port = b.port")
                                    ll = which(aS$LFA==lfa[i] & aS$SYEAR==j)
                                    aS$WOS[ll] = floor(as.numeric(aS$SDATE[ll]-min(h$START_DATE[h$SYEAR==j]))/7)+1
                                 }
-                          }
+                            }
+                        
+                        # Added LFA 41 WOS calculation here
+                        i41 = which(aS$LFA == 41 & !is.na(aS$SYEAR) & !is.na(aS$SDATE))
+                        aS$WOS[i41] =
+                          floor(as.numeric(aS$SDATE[i41] - as.Date(paste0(aS$SYEAR[i41], "-01-01"))) / 7) + 1
+                        ### to here
+                        
                           if(any(!is.finite(aS$WOS))) {kl = which(!is.finite(aS$WOS)); aS$WOS[kl] = NA}
                           aS = subset(aS,WOS>0)
 
