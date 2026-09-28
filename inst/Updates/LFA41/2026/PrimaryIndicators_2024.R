@@ -12,15 +12,16 @@ p$current.assessment.year =2026
 p$yrs = 1947:p$current.assessment.year
 
 assessment.year = p$current.assessment.year ########### check the year ############### !!!!!!!!!!!
-fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators')
+#fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2026','indicators')
 
 #jpeg("BM41_2023TEST.jpeg", width = 9, height = 7, units = "in",res=600, bg = "white")
 par(mfrow = c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
 
 ###DFO RV survey
-all.out=read.csv(file.path(fp,'DFO.restratified.All.csv'))
 
-out=read.csv(file.path(fp,'LFA41-DFOCommercialB.csv'))
+all.out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/DFO.restratified.All.csv")
+
+out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-DFOCommercialB.csv")
 #a = merge(all.out,out,by='yr')
 #median(a$w.Yst.y/a$w.Yst.x)    #0.876 proportion of total weight that comprises commercial animals....assuming constant over
 ao = all.out[,c('yr','w.Yst')]
@@ -49,9 +50,10 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 ###Georges###
 rm(out)
-aout=read.csv(file.path(fp,'DFO.Georges.All.csv'))
+aout=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/DFO.Georges.All.csv")
+
 aout = aout[,c('yr','w.Yst')]
-out=read.csv(file.path(fp,'LFA41-DFOCommercialB_georges.csv'))
+out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-DFOCommercialB_georges.csv")
 out = subset(out,yr>=2007)
 out = out[,c('yr','w.Yst')]
 
@@ -80,10 +82,10 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 ###Spring ###
 rm(out)
-out=read.csv(file.path(fp,'LFA41-NEFSCSpringCommercialB.csv'))
+out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-NEFSCSpringCommercialB.csv")
 ao = out[,c('yr','w.Yst')]
 ao$w.Yst = ao$w.Yst/1000
-ao<-na.omit(ao)
+#ao<-na.omit(ao)
 
 
 plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
@@ -101,10 +103,10 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 ###Fall###
 rm(out)
-out=read.csv(file.path(fp,'LFA41-NEFSCFallCommercialB.csv'))
+out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-NEFSCFallCommercialB.csv")
 ao = out[,c('yr','w.Yst')]
 ao$w.Yst = ao$w.Yst/1000
-ao<-na.omit(ao)
+#ao<-na.omit(ao)
 
 
 plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
@@ -136,10 +138,10 @@ require(bio.lobster)
 la()
 
 ff = c(
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-  file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
- file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2025','maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+  file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+  file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+  file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+ file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
 
 
 #jpeg("RP41_2022_FR.jpeg", width = 11, height = 8, units = "in",res=600, bg = "white")
