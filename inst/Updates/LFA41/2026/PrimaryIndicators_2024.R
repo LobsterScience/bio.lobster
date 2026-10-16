@@ -82,7 +82,7 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 rm(out)
 out=read.csv(file.path(fp,'LFA41-NEFSCSpringCommercialB.csv'))
 ao = out[,c('yr','w.Yst')]
-ao$w.Yst = ao$w.Yst/1000
+ao$w.Yst = ao$w.Yst/1000/0.453592
 ao<-na.omit(ao)
 
 
@@ -103,9 +103,9 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 rm(out)
 out=read.csv(file.path(fp,'LFA41-NEFSCFallCommercialB.csv'))
 ao = out[,c('yr','w.Yst')]
-ao$w.Yst = ao$w.Yst/1000
+ao$w.Yst = ao$w.Yst/1000/0.453592
 ao<-na.omit(ao)
-
+ao = subset(ao, yr<2025)
 
 plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
 points(ao$yr,ao$w.Yst,type='p',lty=1,pch=16,lwd=2)

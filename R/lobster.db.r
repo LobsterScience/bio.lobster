@@ -501,6 +501,8 @@ when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2021
 when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2022-10-01' and '2023-09-30' then 2023
 when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2023-10-01' and '2024-09-30' then 2024
 when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2024-10-01' and '2025-09-30' then 2025
+when LFA IN ('35','36','38') AND to_char(date_landed,'YYYY-MM-DD') between '2025-10-01' and '2026-09-30' then 2026
+
 when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2002-11-01' and '2003-10-31' then 2003
 when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2003-11-01' and '2004-10-31' then 2004
 when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2004-11-01' and '2005-10-31' then 2005
@@ -524,6 +526,7 @@ when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2021-11-0
 when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2022-11-01' and '2023-10-31' then 2023
 when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2023-11-01' and '2024-10-31' then 2024
 when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2024-11-01' and '2025-10-31' then 2025
+when LFA IN ('33','34') AND to_char(date_landed,'YYYY-MM-DD') between '2025-11-01' and '2026-10-31' then 2026
 when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2002-04-01' and '2002-12-31' then 2002
 when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2003-01-01' and '2003-12-31' then 2003
 when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2004-01-01' and '2004-12-31' then 2004
@@ -548,11 +551,12 @@ when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY
 when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2023-01-01' and '2023-12-31' then 2023
 when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2024-01-01' and '2024-12-31' then 2024
 when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2025-01-01' and '2025-12-31' then 2025
+when LFA IN ('27','28','29','30','31A','31B','32') AND to_char(date_landed,'YYYY-MM-DD') between '2026-01-01' and '2026-12-31' then 2026
 else null
 end season,
 lfa, vr_number, slip_weight_lbs/2.20462/1000 mt
 from marfissci.lobster_sd_slip
-where to_char(date_landed,'YYYY-MM-DD') between '2002-04-01' and '2025-12-31'
+where to_char(date_landed,'YYYY-MM-DD') between '2002-04-01' and '2026-12-31'
 and species_code = 700
 ) where season is not null
 group by season, lfa, to_char(vr_number)")
@@ -584,6 +588,7 @@ when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2021-10-01' and '2022-09-3
 when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2022-10-01' and '2023-09-30' then 2023
 when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2023-10-01' and '2024-09-30' then 2024
 when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2024-10-01' and '2025-09-30' then 2025
+when to_char(LANDING_DATE_TIME,'YYYY-MM-DD') between '2025-10-01' and '2026-09-30' then 2026
 else null
 end season
 
@@ -1545,11 +1550,11 @@ a.port = b.port")
       logs41p = subset(logs41,CPUE>=lq[1] & CPUE<=lq[2])
       logs41p$yr = lubridate::year(logs41p$FV_FISHED_DATETIME)
       
-      gr41 = st_as_sf(readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds')))
-      logs41p$X = logs41p$DDLON * -1
-      logs41p$Y = logs41p$DDLAT
-      lp = st_as_sf(subset(logs41p, !is.na(X)),coords=c('X','Y'),crs=4326)
-      lp = st_join(lp,gr41)
+      #gr41 = st_as_sf(readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds')))
+      #logs41p$X = logs41p$DDLON * -1
+      #logs41p$Y = logs41p$DDLAT
+      #lp = st_as_sf(subset(logs41p, !is.na(X)),coords=c('X','Y'),crs=4326)
+      #lp = st_join(lp,gr41)
       saveRDS( lp, file=fo, compress=T)
     }
     if (DS=="process.logs41.unfiltered") {return(readRDS(f2))  }

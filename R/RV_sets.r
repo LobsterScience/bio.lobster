@@ -131,12 +131,12 @@ RV_sets <- function(length_group=5, aggregate=T, by_sex=F){
     o = which(com$LONGITUDE>0)
     com$LONGITUDE[o] = com$LONGITUDE[o]*-1
   }
-  
   p_cols <- paste0("P.", 13:223)
   
   com <- com %>%
    rowwise() %>%
-    mutate(across(c(Lobster, WEIGHT_KG,Legal,Legal_wt,Berried,Recruit,Recruit_wt,Juv,any_of(p_cols)), ~ .x * OFFSET))
+    mutate(across(c(Lobster, WEIGHT_KG,Legal,Legal_wt,Berried,Recruit,Recruit_wt,Juv,any_of(p_cols)), ~ .x * OFFSET)) %>%
+    ungroup()
   
   print('this is n or wt, accounting for trawl corrections but is not the numbers per km2')
   return(com)
