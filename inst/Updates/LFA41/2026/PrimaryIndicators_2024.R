@@ -86,6 +86,9 @@ out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-NEFSC
 ao = out[,c('yr','w.Yst')]
 ao$w.Yst = ao$w.Yst/1000
 #ao<-na.omit(ao)
+=======
+ao$w.Yst = ao$w.Yst/1000/0.453592
+ao<-na.omit(ao)
 
 
 plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
@@ -105,9 +108,14 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 rm(out)
 out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-NEFSCFallCommercialB.csv")
 ao = out[,c('yr','w.Yst')]
+
 ao$w.Yst = ao$w.Yst/1000
 #ao<-na.omit(ao)
 
+
+ao$w.Yst = ao$w.Yst/1000/0.453592
+ao<-na.omit(ao)
+ao = subset(ao, yr<2025)
 
 plot(ao$yr,ao$w.Yst,type='n',xlab=' ',ylab = paste(" ",sep=" "))
 points(ao$yr,ao$w.Yst,type='p',lty=1,pch=16,lwd=2)

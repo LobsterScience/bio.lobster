@@ -147,6 +147,7 @@ ggLobsterMap <- function(
     file.path(layerDir,"bathy10-300SF.rds")
   )
   
+  
   nafo_sf <- readRDS(
     file.path(layerDir,"NAFO_sf.rds")
   )
@@ -565,7 +566,17 @@ ggLobsterMap <- function(
       family="sans"
     )
   }
-  
+  if(addNAFO){
+    nafo.sel<-subset(nafo_sf,NAFO_1%in%nafo)
+    o = list()
+    nn = unique(nafo)
+    for(i in 1:length(nn)){
+      b = subset(nafo.sel,NAFO_1==nn[i])
+      o[[i]] = st_as_sf(st_union(b))
+    }
+    o = bind_rows(o)
+    p = p + geom_sf(data=o,fill=NA,colour='orange',lwd=1) 
+  }
   
   # ----------------------
   # Points
