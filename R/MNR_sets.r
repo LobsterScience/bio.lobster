@@ -5,6 +5,7 @@ MNR_sets <- function(){
             print('Data obtained from https://mainedmr.shinyapps.io/MaineDMR_Trawl_Survey_Portal/')
             x = dir(fd,full.names = T)
             x = x[grep('csv',x)]
+            if(length(x)>4) {print('move duplicated files to arch.'); stop()}
             ou = list()
             for(i in 1:length(x)){
               ou[[i]] = read.csv(x[i])

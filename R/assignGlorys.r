@@ -1,8 +1,11 @@
 assignGlorys <- function(
-    x=go, x_spatial = c('LONGITUDE', "LATITUDE"), x_crs = 4326,
-    temp=file.path(bio.lobster::project.datadirectory('bio.lobster.glorys'),'Glorys2000-2025wBiasCorrColumn_doy_july29.rds'),
+    x=go, 
+    x_spatial = c('LONGITUDE', "LATITUDE"), 
+    x_crs = 4326,
+    temp=file.path(bio.lobster::project.datadirectory('bio.lobster.glorys'),'Glorys1994_2025wBiasCorrColumn_doy_sept24.rds'),
     temp_spatial = c('X','Y'),
-  temp_crs = 32620,tmp_dir = 'C:/Users/cooka/Documents/tmp/'
+  temp_crs = 32620,
+  tmp_dir = 'C:/Users/cooka/Documents/tmp/'
     
           ){
 	cat("WARNING: This function is very slow.\n")
@@ -39,8 +42,11 @@ for(k in seq_along(dy)){
 	        saveRDS(list(v,l), file=file.path(tmp_dir,paste0('Gl_ob',dy[k],'.rds')))
 }
 
-v = dir(tmp_dir,full.names = T)
-v = v[grep('Gl_ob',v)]
+v<- list.files(
+  tmp_dir,
+  pattern = "^Gl_ob(199[4-9]|20[0-9]{2})\\.rds$",
+  full.names = TRUE
+)
 #file.remove(v)
 
 for(i in 1:length(v)) {
@@ -66,7 +72,7 @@ for(i in 1:length(v)) {
 				rm(b2)
 				gc()
 			}
-file.remove(v)
+
 
 
 out = list()
@@ -78,10 +84,10 @@ for(i in 1:length(v)){
 	out[[i]] = readRDS(v[i])
 }
 file.remove(v)
-oi = do.call(rbind,out)
+oi = bind_rows(out)
 
-ois = subset(oi,dist<10)
-saveRDS(ois,file=file.path(bio.lobster::project.datadirectory('bio.lobster.glorys'),'lobsterData_withGlorys_sept9.rds'))
+ois = subset(oi,dist<11 & Glor> -1)
+saveRDS(ois,file=file.path(bio.lobster::project.datadirectory('bio.lobster.glorys'),'lobsterData_withGlorys_oct19.rds'))
     return(ois)
   
   

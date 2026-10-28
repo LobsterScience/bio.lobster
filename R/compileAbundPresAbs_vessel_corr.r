@@ -394,6 +394,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
               select(id, Lobster, Legal, Legal_wt, Berried, Recruit, Recruit_wt,YEAR, DATE,Juv, EMPTY, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
     
     #MNR
+          
             mn = MNR_sets()       
            
                      
