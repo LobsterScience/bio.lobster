@@ -1,4 +1,54 @@
-sdmTMBcv_predictions <- function(object, response_var, offset_var = NULL) {
+#' @export
+
+sdmTMB_cv_stats <- function(response_var,offset_var,denom_var) {
+  
+  x <- as.data.frame(matrix(data = NA,nrow = 1,ncol = length(columns)))
+  colnames(x) <- columns
+  
+  x$Model <- mod.label
+  x$Formula <- m$formula[1]
+  
+  x$`Time-varying` <- ifelse( is.null(m$time_varying),NA,  paste(m$time_varying[1], m$time_varying[2]))
+  z  <- paste0(m$family$family,"(link = ",m$family$link,")" )
+  if(length(z)>1) z = paste(z,collapse=" + ")
+  x$Family = z
+  x$cAIC <- cAIC(m, what = "cAIC")
+  x$AIC <- AIC(m)
+  x$rho <- tryCatch(m$sd_report[[1]]["rho"],error = function(e) NA)
+  x$`Matern range` <- tryCatch(m$sd_report[[1]]["range"], error = function(e) NA)
+  x$`Spatial SD` <- tryCatch(  m$sd_report[[1]]["sigma_O"],   error = function(e) NA)
+  x$Hessian_positive <- m$pos_def_hessian
+  ## CV log-likelihood
+  x$`Sum loglik` <- m_cv$sum_loglik
+  fitTT <- dplyr::bind_rows(sdmTMBcv_predictions( m_cv,response_var = response_var, offset_var = offset_var,fam = m$family$family,denom_var=denom_var))
+  fam <- m$family$family
+  train_dat <- subset(fitTT, tt == "train")
+  test_dat  <- subset(fitTT, tt == "test")
+  
+  train_stats <- get_cv_scores(train_dat, fam)
+  test_stats  <- get_cv_scores(test_dat, fam)
+  
+  for (nm in names(train_stats)) {
+    colname <- paste0(nm, "_train")
+    if (!(colname %in% names(x))) {
+      x[[colname]] <- NA
+    }
+    x[[colname]] <- train_stats[[nm]]
+  }
+  
+  for (nm in names(test_stats)) {
+    colname <- paste0(nm, "_test")
+    if (!(colname %in% names(x))) {
+      x[[colname]] <- NA
+    }
+    
+    x[[colname]] <- test_stats[[nm]]
+  }
+  
+  x
+}
+
+sdmTMBcv_predictions <- function(object, response_var,denom_var, offset_var = NULL,fam) {
   
   x <- object$data
   k <- length(object$models)
@@ -23,14 +73,30 @@ sdmTMBcv_predictions <- function(object, response_var, offset_var = NULL) {
         type='response'
       )
     }
+    
     train$obs  <- train[[response_var]]
     train$pred <- pr$est
+    
+    if(fam=='binomial'){
+      ii = which(train[[denom_var]]>0)
+      train = train[ii,]
+      train$obs  <- train[[response_var]] / train[[denom_var]]
+      train$pred <- pr$est[ii]
+      
+      }
+    ###need to add a denominatory variable if binomial if()
     train$tt   <- "train"
     
     test$obs  <- test[[response_var]]
     test$pred <- test$cv_predicted
-    test$tt   <- "test"
     
+    if(fam=='binomial'){
+         ii = which(test[[denom_var]]>0)
+        test = test[ii,]
+        test$obs  <- test[[response_var]] / test[[denom_var]]
+        test$pred = test$cv_predicted
+    }
+    test$tt   <- "test"
     out[[i]] <- rbind(train, test)
   }
   
@@ -51,14 +117,11 @@ cv_metrics <- function(obs, pred) {
 
 
 cv_binomial_metrics <- function(obs, pred) {
-  
   eps <- 1e-15
   pred <- pmax(pmin(pred, 1 - eps), eps)
   logloss <- -mean( obs * log(pred) +(1 - obs) * log(1 - pred))
   brier <- mean((obs - pred)^2)
-  auc <- tryCatch(pROC::auc(obs, pred)[1],error = function(e) NA_real_)
-  
-  data.frame( LogLoss = logloss,Brier = brier,AUC = auc )
+  data.frame( LogLoss = logloss,Brier = brier )
 }
 
 cv_count_metrics <- function(obs, pred) {
@@ -154,53 +217,3 @@ get_cv_scores <- function(dat, family_name) {
 
 columns <- c("Model","Formula","Time-varying","Family", "AIC","cAIC", "EDF_ep","EDF_om","rho","Matern range", "Spatial SD",  "Hessian_positive","Sum loglik")
 
-
-#' @export
-
-sdmTMB_cv_stats <- function(response_var,offset_var) {
-  
-  x <- as.data.frame(matrix(data = NA,nrow = 1,ncol = length(columns)))
-  colnames(x) <- columns
-  
-  x$Model <- mod.label
-  x$Formula <- m$formula[1]
-
-  x$`Time-varying` <- ifelse( is.null(m$time_varying),NA,  paste(m$time_varying[1], m$time_varying[2]))
-    z  <- paste0(m$family$family,"(link = ",m$family$link,")" )
-  if(length(z)>1) z = paste(z,collapse=" + ")
-    x$Family = z
-  x$cAIC <- cAIC(m, what = "cAIC")
-  x$AIC <- AIC(m)
-  x$rho <- tryCatch(m$sd_report[[1]]["rho"],error = function(e) NA)
-  x$`Matern range` <- tryCatch(m$sd_report[[1]]["range"], error = function(e) NA)
-  x$`Spatial SD` <- tryCatch(  m$sd_report[[1]]["sigma_O"],   error = function(e) NA)
-    x$Hessian_positive <- m$pos_def_hessian
-  ## CV log-likelihood
-  x$`Sum loglik` <- m_cv$sum_loglik
-  fitTT <- dplyr::bind_rows(sdmTMBcv_predictions( m_cv,response_var = response_var, offset_var = offset_var))
-  fam <- m$family$family
-  train_dat <- subset(fitTT, tt == "train")
-  test_dat  <- subset(fitTT, tt == "test")
-  
-  train_stats <- get_cv_scores(train_dat, fam)
-  test_stats  <- get_cv_scores(test_dat, fam)
-  
-    for (nm in names(train_stats)) {
-      colname <- paste0(nm, "_train")
-          if (!(colname %in% names(x))) {
-            x[[colname]] <- NA
-            }
-        x[[colname]] <- train_stats[[nm]]
-        }
-  
-  for (nm in names(test_stats)) {
-      colname <- paste0(nm, "_test")
-    if (!(colname %in% names(x))) {
-      x[[colname]] <- NA
-    }
-    
-    x[[colname]] <- test_stats[[nm]]
-  }
-  
-  x
-}
