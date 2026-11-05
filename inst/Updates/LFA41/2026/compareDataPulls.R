@@ -12,8 +12,8 @@ p$lfas = c("41") # specify lfa
 p$current.assessment.year =2026
 p$yrs = 1947:p$current.assessment.year
 
-outspring25=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-NEFSCSpringCommercialB.csv")
-outfall25=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-NEFSCFallCommercialB.csv")
+outspring25=read.csv("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/LFA41-NEFSCSpringCommercialB.csv")
+outfall25=read.csv("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/LFA41-NEFSCFallCommercialB.csv")
 
 fp = file.path(project.datadirectory('bio.lobster'),'assessments','LFA41','2024','indicators')
 outspring24=read.csv(file.path(fp,'NEFSC.spring.restratified.commercial.csv'))

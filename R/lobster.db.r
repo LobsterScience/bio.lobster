@@ -1712,10 +1712,23 @@ a.port = b.port")
       
       full.tab$BOARD_DATE = as_datetime(full.tab$BOARD_DATE, format = "%Y-%m-%d")
       
+    #Vic Added retention of OWNER_GROUP into DESCRIPTION for 2026 data
+      atSea3 <- full.tab %>% mutate(
+          SAMCODE = NA,
+          PORT = NA,
+          CALWT = NA,
+          CULL = CULLS,
+          DESCRIPTION = OWNER_GROUP) %>% dplyr::select(
+          TRIP, BOARD_DATE, COMAREA_ID, PORT, PORT_NAME, CAPTAIN,
+          LICENSE_NO, SAMCODE, DESCRIPTION, TRAP_NO, TRAP_TYPE,
+          SET_NO, DEPTH, SOAK_DAYS, LAT, LON, STRATUM_ID,
+          NUM_HOOK, SPECCD_ID, COMMON, SEXCD_ID, VNOTCH,
+          EGG_STAGE, SHELL, CULLS, FISH_LENGTH, DISEASE,
+          CONDITION, CLUTCH, CALWT, ABUNDANCE, KEPT, RELEASE_CD  )
       
-      atSea3 <- full.tab %>% mutate(SAMCODE = NA, PORT = NA, CALWT = NA, CULL = CULLS) %>% dplyr::select(TRIP, BOARD_DATE, COMAREA_ID, PORT, PORT_NAME, CAPTAIN, LICENSE_NO, SAMCODE, OWNER_GROUP, TRAP_NO, TRAP_TYPE, SET_NO, DEPTH, SOAK_DAYS, 
-                                                                                           LAT, LON, STRATUM_ID, NUM_HOOK, SPECCD_ID, COMMON, SEXCD_ID, VNOTCH, EGG_STAGE, SHELL, CULLS, FISH_LENGTH, DISEASE,
-                                                                                           CONDITION, CLUTCH, CALWT, ABUNDANCE, KEPT, RELEASE_CD)
+    #  atSea3 <- full.tab %>% mutate(SAMCODE = NA, PORT = NA, CALWT = NA, CULL = CULLS) %>% dplyr::select(TRIP, BOARD_DATE, COMAREA_ID, PORT, PORT_NAME, CAPTAIN, LICENSE_NO, SAMCODE, OWNER_GROUP, TRAP_NO, TRAP_TYPE, SET_NO, DEPTH, SOAK_DAYS, 
+    #                                                                                       LAT, LON, STRATUM_ID, NUM_HOOK, SPECCD_ID, COMMON, SEXCD_ID, VNOTCH, EGG_STAGE, SHELL, CULLS, FISH_LENGTH, DISEASE,
+    #                                                                                       CONDITION, CLUTCH, CALWT, ABUNDANCE, KEPT, RELEASE_CD)
       
    
       ncol(atSea3)

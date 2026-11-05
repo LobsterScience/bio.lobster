@@ -26,11 +26,12 @@ p$yrs = 1947:p$assessment.year
 
 p$lfas = c("41") # specify lfa
 
+la()
 
-logs=lobster.db('process.logs.redo')
+llobster.db('process.logs.redo')
 logs=lobster.db("process.logs")
 
-land=lobster.db('annual.landings.redo')
+lobster.db('annual.landings.redo')
 land = lobster.db('annual.landings')
 
 lobster.db("observer41.redo")

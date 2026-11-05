@@ -20,11 +20,11 @@ p$yrs = 1947:p$assessment.year
 figdir = file.path("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/Figs")
 p$lfas = c("41") # specify lfa
 
-#lobster.db('process.logs41.redo')
+lobster.db('process.logs41.redo')
 logs41=lobster.db("process.logs41")
-#lobster.db('annual.landings.redo')
+lobster.db('annual.landings.redo')
 land = lobster.db('annual.landings')
-#lobster.db("observer41.redo")
+lobster.db("observer41.redo")
 Obs41 = lobster.db("observer41")
 
 
@@ -98,6 +98,50 @@ ggplot(land41,
 landings41<-land41[, c("YR", "LFA41")]
 
 write.csv(land41, "C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/landingstable.csv")
+
+# Last 4 years
+last5 <- tail(landings41[order(landings41$YR), ], 5)
+
+# % below TAC
+pct_below_TAC <- round((720 - last4$LFA41) / 720 * 100, 1)
+
+data.frame(
+  Metric = "% below TAC",
+  t(pct_below_TAC)
+)
+
+## TAC with respect to Carry-Over
+
+carryover_tac <- 2160
+
+blocks <- data.frame(
+  start_yr = c(2013, 2016, 2019, 2022, 2025),
+  end_yr   = c(2015, 2018, 2021, 2024, 2027)
+)
+
+carryover_summary <- do.call(
+  rbind,
+  lapply(seq_len(nrow(blocks)), function(i) {
+    
+    s <- blocks$start_yr[i]
+    e <- blocks$end_yr[i]
+    
+    total_landings <- sum(
+      subset(landings41, YR >= s & YR <= e)$LFA41,
+      na.rm = TRUE
+    )
+    
+    data.frame(
+      start_yr = s,
+      end_yr = e,
+      landings41 = total_landings,
+      below_tac = carryover_tac - total_landings,
+      pct_below_tac = 100 * (carryover_tac - total_landings) / carryover_tac
+    )
+  })
+)
+
+carryover_summary
 
 
 #########Observer Coverage #############

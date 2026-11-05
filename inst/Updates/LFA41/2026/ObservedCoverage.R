@@ -64,7 +64,6 @@ Trips_logs<-aggregate(MON_DOC_ID ~SYEAR, data = L41log, FUN = function(x) length
 
 
 ##Trap Hauls by Year in LOGS
-
 Agg_Logs<- aggregate(NUM_OF_TRAPS ~SYEAR, data = L41log, sum, na.rm=TRUE)
 Agg_Logs<-Agg_Logs[Agg_Logs$SYEAR >2017,]
 ##Trap Hauls by Year in Observed
@@ -79,21 +78,47 @@ Percentobs$PercentObserved<-(Percentobs$OBSTOTALTRAPS)/(Percentobs$NUM_OF_TRAPS)
 Percentobs$PercentObserved<-(Percentobs$PercentObserved*100)
 
 
+#### Trip Coverage Table
+
+logs_summary <-L41log%>%
+  mutate(YEAR = year(FV_FISHED_DATETIME)) %>%       
+  distinct(MON_DOC_ID, YEAR) %>%                   
+  count(YEAR, name = "Fished") 
+
+obs_summary <-obs %>%
+  mutate(YEAR = year(STARTDATE)) %>%       
+  distinct(TRIPNO, YEAR) %>%                   
+  count(YEAR, name = "Observed")          
+
+## SHOULD BE 6 trips in 2026
+combined <- logs_summary %>%
+  full_join(obs_summary, by = "YEAR") %>%
+  mutate(
+    Observed = coalesce(Observed, 0),
+    Fished = coalesce(Fished, 0),
+    PercentObserved = round((Observed / Fished) * 100, 1)
+  ) %>%
+  filter(YEAR >= 2002, YEAR <= 2026) %>%
+  arrange(YEAR) %>%
+  select(YEAR, Fished, Observed, PercentObserved)
+
+
+
+
+
 
 ###Summarized observed trips
 
 filtered_data <- Obs41 %>%
-  filter(SYEAR %in% c(2022, 2023, 2024,2025))
+  filter(SYEAR %in% c( 2024,2025, 2026))
 
 unique_trips <- filtered_data %>%
   select(TRIPNO, MONTH, SYEAR) %>%
   distinct()
 
 
-
-
 result <- Obs41%>%
-  filter(SYEAR %in% c(2024, 2025)) %>%    
+  filter(SYEAR %in% c(2024, 2025, 2026)) %>%    
   group_by(SYEAR, TRIPNO) %>%           
   summarise(STARTDATE = min(STARTDATE),  
             .groups = "drop")

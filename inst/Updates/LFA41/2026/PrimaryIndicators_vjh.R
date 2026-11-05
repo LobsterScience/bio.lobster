@@ -19,9 +19,16 @@ par(mfrow = c(2,2),las=1,mar = c(2,2,2,2),omi=c(0.5,0.5,0.25,0.25))
 
 ###DFO RV survey
 
-all.out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/DFO.restratified.All.csv")
+#all.out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/DFO.restratified.All.csv")
 
-out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-DFOCommercialB.csv")
+#out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-DFOCommercialB.csv")
+
+all.out=read.csv("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/DFO.restratified.All.csv")
+
+out=read.csv("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/LFA41-DFOCommercialB.csv")
+
+
+
 #a = merge(all.out,out,by='yr')
 #median(a$w.Yst.y/a$w.Yst.x)    #0.876 proportion of total weight that comprises commercial animals....assuming constant over
 ao = all.out[,c('yr','w.Yst')]
@@ -50,10 +57,13 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 ###Georges###
 rm(out)
-aout=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/DFO.Georges.All.csv")
+#aout=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/DFO.Georges.All.csv")
+aout=read.csv("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/DFO.Georges.All.csv")
 
 aout = aout[,c('yr','w.Yst')]
-out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-DFOCommercialB_georges.csv")
+#out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-DFOCommercialB_georges.csv")
+out=read.csv("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/LFA41-DFOCommercialB_georges.csv")
+
 out = subset(out,yr>=2007)
 out = out[,c('yr','w.Yst')]
 
@@ -82,9 +92,10 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 ###Spring ###
 rm(out)
-out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-NEFSCSpringCommercialB.csv")
+#out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-NEFSCSpringCommercialB.csv")
+out=read.csv("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/NEFSC.spring.restratified.commercial.csv")
 ao = out[,c('yr','w.Yst')]
-ao$w.Yst = ao$w.Yst/1000
+ao$w.Yst = (ao$w.Yst/1000)/0.4537205 ### Fixing scaling 2026?
 ao<-na.omit(ao)
 
 
@@ -103,9 +114,11 @@ abline(h=ub,col='lightcyan4',lwd=2, lty=4)
 
 ###Fall###
 rm(out)
-out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-NEFSCFallCommercialB.csv")
+#out=read.csv("C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/LFA41-NEFSCFallCommercialB.csv")
+out=read.csv("C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/NEFSC.fall.restratified.commercial.csv")
+
 ao = out[,c('yr','w.Yst')]
-ao$w.Yst = ao$w.Yst/1000
+ao$w.Yst = (ao$w.Yst/1000)/0.4537205 ### Fixing scaling 2026?
 ao<-na.omit(ao)
 
 
@@ -137,11 +150,17 @@ mtext("Stratified Total Weight (kt)",2,1,outer=T,las=0, cex = 1.5)
 require(bio.lobster)
 la()
 
+#ff = c(
+#  file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+#  file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+#  file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+# file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+
 ff = c(
-  file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
-  file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
-  file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
- file.path('C:/Users/HowseVJ/OneDrive - DFO-MPO/LFA 41 Update/2026/maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
+  file.path('C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/maturefemaleLengthFrequenciesLFA41polygonSummerRV.rdata'),
+  file.path('C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/maturefemaleLengthFrequenciesLFA41NEFSCspringrestratified.rdata'),
+  file.path('C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/maturefemaleLengthFrequenciesLFA41NEFSCfallrestratified.rdata'),
+  file.path('C:/Users/HowseVJ/Documents/bio.data/bio.lobster/assessments/LFA41/2026/indicators/maturefemaleLengthFrequenciesLFA41dfogeorges.rdata'))
 
 
 #jpeg("RP41_2022_FR.jpeg", width = 11, height = 8, units = "in",res=600, bg = "white")

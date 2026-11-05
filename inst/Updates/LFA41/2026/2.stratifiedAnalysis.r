@@ -16,7 +16,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
 
 
       p$reweight.strata = F #this subsets 
-      p$years.to.estimate = c(1969:assessment.year)
+      p$years.to.estimate = c(1969:(assessment.year-1))
       p$length.based = T
       p$size.class= c(50,300)
       p$by.sex = F
@@ -63,7 +63,7 @@ assessment.year = p$current.assessment.year ########### check the year #########
       p$lobster.subunits=F
       p$area = 'LFA41'
       p$reweight.strata = T #this subsets 
-      p$years.to.estimate = c(1969:assessment.year) # -1 because update is in the Fall
+      p$years.to.estimate = c(1969:(assessment.year-1)) # -1 because update is in the Fall
       p = make.list(list(yrs=p$years.to.estimate),Y=p)
      
    aout= nefsc.analysis_vh(DS='stratified.estimates.redo',p=p)
