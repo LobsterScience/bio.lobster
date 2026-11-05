@@ -11,7 +11,7 @@ p1$yrs = 1969:2026
 
 p$current.assessment.year = 2026##Check Year
 p$syr = 1989
-p$yrs = p$syr:assessment.year
+p$yrs = p$syr:2026
 
 p$lfas = c("41")
 
@@ -31,11 +31,11 @@ stratifiedAnalysesCommercial = function( p=p1, survey,lfa,  fpf = fp1,f=ff,ht=ht
         p$season =c('spring')# p$series =c('spring');p$series =c('fall')
         p$define.by.polygons = T
         p$lobster.subunits=F
-        p$area = lfa
+        p$area = "LFA41"
         p$reweight.strata = T #this subsets 
 p = make.list(list(yrs=p$years.to.estimate),Y=p)
     
-     aout= nefsc.analysis_vh(DS='stratified.estimates.redo',p=p)
+     aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
      write.csv(aout,file=file.path(fpf,'indicators',paste(lfa,'NEFSCSpringCommercialB.csv',sep="-")))
 
       p$season =c('fall')# p$series =c('spring');p$series =c('fall')
@@ -44,7 +44,7 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
          p$metric = 'weights' #weights
       p$measure = 'stratified.total' #'stratified.total'
       p$file.name = file.path(f,paste(lfa,'NEFSCFallrestratifiedtotalweightscommercial.png',sep=""))
-     aout= nefsc.analysis_vh(DS='stratified.estimates.redo',p=p)
+     aout= nefsc.analysis(DS='stratified.estimates.redo',p=p)
      write.csv(aout,file=file.path(fpf,'indicators',paste(lfa,'NEFSCFallCommercialB.csv',sep="-")))
        
      }
@@ -86,6 +86,6 @@ p = make.list(list(yrs=p$years.to.estimate),Y=p)
 
 
 
-stratifiedAnalysesCommercial(survey='NEFSC',lfa='LFA41',ht=8,wd=10)
+stratifiedAnalysesCommercial(survey='NEFSC',lfa='LFA41')
 stratifiedAnalysesCommercial(survey='DFO',lfa='LFA41',ht=8,wd=10)
 

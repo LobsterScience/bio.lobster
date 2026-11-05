@@ -53,7 +53,8 @@ ff = c(
                                   p$reference.measure = 'median' # mean, geomean
                                   p$file.name = paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][6],"\\.")[[1]][1],'png',sep=".")
         		                  print(p$file.name)
-
+        		                  rmm = rmed(out$yr,out$Fecm)
+        		                  
                             p$y.maximum = NULL # NULL # if ymax is too high for one year
                             p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
                             		p$ylim = c(0,215)
@@ -105,7 +106,9 @@ ff = c(
                                   p$reference.measure = 'median' # mean, geomean
                                   p$file.name = paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][6],"\\.")[[1]][1],'png',sep=".")
                               print(p$file.name)
-
+                              out =subset(out,yr<2025)
+                              rmm = rmed(out$yr,out$Fecm)
+                              
                             p$y.maximum = NULL # NULL # if ymax is too high for one year
                             p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
                                 p$ylim = c(0,650)
@@ -158,7 +161,8 @@ ff = c(
                                   p$reference.measure = 'median' # mean, geomean
                                   p$file.name = paste('Fec',strsplit(strsplit(ff[i],"/")[[1]][6],"\\.")[[1]][1],'png',sep=".")
                               print(p$file.name)
-
+                              rmm = rmed(out$yr,out$Fecm)
+                              
                             p$y.maximum = NULL # NULL # if ymax is too high for one year
                             p$show.truncated.numbers = F #if using ymax and want to show the numbers that are cut off as values on figure
                                 p$ylim =NULL

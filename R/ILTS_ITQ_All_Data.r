@@ -71,6 +71,14 @@ print('this is updated Dec 8 2025')
               se$X = c(sapply(se$LONGITUDE,fixSensorLatLon)*-1  )
               
               se = se[order(se$GPSTIME),]
+              
+              thresh <- 0.005
+              repeat {
+                d <- c( 0,sqrt(diff(se$X)^2 + diff(se$Y)^2))
+                bad <- which(d > thresh)
+                if (length(bad) == 0) break
+                se <- se[-bad, ]
+              }  
               #distance
               v$distance <- sum(sapply(2:nrow(se), function(i) {
                 distGeo(se[i - 1, c("X", "Y")], se[i, c("X", "Y")])
@@ -86,7 +94,17 @@ print('this is updated Dec 8 2025')
                 se = subset(se,!is.na(se$LATITUDE))
                 se$Y = c(sapply(se$LATITUDE,fixSensorLatLon)  )
                 se$X = c(sapply(se$LONGITUDE,fixSensorLatLon)*-1  )
-              
+                se = se[order(se$GPSTIME),]
+                
+                    # distance from previous point fine to use euclidean cause this is just a filter
+            
+                thresh <- 0.002
+                repeat {
+                    d <- c( 0,sqrt(diff(se$X)^2 + diff(se$Y)^2))
+                   bad <- which(d > thresh)
+                  if (length(bad) == 0) break
+                  se <- se[-bad, ]
+                }
                 #total distance from all GPS feed  
                 #distance
                 v$distance <- sum(sapply(2:nrow(se), function(i) {

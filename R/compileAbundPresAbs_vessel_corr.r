@@ -5,7 +5,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
     #offshore logs
             lobster.db('logs41') #make sure to do a database recapture through logs41.redo before moving on
             
-            logs41 = rename.df(logs41,c('FV_FISHED_DATETIME'),c('DATE_FISHED'))
+            logs41 = bio.utilities::rename.df(logs41,c('FV_FISHED_DATETIME'),c('DATE_FISHED'))
             
             logs41$yr = year(logs41$DATE_FISHED) #2002 to present
             ziff41$yr = year(ziff41$DATE_FISHED) #1995 to 2001
@@ -394,6 +394,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
               select(id, Lobster, Legal, Legal_wt, Berried, Recruit, Recruit_wt,YEAR, DATE,Juv, EMPTY, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
     
     #MNR
+          
             mn = MNR_sets()       
            
                      

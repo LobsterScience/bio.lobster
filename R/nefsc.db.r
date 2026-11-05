@@ -71,7 +71,7 @@ if(DS %in% c('clean.redo')) {
                   #       and to_number(SHG) <= 136
                   #       and stratum like '01%' 
                   #       ;")) 
-                   #sept2026 needed to update this to bring in TOGA labelled sets
+                   print('Sept 2026 needed to update this to bring in TOGA labelled sets')
     usinf = connect.command(con,paste("      (      SELECT a.CRUISE6,STRATUM,TOW,a.STATION,SEASON,STATUS_CODE,ID,AREA,SVVESSEL,CRUNUM,SVGEAR,BEGIN_GMT_TOWDATE,GMT_YEAR,GMT_MONTH,GMT_DAY,TOWDUR,AVGDEPTH,BOTTEMP,BOTSALIN,DOPDISTB,DECDEG_ENDLON,DECDEG_ENDLAT,
       DECDEG_BEGLON,DECDEG_BEGLAT
                     FROM  USNEFSC.USS_STATION a, 

@@ -1,0 +1,187 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs}
+\usepackage{microtype}
+
+\title{Temperature-Dependent Lobster Growth Model}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Model overview}
+
+Growth was modelled using a nonlinear mixed-effects model combining a von Bertalanffy growth process with a Sharpe--Schoolfield thermal response. The model accounts for differences in the duration of observation intervals, repeated measurements of individual lobsters, and error in observed carapace length. The response variable is the observed carapace length at the end of each growth interval, rather than the observed growth increment. Consequently, small negative observed growth increments can arise through observation error even though the underlying growth process does not predict negative growth.
+
+\section{Growth process}
+
+For observation interval $j$ from individual $i$, expected carapace length at the end of the interval is
+
+\begin{equation}
+\widehat{L}_{ij,\mathrm{end}}
+=
+L_{\infty}
+-
+\left(L_{\infty}-L_{ij,\mathrm{start}}\right)
+\exp\left[-k_{ij}(T)\,\Delta t_{ij}\right],
+\end{equation}
+
+where $L_{ij,\mathrm{start}}$ is carapace length at the start of the interval, $\Delta t_{ij}$ is the interval duration in days, $L_{\infty}$ is the asymptotic length parameter, and $k_{ij}(T)$ is the temperature- and individual-dependent growth coefficient.
+
+This form allows growth over intervals of different durations and causes the expected rate of increase in length to decline as size approaches $L_{\infty}$.
+
+\section{Temperature dependence}
+
+Temperature dependence in the growth coefficient is described using a Sharpe--Schoolfield function. For an average individual,
+
+\begin{equation}
+k(T)
+=
+k_{\mathrm{ref}}
+\frac{
+\exp\left[
+\dfrac{E}{k_B}
+\left(
+\dfrac{1}{T_{\mathrm{ref}}}
+-
+\dfrac{1}{T_K}
+\right)
+\right]
+}
+{
+1+
+\exp\left[
+\dfrac{E_h}{k_B}
+\left(
+\dfrac{1}{T_h}
+-
+\dfrac{1}{T_K}
+\right)
+\right]
+},
+\end{equation}
+
+where
+
+\begin{align*}
+T_K &= T_C + 273.15,\\
+T_{\mathrm{ref}} &= 293.15\ \mathrm{K},\\
+k_B &= 8.617\times10^{-5}\ \mathrm{eV\,K^{-1}}.
+\end{align*}
+
+Here $T_C$ is experimental temperature in degrees Celsius and $T_K$ is absolute temperature in Kelvin. The parameters are $k_{\mathrm{ref}}$, a reference growth coefficient; $E$, an activation-energy parameter governing the increase in growth with temperature; $E_h$, a high-temperature deactivation parameter; and $T_h$, the high-temperature deactivation parameter expressed on the Kelvin scale.
+
+The thermal function constrains the temperature response to increase according to the activation component before high-temperature deactivation increasingly suppresses growth. This provides a biologically structured alternative to an unconstrained spline response.
+
+\section{Individual variation}
+
+Repeated observations from the same lobster are accommodated using an individual random effect,
+
+\begin{equation}
+u_i \sim \mathcal{N}\left(0,\sigma_{\mathrm{ind}}^2\right).
+\end{equation}
+
+The individual-specific growth coefficient is
+
+\begin{equation}
+k_i(T)=k(T)\exp(u_i).
+\end{equation}
+
+Thus, $u_i>0$ corresponds to an individual with a larger growth coefficient than the population-average thermal response, whereas $u_i<0$ corresponds to a smaller growth coefficient. The exponential specification ensures that the individual-specific growth coefficient remains positive.
+
+Substitution into the growth equation gives
+
+\begin{equation}
+\widehat{L}_{ij,\mathrm{end}}
+=
+L_{\infty}
+-
+\left(L_{\infty}-L_{ij,\mathrm{start}}\right)
+\exp\left[-k(T_{ij})\exp(u_i)\Delta t_{ij}\right].
+\end{equation}
+
+\section{Observation model and measurement error}
+
+Observed end-of-interval carapace length is modelled as
+
+\begin{equation}
+L_{ij,\mathrm{end}}^{\mathrm{obs}}
+\sim
+\mathcal{N}\left(
+\widehat{L}_{ij,\mathrm{end}},
+\sigma_{\mathrm{obs}}^2
+\right),
+\end{equation}
+
+where $\sigma_{\mathrm{obs}}$ represents residual observation-scale variation. In the current implementation this term accommodates measurement error as well as any process variation not represented explicitly by the growth equation.
+
+An important consequence is that an observed end length can occasionally be smaller than the observed starting length even though the expected growth process is non-negative (provided $L_{\mathrm{start}}<L_{\infty}$). Thus, apparent negative growth does not need to be interpreted as true biological shrinkage.
+
+\section{Likelihood}
+
+Conditional on the individual random effects, the negative log-likelihood contribution from the length observations is
+
+\begin{equation}
+-\log \mathcal{L}_{\mathrm{obs}}
+=
+-\sum_{i,j}
+\log
+\phi\left(
+L_{ij,\mathrm{end}}^{\mathrm{obs}};
+\widehat{L}_{ij,\mathrm{end}},
+\sigma_{\mathrm{obs}}
+\right),
+\end{equation}
+
+where $\phi(x;\mu,\sigma)$ denotes the Gaussian density with mean $\mu$ and standard deviation $\sigma$.
+
+The random-effect contribution is
+
+\begin{equation}
+-\log \mathcal{L}_{\mathrm{ind}}
+=
+-\sum_i
+\log
+\phi\left(u_i;0,\sigma_{\mathrm{ind}}\right).
+\end{equation}
+
+The total objective function minimized by TMB is therefore
+
+\begin{equation}
+\mathrm{NLL}
+=
+-\log \mathcal{L}_{\mathrm{obs}}
+-\log \mathcal{L}_{\mathrm{ind}},
+\end{equation}
+
+with the individual random effects integrated using the Laplace approximation when \texttt{u} is supplied to \texttt{MakeADFun} as a random effect.
+
+\section{Parameterization}
+
+Parameters constrained to be positive are estimated on the log scale in the TMB implementation:
+
+\begin{align*}
+k_{\mathrm{ref}} &= \exp(\theta_k),\\
+E &= \exp(\theta_E),\\
+E_h &= \exp(\theta_{E_h}),\\
+T_h &= \exp(\theta_{T_h}),\\
+L_{\infty} &= \exp(\theta_{L_{\infty}}),\\
+\sigma_{\mathrm{obs}} &= \exp(\theta_{\mathrm{obs}}),\\
+\sigma_{\mathrm{ind}} &= \exp(\theta_{\mathrm{ind}}).
+\end{align*}
+
+This parameterization ensures that growth, thermal, size, and variance parameters remain positive during optimization.
+
+\section{Estimated quantities}
+
+The fitted model estimates the thermal-response parameters $k_{\mathrm{ref}}$, $E$, $E_h$, and $T_h$; the asymptotic length $L_{\infty}$; the observation-error standard deviation $\sigma_{\mathrm{obs}}$; and the among-individual standard deviation $\sigma_{\mathrm{ind}}$. The implementation also reports fitted end lengths and observation-specific values of $k_i(T)$.
+
+\section{Interpretation and limitations}
+
+The model should be interpreted as a continuous approximation to growth over each observation interval. Larval lobster growth occurs through discrete moulting events, whereas the von Bertalanffy component represents the accumulated change in length continuously over time. Intervals containing more than one moult can therefore be represented in terms of net expected growth, but individual moulting events are not modelled explicitly.
+
+In addition, $\sigma_{\mathrm{obs}}$ is not a pure estimate of instrument measurement error unless independent information on measurement precision is available. In the current likelihood, $\sigma_{\mathrm{obs}}$ includes both measurement error and residual biological/process variation not otherwise represented by the model.
+
+\end{document}

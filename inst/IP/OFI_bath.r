@@ -13,7 +13,7 @@ lp = st_transform(l,crs=32620)
 pip <- st_join(vs, lp)
 pip = subset(pip,!is.na(LFA))
 
-ggplot(subset(pip,LFA==38),aes(fill=log(z),colour=log(z)))+geom_sf()
+ggplot(subset(pip,LFA==34),aes(fill=(z),colour=(z)))+geom_sf()
 ggplot(subset(pip,LFA==38),aes(fill=slope,colour=slope))+geom_sf()
 ggplot(subset(pip,LFA==38),aes(fill=rie,colour=rie))+geom_sf() #The local standard deviation of the residual topography surface, where the residual topography surface is calculated as the DTM minus the focal mean of the DTM
 
