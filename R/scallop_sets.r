@@ -8,8 +8,20 @@ scallop_sets <- function(length.group=1){
   scallop.tows$X = convert.dd.dddd(scallop.tows$START_LONG)
   scallop.tows$OFFSET = ifelse(scallop.tows$DRAG_WIDTH==2.5, scallop.tows$TOW_LEN*3.048, scallop.tows$TOW_LEN*5.8464 ) #sameoto conversion email July 28 2024; 
   scT = subset(scallop.tows,select=c('TOW_SEQ','TOW_DATE','STRATA_ID','X','Y', 'OFFSET'))
-  
+  scT$YEAR = lubridate::year(scT$TOW_DATE)
+  ss = st_as_sf(scT,coords=c('X','Y'),crs=4326)
+  gr = readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFAPolysSF.rds'))
+  gr <- gr %>%
+    mutate(area = abs(st_area(geometry))) %>%
+    group_by( LFA) %>%
+    slice_max(order_by = area, n = 1, with_ties = FALSE) %>%
+    ungroup() %>%
+    select(-area)
+  ss = st_join(ss,gr,largest = T)
+  ss = subset(as_tibble(ss),select=c(TOW_SEQ,LFA))
+  scT = merge(scT,ss,by='TOW_SEQ',all.x=T)
   scC = subset(scallopSurv,select=c("TOW_SEQ",  "ABUNDANCE_RAW","MEAS_VAL", "SEX_ID") )
+  scC = merge(subset(scT,select=c(TOW_SEQ,LFA,YEAR)),scC,all.y=T)
   ms = sum(scC$MEAS_VAL*scC$ABUNDANCE_RAW,na.rm=T) / sum(scC$ABUNDANCE_RAW,na.rm=T)
   scC$MEAS_VAL = ifelse(scC$ABUNDANCE_RAW>0 & is.na(scC$MEAS_VAL),ms,scC$MEAS_VAL)
   #sc1=seq(13,253,by=length.group)
@@ -24,16 +36,19 @@ scallop_sets <- function(length.group=1){
   
   scC$Legal_wt = lobLW(CL=scC$MEAS_VAL,sex=scC$SEX_ID)/1000* scC$Legal
   scC$Recruit_wt = lobLW(CL=scC$MEAS_VAL,sex=scC$SEX_ID)/1000* scC$Recruit
-  
-  
-  deL1 = aggregate(cbind(ABUNDANCE_RAW,Berried,Legal,Legal_wt,Recruit,Recruit_wt,Juv)~TOW_SEQ+SZ,data=scC,FUN=sum)
+  i = which(scC$SEX_ID %in% c(2,3))
+  j = which(!is.na(scC$LFA))
+  i = intersect(i,j)
+  scC$EggProd = 0
+  scC$EggProd[i] = eggProduction(cl=scC$MEAS_VAL[i],lfa=scC$LFA[i],year = scC$YEAR[i])*scC$ABUNDANCE_RAW[i]
+  deL1 = aggregate(cbind(ABUNDANCE_RAW,Berried,Legal,Legal_wt,Recruit,Recruit_wt,Juv,EggProd)~TOW_SEQ+SZ,data=scC,FUN=sum)
   deL = subset(deL1,select=c(TOW_SEQ,SZ,ABUNDANCE_RAW))
   names(deL)[3]= 'P'
   aa = aggregate(P~TOW_SEQ+SZ,data=deL,FUN=sum)
   bb = reshape(aa[,c('TOW_SEQ','SZ','P')],idvar='TOW_SEQ',timevar='SZ', direction='wide')
   bb = na.zero(bb)
   
-  deL1 = aggregate(cbind(ABUNDANCE_RAW,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt)~TOW_SEQ,data=scC,FUN=sum)
+  deL1 = aggregate(cbind(ABUNDANCE_RAW,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt,EggProd)~TOW_SEQ,data=scC,FUN=sum)
   
   scC = merge(deL1,bb)
   scC = bio.utilities::rename.df(scC, 'ABUNDANCE_RAW','Lobster')
