@@ -877,7 +877,7 @@ saveRDS(ee,file=file.path(fnODBC,'land_by_vess.rdata'))
       return(port_locs)
     }
     #con = odbcConnect(oracle.server , uid=oracle.username, pwd=oracle.password, believeNRows=F) # believeNRows=F required for oracle db's
-    port_locs = connect.command(con,'select * from frailc.port_locs')
+    port_locs = connect.command(con,'select * from lobster.port_locs')
     save(port_locs,file=file.path(fnODBC,'port_locs.rdata'))
   }
   
@@ -1550,11 +1550,11 @@ a.port = b.port")
       logs41p = subset(logs41,CPUE>=lq[1] & CPUE<=lq[2])
       logs41p$yr = lubridate::year(logs41p$FV_FISHED_DATETIME)
       
-      #gr41 = st_as_sf(readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds')))
-      #logs41p$X = logs41p$DDLON * -1
-      #logs41p$Y = logs41p$DDLAT
-      #lp = st_as_sf(subset(logs41p, !is.na(X)),coords=c('X','Y'),crs=4326)
-      #lp = st_join(lp,gr41)
+      gr41 = st_as_sf(readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFA41_grid_polys.rds')))
+      logs41p$X = logs41p$DDLON * -1
+      logs41p$Y = logs41p$DDLAT
+      lp = st_as_sf(subset(logs41p, !is.na(X)),coords=c('X','Y'),crs=4326)
+      lp = st_join(lp,gr41)
       saveRDS( lp, file=fo, compress=T)
     }
     if (DS=="process.logs41.unfiltered") {return(readRDS(f2))  }
@@ -2392,13 +2392,31 @@ SELECT trip.trip_id,late, lone, sexcd_id,fish_length,st.nafarea_id,board_date, s
         with(surveyCatch,paste(TRIP_ID,SET_NO,sep=''))->surveyCatch$SET_ID
         surveyCatch$SET_LONG = surveyCatch$SET_LONG*-1
         surveyCatch$HAUL_LONG = surveyCatch$HAUL_LONG*-1
-        surveyCatch$YEAR = year(surveyCatch$BOARD_DATE)
+        surveyCatch$YEAR = lubridate::year(surveyCatch$BOARD_DATE)
         surveyMeasurements$SET_LON = surveyMeasurements$SET_LON*-1
         surveyMeasurements$HAUL_LON = surveyMeasurements$HAUL_LON*-1
 
-
-
- #browser()
+        u <- surveyCatch[!duplicated(surveyCatch[, c("SET_ID", "SET_LONG", "SET_LAT")]), c("SET_ID",  "SET_LONG", "SET_LAT")]
+        ss = st_as_sf(u,coords=c('SET_LONG','SET_LAT'),crs=4326)
+        gr = readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFAPolysSF.rds'))
+        gr <- gr %>%
+          mutate(area = abs(st_area(geometry))) %>%
+          group_by( LFA) %>%
+          slice_max(order_by = area, n = 1, with_ties = FALSE) %>%
+          ungroup() %>%
+          select(-area)
+        gr$LFA = paste0('L',gr$LFA)
+        ss = st_join(ss,gr,largest = T)
+        ss = subset(as_tibble(ss),select=c(SET_ID,LFA))
+        surveyCatch = merge(surveyCatch,ss,by='SET_ID',all.x=T)
+        i = which(is.na(surveyCatch$LFA.x))
+        surveyCatch$LFA.x[i] <- surveyCatch$LFA.y[i]
+        surveyCatch$LFA = surveyCatch$LFA.x
+        surveyCatch = subset(surveyCatch,select=c(-LFA.x, -LFA.y))
+        u <- surveyCatch[!duplicated(surveyCatch[, c("SET_ID", "LFA")]), c("SET_ID",  "LFA")]
+        surveyMeasurements$LFA = NULL
+        surveyMeasurements = merge(surveyMeasurements,u,all.x=T)
+          #browser()
        # surveyStationID = connect.command(con, "select * from LOBSTER.ILTS_SURVEY_STATION")
       #  save(list=c("ILTS2016TowDepth","ILTS2016TowSpread","ILTS2016Tracks") , file=file.path( fnODBC, "MarPort2016.rdata"), compress=T)
         save(surveyCatch, file=file.path( fnODBC, "surveyCatch.rdata"), compress=T)

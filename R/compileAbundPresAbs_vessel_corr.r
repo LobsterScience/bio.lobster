@@ -297,6 +297,9 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
           #  trapsNoSize = readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesNoSize.rds')) 
           #  trapSize = readRDS(file.path(project.datadirectory('bio.lobster'),'data','CombinedCatchData','trapCatchesSize.rds')) 
             
+            
+            # nov 18 2026 adding in SaM to get egg production for surveys
+            
             #RV Survey  ###covertt back to raw #s
             rv = RV_sets(length_group = 1)
             rv$TEMP = rv$bottom_temperature
@@ -306,7 +309,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             rv$OFFSET_METRIC = "TowedDist x wing spread m2"
             
             rv = rv %>%
-                  select(id,Lobster, Legal, Legal_wt,Berried, Recruit, Recruit_wt, Juv,YEAR,DATE,EMPTY,starts_with("P."), LONGITUDE, LATITUDE, SOURCE, OFFSET, OFFSET_METRIC,Gear )
+                  select(id,Lobster, Legal, Legal_wt,Berried, Recruit, Recruit_wt, Juv,EggProd,YEAR,DATE,EMPTY,starts_with("P."), LONGITUDE, LATITUDE, SOURCE, OFFSET, OFFSET_METRIC,Gear )
             
             #NEFSC Surveys
             ne = NEFSC_sets(length.group=1)
@@ -314,11 +317,27 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             ne$OFFSET = ne$OFFSET*1e6
             ne$OFFSET_METRIC="TowedDist x wing spread m2"
             ne = ne %>%
-                  select(id, Lobster, Legal, Legal_wt, Berried, Recruit,Recruit_wt, YEAR, DATE, EMPTY,Juv, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
+                  select(id, Lobster, Legal, Legal_wt, Berried, Recruit,Recruit_wt, YEAR, DATE, EMPTY,Juv, EggProd,starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
             
             #ILTS and ITQ
             
             ilts = ILTS_ITQ_All_Data(biomass = F,aggregate=F,redo_base_data = F)  
+            ilts$ID = paste(ilts$TRIP_ID,ilts$SET_NO,sep="_")
+            ii = unique(ilts[, c("SET_LONG", "SET_LAT", "ID")])
+            ss = st_as_sf(ii,coords=c('SET_LONG','SET_LAT'),crs=4326)
+            gr = readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFAPolysSF.rds'))
+            gr <- gr %>%
+              mutate(area = abs(st_area(geometry))) %>%
+              group_by( LFA) %>%
+              slice_max(order_by = area, n = 1, with_ties = FALSE) %>%
+              ungroup() %>%
+              select(-area)
+            ss = st_join(ss,gr,largest = T)
+            ss = subset(as_tibble(ss),select=c(ID,LFA))
+            ss$LFA = paste0('L',ss$LFA)
+            ilts = merge(ilts,ss,by='ID',all.x=T)
+            ilts$LFA = ifelse(is.na(ilts$LFA.x) & !is.na(ilts$LFA.y),ilts$LFA.y,ilts$LFA.x)
+            ilts$LFA.x = ilts$LFA.y = NULL
             ilts$N = ilts$SA_CORRECTED_PRORATED_N * ilts$sweptArea ###covertt back to raw #s
             ilts$SZ = round(ilts$FISH_LENGTH/1)*1
             ilts$Berried= ilts$Recruit = ilts$Legal=  ilts$Juv =0
@@ -326,17 +345,22 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             ilts$Recruit = ifelse(ilts$FISH_LENGTH %in% 70:81,ilts$N,ilts$Recruit)
             ilts$Recruit = ifelse(ilts$FISH_LENGTH ==82,ilts$N/2,ilts$Recruit)
             ilts$Juv = ifelse(ilts$FISH_LENGTH <=60,ilts$N,ilts$Juv)
-            
             ilts$Legal = ifelse(ilts$FISH_LENGTH >82,ilts$N,ilts$Legal)
             ilts$Legal = ifelse(ilts$FISH_LENGTH ==82,ilts$N/2,ilts$Legal)
             ilts$Legal_wt = (lobLW(CL=ilts$FISH_LENGTH,sex=ilts$SEX) * ilts$Legal)/1000
             
             ilts$Recruit_wt = (lobLW(CL=ilts$FISH_LENGTH,sex=ilts$SEX) * ilts$Recruit)/1000
+            i = which(ilts$SEX %in% c(2,3))
+            j = which(!is.na(ilts$LFA))
+            i = intersect(i,j)
+            ilts$EggProd = 0
+            ilts$EggProd[i] = eggProduction(cl=ilts$FISH_LENGTH[i],lfa=ilts$LFA[i],year = ilts$YEAR[i]) * ilts$N[i]
+            j = which(is.na(ilts$LFA)) 
+            ilts$EggProd[j] = NA
             
-            ilts$ID = paste(ilts$TRIP_ID,ilts$SET_NO,sep="_")
             dA = aggregate(N~SZ+ID,data=ilts,FUN=sum)
             
-            dS = aggregate(cbind(Berried,Legal,N,Legal_wt,Recruit,Juv,Recruit_wt)~TRIP_ID+SET_NO+ID,data=ilts,FUN=sum)
+            dS = aggregate(cbind(Berried,Legal,N,Legal_wt,Recruit,Juv,Recruit_wt,EggProd)~TRIP_ID+SET_NO+ID,data=ilts,FUN=sum)
             dS$Lobster = dS$N
             dS$N = NULL
             dA$P = dA$N
@@ -359,7 +383,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             ilt$Gear = 'NEST'
             
             p_cols <- grep("^P\\.", names(ilt), value = TRUE)
-            extra_cols <- c("Berried", "Legal", "Legal_wt", "Recruit", "Juv","Recruit_wt")
+            extra_cols <- c("Berried", "Legal", "Legal_wt", "Recruit", "Juv","Recruit_wt",'EggProd')
             
             # Combine all target columns
             target_cols <- c(p_cols, extra_cols)
@@ -367,7 +391,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             
             ilt = ilt %>%
             #  filter(YEAR>1998) %>%
-              select(id, Lobster, Legal, Legal_wt, Berried, Recruit,Recruit_wt, YEAR, DATE,Juv, EMPTY, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
+              select(id, Lobster, Legal, Legal_wt, Berried, Recruit,Recruit_wt, YEAR, DATE,Juv, EMPTY,EggProd, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
             
     #Snow crab
             sn = snowcrab_sets()
@@ -391,7 +415,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             sc$id = paste('Scall',sc$TOW_SEQ,sep="_")
             
             sc = sc %>%
-              select(id, Lobster, Legal, Legal_wt, Berried, Recruit, Recruit_wt,YEAR, DATE,Juv, EMPTY, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
+              select(id, Lobster, Legal, Legal_wt, Berried, Recruit, Recruit_wt,YEAR, DATE,Juv, EMPTY,EggProd, starts_with("P."), LONGITUDE, LATITUDE,SOURCE, OFFSET, OFFSET_METRIC, Gear)
     
     #MNR
           
@@ -404,7 +428,7 @@ compileAbundPresAbs_vessel_corr <- function(redo=F,size=T){
             ws = st_as_sf(ww,coords=c('LONGITUDE','LATITUDE'),crs=4326)
             ww$Empty = ww$EMPTY
             ww$EMPTY = NULL
-            wwNoSize = subset(ww, select=c(id , DATE, YEAR, LONGITUDE, LATITUDE, OFFSET, SOURCE, OFFSET_METRIC,Lobster, Berried,Legal,Recruit,Juv,Legal_wt,Recruit_wt,Empty,Gear))
+            wwNoSize = subset(ww, select=c(id , DATE, YEAR, LONGITUDE, LATITUDE, OFFSET, SOURCE, OFFSET_METRIC,Lobster, Berried,Legal,Recruit,Juv,Legal_wt,Recruit_wt,Empty,Gear,EggProd))
             
             combinedNoSize = dplyr::bind_rows(trapsNoSize,wwNoSize)
             

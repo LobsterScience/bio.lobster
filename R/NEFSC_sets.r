@@ -6,7 +6,22 @@ NEFSC_sets <- function(length.group=5){
   cas =  nefsc.db(DS='uscat.clean')
   de =   nefsc.db(DS='usdet.clean')
   
+  ss = st_as_sf(set,coords=c('X','Y'),crs=4326)
+  gr = readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFAPolysSF.rds'))
+  gr <- gr %>%
+    mutate(area = abs(st_area(geometry))) %>%
+    group_by( LFA) %>%
+    slice_max(order_by = area, n = 1, with_ties = FALSE) %>%
+    ungroup() %>%
+    select(-area)
+  ss = st_join(ss,gr,largest = T)
+  ss = subset(as_tibble(ss),select=c(ID,LFA))
+  set = merge(set,ss,by='ID',all.x=T)
+  set$YEAR = set$GMT_YEAR
+  ses = subset(set,select=c(ID,YEAR,LFA))
+  
   sc1=seq(13,253,by=length.group)
+  de = merge(de,ses,all.x=T)
   de$SZ = sc1[cut(de$FLEN,sc1,labels=F)]
   de$Berried = ifelse(de$FSEX==3,de$CLEN,0)
   de$Legal = ifelse(de$FSEX<3 & de$FLEN>82,de$CLEN,0)
@@ -19,9 +34,17 @@ NEFSC_sets <- function(length.group=5){
   de$WEIGHT_KG = de$CLEN * de$FWT/1000
   de$Legal_wt = de$Legal * de$FWT/1000
   de$Recruit_wt = de$Recruit * de$FWT/1000
+  i = which(de$FSEX %in% c(2,3))
+  j = which(!is.na(de$LFA))
+  i = intersect(i,j)
+  de$EggProd = 0
+  de$EggProd[i] = eggProduction(cl=de$FLEN[i],lfa=de$LFA[i], year =de$YEAR ) * de$CLEN[i]
+  j = which(is.na(de$LFA))
+  de$EggProd[j] = NA
+  
   dA = aggregate(CLEN~SZ+FSEX+MISSION+SETNO+ID,data=de,FUN=sum)
   
-  dS = aggregate(cbind(Berried,Legal,CLEN,WEIGHT_KG,Legal_wt,Recruit,Juv,Recruit_wt)~MISSION+SETNO+ID,data=de,FUN=sum)
+  dS = aggregate(cbind(Berried,Legal,CLEN,WEIGHT_KG,Legal_wt,Recruit,Juv,Recruit_wt,EggProd)~MISSION+SETNO+ID,data=de,FUN=sum)
   dS$Lobster = dS$CLEN
   dS$CLEN = NULL
   dA$P = dA$CLEN
