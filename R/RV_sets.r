@@ -6,19 +6,38 @@ RV_sets <- function(length_group=5, aggregate=T, by_sex=F){
   set = o$gsinf
   cas = o$gscat
   de = o$gsdet
-  
-  
   set$X = convert.dd.dddd(set$slong) *-1
   set$Y = convert.dd.dddd(set$slat)
+  ss = st_as_sf(set,coords=c('X','Y'),crs=4326)
+  gr = readRDS(file.path(git.repo,'bio.lobster.data','mapping_data','LFAPolysSF.rds'))
+  gr <- gr %>%
+    mutate(area = abs(st_area(geometry))) %>%
+    group_by( LFA) %>%
+    slice_max(order_by = area, n = 1, with_ties = FALSE) %>%
+    ungroup() %>%
+    select(-area)
+  ss = st_join(ss,gr,largest = T)
+  ss = subset(as_tibble(ss),select=c(id,LFA))
+  set = merge(set,ss,by='id',all.x=T)
+  
   caL = subset(cas,spec==2550)
   deL = subset(de,spec==2550)
   deL$fsex = ifelse(is.na(deL$fsex),0,deL$fsex)
-  
   ii = which(is.na(deL$fwt))
   lobLW1 <- function(row) {
     lobLW(CL=row[1],sex=row[2])
   }
   deL$fwt[ii] =  apply(deL[ii,c('flen','fsex')],1,lobLW1)
+  deL = merge(deL,ss,all.x=T)
+  j = is.na(deL$LFA)
+  #egg production
+  i = deL$fsex %in% c(2,3)
+  j = which(!is.na(deL$LFA))
+  i = intersect(i,j)
+  deL$EggProd = 0
+  deL$EggProd[i] = eggProduction(cl=deL$flen[i],lfa=deL$LFA[i],year=deL$year[i]) * deL$clen[i]
+  j = which(is.na(deL$LFA))
+  deL$EggProd[j] = NA
   
   deL$wts = deL$fwt * deL$clen
   deL$UID = paste(deL$mission,deL$setno, deL$size_class,sep="-")
@@ -37,8 +56,8 @@ RV_sets <- function(length_group=5, aggregate=T, by_sex=F){
   deL$SZ = round(deL$flen/length_group)*length_group
   
   
-  if(!by_sex) deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt)~UID+SZ,data=deL,FUN=sum)
-  if(by_sex) deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt)~UID+SZ+fsex,data=deL,FUN=sum)
+  if(!by_sex) deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt,EggProd)~UID+SZ,data=deL,FUN=sum)
+  if(by_sex) deL1 = aggregate(cbind(wts,clen,Berried,Legal,Legal_wt,Recruit,Juv,Recruit_wt,EggProd)~UID+SZ+fsex,data=deL,FUN=sum)
   caL$UID = paste(caL$mission, caL$setno, caL$size_class,sep="-")
   deL1 = merge(deL1, caL[,c('UID','sampwgt','totwgt','totno')],all.x=T)
   
@@ -51,6 +70,8 @@ RV_sets <- function(length_group=5, aggregate=T, by_sex=F){
   deL1$Legal_wt = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Legal_wt, deL1$Legal_wt * (deL1$totwgt/deL1$sampwgt))
   deL1$Recruit = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Recruit, deL1$Recruit * (deL1$totwgt/deL1$sampwgt))
   deL1$Recruit_wt = ifelse(deL1$sampwgt == deL1$totwgt, deL1$Recruit_wt, deL1$Recruit_wt * (deL1$totwgt/deL1$sampwgt))
+  deL1$EggProd = ifelse(deL1$sampwgt == deL1$totwgt, deL1$EggProd, deL1$EggProd * (deL1$totwgt/deL1$sampwgt))
+  
   d1 = as.data.frame(do.call(rbind,strsplit(deL1$UID,"-")))
   deL1 = cbind(deL1, d1)
   deL1 = rename.df(deL1, c('V1','V2','V3'),c('mission','setno','scla'))
@@ -63,9 +84,9 @@ RV_sets <- function(length_group=5, aggregate=T, by_sex=F){
     com$UID = NULL
     return(com)
     }
-  deL2 = aggregate(cbind(clen,wts,Legal,Legal_wt,Berried,Recruit,Juv,Recruit_wt)~mission+setno+SZ,data=deL1,FUN=sum)
+  deL2 = aggregate(cbind(clen,wts,Legal,Legal_wt,Berried,Recruit,Juv,Recruit_wt,EggProd)~mission+setno+SZ,data=deL1,FUN=sum)
   deL2$UID = paste(deL2$mission, deL2$setno, sep="_")
-  deL3 = aggregate(cbind(clen,wts,Legal,Legal_wt,Berried,Recruit,Juv,Recruit_wt)~mission+setno+UID,data=deL2,FUN=sum)
+  deL3 = aggregate(cbind(clen,wts,Legal,Legal_wt,Berried,Recruit,Juv,Recruit_wt,EggProd)~mission+setno+UID,data=deL2,FUN=sum)
   
   deL2$P=deL2$clen
   aa = aggregate(P~UID+SZ,data=deL2,FUN=sum)
@@ -110,6 +131,7 @@ RV_sets <- function(length_group=5, aggregate=T, by_sex=F){
   ca$Legal_wt[iw] = NA
   ca$Recruit[iw] = NA
   ca$Juv[iw] = NA
+  ca$EggProd[iw] = NA
   
   ca$X = st_coordinates(ca)[,1]
   ca$Y = st_coordinates(ca)[,2]
@@ -135,7 +157,7 @@ RV_sets <- function(length_group=5, aggregate=T, by_sex=F){
   
   com <- com %>%
    rowwise() %>%
-    mutate(across(c(Lobster, WEIGHT_KG,Legal,Legal_wt,Berried,Recruit,Recruit_wt,Juv,any_of(p_cols)), ~ .x * OFFSET)) %>%
+    mutate(across(c(Lobster, WEIGHT_KG,Legal,Legal_wt,Berried,Recruit,Recruit_wt,Juv,EggProd,any_of(p_cols)), ~ .x * OFFSET)) %>%
     ungroup()
   
   print('this is n or wt, accounting for trawl corrections but is not the numbers per km2')
